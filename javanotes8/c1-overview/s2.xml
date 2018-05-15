@@ -154,8 +154,8 @@ When the event occurs, an interrupt will "wake up" the thread so that it can
 continue running.</li>
 
 <li>The thread might use up its allotted slice of time and be suspended to
-allow other threads to run. Not all computers can "forcibly" suspend a thread
-in this way; those that can are said to use <newword>preemptive multitasking</newword>. 
+allow other threads to run. Most computers can "forcibly" suspend a thread
+in this way; computers that can do that are said to use <newword>preemptive multitasking</newword>. 
 To do preemptive multitasking, a computer needs a special
 timer device that generates an interrupt at regular intervals, such as 100
 times per second. When a timer interrupt occurs, the CPU has a chance to switch
@@ -174,7 +174,7 @@ have become more powerful and as they have begun to make more use of
 multitasking and multiprocessing.  In fact, the ability to work with threads
 is fast becoming an essential job skill for programmers.
 Fortunately, Java has good support for threads, which
- are built into the Java programming language as a
+are built into the Java programming language as a
 fundamental programming concept.  Programming with threads will be covered
 in <localref href="threads"/>.</p>
 
@@ -196,8 +196,9 @@ is allowed to run is called the
 <newword>operating system</newword>. The operating system is the
 basic, essential software without which a computer would not be able to
 function. Other programs, such as word processors and Web browsers,
-are dependent upon the operating system. Common operating systems include
-Linux, various versions of Windows, and Mac&nbsp;OS.</p>
+are dependent upon the operating system. Common desktop operating systems include
+Linux, various versions of Windows, and Mac&nbsp;OS.  Operating systems
+for smartphones and tables include Android and iOS.</p>
     
     
 </section>

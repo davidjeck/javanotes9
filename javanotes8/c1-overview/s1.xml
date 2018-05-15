@@ -28,7 +28,7 @@ An address provides a way of picking out one
 particular piece of information from among the millions stored in memory. When
 the CPU needs to access the program instruction or data in a particular
 location, it sends the address of that information as a signal to the memory;
-the memory responds by sending back the data contained in the specified
+the memory responds by sending back the value contained in the specified
 location. The CPU can also store information in memory by specifying the
 information to be stored and the address of the location where it is to be
 stored.</p>
@@ -42,20 +42,39 @@ an instruction from memory and then carrying out, or
 an instruction, execute it, fetch another instruction, execute it, and so on
 forever&mdash;is called the <newword>fetch-and-execute cycle</newword>.
 With one exception, which will be covered in the <localref href="overview.2">next&nbsp;section</localref>, 
-this is all that the CPU ever does.</p>
+this is all that the CPU ever does.  (This is all really somewhat more complicated in modern
+computers.  A typical processing chip these days contains several CPU "cores," which allows
+it to execute several instructions simultaneously.  And access to main memory is speeded up
+by memory "caches," which can be more quickly accessed than main memory and which are meant to hold
+data and instructions that the CPU is likely to need soon.  However, these complications
+don't change the basic operation.)</p>
 
-<p>The details of the fetch-and-execute cycle are not terribly important, but
-there are a few basic things you should know. The CPU contains a few internal
-<newword>registers</newword>, which are small memory units capable of
-holding a single number or machine language instruction. The CPU uses one of
-these registers&mdash;the <newword>program counter</newword>, or PC&mdash;to
+<p>A CPU contains an <newword>Arithmetic Logic Unit</newword>, or ALU, which is the part of
+the processor that carries out operations such as addition and subtraction.  It also holds
+a small number of <newword>registers</newword>, which are small memory units capable of
+holding a single number.  A typical CPU might have 16 or 32 "general purpose" registers,
+which hold data values that are immediately accessible for processing, and many machine
+language instructions refer to these registers.  For example, there might be an instruction
+that takes two numbers from two specified registers, adds those numbers (using the ALU), and stores the
+result back into a register.  And there might be instructions for copying a data value from
+main memory into a register, or from a register into main memory.
+</p>
+
+<p>The CPU also includes special purpose registers.  The most important of these is
+the <newword>program counter</newword>, or PC.  The CPU uses the PC to
 keep track of where it is in the program it is executing. The PC simply stores the
 memory address of the next instruction that the CPU should execute. At the beginning
 of each fetch-and-execute cycle, the CPU checks the PC to see which instruction
 it should fetch. During the course of the fetch-and-execute cycle, the number
 in the PC is updated to indicate the instruction that is to be executed in the
-next cycle. (Usually, but not always, this is just the instruction that
-sequentially follows the current instruction in the program.)</p>
+next cycle. Usually, but not always, this is just the instruction that
+sequentially follows the current instruction in the program.  Some machine language
+instructions modify the value that is stored in the PC.  This makes it possible
+for the computer to "jump" from one point in the program to another point, which
+is essential for implementing the program features known as loops and branches
+that are discussed in <localref href="overview.4"/>.
+</p>
+
 
 <break/>
 
@@ -76,8 +95,11 @@ language instruction is just a sequence of zeros and ones. Each particular
 sequence encodes some particular instruction. The data that the computer
 manipulates is also encoded as binary numbers.  In modern computers, each
 memory location holds a <newword>byte</newword>, which is a sequence of eight
-bits.  (A machine language instruction or a piece of data generally
-consists of several bytes, stored in consecutive memory locations.)
+bits.  A machine language instruction or a piece of data generally
+consists of several bytes, stored in consecutive memory locations.
+For example, when a CPU reads an instruction from memory, it might actually
+read four or eight bytes from four or eight memory locations; the memory address
+of the instruction is the address of the first of those bytes.
 </p>
 
 <p>A computer can work directly
@@ -93,13 +115,15 @@ the way all the other switches in the CPU are wired together.</p>
 <p>So, you should understand this much about how computers work: Main memory
 holds machine language programs and data. These are encoded as binary numbers.
 The CPU fetches machine language instructions from memory one after another and
-executes them. It does this mechanically, without thinking about or
+executes them.  Each instruction makes the CPU perform some very small task,
+such as adding two numbers or moving data to or from memory.
+The CPU does all this mechanically, without thinking about or
 understanding what it does&mdash;and therefore the program it executes must be
 perfect, complete in all details, and unambiguous because the CPU can do
 nothing but execute it exactly as written. Here is a schematic view of this
 first-stage understanding of the computer:</p>
 
-<img width="486" height="295" src="overview-fig1.png" tex="overview-fig1.eps" texscale="0.8"
+<img width="582" height="342" src="overview-fig1.png" tex="overview-fig1.eps" texscale="0.7"
    alt="Basic diagram of the CPU and RAM"/>
 
 

@@ -3,7 +3,7 @@
 VERSION='javanotes-8.0'
 PROJECT='javanotes8'
 
-SOURCE_DIR='/home/eck/eclipse-workspace-oxygen'
+SOURCE_DIR='/home/eck/git/javanotes8'
 EXPORT_DIR="/home/eck/Desktop/$VERSION-source"
 XALAN_DIR="/home/eck/xalan-j_2_7_1"
 

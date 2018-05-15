@@ -14,7 +14,7 @@ large part of the course becoming familiar with these concepts.</p>
 several consecutive locations treated as a unit) that has been given a name so that it can
 be easily referred to and used in a program. The programmer only has to worry
 about the name; it is the compiler's responsibility to keep track of the memory
-location. As a programmer, you need to keep in mind that the name refers to a
+location. As a programmer, you just need to keep in mind that the name refers to a
 kind of "box" in memory that can hold data, even though you don't have
 to know where in memory that box is located.</p>
 

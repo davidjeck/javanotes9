@@ -30,6 +30,9 @@ Addresses are used when information is being stored into or retrieved from memor
 which is guaranteed to terminate after a finite number of steps.</gitem>
 <gitem term="alpha color component">A component of a color that says how transparent or opaque
 that color is.  The higher the alpha component, the more opaque the color.</gitem>
+<gitem term="ALU">Arithmetic Logic Unit.  The ALU is the part of
+the CPU that performs arithmetic operations such as addition and subtraction and logical
+operations such as AND and OR.</gitem>
 <gitem term="API">Application Programming Interface.  A specification of the interface
 to a software package or "toolbox."  The API says what classes or subroutines are provided
 in the toolbox and how to use them.</gitem>
@@ -139,7 +142,7 @@ by its Javadoc comment.</gitem>
 or a <i>while</i> loop that affects the flow of control in a program (that is, the
 order in which the instructions in the program are executed).</gitem>
 <gitem term="CPU">Central Processing Unit.  The CPU is the part of
-the program that actually performs calculations and carries out programs.</gitem>
+the computer that actually performs calculations and carries out programs.</gitem>
 <gitem term="data structure">An organized collection of data, that can be treated
 as a unit in a program.</gitem>
 <gitem term="deadlock">A situation in which several threads hang indefinitely, 

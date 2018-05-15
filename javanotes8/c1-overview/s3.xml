@@ -6,7 +6,7 @@
 <p><start><big>M</big>achine language consists</start> of very simple
 instructions that can be executed directly by the CPU of a computer. Almost all
 programs, though, are written in <newword>high-level programming languages</newword> 
-such as Java, Fortran, or C++. A program written in a
+such as Java, Python, or C++. A program written in a
 high-level language cannot be run directly on any computer. First, it has to be
 translated into machine language. This translation can be done by a program
 called a <newword>compiler</newword>. A compiler takes a
@@ -40,7 +40,7 @@ acting as an interpreter for the C64 machine language.</p>
 
 <break/>
 
-<p>The designers of Java chose to use a combination of compilation and
+<p>The designers of Java chose to use a combination of compiling and
 interpreting. Programs written in Java are compiled into machine language,
 but it is a machine language for a computer that doesn't really exist. This
 so-called "virtual" computer is known as the <newword>Java Virtual Machine</newword>,
@@ -111,18 +111,17 @@ and Java bytecode is platform-independent, secure, and network-compatible
 while allowing you to program in a modern high-level object-oriented
 language.</p>
 
-<p>(In the past few years, it has become fairly common to create new programming
+<p>In the past few years, it has become fairly common to create new programming
 languages, or versions of old languages, that compile into Java bytecode.  The 
 compiled bytecode programs can then be executed by a standard JVM.  New languages
-that have been developed specifically for programming the JVM include
+that have been developed specifically for programming the JVM include Scala,
 Groovy, Clojure, and Processing.  Jython and JRuby are versions of older languages,
 Python and Ruby, that target the JVM.  These languages make it possible to
 enjoy many of the advantages of the JVM while avoiding some of the technicalities
 of the Java language.  In fact, the use of other languages with the JVM has
 become important enough that several new features have been added to the
 JVM specifically to add better support for some of those languages.  And this
-improvement to the JVM has in turn made possible some of the new features in Java&nbsp;7 and
-Java&nbsp;8.)</p>
+improvement to the JVM has in turn made possible some new features in Java.</p>
 
 <break/>
 
