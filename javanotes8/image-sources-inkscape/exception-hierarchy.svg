@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="exception-hierarchy.svg"
+   inkscape:export-filename="/Users/eck/eclipse-workspace/javanotes7/c8-robustness/exception-hierarchy.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="212.08169"
+     inkscape:cy="852.27844"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1144"
+     inkscape:window-height="724"
+     inkscape:window-x="163"
+     inkscape:window-y="8"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       x="114.00511"
+       y="17.193638"
+       id="text2985"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2987"
+         x="114.00511"
+         y="17.193638">Throwable</tspan></text>
+    <rect
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2993"
+       width="82.690369"
+       height="20.725489"
+       x="107.59797"
+       y="1.9675949" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3769"
+       y="78.343193"
+       x="38.179657"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       xml:space="preserve"><tspan
+         y="78.343193"
+         x="38.179657"
+         id="tspan3771"
+         sodipodi:role="line">Error</tspan></text>
+    <rect
+       y="63.117153"
+       x="31.772526"
+       height="20.725489"
+       width="51.373638"
+       id="rect3773"
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       xml:space="preserve"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       x="49.594242"
+       y="58.775337"
+       id="text3775"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3777"
+         x="49.594242"
+         y="58.775337" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       x="219.18234"
+       y="76.71254"
+       id="text3781"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3783"
+         x="219.18234"
+         y="76.71254"
+         style="font-style:italic;fill:#ff0000;-inkscape-font-specification:Serif Italic">Exception</tspan></text>
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3785"
+       width="82.690369"
+       height="20.725489"
+       x="212.77521"
+       y="61.4865" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3787"
+       y="58.775337"
+       x="299.08444"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       xml:space="preserve"><tspan
+         y="58.775337"
+         x="299.08444"
+         id="tspan3789"
+         sodipodi:role="line" /></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3793"
+       y="140.30807"
+       x="217.5517"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       xml:space="preserve"><tspan
+         y="140.30807"
+         x="217.5517"
+         id="tspan3795"
+         sodipodi:role="line"
+         style="font-style:italic;fill:#ff0000;-inkscape-font-specification:Serif Italic">InterruptedException</tspan></text>
+    <rect
+       y="125.08205"
+       x="211.14455"
+       height="20.725489"
+       width="152.88663"
+       id="rect3797"
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       xml:space="preserve"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       x="150.69484"
+       y="252.82327"
+       id="text3805"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3807"
+         x="150.69484"
+         y="252.82327">ArrayIndexOutOfBoundsException</tspan></text>
+    <rect
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3809"
+       width="243.96008"
+       height="20.725489"
+       x="144.2877"
+       y="237.59724" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3811"
+       y="141.93874"
+       x="173.52402"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       xml:space="preserve"><tspan
+         y="141.93874"
+         x="173.52402"
+         id="tspan3813"
+         sodipodi:role="line" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       x="383.87848"
+       y="140.30807"
+       id="text3817"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3819"
+         x="383.87848"
+         y="140.30807"
+         style="font-style:italic;fill:#ff0000;-inkscape-font-specification:Serif Italic">IOException</tspan></text>
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3821"
+       width="94.749138"
+       height="20.725489"
+       x="377.47131"
+       y="125.08205" />
+    <text
+       xml:space="preserve"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       x="307.2377"
+       y="207.16493"
+       id="text3829"
+       sodipodi:linespacing="125%"><tspan
+         style="font-style:italic;fill:#ff0000;-inkscape-font-specification:Serif Italic"
+         sodipodi:role="line"
+         id="tspan3831"
+         x="307.2377"
+         y="207.16493">EOFException</tspan></text>
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3833"
+       width="112.48464"
+       height="20.725489"
+       x="300.83057"
+       y="191.9389" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3835"
+       y="207.16493"
+       x="440.95142"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       xml:space="preserve"><tspan
+         style="font-style:italic;fill:#ff0000;-inkscape-font-specification:Serif Italic"
+         y="207.16493"
+         x="440.95142"
+         id="tspan3837"
+         sodipodi:role="line">SocketException</tspan></text>
+    <rect
+       y="191.9389"
+       x="434.54425"
+       height="20.725489"
+       width="126.13419"
+       id="rect3839"
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3843"
+       y="141.12341"
+       x="63.454807"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       xml:space="preserve"><tspan
+         y="141.12341"
+         x="63.454807"
+         id="tspan3845"
+         sodipodi:role="line">RuntimeException</tspan></text>
+    <rect
+       y="125.89738"
+       x="57.047672"
+       height="20.725489"
+       width="133.75513"
+       id="rect3847"
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       xml:space="preserve"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       x="8.0125418"
+       y="289.513"
+       id="text3849"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3851"
+         x="8.0125418"
+         y="289.513">IllegalArgumentException</tspan></text>
+    <rect
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3853"
+       width="186.1682"
+       height="20.725489"
+       x="1.6054046"
+       y="274.28696" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3855"
+       y="341.69397"
+       x="8.0125418"
+       style="font-size:13.04523945px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       xml:space="preserve"><tspan
+         y="341.69397"
+         x="8.0125418"
+         id="tspan3857"
+         sodipodi:role="line">NumberFormatException</tspan></text>
+    <rect
+       y="326.46793"
+       x="1.6054046"
+       height="20.725489"
+       width="184.008"
+       id="rect3859"
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 146.08952,22.521928 59.664809,62.472973"
+       id="path3893"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path3895"
+       d="M 119.99904,147.26703 84.124632,273.64278"
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 119.99904,147.26703 146.35127,90.09368"
+       id="path3897"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:#0000ff;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 84.124632,294.02597 0,31.79777"
+       id="path3899"
+       inkscape:connector-curvature="0" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path3901"
+       d="M 146.08952,22.521928 253.71274,61.249982"
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 256.97405,82.856159 426.56216,124.84552"
+       id="path3903"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path3905"
+       d="m 256.97405,82.856159 29.35179,41.581701"
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path3907"
+       d="M 256.97405,82.856159 120.81437,125.25319"
+       style="fill:none;stroke:#0000ff;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 427.37748,146.4517 68.89517,45.25067"
+       id="path3909"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path3911"
+       d="m 427.37748,146.4517 -73.78713,45.25067"
+       style="fill:none;stroke:#ff0000;stroke-width:1.63065493;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:STIXNonUnicode;-inkscape-font-specification:STIXNonUnicode"
+       x="414"
+       y="307.36218"
+       id="text3039"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3041"
+         x="414"
+         y="307.36218">The class Throwable and</tspan><tspan
+         sodipodi:role="line"
+         x="414"
+         y="327.36218"
+         id="tspan3043">some of its subclasses.</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE quiz SYSTEM "../javanotes7.dtd" >
+
+<quiz>
+   
+<question>
+<ques><p>What is an <i>algorithm</i>?</p></ques>
+<ans><p>An algorithm is an unambiguous, step-by-step procedure for performing
+a certain task, which is guaranteed to finish after a finite number of steps.
+(An algorithm is not the same thing as a program, but it can be the <i>idea</i>
+behind a program.)</p></ans>
+</question>
+
+<question>
+<ques><p>Explain briefly what is
+meant by "pseudocode" and how is it useful in the development of
+algorithms.</p></ques>
+<ans><p>Pseudocode refers to informal
+descriptions of algorithms, written in a language that imitates the structure
+of a programming language, but without the strict syntax. Pseudocode can be
+used in the process of developing an algorithm with stepwise refinement. You
+can start with a brief pseudocode description of the algorithm and then add
+detail to the description through a series of refinements until you have
+something that can be translated easily into a program written in an actual
+programming language.</p></ans>
+</question>
+
+<question>
+<ques><p>What is a <i>block
+statement?</i> How are block statements used in Java programs?</p></ques>
+<ans><p>A block statement is just a
+sequence of Java statements enclosed between braces, { and }. The body of a
+subroutine is a block statement. Block statements are often used in control
+structures. A block statement is generally used to group together several
+statements so that they can be used in a situation that only calls for a single
+statement. For example, the syntax of a while loop calls for a single
+statement: "while (condition) do statement". However, the statement can be a
+block statement, giving the structure: "while (condition) { statement;
+statement;&nbsp;&dots;}".</p></ans>
+</question>
+
+
+<question>
+<ques><p>What is the main difference
+between a <code>while</code> loop and a <code>do..while</code> loop?</p></ques>
+<ans><p>Both types of loop repeat a
+block of statements until some condition becomes false. The main difference is
+that in a <code>while</code> loop, the condition is tested at the beginning of the
+loop, and in a <code>do..while</code> loop, the condition is tested at the end of
+the loop. It is possible that the body of a <code>while</code> loop might not be
+executed at all. However, the body of a <code>do..while</code> loop is executed at
+least once since the condition for ending the loop is not tested until the body
+of the loop has been executed.</p></ans>
+</question>
+
+
+<question>
+<ques><p>What does it mean to
+<i>prime</i> a loop?</p></ques>
+<ans><p>The condition at the beginning
+of a while loop has to make sense even the first time it is tested, before the
+body of the loop is executed. To prime the loop is to set things up before the
+loop starts so that the test makes sense (that is, the variables that it
+contains have reasonable values). For example, if the test in the loop is
+"while the user's response is yes," then you will have to prime the loop by
+getting a response from the user (or making one up) before the loop.</p></ans>
+</question>
+
+
+<question>
+<ques><p>Explain what is meant by an
+<i>animation</i> and how a computer displays an animation.</p></ques>
+<ans><p>An animation consists of a
+series of "frames." Each frame is a still image, but there are slight
+differences from one frame to the next. When the images are displayed rapidly
+one frame after another, the eye perceives motion. A computer displays an
+animation by showing one image on the screen, then replacing it with the next
+image, then the next, and so on.</p></ans>
+</question>
+
+
+<question>
+<ques><p>Write a <code>for</code> loop
+that will print out all the multiples of 3 from 3 to 36, that is: 3 6 9 12 15
+18 21 24 27 30 33 36.</p></ques>
+<ans><p>Here are two possible answers.
+Assume that <code>N</code> has been declared to be a variable of type
+<ptype>int</ptype>:</p>
+<pre>        for ( N = 3;  N &lt;= 36;  N = N + 3 ) {
+            System.out.println( N );
+        }
+  
+or
+        for ( N = 3;  N &lt;= 36;  N++ ) {
+            if ( N % 3 == 0 )
+                System.out.println( N );
+        }</pre></ans>
+</question>
+   
+
+<question>
+<ques><p>Fill in the following
+<code>main()</code> routine so that it will ask the user to enter an integer, read
+the user's response, and tell the user whether the number entered is even or
+odd. (You can use <code>TextIO.getInt()</code> to read the integer. Recall that an
+integer <code>n</code> is even if <code>n&nbsp;%&nbsp;2&nbsp;==&nbsp;0</code>.)</p>
+<pre>public static void main(String[] args) {
+ 
+         // Fill in the body of this subroutine!
+ 
+}</pre>
+</ques>
+<ans><p>The problem already gives an
+outline of the program. The last step, telling the user whether the number is
+even or odd, requires an <code>if</code> statement to decide between the two
+possibilities.</p>
+<pre>public static void main (String[] args) {
+
+   int n;  // the number read from the user
+
+   TextIO.put("Type an integer: ");  // ask the use to enter an integer
+ 
+   n = TextIO.getInt();   // read the user's response
+ 
+   if (n % 2 == 0)        // tell the user whether the number is even or odd
+      System.out.println("That's an even number.");
+   else
+      System.out.println("That's an odd number.");
+}</pre>
+</ans>
+</question>
+
+
+<question>
+<ques><p>Write a code segment that will print out two <i>different</i> random integers
+selected from the range 1 to 10.  All possible outputs should have the same probability.
+Hint:  You can easily select two random numbers, but you have to account for the
+fact that the two numbers that you pick might be the same.</p>
+</ques>
+<ans><p>The code for selecting two random integers has to be wrapped in a loop that
+will end only when the two selected numbers are different.  This can be done easily with
+a <code>do..while</code> loop.  A <code>while</code> loop can also be used, but it
+must be "primed" in some way.  Note that by using a loop to choose the numbers, we can
+be absolutely sure that after the loop ends, the two numbers are different.
+Here are three possible solutions:</p>
+<pre>(1)     int x,y; // Two random integers.
+        do {
+            x = (int)(10*Math.random() + 1);
+            y = (int)(10*Math.random() + 1);
+        } while (x == y);  // continue if x and y are the same number.
+        System.out.println(x + " " + y);
+        
+(2)     int x,y;  // Two random integers.
+        x = y = 0;  // Give them junk value to "prime" the loop to make sure it runs.
+        while (x == y) {
+            x = (int)(10*Math.random() + 1);
+            y = (int)(10*Math.random() + 1);
+        }
+        System.out.println(x + " " + y);
+        
+(3)     int x,y; // Two random integers.
+        x = (int)(10*Math.random() + 1);  // Pick x, and keep its value.
+        do { // The loop finds a y with a different value from x.
+            y = (int)(10*Math.random() + 1);
+        } while (x == y);
+        System.out.println(x + " " + y);</pre>
+</ans>
+</question>
+
+
+<question>
+<ques><p>Suppose that <code>s1</code> and <code>s2</code> are variables of type
+<classname>String</classname>, whose values are expected to be string representations
+of values of type <ptype>int</ptype>.  Write a code segment that will compute and print
+the integer sum of those values, or will print an error message if the values cannot
+successfully be converted into integers.  (Use a <code>try..catch</code> statement.)</p></ques>
+<ans><p>The function <code>Integer.parseInt</code> can be used to convert the strings
+into integers.  This function will throw an exception of type <classname>NumberFormatException</classname>
+if the conversion fails.  A <code>try..catch</code> statement can catch this exception and
+print an error message.  So, the code segment can be written:</p>
+<pre>try {
+   int n1, n2;  // The values of s1 and s2 as integers.
+   int sum;     // The sum of n1 and n2.
+   n1 = Integer.parseInt(s1);
+   n2 = Integer.parseInt(s2);
+   sum = n1 + n2;   // (If an exception occurs, we don't get to this point.)
+   System.out.println("The sum is " + sum);
+}
+catch ( NumberFormatException e ) {
+    System.out.println("Error!  Unable to convert strings to integers.");  
+}</pre>
+</ans>
+</question>
+
+
+<question>
+<ques><p>Show the exact output that
+would be produced by the following <code>main()</code> routine:</p>
+<pre>public static void main(String[] args) {
+    int N;
+    N = 1;
+    while (N &lt;= 32) {
+       N = 2 * N;
+       System.out.println(N);   
+    }
+}</pre>
+</ques>
+<ans><p>The exact output printed by this
+program is:</p>
+<pre>2
+4
+8
+16
+32
+64</pre>
+<np>(The hard part to get right is the 64 at the end. The value of N doubles
+each time through the loop. For the final execution of the loop, N starts out
+with the value 32, but N is doubled to 64 before it is printed.)</np></ans>
+</question>
+
+
+<question>
+<ques><p>Show the exact output
+produced by the following <code>main()</code> routine:</p>
+<pre>public static void main(String[] args) {
+   int x,y;
+   x = 5;
+   y = 1;
+   while (x &gt; 0) {
+      x = x - 1;
+      y = y * x;
+      System.out.println(y);
+   }
+}</pre>
+</ques>
+<ans><p>The way to answer this question
+is to trace exactly what the program does, step-by-step. The output is shown
+below on the right. On the left is a table that shows the values of the
+variables x and y as the program is being executed.</p>
+<pre> value of x   |   value of y                 OUTPUT
+--------------|--------------             -------------
+      5       |     1  [ before loop]
+      4       |     4  [ = 1*4 ]               4
+      3       |    12  [ = 4*3 ]               12
+      2       |    24  [ = 12*2 ]              24
+      1       |    24  [ = 24*1 ]              24
+      0       |     0  [ = 24*0 ]              0</pre>
+</ans>
+</question>
+
+
+<question>
+<ques><p>What output is produced by
+the following program segment? <b>Why?</b> (Recall that <code>name.charAt(i)</code>
+is the i-th character in the string, <code>name</code>.)</p>
+<pre>String name;
+int i;
+boolean startWord;
+
+name = "Richard M. Nixon";
+startWord = true;
+for (i = 0; i &lt; name.length(); i++) {
+   if (startWord)
+      System.out.println(name.charAt(i));
+   if (name.charAt(i) == ' ')
+      startWord = true;
+   else
+      startWord = false;
+}</pre>
+</ques>
+<ans><p>This is a tough one! The output
+from this program consists of the three lines:</p>
+<pre>    R
+    M
+    N</pre>
+<np>As the <code>for</code> loop in this code segment is executed,
+<code>name.charAt(i)</code> represents each of the characters in the string
+"Richard M. Nixon" in succession. The statement
+<code>System.out.println(name.charAt(i))</code> outputs the single character
+<code>name.charAt(i)</code> on a line by itself. However, this output statement
+occurs inside an <code>if</code> statement, so only some of the characters are
+output. The character is output if <code>startWord</code> is true. This variable is
+initialized to true, so when <code>i</code> is 0, startWord is true, and the first
+character in the string, 'R', is output. Then, since 'R' does not equal ' ',
+<code>startWorld</code> becomes false, so no more characters are output until
+<code>startWord</code> becomes true again. This happens when
+<code>name.charAt(i)</code> is a space, that is, just <i>before</i> the 'M' is
+processed and again just before the 'N' is processed. In fact whatever the
+value of <code>name</code>, this <code>for</code> statement would print the first
+character in <code>name</code> and every character in <code>name</code> that follows a
+space. (It is <i>almost</i> true that this for statement prints the first
+character of each word in the string, but something goes wrong when the first
+character is a space or when there are
+two spaces in a row. What happens in these cases?)
+</np></ans>
+</question>
+
+<question>
+<ques><p>Suppose that <code>numbers</code> is an array of type <atype>int[]</atype>.
+Write a code segment that will count and output the number of times that the
+number 42 occurs in the array.</p>
+</ques>
+<ans><p>Use a <code>for</code> loop to go through the array and test each array element.
+If the value is 42, add 1 to a counter:</p>
+<pre>int count42;  // The number of 42s in the array
+count42 = 0;
+int i;  // loop control variable
+for ( i = 0; i &lt; numbers.length; i++ ) {
+    if ( numbers[i] == 42 ) {
+        count42++;
+    }
+}
+System.out.println("There were " + count42 + " 42s in the array.")</pre>
+</ans>
+</question>
+
+<question>
+<ques><p>Define the <newword>range</newword> of an array of numbers to be
+the maximum value in the array minus the minimum value.  Suppose that
+<code>raceTimes</code> is an array of type <atype>double[]</atype>.
+Write a code segment that will find and print the range of <code>raceTimes</code>.</p>
+</ques>
+<ans><p>We need both the minimum and the maximum value in the array.  We can compute both
+using one <code>for</code> loop.</p>
+<pre>double max;    // maximum value from the array
+double min;    // minimum value from the array
+double range;  // the range of the array, max - min
+int i;         // for-loop variable
+max = min = raceTimes[0];  // start with both equal to the first element
+for ( i = 1; i &lt; raceTimes.length; i++ ) {
+    if ( raceTimes[i] &gt; max )
+        max = raceTimes[i];
+    if ( raceTimes[i] &lt; min )
+        min = raceTimes[i];
+}
+range = max - min;
+System.out.println("The range is " + range);</pre>
+</ans>
+</question>
+
+
+</quiz>

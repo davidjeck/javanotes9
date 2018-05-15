@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="OOP.5" title="Inheritance, Polymorphism, and Abstract Classes" shorttitle="Inheritance and Polymorphism">
+   
+<p><start><big>A</big> class represents a set of objects</start> which share the
+same structure and behaviors. The class determines the structure of objects by
+specifying variables that are contained in each instance of the class, and it
+determines behavior by providing the instance methods that express the behavior
+of the objects. This is a powerful idea. However, something like this can be
+done in most programming languages. The central new idea in object-oriented
+programming&mdash;the idea that really distinguishes it from traditional
+programming&mdash;is to allow classes to express the similarities among objects
+that share <b>some</b>, but not all, of their structure and behavior.
+Such similarities can be expressed using <newword>inheritance</newword> 
+and <newword>polymorphism</newword>.</p>
+
+   
+<subsection id="OOP.5.1" title="Extending Existing Classes">
+<p>The topics covered in later subsections of this section are relatively advanced aspects of
+object-oriented programming. Any programmer should know what is meant by
+subclass, inheritance, and polymorphism. However, it will probably be a while
+before you actually do anything with inheritance except for extending classes
+that already exist.  In the first part of this section, we look at how that
+is done.</p>
+
+<p>In day-to-day programming, especially for programmers who are just beginning
+to work with objects, subclassing is used mainly in one situation: There is an
+existing class that can be adapted with a few changes or additions. This is
+much more common than designing groups of classes and subclasses from scratch.
+The existing class can be <newword>extended</newword> to make a
+subclass. The syntax for this is</p>
+
+<pre>public class <bnf>subclass-name</bnf> extends <bnf>existing-class-name</bnf> {
+   .
+   .   // Changes and additions.
+   .
+}</pre>
+
+
+<p>As an example, suppose you want to write a program that plays the card game,
+Blackjack. You can use the <classname>Card</classname>, 
+<classname>Hand</classname>, and <classname>Deck</classname>
+classes developed in <localref href="OOP.4"/>. However, a hand in the
+game of Blackjack is a little different from a hand of cards in general, since
+it must be possible to compute the "value" of a Blackjack hand according to the
+rules of the game. The rules are as follows: The value of a hand is obtained by
+adding up the values of the cards in the hand. The value of a numeric card such
+as a three or a ten is its numerical value. The value of a Jack, Queen, or King
+is 10. The value of an Ace can be either 1 or 11. An Ace should be counted as
+11 unless doing so would put the total value of the hand over 21. Note that
+this means that the second, third, or fourth Ace in the hand will always be
+counted as 1.</p>
+
+<p>One way to handle this is to extend the existing <classname>Hand</classname> class by
+adding a method that computes the Blackjack value of the hand. Here's the
+definition of such a class:</p>
+
+<pre>public class BlackjackHand <newcode>extends Hand</newcode> {
+
+    /**
+     * Computes and returns the value of this hand in the game
+     * of Blackjack.
+     */
+    public int getBlackjackValue() {
+
+        int val;      // The value computed for the hand.
+        boolean ace;  // This will be set to true if the
+                      //   hand contains an ace.
+        int cards;    // Number of cards in the hand.
+
+        val = 0;
+        ace = false;
+        cards = getCardCount();  // (method defined in class Hand.)
+
+        for ( int i = 0;  i &lt; cards;  i++ ) {
+                // Add the value of the i-th card in the hand.
+            Card card;    // The i-th card; 
+            int cardVal;  // The blackjack value of the i-th card.
+            card = getCard(i);
+            cardVal = card.getValue();  // The normal value, 1 to 13.
+            if (cardVal &gt; 10) {
+                cardVal = 10;   // For a Jack, Queen, or King.
+            }
+            if (cardVal == 1) {
+                ace = true;     // There is at least one ace.
+            }
+            val = val + cardVal;
+         }
+
+         // Now, val is the value of the hand, counting any ace as 1.
+         // If there is an ace, and if changing its value from 1 to 
+         // 11 would leave the score less than or equal to 21,
+         // then do so by adding the extra 10 points to val. 
+
+         if ( ace == true  &amp;&amp;  val + 10 &lt;= 21 )
+             val = val + 10;
+
+         return val;
+
+    }  // end getBlackjackValue()
+
+} // end class BlackjackHand</pre>
+
+<np>Since <classname>BlackjackHand</classname> is a subclass of <classname>Hand</classname>, an object of
+type <classname>BlackjackHand</classname> contains all the instance variables and instance
+methods defined in <classname>Hand</classname>, plus the new instance method named
+<code>getBlackjackValue()</code>. For example, if <code>bjh</code> is a variable of
+type <code>BlackjackHand</code>, then the following are all legal:
+<code>bjh.getCardCount()</code>, <code>bjh.removeCard(0)</code>, and
+<code>bjh.getBlackjackValue()</code>.  The first two methods are defined in <classname>Hand</classname>,
+but are inherited by <classname>BlackjackHand</classname>.</np>
+
+<p>Variables and methods from the <classname>Hand</classname> class  are
+inherited by <classname>BlackjackHand</classname>, and they can be used 
+in the definition of <classname>BlackjackHand</classname> just as if they
+were actually defined in that class&mdash;except for any that are
+declared to be <code>private</code>, which prevents access even by subclasses. The statement "<code>cards&nbsp;=
+getCardCount();</code>" in the above definition of <code>getBlackjackValue()</code>
+calls the instance method <code>getCardCount()</code>, which was defined in
+<classname>Hand</classname>.</p>
+
+<p>Extending existing classes is an easy way to build on previous work. We'll
+see that many standard classes have been written specifically to be used as the
+basis for making subclasses.</p>
+   
+<break/>
+   
+<p>Access modifiers such as <code>public</code> and <code>private</code> are used
+to control access to members of a class.  There is one more access modifier,
+<newword>protected</newword>, that comes into the picture when subclasses are taken
+into consideration.  When <code>protected</code> is applied as an access modifier
+to a method or member variable in a class,
+that member can be used in subclasses&mdash;direct or indirect&mdash;of the class in which
+it is defined, but it cannot be used in non-subclasses.  (There is an exception: A <code>protected</code> member
+can also be accessed by any class in the same package as the class that contains the protected member.
+Recall that using no access modifier makes a member accessible to classes in the same package, and nowhere
+else.  Using the <code>protected</code> modifier is strictly more liberal than using no modifier
+at all:  It allows access from classes in the same package and from <b>subclasses</b> that are not
+in the same package.)</p>
+   
+<p>When you declare a method or member variable to be <code>protected</code>, you are saying
+that it is part of the implementation of the class, rather than part of the public interface of
+the class.  However, you are allowing subclasses to use and modify that part of the implementation.</p>
+   
+<p>For example, consider a <classname>PairOfDice</classname> class that has instance
+variables <code>die1</code> and <code>die2</code>
+to represent the numbers appearing on the two dice.  We could make those variables
+<code>private</code> to make it impossible to change their values from outside the
+class, while still allowing read access through getter methods.  However, if we think
+it possible that <classname>PairOfDice</classname> will be used to create subclasses,
+we might want to make it possible for subclasses to change the numbers on the dice.
+For example, a <classname>GraphicalDice</classname> subclass that draws the dice might
+want to change the numbers at other times besides when the dice are rolled.
+In that case, we could make <code>die1</code> and <code>die2</code>
+<code>protected</code>, which would allow the
+subclass to change their values without making them public to the rest of the world.
+(An even better idea would be to define <code>protected</code> setter methods for
+the variables.  A setter method could, for example, ensure that the value that is
+being assigned to the variable is in the legal range 1 through&nbsp;6.)</p>
+   
+</subsection>
+   
+<subsection id="OOP.5.2" title="Inheritance and Class Hierarchy">
+   
+<p>The term <newword>inheritance</newword> refers to the fact that
+one class can inherit part or all of its structure and behavior from another
+class.  The class that does the inheriting is said to be a <newword>subclass</newword> 
+of the class from which it inherits. If class B is a
+subclass of class A, we also say that class A is a <newword>superclass</newword> of 
+class B. (Sometimes the terms <newword>derived class</newword> and <newword>base class</newword> are
+used instead of subclass and superclass; this is the common terminology in&nbsp;C++.) 
+A subclass can add to the structure
+and behavior that it inherits. It can also replace or modify inherited behavior
+(though not inherited structure). The relationship between subclass and
+superclass is sometimes shown by a diagram in which the subclass is shown
+below, and connected to, its superclass, as shown on the left below:</p>
+
+
+<img src="subclass-superclass.png" width="552" height="223" 
+    alt="two class hierarchy diagrams" tex="subclass-superclass.eps" texscale="0.6"/>
+
+<p>In Java, to create a class named "B" as a subclass of a class named "A", 
+you would write</p>
+
+<pre>class B extends A {
+    .
+    .  // additions to, and modifications of,
+    .  // stuff inherited from class A
+    .
+}</pre>
+   
+
+<p>Several classes
+can be declared as subclasses of the same superclass. The subclasses, which
+might be referred to as "sibling classes," share some structures and behaviors&mdash;namely, 
+the ones they inherit from their common superclass. The superclass
+expresses these shared structures and behaviors. In the diagram shown
+on the right above,
+classes B, C, and D are sibling classes. Inheritance can also extend over
+several "generations" of classes. This is shown in the diagram, where class E
+is a subclass of class D which is itself a subclass of class A. In this case,
+class E is considered to be a subclass of class A, even though it is not a
+direct subclass.  This whole set of classes forms a small
+<newword>class hierarchy</newword>.</p>
+
+<imageclear/>
+
+</subsection>
+
+<subsection id="OOP.5.3" title="Example: Vehicles">
+
+<p>Let's look at
+an example. Suppose that a program has to deal with motor vehicles, including
+cars, trucks, and motorcycles. (This might be a program used by a Department of
+Motor Vehicles to keep track of registrations.) The program could use a class
+named <classname>Vehicle</classname> to represent all types of vehicles.  Since cars, trucks,
+and motorcycles are types of vehicles, they would be represented by subclasses
+of the <classname>Vehicle</classname> class, as shown in this class hierarchy diagram:</p>
+
+<img width="290" height="123" src="vehicle-hierarchy.png" tex="vehicle-hierarchy.eps" texscale="0.6"/> 
+   
+<np>The <classname>Vehicle</classname>
+class would include instance variables such as <code>registrationNumber</code> and
+<code>owner</code> and instance methods such as <code>transferOwnership()</code>. These
+are variables and methods common to all vehicles. The three subclasses of
+<classname>Vehicle</classname>&mdash;<classname>Car</classname>, 
+<classname>Truck</classname>, and <classname>Motorcycle</classname>&mdash;could
+then be used to hold variables and methods specific to particular types
+of vehicles. The <classname>Car</classname> class might add an instance variable
+<code>numberOfDoors</code>, the <classname>Truck</classname> class might have
+<code>numberOfAxles</code>, and the <classname>Motorcycle</classname> class could have a boolean
+variable <code>hasSidecar</code>. (Well, it <u>could</u> in theory at least, even
+if it might give a chuckle to the people at the Department of Motor Vehicles.)
+The declarations of these classes in a Java program would look, in outline, like
+this (although they are likely to be  defined
+in separate files and declared as <code>public</code> classes):</np>
+
+<pre>class Vehicle {
+   int registrationNumber;
+   Person owner;  // (Assuming that a Person class has been defined!)
+   void transferOwnership(Person newOwner) {
+       . . .
+   }
+   . . .
+}
+
+class Car extends Vehicle {
+   int numberOfDoors;
+   . . .
+}
+
+class Truck extends Vehicle {
+   int numberOfAxles;
+   . . .
+}
+
+class Motorcycle extends Vehicle {
+   boolean hasSidecar;
+   . . .
+}</pre>
+
+<p>Suppose that <code>myCar</code> is a variable of type <classname>Car</classname> that has been
+declared and initialized with the statement</p>
+
+<pre>Car myCar = new Car();</pre>
+
+<np>Given this declaration, a program could refer to
+<code>myCar.numberOfDoors</code>, since <code>numberOfDoors</code> is an instance
+variable in the class <code>Car</code>. But since class <classname>Car</classname> extends class
+<classname>Vehicle</classname>, a car also has all the structure and behavior of a vehicle.
+This means that <code>myCar.registrationNumber</code>, <code>myCar.owner</code>, and
+<code>myCar.transferOwnership()</code> also exist.</np>
+
+<p>Now, in the real world, cars, trucks, and motorcycles are in fact vehicles.
+The same is true in a program. That is, an object of type <classname>Car</classname> or
+<classname>Truck</classname> or <classname>Motorcycle</classname> is automatically an object of type
+<classname>Vehicle</classname> too. This brings us to the following Important Fact:</p>
+
+<centered><p><b>A variable that can hold a reference<br/>
+to an object of class A can also hold a reference<br/>
+to an object belonging to any subclass of A.</b></p>
+</centered>
+
+<np>The practical effect of this in our example is that an object of type
+<classname>Car</classname> can be assigned to a variable of type <classname>Vehicle</classname>. That is,
+it would be legal to say</np>
+
+<pre>Vehicle myVehicle = myCar;</pre>
+
+<np>or even</np>
+
+<pre>Vehicle myVehicle = new Car();</pre>
+
+<np>After either of these statements, the variable <code>myVehicle</code> holds a
+reference to a <classname>Vehicle</classname> object that happens to be an instance of the
+subclass, <classname>Car</classname>. The object "remembers" that it is in fact a
+<classname>Car</classname>, and not <b>just</b> a <classname>Vehicle</classname>. Information about the
+actual class of an object is stored as part of that object. It is even possible
+to test whether a given object belongs to a given class, using the
+<code>instanceof</code> operator. The test:</np>
+
+<pre>if (myVehicle instanceof Car) ...</pre>
+
+<np>determines whether the object referred to by <code>myVehicle</code> is in fact a
+car.</np>
+
+<p>On the other hand, the assignment statement</p>
+
+<pre>myCar = myVehicle;</pre>
+
+<np>would be illegal because <code>myVehicle</code> could potentially refer to other
+types of vehicles that are not cars. This is similar to a problem we saw
+previously in <localref href="basics.5.6"/>: The computer will not
+allow you to assign an <ptype>int</ptype> value to a variable of type <ptype>short</ptype>,
+because not every <ptype>int</ptype> is a <ptype>short</ptype>. Similarly, it will not
+allow you to assign a value of type <classname>Vehicle</classname> to a variable of type
+<classname>Car</classname> because not every vehicle is a car. As in the case of
+<ptype>ints</ptype> and <ptype>shorts</ptype>, the solution here is to use type-casting.
+If, for some reason, you happen to know that <code>myVehicle</code> does in fact
+refer to a <classname>Car</classname>, you can use the type cast <code>(Car)myVehicle</code> to
+tell the computer to treat <code>myVehicle</code> as if it were actually of type
+<classname>Car</classname>. So, you could say</np>
+
+<pre>myCar = (Car)myVehicle;</pre>
+
+<np>and you could even refer to <code>((Car)myVehicle).numberOfDoors</code>. 
+(The parentheses are necessary because of precedence.  The "<code>.</code>"
+has higher precedence than the type-cast, so
+<code>(Car)myVehicle.numberOfDoors</code> would be read as <code>(Car)(myVehicle.numberOfDoors)</code>,
+an attempt to type-cast the <ptype>int</ptype>
+<code>myVehicle.numberOfDoors</code> into a <classname>Vehicle</classname>,
+which is impossible.)
+</np>
+
+<p>As an
+example of how this could be used in a program, suppose that you want to print
+out relevant data about the <classname>Vehicle</classname> referred to by
+<code>myVehicle</code>.  If it's a <classname>Car</classname>, you will want
+to print out the car's <code>numberOfDoors</code>, but you can't
+say <code>myVehicle.numberOfDoors</code>, since there is no <code>numberOfDoors</code>
+in the <classname>Vehicle</classname> class.  But you could say:</p>
+
+<pre>System.out.println("Vehicle Data:");
+System.out.println("Registration number:  " 
+                              + myVehicle.registrationNumber);
+if (myVehicle instanceof Car) {
+   System.out.println("Type of vehicle:  Car");
+   Car c;
+   c = (Car)myVehicle;  // Type-cast to get access to numberOfDoors!
+   System.out.println("Number of doors:  " + c.numberOfDoors);
+}
+else if (myVehicle instanceof Truck) {
+   System.out.println("Type of vehicle:  Truck");
+   Truck t;
+   t = (Truck)myVehicle;  // Type-cast to get access to numberOfAxles!
+   System.out.println("Number of axles:  " + t.numberOfAxles);
+}
+else if (myVehicle instanceof Motorcycle) {
+   System.out.println("Type of vehicle:  Motorcycle");
+   Motorcycle m;
+   m = (Motorcycle)myVehicle;  // Type-cast to get access to hasSidecar!
+   System.out.println("Has a sidecar:    " + m.hasSidecar);
+}</pre>
+
+<p>Note that for object types, when the computer executes a program, it checks
+whether type-casts are valid. So, for example, if <code>myVehicle</code> refers to
+an object of type <classname>Truck</classname>, then the type cast <code>(Car)myVehicle</code>
+would be an error.  When this happens, an exception of type
+<classname>ClassCastException</classname> is thrown.  This check is done at run time,
+not compile time, because the actual type of the object referred to by <code>myVehicle</code>
+is not known when the program is compiled.</p>
+
+</subsection>
+
+<subsection id="OOP.5.4" title="Polymorphism">
+
+
+<p>As another example, consider a program that deals with shapes drawn on the
+screen. Let's say that the shapes include rectangles, ovals, and roundrects of
+various colors.  (A "roundrect" is just a rectangle with rounded corners.)</p>
+
+<img width="494" height="164" alt="(illustration showing various shapes)"
+   src="various-shapes.png" tex="various-shapes.eps" texscale="0.6" bordered="true"/>
+
+<p>Three classes, <classname>Rectangle</classname>, <classname>Oval</classname>, 
+and <classname>RoundRect</classname>,
+could be used to represent the three types of shapes. These three classes would
+have a common superclass, <classname>Shape</classname>, to represent features that all three
+shapes have in common. The <classname>Shape</classname> class could include instance
+variables to represent the color, position, and size of a shape, and it could
+include instance methods for changing the values of those properties.
+Changing the color, for example, might involve changing the value of an
+instance variable, and then redrawing the shape in its new color:</p>
+
+<pre>class Shape {
+
+    Color color; // (must be imported from package java.awt)
+                   
+    void setColor(Color newColor) {
+          // Method to change the color of the shape.
+       color = newColor; // change value of instance variable
+       redraw(); // redraw shape, which will appear in new color
+    }
+    
+    void redraw() {
+          // method for drawing the shape
+       ? ? ?  // what commands should go here?
+    }
+
+    . . .          // more instance variables and methods
+ 
+} // end of class Shape</pre>
+
+<p>Now, you might see a problem here with the method <code>redraw()</code>. The
+problem is that each different type of shape is drawn differently. The method
+<code>setColor()</code> can be called for any type of shape. How does the computer
+know which shape to draw when it executes the <code>redraw()</code>? Informally, we
+can answer the question like this: The computer executes <code>redraw()</code> by
+asking the shape to redraw <b>itself</b>. Every shape object knows
+what it has to do to redraw itself.</p>
+
+<p>In practice, this means that each of the specific shape classes has its own
+<code>redraw()</code> method:</p>
+
+<pre>class Rectangle extends Shape {
+   void redraw() {
+      . . .  // commands for drawing a rectangle
+   }
+   . . . // possibly, more methods and variables
+}
+
+class Oval extends Shape {
+   void redraw() {
+      . . .  // commands for drawing an oval
+   }
+   . . . // possibly, more methods and variables
+}
+
+class RoundRect extends Shape {
+   void redraw() {
+      . . .  // commands for drawing a rounded rectangle
+   }
+   . . . // possibly, more methods and variables
+}</pre>
+
+<p>Suppose that <code>someShape</code> is a variable of type <classname>Shape</classname>.   
+Then it could refer to
+an object of any of the types <classname>Rectangle</classname>, <classname>Oval</classname>, or
+<classname>RoundRect</classname>. As a program executes, and the value of <code>someShape</code>
+changes, it could even refer to objects of different types at different times!
+Whenever the statement</p>
+
+<pre>someShape.redraw();</pre>
+
+<np>is executed, the redraw method that is actually called is the one
+appropriate for the type of object to which <code>someShape</code> actually refers.
+There may be no way of telling, from looking at the text of the program, what
+shape this statement will draw, since it depends on the value that
+<code>someShape</code> happens to have when the program is executed. Even more is
+true. Suppose the statement is in a loop and gets executed many times. If the
+value of <code>someShape</code> changes as the loop is executed, it is possible that
+the very same statement "<code>someShape.redraw();</code>" will call different
+methods and draw different shapes as it is executed over and over. We say that
+the <code>redraw()</code> method is <newword>polymorphic</newword>. A
+method is polymorphic if the action performed by the method depends on the
+actual type of the object to which the method is applied. Polymorphism is one
+of the major distinguishing features of object-oriented programming.  This can be
+seen most vividly, perhaps, if we have an array of shapes.  Suppose that
+<code>shapelist</code> is an a variable of type <atype>Shape[]</atype>,
+and that the array has already been created and filled with data.  Some of
+the elements in the array might be <classname>Rectangles</classname>,
+some might be <classname>Ovals</classname>, and some might be <classname>RoundRects</classname>.
+We can draw all the shapes in the array by saying</np>
+
+<pre>for (int i = 0; i &lt; shapelist.length; i++ ) {
+    Shape shape = shapelist[i];
+    shape.redraw();
+}</pre>
+
+<np>As the computer goes through this loop, the statement <code>shape.redraw()</code>
+will sometimes draw a rectangle, sometimes an oval, and sometimes a roundrect,
+depending on the type of object to which array element number <code>i</code> refers.</np>
+
+<p>Perhaps this becomes more understandable if we change our terminology a bit:
+In object-oriented programming, calling a method is often referred to as
+sending a <newword>message</newword> to an object. The object
+responds to the message by executing the appropriate method. The statement
+"<code>someShape.redraw();</code>" is a message to the object referred to by
+<code>someShape</code>. Since that object knows what type of object it is, it knows
+how it should respond to the message. From this point of view, the computer
+always executes "<code>someShape.redraw();</code>" in the same way: by sending a
+message. The response to the message depends, naturally, on who receives it.
+From this point of view, objects are active entities that send and receive
+messages, and polymorphism is a natural, even necessary, part of this view.
+Polymorphism just means that different objects can respond to the same message
+in different ways.</p>
+
+<p> One of the
+most beautiful things about polymorphism is that it lets code that you write do
+things that you didn't even conceive of, at the time you wrote it. Suppose that
+I decide to add beveled rectangles to the types of shapes my program can deal
+with.  A beveled rectangle has a triangle cut off each corner:</p>
+   
+<img width="185" height="220" src="beveled-rects.png" tex="beveled-rects.eps" alt="some examples of beveled rects"
+              texscale="0.6" bordered="yes"/>
+
+   
+<p>To implement beveled rectangles, I can write a new subclass, <classname>BeveledRect</classname>, of
+class <classname>Shape</classname> and give it its own <code>redraw()</code> method.
+Automatically, code that I wrote previously&mdash;such as the statement
+<code>someShape.redraw()</code>&mdash;can now suddenly start drawing beveled
+rectangles, even though the beveled rectangle class didn't exist when I wrote
+the statement!</p>
+
+<break/>
+
+<p>In the statement "<code>someShape.redraw();</code>", the <code>redraw</code> message
+is sent to the object <code>someShape</code>. Look back at the method in the
+<classname>Shape</classname> class for changing the color of a shape:</p>
+
+<pre>void setColor(Color newColor) {
+   color = newColor; // change value of instance variable
+   redraw(); // redraw shape, which will appear in new color
+}</pre>
+
+<np>A <code>redraw</code> message is sent here, but which object is it sent to?
+Well, the <code>setColor</code> method is itself a message that was sent to some
+object. The answer is that the <code>redraw</code> message is sent to that <b>same
+object</b>, the one that received the <code>setColor</code> message. If that object is
+a rectangle, then it contains a <code>redraw()</code> method for drawing rectangles,
+and that is the one that is executed.  If the object is an oval, then it is
+the <code>redraw()</code> method from the <classname>Oval</classname> class. This is what you
+should expect, but it means that the "<code>redraw();</code>" statement in the
+<code>setColor()</code> method does <b>not</b> necessarily call the
+<code>redraw()</code> method in the <classname>Shape</classname> class! The <code>redraw()</code>
+method that is executed could be in any subclass of <classname>Shape</classname>.
+This is just another case of polymorphism.</np>
+
+
+</subsection>
+
+<subsection id="OOP.5.5" title="Abstract Classes">
+
+<p>Whenever a <classname>Rectangle</classname>, <classname>Oval</classname>, 
+or <classname>RoundRect</classname> object
+has to draw itself, it is the <code>redraw()</code> method in the appropriate class
+that is executed. This leaves open the question, What does the
+<code>redraw()</code> method in the <classname>Shape</classname> class do? How should it be
+defined?</p>
+
+<p>The answer may be surprising: We should leave it blank! The fact is that the
+class <classname>Shape</classname> represents the abstract idea of a shape, and there is no
+way to draw such a thing. Only particular, concrete shapes like rectangles and
+ovals can be drawn. So, why should there even be a <code>redraw()</code> method in
+the <classname>Shape</classname> class? Well, it has to be there, or it would be illegal to
+call it in the <code>setColor()</code> method of the <classname>Shape</classname> class, and it
+would be illegal to write "<code>someShape.redraw()</code>;". The compiler would
+complain that <code>someShape</code> is a variable of type <classname>Shape</classname> and
+there's no <code>redraw()</code> method in the <classname>Shape</classname> class.</p>
+
+<p>Nevertheless the version of <code>redraw()</code> in the <classname>Shape</classname> class itself
+will never actually be called. In fact, if you think about it, there can never be any
+reason to construct an actual object of type <classname>Shape</classname>! You can have
+<b>variables</b> of type <classname>Shape</classname>, but the objects they refer
+to will always belong to one of the subclasses of <classname>Shape</classname>. We say that
+<classname>Shape</classname> is an <newword>abstract class</newword>. An abstract
+class is one that is not used to construct objects, but only as a basis for
+making subclasses. An abstract class exists <b>only</b> to express
+the common properties of all its subclasses.  A class that is not abstract
+is said to be <newword>concrete</newword>.  You can create objects belonging to
+a concrete class, but not to an abstract class.  A variable whose type is given
+by an abstract class can only refer to objects that belong to concrete subclasses
+of the abstract class.</p>
+
+<p>Similarly, we say that the <code>redraw()</code> method in class <classname>Shape</classname>
+is an <newword>abstract method</newword>, since it is never meant to
+be called. In fact, there is nothing for it to do&mdash;any actual redrawing is
+done by <code>redraw()</code> methods in the subclasses of <classname>Shape</classname>. The
+<code>redraw()</code> method in <classname>Shape</classname> has to be there. But it is there
+only to tell the computer that <b>all</b> <code>Shapes</code> understand the
+<code>redraw</code> message. As an abstract method, it exists merely to specify the
+common interface of all the actual, concrete versions of <code>redraw()</code> in
+the subclasses. There is no reason for the abstract
+<code>redraw()</code> in class <classname>Shape</classname> to contain any code at all.</p>
+
+<p><classname>Shape</classname> and its <code>redraw()</code> method are semantically abstract.
+You can also tell the computer, syntactically, that they are abstract by adding
+the modifier "<code>abstract</code>" to their definitions. For an abstract method,
+the block of code that gives the implementation of an ordinary method is
+replaced by a semicolon. An implementation must then be provided for the abstract
+method in any concrete subclass of the abstract class. Here's what the
+<classname>Shape</classname> class would look like as an abstract class:</p>
+
+<pre>public abstract class Shape {
+
+    Color color;   // color of shape. 
+                              
+    void setColor(Color newColor) {
+          // method to change the color of the shape
+       color = newColor; // change value of instance variable
+       redraw(); // redraw shape, which will appear in new color
+    }
+    
+    abstract void redraw();
+          // abstract method&mdash;must be defined in 
+          // concrete subclasses
+
+    . . .  // more instance variables and methods
+
+} // end of class Shape</pre>
+
+<p>Once you have declared the class to be <code>abstract</code>, it becomes illegal to try to create actual objects
+of type <classname>Shape</classname>, and the computer will report a syntax error if you try to do
+so.</p>
+
+<p>Note, by the way, that the <classname>Vehicle</classname> class discussed above would probably
+also be an abstract class.  There is no way to own a vehicle as such&mdash;the actual vehicle has
+to be a car or a truck or a motorcycle, or some other "concrete" type of vehicle.</p>
+
+<break/>   
+
+<p>Recall from <localref href="OOP.3.3"/> that a class that is not explicitly declared to be a subclass
+of some other class is automatically made a subclass of the standard class <classname>Object</classname>.
+That is, a class declaration with no "<code>extends</code>" part such as</p>
+
+<pre>public class myClass { . . .</pre>
+
+<np>is exactly equivalent to</np>
+
+<pre>public class myClass extends Object { . . .</pre>
+
+<p>This means that class <classname>Object</classname> is at the top of a huge class hierarchy that
+includes every other class.  (Semantically, <classname>Object</classname> is an abstract class, in fact
+the most abstract class of all.  Curiously, however, it is not declared to be <code>abstract</code>
+syntactically, which means that you can create objects of type <classname>Object</classname>.  
+However, there is not much that you can do with them.)</p>
+
+<p>Since every class is a subclass of <classname>Object</classname>, a variable of type
+<classname>Object</classname> can refer to any object whatsoever, of any type.  
+Similarly, an array of
+type <atype>Object[]</atype> can hold objects of any type. </p>
+
+<break/>
+
+<p>The sample source code file <sourceref href="ShapeDraw.java"/> uses an abstract
+<classname>Shape</classname> class and an array of type <atype>Shape[]</atype>
+to hold a list of shapes. 
+You might want to look at this file, even though you won't be able to
+understand all of it at this time. Even the definitions of the shape classes
+are somewhat different from those that I have described in this section. (For example,
+the <code>draw()</code> method has a parameter of type
+<classname>Graphics</classname>. This parameter is required because drawing in 
+Java requires a graphics context.) I'll return to similar examples in later chapters when you know more
+about GUI programming. However, it would still be worthwhile to look at the definition
+of the <classname>Shape</classname> class and its subclasses in the source code.
+You might also check how an array is used to hold the list of shapes.  Here is a screenshot
+from the program:</p>
+ 
+ <img src="shapedraw-screenshot.png" width="498" height="375" alt="screenshot from ShapeDraw, showing several shapes in its drawing area"
+           tex="shapedraw-screenshot.eps" texscale="0.5"/>
+   
+<p>If you run the <code>ShapeDraw</code> program, 
+you can click one of the buttons along the bottom to add a shape to the picture.
+The new shape will appear in the upper left corner of the drawing area. The color
+of the shape is given by the "pop-up menu" in the lower right. Once a shape is
+on the screen, you can drag it around with the mouse. A shape will maintain the
+same front-to-back order with respect to other shapes on the screen, even while
+you are dragging it. However, you can move a shape out in front of all the
+other shapes if you hold down the shift key as you click on it.</p>
+   
+<p>In the program, the only time when the actual class of a shape is used is
+when that shape is added to the screen. Once the shape has been created, it is
+manipulated entirely as an abstract shape. The routine that implements
+dragging, for example, works with variables of type <classname>Shape</classname> and
+makes no reference to any of its subclasses. As the
+shape is being dragged, the dragging routine just calls the
+shape's draw method each time the shape has to be drawn, so it doesn't
+have to know how to draw the shape or even what type of shape it is. The object
+is responsible for drawing itself. If I wanted to add a new type of shape to
+the program, I would define a new subclass of <classname>Shape</classname>, add another
+button, and program the button to add the correct type of shape
+to the screen. No other changes in the programming would be necessary.</p>
+
+</subsection>
+
+</section>

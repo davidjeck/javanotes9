@@ -1,0 +1,886 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="threads.3" title="Threads and Parallel Processing">
+
+<p><start><b>T</b>he example in</start> <localref href="threads.2.4"/> in
+the previous section used parallel processing to execute pieces of a large task.  On a computer that 
+has several processors, this allows the computation to be
+completed more quickly.  However, the way that the program divided up the
+computation into subtasks was not optimal.  Nor was the way that the threads were managed.
+In this section, we will look at two more versions of that program.  The first
+improves the way the problem is decomposed into subtasks.  The second improves
+the way threads are used.  Along the way, I'll introduce a couple of built-in classes
+that Java provides to support parallel processing.  Later in the section, I will cover
+<code>wait()</code> and <code>notify()</code>, lower-level methods that can be used to
+control parallel processes more directly.</p>
+
+
+<subsection id="threads.3.1" title="Problem Decomposition">
+
+<p>The sample program <sourceref href="MultiprocessingDemo1.java"/> divides the task of
+computing an image into several subtasks and assigns each subtask to a thread. While this
+works OK, there is a problem: Some of the subtasks might take substantially longer than
+others. The program divides the image up into equal parts, but the fact is that some
+parts of the image require more computation than others.  In fact, if you run the program
+with three threads, you'll notice that the middle piece takes longer to compute than the
+top or bottom piece.  In general, when dividing a problem into subproblems, it is very hard
+to predict just how much time it will take to solve each subproblem.  Let's say that
+one particular subproblem happens to take a lot longer than all the others.  The thread
+that computes that subproblem will continue to run for a relatively long time after all 
+the other threads have completed. During that time, only <b>one</b> of the
+computer's processors will be working; the rest will be idle.</p>
+
+<p>As a simple example, suppose that your computer has two processors.  You divide the
+problem into two subproblems and create a thread to run each subproblem  Your hope is
+that by using both processors, you can get your answer in half the time that it would
+take when using one processor.  But if one subproblem takes four times longer than
+the other to solve, then for most of the time, only one processor will be working.
+In this case, you will only have cut the time needed to get your answer by&nbsp;20%.</p>
+
+<p>Even if you manage to divide your problem into subproblems that require equal
+amounts of computation, you still can't depend on all the subproblems requiring
+equal amounts of time to solve.  For example, some of the processors
+on your computer might be busy running other programs.  Or perhaps some of the processors
+are simply slower than others.  (This is not so likely when running your computation on 
+a single computer, but when distributing computation across several networked
+computers, as we will do later in this chapter, differences in processor speed 
+can be a major issue.)</p>
+
+<p>The common technique for dealing with all this is to divide the problem into
+a fairly large number of subproblems&mdash;many more subproblems than there are
+processors.  This means that each processor will have to solve several subproblems. 
+Each time a processor completes one subtask, it is assigned another subtask
+to work on, until all the subtasks have been assigned.   Of course, there will 
+still be variation in the time that the various subtasks require.  One processor
+might complete several subproblems while another works on one particularly difficult
+case.  And a slow or busy processor might complete only one or two subproblems 
+while another processor finishes five or six.  Each processor can work at its
+own pace. As long as the subproblems are fairly small, most of the processors can 
+be kept busy until near the end of the computation.  This is known as <newword>load
+balancing</newword>:  the computational load is balanced among the available processors
+in order to keep them all as busy as possible.  Of course, some processors
+will still finish before others, but not by longer than the time it takes to
+complete the longest subtask.</p>
+
+<p>While the subproblems should be small, they should not be <b>too</b> small.  There
+is some computational overhead involved in creating the subproblems and assigning them
+to processors.  If the subproblems are very small, this overhead can add significantly
+to the total amount of work that has to be done.  In my example program, the task is
+to compute a color for each pixel in an image.  For dividing that task up into subtasks,
+one possibility would be to have each subtask compute just one pixel.  But the subtasks
+produced in that way are probably too small.  So, instead, each subtask in my program
+will compute the colors for one row of pixels.  Since there are several hundred
+rows of pixels in the image, the number of subtasks will be fairly large, while each
+subtask will also be fairly large.  The result is fairly good load balancing, with
+a reasonable amount of overhead.</p> 
+
+<p>Note, by the way, that the problem that we are working on is a very easy one
+for parallel programming.  When we divide the problem of calculating an image into 
+subproblems, all the subproblems are completely independent.  It is possible to
+work on any number of them simultaneously, and they can be done in any order.
+Things get a lot more complicated when some subtasks produce results that
+are required by other subtasks.  In that case, the subtasks are not independent,
+and the order in which the subtasks are performed is important.  Furthermore,
+there has to be some way for results from one subtask to be shared with other
+tasks.  When the subtasks are executed by different threads, this raises all
+the issues involved in controlling access of threads to shared resources.  So,
+in general, decomposing a problem for parallel processing is much more difficult
+than it might appear from our relatively simple example.  But for the most part,
+that's a topic for a course in distributed computing, not an introductory
+programming course.</p>
+
+</subsection>
+
+<subsection id="threads.3.2" title="Thread Pools and Task Queues">
+
+<p>Once we have decided how to decompose a task into subtasks, there is the question of
+how to assign those subtasks to threads.  Typically, in an object-oriented approach,
+each subtask will be represented 
+by an object.  Since a task represents some computation, it's natural for the
+object that represents it to have an instance method that does the computation.
+To execute the task, it is only necessary to call its computation method.  In my
+program, the computation method is called <code>run()</code> and the task object
+implements the standard <classname>Runnable</classname> interface that was discussed in
+<localref href="threads.1.1"/>.  This interface is a natural way to represent computational tasks.
+It's possible to create a new thread for each <classname>Runnable</classname>.
+However, that doesn't really make sense when there are
+many tasks, since there is a significant amount of overhead involved in
+creating each new thread.  A better alternative is to create just a few threads and let
+each thread execute a number of tasks.</p>
+
+<p>The optimal number of threads to use is not entirely clear, and it can depend on
+exactly what problem you are trying to solve.  The goal is to keep all of the computer's
+processors busy.  In the image-computing example, it works well to create one thread 
+for each available processor, but that won't be true for all problems.  In particular,
+if a thread can block for a non-trivial amount of time while waiting for some event or 
+for access to some resource, you want to have extra threads around for the processor to 
+run while other threads are blocked.  We'll encounter exactly that situation when
+we turn to using threads with networking in <localref href="threads.4"/>.</p>
+
+<p>When several threads are available for performing tasks, those threads are called
+a <newword>thread pool</newword>.  Thread pools are used to avoid creating a new
+thread to perform each task.  Instead, when a task needs to be performed, it can
+be assigned to any idle thread in the "pool."</p>
+
+<p>Once all the threads in the thread pool are busy, any additional tasks will have
+to wait until one of the threads becomes idle.  This is a natural application for
+a queue:  Associated with the thread pool is a queue of waiting tasks.  As tasks
+become available, they are added to the queue.  Every time that a thread finishes
+a task, it goes to the queue to get another task to work on.</p>
+
+<p>Note that there is only one task queue for the thread pool.
+All the threads in the pool use the same queue, so the queue is a shared resource.
+As always with shared resources, race conditions are possible and synchronization
+is essential.  Without synchronization, for example, it is possible that two threads trying
+to get items from the queue at the same time will end up retrieving the same item.
+(See if you can spot the race conditions in the <code>dequeue()</code> method in
+<localref href="recursion.3.2"/>.)</p>
+
+<p>Java has a built-in class to solve this problem:
+<classname>ConcurrentLinkedQueue</classname>.  This class and others that can 
+be useful in parallel programming are defined in the package <code>java.util.concurrent</code>.
+It is a parameterized class so that to create a queue that can hold objects
+of type <classname>Runnable</classname>, you can say</p>
+
+<pre>ConcurrentLinkedQueue&lt;Runnable&gt; queue = new ConcurrentLinkedQueue&lt;Runnable&gt;();</pre>
+
+<np>This class represents a queue, implemented as a linked list, in which operations
+on the queue are properly synchronized.  The operations on a <classname>ConcurrentLinkedQueue</classname>
+are not exactly the queue operations that we are used to.  The method for adding a new
+item, <code>x</code>, to the end of <code>queue</code> is <codedef>queue.add(x)</codedef>.  The method for
+removing an item from the front of <code>queue</code> is <codedef>queue.poll()</codedef>.  The
+<code>queue.poll()</code> method returns <code>null</code> if the queue is empty; thus, <code>poll()</code>
+can be used to test whether the queue is empty and to retrieve an item if it is not.  It makes sense
+to do things in this way because testing whether the queue is non-empty before taking
+an item from the queue involves a race condition: Without synchronization, it is possible for another thread
+to remove the last item from the queue between the time when you check that the queue is 
+non-empty and the time when you try to take the item from the queue.  By the time you try
+to get the item, there's nothing there!</np>
+
+<break/>
+
+<p>To use <classname>ConcurrentLinkedQueue</classname> in our image-computing example,
+we can use the queue along with a thread pool.  To begin the computation of the image,
+we create all the tasks that make up the image and add them to the queue.  
+Then, we can create and start the worker threads that will execute the tasks. Each thread will
+run in a loop in which it gets one task from the queue, by calling the queue's <code>poll()</code>
+method, and carries out that task.  Since
+the task is an object of type <classname>Runnable</classname>, it is only necessary
+for the thread to call the task's <code>run()</code> method.  When the <code>poll()</code>
+method returns <code>null</code>, the queue is empty and the thread can terminate because
+all the tasks have been assigned to threads.</p>
+
+<p>The sample program <sourceref href="MultiprocessingDemo2.java"/> implements this idea.
+It uses a queue <code>taskQueue</code> of type <classname>ConcurrentLinkedQueue&lt;Runnable&gt;</classname>
+to hold the tasks.  In addition, in order to allow the user to abort the computation before it
+finishes, it uses the <code>volatile</code> <ptype>boolean</ptype> variable <code>running</code>
+to signal the thread when the user aborts the computation.  The thread should terminate
+when this variable is set to <code>false</code>.  The threads are defined by a nested
+class named <classname>WorkerThread</classname>.  It is quite short and simple to write
+at this point:</p>
+
+
+<pre>private class WorkerThread extends Thread {
+    public void run() {
+        try {
+            while (running) {
+                Runnable task = taskQueue.poll(); // Get a task from the queue.
+                if (task == null)
+                    break; // (because the queue is empty)
+                task.run();  // Execute the task;
+            }
+        }
+        finally {
+            threadFinished(); // Records fact that this thread has terminated.
+        }
+    }
+}</pre>
+
+<p>The program uses a nested class named <code>MandelbrotTask</code> to represent the task
+of computing one row of pixels in the image.  This class implements the <classname>Runnable</classname>
+interface.  Its <code>run()</code> method does the actual work:  Compute the color
+of each pixel, and apply the colors to the image.  Here is what the program does to start the
+computation (with a few details omitted):</p>
+
+<pre>taskQueue = new ConcurrentLinkedQueue&lt;Runnable&gt;(); // Create the queue.
+int height = ... ; // Number of rows in the image.
+for (int row = 0; row &lt; height; row++) {
+    MandelbrotTask task;
+    task = ... ;  // Create a task to compute one row of the image.
+    taskQueue.add(task); // Add the task to the queue.
+}
+
+int threadCount = ... ; // Number of threads in the pool
+workers = new WorkerThread[threadCount];
+running = true;  // Set the signal before starting the threads!
+threadsCompleted = 0;  // Records how many of the threads have terminated.
+for (int i = 0; i &lt; threadCount; i++) {
+    workers[i] = new WorkerThread();
+    try {
+        workers[i].setPriority( Thread.currentThread().getPriority() - 1 );
+    }
+    catch (Exception e) {
+    }
+    workers[i].start();
+}</pre>
+
+<np>Note that it is important that the tasks be added to the queue <b>before</b>
+the threads are started.  The threads see an empty queue as a signal to terminate.
+If the queue is empty when the threads are started, they might see an empty queue
+and terminate immediately after being started, without performing any tasks!</np>
+
+<p>You should try out <code>MultiprocessingDemo2</code>.
+It computes the same image as <code>MultiprocessingDemo1</code>, but the rows of pixels are
+not computed in the same order as in that program (if there is more than one thread).  
+If you look carefully,
+you might see that the rows of pixels are not added to the image in strict order from
+top to bottom.  This is because it is possible for one thread to finish row number
+<code>i+1</code> while another thread is still working on row <code>i</code>, or even
+earlier rows.  (The effect might be more apparent if you use more threads than
+you have processors.  Try it with 20 threads.)</p>
+
+</subsection>
+
+
+
+
+<subsection id="threads.3.3" title="Producer/Consumer and Blocking Queues">
+
+<p><code>MultiprocessingDemo2</code> creates an entirely new thread pool every 
+time it draws an image.  This seems wasteful.  Shouldn't it be possible to create
+one set of threads at the beginning of the program and use them whenever an
+image needs to be computed?  After all, the idea of a thread pool is that the
+threads should sit around and wait for tasks to come along and should execute
+them when they do.  The problem is that, so far, we have no way to make a
+thread <i>wait</i> for a task to come along.  To do that, we will use something
+called a <newword>blocking queue</newword>.</p>
+
+<p>A blocking queue is an implementation of one of the classic patterns in
+parallel processing: the <newword>producer/consumer</newword> pattern.
+This pattern arises when there are one or more "producers" who produce things
+and one or more "consumers" who consume those things.  All the producers and
+consumers should be able to work simultaneously (hence, parallel processing).
+If there are no things ready to be processed, a consumer will have to wait
+until one is produced.  In many applications, producers also have to wait
+sometimes:  If things can only be consumed at a rate of, say, one per minute,
+it doesn't make sense for the producers to produce them indefinitely at a
+rate of two per minute.  That would just lead to an unlimited build-up of
+things waiting to be processed.  Therefore, it's often useful to put a limit
+on the number of things that can be waiting for processing.  When that limit
+is reached, producers should wait before producing more things.</p>
+
+<p>We need a way to get the things from the producers to the consumers.  A queue
+is an obvious answer:  Producers place items into the queue as they
+are produced.  Consumers remove items from the other end of the queue.</p>
+
+<img src="producer-consumer.png" width="499" height="206" alt="producers and consumers connected by a queue" 
+     tex="producer-consumer.eps" texscale="0.6"/>
+
+<p>We are talking parallel processing, so we need a synchronized queue, but
+we need more than that.  When the queue is empty, we need a way to have
+consumers <i>wait</i> until an item appears in the queue.  If the queue
+becomes full, we need a way to have producers <i>wait</i> until a space
+opens up in the queue.  In our application, the producers and consumers are
+threads.  A thread that is suspended, waiting for something to happen, is
+said to be blocked, and the type of queue that we need is called
+a blocking queue.  In a blocking queue, the operation of dequeueing an
+item from the queue can block if the queue is empty.  That is, if a thread
+tries to dequeue an item from an empty queue, the thread will be
+suspended until an item becomes available; at that time, it will wake up,
+retrieve the item, and proceed.  Similarly, if the queue has a limited
+capacity, a producer that tries to enqueue an item can block if there
+is no space in the queue.</p>
+
+<p>Java has two classes that implement blocking queues: <classname>LinkedBlockingQueue</classname>
+and <classname>ArrayBlockingQueue</classname>.  These are parameterized types
+to allow you to specify the type of item that the queue can hold.
+Both classes are defined in the package
+<code>java.util.concurrent</code> and both implement an interface called
+<classname>BlockingQueue</classname>.  If <code>bqueue</code> is a blocking
+queue belonging to one of these classes, then the following operations are
+defined:</p>
+
+<ul>
+<li><codedef>bqueue.take()</codedef> -- Removes an item from the queue and
+returns it.  If the queue is empty when this method is called, the thread
+that called it will block until an item becomes available.  This method 
+throws an <classname>InterruptedException</classname> if the thread is
+interrupted while it is blocked.</li>
+<li><codedef>bqueue.put(item)</codedef> -- Adds the <code>item</code> to the queue.
+If the queue has a limited capacity and is full, the thread that called it
+will block until a space opens up in the queue. This method 
+throws an <classname>InterruptedException</classname> if the thread is
+interrupted while it is blocked.</li>
+<li><codedef>bqueue.add(item)</codedef> -- Adds the <code>item</code> to the queue,
+if space is available.  If the queue has a limited capacity and is full,
+an <classname>IllegalStateException</classname> is thrown.  This method
+does not block.</li>
+<li><codedef>bqueue.clear()</codedef> -- Removes all items from the queue
+and discards them.</li>
+</ul>
+
+<np>Java's blocking queues define many additional methods (for example, 
+<code>bqueue.poll(500)</code> is similar to <code>bqueue.take()</code>,
+except that it will not block for longer than 500 milliseconds), but the
+four listed here are sufficient for our purposes.  Note that I have
+listed two methods for adding items to the queue:  <code>bqueue.put(item)</code>
+blocks if there is not space available in the queue and is most appropriate for use
+with blocking queues that have a limited capacity; <code>bqueue.add(item)</code>
+does not block and is appropriate for use with blocking queues that have an
+unlimited capacity.</np>
+
+<p>An <classname>ArrayBlockingQueue</classname> has a maximum capacity that
+is specified when it is constructed.  For example, to create a blocking
+queue that can hold up to 25  objects of type <classname>ItemType</classname>,
+you could say:</p>
+
+<pre>ArrayBlockingQueue&lt;ItemType&gt; bqueue = new ArrayBlockingQueue&lt;ItemType&gt;(25);</pre>
+
+<np>With this declaration, <code>bqueue.put(item)</code> will block if <code>bqueue</code>
+already contains 25 items, while <code>bqueue.add(item)</code> will throw an exception
+in that case.  Recall that this ensures that items are not produced indefinitely
+at a rate faster than they can be consumed.  A <classname>LinkedBlockingQueue</classname>
+is meant for creating blocking queues with unlimited capacity.  For example,</np>
+
+<pre>LinkedBlockingQueue&lt;ItemType&gt; bqueue = new LinkedBlockingQueue&lt;ItemType&gt;();</pre>
+
+<np>creates a queue with no upper limit on the number of items that it can contain.
+In this case, <code>bqueue.put(item)</code> will never block and <code>bqueue.add(item)</code>
+will never throw an <code>IllegalStateException</code>.  You would use a
+<classname>LinkedBlockingQueue</classname> when you want to avoid blocking,
+and you have some other way of ensuring that the queue will not grow to arbitrary
+size.  For both types of blocking queue, <code>bqueue.take()</code> will block
+if the queue is empty.</np>
+
+<break/>
+
+<p>The sample program <sourceref href="MultiprocessingDemo3.java"/> uses a
+<classname>LinkedBlockingQueue</classname>  in place of the 
+<classname>ConcurrentLinkedQueue</classname> in the previous version,
+<sourceref href="MultiprocessingDemo2.java"/>.  In this example, the queue
+holds tasks, that is, items of type <classname>Runnable</classname>, and
+the queue is declared as an instance variable named <code>taskQueue</code>:
+</p>
+
+<pre>LinkedBlockingQueue&lt;Runnable&gt; taskQueue;</pre>
+
+<np>When the user clicks the "Start" button and it's time to compute
+an image, all of the tasks that make up the computation are put into this
+queue.  This is done by calling <code>taskQueue.add(task)</code> for
+each task.  It's important that this can be done without blocking,
+since the tasks are created in the event-handling thread, and we don't
+want to block that.  The queue cannot grow indefinitely because the program
+only works on one image at a time, and there are only a few hundred tasks
+per image.</np>
+
+<p>Just as in the previous version of the program, worker threads belonging 
+to a thread pool will remove tasks from the queue and carry them out.  However,
+in this case, the threads are created once at the beginning of the program&mdash;actually,
+the first time the "Start" button is pressed&mdash;and the same threads are
+reused for any number of images.  When there are no tasks to execute, the
+task queue is empty and the worker threads will block until tasks become available.
+Each worker thread runs in an infinite loop, processing tasks forever, but it
+will spend a lot of its time blocked, waiting for a task to be added to the 
+queue.  Here is the inner class that defines the worker threads:
+</p>
+
+<pre>/**
+ * This class defines the worker threads that make up the thread pool.
+ * A WorkerThread runs in a loop in which it retrieves a task from the 
+ * taskQueue and calls the run() method in that task.  Note that if
+ * the queue is empty, the thread blocks until a task becomes available
+ * in the queue.  The constructor starts the thread, so there is no
+ * need for the main program to do so.  The thread will run at a priority
+ * that is one less than the priority of the thread that calls the
+ * constructor.
+ * 
+ * A WorkerThread is designed to run in an infinite loop.  It will
+ * end only when the Java virtual machine exits. (This assumes that
+ * the tasks that are executed don't throw exceptions, which is true
+ * in this program.)  The constructor sets the thread to run as
+ * a daemon thread; the Java virtual machine will exit automatically when
+ * the only threads are daemon threads.  (In this program, this is not
+ * necessary since the virtual machine is set to exit when the
+ * window is closed.  In a multi-window program, however, we can't
+ * simply end the program when a window is closed.)
+ */
+private class WorkerThread extends Thread {
+    WorkerThread() {
+        try {
+            setPriority( Thread.currentThread().getPriority() - 1);
+        }
+        catch (Exception e) {
+        }
+        try {
+            setDaemon(true);
+        }
+        catch (Exception e) {
+        }
+        start(); // Thread starts as soon as it is constructed.
+    }
+    public void run() {
+        while (true) {
+            try {
+                Runnable task = taskQueue.take(); // wait for task if necessary
+                task.run();
+            }
+            catch (InterruptedException e) {
+            }
+        }
+    }
+}</pre>
+
+<np>We should look more closely at how the thread pool works.  The worker threads
+are created and started before there is any task to perform.  Each thread
+immediately calls <code>taskQueue.take()</code>.  Since the task queue is empty,
+all the worker threads will block as soon as they are started.  To start the
+computation of an image, the event-handling thread will create tasks and
+add them to the queue.  As soon as this happens, worker threads will wake
+up and start processing tasks, and they will continue doing so until the
+queue is emptied.  (Note that on a multi-processor computer, some worker threads 
+can start processing even while the event thread is still adding tasks to the queue.)
+When the queue is empty, the worker threads will go back to sleep until processing
+starts on the next image.</np>
+
+<break/>
+
+<p>An interesting point in this program is that we want to be
+able to abort the computation before it finishes, but we don't want
+the worker threads to terminate when that happens.  When the user
+clicks the "Abort" button, the program calls <code>taskQueue.clear()</code>,
+which prevents any more tasks from being assigned to worker threads.
+However, some tasks are most likely already being executed when the
+task queue is cleared. Those tasks will complete <b>after</b> the
+computation in which they are subtasks has supposedly been aborted.
+When those subtasks complete, we don't want their output to be
+applied to the image.  It's not a big deal in this program, but
+in more general applications, we don't want output meant for
+a previous computation job to be applied to later jobs.</p>
+
+<p>My solution is to assign a job number to each computation job.  The job number
+of the current job is stored in an instance variable named <code>jobNum</code>,
+and each task object has an instance variable that tells which task that job is
+part of.  When a job ends&mdash;either because the job finishes on its own
+or because the user aborts it&mdash;the value of <code>jobNum</code> is
+incremented.  When a task completes, the job number stored in the
+task object is compared to <code>jobNum</code>.  If they are equal, then the
+task is part of the current job, and its output is applied to the image.
+If they are not equal, then the task was part of a previous job, and its output
+is discarded.</p>
+
+<p>It's important that access to <code>jobNum</code> be properly synchronized.
+Otherwise, one thread might check the job number just as another thread is
+incrementing it, and output meant for an old job might sneak through
+after that job has been aborted.  In the program, all the methods that
+access or change <code>jobNum</code> are synchronized.  You can
+read the <sourceref href="MultiprocessingDemo3.java">source&nbsp;code</sourceref>
+to see how it works.</p>
+
+<break/>
+
+<p>One more point about <code>MultiprocessingDemo3</code>&dots;. I have not provided 
+any way to terminate the worker threads in this program.  They will continue to
+run until the Java Virtual Machine exits.  To allow thread termination before that,
+we could use a <code>volatile</code> signaling variable, <code>running</code>,
+and set its value to <code>false</code> when we want the worker threads to terminate.
+The <code>run()</code> methods for the threads would be replaced by</p>
+
+<pre>public void run() {
+    while ( <newcode>running</newcode> ) {
+       try {
+          Runnable task = taskQueue.take();
+          task.run();
+       }
+       catch (InterruptedException e) {
+       }
+    }
+}</pre>
+
+<np>However, if a thread is blocked in <code>taskQueue.take()</code>, it
+will not see the new value of <code>running</code> until it becomes unblocked.
+To ensure that that happens, it is necessary to call <code>worker.interrupt()</code>
+for each worker thread <code>worker</code>, just after setting
+<code>runner</code> to <code>false</code>.</np>
+
+<p>If a worker thread is executing a task when <code>runner</code> is set to
+<code>false</code>, the thread will not terminate until that task has completed.
+If the tasks are reasonably short, this is not a problem.  If tasks can take longer
+to execute than you are willing to wait for the threads to terminate, then
+each task must also check the value of <code>running</code> periodically and
+exit when that value becomes <code>false</code>.</p>
+
+</subsection>
+
+
+
+<subsection id="threads.3.4" title="Wait and Notify">
+
+<p>To implement a blocking queue, we must be able to make a thread
+block just until some event occurs.   The thread is <i>waiting</i>
+for the event to occur.  Somehow, it must be <i>notified</i>
+when that happens.  There are two threads involved since the
+event that will wake one thread is caused by an action taken
+by another thread, such as adding an item to the queue.</p>
+
+<p>Note that this is not just an issue for blocking queues.
+Whenever one thread produces some sort of result that is needed by
+another thread, that imposes some restriction on the order in which the threads
+can do their computations.  If the second thread gets to the point where it
+needs the result from the first thread, it might have to stop and wait for
+the result to be produced.  Since the second thread can't continue, it might
+as well go to sleep.  But then there has to be some way to notify the second thread
+when the result is ready, so that it can wake up and continue its computation.</p>
+
+<p>Java, of course, has a way to do this kind of "waiting" and "notifying":  It has
+<code>wait()</code> and <code>notify()</code> methods that are defined as
+instance methods in class <classname>Object</classname> and so can be used
+with any object.  These methods are used internally in blocking queues.
+They are fairly low-level, tricky, and error-prone, and you should use
+higher-level control strategies such as blocking queues when possible.
+However, it's nice to know about <code>wait()</code> and <code>notify()</code>
+in case you ever need to use them directly.</p>
+
+<p>The reason why <code>wait()</code> and
+<code>notify()</code> should be associated with objects is not obvious, so
+don't worry about it at this point.  It does, at least, make it possible
+to direct different notifications to different recipients, depending on
+which object's <code>notify()</code> method is called.</p>
+
+<p>The general idea is that when a thread calls a <code>wait()</code> method
+in some object, that thread goes to sleep until the <code>notify()</code> method
+in the <b>same</b> object is called.  It will have to be called, obviously, by
+another thread, since the thread that called <code>wait()</code> is sleeping.
+A typical pattern is that Thread&nbsp;A calls <code>wait()</code> when it
+needs a result from Thread&nbsp;B, but that result is not yet available.  When Thread&nbsp;B
+has the result ready, it calls <code>notify()</code>, which will wake
+Thread&nbsp;A up, if it is waiting, so that it can use the result.  It is not an error to call
+<code>notify()</code> when no one is waiting; it just has no effect.  To implement this,
+Thread&nbsp;A will execute code similar to the following, where <code>obj</code> is
+some object:</p>
+   
+<pre>if ( resultIsAvailable() == false )
+   obj.wait();  // wait for notification that the result is available
+useTheResult();</pre>
+   
+<np>while Thread&nbsp;B does something like:</np>
+   
+<pre>generateTheResult();
+obj.notify();  // send out a notification that the result is available</pre>
+   
+<p>Now, there is a really nasty race condition in this code.  The two threads
+might execute their code in the following order:</p>
+   
+<pre>1.  Thread A checks resultIsAvailable() and finds that the result is not ready,
+        so it decides to execute the obj.wait() statement, but before it does,
+2.  Thread B finishes generating the result and calls obj.notify()
+3.  Thread A calls obj.wait() to wait for notification that the result is ready.</pre>
+   
+<np>In Step 3, Thread A is waiting for a notification that will never come,
+because <code>notify()</code> has already been called in Step&nbsp;2.  This is a kind of
+deadlock that can leave Thread&nbsp;A waiting forever.  Obviously, we need
+some kind of synchronization.  The solution is to enclose both Thread&nbsp;A's
+code and Thread&nbsp;B's code in <code>synchronized</code> statements, and
+it is very natural to synchronize on the same object, <code>obj</code>,
+that is used for the calls to <code>wait()</code> and <code>notify()</code>.
+In fact, since synchronization is almost always needed when
+<code>wait()</code> and <code>notify()</code> are used, Java makes
+it an absolute requirement.  In Java, a thread can legally call
+<code>obj.wait()</code> or <code>obj.notify()</code>
+<b>only</b> if that thread holds the synchronization lock
+associated with the object <code>obj</code>.  If it does not hold that
+lock, then an exception is thrown.  (The exception is of type
+<classname>IllegalMonitorStateException</classname>, which does not
+require mandatory handling and which is typically not caught.)
+One further complication is that the <code>wait()</code> method can throw
+an <classname>InterruptedException</classname> and so should be called in
+a <code>try</code> statement that handles the exception.</np>
+   
+<p>To make things more definite, let's consider how we can get a result that 
+is computed by one thread to another thread that needs the result.  This
+is a simplified producer/consumer problem in which only one item is produced
+and consumed.  Assume that there is a shared variable named <code>sharedResult</code> that is
+used to transfer the result from the producer to the consumer.  When the
+result is ready, the producer sets the variable to a non-null value.
+The consumer can check whether the result is ready by testing whether
+the value of <code>sharedResult</code> is null.  We will use a variable named
+<code>lock</code> for synchronization.  The code for the producer thread
+could have the form:</p>
+   
+<pre>makeResult = generateTheResult();  // Not synchronized!
+synchronized(lock) {
+   sharedResult = makeResult;
+   lock.notify();
+}</pre>
+
+<np>while the consumer would execute code such as:</np>
+   
+<pre>synchronized(lock) {
+   while ( sharedResult == null ) {
+      try {
+         lock.wait();
+      }
+      catch (InterruptedException e) {
+      }
+   }
+   useResult = sharedResult;
+}
+useTheResult(useResult);  // Not synchronized!</pre>
+   
+<p>The calls to <code>generateTheResult()</code> and <code>useTheResult()</code>
+are not synchronized, which allows them to run in parallel with other threads that
+might also synchronize on <code>lock</code>.  Since <code>sharedResult</code>
+is a shared variable, all references to <code>sharedResult</code> should be synchronized,
+so the references to <code>sharedResult</code> must be inside the <code>synchronized</code> statements.
+The goal is to do as little as possible (but not less) in synchronized code segments.</p>
+
+<p>If you are uncommonly alert, you might notice something funny:  <code>lock.wait()</code>
+does not finish until <code>lock.notify()</code> is executed, but since both of these
+methods are called in <code>synchronized</code> statements that synchronize on the same
+object, shouldn't it be impossible for both methods to be running at the same time?
+In fact, <code>lock.wait()</code> is a special case:  When a thread calls
+<code>lock.wait()</code>, it gives up the lock that it holds on the synchronization object, <code>lock</code>.
+This gives another thread a chance to execute the <code>synchronized(lock)</code> block 
+that contains the <code>lock.notify()</code> statement.  After the second thread
+exits from this block, the lock is returned to the consumer thread so that it can continue.</p>
+   
+<p>In the full producer/consumer pattern, multiple results are produced by one or
+more producer threads and are consumed by one or more consumer threads.  Instead of
+having just one <code>sharedResult</code> object, we keep a list of objects that have
+been produced but not yet consumed.  Let's see how this might work in a very
+simple class that implements the three operations on a <classname>LinkedBlockingQueue&lt;Runnable&gt;</classname>
+that are used in <code>MultiprocessingDemo3</code>:</p>
+ 
+   
+<pre>import java.util.LinkedList;
+
+public class MyLinkedBlockingQueue {
+    
+    private LinkedList&lt;Runnable&gt; taskList = new LinkedList&lt;Runnable&gt;();
+    
+    public void clear() {
+        synchronized(taskList) {
+            taskList.clear();
+        }
+    }
+    
+    public void add(Runnable task) {
+        synchronized(taskList) {
+            taskList.addLast(task);
+            taskList.notify();
+        }
+    }
+    
+    public Runnable take() throws InterruptedException {
+        synchronized(taskList) {
+            while (taskList.isEmpty())
+                taskList.wait();
+            return taskList.removeFirst();
+        }
+    }
+
+}</pre>
+
+<np>An object of this class could be used as a direct replacement for the
+<code>taskQueue</code> in <code>MultiprocessingDemo3</code>.</np>
+
+<p>In this class, I have chosen to synchronize on the <code>taskList</code> object,
+but any object could be used.  In fact, I could simply use <code>synchronized</code>
+methods, which is equivalent to synchronizing on <code>this</code>.  (Note that
+you might see a call to <code>wait()</code> or <code>notify()</code> in a
+<code>synchronized</code> instance method, with no reference to the object that is being used.
+Remember that <code>wait()</code> and <code>notify()</code> in that context
+really mean <code>this.wait()</code> and <code>this.notify()</code>.)</p>
+
+<p>By the way, it is essential that the call to <code>taskList.clear()</code> be
+synchronized on the same object, even though it doesn't call <code>wait()</code>
+or <code>notify()</code>.  Otherwise, there is a race condition that can
+occur: The list might be cleared just after the <code>take()</code> method checks 
+that <code>taskList</code> is non-empty and before it removes an item from the
+list.  In that case, the list is empty again by the time <code>taskList.removeFirst()</code>
+is called, resulting in an error.</p>
+   
+<break/>
+
+<p>It is possible for several threads to
+be waiting for notification.  A call to <code>obj.notify()</code> will wake only one
+of the threads that is waiting on <code>obj</code>.  If you want to wake all threads
+that are waiting on <code>obj</code>, you can call <code>obj.notifyAll()</code>.
+<code>obj.notify()</code> works OK in the above example because only consumer threads
+can be blocked.  We only need to wake one consumer thread when a task is added
+to the queue because it doesn't matter which consumer gets the task.  But consider
+a blocking queue with limited capacity, where producers and consumers can both
+block.  When an item is added to the queue, we want to make sure that a consumer
+thread is notified, not just another producer. One solution is
+to call <code>notifyAll()</code> instead of <code>notify()</code>, 
+which will notify all threads including any waiting consumer.</p>
+
+<p>I should also mention a possible confusion about the name of the method <code>obj.notify()</code>.
+This method does <b>not</b> notify <code>obj</code> of anything!  It notifies a
+thread that has called <code>obj.wait()</code> (if there is such a thread).  Similarly,
+in <code>obj.wait()</code>, it's <b>not</b> <code>obj</code> that is waiting for something;
+it's the thread that calls the method.</p>
+
+<p>And
+a final note on <code>wait</code>:  There is another version of <code>wait()</code>
+that takes a number of milliseconds as a parameter.  A thread that calls <code>obj.wait(milliseconds)</code>
+will wait only up to the specified number of milliseconds for a notification.  If a notification
+doesn't occur during that period, the thread will wake up and continue without the notification.
+In practice, this feature is most often used to let a waiting thread wake periodically while it
+is waiting in order to perform some periodic task, such as causing a message "Waiting for
+computation to finish" to blink.</p>
+
+<break/>
+   
+<p>Let's look at an example that uses <code>wait()</code> and <code>notify()</code>
+to allow one thread to control another.  The sample program
+<sourceref href="TowersOfHanoiGUI.java"/> solves the Towers Of Hanoi
+puzzle (<localref href="recursion.1.2"/>), with control buttons that allow the
+user to control the execution of the algorithm.  The user can click a "Next Step" 
+button to execute just one step in the solution,
+which moves a single disk from one pile to another.  Clicking "Run" lets the algorithm 
+run automatically on its own; the text on the button changes from "Run" to "Pause", 
+and clicking "Pause" stops the automatic
+execution. There is also a "Start Over" button that aborts the current solution
+and puts the puzzle back into its initial configuration. Here is a picture of
+the program in the middle of a solution, including the buttons:</p>
+
+<img src="towers-of-hanoi-gui.png" width="430" height="202" alt="Towers of Hanoi"
+      tex="towers-of-hanoi-gui.eps" texscale="0.6"/>
+
+<p>In this program, there are two threads: a thread that runs a recursive algorithm
+to solve the puzzle, and the event-handling thread that reacts to user actions.
+When the user clicks one of the buttons, a method is called in the event-handling
+thread. But it's actually the thread that is running the recursion that has to
+respond by, for example, doing one step of the solution or starting over.
+The event-handling thread has to send some sort of signal to the solution thread.
+This is done by setting the value of a variable that is shared by both threads.
+The variable is named <code>status</code>, and its possible values are the
+constants <code>GO</code>, <code>PAUSE</code>, <code>STEP</code>, and
+<code>RESTART</code>.</p>
+
+<p>When the event-handling thread changes the value 
+of this variable, the solution thread should see the new value and respond.
+When <code>status</code> equals <code>PAUSE</code>, the solution thread is paused, waiting for
+the user to click "Run" or "Next Step".  This is the initial state, when the program
+starts.  If the user clicks "Next Step", the event-handling
+thread sets the value of <code>status</code> to "STEP"; the solution thread should see the new value and
+respond by executing one step of the solution and then resetting <code>status</code>
+to <code>PAUSE</code>.  If the user clicks "Run", <code>status</code> is set to
+<code>GO</code>, which should cause the solution thread to run automatically.
+When the user clicks "Pause" while the solution is running,
+<code>status</code> is reset to <code>PAUSE</code>, and the solution thread should return
+to its paused state.  If the user clicks "Start Over", the event-handling
+thread sets <code>status</code> to <code>RESTART</code>, and the solution thread
+should respond by ending the current recursive solution and restoring the puzzle
+to its initial state.</p>
+
+<p>The main point for us is that when the solution thread is paused, it is
+<i>sleeping</i>.  It won't see a new value for <code>status</code> unless it
+wakes up!  To make that possible, the program uses <code>wait()</code> in
+the solution thread to put that thread to sleep, and it uses
+<code>notify()</code> in the event-handling thread to wake up the
+solution thread whenever it changes the value of <code>status</code>.
+Here is the <code>actionPerformed()</code> method that responds to
+clicks on the buttons.  When the user clicks a button, this method
+changes the value of <code>status</code> and calls <code>notify()</code>
+to wake up the solution thread:</p>
+
+<pre>synchronized public void actionPerformed(ActionEvent evt) {
+    Object source = evt.getSource();
+    if (source == runPauseButton) {  // Toggle between running and paused.
+        if (status == GO) {  // Animation is running.  Pause it.
+            status = PAUSE;
+            nextStepButton.setEnabled(true);  // Enable while paused.
+            runPauseButton.setText("Run");
+        }
+        else {  // Animation is paused.  Start it running.
+            status = GO;
+            nextStepButton.setEnabled(false);  // Disable while running.
+            runPauseButton.setText("Pause");
+        }
+    }
+    else if (source == nextStepButton) {  // Makes animation run one step.
+        status = STEP;
+    }
+    else if (source == startOverButton) { // Restore to initial state.
+        status = RESTART;
+    }
+    notify();  // Wake up the thread so it can see the new status value!
+}</pre>
+
+<np>This method is synchronized to allow the call to <code>notify()</code>.
+Remember that the <code>notify()</code> method in an object can only 
+be called by a thread that holds that object's synchronization lock.
+In this case, the synchronization object is <code>this</code>.
+Synchronization is also necessary because of race conditions that
+arise because the value of <code>status</code> can also be changed
+by the solution thread.</np>
+
+<p>The solution thread calls a method named <code>checkStatus()</code>
+to check the value of <code>status</code>.  This method calls
+<code>wait()</code> if the status is <code>PAUSE</code>, which
+puts the solution thread to sleep until the event-handling
+thread calls <code>notify()</code>.  Note that if the
+status is <code>RESTART</code>, <code>checkStatus()</code> throws
+an <classname>IllegalStateException</classname>:</p>
+
+<pre>synchronized private void checkStatus() {
+    while (status == PAUSE) {
+        try {
+            wait();
+        }
+        catch (InterruptedException e) {
+        }
+    }
+    // At this point, status is RUN, STEP, or RESTART.
+    if (status == RESTART)
+        throw new IllegalStateException("Restart");
+    // At this point, status is RUN or STEP.
+}</pre>
+
+
+<p>The <code>run()</code> method for the solution thread runs in an
+infinite loop in which it sets up the initial state of the puzzle
+and then calls a <code>solve()</code> method to solve the puzzle.
+To implement the wait/notify control strategy,
+<code>run()</code> calls <code>checkStatus()</code> before starting
+the solution, and <code>solve()</code> calls <code>checkStatus()</code>
+after each move.  If <code>checkStatus()</code> throws an
+<classname>IllegalStateException</classname>, the call to <code>solve()</code>
+is terminated early.  (We used the method of throwing an exception to terminate
+a recursive algorithm before, in <localref href="threads.2.2"/>.)
+After the <code>solve()</code> method finishes or is terminated by
+an exception, the <code>run()</code> method returns to the
+beginning of the while loop, where the initial state of the puzzle,
+and of the user interface, is restored:
+</p>
+    
+<pre>public void run() {
+    while (true) {
+        runPauseButton.setText("Run");   // Set user interface to initial state.
+        nextStepButton.setEnabled(true);
+        startOverButton.setEnabled(false);
+        setUpProblem();  // Set up the initial state of the puzzle
+        status = PAUSE;  // Initially, the solution thread is paused.
+        checkStatus(); // Returns only when user has clicked "Run" or "Next Step"
+        startOverButton.setEnabled(true);
+        try {
+            solve(10,0,1,2);  // Move 10 disks from pile 0 to pile 1.
+        }
+        catch (IllegalStateException e) {
+            // Exception was thrown because user clicked "Start Over".
+        }            
+    }
+}</pre>
+
+<p>You can check the full <sourceref href="TowersOfHanoiGUI.java">source code</sourceref>
+to see how this all fits into the complete program.  If you want to learn how
+to use <code>wait()</code> and <code>notify()</code> directly, understanding
+this example is a good place to start!</p>
+
+</subsection>
+
+
+
+</section>

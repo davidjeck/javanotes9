@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="robustness.3" title="Exceptions and try..catch">
+   
+<p><start><big>G</big>etting a program to work</start> under ideal circumstances
+is usually a lot easier than making the program <newword>robust</newword>. 
+A robust program can survive unusual or "exceptional"
+circumstances without crashing. One approach to writing robust programs is to
+anticipate the problems that might arise and to include tests in the program
+for each possible problem. For example, a program will crash if it tries to use
+an array element <code>A[i]</code>, when <code>i</code> is not within the declared
+range of indices for the array <code>A</code>. A robust program must anticipate the
+possibility of a bad index and guard against it.  One way to do this is to
+write the program in a way that ensures (as a postcondition of the code that
+precedes the array reference) that the index is in the legal range.
+Another way is to test whether the index value is legal before using it in the array.
+This could be done with an <code>if</code> statement:</p>
+
+<pre>if (i &lt; 0 || i &gt;= A.length) {
+   ...  // Do something to handle the out-of-range index, i
+}
+else {
+   ...  // Process the array element, A[i]
+}</pre>
+
+<np>There are some problems with this approach. It is difficult and sometimes
+impossible to anticipate all the possible things that might go wrong. It's not
+always clear what to do when an error is detected. Furthermore, trying to
+anticipate all the possible problems can turn what would otherwise be a
+straightforward program into a messy tangle of <code>if</code> statements.</np>
+   
+<subsection id="robustness.3.1" title="Exceptions and Exception Classes">
+
+<p>We have already seen in <localref href="control.7"/>
+that Java provides a neater, more structured alternative
+technique for dealing with errors that can occur while a program is running. The
+technique is referred to as <newword>exception handling</newword>.  The
+word "exception" is meant to be more general than "error." It includes any
+circumstance that arises as the program is executed which is meant to be
+treated as an exception to the normal flow of control of the program. An
+exception might be an error, or it might just be a special case that you would
+rather not have clutter up your elegant algorithm.</p>
+
+<p>When an exception occurs during the execution of a program, we say that the
+exception is <newword>thrown</newword>. When this happens, the normal
+flow of the program is thrown off-track, and the program is in danger of
+crashing. However, the crash can be avoided if the exception is 
+<newword>caught</newword> and handled in some way.  An exception can be thrown in
+one part of a program and caught in a different part. An exception that is not
+caught will generally cause the program to crash. (More exactly, the thread
+that throws the exception will crash. In a multithreaded program, it is
+possible for other threads to continue even after one crashes.  We will
+cover threads in <localref href="threads"/>. In particular, GUI
+programs are multithreaded, and parts of the program might continue to
+function even while other parts are non-functional because of exceptions.)</p>
+
+<p>By the way, since Java programs are executed by a Java interpreter, having a
+program crash simply means that it terminates abnormally and prematurely. It
+doesn't mean that the Java interpreter will crash. In effect, the interpreter
+catches any exceptions that are not caught by the program. The interpreter
+responds by terminating the program. In many other programming languages, a
+crashed program will sometimes crash the entire system and freeze the computer
+until it is restarted. With Java, such system crashes should be impossible&mdash;which 
+means that when they happen, you have the satisfaction of blaming the
+system rather than your own program.</p>
+
+<p>Exceptions were introduced in <localref href="control.7"/>, along with the
+<code>try..catch</code> statement, which is used to catch and handle exceptions.
+However, that section did not cover the complete syntax of <code>try..catch</code>
+or the full complexity of exceptions.  In this section, we cover these topics in
+full detail.</p>
+   
+<break/>
+   
+<p>When an exception occurs, the thing that is actually "thrown" is an object.
+This object can carry information (in its instance variables) from the point
+where the exception occurs to the point where it is caught and handled. This
+information always includes the <newword>subroutine call stack</newword>, 
+which is a list of the subroutines that were being executed when
+the exception was thrown. (Since one subroutine can call another, several
+subroutines can be active at the same time.) Typically, an exception object
+also includes an error message describing what happened to cause the exception,
+and it can contain other data as well.   All exception objects must belong to
+a subclass of the standard class <code>java.lang.Throwable</code>. 
+In general, each different type of exception is represented by
+its own subclass of <classname>Throwable</classname>, and these subclasses
+are arranged in a fairly complex class hierarchy that shows the relationship
+among various types of exception.
+<classname>Throwable</classname> has two direct
+subclasses, <classname>Error</classname> and <classname>Exception</classname>. 
+These two subclasses in turn
+have many other predefined subclasses. In addition, a programmer can create new
+exception classes to represent new types of exception.</p>
+
+<p>Most of the subclasses of the class <classname>Error</classname> represent serious errors
+within the Java virtual machine that should ordinarily cause program
+termination because there is no reasonable way to handle them. In general, you should not
+try to catch and handle such errors.  An example is a
+<classname>ClassFormatError</classname>, which occurs when the Java virtual machine finds
+some kind of illegal data in a file that is supposed to contain a compiled Java
+class. If that class was being loaded as part of the program, then there is
+really no way for the program to proceed.</p>
+
+<p>On the other hand, subclasses of the class <classname>Exception</classname> represent
+exceptions that are meant to be caught. In many cases, these are exceptions
+that might naturally be called "errors," but they are errors in the program or
+in input data that a programmer can anticipate and possibly respond to in some
+reasonable way. (However, you should avoid the temptation of saying, "Well,
+I'll just put a thing here to catch all the errors that might occur, so my
+program won't crash." If you don't have a reasonable way to respond to the
+error, it's best just to let the program crash, because trying to go on
+will probably only lead to worse things down the road&mdash;in the worst case, a
+program that gives an incorrect answer without giving you any indication that
+the answer might be wrong!)</p>
+
+<p>The class <classname>Exception</classname> has its own subclass,
+<classname>RuntimeException</classname>. This class groups together many common exceptions,
+including all those that have been covered in previous sections.  For example,
+<classname>IllegalArgumentException</classname> and <classname>NullPointerException</classname>
+are subclasses of <classname>RuntimeException</classname>.
+A <classname>RuntimeException</classname> generally
+indicates a bug in the program, which the programmer should fix.
+<classname>RuntimeExceptions</classname> and <classname>Errors</classname> share the property that a
+program can simply ignore the possibility that they might occur. ("Ignoring"
+here means that you are content to let your program crash if the exception
+occurs.) For example, a program does this every time it uses an array reference
+like <code>A[i]</code> without making arrangements to catch a possible
+<classname>ArrayIndexOutOfBoundsException</classname>. For all other exception classes
+besides <classname>Error</classname>, <classname>RuntimeException</classname>, and their subclasses,
+exception-handling is "mandatory" in a sense that I'll discuss below.</p>
+
+<p>The following diagram is a class hierarchy showing the class
+<code>Throwable</code> and just a few of its subclasses. Classes that require
+mandatory exception-handling are shown in red:</p>
+
+<img src="exception-hierarchy.png" width="561" height="347" tex="exception-hierarchy.eps" texscale="0.6"
+   alt="Partial class hierarchy for Throwable objects" bordered="true" />
+   
+<p>The class <classname>Throwable</classname> includes several instance methods that can
+be used with any exception object.  If <code>e</code> is of type <classname>Throwable</classname>
+(or one of its subclasses), then <code>e.getMessage()</code> is a function that returns a
+<classname>String</classname> that describes the exception.  The function <code>e.toString()</code>,
+which is used by the system whenever it needs a string representation of the object,
+returns a <classname>String</classname> that contains the name of the class to which the
+exception belongs as well as the same string that would be returned by <code>e.getMessage()</code>.
+And the method <code>e.printStackTrace()</code> writes a stack trace to standard output that tells
+which subroutines were active when the exception occurred.
+A stack trace can be very useful when you
+are trying to determine the cause of the problem.  (Note that if an exception is <b>not</b>
+caught by the program, then the default response to the exception  prints the stack trace to standard output.)</p>
+
+</subsection>
+   
+<subsection id="robustness.3.2" title="The try Statement">
+   
+<p>To catch exceptions in a Java program, you need a <code>try</code> statement.
+We have been using such statements since <localref href="control.7"/>, but the
+full syntax of the <code>try</code> statement is more complicated than what
+was presented there.  The <code>try</code> statements that we have used so
+far had a syntax similar to the following example:</p>
+
+<pre>try {
+    double determinant = M[0][0]*M[1][1] - M[0][1]*M[1][0];
+    System.out.println("The determinant of M is " + determinant);
+}
+catch ( ArrayIndexOutOfBoundsException e ) {
+   System.out.println("M is the wrong size to have a determinant.");
+   e.printStackTrace();
+}</pre>
+
+<np>Here, the computer tries to execute the block of statements following the word
+"<code>try</code>". If no exception occurs during the execution of this block, then
+the "<code>catch</code>" part of the statement is simply ignored. However, if an
+exception of type
+<classname>ArrayIndexOutOfBoundsException</classname> occurs, then the computer jumps
+immediately to the <code>catch</code> clause of the <code>try</code> statement.
+This block of statements is said to be an <newword>exception handler</newword> for
+<classname>ArrayIndexOutOfBoundsException</classname>. By handling the exception in this way,
+you prevent it from crashing the program.  Before the body of the <code>catch</code> clause
+is executed, the object that represents the exception is assigned to the variable <code>e</code>,
+which is used in this example to print a stack trace.</np>
+   
+<p>However, the full syntax of the <code>try</code> statement has many options.
+It will take a while to go through them.  For one thing, a <code>try..catch</code>
+statement can have more than one
+<code>catch</code> clause.  This makes it possible to catch several different types
+of exception with one <code>try</code> statement.  In the above example, in addition
+to the possible <classname>ArrayIndexOutOfBoundsException</classname>, there is a
+possible <classname>NullPointerException</classname> which will occur if the value
+of <code>M</code> is <code>null</code>.  We can handle both possible exceptions by
+adding a second <code>catch</code> clause to the <code>try</code> statement:</p>
+
+<pre>try {
+    double determinant = M[0][0]*M[1][1] - M[0][1]*M[1][0];
+    System.out.println("The determinant of M is " + determinant);
+}
+catch ( ArrayIndexOutOfBoundsException e ) {
+   System.out.println("M is the wrong size to have a determinant.");
+}
+catch ( NullPointerException e ) {
+   System.out.print("Programming error!  M doesn't exist." + );
+}</pre>
+   
+<p>Here, the computer tries to execute the statements in the <code>try</code> clause.
+If no error occurs, both of the <code>catch</code> clauses are skipped.  If an
+<classname>ArrayIndexOutOfBoundsException</classname> occurs, the computer executes
+the body of the first <code>catch</code> clause and skips the second one.  If a
+<classname>NullPointerException</classname> occurs, it jumps to the second
+<code>catch</code> clause and executes that.</p>
+
+<p>Note that both <classname>ArrayIndexOutOfBoundsException</classname> and
+<classname>NullPointerException</classname> are subclasses of <classname>RuntimeException</classname>. It's
+possible to catch all <classname>RuntimeExceptions</classname> with a single <code>catch</code>
+clause. For example:</p>
+
+<pre>try {
+    double determinant = M[0][0]*M[1][1] - M[0][1]*M[1][0];
+    System.out.println("The determinant of M is " + determinant);
+}
+catch ( RuntimeException err ) {
+   System.out.println("Sorry, an error has occurred.");
+   System.out.println("The error was: " + err);
+}</pre>
+
+<np>The <code>catch</code> clause in this <code>try</code> statement will catch
+any exception belonging to class <classname>RuntimeException</classname> or to
+any of its subclasses.  This shows why exception classes are organized into a
+class hierarchy. It allows you the option of casting your net narrowly to catch
+only a specific type of exception. Or you can cast your net widely to catch a
+wide class of exceptions.  Because of subclassing, when there are multiple <code>catch</code> clauses
+in a <code>try</code> statement, it is possible that a given exception might
+match several of those <code>catch</code> clauses.  For example, an exception of
+type <classname>NullPointerException</classname> would match <code>catch</code>
+clauses for <classname>NullPointerException</classname>, <classname>RuntimeException</classname>,
+<classname>Exception</classname>, or <classname>Throwable</classname>.  In this
+case, only the <b>first</b> <code>catch</code> clause that matches the exception
+is executed.</np>
+
+<p>Of course, catching <classname>RuntimeException</classname> would catch many more
+types of exception than the two that we are interested in.  It is possible to
+combine several specific exception types in a single <code>catch</code> clause.
+For example,</p>
+
+<pre>try {
+    double determinant = M[0][0]*M[1][1] - M[0][1]*M[1][0];
+    System.out.println("The determinant of M is " + determinant);
+}
+catch ( <newcode>NullPointerException</newcode> | <newcode>ArrayIndexOutOfBoundsException</newcode> err ) {
+   System.out.println("Sorry, an error has occurred.");
+   System.out.println("The error was: " + err);
+}</pre>
+
+<np>Here, the two exception types are combined with a&nbsp;"<code>|</code>", the vertical line
+character that is also used in the boolean <b>or</b> operator.  This example
+will catch errors of type <classname>NullPointerException</classname>
+or <classname>ArrayIndexOutOfBoundsException</classname>, and no other types.</np>
+
+<p>The example I've been using here is not realistic, because you are not very
+likely to use exception-handling to guard against null pointers and bad array
+indices. This is a case where careful programming is better than exception
+handling: Just be sure that your program assigns a reasonable,
+non-<code>null</code> value to the array <code>M</code>. You would certainly resent it
+if the designers of Java forced you to set up a <code>try..catch</code>
+statement every time you wanted to use an array! This is why handling of
+potential <classname>RuntimeExceptions</classname> is not mandatory. There are just too many
+things that might go wrong! (This also shows that exception-handling does not
+solve the problem of program robustness. It just gives you a tool that will in
+many cases let you approach the problem in a more organized way.)</p>
+   
+<break/>
+   
+<p>I have still not completely specified the syntax of the <code>try</code> statement.
+The next variation is the possibility of a <newword>finally clause</newword>
+at the end of a <code>try</code> statement.  With this addition, syntax of the <code>try</code>
+statement can be described as:</p>
+
+<pre>try {
+   <bnf>statements</bnf>
+}
+<bnf>optional-catch-clauses</bnf>
+<bnf>optional-finally-clause</bnf></pre>
+
+<np>Note that the <code>catch</code> clauses are also listed as optional.
+The <code>try</code> statement can include zero or more <code>catch</code> clauses and,
+optionally, a <code>finally</code> clause.  The <code>try</code> statement <b>must</b> include
+one or the other.  That is, a <code>try</code> statement can have
+either a <code>finally</code> clause, or one or more <code>catch</code> clauses, or both.  The
+syntax for a <code>catch</code> clause is</np>
+
+<pre>catch ( <bnf>exception-class-names</bnf> <bnf>variable-name</bnf> ) {
+   <bnf>statements</bnf>
+}</pre>
+
+<np>where <bnf>exception-class-names</bnf> can be a single exception class or several classes separated
+by&nbsp;"<code>|</code>".
+The syntax for a <code>finally</code> clause is</np>
+
+<pre>finally {
+   <bnf>statements</bnf>
+}</pre>
+
+<p>The semantics of the <code>finally</code> clause is that the block of statements
+in the <code>finally</code> clause is guaranteed to be executed as the last step in
+the execution of the try statement, whether or not any exception occurs and
+whether or not any exception that does occur is caught and handled. The
+<code>finally</code> clause is meant for doing essential cleanup that under no
+circumstances should be omitted.  One example of this type of cleanup is
+closing a network connection.  Although you don't yet know enough about networking
+to look at the actual programming in this case, we can consider some pseudocode:</p>
+   
+<pre>try {
+   open a network connection
+   communicate over the connection
+}
+catch ( IOException e ) {
+   report the error
+}
+finally {
+   if the connection was successfully opened
+      close the connection
+}</pre>
+   
+<np>The <code>finally</code> clause
+ensures that the network connection will definitely be closed, whether or
+not an error occurs during the communication.  The pseudocode in this
+example follows a general pattern that can be used to robustly obtain a resource, 
+use the resource, and then release the resource.</np>
+
+<break/>
+
+<p>The pattern of obtaining a resource, then using the resource, and then releasing
+the resource is very common.  Note that the resource can only be released if no error occurred
+while obtaining it.  And, if it was successfully obtained, then it should be
+closed whether or not an error occurs while using it.  This pattern is so common
+that it leads to one last option in the <code>try</code> statement syntax.
+With this option, you only need code to obtain the resource, and you don't need
+to worry about releasing it.  That will happen automatically at the end of the
+<code>try</code> statement.</p>
+
+<p>In order for this to work, the resource must be represented by an object that
+implements an interface named <classname>AutoCloseable</classname>, which defines
+a single method named <code>close()</code>, with no parameters.  Standard Java
+classes that represent things like files and network connections already implement
+<classname>AutoClosable</classname>.  So does the <classname>Scanner</classname>
+class, which was introduced in <localref href="basics.4.6"/>.  In that section, 
+I showed how to use a Scanner to read from <code>System.in</code>.  Although
+I didn't do it in that section, it's considered good form to close a Scanner
+after using it.  Here is an example that uses the resource pattern in a 
+<code>try</code> statement to make sure that the Scanner is closed automatically:</p>
+
+<pre>try( Scanner in = new Scanner(System.in) ) {
+    // Use the Scanner to read from standard input
+}
+catch (Exception e) {
+    // ... some error occurred while using the Scanner
+}</pre>
+
+<np>The statement that allocates the resource goes in parentheses after
+the word "try".  The statement must have the form of a variable declaration
+that includes an initialization of the variable.  The variable is
+local to the <code>try</code> statement.  (You can actually declare several
+variables in the parentheses, separated by semicolons.)  In this 
+example, we can be sure that <code>in.close()</code> will definitely be
+called by the system at the end of the <code>try</code> statement, as long
+as the Scanner was successfully initialized.</np>
+
+<p>This is all getting quite complicated, and I won't continue the discussion
+here.  The sample program <sourceref href="TryStatementDemo.java"/> demonstrates
+a <code>try</code> statement with all its options, and it includes a lot of comments
+to help you understand what can happen when you run the program.</p>
+
+
+
+</subsection>
+   
+<subsection id="robustness.3.3" title="Throwing Exceptions">
+
+<p>There are times when it makes sense for a program to deliberately throw an
+exception. This is the case when the program discovers some sort of exceptional
+or error condition, but there is no reasonable way to handle the error at the
+point where the problem is discovered. The program can throw an exception in
+the hope that some other part of the program will catch and handle the
+exception.  This can be done with a <newword>throw statement</newword>.
+You have already seen an example of this in <localref href="subroutines.3.6"/>.
+In this section, we cover the <code>throw</code> statement more fully.
+The syntax of the <code>throw</code> statement is:</p>
+
+<pre>throw  <bnf>exception-object</bnf> ;</pre>
+
+<np>The <bnf>exception-object</bnf> must be an object
+belonging to one of the subclasses of <code>Throwable</code>. Usually, it will in
+fact belong to one of the subclasses of <code>Exception</code>. In most cases, it
+will be a newly constructed object created with the <code>new</code> operator. For
+example:</np>
+
+<pre>throw new ArithmeticException("Division by zero");</pre>
+
+<np>The parameter in the constructor becomes the error message in the exception
+object; if <code>e</code> refers to the object, the error message can be retrieved
+by calling <code>e.getMessage()</code>.
+(You might find this example a bit odd, because you might expect the
+system itself to throw an <classname>ArithmeticException</classname> when an attempt is made
+to divide by zero. So why should a programmer bother to throw the exception?
+Recall that if the numbers that are being divided are of
+type <ptype>int</ptype>, then division by zero will indeed throw an
+<classname>ArithmeticException</classname>. However, no arithmetic operations with
+floating-point numbers will ever produce an exception. Instead, the special
+value <code>Double.NaN</code> is used to represent the result of an illegal
+operation.  In some situations, you might prefer to throw an 
+<classname>ArithmeticException</classname> when a real number is divided by zero.)</np>
+
+<p>An exception can be thrown either by the system or by a <code>throw</code>
+statement. The exception is processed in exactly the same way in either case.
+Suppose that the exception is thrown inside a <code>try</code> statement. If that
+<code>try</code> statement has a <code>catch</code> clause that handles that type of
+exception, then the computer jumps to the <code>catch</code> clause and executes
+it. The exception has been <newword>handled</newword>. After handling
+the exception, the computer executes the <code>finally</code> clause of the
+<code>try</code> statement, if there is one. It then continues normally with the
+rest of the program, which follows the <code>try</code> statement. If the exception
+is not immediately caught and handled, the processing of the exception will
+continue.</p>
+
+<p>When an exception is thrown during the execution of a subroutine and the
+exception is not handled in the same subroutine, then that subroutine is
+terminated (after the execution of any pending <code>finally</code> clauses). Then
+the routine that called that subroutine gets a chance to handle the exception.
+That is, if the subroutine was called inside a <code>try</code> statement that has
+an appropriate <code>catch</code> clause, then <b>that</b> <code>catch</code> clause will be
+executed and the program will continue on normally from there. Again, if the second
+routine does not handle the exception, then it also is terminated and the
+routine that called <b>it</b> (if any) gets the next shot at the exception. The
+exception will crash the program only if it passes up through the entire chain
+of subroutine calls without being handled.  (In fact, even this is not quite true:
+In a multithreaded program, only the thread in which the exception occurred is terminated.)</p>
+
+<p>A subroutine that might generate an exception can announce this fact by
+adding a clause "<code>throws</code> <bnf>exception-class-name</bnf>" 
+to the header of the routine. For example:</p>
+
+<pre>/**
+ * Returns the larger of the two roots of the quadratic equation
+ * A*x*x + B*x + C = 0, provided it has any roots.  If A == 0 or
+ * if the discriminant, B*B - 4*A*C, is negative, then an exception
+ * of type IllegalArgumentException is thrown.
+ */
+static public double root( double A, double B, double C ) 
+                              <newcode>throws IllegalArgumentException</newcode> {
+    if (A == 0) {
+      throw new IllegalArgumentException("A can't be zero.");
+    }
+    else {
+       double disc = B*B - 4*A*C;
+       if (disc &lt; 0)
+          throw new IllegalArgumentException("Discriminant &lt; zero.");
+       return  (-B + Math.sqrt(disc)) / (2*A);
+    }
+}</pre>
+
+<p>As discussed in the <localref href="robustness.2">previous section</localref>, 
+the computation
+in this subroutine has the preconditions that <code>A&nbsp;!=&nbsp;0</code> and <code>B*B-4*A*C
+&gt;=&nbsp;0</code>. The subroutine throws an exception of type
+<classname>IllegalArgumentException</classname> when either of these preconditions is
+violated. When an illegal condition is found in a subroutine, throwing an
+exception is often a reasonable response.  If the program that called the
+subroutine knows some good way to handle the error, it can catch the exception.
+If not, the program will crash&mdash;and the programmer will know that the program
+needs to be fixed.</p>
+   
+<p>A <code>throws</code> clause in a subroutine heading can declare several different
+types of exception, separated by commas.  For example:</p>
+   
+<pre>void processArray(int[] A) throws NullPointerException, 
+                                         ArrayIndexOutOfBoundsException { ...</pre>
+
+</subsection>
+
+<subsection id="robustness.3.4" title="Mandatory Exception Handling">
+
+<p>In the preceding example, declaring that the subroutine <code>root()</code> can
+throw an <classname>IllegalArgumentException</classname> is just a courtesy to potential
+readers of this routine. This is because handling of
+<classname>IllegalArgumentExceptions</classname> is not "mandatory." A routine can throw an
+<classname>IllegalArgumentException</classname> without announcing the possibility. And a
+program that calls that routine is free either to catch or to ignore the
+exception, just as a programmer can choose either to catch or to ignore an
+exception of type <classname>NullPointerException</classname>.</p>
+
+<p>For those exception classes that require mandatory handling, the situation
+is different. If a subroutine can throw such an exception, that fact
+<b>must</b> be announced in a <code>throws</code> clause in the routine definition.
+Failing to do so is a syntax error that will be reported by the compiler.
+Exceptions that require mandatory handling are called <newword>checked exceptions</newword>.
+The compiler will check that such exceptions are handled by the program.</p>
+
+<p>Suppose that some statement in the body of a subroutine can generate a
+checked exception, one that requires mandatory handling. The statement could be a
+<code>throw</code> statement, which throws the exception directly, or it could be a
+call to a subroutine that can throw the exception. In either case, the
+exception <b>must</b> be handled. This can be done in one of two ways: The first way
+is to place the statement in a <code>try</code> statement that has a <code>catch</code>
+clause that handles the exception; in this case, the exception is handled within the
+subroutine, so that no caller of the subroutine can ever see the exception.
+The second way is to declare that the subroutine can throw the exception. This is done by
+adding a "<code>throws</code>" clause to the subroutine heading, which alerts any callers
+to the possibility that the exception might be generated when the subroutine is executed.
+The caller will, in turn, be forced either to handle the exception in a <code>try</code>
+statement or to declare the exception in a <code>throws</code> clause in its own
+header.</p>
+
+<p>Exception-handling is mandatory for any exception class that is <b>not</b> a
+subclass of either <classname>Error</classname> or <classname>RuntimeException</classname>. 
+These checked exceptions generally represent conditions that are outside the
+control of the programmer. For example, they might represent bad input or an
+illegal action taken by the user.  There is no way to <b>avoid</b> such errors,
+so a robust program has to be prepared to handle them.  The design of Java makes it 
+impossible for programmers to ignore the possibility of such errors.</p>
+
+<p>Among the checked exceptions are several that can
+occur when using Java's input/output routines. This means that you can't even
+use these routines unless you understand something about exception-handling.
+<localref href="IO"/> deals with input/output and uses checked exceptions
+extensively.</p>
+   
+</subsection>
+   
+<subsection id="robustness.3.5" title="Programming with Exceptions">
+   
+<p>Exceptions can be used to help write robust
+programs. They provide an organized and structured approach to robustness.
+Without exceptions, a program can become cluttered with <code>if</code> statements
+that test for various possible error conditions. With exceptions, it becomes
+possible to write a clean implementation of an algorithm that will handle all
+the normal cases. The exceptional cases can be handled elsewhere, in a
+<code>catch</code> clause of a <code>try</code> statement.</p>
+
+<p>When a program encounters an exceptional condition and has no way of
+handling it immediately, the program can throw an exception. In some cases, it
+makes sense to throw an exception belonging to one of Java's predefined
+classes, such as <classname>IllegalArgumentException</classname> or <classname>IOException</classname>.
+However, if there is no standard class that adequately represents the
+exceptional condition, the programmer can define a new exception class. The new
+class must extend the standard class <classname>Throwable</classname> or one of its
+subclasses. In general, if the programmer does <b>not</b> want to require
+mandatory exception handling,
+the new class will extend <classname>RuntimeException</classname> (or
+one of its subclasses).  To create a new checked exception class, which <b>does</b> require
+mandatory handling, the programmer can extend one of the other subclasses of
+<classname>Exception</classname> or can extend <classname>Exception</classname> itself.</p>
+
+<p>Here, for example, is a class that extends <classname>Exception</classname>, and therefore
+requires mandatory exception handling when it is used:</p>
+
+<pre>public class ParseError extends Exception {
+   public ParseError(String message) {
+         // Create a ParseError object containing
+         // the given message as its error message.
+      super(message);
+   }
+}</pre>
+
+<np>The class contains only a constructor that makes it possible to create a
+<classname>ParseError</classname> object containing a given error message. (The statement
+"<code>super(message)</code>" calls a constructor in the superclass,
+<classname>Exception</classname>. See <localref href="OOP.6.3"/>.) Of course the
+class inherits the <code>getMessage()</code> and <code>printStackTrace()</code>
+routines from its superclass. If <code>e</code> refers to an object of type
+<classname>ParseError</classname>, then the function call <code>e.getMessage()</code> will
+retrieve the error message that was specified in the constructor. But the main
+point of the <classname>ParseError</classname> class is simply to exist. When an object of
+type <classname>ParseError</classname> is thrown, it indicates that a certain type of error
+has occurred. (<newword>Parsing</newword>, by the way, refers to
+figuring out the syntax of a string. A <classname>ParseError</classname> would indicate,
+presumably, that some string that is being processed by the program does not have the
+expected form.)</np>
+
+<p>A <code>throw</code> statement can be used in a program to throw an error of
+type <classname>ParseError</classname>. The constructor for the <classname>ParseError</classname> object
+must specify an error message. For example:</p>
+
+<pre>throw new ParseError("Encountered an illegal negative number.");</pre>
+
+<np>or</np>
+
+<pre>throw new ParseError("The word '" + word 
+                               + "' is not a valid file name.");</pre>
+
+<p>Since <classname>ParseError</classname> is defined as a subclass of <classname>Exception</classname>,
+it is a checked exception.
+If the <code>throw</code> statement does not occur in a <code>try</code> statement
+that catches the error, then the subroutine that contains the <code>throw</code>
+must declare that it can throw a <classname>ParseError</classname> by
+adding the clause "<code>throws ParseError</code>" to the subroutine heading. For
+example,</p>
+
+<pre>void getUserData() throws ParseError {
+   . . .
+}</pre>
+
+<np>This would not be required if <classname>ParseError</classname> were defined as a subclass
+of <classname>RuntimeException</classname> instead of <classname>Exception</classname>, since in that case
+<classname>ParseErrors</classname> would not be checked exceptions.</np>
+
+<p>A routine that wants to handle <classname>ParseErrors</classname> can use a <code>try</code>
+statement with a <code>catch</code> clause that catches <classname>ParseErrors</classname>. For
+example:</p>
+
+<pre>try {
+   getUserData();
+   processUserData();
+}
+catch (ParseError pe) {
+   . . .  // Handle the error
+}</pre>
+
+<np>Note that since <classname>ParseError</classname> is a subclass of <classname>Exception</classname>, a
+<code>catch</code> clause of the form "<code>catch (Exception e)</code>" would also
+catch <classname>ParseErrors</classname>, along with any other object of type
+<classname>Exception</classname>.</np>
+
+<p>Sometimes, it's useful to store extra data in an exception object. For
+example,</p>
+
+<pre>class ShipDestroyed extends RuntimeException {
+   Ship ship;  // Which ship was destroyed.
+   int where_x, where_y;  // Location where ship was destroyed.
+   ShipDestroyed(String message, Ship s, int x, int y) {
+         // Constructor creates a ShipDestroyed object
+         // carrying an error message plus the information
+         // that the ship s was destroyed at location (x,y)
+         // on the screen. 
+       super(message);
+       ship = s;
+       where_x = x;
+       where_y = y;
+   }
+}</pre>
+
+<np>Here, a <classname>ShipDestroyed</classname> object contains an error message and some
+information about a ship that was destroyed. This could be used, for example,
+in a statement:</np>
+
+<pre>if ( userShip.isHit() )
+   throw new ShipDestroyed("You've been hit!", userShip, xPos, yPos);</pre>
+
+<p>Note that the condition represented by a <classname>ShipDestroyed</classname> object might
+not even be considered an error. It could be just an expected interruption to
+the normal flow of a game. Exceptions can sometimes be used to handle such
+interruptions neatly.</p>
+
+<break/>
+
+<p>The ability to throw exceptions is particularly useful in writing
+general-purpose methods and classes that are meant to be used in more than
+one program. In this case, the person writing the method or class often has
+no reasonable way of handling the error, since that person has no way of
+knowing exactly how the method or class will be used. In such
+circumstances, a novice programmer is often tempted to print an error message
+and forge ahead, but this is almost never satisfactory since it can lead to
+unpredictable results down the line. Printing an error message and terminating
+the program is almost as bad, since it gives the program no chance to handle
+the error.</p>
+
+<p>The program that calls the method or uses the class needs to know that
+the error has occurred. In languages that do not support exceptions, the only
+alternative is to return some special value or to set the value of some
+variable to indicate that an error has occurred. For example, the
+<code>readMeasurement()</code> function in <localref href="robustness.2.2"/> returns
+the value <code>-1</code> if the user's input is illegal. However, this only does any good
+if the main program bothers to test the return value.  It is very easy to be lazy about
+checking for special return values every time a subroutine is called.
+And in this case, using
+<code>-1</code> as a signal that an error has occurred makes it impossible to allow
+negative measurements.  Exceptions are a cleaner way for a subroutine to react
+when it encounters an error.</p>
+
+<p>It is easy to modify the <code>readMeasurement()</code> function to use
+exceptions instead of a special return value to signal an error. My modified
+subroutine throws a <classname>ParseError</classname> when the user's input is illegal, where
+<classname>ParseError</classname> is the subclass of <classname>Exception</classname> that was defined
+above. (Arguably, it might be reasonable to avoid
+defining a new class by using the standard exception class
+<classname>IllegalArgumentException</classname> instead.) The changes from the original
+version are shown in &newcodestyle;:</p>
+
+<pre>
+/**
+ * Reads the user's input measurement from one line of input.
+ * Precondition:   The input line is not empty.
+ * Postcondition:  If the user's input is legal, the measurement
+ *                 is converted to inches and returned.
+ <newcode>* @throws ParseError if the user's input is not legal.</newcode>
+ */
+static double readMeasurement() <newcode>throws ParseError</newcode> {
+
+   double inches;  // Total number of inches in user's measurement.
+   
+   double measurement;  // One measurement, 
+                        //   such as the 12 in "12 miles."
+   String units;        // The units specified for the measurement,
+                        //   such as "miles."
+   
+   char ch;  // Used to peek at next character in the user's input.
+
+   inches = 0;  // No inches have yet been read.
+
+   skipBlanks();
+   ch = TextIO.peek();
+   
+   /* As long as there is more input on the line, read a measurement and
+      add the equivalent number of inches to the variable, inches.  If an
+      error is detected during the loop, end the subroutine immediately
+      by <newcode>throwing a ParseError.</newcode> */
+
+   while (ch != '\n') {
+   
+       /* Get the next measurement and the units.  Before reading
+          anything, make sure that a legal value is there to read. */
+   
+       if ( ! Character.isDigit(ch) ) {
+           <newcode>throw new ParseError("Expected to find a number, but found " + ch);</newcode>
+       }
+       measurement = TextIO.getDouble();
+       
+       skipBlanks();
+       if (TextIO.peek() == '\n') {
+          <newcode>throw new ParseError("Missing unit of measure at end of line.");</newcode>
+       }
+       units = TextIO.getWord();
+       units = units.toLowerCase();
+       
+       /* Convert the measurement to inches and add it to the total. */
+       
+       if (units.equals("inch") 
+               || units.equals("inches") || units.equals("in")) {
+           inches += measurement;
+       }
+       else if (units.equals("foot") 
+                  || units.equals("feet") || units.equals("ft")) {
+           inches += measurement * 12;
+       }
+       else if (units.equals("yard") 
+                  || units.equals("yards") || units.equals("yd")) {
+           inches += measurement * 36;
+       }
+       else if (units.equals("mile") 
+                  || units.equals("miles") || units.equals("mi")) {
+           inches += measurement * 12 * 5280;
+       }
+       else {
+           <newcode>throw new ParseError("\"" + units 
+                                + "\" is not a legal unit of measure.");</newcode>
+       }
+     
+       /* Look ahead to see whether the next thing on the line is 
+          the end-of-line. */
+      
+       skipBlanks();
+       ch = TextIO.peek();
+       
+   }  // end while
+   
+   return inches;
+   
+} // end readMeasurement()</pre>
+
+<np>In the main program, this subroutine is called in a <code>try</code> statement
+of the form</np>
+
+<pre>try {
+   inches = readMeasurement();
+}
+catch (ParseError e) {
+   . . .  // Handle the error.
+}</pre>
+
+<p>The complete program can be found in the file <sourceref href="LengthConverter3.java"/>.
+From the user's
+point of view, this program has exactly the same behavior as the program
+<sourceref href="LengthConverter2.java">LengthConverter2</sourceref>
+from the <localref href="robustness.2">previous section</localref>. 
+Internally, however, the programs are significantly
+different, since <code>LengthConverter3</code> uses exception handling.</p>
+
+</subsection>
+
+</section>

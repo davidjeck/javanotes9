@@ -1,0 +1,425 @@
+% ================== Definition of \obeywhitespace, copied from eplain.tex ================
+\def\makeactive#1{\catcode`#1 = \active \ignorespaces}%
+\begingroup
+\catcode`@=11
+\gdef\@obeywhitespaceloop#1{\futurelet\next\@finishobeywhitespace}%
+\gdef\@removebox{%
+  \ifhmode
+    \setbox0 = \lastbox
+    \ifdim\wd0=\parindent
+      \setbox2 = \hbox{\unhbox0}%
+      \ifdim\wd2=0pt
+        \ignorespaces
+      \else
+        \box2 % Put it back: it wasn't empty.
+      \fi
+    \else
+       \box0 % Put it back: it wasn't the right width.
+    \fi
+  \fi
+}%
+\makeactive\^^M \makeactive\ % No spaces or ^^M's from here on.
+\gdef\obeywhitespace{%
+\tolerance=100%
+\makeactive\^^M\def^^M{\par\futurelet\next\@finishobeyedreturn}%
+\makeactive\ \let =\ %
+\aftergroup\@removebox%
+\futurelet\next\@finishobeywhitespace%
+}%
+\gdef\@finishobeywhitespace{{%
+\ifx\next %
+\aftergroup\@obeywhitespaceloop%
+\else\ifx\next^^M%
+\aftergroup\gobble%
+\fi\fi}}%
+\gdef\@finishobeyedreturn{%
+\ifx\next^^M\vskip\blanklineskipamount\fi%
+\indent%
+}%
+\endgroup
+\newskip\blanklineskipamount
+\blanklineskipamount = 0pt
+\def\frac#1/#2{\leavevmode
+   \kern.1em \raise .5ex \hbox{\the\scriptfont0 #1}%
+   \kern-.1em $/$%
+   \kern-.15em \lower .25ex \hbox{\the\scriptfont0 #2}%
+}%
+\newdimen\hruledefaultheight  \hruledefaultheight = 0.4pt
+\newdimen\hruledefaultdepth   \hruledefaultdepth = 0.0pt
+\newdimen\vruledefaultwidth   \vruledefaultwidth = 0.4pt
+\def\ehrule{\hrule height\hruledefaultheight depth\hruledefaultdepth}%
+\def\evrule{\vrule width\vruledefaultwidth}%
+%================================================================================
+
+\def\displaycode{\par\medbreak\begingroup\small\ttfamily\parindent=35pt\obeywhitespace}
+\def\donedisplaycode{\par\endgroup\medbreak}
+\blanklineskipamount=-5pt
+
+\newcommand{\<}{\ifmmode<\else{\tt\char`<}\fi}
+\renewcommand{\>}{\ifmmode>\else{\tt\char`>}\fi}
+\renewcommand{\|}{\ifmmode|\else{\tt\char`|}\fi}
+\renewcommand{\{}{{\tt\char`\{}}
+\renewcommand{\}}{{\tt\char`\}}}
+\renewcommand{\^}{{\tt\char`\^}}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\ptype}[1]{\textbf{\textsf{#1}}}
+\newcommand{\classname}[1]{\textsl{\textsf{#1}}}
+\newcommand{\atype}[1]{\texttt{\textsf{#1}}}
+\newcommand{\newword}[1]{\textbf{\textit{#1}}}
+\newcommand{\codedef}[1]{\textbf{\texttt{#1}}}
+\newcommand{\bnf}[1]{{$\langle$\textit{#1}$\rangle$}}
+\newcommand{\newcode}[1]{{\itshape#1}}
+\newcommand{\start}[1]{\textsc{#1}}
+\newcommand{\sourceref}[1]{\textit{#1}}
+\newcommand{\jarref}[1]{\textit{#1}}
+\newcommand{\mybreak}{\par\smallbreak\centerline{\large{$*\ *\ *$}}\smallbreak\par}
+\newcommand{\weblink}[2]{#2}
+\newcommand{\1}{{\texttt{\char`\\}}}
+\newcommand{\2}{\ifmmode\pi\else{$\pi$}\fi}
+\newcommand{\3}{\ifmmode{\mathscr O}\else{$\mathscr O$}\fi}
+\newcommand{\4}{\ifmmode\Theta\else{$\Theta$}\fi}
+\newcommand{\5}{\ifmmode\Omega\else{$\Omega$}\fi}
+
+\newcounter{exercisecounter}
+\newcommand{\exercise}{\par\bigskip\stepcounter{exercisecounter}\noindent\llap{\bfseries\arabic{exercisecounter}.\ }\ignorespaces}
+\newenvironment{exercises}
+   {\setcounter{exercisecounter}{0}
+   \newpage
+   \section*{Exercises for Chapter \thechapter}\addcontentsline{toc}{section}{Exercises for Chapter \thechapter}\markright{\textsc{Exercises}}
+   \leftskip=25pt}
+   {}
+   
+\newcounter{quizcounter}
+\newcommand{\quizquestion}{\par\bigskip\stepcounter{quizcounter}\noindent\llap{\bfseries\arabic{quizcounter}.\ }\ignorespaces}
+\newenvironment{quiz}
+   {\setcounter{quizcounter}{0}
+   \newpage
+   \section*{Quiz on Chapter \thechapter}\addcontentsline{toc}{section}{Quiz on Chapter \thechapter}\markright{\textsc{Quiz}}
+   \leftskip=25pt}
+   {}
+
+\newcommand{\dumpfigure}[1]{\par\bigskip \setbox0=\hbox{#1}
+\dimen1=\pagetotal \advance\dimen1by50pt
+\ifdim \dimen1<\pagegoal
+   \dimen0=\ht0 \advance\dimen0by\pagetotal
+   \ifdim \dimen0>\pagegoal \vfil\goodbreak \fi 
+\fi
+\centerline{\box0}\bigbreak}
+
+
+%\newcommand{\dumpfigure}[1]{\par\bigskip \setbox0=\hbox{#1} \dimen0=\ht0 \advance\dimen0by\pagetotal
+%\ifdim \dimen0>\pagegoal \vfil\goodbreak \fi \centerline{\box0}\bigbreak}
+
+\newcommand{\Item}[1]{\par\hangafter=0
+                         \hangindent=25pt
+                         \noindent\llap{#1}\ignorespaces}
+
+\newcounter{mylistcounter}
+\newcommand{\mynumberedlist}[1]{\par\smallskip\setcounter{mylistcounter}{0}#1\par\medskip}
+\newcommand{\mynumbereditem}{\par\smallskip\stepcounter{mylistcounter}\Item{{\bfseries\arabic{mylistcounter}.}}\ }
+
+\newcommand{\mylist}[1]{\par\smallskip #1\par\medskip}
+\newcommand{\myitem}{\par\smallskip\Item{$\bullet\;$}}
+
+\newcommand{\glossaryitem}[2]{{\hangafter=1 \hangindent=30pt \parindent=0pt \textbf{#1}. #2\par\smallskip}}
+
+% used only in the non-linked PDF.  The first page of the linked PDF is \pageonelinked.
+\newcommand{\pageone}{
+  \begin{titlepage}
+    \vglue 1.5 in
+    \centerline{\Huge{Introduction to Programming Using Java}}
+    \vskip 0.4 in
+    \centerline{\LARGE{Version 7.0, August 2014}}
+    \vskip 0.1 in
+    \centerline{(\textit{Version 7.0.3, with just a few corrections, May 2018})}
+    \vskip 1.5 in
+    \centerline{\LARGE{David J. Eck}}
+    \vskip 0.2 in
+    \centerline{\Large{Hobart and William Smith Colleges}}
+    \vskip 1.5 in
+    \centerline{This is a PDF version of a free, on-line book that is available}
+    \centerline{at http://math.hws.edu/javanotes/.  The web site includes}
+    \centerline{source code for all example programs, answers to quizzes,}
+    \centerline{and discussions and solutions for exercises.}
+    
+    \newpage
+    \vglue 4.8 in
+ 
+    {\leftskip=0.9 in \rightskip=0.9 in plus 0.2 in minus 0.2 in
+ 
+    \noindent\copyright 1996--2018, David J. Eck
+    
+    \bigskip
+    
+    \small{
+    
+    \noindent David J. Eck (eck@hws.edu)
+
+    \noindent Department of Mathematics and Computer Science
+
+    \noindent Hobart and William Smith Colleges
+
+    \noindent Geneva, NY\quad 14456}
+    
+    \bigskip
+    \medskip
+    
+    \noindent  This book can be distributed in unmodified form for non-commercial purposes.  
+    Modified versions can be made and distributed for non-commercial purposes
+    provided they are distributed under the same license as the
+    original.  More specifically:
+    This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License. 
+    To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
+    Other uses require permission from the author.
+    
+    \bigskip
+    
+    \noindent The web site for this book is:\ \ \ http://math.hws.edu/javanotes
+    
+    }
+
+  \end{titlepage}
+}
+
+\newcommand{\pageonelinked}{
+  \begin{titlepage}
+    \vglue 1.3 in
+    \centerline{\Huge{Introduction to Programming Using Java}}
+    \vskip 0.4 in
+    \centerline{\LARGE{Version 7.0, August 2014}}
+    \vskip 0.1 in
+    \centerline{(\textit{Version 7.0.3, with just a few corrections, May 2018})}
+    \vskip 1.2 in
+    \centerline{\LARGE{David J. Eck}}
+    \vskip 0.2 in
+    \centerline{\Large{Hobart and William Smith Colleges}}
+   
+   \vskip 1.2 in
+   \centerline{This is a PDF version of a free on-line book that is available at}
+   \centerline{\url{http://math.hws.edu/javanotes/}.  The PDF does not include}
+   \centerline{source code files, solutions to exercises, or answers to quizzes, but}
+   \centerline{it does have external links to these resources, shown in blue.}
+   \centerline{The PDF also has internal links, shown in red.  These links can}
+   \centerline{be used in \textit{Acrobat Reader} and some other PDF reader programs.}
+    
+    \newpage
+    \vglue 4.8 in
+ 
+    {\leftskip=0.9 in \rightskip=0.9 in plus 0.2 in minus 0.2 in
+ 
+    \noindent\copyright 1996--2018, David J. Eck
+    
+    \bigskip
+    
+    \small{
+    
+    \noindent David J. Eck (eck@hws.edu)
+
+    \noindent Department of Mathematics and Computer Science
+
+    \noindent Hobart and William Smith Colleges
+
+    \noindent Geneva, NY\quad 14456}
+    
+    \bigskip
+    \medskip
+    
+    \noindent This book can be distributed in unmodified form for non-commercial purposes.  
+    Modified versions can be made and distributed for non-commercial purposes
+    provided they are distributed under the same license as the
+    original.  More specifically:
+    This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License. 
+    To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
+    Other uses require permission from the author.
+    
+    \bigskip
+    
+    \noindent The web site for this book is:\ \ \ http://math.hws.edu/javanotes
+    
+    }
+
+  \end{titlepage}
+}
+
+
+\newcommand{\pageoneluluall}{
+  \begin{titlepage}
+    \vglue 1.5 in
+    \centerline{\Huge{Introduction to Programming Using Java}}
+    \vskip 0.4 in
+    \centerline{\LARGE{Version 7.0, August 2014}}
+    \vskip 1.5 in
+    \centerline{\LARGE{David J. Eck}}
+    \vskip 0.2 in
+    \centerline{\Large{Hobart and William Smith Colleges}}
+    \vskip 1.5 in
+    \centerline{This is a print version of a free on-line textbook that is}
+    \centerline{available at http://math.hws.edu/javanotes/.  The web site}
+    \centerline{includes source code for all example programs, answers to}
+    \centerline{quizzes, discussions and solutions for exercises, and}
+    \centerline{a glossary.}
+    
+    \newpage
+    \vglue 4.8 in
+ 
+    {\leftskip=0.9 in \rightskip=0.9 in plus 0.2 in minus 0.2 in
+ 
+    \noindent\copyright 1996--2014, David J. Eck
+    
+    \bigskip
+    
+    \small{
+    
+    \noindent David J. Eck (eck@hws.edu)
+
+    \noindent Department of Mathematics and Computer Science
+
+    \noindent Hobart and William Smith Colleges
+
+    \noindent Geneva, NY\quad 14456}
+    
+    \bigskip
+    \medskip
+    
+    \noindent  This book can be distributed in unmodified form for non-commercial purposes.  
+    Modified versions can be made and distributed for non-commercial purposes
+    provided they are distributed under the same license as the
+    original.  More specifically:
+    This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License. 
+    To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
+    Other uses require permission from the author.
+    
+    \bigskip
+    
+    \noindent The web site for this book is:\ \ \ http://math.hws.edu/javanotes
+    
+    }
+
+  \end{titlepage}
+}
+
+\newcommand{\pageoneluluone}{
+  \begin{titlepage}
+    \vglue 1.2 in
+    \centerline{\Huge{Introduction to Programming Using Java}}
+    \vskip 0.3 in
+    \centerline{\LARGE{Version 7.0, August 2014}}
+    \vskip 0.1 in
+    \centerline{(\textit{Version 7.0.3, with just a few corrections, May 2018})}
+    \vskip 0.7 in
+    \centerline{\Huge{Part 1}}
+    \vskip 0.2 in
+    \centerline{\Large{(\textit{Chapters 1 through 7 from the complete book.})}}
+    \vskip 0.7 in
+    \centerline{\LARGE{David J. Eck}}
+    \vskip 0.2 in
+    \centerline{\Large{Hobart and William Smith Colleges}}
+    \vskip 1.5 in
+    \centerline{This is the first half of a free on-line textbook that is}
+    \centerline{available at http://math.hws.edu/javanotes/.  The web site}
+    \centerline{includes source code for all example programs, answers to}
+    \centerline{quizzes, and discussions and solutions for exercises.}
+    
+    \newpage
+    \vglue 4.8 in
+ 
+    {\leftskip=0.9 in \rightskip=0.9 in plus 0.2 in minus 0.2 in
+ 
+    \noindent\copyright 1996--2018, David J. Eck
+    
+    \bigskip
+    
+    \small{
+    
+    \noindent David J. Eck (eck@hws.edu)
+
+    \noindent Department of Mathematics and Computer Science
+
+    \noindent Hobart and William Smith Colleges
+
+    \noindent Geneva, NY\quad 14456}
+    
+    \bigskip
+    \medskip
+    
+    \noindent  This book can be distributed in unmodified form for non-commercial purposes.  
+    Modified versions can be made and distributed for non-commercial purposes
+    provided they are distributed under the same license as the
+    original.  More specifically:
+    This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License. 
+    To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
+    Other uses require permission from the author.
+    
+    \bigskip
+    
+    \noindent The web site for this book is:\ \ \ http://math.hws.edu/javanotes
+    
+    }
+
+  \end{titlepage}
+}
+
+\newcommand{\pageonelulutwo}{
+  \begin{titlepage}
+    \vglue 1.2 in
+    \centerline{\Huge{Introduction to Programming Using Java}}
+    \vskip 0.3 in
+    \centerline{\LARGE{Version 7.0, August 2014}}
+    \vskip 0.1 in
+    \centerline{(\textit{Version 7.0.3, with just a few corrections, May 2018})}
+    \vskip 0.7 in
+    \centerline{\Huge{Part 2}}
+    \vskip 0.2 in
+    \centerline{\Large{(\textit{Chapters 8 through 13 from the complete book.})}}
+    \vskip 0.7 in
+    \centerline{\LARGE{David J. Eck}}
+    \vskip 0.2 in
+    \centerline{\Large{Hobart and William Smith Colleges}}
+    \vskip 1.5 in
+    \centerline{This is the second half of a free on-line textbook that is}
+    \centerline{available at http://math.hws.edu/javanotes/.  The web site}
+    \centerline{includes source code for all example programs, answers to}
+    \centerline{quizzes, and discussions and solutions for exercises.}
+    
+    \newpage
+    \vglue 4.8 in
+ 
+    {\leftskip=0.9 in \rightskip=0.9 in plus 0.2 in minus 0.2 in
+ 
+    \noindent\copyright 1996--2018, David J. Eck
+    
+    \bigskip
+    
+    \small{
+    
+    \noindent David J. Eck (eck@hws.edu)
+
+    \noindent Department of Mathematics and Computer Science
+
+    \noindent Hobart and William Smith Colleges
+
+    \noindent Geneva, NY\quad 14456}
+    
+    \bigskip
+    \medskip
+    
+    \noindent  This book can be distributed in unmodified form for non-commercial purposes.  
+    Modified versions can be made and distributed for non-commercial purposes
+    provided they are distributed under the same license as the
+    original.  More specifically:
+    This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License. 
+    To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/.
+    Other uses require permission from the author.
+    
+    \bigskip
+    
+    \noindent The web site for this book is:\ \ \ http://math.hws.edu/javanotes
+    
+    }
+
+  \end{titlepage}
+}
+
+
+

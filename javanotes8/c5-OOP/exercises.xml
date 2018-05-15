@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+
+<exercises>
+
+<exercise id="OOP.ex.1">
+<exercise-question><p>In all versions of the
+<classname>PairOfDice</classname> class in <localref href="OOP.2"/>, the instance
+variables <code>die1</code> and <code>die2</code> are declared to be <code>public</code>.
+They really should be <code>private</code>, so that they would be protected from being changed
+from outside the class. Write another version of the <classname>PairOfDice</classname> class
+in which the instance variables <code>die1</code> and <code>die2</code> are
+<code>private</code>. Your class will need "getter" methods that can be used to find out the
+values of <code>die1</code> and <code>die2</code>. (The idea is to protect their values
+from being changed from outside the class, but still to allow the values to be
+read.) Include other improvements in the class, including at least a <code>toString()</code> method. 
+Test your class with a short program that counts how many times a pair of dice is
+rolled, before the total of the two dice is equal to two.</p>
+</exercise-question>
+<exercise-discuss>
+<p>The versions of the <classname>PairOfDice</classname> class in Section 2 differ in how the
+dice are initialized. I like the idea of initializing the dice to random
+values, so I will work with the following version:</p>
+
+<pre>public class PairOfDice {
+
+    public int die1;   // Number showing on the first die.
+    public int die2;   // Number showing on the second die.
+    
+    /**
+     * Constructor creates a pair of dice and rolls them so that
+     * they initially show some random value.
+     */            
+    public PairOfDice() {
+        roll();  // Call the roll() method to roll the dice.
+    }
+    
+    /**
+     * Roll the dice by setting each die to be a random number between 1 and 6.
+     */
+    public void roll() {
+        die1 = (int)(Math.random()*6) + 1;
+        die2 = (int)(Math.random()*6) + 1;
+    }
+    
+} // end class PairOfDice</pre>
+
+<p>After a <classname>PairOfDice</classname> object has just been created, the number on each
+die is definitely between 1 and 6, just like the number on a real die. Can we
+be sure that this will always be true? Not if the instance variables
+<code>die1</code> and <code>die2</code> are <code>public</code>, since they can be changed
+from outside the class. There is nothing to stop someone from changing them to
+42 and -17 or anything else. It's not good enough to say that you're not
+supposed to do that with dice. I want an absolute guarantee that my dice
+objects can only have the values that real dice could have. By making
+<code>die1</code> and <code>die2</code> <code>private</code>, I can have that guarantee,
+because the code that I write in the <classname>PairOfDice</classname> class is the only code
+that will ever affect the values of the variables.</p>
+
+<p>So, we will make <code>die1</code> and <code>die2</code> private, and add instance
+methods <code>getDie1()</code> and <code>getDie2()</code> to return the values of
+<code>die1</code> and <code>die2</code>.  These are "getter" methods that get the
+value of a member variable, and their names follow the convention that the name of
+a getter method consists of "get" followed by a capitalized version of the variable name.
+It would still be useful to be able to set the values of the dice, but we want to
+make it impossible to set the value to anything outside the range 1 to 6.  The solution
+is to provide "setter" methods that throw an exception when the value is illegal.
+</p>
+
+<p>I also added the <code>toString()</code> method from <localref href="OOP.3.2"/>.
+As for other improvements, I can foresee that
+people who use my class will often be interested in the total on the dice, so
+they will tend to say things like "<code>dice.getDie1() + dice.getDie2()</code>" a
+lot. If this is going to be done over and over, why not provide a method in the
+class to do it? So, I will also add a method <code>getTotal()</code> that returns
+the total value showing on the two dice. The complete, modified
+<classname>PairOfDice</classname> class is shown below.</p>
+
+<p>(Here is another improvement that I thought about. We could modify the
+<code>roll()</code> method so that in addition to rolling the dice, it would also
+return an <ptype>int</ptype> value giving the total on the dice. For example, this
+would allow us to replace "<code>dice.roll(); val = dice.getTotal()</code>" with
+"<code>val = dice.roll()</code>". Since it's legal to call a function with a
+subroutine call statement, we could still say "<code>dice.roll()</code>" if we just
+want to roll the dice without recording the total immediately. However, I
+decided that it was a little clearer to leave this feature out.)</p>
+
+<p>The main program is easy, especially since we've done the same problem
+before without using objects (in <localref href="control.ex.1"/>).
+Note how the pair of dice object is used. To test whether or not the
+total on the dice is 2, I use the test "<code>while (dice.getTotal() != 2)</code>".
+Because of the <code>toString()</code> method,
+I just have to say say</p>
+
+<pre>System.out.println("The dice come up " + dice );</pre>
+
+<np>to show the numbers on the two dice.</np>
+
+</exercise-discuss>
+<exercise-code>
+<pre>
+
+<b><newcode>The Modified PairOfDice Class</newcode></b>
+
+     <prog name="PairOfDice">/**
+      * An object of class PairOfDice represents a pair of dice,
+      * where each die shows a number between 1 and 6.  The dice
+      * can be rolled, which randomizes the numbers showing on the
+      * dice.
+      */
+     public class PairOfDice {
+     
+        private int die1;   // Number showing on the first die.
+        private int die2;   // Number showing on the second die.
+
+        /**
+         * Constructor creates a pair of dice and rolls them so that
+         * they initially show some random value.
+         */
+        public PairOfDice() {
+            roll();  // Call the roll() method to roll the dice.
+        }
+        
+        /**
+         * Roll the dice by setting each die to be a random number between 1 and 6.
+         */
+        public void roll() {
+            die1 = (int)(Math.random()*6) + 1;
+            die2 = (int)(Math.random()*6) + 1;
+        }
+                
+        /**
+         * Return the number showing on the first die.
+         */ 
+        public int getDie1() {
+           return die1;
+        }
+        
+        /**
+         * Set the value of the first die.  Throws an IllegalArgumentException
+         * if the value is not in the range 1 to 6.
+         */
+        public void setDie1( int value ) {
+           if ( value &lt; 1 || value &gt; 6 )
+              throw new IllegalArgumentException("Illegal dice value " + value);
+           die1 = value;
+        }
+        
+        /**
+         * Return the number showing on the second die.
+         */ 
+        public int getDie2() {
+           return die2;
+        }
+        
+        /**
+         * Set the value of the second die.  Throws an IllegalArgumentException
+         * if the value is not in the range 1 to 6.
+         */
+        public void setDie2( int value ) {
+           if ( value &lt; 1 || value &gt; 6 )
+              throw new IllegalArgumentException("Illegal dice value " + value);
+           die2 = value;
+        }
+        
+        /**
+         * Return the total showing on the two dice.
+         */ 
+        public int getTotal() {
+           return die1 + die2;
+        }
+        
+        /**
+         * Return a String representation of a pair of dice, where die1
+         * and die2 are instance variables containing the numbers that are
+         * showing on the two dice.
+         */
+        public String toString() {
+           if (die1 == die2)
+              return "double " + die1;
+           else
+              return die1 + " and " + die2;
+        }
+        
+     }  // end class PairOfDice</prog>
+     
+     
+     
+<b><newcode>The Main Program</newcode></b>
+      
+     <prog name="RollFor2">/** 
+      * Rolls a pair of dice until the dice come up snake eyes
+      * (with a total value of 2).  Counts and reports the
+      * number of rolls.
+      */
+     public class RollFor2 {
+     
+        public static void main(String[] args) {
+           
+           PairOfDice dice;  // A variable that will refer to the dice.
+           int rollCount;    // Number of times the dice have been rolled.
+     
+           dice = new PairOfDice();  // Create the PairOfDice object.
+           rollCount = 0;
+           
+           /* Roll the dice until they come up snake eyes. */
+           
+           do {
+               dice.roll();
+               System.out.println("The dice come up " + dice );
+               rollCount++;
+           } while (dice.getTotal() != 2);
+           
+           /* Report the number of rolls. */
+           
+           System.out.println("\nIt took " + rollCount + " rolls to get a 2.");
+           
+           /* Now, generate an exception. */
+            
+           System.out.println();
+           System.out.println("This program will now crash with an error");
+           System.out.println("when it tries to set the value of a die to 42.");
+           System.out.println();
+           
+           dice.setDie1(42);
+           System.out.println(dice);  // This statement will not be executed!
+           
+        }
+        
+     }  // end class RollFor2</prog>
+</pre>
+</exercise-code>
+</exercise>
+
+
+
+
+
+<exercise id="OOP.ex.2">
+<exercise-question><p>A common programming task
+is computing statistics of a set of numbers. (A statistic is a number that
+summarizes some property of a set of data.) Common statistics include the mean
+(also known as the average) and the standard deviation (which tells how spread
+out the data are from the mean). I have written a little class called
+<classname>StatCalc</classname> that can be used to compute these statistics, as well as the
+sum of the items in the dataset and the number of items in the dataset. You can
+read the source code for this class in the file <sourceref href="StatCalc.java"/>.
+If <code>calc</code> is a variable of
+type <classname>StatCalc</classname>, then the following instance methods are available:</p>
+
+<ul>
+<li><code>calc.enter(item)&nbsp;</code> where
+<code>item</code> is a number, adds the item to the dataset.</li>
+
+<li><code>calc.getCount()&nbsp;</code> is a function
+that returns the number of items that have been added to the dataset.</li>
+
+<li><code>calc.getSum()&nbsp;</code> is a function
+that returns the sum of all the items that have been added to the dataset.</li>
+
+<li><code>calc.getMean()&nbsp;</code> is a function
+that returns the average of all the items.</li>
+
+<li><code>calc.getStandardDeviation()&nbsp;</code> is
+a function that returns the standard deviation of the items.</li>
+</ul>
+
+<p>Typically, all the data are added one after the other by calling the
+<code>enter()</code> method over and over, as the data become available. After all
+the data have been entered, any of the other methods can be called to get
+statistical information about the data. The methods <code>getMean()</code> and
+<code>getStandardDeviation()</code> should only be called if the number of items is
+greater than zero.</p>
+
+<p>Modify the current source code, <sourceref href="StatCalc.java"/>, to add instance
+methods <code>getMax()</code> and <code>getMin()</code>. The <code>getMax()</code> method
+should return the largest of all the items that have been added to the dataset,
+and <code>getMin()</code> should return the smallest. You will need to add two new
+instance variables to keep track of the largest and smallest items that have
+been seen so far.</p>
+
+<p>Test your new class by using it in a program to compute statistics for a set
+of non-zero numbers entered by the user. Start by creating an object of type
+<classname>StatCalc</classname>:</p>
+
+<pre>StatCalc  calc;   // Object to be used to process the data.
+calc = new StatCalc();</pre>
+
+<p>Read numbers from the user and add them to the dataset. Use 0 as a sentinel
+value (that is, stop reading numbers when the user enters 0). After all the
+user's non-zero numbers have been entered, print out each of the six statistics
+that are available from <code>calc</code>.</p>
+</exercise-question>
+<exercise-discuss>
+<p>For the <classname>StatCalc</classname> class to handle minimums and maximums, some of
+what must be added to the class is obvious. We need two new instance
+variables, <code>min</code> and <code>max</code>, and two getter methods to return the values
+of those instance variables. So, we can add these lines to the class
+definition:</p>
+
+<pre>private double min;   // Smallest item that has been entered.
+private double max;   // Largest item that has been entered.
+
+public double getMin() {
+   return min;
+}
+
+public double getMax() {
+   return max;
+}</pre>
+
+<np>But then there is the problem of making sure that <code>min</code> and
+<code>max</code> have the right values. <code>min</code> records the smallest number
+seen so far.  Every time we have a new number to add to
+the dataset there is a possibility that <code>min</code> will change, so
+we have to compare <code>min</code> with the newly added number. If the new number is
+smaller than the current <code>min</code>, then the number becomes the new value of
+<code>min</code> (since the new number is now the smallest number we have seen so
+far). We do something similar for <code>max</code>. This has to be done whenever a
+number is entered into the dataset, so it has to be added to the
+<code>enter()</code> method, giving:</np>
+
+<pre>public void enter(double num) {
+      // This is not completely correct!
+   count++;
+   sum += num;
+   squareSum += num*num;
+   <newcode>if (num &gt; max)          // We have a new maximum.
+      max = num;
+   if (num &lt; min)          // We have a new minimum.
+      min = num;</newcode>
+}</pre>
+
+<p>Unfortunately, if this is all we do, there is a <b>bug in our
+program</b>! For example, if the dataset consists of the numbers 21, 17,
+and 4, the computer will insist that the minimum is 0, rather than 4. The
+problem is that the variables <code>min</code> and <code>max</code> are initialized to
+zero. (If no initial value is provided for a numerical instance variable, it
+gets the default initial value, zero.) Since <code>min</code> is 0, none of the
+numbers in the dataset pass the test "<code>if&nbsp;(num&nbsp;&lt;&nbsp;min)</code>", and therefore the value
+of <code>min</code> never changes. A similar problem holds for <code>max</code>, but it
+will only show up if all the numbers in the dataset are less than zero. For the
+other instance variables, <code>count</code>, <code>sum</code>, and <code>squareSum</code>,
+the default initial value of zero is correct. For <code>min</code> and
+<code>max</code>, we have to do something different.</p>
+
+<p>One possible way to fix the problem is to treat the first number entered as
+a special case. When only one number has been entered, it's certainly the
+largest number so far and also the smallest number so far, so it should be
+assigned to both <code>min</code> and <code>max</code>. This can be handled in the
+<code>enter()</code> method:</p>
+
+<pre>public void enter(double num) {
+      // (This is NOT the version I used in my final answer.)
+   count++;
+   sum += num;
+   squareSum += num*num;
+   if (count == 1) {  // This is the first number.
+      max = num;
+      min = num;
+   }
+   else {
+      if (num &gt; max)     // We have a new maximum.
+         max = num;
+      if (num &lt; min)     // We have a new minimum.
+         min = num;
+   }
+}</pre>
+
+<np>This works fine. However, I decided to use an alternative approach. We would
+be OK if we could initialize <code>min</code> to have a value that is bigger than
+any possible number. Then, when the first number is entered, it definitely will
+satisfy the test "<code>if (num &lt; min)</code>", and therefore 
+the first number will become the value of
+<code>min</code>. But to be "bigger than any possible number," <code>min</code> would
+have to be infinity. The initial value for <code>max</code> has to be smaller than
+any possible number, so <code>max</code> has to be initialized to negative
+infinity. And that's what we'll do!</np>
+
+<p>Recall from <localref href="basics.5"/> 
+that the standard class <classname>Double</classname> contains constants
+<code>Double.POSITIVE_INFINITY</code> and <code>Double.NEGATIVE_INFINITY</code> that
+represent positive and negative infinity.  We can
+use these named constants to provide initial values for the instance variables
+<code>min</code> and <code>max</code>. So, the declarations become:</p>
+
+<pre>private double max = Double.NEGATIVE_INFINITY;  // Largest item seen.
+private double min = Double.POSITIVE_INFINITY;  // Smallest item seen.</pre>
+
+<np>With this change, the <classname>StatCalc</classname> class works correctly. The complete
+class is shown below.  (By the way, you might think about what happens if <code>getMin()</code>
+or <code>getMax()</code> is called before any data has been entered.  What actually happens?
+What should happen?  What is the minimum or maximum of a set of numbers that contains no
+numbers at all?)</np>
+
+<p>The main program is fairly straightforward, so just for fun I decided to
+use a <classname>Scanner</classname> instead of <classname>TextIO</classname>
+to read the user's input (see <localref href="basics.4.6"/>.
+The user's data are read and
+entered into the <classname>StatCalc</classname> object in a loop:</p>
+
+<pre>do {
+   System.out.print("? ");
+   item = in.nextDouble();  // (in is the Scanner.)
+   if (item != 0)
+      calc.enter(item);
+} while ( item != 0 );</pre>
+
+<np>The subroutine call "<code>calc.enter(item);</code>" enters the user's item.
+That is, it does all the processing necessary to include this data item in the
+statistics it is computing. After all the data have been entered, the
+statistics can be obtained by using function calls such as
+"<code>calc.getMean()</code>". The statistics are output in statements such as:</np>
+
+<pre>System.out.println("   Average:            " + calc.getMean());</pre>
+
+<p>Note that a function call represents a value, and so can be used anyplace
+where a variable or literal value could be used. I don't have to assign the
+value of the function to a variable. I can use the function call directly in
+the output statement.  Another note: In this program, I decided not to use
+formatted output, since it seems appropriate to print the answers with
+as much accuracy as possible.  For formatted output, the statement
+used to print the mean could be something like:</p>
+
+<pre>System.out.printf("    Average:            %10.3f\n", calc.getMean());</pre>
+
+<np>The complete main program is shown below.</np>
+
+<break/>
+
+<p>Although that completes the exercise, one might wonder: Instead of modifying
+the source code of <classname>StatCalc</classname>, could we make a subclass of
+<classname>StatCalc</classname> and put the modifications in that? The answer is yes. We will need
+need to use the slightly obscure special variable <code>super</code> that was
+discussed in <localref href="OOP.6.2"/>.</p>
+
+<p>The new instance variables and instance methods can simply be put into the
+subclass. The problem arises with the <code>enter()</code> method. We have to
+redefine this method so that it will update the values of <code>min</code> and
+<code>max</code>. But it also has to do all the processing that is done by the
+original <code>enter()</code> method in the <classname>StatCalc</classname> class. This is what
+<code>super</code> is for. It lets us call a method from the superclass of the
+class we are writing. So, the subclass can be written:</p>
+
+<pre>class StatCalcWithMinMax extends StatCalc {
+
+   private double max = Double.NEGATIVE_INFINITY;  // Largest item seen.
+   private double min = Double.POSITIVE_INFINITY;  // Smallest item seen.
+
+   public void enter(double num) {
+      super.enter(num);  // Call the enter method from the StatCalc class.
+      if (num &gt; max)  // Then do the extra processing for min and max.
+         max = num;
+      if (num &lt; min)
+         min = num;
+   }
+ 
+   public double getMin() {
+      return min;
+   }
+   
+   public double getMax() {
+      return max;
+   }
+
+}  // end class StatCalcWithMinMax</pre>
+</exercise-discuss>
+<exercise-code>
+<pre><b>Revised StatCalc Class.  Changes from the original are shown in &newcodestyle;.</b>
+
+     <prog name="StatCalc">/* 
+      * An object of class StatCalc can be used to compute several simple statistics
+      * for a set of numbers.  Numbers are entered into the dataset using
+      * the enter(double) method.  Methods are provided to return the following
+      * statistics for the set of numbers that have been entered: The number
+      * of items, the sum of the items, the average, the standard deviation,
+      * <newcode>the maximum, and the minimum.</newcode>
+      */
+     public class StatCalc {
+     
+        private int count;   // Number of numbers that have been entered.
+        private double sum;  // The sum of all the items that have been entered.
+        private double squareSum;  // The sum of the squares of all the items.
+        <newcode>private double max = Double.NEGATIVE_INFINITY;  // Largest item seen.
+        private double min = Double.POSITIVE_INFINITY;  // Smallest item seen.</newcode>
+     
+        /**
+         * Add a number to the dataset.  The statistics will be computed for all
+         * the numbers that have been added to the dataset using this method.
+         */
+        public void enter(double num) {
+           count++;
+           sum += num;
+           squareSum += num*num;
+           <newcode>if (num &gt; max)
+              max = num;
+           if (num &lt; min)
+              min = num;</newcode>
+        }
+     
+        /**
+         * Return the number of items that have been entered into the dataset.
+         */
+        public int getCount() {
+           return count;
+        }
+     
+        /**
+         * Return the sum of all the numbers that have been entered.
+         */
+        public double getSum() {
+           return sum;
+        }
+     
+        /**
+         * Return the average of all the items that have been entered.
+         * The return value is Double.NaN if no numbers have been entered.
+         */
+        public double getMean() {
+           return sum / count;  
+        }
+     
+        /**
+         * Return the standard deviation of all the items that have been entered.
+         * The return value is Double.NaN if no numbers have been entered.
+         */
+        public double getStandardDeviation() {  
+           double mean = getMean();
+           return Math.sqrt( squareSum/count - mean*mean );
+        }
+        
+        <newcode>/**
+         * Return the smallest item that has been entered.
+         * The return value will be infinity if no numbers have been entered. 
+         */
+        public double getMin() {
+           return min;
+        }
+        
+        /**
+         * Return the largest item that has been entered.
+         * The return value will be -infinity if no numbers have been entered. 
+         */
+        public double getMax() {
+           return max;
+        }</newcode>
+     
+     }  // end class StatCalc</prog>
+
+
+
+<b><newcode>Main Program</newcode></b>
+
+     <prog name="SimpleStats">/**
+      * Computes and display several statistics for a set of non-zero
+      * numbers entered by the user.  (Input ends when user enters 0.)
+      * This program uses StatCalc.java.
+      */
+     
+     import java.util.Scanner;
+
+     public class SimpleStats {
+   
+       public static void main(String[] args) {
+   
+          Scanner in = new Scanner(System.in);
+   
+          StatCalc calc; // Computes stats for numbers entered by user.
+          calc = new StatCalc();
+   
+          double item; // One number entered by the user.
+   
+          System.out.println("Enter your numbers.  Enter 0 to end.");
+          System.out.println();
+   
+          do {
+             System.out.print("? ");
+             item = in.nextDouble();
+             if (item != 0)
+                calc.enter(item);
+          } while (item != 0);
+   
+          System.out.println("\nStatistics about your calc:\n");
+          System.out.println("   Count:              " + calc.getCount());
+          System.out.println("   Sum:                " + calc.getSum());
+          System.out.println("   Minimum:            " + calc.getMin());
+          System.out.println("   Maximum:            " + calc.getMax());
+          System.out.println("   Average:            " + calc.getMean());
+          System.out.println("   Standard Deviation: "
+                 + calc.getStandardDeviation());
+   
+       } // end main()
+   
+    } // end SimpleStats</prog>
+</pre>
+</exercise-code>
+</exercise>
+
+
+
+
+
+<exercise>
+<exercise-question><p>This problem uses the
+<classname>PairOfDice</classname> class from <localref href="OOP.ex.1"/>
+and the <classname>StatCalc</classname> class from <localref href="OOP.ex.2"/>.</p>
+
+<p>The program in <localref href="subroutines.ex.4"/> performs
+the experiment of counting how many times a pair of dice is rolled before a
+given total comes up. It repeats this experiment 10000 times and then reports
+the average number of rolls. It does this whole process for each possible total
+(2, 3, &dots;, 12).</p>
+
+<p>Redo that exercise. But instead of just reporting the average number of
+rolls, you should also report the standard deviation and the maximum number of
+rolls. Use a <classname>PairOfDice</classname> object to represent the dice. Use a
+<classname>StatCalc</classname> object to compute the statistics. (You'll need a new
+<classname>StatCalc</classname> object for each possible total, 2, 3, &dots;, 12. You can use a
+new pair of dice if you want, but it's not required.)</p>
+</exercise-question>
+<exercise-discuss>
+<p>The program from <localref href="subroutines.ex.4"/> defines
+a function, <code>rollFor(N)</code>, that performs the basic experiment once. It
+rolls the dice until the total on the dice is <code>N</code>, and it returns the
+number of rolls. Using a <classname>PairOfDice</classname> object, <code>dice</code>, the body of
+this subroutine becomes</p>
+
+<pre>int rollCt = 0;  // Number of rolls made.
+do {
+   dice.roll();
+   rollCt++;
+} while ( dice.getTotal() != N );
+return rollCt;</pre>
+
+<p>This is significantly simpler than the original version. But where does the
+dice object come from? One possibility is to create a new <classname>PairOfDice</classname>
+object at the beginning of the function. This will work, but then a new object
+is created each time the function is called. In the program we are writing, the
+function is called 110,000 times. It seems a waste to manufacture 110,000 pairs
+of dice when one would do! To avoid this, I create the dice as a static member
+variable:</p>
+
+<pre>private static PairOfDice dice = new PairOfDice();</pre>
+
+<np>The variable must be <code>static</code> since it is used in the <code>static</code>
+function, <code>rollFor</code>. Since <code>dice</code> is a static member variable, it
+is created and initialized when the class is first loaded and it exists as long
+as the program is running. The <code>rollFor()</code> method always uses this one
+pair of dice. (Some people might prefer to create the dice as a local variable
+in the <code>main()</code> routine. The dice could be passed as a parameter to the
+<code>rollFor()</code> method. Then, <code>rollFor(N,dice)</code> would mean "roll for
+a total of <code>N</code> using this pair of dice." But in my opinion, the dice are not
+logically a part of the interface of this subroutine, and I prefer to use the
+member variable.)</np>
+
+<p>The original program also had a method called <code>getAverageRollCount()</code>
+to find the average number of rolls, when the basic experiment is repeated
+10000 times. We could rename this to <code>getRollCountStats</code> and use it to
+compute all the statistics, not just the average. The actual computation is to
+be done by a <classname>StatCalc</classname> object. Let <code>stats</code> be a variable that
+refers to that object. The results of each experiment will be fed into this
+object, something like this:</p>
+
+<pre>for ( int i = 0;  i &lt; 10000;  i++ ) {
+      // Assume "total" is the number we are rolling for.
+    rollCountThisExperiment = rollFor( total );  // Do one experiment.
+    stats.enter( rollCountThisExperiment );      // Enter the data.
+}</pre>
+
+<np>At the end of this process, <code>stats</code> is ready to report the
+statistics. All you have to do is call its functions, such as
+<code>stats.getMean()</code>.</np>
+
+<p>In my program, I use the named constant <code>NUMBER_OF_EXPERIMENTS</code>
+instead of the literal number, 10000. I abbreviate the for loop to</p>
+
+<pre>for ( int i = 0;  i &lt; NUMBER_OF_EXPERIMENTS;  i++ ) 
+    stats.enter( rollFor(total) );</pre>
+
+<np>and, since it has become so short, I deleted the subroutine and moved the
+<code>for</code> loop into the <code>main()</code> routine. The <code>main()</code> routine
+prints the output in neat columns, using formatted output. For example,
+"<code>System.out.printf("%6d",total);</code>" prints the value of <code>total</code> in a column
+of width 6. (The hardest part was figuring out how wide to make the columns!).
+After printing out some headings for the columns, the <code>main()</code> routine
+says</np>
+
+<pre>for ( int total = 2;  total &lt;= 12;  total++ ) {
+   StatCalc stats;  // An object that will compute the statistics.
+   stats = new StatCalc();
+   for ( int i = 0; i &lt; NUMBER_OF_EXPERIMENTS; i++ ) {
+         // Do the experiment of counting the number of rolls
+         // required to roll the desired total, and enter the
+         // number of rolls into stats' dataset.
+      stats.enter( rollFor(total) );
+   }
+   System.out.printf("%6d", total);
+   System.out.printf("%18.3f", stats.getMean());
+   System.out.printf("%19.3f", stats.getStandardDeviation());
+   System.out.printf("%14.3f", stats.getMax());
+   System.out.println();
+}</pre>
+
+
+<np>The body of the <code>for</code> loop processes one of the possible totals on a
+pair of dice, and it produces one line of output with the statistics for that
+total. A new <classname>StatCalc</classname> object is created for each execution of the
+<code>for</code> loop. This is necessary because we want separate statistics for
+each total. A single <classname>StatCalc</classname> object would just accumulate all the
+data for all the possible values of total into a single dataset. It might be worth
+noting that the five output statements in this method could be written as
+a single statement:</np>
+
+<pre>System.out.printf( "%6d%18.3f%19.3f%14.3f%n", total, stats.getMean(), 
+        stats.getStandardDeveialtion(), stats.getMax() );</pre>
+
+<break/>
+
+<p>By the way, you might wonder what would happen if I had not eliminated the
+<code>getRollCountStats()</code> subroutine? In that case, the statistics data is
+generated in the subroutine and is used in the <code>main()</code> routine. So, the
+same <classname>StatCalc</classname> object has to be used in both routines. There are
+several ways to handle this. The variable, <code>stats</code>, could be a static
+member variable. Then it could simply be used in both routines. Alternatively,
+the <classname>StatCalc</classname> object could be passed as a parameter to the subroutine.
+Or, as a final and best alternative, the object could be created in the subroutine and
+sent back to the <code>main()</code> routine as a return value. Let's look at this
+last possibility. The subroutine would be:</p>
+
+<pre>static StatCalc getRollCountStats( int total ) {
+    StatCalc calc;         // An object to compute the statistics.
+    calc = new StatCalc();
+    for ( int i = 0; i &lt; NUMBER_OF_EXPERIMENTS; i++ )
+        calc.enter( rollFor(total) );
+    return calc;  // Send back the object, with the statistics.
+}</pre>
+
+<np>In the main program, this would be used as follows:</np>
+
+<pre>for ( int total = 2; total &lt;= 12; total++ ) {
+   StatCalc stats;  // The stats for this total
+   stats = getRollCountStats( total ); // Get stats from subroutine.
+   System.out.printf("%6d", total);
+   System.out.printf("%18.3f", stats.getMean());
+   System.out.printf("%19.3f", stats.getStandardDeviation());
+   System.out.printf("%14.3f", stats.getMax());
+   System.out.println();
+}</pre>
+
+<p>Note in particular that not every object variable needs to be initialized
+with a new object. In the case of the variable <code>calc</code> in the
+<code>main()</code> routine, an object is computed elsewhere. The variable,
+<code>calc</code>, is set to refer to that existing object.</p>
+</exercise-discuss>
+<exercise-code>
+<pre>
+<prog name="DiceRollStats2">/**
+ * This program performs the following type of experiment:
+ * Given a desired total roll, such as 7, roll a pair of
+ * dice until the given total comes up, and count how many
+ * rolls are necessary.  Now do the experiment over and over,
+ * and find the average number of rolls.  The number of times
+ * the experiment is repeated is given by the constant,
+ * NUMBER_OF_EXPERIMENTS.  Several statistics are computed and
+ * printed out for each possible roll = 2, 3, ..., 12:
+ * the average number of rolls, the standard deviation,
+ * and the maximum number of rolls.
+ */
+
+public class DiceRollStats2 {
+
+   static final int NUMBER_OF_EXPERIMENTS = 10000;
+   
+   private static PairOfDice dice = new PairOfDice();
+            // A single pair of dice, which will be used for all
+            // the experiments.
+
+   
+   public static void main(String[] args) {
+   
+       System.out.println("Dice Total   Avg # of Rolls   Stand. Deviation   Max # of Rolls");
+       System.out.println("----------   --------------   ----------------   --------------");
+
+       for ( int total = 2;  total &lt;= 12;  total++ ) {
+          StatCalc stats;  // An object that will compute the statistics.
+          stats = new StatCalc();
+          for ( int i = 0; i &lt; NUMBER_OF_EXPERIMENTS; i++ ) {
+                // Do the experiment of counting the number of rolls
+                // required to roll the desired total, and enter the
+                // number of rolls into stats' dataset.
+             stats.enter( rollFor(total) );
+          }
+          System.out.printf("%6d", total);
+          System.out.printf("%18.3f", stats.getMean());
+          System.out.printf("%19.3f", stats.getStandardDeviation());
+          System.out.printf("%14.3f", stats.getMax());
+          System.out.println();
+       }
+       
+   } // end main
+   
+   /**
+    * Roll the dice repeatedly until the total on the
+    * two dice comes up to be N.  N MUST be one of the numbers
+    * 2, 3, ..., 12.  (If not, this routine will go into an
+    * infinite loop!).  The number of rolls is returned.
+    */
+   static int rollFor( int N ) {
+       int rollCt = 0;  // Number of rolls made.
+       do {
+          dice.roll();
+          rollCt++;
+       } while ( dice.getTotal() != N );
+       return rollCt;
+   }
+
+   
+}  // end class DiceRollStats2</prog>
+</pre>
+</exercise-code>
+</exercise>
+
+
+
+
+
+<exercise>
+<exercise-question><p>The <classname>BlackjackHand</classname>
+class from <localref href="OOP.5.1"/> is an extension of the
+<classname>Hand</classname> class from <localref href="OOP.4"/>. The instance
+methods in the <classname>Hand</classname> class are discussed in that section. In addition to
+those methods, <classname>BlackjackHand</classname> includes an instance method,
+<code>getBlackjackValue()</code>, which returns the value of the hand for the game
+of Blackjack. For this exercise, you will also need the <classname>Deck</classname> and
+<classname>Card</classname> classes from <localref href="OOP.4"/>.</p>
+
+<p>A Blackjack hand typically contains from two to six cards. Write a program
+to test the <classname>BlackjackHand</classname> class. You should create a
+<classname>BlackjackHand</classname> object and a <classname>Deck</classname> object. Pick a random number
+between 2 and 6. Deal that many cards from the deck and add them to the hand.
+Print out all the cards in the hand, and then print out the value computed for
+the hand by <code>getBlackjackValue()</code>. Repeat this as long as the user wants
+to continue.</p>
+
+<p>In addition to <sourceref href="TextIO.java"/>, your program will depend on 
+<sourceref href="Card.java"/>, <sourceref href="Deck.java"/>, 
+<sourceref href="Hand.java"/>, and <sourceref href="BlackjackHand.java"/>.</p>
+</exercise-question>
+<exercise-discuss>
+<p>This problem is mostly a warm-up for the <localref href="OOP.ex.5">next
+one</localref>. It uses objects of three different types, <classname>Card</classname>,
+<classname>Deck</classname>, and <classname>BlackjackHand</classname>. 
+The <classname>Hand</classname> class is used
+indirectly, as the superclass of <classname>BlackjackHand</classname>. To use these objects,
+you need to know what methods are available in each class, so you should review
+the information that you have about the classes before beginning the
+program.</p>
+
+<p>An algorithm for the program is</p>
+
+<pre>Create a deck
+repeat while user wants to continue:
+    Shuffle the deck
+    Create a new BlackjackHand
+    Decide the number of cards in the hand
+    Deal cards from the deck into the hand, and print them out
+    Display the value of the hand</pre>
+
+<np>Some variation is possible. You could use just one <classname>BlackjackHand</classname>
+object, and remove all the cards from it between hands. The <classname>Hand</classname> class
+includes an instance method, <code>clear()</code>, that could be used for this
+purpose. Similarly, you could create a new <classname>Deck</classname> object each time
+through the loop. Or, you might want to use one deck and shuffle it only when
+the number of cards in the deck gets too small. You could say:</np>
+
+<pre>if (deck.cardsLeft() &lt; 6)  
+      deck.shuffle();</pre>
+
+<p>Since we always want to do at least one hand, we can use a
+<code>do..while</code> statement for the loop. Putting in some variable names, we
+can refine the algorithm to</p>
+
+<pre>deck  =  new Deck();
+do:
+    deck.shuffle();
+    hand  =  new BlackjackHand();
+    cardsInHand = a random number between 2 and 6
+    Deal cards from deck into hand, and print them out.
+    Display hand.getBlackjackValue()
+    Ask if user wants to go again
+while user wants to go again</pre>
+
+<np>The number of cards in the hand is supposed to be a random number between 2
+and 6. There are five possible values. The expression
+"<code>(int)(Math.random()*5)</code>" has one of the 5 possible values 0, 1, 2, 3,
+or 4. Adding 2 to the result gives one of the values 2, 3, 4, 5, or 6. So, the
+number of cards can be computed as "<code>2&nbsp;+&nbsp;(int)(Math.random()*5)</code>".</np>
+
+<p>Once we know the number of cards, we can use a <code>for</code> loop to deal
+cards into the hand, one at a time. The function call <code>deck.dealCard()</code>
+gets a card from the deck. Once we have a card, we can add it to the hand with
+the subroutine call <code>hand.addCard(card)</code>. This allows us to refine the
+algorithm to</p>
+
+<pre>deck  =  new Deck();
+do:
+    deck.shuffle();
+    hand  =  new BlackjackHand();
+    cardsInHand = 2 + (int)(Math.random()*5)
+    for i = 0 to cardsInHand:
+        card  =  deck.dealCard()
+        hand.addCard(card)
+        Display the card
+    Display hand.getBlackjackValue()
+    Ask if user wants to go again
+while user wants to go again</pre>
+
+<np>Alternatively, dealing the cards and displaying them could be done in
+separate <code>for</code> loops.</np>
+
+<p>This algorithm can be translated pretty directly into the <code>main()</code>
+routine of the program, which is shown below.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="TestBlackjackHand">/**
+ * Creates random blackjack hands, with 2 to 6 cards,
+ * and prints out the blackjack value of each hand.
+ * The user decides when to stop.
+ */
+public class TestBlackjackHand {
+
+   public static void main(String[] args) {
+   
+      Deck deck;            // A deck of cards.
+      Card card;            // A card dealt from the deck.
+      BlackjackHand hand;   // A hand of from two to six cards.
+      int cardsInHand;      // Number or cards in the hand.
+      boolean again;        // Set to true if user wants to continue.
+      
+      deck = new Deck();    // Create the deck.
+
+      do {
+         deck.shuffle();
+         hand = new BlackjackHand(); 
+         cardsInHand = 2 + (int)(Math.random()*5);
+         System.out.println();
+         System.out.println();
+         System.out.println("Hand contains:");
+         for ( int i = 1; i &lt;= cardsInHand; i++ ) {
+                // Get a card from the deck, print it out,
+                //   and add it to the hand.
+            card = deck.dealCard();
+            hand.addCard(card);
+            System.out.println("    " + card);
+         }
+         System.out.println("Value of hand is " + hand.getBlackjackValue());
+         System.out.println();
+         System.out.print("Again? ");
+         again = TextIO.getlnBoolean();
+      } while (again == true);
+      
+   }
+   
+}  // end class TestBlackjackHand</prog>
+</pre>
+</exercise-code>
+</exercise>
+
+
+
+
+   
+<exercise id="OOP.ex.5">
+<exercise-question><p>Write a program that lets
+the user play Blackjack. The game will be a simplified version of Blackjack as
+it is played in a casino. The computer will act as the dealer. As in the
+previous exercise, your program will need the classes defined in 
+<sourceref href="Card.java"/>, <sourceref href="Deck.java"/>, 
+<sourceref href="Hand.java"/>, and <sourceref href="BlackjackHand.java"/>.
+(This is the longest and
+most complex program that has come up so far in the exercises.)</p>
+
+<p>You should first write a subroutine in which the user plays one game. The
+subroutine should return a <ptype>boolean</ptype> value to indicate whether the user
+wins the game or not. Return <code>true</code> if the user wins, <code>false</code> if
+the dealer wins. The program needs an object of class <classname>Deck</classname> and two
+objects of type <classname>BlackjackHand</classname>, one for the dealer and one for the
+user. The general object in Blackjack is to get a hand of cards whose value is
+as close to 21 as possible, without going over. The game goes like this.</p>
+
+<ul>
+<li>First, two cards are dealt into each player's hand. If the dealer's hand has
+a value of 21 at this point, then the dealer wins. Otherwise, if the user has
+21, then the user wins. (This is called a "Blackjack".) Note that the dealer
+wins on a tie, so if both players have Blackjack, then the dealer wins.</li>
+
+<li>Now, if the game has not ended, the user gets a chance to add some cards to
+her hand. In this phase, the user sees her own cards and sees
+<b>one</b> of the dealer's two cards. (In a casino, the dealer deals
+himself one card face up and one card face down. All the user's cards are dealt
+face up.) The user makes a decision whether to "Hit", which means to add
+another card to her hand, or to "Stand", which means to stop taking cards.</li>
+
+<li>If the user Hits, there is a possibility that the user will go over 21. In
+that case, the game is over and the user loses. If not, then the process
+continues. The user gets to decide again whether to Hit or Stand.</li>
+
+<li>If the user Stands, the game will end, but first the dealer gets a chance to
+draw cards. The dealer only follows rules, without any choice. The rule is that
+as long as the value of the dealer's hand is less than or equal to 16, the
+dealer Hits (that is, takes another card). The user should see all the dealer's
+cards at this point. Now, the winner can be determined: If the dealer has gone
+over 21, the user wins. Otherwise, if the dealer's total is greater than or
+equal to the user's total, then the dealer wins. Otherwise, the user wins.</li>
+</ul>
+
+
+<p>Two notes on programming: At any point in the subroutine, as soon as you
+know who the winner is, you can say "<code>return true</code>;" or "<code>return
+false</code>;" to end the subroutine and return to the main program. To avoid
+having an overabundance of variables in your subroutine, remember that a
+function call such as <code>userHand.getBlackjackValue()</code> can be used
+anywhere that a number could be used, including in an output statement or in
+the condition of an <code>if</code> statement.</p>
+
+<p>Write a main program that lets the user play several games of Blackjack. To
+make things interesting, give the user 100 dollars, and let the user make bets
+on the game. If the user loses, subtract the bet from the user's money. If the
+user wins, add an amount equal to the bet to the user's money. End the program
+when the user wants to quit or when she runs out of money.</p>
+
+</exercise-question>
+<exercise-discuss>
+<p>Let's start by designing the main program. We want to give the user $100 for
+betting on the games. Then, the user plays Blackjack games until the user runs
+out of money or until the user wants to quit. We could ask the user after each
+game whether she wants to continue. But instead of this, I just tell the user
+to enter a bet amount of 0 if she wants to quit. We need variables to represent
+the amount of money that the user has and the amount that the user bets on a
+given game. Let <code>money</code> and <code>bet</code> be variables of type
+<ptype>int</ptype> to represent these quantities. Then, we can write an algorithm for
+the main program:</p>
+
+<pre>Let money = 100
+while (true):
+    Input the user's bet
+    if the bet is 0:
+        Break out of the loop
+    User plays a game of Blackjack
+    if the user won the game
+        Pay off the user's bet (money = money + bet)
+    else
+        Collect the user's bet (money = money - bet)
+    If the user is out of money:
+        Break out of the loop.</pre>
+
+<p>Since the Blackjack game will take place in a subroutine, we need some way
+for the <code>main()</code> routine to find out whether the user won. The exercise
+says that the subroutine should be a function that returns a boolean value with
+this information. We should record the return value and test it to see whether
+the user won. The other point that needs some refinement is inputting the
+user's bet. We better make sure that the user's bet is a reasonable amount,
+that is, something between 0 and the amount of money the user has. So, the
+algorithm can be refined as:</p>
+
+<pre>Let money = 100
+while (true):
+    do {
+        Ask the user to enter a bet
+        Let bet = the user's response
+    } while bet is &lt; 0 or &gt; money
+    if  bet is 0:
+        Break out of the loop
+    Let userWins = playBlackjack()
+    if userWins:
+        Pay off the user's bet (money = money + bet)
+    else
+        Collect the user's bet (money = money - bet)
+    If money == 0:
+        Break out of the loop.</pre>
+
+<np>This algorithm can be translated into the <code>main()</code> routine in the
+program given below.</np>
+
+<break/>
+
+<p>Of course, the major part of the problem is to write the
+<code>playBlackjack()</code> routine. Fortunately, the exercise gives what amounts
+to a fairly detailed outline of the algorithm. Things are a little complicated
+because the game can end at various points along the way. When this happens,
+the subroutine ends immediately, and any remaining steps in the algorithm are
+skipped. In outline, the game goes like this:</p>
+
+<pre>Create and shuffle a deck of cards
+Create two BlackjackHands, userHand and dealerHand
+Deal two cards into each hand
+Check if dealer has blackjack (if so, game ends)
+Check if user has blackjack (if so, game ends)
+User draws cards (if user goes over 21, game ends)
+Dealer draws cards (if dealer goes over 21, games ends)
+Check for winner</pre>
+
+<p>The last three steps need to be expanded, again using the information stated
+in the exercise. The user can draw several cards, so we need a loop. The loop
+ends when the user wants to "stand". In the loop, if the value of
+<code>userHand</code> goes over 21, then the whole subroutine ends. The dealer
+simply draws cards in a loop as long as the value of <code>dealerHand</code> is 16
+or less. Again, if the value goes over 21, the whole subroutine ends. In the
+last step, we determine the winner by comparing the values of the two hands.
+With these refinements, the algorithm becomes</p>
+
+<pre>Create and shuffle a deck of cards
+Create two BlackjackHands, userHand and dealerHand
+
+Deal two cards into each hand
+if dealer has blackjack
+    User loses and the game ends now
+If user has blackjack
+    User wins and the game ends now
+
+Repeat:
+    Ask whether user wants to hit or stand
+    if user stands:
+        break out of loop
+    if user hits:
+        Give user a card
+        if userHand.getBlackjackValue() &gt; 21:
+            User loses and the game ends now
+
+while  dealerHand.getBlackjackValue() &lt;= 16 :
+    Give dealer a card
+    if dealerHand.getBlackjackValue() &gt; 21:
+        User wins and game ends now
+
+if dealerHand.getBlackjackValue() &gt;= userHand.getBlackjackValue()
+    User loses
+else
+    User wins</pre>
+
+<p>This is ready to be translated into Java. One point of coding is the
+question of how to deal a card to the user or to the dealer. If <code>deck</code>
+refers to the object of type <classname>Deck</classname>, then the function call
+<code>deck.dealCard()</code> returns the card we want. We can add the card to a
+hand with the <code>addCard()</code> instance method from the <classname>Hand</classname> class.
+We can do this in one step, if we want. For example, to deal two cards into
+each hand, we just have to say</p>
+
+<pre>dealerHand.addCard( deck.dealCard() );
+dealerHand.addCard( deck.dealCard() );
+userHand.addCard( deck.dealCard() );
+userHand.addCard( deck.dealCard() );</pre>
+
+<p>Of course, a lot of output statements have to be added to the algorithm to
+keep the user informed about what is going on. For example, I expanded the step
+where it says "Ask whether user wants to hit or stand" to</p>
+
+<pre>Display all the cards in the user's hand
+Display the user's total
+Display the dealers face-up card, i.e. dealerHand.getCard(0)
+Ask if user wants to hit or stand
+Get user's response, and make sure it's legal</pre>
+
+<np>The last step listed here expands to a loop that ends when the user inputs a
+valid response, 'H' or 'S'. The first step uses a <code>for</code> loop
+to display the cards in the user's hand:</np>
+
+<pre>for ( int i = 0;  i &lt; userHand.getCardCount();  i++ )
+     System.out.println("   " + userHand.getCard(i));</pre>
+
+<np>The function call
+<code>userHand.getCardCount()</code> gives the number of cards in the hand. The
+cards are numbered from 0 to <code>userHand.getCardCount() - 1</code>, and
+<code>userHand.getCard(i)</code> is the card in the <code>i</code>-position. Of course,
+to produce code like this, you have to make sure that you are familiar with the
+methods in the classes that you are using.</np>
+
+<p>Although there are many other details to get right, it's mostly routine from
+here on. I encourage you to read the entire program below and make sure that
+you understand it.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="Blackjack">/**
+ * This program lets the user play Blackjack.  The computer
+ * acts as the dealer.  The user has a stake of $100, and
+ * makes a bet on each game.  The user can leave at any time,
+ * or will be kicked out when he loses all the money.
+ * House rules:  The dealer hits on a total of 16 or less
+ * and stands on a total of 17 or more.  Dealer wins ties.
+ * A new deck of cards is used for each game.
+ */
+public class Blackjack {
+
+   public static void main(String[] args) {
+   
+      int money;          // Amount of money the user has.
+      int bet;            // Amount user bets on a game.
+      boolean userWins;   // Did the user win the game?
+      
+      System.out.println("Welcome to the game of blackjack.");
+      System.out.println();
+      
+      money = 100;  // User starts with $100.
+   
+      while (true) {
+          System.out.println("You have " + money + " dollars.");
+          do {
+             System.out.println("How many dollars do you want to bet?  (Enter 0 to end.)");
+             System.out.print("? ");
+             bet = TextIO.getlnInt();
+             if (bet &lt; 0 || bet &gt; money)
+                 System.out.println("Your answer must be between 0 and " + money + '.');
+          } while (bet &lt; 0 || bet &gt; money);
+          if (bet == 0)
+             break;
+          userWins = playBlackjack();
+          if (userWins)
+             money = money + bet;
+          else
+             money = money - bet;
+          System.out.println();
+          if (money == 0) {
+             System.out.println("Looks like you've run out of money!");
+             break;
+          }
+      }
+      
+      System.out.println();
+      System.out.println("You leave with $" + money + '.');
+   
+   } // end main()
+   
+ 
+   /**
+    * Let the user play one game of Blackjack, with the computer as dealer.
+    * @return true if the user wins the game, false if the user loses.
+    */  
+   static boolean playBlackjack() {
+
+      Deck deck;                  // A deck of cards.  A new deck for each game.
+      BlackjackHand dealerHand;   // The dealer's hand.
+      BlackjackHand userHand;     // The user's hand.
+      
+      deck = new Deck();
+      dealerHand = new BlackjackHand();
+      userHand = new BlackjackHand();
+
+      /*  Shuffle the deck, then deal two cards to each player. */
+      
+      deck.shuffle();
+      dealerHand.addCard( deck.dealCard() );
+      dealerHand.addCard( deck.dealCard() );
+      userHand.addCard( deck.dealCard() );
+      userHand.addCard( deck.dealCard() );
+      
+      System.out.println();
+      System.out.println();
+      
+      /* Check if one of the players has Blackjack (two cards totaling to 21).
+         The player with Blackjack wins the game.  Dealer wins ties.
+      */
+      
+      if (dealerHand.getBlackjackValue() == 21) {
+           System.out.println("Dealer has the " + dealerHand.getCard(0)
+                                   + " and the " + dealerHand.getCard(1) + ".");
+           System.out.println("User has the " + userHand.getCard(0)
+                                     + " and the " + userHand.getCard(1) + ".");
+           System.out.println();
+           System.out.println("Dealer has Blackjack.  Dealer wins.");
+           return false;
+      }
+      
+      if (userHand.getBlackjackValue() == 21) {
+           System.out.println("Dealer has the " + dealerHand.getCard(0)
+                                   + " and the " + dealerHand.getCard(1) + ".");
+           System.out.println("User has the " + userHand.getCard(0)
+                                     + " and the " + userHand.getCard(1) + ".");
+           System.out.println();
+           System.out.println("You have Blackjack.  You win.");
+           return true;
+      }
+      
+      /*  If neither player has Blackjack, play the game.  First the user 
+          gets a chance to draw cards (i.e., to "Hit").  The while loop ends 
+          when the user chooses to "Stand".  If the user goes over 21,
+          the user loses immediately.
+      */
+      
+      while (true) {
+          
+           /* Display user's cards, and let user decide to Hit or Stand. */
+
+           System.out.println();
+           System.out.println();
+           System.out.println("Your cards are:");
+           for ( int i = 0; i &lt; userHand.getCardCount(); i++ )
+              System.out.println("    " + userHand.getCard(i));
+           System.out.println("Your total is " + userHand.getBlackjackValue());
+           System.out.println();
+           System.out.println("Dealer is showing the " + dealerHand.getCard(0));
+           System.out.println();
+           System.out.print("Hit (H) or Stand (S)? ");
+           char userAction;  // User's response, 'H' or 'S'.
+           do {
+              userAction = Character.toUpperCase( TextIO.getlnChar() );
+              if (userAction != 'H' &amp;&amp; userAction != 'S')
+                 System.out.print("Please respond H or S:  ");
+           } while (userAction != 'H' &amp;&amp; userAction != 'S');
+
+           /* If the user Hits, the user gets a card.  If the user Stands,
+              the loop ends (and it's the dealer's turn to draw cards).
+           */
+
+           if ( userAction == 'S' ) {
+                   // Loop ends; user is done taking cards.
+               break;
+           }
+           else {  // userAction is 'H'.  Give the user a card.  
+                   // If the user goes over 21, the user loses.
+               Card newCard = deck.dealCard();
+               userHand.addCard(newCard);
+               System.out.println();
+               System.out.println("User hits.");
+               System.out.println("Your card is the " + newCard);
+               System.out.println("Your total is now " + userHand.getBlackjackValue());
+               if (userHand.getBlackjackValue() &gt; 21) {
+                   System.out.println();
+                   System.out.println("You busted by going over 21.  You lose.");
+                   System.out.println("Dealer's other card was the " 
+                                                      + dealerHand.getCard(1));
+                   return false;  
+               }
+           }
+           
+      } // end while loop
+      
+      /* If we get to this point, the user has Stood with 21 or less.  Now, it's
+         the dealer's chance to draw.  Dealer draws cards until the dealer's
+         total is &gt; 16.  If dealer goes over 21, the dealer loses.
+      */
+
+      System.out.println();
+      System.out.println("User stands.");
+      System.out.println("Dealer's cards are");
+      System.out.println("    " + dealerHand.getCard(0));
+      System.out.println("    " + dealerHand.getCard(1));
+      while (dealerHand.getBlackjackValue() &lt;= 16) {
+         Card newCard = deck.dealCard();
+         System.out.println("Dealer hits and gets the " + newCard);
+         dealerHand.addCard(newCard);
+         if (dealerHand.getBlackjackValue() &gt; 21) {
+            System.out.println();
+            System.out.println("Dealer busted by going over 21.  You win.");
+            return true;
+         }
+      }
+      System.out.println("Dealer's total is " + dealerHand.getBlackjackValue());
+      
+      /* If we get to this point, both players have 21 or less.  We
+         can determine the winner by comparing the values of their hands. */
+      
+      System.out.println();
+      if (dealerHand.getBlackjackValue() == userHand.getBlackjackValue()) {
+         System.out.println("Dealer wins on a tie.  You lose.");
+         return false;
+      }
+      else if (dealerHand.getBlackjackValue() &gt; userHand.getBlackjackValue()) {
+         System.out.println("Dealer wins, " + dealerHand.getBlackjackValue() 
+                          + " points to " + userHand.getBlackjackValue() + ".");
+         return false;
+      }
+      else {
+         System.out.println("You win, " + userHand.getBlackjackValue() 
+                          + " points to " + dealerHand.getBlackjackValue() + ".");
+         return true;
+      }
+
+   }  // end playBlackjack()
+
+
+} // end class Blackjack</prog>
+</pre>
+</exercise-code>
+</exercise>
+
+<exercise id="OOP.ex.6">
+<exercise-question><p><localref href="subroutines.ex.7"/> asked you to write
+a program that administers a 10-question addition quiz.  Rewrite that program
+so that it uses the following class to represent addition questions:</p>
+<pre><prog name="AdditionQuestion">public class AdditionQuestion {
+
+    private int a, b;  // The numbers in the problem.
+
+    public AdditionQuestion() { // constructor
+        a = (int)(Math.random() * 50 + 1);
+        b = (int)(Math.random() * 50);
+    }
+
+    public String getQuestion() {
+        return "What is " + a + " + " + b + " ?";
+    }
+
+    public int getCorrectAnswer() {
+        return a + b;
+    }
+
+}</prog></pre>
+</exercise-question>
+<exercise-discuss><p>The original program used two array of type <ptype>int[]</ptype>
+to represent the addition questions.  One array held the first number from each of
+the ten problems, while the other array held the second number.  This representation is
+an example of <newword>parallel arrays</newword>: The data for a single question is split
+between two arrays.  (The arrays are called "parallel" because to see all the data for
+a problem next to each other, you would have to lay the arrays down next to each other,
+like parallel lines, so the i-th element in one array lies next to the i-th element in
+the other array.)</p>
+<p>The new version of the program can use an array of ten objects of type
+<classname>AdditionQuestion</classname> to represent the quiz.  The data that we need for
+any one question can now be found in the same place&mdash;the object that represents that
+question.  This makes for a neater solution than using parallel arrays.</p>
+<p>Some of the functionality
+that we need to create, administer, and grade the quiz has been incorporated into
+the <classname>AdditionQuestion</classname> class.  For example, the constructor in that
+class already selects random numbers to be used in the problem, so creating a problem is
+just a matter of calling the constructor, so there is no need to use random numbers when
+making a problem in the <code>createQuiz()</code> method.  Also, to get the question
+and correct answer for a problem, we can just call <code>questions[i].getQuestion()</code>
+and <code>questions[i].getCorrectAnswer()</code>.  In fact, we can't get the question
+any other way, since the two instance variables in
+an <classname>ArithmeticQuestion</classname> are <code>private</code>.
+One downside of this is that I couln't format the output from <code>gradeQuis()</code>
+as neatly as in the first version.</p>
+<p>All-in-all, t is fairly straightforward to translate the
+old version of the program into the new version. You can read my solution below.</p>
+<p>By the way, I considered adding the user's answer to the <classname>AdditionQuestion</classname>
+class, along with the correct answer, but the user's answer doesn't seem to me to be logically
+part of a question.  So I think it makes more sense to keep it out of the object that
+represents the question.</p>
+<p>Remember that this program depends on the <classname>AdditionQuiz</classname> class that is given in the
+statement of the problem.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="AdditionQuizWithObjects">/**
+ * This program administers a ten-question addition quiz to the user.  The numbers
+ * for the problem are chosen at random.  The numbers and the answers are one or
+ * two digits.  After asking the user the ten questions, the computer grades the
+ * quiz, telling the user the correct answer for any problem they got wrong.
+ */
+public class AdditionQuizWithObjects {
+    
+    <newcode>private static AdditionQuestion[] questions;  // The questions for the quiz</newcode>
+
+    private static int[] userAnswers;   // The user's answers to the ten questions.
+    
+    
+    public static void main(String[] args) {
+        System.out.println();
+        System.out.println("Welcome to the addition quiz!");
+        System.out.println();
+        createQuiz();
+        administerQuiz();
+        gradeQuiz();
+    }
+    
+    
+    /**
+     * Creates the <newcode>array of objects that holds the quiz questions</newcode>
+     */
+    private static void createQuiz() {
+        <newcode>questions = new AdditionQuestion[10];
+        for ( int i = 0; i &lt; 10; i++ ) {
+            questions[i] = new AdditionQuestion();
+        }</newcode>
+    }
+    
+    
+    /**
+     * Asks the user each of the ten quiz questions and gets the user's answers.
+     * The answers are stored in an array, which is created in this subroutine.
+     */
+    private static void administerQuiz() {
+        userAnswers = new int[10];
+        for (int i = 0; i &lt; 10; i++) {
+            int questionNum = i + 1;
+            System.out.printf("Question %2d:  <newcode>%s</newcode> ",
+                                  questionNum, <newcode>questions[i].getQuestion())</newcode>;
+            userAnswers[i] = TextIO.getlnInt();
+        }
+    }
+    
+    
+    /**
+     * Shows all the questions, with their correct answers, and computes a grade
+     * for the quiz.  For each question, the user is told whether they got
+     * it right.
+     */
+    private static void gradeQuiz() {
+        System.out.println();
+        System.out.println("Here are the correct answers:");
+        int numberCorrect = 0;
+        int grade;
+        for (int i = 0; i &lt; 10; i++) {
+            int questionNum = i + 1;
+            System.out.printf("   Question <newcode>%2d:  %s  Correct answer is %d  </newcode>",
+                questionNum, <newcode>questions[i].getQuestion(), questions[i].getCorrectAnswer()</newcode>);
+            if ( userAnswers[i] == <newcode>questions[i].getCorrectAnswer()</newcode> ) {
+                System.out.println("You were CORRECT.");
+                numberCorrect++;
+            }
+            else {
+                System.out.println("You said " + userAnswers[i] + ", which is INCORRECT.");
+            }
+        }
+        grade = numberCorrect * 10;
+        System.out.println();
+        System.out.println("You got " + numberCorrect + " questions correct.");
+        System.out.println("Your grade on the quiz is " + grade);
+        System.out.println();
+    }
+
+} // end class AdditionQuizWithObjects</prog></pre>
+</exercise-code>
+</exercise>
+
+<exercise>
+<exercise-question><p>Rewrite the program from the <localref href="OOP.ex.6">previous exercise</localref>
+so that it administers a quiz with several different kinds of questions.
+In the previous exercise, you used
+a class to represent addition questions.  For this exercise, you will use the following <code>interface</code>,
+or an equivalent abstract class, to represent the more general idea of a question that has
+an integer as its answer:</p>
+<pre>public interface IntQuestion {
+    public String getQuestion();
+    public int getCorrectAnswer();
+}</pre>
+<np>You can make the <classname>AdditionQuestion</classname> class implement the interface
+simply by adding "<code>implements IntQuestion</code>" to its definition.  Write a similar
+class to represent subtraction questions.  When creating a subtraction problem, you should make
+sure that the answer is not negative.</np>
+<p>For the new program, use an array of type <atype>IntQuestion[]</atype> to hold the quiz
+questions.  Include some addition questions and some subtraction questions in the quiz.
+You can also add a couple non-math questions, including this one, created as an anonymous class:</p>
+<pre>IntQuestion bigQuestion = new IntQuestion() {
+    public String getQuestion() {
+        return "What is the answer to the ultimate question " +
+                 " of life, the universe, and everything?";
+    }
+    public int getCorrectAnswer() {
+        return 42;
+    }
+};</pre>
+</exercise-question>
+<exercise-discuss><p>Where the solution to the previous exercise used an
+array of <classname>AdditionQuestion</classname> to store addition problems,
+the new program has to store questions of various types. An array of type
+<atype>IntQuestion[]</atype> can hold any object that implements the
+<classname>IntQuestion</classname> interface.  That includes 
+objects of type <classname>AdditionQuestion</classname> as long as we modify that
+class so that it implements <classname>IntQuestion</classname>.  But it can also
+include other types of objects.  For one thing, we want to have subtraction 
+problems.  We can implement subtraction with a class very similar to the class
+for addition questions:</p>
+<pre>class SubtractionQuestion implements IntQuestion {
+    private int a, b;  // The numbers in the problem.
+    public SubtractionQuestion() { // constructor
+       a = (int)(Math.random() * 50 + 1);
+       b = (int)(Math.random() * 50);
+       <newcode>if (ba - b &lt; 0) { // swap a and b so answer won't be negative
+          int temp = a;
+          a = b;
+          b = temp;
+       }</newcode>
+   }
+   public String getQuestion() {
+       return "What is " + a + " - " + b + " ?";
+    }
+    public int getCorrectAnswer() {
+       return a - b;
+   }
+}</pre>
+<np>The exercise asks for subtraction problems for which the answer is not negative.
+There are a number of ways to accomplish that.  For example, you could use a loop
+that would continue selecting random values for <code>a</code> and <code>b</code>
+as long as <code>a&nbsp;-&nbsp;b&nbsp;&lt;&nbsp;0</code>.  In my solution, I just swap
+the values of <code>a</code> and <code>b</code> when <code>a&nbsp;-&nbsp;b&nbsp;&lt;&nbsp;0</code>.</np>
+<p>Creating the quiz becomes a more difficult problem in the new version, since
+we need to use several different kinds of questions.  In my solution, the first seven
+questions are math problems.  For each math problem, the program decides randomly whether
+to make it an addition question or a subtraction question.  The last three questions
+are created using anonymous classes, just like the example given in the exercise.
+You can see my solution below.</p>
+<p>But the three anonymous classes in my solution have a lot in common: They are the same except for
+the particular string that is used to ask the question and the particular number
+that is the correct answer.  A better approach would probably have been to create 
+a class to represent such questions:</p>
+<pre>public class GeneralQuestion implements IntQuestion {
+    private String question;
+    private int answer;
+    public GeneralQuestion( String question, int answer ) {
+        this.question = question;
+        this.answer = answer;
+    }
+    public String getQuestion() {
+        return question;
+    }
+    public int getCorrectAnswer() {
+        return answer;
+    }
+}</pre>
+<np>In that case, the subroutine for creating the quiz would become:</np>
+<pre>private static void createQuiz() {
+    questions = new IntQuestion[10];
+    for ( int i = 0; i &lt; 7; i++ ) {
+        if (Math.random() &lt; 0.5)
+            questions[i] = new AdditionQuestion();
+        else
+            questions[i] = new SubtractionQuestion();
+    }
+    questions[7] = new GeneralQuestion("How many states are there in the United States?",50);
+    questions[8] = new GeneralQuestion("In what year did the First World War begin?",1914);
+    questions[9] = new GeneralQuestion("What is the answer to the ultimate question " +
+                                "of life, the universe, and everything?",42);
+}</pre>
+<p>Aside from the declaration of the array <code>questions</code> 
+and the routine for creating the quiz, everything else in the program can be exactly as
+it was in the previous exercise.  (However, I did change the format of the output in
+<code>gradeQuiz()</code> to make it look better for longer questions.)</p>
+<p>In my solution, just to keep everything in one file, I nested the interface 
+and the two classes that implement it inside the main program class.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="GeneralQuiz">
+/**
+ * This program creates, administers, and grades a quiz made up of ten questions,
+ * where each question has an integer answer.  The quiz includes some simple addition
+ * problems, some subtraction problems, and some non-math questions.
+ */
+public class GeneralQuiz {
+
+    // -------------------- Nested classes and interface -----------------------
+
+    interface IntQuestion {
+        public String getQuestion();
+        public int getCorrectAnswer();
+    }
+    
+    static class AdditionQuestion implements IntQuestion {
+       private int a, b;  // The numbers in the problem.
+       public AdditionQuestion() { // constructor
+           a = (int)(Math.random() * 50 + 1);
+           b = (int)(Math.random() * 50);
+       }
+       public String getQuestion() {
+           return "What is " + a + " + " + b + " ?";
+       }
+       public int getCorrectAnswer() {
+           return a + b;
+       }
+    }
+
+    static class SubtractionQuestion implements IntQuestion {
+       private int a, b;  // The numbers in the problem.
+       public SubtractionQuestion() { // constructor
+           a = (int)(Math.random() * 50 + 1);
+           b = (int)(Math.random() * 50);
+           if (b > a) { // swap a and b so answer won't be negative
+              int temp = a;
+              a = b;
+              b = temp;
+           }
+       }
+       public String getQuestion() {
+           return "What is " + a + " - " + b + " ?";
+       }
+       public int getCorrectAnswer() {
+           return a - b;
+       }
+    }
+    
+    // -------------------- The Program --------------------------------------
+
+    private static IntQuestion[] questions;  // The questions for the quiz
+
+    private static int[] userAnswers;   // The user's answers to the ten questions.
+    
+    
+    public static void main(String[] args) {
+        System.out.println();
+        System.out.println("Welcome to the quiz");
+        System.out.println();
+        System.out.println("There are some math questions and a few non-math");
+        System.out.println("questions, but the answer to every question is");
+        System.out.println("an integer.");
+        System.out.println();
+        createQuiz();
+        administerQuiz();
+        gradeQuiz();
+    }
+    
+    
+    /**
+     * Creates the array of objects that holds the quiz questions
+     */
+    private static void createQuiz() {
+        questions = new IntQuestion[10];
+        for ( int i = 0; i &lt; 7; i++ ) {
+            if (Math.random() &lt; 0.5)
+	            questions[i] = new AdditionQuestion();
+	        else
+	            questions[i] = new SubtractionQuestion();
+        }
+        questions[7] = new IntQuestion() {
+              public String getQuestion() {
+                  return "How many states are there in the United States?";
+              }
+              public int getCorrectAnswer() {
+                  return 50;
+              }
+        };
+        questions[8] = new IntQuestion() {
+              public String getQuestion() {
+                  return "In what year did the First World War begin?";
+              }
+              public int getCorrectAnswer() {
+                  return 1914;
+              }
+        };
+        questions[9] = new IntQuestion() {
+              public String getQuestion() {
+                  return "What is the answer to the ultimate question " +
+                                "of life, the universe, and everything?";
+              }
+              public int getCorrectAnswer() {
+                  return 42;
+              }
+        };
+   }        
+    
+    
+    /**
+     * Asks the user each of the ten quiz questions and gets the user's answers.
+     * The answers are stored in an array, which is created in this subroutine.
+     */
+    private static void administerQuiz() {
+        userAnswers = new int[10];
+        for (int i = 0; i &lt; 10; i++) {
+            int questionNum = i + 1;
+            System.out.printf("Question %2d:  %s ",
+                                  questionNum, questions[i].getQuestion());
+            userAnswers[i] = TextIO.getlnInt();
+        }
+    }
+    
+    
+    /**
+     * Shows all the questions, with their correct answers, and computes a grade
+     * for the quiz.  For each question, the user is told whether they got
+     * it right.
+     */
+    private static void gradeQuiz() {
+        System.out.println();
+        System.out.println("Here are the correct answers:");
+        System.out.println();
+        int numberCorrect = 0;
+        int grade;
+        for (int i = 0; i &lt; 10; i++) {
+            System.out.println("Question number " + (i+1) + ":");
+            System.out.println("    " + questions[i].getQuestion());
+            System.out.println("    Correct answer:  " + questions[i].getCorrectAnswer());
+            if ( userAnswers[i] == questions[i].getCorrectAnswer() ) {
+                System.out.println("    You were CORRECT.");
+                numberCorrect++;
+            }
+            else {
+                System.out.println("    You said " + userAnswers[i] + ", which is INCORRECT.");
+            }
+            System.out.println();
+        }
+        grade = numberCorrect * 10;
+        System.out.println();
+        System.out.println("You got " + numberCorrect + " questions correct.");
+        System.out.println("Your grade on the quiz is " + grade);
+        System.out.println();
+    }
+
+} // end class GeneralQuiz
+</prog></pre>
+</exercise-code>
+</exercise>
+
+
+</exercises>

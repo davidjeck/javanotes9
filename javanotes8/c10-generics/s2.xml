@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="generics.2" title="Lists and Sets">
+   
+
+<p><start><big>I</big>n the previous section</start>, we looked at the general
+properties of collection classes in Java. In this section, we look at some
+specific collection classes and how to use them. These classes can be divided
+into two main categories: lists and sets. A list consists of a sequence of items
+arranged in a linear order. A list has a definite order, but is not necessarily
+sorted into ascending order.
+A set is a collection that has no duplicate
+entries. The elements of a set might or might not be arranged into some
+definite order.  I will also briefly discuss a third category of
+collection known as a "priority queue."</p>
+
+
+
+<subsection id="generics.2.1" title="ArrayList and LinkedList">
+
+<p>There are two obvious ways to represent a list: as a dynamic array and as a
+linked list. We've encountered these already in 
+<localref href="arrays.3"/> and <localref href="recursion.2"/>. Both of these
+options are available in generic form as the collection classes
+<code>java.util.ArrayList</code> and <code>java.util.LinkedList</code>. These
+classes are part of the Java Collection Framework.  Each implements the interface
+<classname>List&lt;T&gt;</classname>, and therefore the interface <classname>Collection&lt;T&gt;</classname>.
+An object of type <classname>ArrayList&lt;T&gt;</classname>
+represents an ordered sequence of objects of type <classname>T</classname>,
+stored in an array that will grow in size whenever necessary as new items are added. An object of type
+<classname>LinkedList&lt;T&gt;</classname> also
+represents an ordered sequence of objects of type <classname>T</classname>, but
+the objects are stored in nodes that are linked
+together with pointers.</p>
+
+<p>Both list classes support the basic list operations that are defined in
+the interface <classname>List&lt;T&gt;</classname>, and an abstract data
+type is defined by its operations, not by its representation. So why two
+classes? Why not a single List class with a single representation? The problem
+is that there <b>is</b> no single representation of lists for which all list
+operations are efficient. For some operations, linked lists are more efficient
+than arrays. For others, arrays are more efficient. In a particular application
+of lists, it's likely that only a few operations will be used frequently. You
+want to choose the representation for which the frequently used operations will
+be as efficient as possible.</p>
+
+<p>Broadly speaking, the <classname>LinkedList</classname> class is more efficient in
+applications where items will often be added or removed at the beginning of the
+list or in the middle of the list. In an array, these operations require moving
+a large number of items up or down one position in the array, to make a space
+for a new item or to fill in the hole left by the removal of an item.  In terms
+of asymptotic analysis (<localref href="robustness.5"/>), adding an element at the beginning
+or in the middle of an array has run time&nbsp;&Theta;(n), where n is the number
+of items in the array.  In a
+linked list, nodes can be added or removed at any position by changing a few
+pointer values, an operation that has run time &Theta;(1).  That is, the 
+operation takes only some constant amount of time, independent of how many
+items are in the list.</p>
+   
+<p>On the other hand, the <classname>ArrayList</classname> class is more efficient when
+<newword>random access</newword> to items is required.  Random access
+means accessing the k-th item in the list, for any integer&nbsp;k.  Random access
+is used when you get or change the value stored at a specified position in the list.
+This is trivial for an array, with run time &Theta;(1).  
+But for a linked list it means starting at the beginning
+of the list and moving from node to node along the list for k steps, an
+operation that has run time &Theta;(k).</p>
+   
+<p>Operations that can be done efficiently for both types of lists include sorting and adding
+an item at the end of the list.</p>
+
+<p>All lists implement the methods from interface <classname>Collection&lt;T&gt;</classname> 
+that were discussed in <localref href="generics.1.4"/>.  These methods include  <code>size()</code>,
+<code>isEmpty()</code>, <code>add(T)</code>, <code>remove(Object)</code>, and
+<code>clear()</code>. The <code>add(T)</code> method adds the object at the end of
+the list. The <code>remove(Object)</code> method involves first finding the object,
+which uses linear search and is not very efficient for any list since it involves going through the
+items in the list from beginning to end until the object is found. The interface
+<classname>List&lt;T&gt;</classname>  adds some methods for accessing list items according to
+their numerical positions in the list.  Suppose that <code>list</code> is an object
+of type <classname>List&lt;T&gt;</classname>.  Then we have the methods:</p>
+
+<ul>
+<li><codedef>list.get(index)</codedef> &mdash; returns the
+object of type <classname>T</classname> that is
+at position <code>index</code> in the list, where <code>index</code> is
+an integer. Items are numbered 0, 1, 2, &dots;, <code>list.size()-1</code>. The
+parameter must be in this range, or an <classname>IndexOutOfBoundsException</classname> is
+thrown.</li>
+
+<li><codedef>list.set(index,obj)</codedef> &mdash; stores the
+object <code>obj</code> at position number <code>index</code> in the list, replacing
+the object that was there previously. The object <code>obj</code> must be of
+type <classname>T</classname>.  This does not change the number of
+elements in the list or move any of the other elements.</li>
+
+<li><codedef>list.add(index,obj)</codedef> &mdash; inserts an
+object <code>obj</code> into the list at position number <code>index</code>,
+where <code>obj</code> must be of type <classname>T</classname>.  The number
+of items in the list increases by one, and items that come after position
+<code>index</code> move down one position to make room for the new item. The value of
+<code>index</code> must be in the range 0 to <code>list.size()</code>, inclusive.
+If <code>index</code> is equal to <code>list.size()</code>, then <code>obj</code>
+is added at the end of the list.</li>
+
+<li><codedef>list.remove(index)</codedef> &mdash; removes the
+object at position number <code>index</code>, and returns that object
+as the return value of the method.
+Items after this position move up one
+space in the list to fill the hole, and the size of the list decreases by one.
+The value of <code>index</code> must be in the range 0 to <code>list.size()-1</code>.</li>
+
+<li><codedef>list.indexOf(obj)</codedef> &mdash; returns an
+<ptype>int</ptype> that gives the position of <code>obj</code> in the list, if it occurs.
+If it does not occur, the return value is <code>-1</code>.  The object <code>obj</code>
+can be of any type, not just of type&nbsp;<classname>T</classname>.  If <code>obj</code> occurs
+more than once in the list, the index of the first occurrence is returned.</li>
+</ul>
+
+<p>These methods are defined both in class <classname>ArrayList&lt;T&gt;</classname> and in class
+<classname>LinkedList&lt;T&gt;</classname>, although some of them&mdash;<code>get</code>
+and <code>set</code>&mdash;are only efficient for
+<classname>ArrayLists</classname>. The class <classname>LinkedList&lt;T&gt;</classname> adds a few additional
+methods, which are not defined for an <classname>ArrayList</classname>. If
+<code>linkedlist</code> is an object of type <classname>LinkedList&lt;T&gt;</classname>, then we have</p>
+
+<ul>
+<li><codedef>linkedlist.getFirst()</codedef> &mdash; returns the
+object of type <classname>T</classname> that is the first item in the list. The list is not
+modified.  If the list is empty when the method is called, an exception of type
+<classname>NoSuchElementException</classname> is thrown (the same is true for the
+next three methods as well).</li>
+
+<li><codedef>linkedlist.getLast()</codedef> &mdash; returns the
+object of type <classname>T</classname> that is the last item in the list. The list is not
+modified.</li>
+
+<li><codedef>linkedlist.removeFirst()</codedef> &mdash; removes
+the first item from the list, and returns that object of type <classname>T</classname> as its return
+value.  The functions <codedef>linkedlist.remove()</codedef> and <codedef>linkedlist.pop()</codedef> 
+are also defined, with the same meaning as <code>removeFirst()</code>.</li>
+
+<li><codedef>linkedlist.removeLast()</codedef> &mdash; removes
+the last item from the list, and returns that object of type <classname>T</classname> as its return
+value.</li>
+
+<li><codedef>linkedlist.addFirst(obj)</codedef> &mdash; adds the
+<code>obj</code>, which must be of type <classname>T</classname>, to the beginning of the list.
+The function <codedef>linkedlist.push(obj)</codedef> has the same meaning.</li>
+
+<li><codedef>linkedlist.addLast(obj)</codedef> &mdash; adds the
+object <code>obj</code>, which must be of type <classname>T</classname>, to the end of the list. 
+This is exactly the same as <code>linkedlist.add(obj)</code> but is defined to keep the
+naming consistent.</li>
+</ul>
+
+<p>There is some redundancy here, apparently to make it easy to use a
+<classname>LinkedList</classname> as if it were a stack or a queue. (See 
+<localref href="recursion.3"/>.) For example, we can use a
+<classname>LinkedList</classname> as a stack by using the methods named <code>push()</code>
+and <code>pop()</code>, or as a queue by using <code>add()</code> and <code>remove()</code>
+to implement the enqueue and dequeue operations.</p>
+
+<p>If <code>list</code> is an object of type <classname>List&lt;T&gt;</classname>, then the method
+<code>list.iterator()</code>, defined in the interface <classname>Collection&lt;T&gt;</classname>, returns
+an <classname>Iterator</classname> that can be used to traverse the list from beginning to
+end. However, for <classname>Lists</classname>, there is a special type of <classname>Iterator</classname>,
+called a <classname>ListIterator</classname>, which offers additional capabilities. 
+<classname>ListIterator&lt;T&gt;</classname> is an interface that extends the
+interface <classname>Iterator&lt;T&gt;</classname>.  
+The method <code>list.listIterator()</code> returns an object of type
+<classname>ListIterator&lt;T&gt;</classname>.</p>
+
+<p>A <classname>ListIterator</classname> has the usual <classname>Iterator</classname> methods,
+<code>hasNext()</code>, <code>next()</code>, and <code>remove()</code>, but it also has methods
+<code>hasPrevious()</code>, <code>previous()</code>, <code>add(obj)</code>, and <code>set(obj)</code>
+that make it possible to move backwards in the list, to add an item at the
+current position of the iterator, and to replace one of the items in the list.  
+To understand how these work, it's best to think of an
+iterator as pointing to a position <b>between</b> two list elements, or at
+the beginning or end of the list. In this diagram, the items in a list are
+represented by squares, and arrows indicate the possible positions of an
+iterator:</p>
+
+<img src="list-positions.png" width="320" height="73" 
+   alt="Iterator Positions" tex="list-positions.eps" texscale="0.6"/>
+
+
+<p>If <code>iter</code> is of type <classname>ListIterator&lt;T&gt;</classname>, then 
+<code>iter.next()</code> moves
+the iterator one space to the right along the list and returns the item that
+the iterator passes as it moves. The method <code>iter.previous()</code> moves the
+iterator one space to the left along the list and returns the item that it
+passes. The method <code>iter.remove()</code> removes an item from the list; the
+item that is removed is the item that the iterator passed most recently in a
+call to either <code>iter.next()</code> or <code>iter.previous()</code>.  The method
+<code>iter.set(obj)</code> works similarly; it replaces the item that would be removed
+by <code>iter.remove()</code>.  There is also
+a method <code>iter.add(obj)</code> that adds the specified object to the list
+at the current position of the iterator (where <code>obj</code> must be of type
+<classname>T</classname>).  This can be between two existing items
+or at the beginning of the list or at the end of the list.</p>
+
+<p>(By the way, the lists that are used in class <code>LinkedList&lt;T&gt;</code> are
+<newword>doubly linked lists</newword>. That is, each node in the
+list contains two pointers&mdash;one to the next node in the list and one to the
+previous node. This makes it possible to efficiently implement both the
+<code>next()</code> and <code>previous()</code> methods of a <code>ListIterator</code>.
+Also, to make the <code>addLast()</code> and <code>getLast()</code> methods of a
+<classname>LinkedList</classname> efficient, the class <classname>LinkedList&lt;T&gt;</classname> 
+includes a "tail pointer" that points to the last node in the list.)</p>
+
+<p>As an example of using a <classname>ListIterator</classname>, suppose that we want to
+maintain a list of items that is always sorted into increasing order. When
+adding an item to the list, we can use a <classname>ListIterator</classname> to find the
+position in the list where the item should be added.  Once the position has been
+found, we use the same list iterator to place the item in that position.
+The idea is to start at
+the beginning of the list and to move the iterator forward past all the items
+that are smaller than the item that is being inserted. At that point, the
+iterator's <code>add()</code> method can be used to insert the item.
+To be more definite, suppose that
+<code>stringList</code> is a variable of type <classname>List&lt;String&gt;</classname>.
+Assume that the strings that are already in the list are stored in
+ascending order and that <code>newItem</code> is a string that we would
+like to insert into the list.  The following code will place <code>newItem</code>
+in the list in its correct position, so that the modified list is still in
+ascending order:</p>
+
+<pre>ListIterator&lt;String&gt; iter = stringList.listIterator();
+
+// Move the iterator so that it points to the position where
+// newItem should be inserted into the list.  If newItem is
+// bigger than all the items in the list, then the while loop
+// will end when iter.hasNext() becomes false, that is, when
+// the iterator has reached the end of the list.
+
+while (iter.hasNext()) {
+   String item = iter.next();
+   if (newItem.compareTo(item) &lt;= 0) {
+         // newItem should come BEFORE item in the list.
+         // Move the iterator back one space so that
+         // it points to the correct insertion point,
+         // and end the loop.
+      iter.previous();
+      break;
+   } 
+}
+
+iter.add(newItem);</pre>
+
+<p>Here, <code>stringList</code> might be of type <classname>ArrayList&lt;String&gt;</classname>
+or of type <classname>LinkedList&lt;String&gt;</classname>.  The
+algorithm that is used to insert <code>newItem</code> into the list will be
+about equally efficient for both types of lists, and it will even work for other classes that
+implement the interface <classname>List&lt;String&gt;</classname>.
+You would probably find it
+easier to design an insertion algorithm that uses array-like indexing with
+the methods <code>get(index)</code> and <code>add(index,obj)</code>. However, that
+algorithm would be horribly inefficient for <classname>LinkedLists</classname> because
+random access is so inefficient for linked lists.  (By the way, the insertion 
+algorithm works when the list is empty.  It might be useful
+for you to think about why this is true.)</p>
+
+
+</subsection>
+   
+<subsection id="generics.2.2" title="Sorting">
+   
+<p>Sorting a list is a fairly common operation, and there should really be a
+sorting method in the <classname>List</classname> interface. There is not,
+presumably because it only makes sense to sort lists of certain types of objects.
+However, methods for sorting lists are available as <code>static</code> methods
+in the class <code>java.util.Collections</code>. This class contains a variety of
+static utility methods for working with collections.  The methods are generic;
+that is, they will work for collections of objects of various types.
+(You have already seen similar methods for arrays in the <classname>Arrays</classname> class.)
+Suppose that <code>list</code> is of type <classname>List&lt;T&gt;</classname>.
+The command</p>
+
+<pre>Collections.sort(list);</pre>
+
+<np>can be used to sort the list into ascending order.  The items in the list should
+implement the interface <classname>Comparable&lt;T&gt;</classname> 
+(see <localref href="generics.1.6"/>). 
+The method <code>Collections.sort()</code> will work, for
+example, for lists of <classname>String</classname> and for lists
+of any of the wrapper classes such as <classname>Integer</classname> and
+<classname>Double</classname>.  There is also a sorting method that takes
+a <classname>Comparator</classname> as its second argument:</np>
+
+<pre>Collections.sort(list,comparator);</pre>
+
+<np>In this method, the <code>comparator</code> will be used to compare the items in the list. As
+mentioned in the <localref href="generics.1.6">previous section</localref>,
+a <classname>Comparator</classname> is an object that
+defines a <code>compare()</code> method that can be used to compare two objects.
+We'll see an example of using a <classname>Comparator</classname> in
+<localref href="generics.4"/>.</np>
+   
+<p>The sorting method that is used by <code>Collections.sort()</code> is the
+so-called "merge sort" algorithm, which has both worst-case
+and average-case run times that are &Theta;(n*log(n)) for a list of size&nbsp;n.
+Although the average run time for MergeSort is a little slower than that of
+QuickSort, its worst-case performance is much better than QuickSort's.
+(QuickSort was covered in <localref href="recursion.1.3"/>.)
+MergeSort also has a nice property called "stability" that we will encounter
+at the end of <localref href="generics.4.3"/>.</p>
+
+<p>The <classname>Collections</classname> class has at least two other useful methods for
+modifying lists. <code>Collections.shuffle(list)</code> will rearrange the elements
+of the list into a random order. <code>Collections.reverse(list)</code> will
+reverse the order of the elements, so that the last element is moved to the
+beginning of the list, the next-to-last element to the second position, and so
+on.</p>
+
+<p>Since an efficient sorting method is provided for <classname>Lists</classname>, there is
+no need to write one yourself.</p>
+
+</subsection>
+
+   
+<subsection id="generics.2.3" title="TreeSet and HashSet">
+   
+<p>A set is a collection of objects in which no object occurs more
+than once. Sets implement all the methods in the interface 
+<classname>Collection&lt;T&gt;</classname>, but do so
+in a way that ensures that no element occurs twice in the set. For example, if
+<code>set</code> is an object of type <classname>Set&lt;T&gt;</classname>, 
+then <code>set.add(obj)</code> will
+have no effect on the set if <code>obj</code> is already an element of the set.
+Java has two classes that implement the interface <classname>Set&lt;T&gt;</classname>:
+<code>java.util.TreeSet</code> and <code>java.util.HashSet</code>.</p>
+
+<p>In addition to being a <classname>Set</classname>, a <classname>TreeSet</classname> has the property
+that the elements of the set are arranged into ascending sorted order. An
+<classname>Iterator</classname> (or a for-each loop) 
+for a <code>TreeSet</code> will always visit the elements of the
+set in ascending order.</p>
+
+<p>A <classname>TreeSet</classname> cannot hold arbitrary objects, since there must be a way
+to determine the sorted order of the objects it contains. Ordinarily, this
+means that the objects in a set of type <classname>TreeSet&lt;T&gt;</classname> should implement the
+interface <classname>Comparable&lt;T&gt;</classname>
+and that <code>obj1.compareTo(obj2)</code> should be
+defined in a reasonable way for any two objects <code>obj1</code> and <code>obj2</code>
+in the set. Alternatively, an object of type
+<classname>Comparator&lt;T&gt;</classname> can be provided as a parameter
+to the constructor when the <classname>TreeSet</classname> is created. In that case, the
+<code>compare()</code> method of the
+<classname>Comparator</classname> will be used to compare objects that are added to the
+set.</p>
+   
+<p>A <classname>TreeSet</classname> does not use the <code>equals()</code> method to
+test whether two objects are the same.  Instead, it uses the <code>compareTo()</code> (or <code>compare()</code>)
+method.  This can be a problem.  Recall from <localref href="generics.1.6"/> that
+<code>compareTo()</code> can consider two objects to be the same for the purpose
+of the comparison even though the objects are not equal.  For a <classname>TreeSet</classname>,
+this means that only <b>one</b> of those objects can be in the set.  For example,
+if the <classname>TreeSet</classname> contains mailing addresses
+and if the <code>compareTo()</code> method
+for addresses just compares their zip codes, then the set can contain only
+one address in each zip code.  Clearly, this is not right!  But that only means
+that you have to be aware of the semantics of <classname>TreeSets</classname>,
+and you need to make sure that <code>compareTo()</code> is defined in a reasonable
+way for objects that you put into a <classname>TreeSet</classname>.  This will be
+true, by the way, for <classname>Strings</classname>, <classname>Integers</classname>,
+and many other built-in types, since the <code>compareTo()</code> method for these
+types considers two objects to be the same only if they are actually equal.</p>
+
+<p>In the implementation of a <classname>TreeSet</classname>, the elements are stored in
+something similar to a binary sort tree. (See <localref href="recursion.4.2"/>.) 
+However, the data structure that is used is <b>balanced</b> 
+in the sense that all the leaves of the tree are at
+about the same distance from the root of the tree.  This ensures that
+all the basic operations&mdash;inserting, deleting, and searching&mdash;are
+efficient, with worst-case run time &Theta;(log(n)), where n is the
+number of items in the set.</p>
+
+<p>The fact that a <classname>TreeSet</classname> sorts its elements and removes duplicates
+makes it very useful in some applications. <localref href="arrays.ex.6"/> asked
+you to write a program that would read a file and output an alphabetical list of
+all the words that occurred in the file, with duplicates removed.  The words
+were to be stored in an <classname>ArrayList</classname>, so it was up to you to
+make sure that the list was sorted and contained no duplicates.
+The same task can be programmed much more easily using a <classname>TreeSet</classname>
+instead of a list.  A <classname>TreeSet</classname> automatically eliminates
+duplicates, and an iterator for the set will automatically visit the items in
+the set in sorted order.  An algorithm for the program, using
+a <classname>TreeSet</classname>, would be:</p>
+
+<pre>TreeSet&lt;String&gt; words = new TreeSet&lt;String&gt;();
+
+while there is more data in the input file:
+   Let word = the next word from the file
+   Convert word to lower case
+   words.add(word)   // Adds the word only if not already present.
+
+for ( String w : words ) // for each String w in words
+   Output w  // words are output in sorted order</pre>
+
+<np>If you would like to see a complete, working program, you can find it in the
+file <sourceref href="WordListWithTreeSet.java"/>.</np>
+
+<p>As another example, suppose that <code>coll</code> is any <code>Collection</code> of
+<classname>Strings</classname>. (This would also work for any other type for which 
+<code>compareTo()</code> is properly
+defined.) We can use a <classname>TreeSet</classname> to sort the items of <code>coll</code> and
+remove the duplicates simply by saying:</p>
+
+<pre>TreeSet&lt;String&gt; set = new TreeSet&lt;String&gt;();
+set.addAll(coll);</pre>
+
+<np>The second statement adds all the elements of the collection to the set.
+Since it's a <classname>Set</classname>, duplicates are ignored. Since it's a
+<classname>TreeSet</classname>, the elements of the set are sorted. If you would like to have
+the data in some other type of data structure, it's easy to copy the data from
+the set. For example, to place the answer in an <classname>ArrayList</classname>, you could
+say:</np>
+
+<pre>TreeSet&lt;String&gt; set = new TreeSet&lt;String&gt;();
+set.addAll(coll);
+ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;();
+list.addAll(set);</pre>
+
+<p>Now, in fact, every one of Java's collection classes has a constructor that
+takes a <classname>Collection</classname> as an argument. All the items in that
+<classname>Collection</classname> are added to the new collection when it is created. So,
+if <code>coll</code> is of type <classname>Collection&lt;String&gt;</classname>, then
+"<code>new&nbsp;TreeSet&lt;String&gt;(coll)</code>" creates a <classname>TreeSet</classname> 
+that contains the same elements as <code>coll</code>, but with duplicates removed and
+in sorted order.  This means that we can
+abbreviate the four lines in the above example to the single command:</p>
+
+<pre>ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;( new TreeSet&lt;String&gt;(coll) );</pre>
+
+<np>This makes a sorted list of the elements of <code>coll</code> with no
+duplicates. Although the repeated type parameter, "<code>&lt;String&gt;</code>", makes
+it a bit ugly to look at, this is still
+a nice example of the power of generic programming.</np>
+
+<break/>
+
+<p>A <classname>HashSet</classname> stores its elements in a <newword>hash table</newword>, 
+a type of data structure that I will discuss in the <localref href="generics.3">next
+section</localref>. The operations of finding, adding, and removing
+elements are implemented very efficiently in hash tables, even more so than for
+<classname>TreeSets</classname>. The elements of a <classname>HashSet</classname> are not stored in any
+particular order, and so do not need to implement the <classname>Comparable</classname> interface.
+(They do, however, need to define a proper "hash code," as we'll see in the next section.)</p>
+
+<p>The <code>equals()</code> method is used to determine whether two objects in
+a <classname>HashSet</classname> are to be considered the same.
+An <classname>Iterator</classname> for a <classname>HashSet</classname> will visit its
+elements in what seems to be a completely arbitrary order, and it's possible
+for the order to change completely when a new element is added. 
+Use a <classname>HashSet</classname> instead of a
+<classname>TreeSet</classname> when the elements it contains are not comparable, or when the
+order is not important, or when the small advantage in efficiency is important.</p>
+
+<break/>
+   
+<p>A note about the mathematics of sets:  In mathematical set theory, the items in a
+set are called <newword>members</newword> or <newword>elements</newword> of that set.
+Important operations include adding an element to a set, removing an element from a
+set, and testing whether a given entity is an element of a set.
+Operations that can be performed on two sets include <newword>union</newword>,
+<newword>intersection</newword>, and <newword>set difference</newword>.
+All these operations are defined in Java for objects of type <classname>Set</classname>,
+but with different names.  Suppose that <code>A</code> and <code>B</code> are <classname>Sets</classname>.
+Then:</p>
+
+<ul>
+<li><code>A.add(x)</code> <b>adds</b> the element <code>x</code> to the set <code>A</code>.</li>
+<li><code>A.remove(x)</code> <b>removes</b> the element <code>x</code> from the set <code>A</code>.</li>
+<li><code>A.contains(x)</code> <b>tests</b> whether <code>x</code> is an element of the set <code>A</code>.</li>
+<li><code>A.addAll(B)</code> computes the <b>union</b> of <code>A</code> and <code>B</code>.</li>
+<li><code>A.retainAll(B)</code> computes the <b>intersection</b> of <code>A</code> and <code>B</code>.</li>
+<li><code>A.removeAll(B)</code> computes the <b>set difference</b>, <code>A - B</code>.</li>
+</ul>
+   
+<p>There are of course, differences between mathematical sets and sets in Java.
+Most important, perhaps, sets in Java must be finite, while in mathematics, most of
+the fun in set theory comes from working with infinity.  In mathematics, a set can
+contain arbitrary elements, while in Java, a set of type <classname>Set&lt;T&gt;</classname>
+can only contain elements of type <classname>T</classname>.  The operation
+<code>A.addAll(B)</code> acts by modifying the value of <code>A</code>, while in
+mathematics the operation <code>A</code> union <code>B</code> computes a new set,
+without changing the value of <code>A</code> or <code>B</code>.  See
+<localref href="generics.ex.2"/> for an example of mathematical set operations in Java.</p>
+
+   
+</subsection>
+   
+<subsection id="generics.2.4" title="EnumSet">
+   
+<p>Enumerated types (or "enums") were introduced in <localref href="basics.3.4"/>.  
+Suppose that <classname>E</classname>
+is an enumerated type.  Since <classname>E</classname> is a class, it is possible to create
+objects of type <classname>TreeSet&lt;E&gt;</classname> and <classname>HashSet&lt;E&gt;</classname>.
+However, because enums are so simple, trees and hash tables are not the most efficient
+implementation for sets of enumerated type values.  Java provides the class
+<code>java.util.EnumSet</code> as an alternative way to create such sets.</p>
+   
+<p>Sets of enumerated type values are created using <code>static</code> methods
+in the class <classname>EnumSet</classname>.  For example, if <code>e1</code>, 
+<code>e2</code>, and <code>e3</code> are values belonging to the enumerated type
+<classname>E</classname>, then the method</p>
+   
+<pre>EnumSet.of( e1, e2, e3 )</pre>
+   
+<np>creates and returns a set of type <classname>EnumSet&lt;E&gt;</classname> that
+contains exactly the elements <code>e1</code>, <code>e2</code>, and <code>e3</code>.
+The set implements the interface <classname>Set&lt;E&gt;</classname>, so all
+the usual set and collection operations are available.  The implementation
+of these operations is very efficient.  The implementation uses what is
+called a <classname>bit vector</classname>.  A bit is a quantity that has only
+two possible values, zero and one.  A set of type <classname>EnumSet&lt;E&gt;</classname>
+is represented by a bit vector that contains one bit for each enum constant in the
+enumerated type <classname>E</classname>; the bit corresponding to the enum
+constant <code>e</code> is 1 if <code>e</code> is a member of the set and is
+0 if <code>e</code> is not a member of the set.  The bit vectors for
+two sets of type <classname>EnumSet&lt;E&gt;</classname> can be very easily
+combined to represent such operations as the union and intersection of two
+sets.  The bit vector representation is feasible for <classname>EnumSets</classname>,
+but not for other sets in Java, because an enumerated type contains only a
+small finite number of enum constants.  (Java actually has a class named
+<classname>BitSet</classname> that uses bit vectors to represent finite sets
+of non-negative integers, but this class is not part of
+the Java Collection Framework and does not implement
+the <classname>Set</classname> interface.)</np>
+   
+<p>The function <code>EnumSet.of()</code> can be used with any positive number of parameters.
+All the parameters must be values of the same enumerated type.  Null values are not
+allowed. An <classname>EnumSet</classname> cannot contain the value <code>null</code>&mdash;any
+attempt to add <code>null</code> to an <classname>EnumSet</classname> will
+result in a <classname>NullPointerException</classname>.
+</p>
+   
+<p>There is also a function <code>EnumSet.range(e1,e2)</code> that returns an
+<classname>EnumSet</classname> consisting of the enum constants between <code>e1</code>
+and <code>e2</code>, inclusive.  The ordering of enum constants is the same as
+the order in which they are listed in the definition of the enum.
+In <code>EnumSet.range(e1,e2)</code>, <code>e1</code> and <code>e2</code> must
+belong to the same enumerated type, and <code>e1</code> must be less than or
+equal to <code>e2</code>.</p>
+   
+<p>If <classname>E</classname> is an enum, then <code>EnumSet.allOf(E.class)</code>
+is a set that contains all values of type <classname>E</classname>.
+<code>EnumSet.noneOf(E.class)</code> is an <newword>empty set</newword>,
+a set of type <classname>EnumSet&lt;E&gt;</classname> that contains no elements at all.
+Note that in <code>EnumSet.allOf(E.class)</code> and <code>EnumSet.noneOf(E.class)</code>,
+the odd-looking parameter represents the enumerated type class itself.  If <code>eset</code> is a set of
+type <classname>EnumSet&lt;E&gt;</classname>, then <code>EnumSet.complementOf(eset)</code>
+is a set that contains all the enum constants of <classname>E</classname> that
+are <b>not</b> in <code>eset</code>.</p>
+
+<p>As an example, consider a program that keeps schedules of events.  The program
+must keep track of repeating events that happen on specified days of the week.
+For example, an event might take place only on weekdays, or only on
+Wednesdays and Fridays.  In other words, associated with the event is
+the <b>set</b> of days of the week on which it takes place.  This information
+can be represented using the enumerated type</p>
+   
+<pre>enum Day { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }</pre>
+   
+<np>The days of the week on which an event takes place would then be a value
+of type <classname>EnumSet&lt;Day&gt;</classname>.  An object of type
+<classname>RepeatingEvent</classname> would have an instance variable of type
+<classname>EnumSet&lt;Day&gt;</classname> to hold this information.
+An event that takes place on Wednesdays and Fridays would have the associated set</np>
+   
+<pre>EnumSet.of( Day.WEDNESDAY, Day.FRIDAY )</pre>
+   
+<np>We could define some common sets of <classname>Days</classname> as</np>
+
+<pre>EnumSet&lt;Day&gt; weekday = EnumSet.range( Day.MONDAY, Day.FRIDAY );
+EnumSet&lt;Day&gt; weekend = EnumSet.complementOf( weekday );
+EnumSet&lt;Day&gt; everyday = EnumSet.allOf( Day.class );</pre>
+   
+<p><classname>EnumSets</classname> are often used to specify sets of
+"options" that are to be applied during some type of processing.  For example,
+a program that draws characters in fancy fonts might have various options that
+can be applied.  Let's say that the options are bold, italic, underlined, strikethrough,
+and boxed.  Note that we are assuming that options can be combined in arbitrary
+ways.  For example, you can have italic, boxed, underlined characters. This
+just means that we need to keep track of a <b>set</b> of options.  If the
+options are represented by the enumerated type
+</p>
+
+<pre>enum FontOption { BOLD, ITALIC, UNDERLINED, STRIKETHROUGH, BOXED }</pre>
+
+<np>then a set of options is represented by a value of type 
+<classname>EnumSet&lt;FontOption&gt;</classname>.  Suppose that
+<code>options</code> is a variable of this type that represents the
+set of options that are currently being applied by the program.
+Then we can do things like:</np>
+   
+<ul>
+<li><code>options = EnumSet.noneOf( FontOption.class )</code> &mdash; Turn off all options.</li>
+<li><code>options = EnumSet.of( FontOption.BOLD )</code> &mdash; Use bold, with no other options.</li>
+<li><code>options.add( FontOption.BOLD )</code> &mdash; Add bold to any options that are already on.</li>
+<li><code>options.remove( FontOption.UNDERLINED )</code> &mdash; Turn underlining off (if it's on).</li>
+</ul>
+   
+<np>This is a nice, safe way to work with sets of options. Applications like
+this are one of the major reasons that enumerated types were introduced.</np>
+   
+</subsection>
+
+<subsection id="generics.2.5" title="Priority Queues">
+
+<p>A <newword>priority queue</newword> is an ADT that represents a collection of
+items, where each item has an assigned "priority" that allows any two items
+to be compared.  Operations on a priority queue include <i>add</i>, which adds
+an item to the collection, and <i>remove</i>, which removes and returns an item
+from the collection that has the minimum priority among items currently in
+the collection. (Maximum priority would also be possible, but in Java's version,
+the <i>remove</i> operation removes a minimum priority item.)</p>
+
+<p>A simple implementation of priority queue could be achieved by using a linked list
+to store the items in the queue in order of increasing priority.  In that case,
+<i>remove</i> would simply remove and return the first item in the list.
+However, <i>add</i> would have to insert the new item into its correct position
+in the list, an operation with average run time &Theta;(n), where n is the number of items
+in the list.  In fact, priority queues can be implemented so that both <i>add</i>
+and <i>remove</i> have run time &Theta;(log(n)), which is much more efficient.  (The efficient
+implementation uses something called a "heap," which is not to be confused with the
+heap where objects are created.  I will not discuss the implementation here.)</p>
+
+<p>The parameterized class <classname>PriorityQueue&lt;T&gt;</classname> implements a
+priority queue of objects of type <classname>T</classname>.  This class implements
+the interface <classname>Collection&lt;T&gt;</classname>.  So, if <code>pq</code>
+is a <classname>PriorityQueue</classname>, then it has all the methods defined in
+that interface.  But the essential priority queue operations are</p>
+
+<ul>
+<li><codedef>pq.add(obj)</codedef> &mdash; adds <code>obj</code> to the priority queue, where 
+<code>obj</code> must be an object of type <classname>T</classname></li>
+<li><codedef>pq.remove()</codedef> &mdash; removes and returns an item of minimal priority.
+The return value is an object of type <classname>T</classname>.  Throws an exception if
+the queue is empty.</li>
+<li><codedef>pq.isEmpty()</codedef> &mdash; tests whether the priority queue is empty.</li>
+</ul>
+
+<p>You've probably noticed that I haven't yet mentioned how the priority of items in the
+priority queue are determined.  The situation is much like sorting: We need to be able to compare
+any two items in the queue.  As with sorting, there are two solutions.  If the items implement
+the <classname>Comparable</classname> interface, then they can be compared using the
+<code>compareTo()</code> method from that interface.   Alternatively, a <classname>Comparator</classname>
+object can be provided as a parameter to the <classname>PriorityQueue</classname> constructor.
+In that case, the Comparator's <code>compare</code> method will be used to compare items.</p>
+
+<p>Classes such as <classname>String</classname>, <classname>Integer</classname>, and
+<classname>Date</classname> that implement <classname>Comparable</classname> can be used
+in a priority queue.  For example, a <classname>PriorityQueue&lt;String&gt;</classname> can be
+used to sort strings into lexicographic order: Just <i>add</i> all the strings to the
+priority queue, then <i>remove</i> them one-by-one.  Since items are removed from a queue
+in order of priority, they will be removed in lexicographic order.  Earlier, I showed how to
+use a <classname>TreeSet</classname> to sort and remove duplicates from a collection.
+A <classname>PriorityQueue</classname> can be used in a similar way to sort a collection
+without removing duplicates.  For example, if <code>coll</code> is of type
+<classname>Collection&lt;String&gt;</classname>, then the following code segment will print all the
+items from <code>coll</code> in order, including duplicates:</p>
+
+<pre>PriorityQueue&lt;String&gt; pq = new PriorityQueue&lt;String&gt;();
+pq.addAll( coll );
+while ( ! pq.isEmpty() ) {
+    System.out.println( pq.remove() );
+}</pre>
+
+<np>(Note, by the way, that we can't use an iterator or a for-each loop to print the
+items in this example, since interators and for-each loops do not traverse a
+priority queue in ascending order.)</np>
+
+<p>The sample program <sourceref href="WordListWithPriorityQueue.java"/> makes a sorted list of
+words from a file without removing duplicates, using a priority queue to hold the words.
+It is a minor modification of <sourceref href="WordListWithTreeSet.java"/>.</p>
+
+<p>Although priority queues can be used for sorting, they have other natural applications.
+For example, consider the problem of scheduling "jobs" to be executed on a computer,
+where each job is assigned a priority and jobs with lower priority should always be executed
+before jobs with higher priority.  Jobs can be placed into a priority queue as they are
+created.  When the computer removes jobs from the queue for execution, they will be removed
+in order of increasing priority.</p>
+
+</subsection>
+   
+
+
+</section>

@@ -1,0 +1,845 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="GUI1.7" title="Basic Layout">
+
+<p><start><big>C</big>omponents</start> are the fundamental building blocks
+of a graphical user interface.  But you have to do more with components besides create them.
+Another aspect of GUI programming is <newword>laying out</newword> components on the screen,
+that is, deciding where they are drawn and how big they are. You have probably
+noticed that computing coordinates can be a difficult problem, especially if
+you don't assume a fixed size for the drawing area. Java has a solution for this, as
+well.</p>
+
+<p>Components are the visible objects that make up a GUI. Some components are
+<newword>containers</newword>, which can hold other components.  Containers in
+Java are objects that belong to some subclass of <code>java.awt.Container</code>.
+The content pane of a  <classname>JFrame</classname>
+is an example of a container. The standard class
+<classname>JPanel</classname>, which we have mostly used as a drawing surface up until now, is
+another example of a container.</p>
+
+<p>Because a <classname>JPanel</classname> object is a
+container, it can hold other components.  Because a
+<classname>JPanel</classname> is itself a component, you can add a <classname>JPanel</classname> 
+to another <classname>JPanel</classname>. This makes complex
+nesting of components possible. <classname>JPanels</classname> can be used to organize
+complicated user interfaces, as shown in this illustration:</p>
+
+<img src="panels-in-layout.png" width="217" height="164" alt="illustration of panels nested in other panels"
+   tex="panels-in-layout.eps"/>
+  
+<np>In this picture, a large panel holds two smaller panels.  Each of the two smaller
+panels in turn holds three components.</np>
+
+<p>The components in a container must be "laid out," which means setting their
+sizes and positions. It's possible to program the layout yourself, but
+layout is ordinarily done by a <newword>layout manager</newword>. A
+layout manager is an object associated with a container that implements some
+policy for laying out the components in that container. Different types of
+layout manager implement different policies.  In this section, we will cover
+the three most common types of layout manager, and then we will look at
+several programming examples that use components and layout.</p>
+
+<p>Every container has a default layout manager and has 
+an instance method, <code>setLayout()</code>, that takes
+a parameter of type <classname>LayoutManager</classname> and that is used to specify
+a different layout manager for the container.
+Components are added to a container by calling
+an instance method named <code>add()</code> in the container object.  There
+are actually several versions of the <code>add()</code> method, with different
+parameter lists.  Different versions of <code>add()</code> are appropriate
+for different layout managers, as we will see below.</p>
+   
+   
+<subsection id="GUI1.7.1" title="Basic Layout Managers">
+
+<p>Java has a variety of standard layout managers that
+can be used as parameters in the <code>setLayout()</code> method.  They are defined by
+classes in the package <code>java.awt</code>.  Here, we will look at
+just three of these layout manager classes: <classname>FlowLayout</classname>,
+<classname>BorderLayout</classname>, and <classname>GridLayout</classname>.
+</p>
+   
+<p>A <classname>FlowLayout</classname> simply lines up components in a row across the
+container.  The size of each component is equal to that component's "preferred size."
+After laying out as many items as will fit in a row
+across the container, the layout manager will move on to the next row.
+The default layout for a <classname>JPanel</classname> is a
+<classname>FlowLayout</classname>;  that is, a <classname>JPanel</classname> uses a
+<classname>FlowLayout</classname> unless you specify a different layout manager by
+calling the panel's <code>setLayout()</code> method.</p>
+   
+<p>The components in a given row can be either left-aligned, right-aligned, or centered within
+that row, and there can be horizontal and vertical gaps between components. If the default constructor,
+"<code>new FlowLayout()</code>", is used, then the components on each row will be centered
+and both the horizontal and the vertical gaps will be five pixels.  The constructor</p>
+
+<pre>public FlowLayout(int align, int hgap, int vgap)</pre>
+
+<np>can be used to specify alternative alignment and gaps. The possible values
+of <code>align</code> are <code>FlowLayout.LEFT</code>, <code>FlowLayout.RIGHT</code>, and
+<code>FlowLayout.CENTER</code>.</np>
+   
+<p>Suppose that <code>container</code> is a container object that is using a <classname>FlowLayout</classname>
+as its layout manager.  Then, a component, <code>comp</code>, can be added to the container with
+the statement</p>
+  
+<pre>container.add(comp);</pre>
+   
+<np>The <classname>FlowLayout</classname> will line up all the components that have been
+added to the container in this way.  They will be lined up in the order in which they
+were added.  For example, this picture shows five buttons in a panel that uses
+a <classname>FlowLayout</classname>:</np>
+
+<img src="flow-layout-demo.png" alt="buttons in a panel that uses a FlowLayout"
+    width="548" height="95" tex="flow-layout-demo.eps" texscale="0.6"/>
+   
+<np>Note that since the five buttons will not fit in a single row across the panel,
+they are arranged in two rows.  In each row, the buttons are grouped together and are
+centered in the row.  The buttons were added to the panel using the statements:</np>
+   
+<pre>panel.add(button1);
+panel.add(button2);
+panel.add(button3);
+panel.add(button4);
+panel.add(button5);</pre>
+   
+<p>When a container uses a layout manager, the layout manager is ordinarily responsible
+for computing the preferred size of the container (although a different preferred size
+could be set by calling the container's <code>setPreferredSize</code> method).  A
+<classname>FlowLayout</classname> prefers to put its components in a single row,
+so the preferred width is the total of the preferred widths of all the components, plus
+the horizontal gaps between the components.  The preferred height is the maximum
+preferred height of all the components.</p>
+
+<break/>
+   
+<p>A <classname>BorderLayout</classname> layout manager is designed to display
+one large, central component, with up to four smaller components arranged around
+the edges of the central component.  If a container, <code>cntr</code>, is
+using a <classname>BorderLayout</classname>, then a component, <code>comp</code>,
+should be added to the container using a statement of the form</p>
+   
+<pre>cntr.add( comp, borderLayoutPosition );</pre>
+   
+<np>where <code>borderLayoutPosition</code> specifies what position the component
+should occupy in the layout and is given as one of the constants
+<code>BorderLayout.CENTER</code>, <code>BorderLayout.NORTH</code>, 
+<code>BorderLayout.SOUTH</code>, <code>BorderLayout.EAST</code>, 
+or <code>BorderLayout.WEST</code>.  The meaning of the five
+positions is shown in this diagram:</np>
+   
+<img src="border-layout.png" width="225" height="177" alt="positions of components in a BorderLayout"
+   tex="border-layout.eps" texscale="0.6"/>   
+
+<np>Note that a border layout can contain fewer than five components,
+so that not all five of the possible positions need to be filled.
+It would be very unusual, however, to have no center component.</np>
+   
+<p>A <classname>BorderLayout</classname> sets the sizes of its components
+as follows:  The <code>NORTH</code> and <code>SOUTH</code> components (if
+present) are shown at their preferred heights, but their width is set equal
+to the full width of the container.  The <code>EAST</code> and <code>WEST</code>
+components are shown at their preferred widths, but their height is set
+to the height of the container, minus the space occupied by the <code>NORTH</code>
+and <code>SOUTH</code> components.  Finally, the <code>CENTER</code> component
+takes up any remaining space.  The preferred size of the <code>CENTER</code>
+component is ignored when the layout is done, but it is taken into account when
+the preferred size of the container as a whole is computed.  You should make sure that the components
+that you put into a <classname>BorderLayout</classname> are suitable for the
+positions that they will occupy.  A horizontal slider or text field, for example,
+would work well in the <code>NORTH</code> or <code>SOUTH</code> position, but
+wouldn't make much sense in the <code>EAST</code> or <code>WEST</code> position.</p>
+
+
+<p>The default constructor, <code>new BorderLayout()</code>, leaves no space
+between components.  If you would like to leave some space,
+you can specify horizontal and vertical gaps in the constructor of the
+<code>BorderLayout</code> object. For example, if you say</p>
+
+<pre>panel.setLayout(new BorderLayout(5,7));</pre>
+
+<np>then the layout manager will insert horizontal gaps of 5 pixels between
+components and vertical gaps of 7 pixels between components. The background
+color of the container will show through in these gaps.  The default layout for
+the original content pane that comes with a <classname>JFrame</classname> 
+is a <code>BorderLayout</code> with no horizontal or vertical gap.</np>
+   
+<break/>
+
+<p>Finally, we consider the <classname>GridLayout</classname> layout manager.
+A grid layout lays out components in a grid containing rows and columns of equal
+sized rectangles. This illustration shows how the components would be arranged
+in a grid layout with 4 rows and 3 columns:</p>
+   
+<img src="grid-layout.png" width="209" height="158" alt="components in a grid layout"
+   tex="grid-layout.eps" texscale="0.6"/>   
+   
+<np>If a container uses a
+<classname>GridLayout</classname>, the appropriate <code>add</code> method for the container
+takes a single parameter of type <classname>Component</classname> (for example: 
+<code>cntr.add(comp)</code>).  Components are added to the grid in the order shown;
+that is, each row is filled from left to right before going on the next row.</np>
+
+<p>The constructor for a <classname>GridLayout</classname> takes the form 
+"<code>new GridLayout(R,C)</code>", where <code>R</code> is the number of rows
+and <code>C</code> is the number of columns. If you want
+to leave horizontal gaps of <code>H</code> pixels between columns and vertical gaps
+of <code>V</code> pixels between rows, use "<code>new GridLayout(R,C,H,V)</code>"
+instead.</p>
+
+<p>When you use a <classname>GridLayout</classname>, it's probably good form to add just
+enough components to fill the grid. However, this is not required. In fact, as
+long as you specify a non-zero value for the number of rows, then the number of
+columns is essentially ignored. The system will use just as many columns as are
+necessary to hold all the components that you add to the container. If you want
+to depend on this behavior, you should probably specify zero as the number of
+columns. You can also specify the number of rows as zero. In that case, you
+must give a non-zero number of columns. The system will use the specified
+number of columns, with just as many rows as necessary to hold the components
+that are added to the container.</p>
+
+<p>Horizontal grids, with a single row, and vertical grids, with a single
+column, are very common. For example, suppose that <code>button1</code>,
+<code>button2</code>, and <code>button3</code> are buttons and that you'd like to
+display them in a horizontal row in a panel. If you use a horizontal grid for
+the panel, then the buttons will completely fill that panel and will all be the
+same size.  The panel can be created as follows:</p>
+
+<pre>JPanel buttonBar = new JPanel();
+buttonBar.setLayout( new GridLayout(1,3) );
+    // (Note:  The "3" here is pretty much ignored, and
+    //  you could also say "new GridLayout(1,0)".
+    //  To leave gaps between the buttons, you could use
+    //  "new GridLayout(1,0,5,5)".)
+buttonBar.add(button1);
+buttonBar.add(button2);
+buttonBar.add(button3);</pre>
+
+<np>You might find this button bar to be more attractive than the one
+that uses the default <classname>FlowLayout</classname> layout manager.</np>
+
+
+</subsection>
+
+
+<subsection id="GUI1.7.2" title="Borders">
+   
+<p>We have seen how to leave gaps between the components in a container, but what
+if you would like to leave a border around the outside of the container?  This
+problem is not handled by layout managers.  Instead, borders in Swing are represented
+by objects.  A <classname>Border</classname> object can be added to any <classname>JComponent</classname>,
+not just to containers. Borders can be more than just empty space.
+The class <code>javax.swing.BorderFactory</code> contains a
+large number of static methods for creating border objects. For example, the
+function</p>
+
+<pre>BorderFactory.createLineBorder(Color.BLACK)</pre>
+
+<np>returns an object that represents a one-pixel wide black line around the
+outside of a component. If <code>comp</code> is a <code>JComponent</code>, a border can
+be added to <code>comp</code> using its <code>setBorder()</code> method. For
+example:</np>
+
+<pre>comp.setBorder( BorderFactory.createLineBorder(Color.BLACK) );</pre>
+
+<p>Once a border has been set for a <code>JComponent</code>, the border is drawn
+automatically, without any further effort on the part of the programmer. The
+border is drawn along the edges of the component, just inside its boundary. The
+layout manager of a <code>JPanel</code> or other container will take the space
+occupied by the border into account. The components that are added to the
+container will be displayed in the area inside the border. I don't recommend
+using a border on a <code>JPanel</code> that is being used as a drawing surface.
+However, if you do this, you should take the border into account. If you draw
+in the area occupied by the border, that part of your drawing will be covered
+by the border.</p>
+
+<p>Here are some of the static methods that can be used to create borders:</p>
+
+<ul>
+<li><codedef>BorderFactory.createEmptyBorder(top,left,bottom,right)</codedef>
+&mdash; leaves an empty border around the edges of a component. Nothing is drawn in
+this space, so the background color of the component will appear in the area occupied by the
+border. The parameters are integers that give the width of the border along the
+top, left, bottom, and right edges of the component. This is actually very
+useful when used on a <classname>JPanel</classname> that contains other components. It puts
+some space between the components and the edge of the panel.  It can also be
+useful on a <classname>JLabel</classname>, which otherwise would not have any
+space between the text and the edge of the label.</li>
+
+<li><codedef>BorderFactory.createLineBorder(color,thickness)</codedef> &mdash;
+draws a line around all four edges of a component. The first parameter is of
+type <classname>Color</classname> and specifies the color of the line. The second parameter
+is an integer that specifies the thickness of the border, in pixels. If the second
+parameter is omitted, a line of thickness 1 is drawn.</li>
+
+<li><codedef>BorderFactory.createMatteBorder(top,left,bottom,right,color)</codedef>
+&mdash; is similar to <code>createLineBorder</code>, except that you can specify
+individual thicknesses for the top, left, bottom, and right edges of the
+component.</li>
+
+<li><codedef>BorderFactory.createEtchedBorder()</codedef>
+&mdash; creates a border that looks like a groove etched around the boundary of the
+component. The effect is achieved using lighter and darker shades of the
+component's background color, and it does not work well with every background
+color.</li>
+
+<li><codedef>BorderFactory.createLoweredBevelBorder()</codedef>&mdash;gives a
+component a three-dimensional effect that makes it look like it is lowered into
+the computer screen. As with an EtchedBorder, this only works well for certain
+background colors.</li>
+
+<li><codedef>BorderFactory.createRaisedBevelBorder()</codedef>&mdash;similar
+to a LoweredBevelBorder, but the component looks like it is raised above the
+computer screen.</li>
+
+<li><codedef>BorderFactory.createTitledBorder(title)</codedef>&mdash;creates a
+border with a title. The title is a <classname>String</classname>, which is displayed in the
+upper left corner of the border.</li>
+</ul>
+
+<p>There are many other methods in the <code>BorderFactory</code> class, most of
+them providing variations of the basic border styles given here. The following
+illustration shows six components with six different border styles. The text in each
+component is the command that created the border for that component:</p>
+
+<img src="border-demo.png" alt="a panel containing subpanels with several different types of borders" 
+   width="409" height="292" tex="border-demo.eps" texscale="0.6"/>
+
+<np>(The source code for the program that produced this picture can be found
+in <sourceref href="BorderDemo.java"/>.)</np>
+
+</subsection>
+
+   
+<subsection id="GUI1.7.3" title="SliderAndButtonDemo">
+
+<p>Now that we have looked at components and layouts, it's time to put
+them together into some complete programs.  We start with a simple demo
+that uses a <classname>JLabel</classname>, three <classname>JButtons</classname>,
+and a couple of <classname>JSliders</classname>, all laid out in a
+<classname>GridLayout</classname><tex>, as shown in this picture</tex>:</p>
+
+<img src="slider-and-button-demo.png" width="477" height="133" alt="picture from SliderAndButtonDemo"
+       tex="slider-and-button-demo.eps" texscale="0.6"/>
+
+<np>The sliders in this program control the foreground and background color of the label,
+and the buttons control its font style.  Writing this program is a matter of creating
+the components, laying them out, and programming listeners to respond to events
+from the sliders and buttons.  My program is defined as a subclass of <classname>JPanel</classname>
+that implements
+<classname>ChangeListener</classname> and <classname>ActionListener</classname>, so that the
+panel itself can act as the listener for change events from the sliders and action events from the buttons.
+In the constructor, the six components are created and configured,
+a <classname>GridLayout</classname> is installed as the layout manager for
+the panel, and the components are added to the panel:</np>
+
+   
+<pre>/* Create the display label, with properties to match the
+       values of the sliders and the setting of the combo box. */
+
+displayLabel = new JLabel("Hello World!", JLabel.CENTER);
+displayLabel.setOpaque(true);
+displayLabel.setBackground( new Color(100,100,100) );
+displayLabel.setForeground( Color.RED );
+displayLabel.setFont( new Font("Serif", Font.BOLD, 30) );
+displayLabel.setBorder(BorderFactory.createEmptyBorder(0,8,0,8));
+
+/* Create the sliders, and set up the panel to listen for
+   ChangeEvents that are generated by the sliders. */
+
+bgColorSlider = new JSlider(0,255,100);
+bgColorSlider.addChangeListener(this);
+
+fgColorSlider = new JSlider(0,100,0);
+fgColorSlider.addChangeListener(this);
+
+/* Create three buttons to control the font style, and set up the
+   panel to listen for ActionEvents from the buttons. */
+
+JButton plainButton = new JButton("Plain Font");
+plainButton.addActionListener(this);
+JButton italicButton = new JButton("Italic Font");
+italicButton.addActionListener(this);
+JButton boldButton = new JButton("Bold Font");
+boldButton.addActionListener(this);
+
+
+/* Set the layout for the panel, and add the six components. 
+       Use a GridLayout with 3 rows and 2 columns, and with
+       5 pixels between components. */
+
+setLayout(new GridLayout(3,2,5,5));
+add(displayLabel);
+add(plainButton);
+add(bgColorSlider);
+add(italicButton);
+add(fgColorSlider);
+add(boldButton);</pre>
+   
+<p>The class also defines the methods required by the <classname>ActionListener</classname>
+and <classname>ChangeListener</classname> interfaces.  The <code>actionPerformed()</code>
+method is called when the user clicks one of the buttons.  This method changes
+the font in the <classname>JLabel</classname>, where the font depends on which button was
+clicked.  To determine which button was clicked, the method uses <code>evt.getActionCommand()</code>,
+which returns the text from the button:</p>
+   
+<pre>public void actionPerformed(ActionEvent evt) {
+    String cmd = evt.getActionCommand();
+    if (cmd.equals("Plain Font")) {
+        displayLabel.setFont( new Font("Serif", Font.PLAIN, 30) );
+    }
+    else if (cmd.equals("Italic Font")) {
+        displayLabel.setFont( new Font("Serif", Font.ITALIC, 30) );
+    }
+    else if (cmd.equals("Bold Font")) {
+        displayLabel.setFont( new Font("Serif", Font.BOLD, 30) );
+    }
+}</pre>
+   
+<np>And the <code>stateChanged()</code> method, which is called when the user
+manipulates one of the sliders, uses the value on the slider to compute a new
+foreground or background color for the label.  The method checks
+<code>evt.getSource()</code> to determine which slider was changed:</np>
+   
+<pre>public void stateChanged(ChangeEvent evt) {
+    if (evt.getSource() == bgColorSlider) {
+        int bgVal = bgColorSlider.getValue();
+        displayLabel.setBackground( new Color(bgVal,bgVal,bgVal) );
+            // NOTE:  The background color is a shade of gray,
+            //        determined by the setting on the slider.
+    }
+    else {
+        float hue = fgColorSlider.getValue()/100.0f;
+        displayLabel.setForeground( Color.getHSBColor(hue, 1.0f, 1.0f) );
+            // Note:  The foreground color ranges through all the colors
+            // of the spectrum.
+    }
+}</pre>
+   
+<np>Note that the slider variables are global variables in the program because they are referenced
+in the <code>stateChanged()</code> method as well as in the constructor.  On the other hand, the
+button variables are local variables in the constructor because that is the only place where they
+are used.  The complete source code for this example is in the file 
+<sourceref href="SliderAndButtonDemo.java"/>.</np>
+   
+</subsection>
+   
+
+<subsection id="GUI1.7.4" title="A Simple Calculator">
+
+<p>As our next example, we look briefly at an example that uses nested subpanels
+to build a more complex user interface.  The program has two <classname>JTextFields</classname>
+where the user can enter two numbers, four <classname>JButtons</classname> that the
+user can click to add, subtract, multiply, or divide the two numbers, and
+a <classname>JLabel</classname> that displays the result of the operation.  Here
+is a picture from the program:</p>
+
+<img src="simple-calc.png" width="186" height="135" alt="screenshot from SimpleCalc.java"
+       tex="simple-calc.eps" texscale="0.6"/>
+ 
+<np>This example uses a panel with a
+<classname>GridLayout</classname> that has four rows and one column.  In this
+case, the layout is created with the statement:</np>
+   
+<pre>setLayout(new GridLayout(4,1,3,3));</pre>
+
+<np>which allows a 3-pixel gap between the rows where the gray background color
+of the panel is visible.</np>
+   
+<p>The first row of the grid layout actually contains two components,
+a <classname>JLabel</classname> displaying the text "<code>x&nbsp;=</code>"
+and a <classname>JTextField</classname>.  A grid layout can only
+have one component in each position.  In this case, the component in the first row
+is a <classname>JPanel</classname>, a subpanel that is nested inside
+the main panel.  This subpanel in turn contains the label and text
+field.  This can be programmed as follows:</p>
+   
+<pre>xInput = new JTextField("0", 10); // Create a text field sized to hold 10 chars.
+JPanel xPanel = new JPanel();     // Create the subpanel.
+xPanel.add( new JLabel(" x = ")); // Add a label to the subpanel.
+xPanel.add(xInput);               // Add the text field to the subpanel
+
+add(xPanel);                      // Add the subpanel to the main panel.</pre>
+
+<np>The subpanel uses the default <classname>FlowLayout</classname> layout manager,
+so the label and text field are simply placed next to each other in the
+subpanel at their preferred size, and are centered in the subpanel.</np>
+   
+<p>Similarly, the third row of the grid layout is a subpanel that contains four
+buttons.  In this case, the subpanel uses a <classname>GridLayout</classname> with
+one row and four columns, so that the buttons are all the same size and completely
+fill the subpanel.</p>
+   
+<p>One other point of interest in this example is the <code>actionPerformed()</code>
+method that responds when the user clicks one of the buttons.  This method must
+retrieve the user's numbers from the text fields, perform the appropriate 
+arithmetic operation on them (depending on which button was clicked), and
+set the text of the <classname>JLabel</classname> (named <code>answer</code>) 
+to represent the result.  However, the contents of
+the text fields can only be retrieved as strings, and these strings must be
+converted into numbers.  If the conversion fails, the label is set to display 
+an error message:</p>
+   
+<pre>public void actionPerformed(ActionEvent evt) {
+   
+   double x, y;  // The numbers from the input boxes.
+   
+   try {
+      String xStr = xInput.getText();
+      x = Double.parseDouble(xStr);
+   }
+   catch (NumberFormatException e) {
+          // The string xStr is not a legal number.
+      answer.setText("Illegal data for x.");
+      xInput.requestFocusInWindow();
+      return;
+   }
+   
+   try {
+      String yStr = yInput.getText();
+      y = Double.parseDouble(yStr);
+   }
+   catch (NumberFormatException e) {
+         // The string yStr is not a legal number.
+      answer.setText("Illegal data for y.");
+      yInput.requestFocusInWindow();
+      return;
+   }
+   
+   /* Perform the operation based on the action command from the
+    button.  The action command is the text displayed on the button.
+    Note that division by zero produces an error message. */
+   
+   String op = evt.getActionCommand();
+   if (op.equals("+"))
+      answer.setText( "x + y = " + (x+y) );
+   else if (op.equals("-"))
+      answer.setText( "x - y = " + (x-y) );
+   else if (op.equals("*"))
+      answer.setText( "x * y = " + (x*y) );
+   else if (op.equals("/")) {
+      if (y == 0)
+         answer.setText("Can't divide by zero!");
+      else
+         answer.setText( "x / y = " + (x/y) );
+   }
+   
+} // end actionPerformed()</pre>
+   
+<np>The complete source code for this example can be found in <sourceref href="SimpleCalc.java"/>.</np>
+
+</subsection>
+   
+
+   
+<subsection id="GUI1.7.5" title="Using a null Layout">
+
+
+<p>As mentioned above, it is possible to do without a layout manager altogether.
+For our next example, we'll look at a panel that does not use a layout
+manager.  If you set the layout manager of a container to be <code>null</code>, 
+by calling <code>container.setLayout(null)</code>, then
+you assume complete responsibility for positioning and sizing the components in
+that container.</p>
+
+<p>If <code>comp</code> is any component, then the statement</p>
+
+<pre>comp.setBounds(x, y, width, height);</pre>
+
+<np>puts the top left corner of the component at the point <code>(x,y)</code>,
+measured in the coordinate system of the container that contains the
+component, and it sets the width and height of the component to the specified
+values. You should only set the bounds of a component if the container that
+contains it has a null layout manager. In a container that has a non-null
+layout manager, the layout manager is responsible for setting the bounds, and
+you should not interfere with its job.</np>
+
+<p>Assuming that you have set the layout manager to <code>null</code>, you can call
+the <code>setBounds()</code> method any time you like. (You can even make a
+component that moves or changes size while the user is watching.) If you are
+writing a panel that has a known, fixed size, then you can set the bounds of
+each component in the panel's constructor.  Note that you must also add
+the components to the panel, using the panel's <code>add(component)</code>
+instance method; otherwise, the component will not appear on the screen.</p>
+   
+<p>Our example contains four components: two buttons, a label, and a
+panel that displays a checkerboard pattern:</p>
+
+<img src="null-layout-demo.png" width="350" height="240" alt="NullLayoutDemo with checkerboard, two buttons, and a message"
+     tex="null-layout-demo.eps" texscale="0.6"/>
+
+<np>This is just an example of using a null layout; it doesn't do anything,
+except that clicking the buttons changes the text of the label. (We will use
+this example in <localref href="arrays.5"/> as a starting point for a checkers game.)</np>
+
+<p>The panel in this program is defined by the class <classname>NullLayoutDemo</classname>,
+which is created as a subclass of <classname>JPanel</classname>.  The four
+components are created and added to the panel in the constructor.
+Then the <code>setBounds()</code> method of each component is
+called to set the size and position of the component:</p>
+
+<pre>public NullLayoutDemo() {
+
+    setLayout(null);  // I will do the layout myself!
+
+    setBackground(new Color(0,120,0));  // A dark green background.
+
+    setBorder( BorderFactory.createEtchedBorder() ); 
+
+    setPreferredSize( new Dimension(350,240) );
+
+    /* Create the components and add them to the content pane.  If you
+         don't add them to a container, they won't appear, even if
+         you set their bounds! */
+
+    board = new Checkerboard();
+        // (Checkerboard is a subclass of JPanel, defined below as a static
+        //  nested class inside the main class.)
+    add(board);
+
+    newGameButton = new JButton("New Game");
+    newGameButton.addActionListener(this);
+    add(newGameButton);
+
+    resignButton = new JButton("Resign");
+    resignButton.addActionListener(this);
+    add(resignButton);
+
+    message = new JLabel("Click \"New Game\" to begin.");
+    message.setForeground( new Color(100,255,100) ); // Light green.
+    message.setFont(new Font("Serif", Font.BOLD, 14));
+    add(message);
+
+    /* Set the position and size of each component by calling
+         its setBounds() method. */
+
+    board.setBounds(20,20,164,164);
+    newGameButton.setBounds(210, 60, 120, 30);
+    resignButton.setBounds(210, 120, 120, 30);
+    message.setBounds(20, 200, 330, 30);
+
+} // end constructor</pre>
+
+<p>It's fairly easy in this case to get a reasonable layout. It's much
+more difficult to do your own layout if you want to allow for changes of size.
+In that case, you have to respond to changes in the container's size by
+recomputing the sizes and positions of all the components that it contains. If
+you want to respond to changes in a container's size, you can register an
+appropriate listener with the container. Any component generates an event of
+type <classname>ComponentEvent</classname> when its size changes (and also when it is moved,
+hidden, or shown). You can register a <classname>ComponentListener</classname> with the
+container and respond to resize events by recomputing the sizes and
+positions of all the components in the container. Consult a Java reference for
+more information about <classname>ComponentEvents</classname>. However, my real advice is
+that if you want to allow for changes in the container's size, try to find a
+layout manager to do the work for you.</p>
+
+<p>The complete source code for this example is in <sourceref href="NullLayoutDemo.java"/>.</p>
+
+</subsection>
+
+
+<subsection id="GUI1.7.6" title="A Little Card Game">
+   
+
+<p>For a final example, let's look at something a little more interesting as a program.
+The example is a simple card game in which you look at a playing card and try to
+predict whether the next card will be higher or lower in value. (Aces have the
+lowest value in this game.) You've seen a text-oriented version of the same
+game in <localref href="OOP.4.3"/>. <localref href="OOP.4"/> also introduced
+<classname>Deck</classname>, <classname>Hand</classname>, and <classname>Card</classname> 
+classes that are used by the program. In this GUI version of the game, 
+you click on a button to make your
+prediction. If you predict wrong, you lose. If you make three correct
+predictions, you win. After completing one game, you can click the "New Game"
+button to start a new game. Here is
+what the program looks like in the middle of a game:</p>
+
+<img src="high-low-gui.png" width="376" height="194" alt="GUI version of the HighLow card game"
+      tex="high-low-gui.eps" texscale="0.6"/>
+
+
+<np>The complete source code for the panel can be found in the file
+<sourceref href="HighLowGUI.java"/>.  I encourage you to compile and run it.
+Remember that you also need <sourceref href="Card.java"/>, <sourceref href="Deck.java"/>, 
+and <sourceref href="Hand.java"/>, since they define classes that are used in the program.</np>
+   
+<p>The overall structure of the main panel in this example should be reasonably clear:
+It has three buttons in a subpanel at the bottom of the main panel and a large drawing
+surface that displays the cards and a message.  (The cards and message are not
+components in this example; they are drawn using the graphics context in the panel's
+<code>paintComponent()</code> method.)  The main panel uses a
+<classname>BorderLayout</classname>.  The drawing surface occupies the
+<code>CENTER</code> position of the border layout.  The subpanel that contains
+the buttons occupies the <code>SOUTH</code> position of the border layout,
+and the other three positions of the borderlayout are empty.</p>
+   
+<p>The drawing surface is defined by a nested class named <classname>CardPanel</classname>,
+which is subclass of <classname>JPanel</classname>.  I have chosen to let the
+drawing surface object do most of the work of the game: It listens for
+events from the three buttons and responds by taking the appropriate actions.
+The main panel is defined by <classname>HighLowGUI</classname> itself, which
+is also a subclass of <classname>JPanel</classname>.  The constructor
+of the <classname>HighLowGUI</classname> class creates all the other
+components, sets up event handling, and lays out the components:</p>
+
+<pre>public HighLowGUI() {   // The constructor.
+            
+   setBackground( new Color(130,50,40) );
+   
+   setLayout( new BorderLayout(3,3) );  // BorderLayout with 3-pixel gaps.
+   
+   CardPanel board = new CardPanel();  // Where the cards are drawn.
+   add(board, BorderLayout.CENTER);
+   
+   JPanel buttonPanel = new JPanel();  // The subpanel that holds the buttons.
+   buttonPanel.setBackground( new Color(220,200,180) );
+   add(buttonPanel, BorderLayout.SOUTH);
+   
+   JButton higher = new JButton( "Higher" );
+   higher.addActionListener(board);   // The CardPanel listens for events.
+   buttonPanel.add(higher);
+   
+   JButton lower = new JButton( "Lower" );
+   lower.addActionListener(board);
+   buttonPanel.add(lower);
+   
+   JButton newGame = new JButton( "New Game" );
+   newGame.addActionListener(board);
+   buttonPanel.add(newGame);
+   
+   setBorder(BorderFactory.createLineBorder( new Color(130,50,40), 3) );
+   
+}  // end constructor</pre>
+   
+   
+<p>The programming of the drawing surface class, <classname>CardPanel</classname>,
+is a nice example of thinking in terms of a state machine.  (See <localref href="GUI1.5.4"/>.)
+It is important to think in terms of the states that the game can be in, how the
+state can change, and how the response to events can depend on the state. The
+approach that produced the original, text-oriented game in 
+<localref href="OOP.4.3"/> is not appropriate here. Trying to think about
+the game in terms of a process that goes step-by-step from beginning to end is
+more likely to confuse you than to help you.</p>
+
+<p>The state of the game includes the cards and the message. The cards are
+stored in an object of type <classname>Hand</classname>. 
+The message is a <classname>String</classname>.
+These values are stored in instance variables. There is also another, less
+obvious aspect of the state: Sometimes a game is in progress, and the user is
+supposed to make a prediction about the next card. Sometimes we are between
+games, and the user is supposed to click the "New Game" button. It's a good
+idea to keep track of this basic difference in state. The <classname>CardPanel</classname> class uses a
+boolean instance variable named <code>gameInProgress</code> for this purpose.</p>
+
+<p>The state of the game can change whenever the user clicks on a button. The
+<classname>CardPanel</classname> class implements the <classname>ActionListener</classname> interface
+and defines an <code>actionPerformed()</code> method to respond to the user's
+clicks. This method simply calls one of three other methods,
+<code>doHigher()</code>, <code>doLower()</code>, or <code>newGame()</code>, depending on
+which button was pressed. It's in these three event-handling methods that the
+action of the game takes place.</p>
+
+<p>We don't want to let the user start a new game if a game is currently in
+progress. That would be cheating. So, the response in the <code>newGame()</code>
+method is different depending on whether the state variable
+<code>gameInProgress</code> is true or false. If a game is in progress, the
+<code>message</code> instance variable should be set to be an error message. If a
+game is not in progress, then all the state variables should be set to
+appropriate values for the beginning of a new game. In any case, the board must
+be repainted so that the user can see that the state has changed. The complete
+<code>newGame()</code> method is as follows:</p>
+
+<pre>/**
+ * Called by the CardPanel constructor, and called by actionPerformed() if
+ * the user clicks the "New Game" button.  Start a new game.
+ */
+void doNewGame() {
+   if (gameInProgress) {
+         // If the current game is not over, it is an error to try
+         // to start a new game.
+      message = "You still have to finish this game!";
+      repaint();
+      return;
+   }
+   deck = new Deck();   // Create the deck and hand to use for this game.
+   hand = new Hand();
+   deck.shuffle();
+   hand.addCard( deck.dealCard() );  // Deal the first card into the hand.
+   message = "Is the next card higher or lower?";
+   gameInProgress = true;
+   repaint();
+} // end doNewGame()</pre>
+
+<p>The <code>doHigher()</code> and <code>doLower()</code> methods are almost identical
+to each other (and could probably have been combined into one method with a
+parameter, if I were more clever). Let's look at the <code>doHigher()</code>
+routine. This is called when the user clicks the "Higher" button. This only
+makes sense if a game is in progress, so the first thing <code>doHigher()</code>
+should do is check the value of the state variable <code>gameInProgress</code>. If
+the value is <code>false</code>, then <code>doHigher()</code> should just set up an
+error message. If a game is in progress, a new card should be added to the hand
+and the user's prediction should be tested. The user might win or lose at this
+time. If so, the value of the state variable <code>gameInProgress</code> must be
+set to <code>false</code> because the game is over. In any case, the board is
+repainted to show the new state. Here is the <code>doHigher()</code> method:</p>
+
+<pre>/**
+ * Called by actionPerformed() when user clicks the "Higher" button.
+ * Check the user's prediction.  Game ends if user guessed
+ * wrong or if the user has made three correct predictions.
+ */
+void doHigher() {
+   if (gameInProgress == false) {
+         // If the game has ended, it was an error to click "Higher",
+         // So set up an error message and abort processing.
+      message = "Click \"New Game\" to start a new game!";
+      repaint();
+      return;
+   }
+   hand.addCard( deck.dealCard() );     // Deal a card to the hand.
+   int cardCt = hand.getCardCount();
+   Card thisCard = hand.getCard( cardCt - 1 );  // Card just dealt.
+   Card prevCard = hand.getCard( cardCt - 2 );  // The previous card.
+   if ( thisCard.getValue() &lt; prevCard.getValue() ) {
+      gameInProgress = false;
+      message = "Too bad! You lose.";
+   }
+   else if ( thisCard.getValue() == prevCard.getValue() ) {
+      gameInProgress = false;
+      message = "Too bad!  You lose on ties.";
+   }
+   else if ( cardCt == 4) {  // The hand is full, after three correct guesses.
+      gameInProgress = false;
+      message = "You win!  You made three correct guesses.";
+   }
+   else {
+      message = "Got it right!  Try for " + cardCt + ".";
+   }
+   repaint();
+} // end doHigher()</pre>
+
+<p>The <code>paintComponent()</code> method of the <classname>CardPanel</classname> class
+uses the values in the state variables to decide what to show. It displays the
+string stored in the <code>message</code> variable. It draws each of the cards in
+the <code>hand</code>. There is one little tricky bit: If a game is in progress, it
+draws an extra face-down card, which is not in the hand, to represent the next
+card in the deck. Drawing the cards requires some care and computation. I wrote
+a method, "<code>void drawCard(Graphics g, Card card, int x, int y)</code>", which
+draws a card with its upper left corner at the point <code>(x,y)</code>. The
+<code>paintComponent()</code> routine decides where to draw each card and calls
+this routine to do the drawing. You can check out all the details in the source
+code, <sourceref href="HighLowGUI.java"/>.  (The playing cards used in this program
+are not very impressive.  A version of the program with images that
+actually look like cards can be found in <localref href="GUI2.1.3"/>.)</p>
+
+   
+</subsection>
+
+   
+
+   
+  
+</section>

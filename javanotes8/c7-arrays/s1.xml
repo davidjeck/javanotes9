@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="arrays.1" title="Array Details">
+   
+   
+<p><start><big>A</big>rray basics have been discussed</start> in previous chapters,
+but there are still details of Java syntax to be filled in, and there is a lot more to say
+about using arrays.  This section looks at some of the syntactic details, 
+with more information about array processing to come in the rest of the
+chapter.</p>
+   
+<p>To briefly review some of the basics&dots;.  An array is a numbered sequence
+of <i>elements</i>, and each element acts like a separate variable.  All of the
+elements are of the same type, which is called the <i>base type</i> of the array.
+The array as a whole also has a type.  If the base type is <classname>btype</classname>,
+then the array is of type <atype>btype[]</atype>.  Each element in the array
+has an <i>index</i>, which is just its numerical position in the sequence of elements.
+If the array is <code>A</code>, then the i-th element of the array is <code>A[i]</code>.
+The number of elements in an array is called its <i>length</i>.  The length of
+an array <code>A</code> is <code>A.length</code>.  The length of an array can't
+be changed after the array is created.  The elements of the array <code>A</code>
+are <code>A[0]</code>, <code>A[1]</code>, &dots;, <code>A[A.length-1]</code>.
+An attempt to refer to an array element with an index outside the range
+from zero to <code>A.length-1</code> causes an <classname>ArrayIndexOutOfBoundsException</classname>.
+</p>
+
+<p>Arrays in Java are objects, so an array variable can only refer to an array,
+it does not contain the array.  The value of an array variable can also be <code>null</code>.
+In that case, it does not refer to any array, and an attempt to refer to an
+array element such as <code>A[i]</code> will cause a <classname>NullPointerException</classname>.
+Arrays are created using a special form of the <code>new</code> operator. For
+example,</p>
+
+<pre>int[] A = new int[10];</pre>
+
+<np>creates a new array with base type <ptype>int</ptype> and length 10, and it sets
+the variable <code>A</code> to refer to the newly created array.</np>
+
+
+
+<subsection id="arrays.1.1" title="For-each Loops">   
+
+<p>Arrays are often processed using <code>for</code> loops.  A <code>for</code>
+loop makes it easy to process each element in an array from beginning to end.  For
+example, if <code>namelist</code> is an array of <classname>Strings</classname>, 
+then all the values in the list can be printed using</p>
+
+<pre>for (int i = 0; i &lt; namelist.length; i++) {
+    System.out.println( namelist[i] );
+}</pre>
+
+<p>This type of processing is so common that there is an alternative form of
+the <code>for</code> loop that makes it easier to write.  The alternative
+is called a <newword>for-each loop</newword>.   It is probably easiest to
+start with an example.  Here is a for-each loop for printing all the values
+in an array of <classname>Strings</classname>:</p>
+
+<pre>for ( String name : namelist ) {
+    System.out.println( name );
+}</pre>
+
+<np>The meaning of "<code>for (String name : namelist)</code>" is
+"for each string, name, in the array, namelist, do the following".  The effect
+is that the variable <code>name</code> takes on each of the values in <code>namelist</code>
+in turn, and the body of the loop is executed for each of those values.  Note that
+there is no array index in the loop.  The loop control variable, <code>name</code>,
+represents one of the values in the array, not the index of one of the values.
+</np>
+
+<p>The for-each loop is meant specifically for processing all the values
+in a data structure, and we will see in <localref href="generics"/> that it applies to other
+data structures besides arrays.  The for-each loop makes it possible to process the
+values without even knowing the details of how the data is structured.  In the
+case of arrays, it lets you avoid the complications of using array indices.</p>
+
+<p>A for-each loop
+will perform the same operation for each value that is stored
+in an array.  
+If <code>itemArray</code> is an array of type <atype>BaseType[]</atype>,
+then a for-each loop for <code>itemArray</code> has the form:</p>
+   
+<pre>for ( BaseType item : itemArray ) {
+   .
+   .  // process the item
+   .
+}</pre>
+   
+<np>As usual, the braces are optional if there is only one statement inside the loop.
+In this loop, <code>item</code> is the loop control variable.  It is
+declared as a variable of type <classname>BaseType</classname>, where
+<classname>BaseType</classname> is the base type of the array.  (In a
+for-each loop, the loop control variable <b>must</b> be declared in the
+loop; it cannot be a variable that already exists outside the loop.)  
+When this loop is executed, each value from the array is assigned
+to <code>item</code> in turn and the body of the loop is executed for each
+value.  Thus, the above loop is exactly equivalent to:</np>
+   
+<pre>for ( int index = 0; index &lt; itemArray.length; index++ ) {
+   BaseType item;
+   item = itemArray[index];  // Get one of the values from the array
+     .
+     .  // process the item
+     .  
+}</pre>
+   
+<p>For example, if <code>A</code> is an array of type <atype>int[]</atype>, then
+we could print all the values from <code>A</code> with the for-each loop:</p>
+   
+<pre>
+for ( int item : A )
+   System.out.println( item );
+</pre>
+
+<np>and we could add up all the positive integers in <code>A</code> with:</np>
+   
+<pre>int sum = 0;   // This will be the sum of all the positive numbers in A
+for ( int item : A ) {
+   if (item &gt; 0)
+      sum = sum + item;
+}</pre>
+   
+<p>The for-each loop is not always appropriate.  For example, there is no
+simple way to use it to process the items in just a part of an array, or to
+process the elements in reverse order.
+However, it does make the code a little simpler when you do want to process all the values, in order.
+since it eliminates any need to use array indices.</p>   
+   
+<p>It's important to note that a for-each loop processes the <b>values</b> in
+the array, not the <b>elements</b> (where an element means the actual memory
+location that is part of the array).  For example, consider the following
+incorrect attempt to fill an array of integers with 17's:</p>
+   
+<pre>int[] intList = new int[10];
+for ( int item : intList ) {   <newcode>// INCORRECT! DOES NOT MODIFY THE ARRAY!</newcode>
+   item = 17;
+}</pre>
+   
+<np>The assignment statement <code>item = 17</code> assigns the value 17 to
+the loop control variable, <code>item</code>.  However, this has nothing to
+do with the array.  When the body of the loop is executed, the
+value from one of the elements of the array is copied into <code>item</code>.
+The statement <code>item&nbsp;=&nbsp;17</code> replaces that copied value
+but has no effect on the array element from which it was copied; the
+value in the array is not changed.  The loop is equivalent to</np>
+  
+<pre>int[] intList = new int[10];
+for ( int i = 0; i &lt; intList.length; i++ ) {
+   int item = intList[i];
+   item = 17;
+}</pre>
+   
+<np>which certainly does not change the value of any element in the array.</np>
+
+</subsection>
+   
+<subsection id="arrays.1.2" title="Variable Arity Methods">
+
+<p>Before Java 5, every method in Java had a fixed arity.
+(The <newword>arity</newword> of a method is defined as the number
+of parameters in a call to the method.)  In a fixed arity method, the number
+of parameters must be the same in every call to the method and must be the same
+as the number of formal parameters in the method's definition.  Java&nbsp;5 introduced
+<newword>variable arity methods</newword>.  In a variable arity method, different
+calls to the method can have different numbers of parameters.  For example,
+the formatted output method <code>System.out.printf</code>, which was introduced
+in <localref href="basics.4.1"/>, is a variable arity method.  The first
+parameter of <code>System.out.printf</code> must be a <classname>String</classname>,
+but it can have any number of additional parameters, of any types.</p>
+
+<p>Calling a variable arity method is no different from calling any other
+sort of method, but writing one requires some new syntax.  As an example,
+consider a method that can compute the average of any number of values of
+type <ptype>double</ptype>.  The definition of such a method could begin
+with:</p>
+   
+<pre>public static double average( double...  numbers ) {</pre>
+   
+<np>Here, the <code>...</code> after the type name, <code>double</code>, 
+is what makes this a variable arity method.  It indicates
+that any number of values of type <ptype>double</ptype> can be provided when
+the subroutine is called, so that for example <code>average(1,4,9,16)</code>, 
+<code>average(3.14,2.17)</code>, <code>average(0.375)</code>, and even
+<code>average()</code> are all legal calls to this method.  Note that 
+actual parameters of type <ptype>int</ptype> can be passed to <code>average</code>.
+The integers will, as usual, be automatically converted to real numbers.</np>
+
+<p>When the method is called, the values of all the actual parameters
+that correspond to the variable arity parameter are placed into an array,
+and it is this array that is actually passed to the method.  That is,
+in the body of a method, a variable arity parameter of type
+<classname>T</classname> actually looks like an ordinary parameter of type
+<atype>T[]</atype>.  The length of the array tells you how many actual parameters
+were provided in the method call.  In the <code>average</code> example, the body
+of the method would see an array named <code>numbers</code> of type <atype>double[]</atype>.
+The number of actual parameters in the method call would be <code>numbers.length</code>,
+and the values of the actual parameters would be <code>numbers[0]</code>,
+<code>numbers[1]</code>, and so on.  A complete definition of the method would be:
+</p>
+   
+<pre>public static double average( double... numbers ) {
+        // Inside this method, numbers if of type double[].
+   double sum;      // The sum of all the actual parameters.
+   double average;  // The average of all the actual parameters.
+   sum = 0;
+   for (int i = 0; i &lt; numbers.length; i++) {
+      sum = sum + numbers[i];  // Add one of the actual parameters to the sum.
+   }
+   average = sum / numbers.length;
+   return average;
+}</pre>
+
+
+<p>By the way, it is possible to pass a single array
+to a variable arity method, instead of a list of individual values.  For example, suppose that
+<code>salesData</code> is a variable of type <atype>double[]</atype>. Then
+it would be legal to call <code>average(salesData)</code>, and this would compute
+the average of all the numbers in the array.</p>
+
+<p>The formal parameter list in the definition of a variable-arity method can 
+include more than one parameter, but the <code>...</code> can only be applied to the
+very last formal parameter.</p>
+   
+<p>As an example, consider a method that can draw a polygon through
+any number of points.  The points are given as values of type <classname>Point</classname>,
+where an object of type <classname>Point</classname> has two instance variables,
+<code>x</code> and <code>y</code>, of type <ptype>int</ptype>.
+In this case, the method has one ordinary parameter&mdash;the
+graphics context that will be used to draw the polygon&mdash;in addition to the
+variable arity parameter.  Remember that inside the definition of the
+method, the parameter <code>points</code> becomes an array of 
+<classname>Points</classname>:</p>
+   
+<pre>public static void drawPolygon(Graphics g, Point... points) {
+    if (points.length &gt; 1) {  // (Need at least 2 points to draw anything.)
+       for (int i = 0; i &lt; points.length - 1; i++) {
+           // Draw a line from i-th point to (i+1)-th point
+           g.drawLine( points[i].x, points[i].y, points[i+1].x, points[i+1].y );
+       }
+       // Now, draw a line back to the starting point.
+       g.drawLine( points[points.length-1].x, points[points.length-1].y,
+                       points[0].x, points[0].y );
+    }
+}</pre>
+
+<np>When this method is called, the subroutine call statement must have one actual parameter
+of type <classname>Graphics</classname>, which can be followed by any number of
+actual parameters of type <classname>Point</classname>.</np>
+   
+<p>For a final example, let's look at a method that strings together all of the
+values in a list of strings into a single, long string.  This example uses a for-each
+loop to process the array:</p>
+
+<pre>public static String concat( String... values ) {
+   StringBuffer buffer;  // Use a StringBuffer for more efficient concatenation.
+   buffer = new StringBuffer();  // Start with an empty buffer.
+   for ( String str : values ) { // A "for each" loop for processing the values.
+       buffer.append(str); // Add string to the buffer.
+   }
+   return buffer.toString(); // return the contents of the buffer
+}</pre>
+
+<np>Given this method definition, <code>concat("Hello", "World")</code>
+would return the string "HelloWorld", and <code>concat()</code> would
+return an empty string. Since a variable arity method can also accept an
+array as actual parameter, we could also call <code>concat(lines)</code>
+where <code>lines</code> is of type <atype>String[]</atype>.  This would 
+concatenate all the elements of the array into a single string.</np>
+
+</subsection>
+   
+<subsection  id="arrays.1.3" title="Array Literals">
+  
+<p>We have seen that it is possible to initialize an array variable 
+with a list of values at the time it is declared.
+For example,</p>
+
+<pre>int[] squares = { 1, 4, 9, 16, 25, 36, 49 };</pre>
+
+<np>This initializes <code>squares</code> to refer to a newly created array
+that contains the seven values in the list</np>
+
+
+<p>A list initializer of this form can be used <b>only</b> in a declaration
+statement, to give an initial value to a newly declared array variable. It
+cannot be used in an assignment statement to assign a value to a variable that
+already existed. However, there is another, similar notation for
+creating a new array that can be used in other places. The notation uses 
+another form of the <code>new</code>
+operator to both create a new array object and fill it with values.
+(The rather odd syntax
+is similar to the syntax for anonymous inner classes, which were discussed in
+<localref href="OOP.8.3"/>.) As an example, to assign a new value to
+an array variable, <code>cubes</code>, of type <atype>int[]</atype>, you could
+use:</p>
+
+<pre>cubes = new int[] { 1, 8, 27, 64, 125, 216, 343 };</pre>
+
+<np>This is an assignment statement rather than a declaration, so the
+array initializer syntax, without "<code>new int[]</code>," would not
+be legal here.  The general syntax for this form of the 
+<code>new</code> operator is</np>
+
+<pre>new <bnf>base-type</bnf> [ ] { <bnf>list-of-values</bnf> }</pre>
+
+<np>This is actually an expression whose value is a reference to a newly created
+array object.  In this sense, it is an "array literal," since it is something that you can type
+in a program to represent a value. This means that it can be used in any
+context where an object of type <bnf>base-type</bnf><code>[]</code> is legal.
+For example, you could pass the newly created array as an actual parameter to
+a subroutine.  Consider the following utility method for creating a menu
+from an array of strings:</np>
+
+<pre>/**
+ * Creates a JMenu.  The names for the JMenuItems in the menu are
+ * given as an array of strings.
+ * @param menuName  the name for the JMenu that is to be created.
+ * @param handler  the listener that will respond to items in the menu.
+ *    This ActionListener is added as a listener for each JMenuItem.
+ * @param itemNames  an array holding the text that appears in each
+ *     JMenuItem.  If a null value appears in the array, the corresponding
+ *     item in the menu will be a separator rather than a JMenuItem.
+ * @return  the menu that has been created and filled with items.
+ */
+public static JMenu createMenu( 
+            String menuName, ActionListener handler, String[] itemNames ) {
+    JMenu menu = new JMenu(menuName);
+    for ( String itemName : itemNames ) {
+        if ( itemName == null ) {
+            menu.addSeparator();
+        }
+        else {
+            JMenuItem item = new JMenuItem(itemName);
+            item.addActionListener(handler);
+            menu.add(item);
+        }
+    }
+    return menu;
+}
+</pre>
+
+<np>The third parameter in a call to <code>createMenu</code> is an array of 
+strings.  The array that is passed as an actual parameter could be created
+in place, using the <code>new</code> operator.  For example, assuming
+that <code>listener</code> is of type <classname>ActionListener</classname>,
+we can use the following statement to create an entire File menu:</np>
+
+<pre>JMenu fileMenu = createMenu( "File", listener
+              <newcode>new String[] { "New", "Open", "Close", null, "Quit" }</newcode> );</pre>
+   
+<np>This should convince you that
+being able to create and use an array "in place" in this way can be very convenient,
+in the same way that anonymous inner classes are convenient.</np>
+   
+<p>By the way, it is perfectly legal to use the "<code>new BaseType[] {&nbsp;&dots;&nbsp;}</code>" syntax
+instead of the array initializer syntax in the declaration of an array variable.  For example,
+instead of saying:</p>
+   
+<pre>int[] primes = { 2, 3, 5, 7, 11, 13, 17, 19 };</pre>
+   
+<np>you can say, equivalently,</np>
+   
+<pre>int[] primes = new int[] { 2, 3, 5, 7, 11, 17, 19 };</pre>
+   
+<np>In fact, rather than use a special notation that works only in the context
+of declaration statements, I sometimes prefer to use the second form.</np>
+
+<break/>
+
+<p>One final note: For historical reasons, an array declaration such as</p>
+
+<pre>int[] list;</pre>
+
+<np>can also be written as</np>
+   
+<pre>int list[];</pre>
+
+<np>which is a syntax used in the languages C and C++. However, this alternative
+syntax does not really make much sense in the context of Java, and it is
+probably best avoided. After all, the intent is to declare a variable of a
+certain type, and the name of that type is "<atype>int[]</atype>". It makes sense to
+follow the "<bnf>type-name</bnf>  <bnf>variable-name</bnf>;" syntax for such declarations.</np>
+  
+</subsection>
+
+
+</section>

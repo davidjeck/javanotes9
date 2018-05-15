@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="life-rules.svg"
+   inkscape:export-filename="/home/eck/eclipse-workspace/javanotes7/c7-arrays/life-rules.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="208"
+     inkscape:cy="880"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1144"
+     inkscape:window-height="949"
+     inkscape:window-x="167"
+     inkscape:window-y="45"
+     inkscape:window-maximized="0" />
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Mend"
+       style="overflow:visible;">
+      <path
+         id="path3808"
+         style="fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(0.6) rotate(180) translate(0,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mendc"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Mendc"
+       style="overflow:visible;">
+      <path
+         id="path4226"
+         style="stroke-linejoin:round;stroke:#000000;stroke-width:0.62500000;fill:#000000;fill-rule:evenodd"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(0.6) rotate(180) translate(0,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2MendcA"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2MendcA"
+       style="overflow:visible;">
+      <path
+         id="path4252"
+         style="stroke-linejoin:round;fill-rule:evenodd;stroke:#929292;stroke-width:0.62500000;fill:#929292"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(0.6) rotate(180) translate(0,0)" />
+    </marker>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <image
+       y="35.862183"
+       x="4.5"
+       id="image2993"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAScAAAEnCAYAAADrWoVBAAAABHNCSVQICAgIfAhkiAAABQFJREFU eJzt3UFu2zAARUG56L3jnNxdZNWkCBzUpB6pmQMohGI9CNr823Ecj2OS+/2+9PWBeX7P/oNvb29D rvv+/j7kusA5fp19AIB/EScgSZyAJHECksQJSBInIEmcgCRxApLECUgSJyBJnIAkcQKSxAlIEicg SZyAJHECksQJSBInIEmcgCRxApLECUiavr5iJQV4hjcnIMluHZDkzQlIEicgSZyAJHECksQJSBIn IEmcgCRxApLECUgSJyBJnIAkcQKSxAlIEicgSZyAJHECksQJSBInIEmcgCRxApLECUiyWwck3Y7j eJx9COa43+9nHyHN/WmZ/ubEuUbvBq5+fTp8cwKSxAlIEicgSZyAJHECksQJSBInIEmcgCRxApLE CUgSJyBJnIAkcQKSxAlIEicgSZyAJHECksQJSBInIEmcgCRxApJMQ12I6aPvuT8tf8Vp9D/H9YFn fdmtW30XbPXzAx98cwKSxAlIEicgSZyAJHECksQJSBInIEmcgCRxApLECUgSJyBJnIAkcQKSxAlI EicgSZyAJHECksQJSBInIEmcgCRxApK+rK+svjKy+vmBD0Y1YRK7ij/z5c0JGMeu4vN8cwKSxAlI EicgSZyAJHECksQJSBInIEmcgCRxApLECUgSJyBJnIAkcQKSxAlIEicgSZyAJHECksQJSBInIEmc gCRxApKsr8BEO66kjDJ1t85uF4yz+u//8/mnvznZ7YJxRj9fM59f35yAJHECksQJSBInIEmcgCRx ApLECUgSJyBJnIAkcQKSxAlIEicgSZyAJHECksQJSBInIEmcgCRxApLECUgSJyBJnICk6esrVlJg nNHP18znd+pu3Wh28WCc2c/Xdou/dvFgHLt1wOWJE5AkTkCSOAFJ4gQkiROQJE5AkjgBSeIEJIkT kCROQJI4AUniBCSJE5AkTkCSOAFJ4gQkiROQJE5AkjgBSeIEJG23vmIlBcbZdrfOrty53J/vuT8t 09+c7Mqda/T9X/36dPjmBCSJE5AkTkCSOAFJ4gQkiROQJE5AkjgBSeIEJIkTkCROQJI4AUniBCSJ E5AkTkCSOAFJ4gQkiROQJE5AkjgBSeIEJE1fX7Fyca7R93/169MxdbeOva2++7b6+Xez3eIv57Jb x6v45gQkiROQJE5AkjgBSeIEJIkTkCROQJI4AUniBCSJE5AkTkCSOAFJ4gQkiROQJE5AkjgBSeIE JIkTkCROQJI4AUniBCRZX+Gl7NbxKuLEy4zefbMrdy3ixFLs1l2Hb05AkjgBSeIEJIkTkCROQJI4 AUniBCSJE5AkTkCSOAFJ4gQkiROQJE5AkjgBSeIEJIkTkCROQJI4AUniBCSJE5AkTkCS9RWWYiXl Om7HcTzOPsSrrL5rtvr54ZW2e3MavWtmNw3m8M0JSBInIEmcgCRxApLECUgSJyBJnIAkcQKSxAlI EicgSZyAJHECksQJSBInIEmcgCRxApLECUgSJyBJnIAkcQKSxAlI2m59ZfSKiZUUmGO7OMFVrb57 +Pn828XJbh1XttPv3zcnIEmcgCRxApLECUgSJyBJnIAkcQKSxAlIEicgSZyAJHECksQJSBInIEmc gCRxApLECUgSJyBJnIAkcQKSxAlIEicgabv1Fbt1XNlOv//bcRyPaX8N/sPoXTbXb9nuzYm9rb4b uPr5Z/LNCUgSJyBJnIAkcQKSxAlI+gPh4roy3E7NiQAAAABJRU5ErkJggg== "
+       height="170.7363"
+       width="170.7363" />
+    <image
+       y="35.862183"
+       x="370.7637"
+       id="image3004"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAScAAAEnCAIAAABkOBIWAAAAA3NCSVQICAjb4U/gAAAEL0lEQVR4 nO3cQZLaQBQFwcHhe8Pc3BsvvMI2tEpfTeYBFEKoQtGb9/UFAAAAAAAAAAAAAAAAAAAAAAAAAACd 29k3wIsej8eo6/Dvfp59A7zufr+/eYXv7+8ld8J/+XH2DcDHUR3UVAc11UFNdVBTHdRUBzXVQU11 UFMd1FQHNdVBTXVQUx3UVAc11UFNdVBTHdRUBzXVQU11ULMRdmEWvi5qfXV2GuG5Q751dhobnvNF OddBTXVQUx3UVAc11UFNdVBTHdRUBzXVQU11UFMd1FQHNdVBTXVQUx3UVAc11UFNdVBTHdRUBzXV Qe2QjTDLUw3P+aLm7mHCrmw/X5g9zItyroOa6qCmOqipDmqqg5rqoKY6qKkOaqqDmuqgpjqoqQ5q qoOa6qCmOqipDmqqg5rqoKY6qKkOaqqDmo2wC7PwdVG35VdctYdpV5N3TH4PD/nW2WlkgrHvoXMd 1FQHNdVBTXVQUx3UVAc11UFNdVBTHdRUBzXVQU11UFMd1FQHNdVBTXVQUx3UVAc11UFNdVBTHdQO 2Qiz8MUEY9/D9XuYMMG0PdU/78f2M9tatYe5fFfTuQ5qqoOa6qCmOqipDmqqg5rqoKY6qKkOaqqD muqgpjqoqQ5qqoOa6qCmOqipDmqqg5rqoKY6qKkOajbC2NaqPczlu5rrq5u8Q7iTVb9r1+cz2SHf urE7hJvxfJ4b+x4610FNdVBTHdRUBzXVQU11UFMd1FQHNdVBTXVQUx3UVAc11UFNdVBTHdRUBzXV QU11UFMd1FQHNdVB7ZCNsLE7hJvxfJ4b+x7e1l6Ov5q2YzntOp/A9vMJpu1YTruf7TnXQU11UFMd 1FQHNdVBTXVQUx3UVAc11UFNdVBTHdRUBzXVQU11UFMd1FQHNdVBTXVQUx3UVAc11UHNRtgJpi1q Tbuf7anu003bw/yEXU3VnWDX/cldf9dyznVQUx3UVAc11UFNdVBTHdRUBzXVQU11UFMd1FQHNdVB TXVQUx3UVAc11UFNdVBTHdRUBzXVQU11ULMRdoJdl7B2/V3L3c6+AV40bTdy2v1M5lt3Yav2J+1Y xpzroKY6qKkOaqqDmuqgpjqoqQ5qqoOa6qCmOqipDmqqg5rqoKY6qKkOaqqDmuqgpjqoqQ5qqoOa 6qBmI+zCVi1zWfiKzd3DnLavOO1+uK7R3zp7j2zJuQ5qqoOa6qCmOqipDmqqg5rqoKY6qKkOaqqD muqgpjqoqQ5qqoOa6qCmOqipDmqqg5rqoKY6qKkOaqM3wuw9sqXR1cHLVu2XHrGDOro6e5i8Y+z/ 7lwHNdVBTXVQUx3UVAc11UFNdVBTHdRUBzXVQU11UFMd1FQHNdVBTXVQUx3UVAc11UFNdVBTHdRU B7XRG2H2MHnH2P99bnVH7BDCBHOrgzfZwwR+Ux3UVAc11UFNdVD7BYW7nRt0o2WMAAAAAElFTkSu QmCC "
+       height="170.7363"
+       width="170.7363" />
+    <path
+       style="fill:none;stroke:#929292;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2MendcA)"
+       d="m 95,56.362183 c 113.53093,-21.444264 229.83481,-26.472391 362,0"
+       id="path3007"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path4271"
+       d="m 83,70.918693 c 114.554,-8.391352 223.95927,-3.831901 362,1"
+       style="fill:none;stroke:#929292;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2MendcA)" />
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       x="281"
+       y="13.362183"
+       id="text4273"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4275"
+         x="281"
+         y="13.362183">Dead cell with 3 live</tspan><tspan
+         sodipodi:role="line"
+         x="281"
+         y="30.862183"
+         id="tspan4277">neighbors comes to life</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text4279"
+       y="87.362183"
+       x="281"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       xml:space="preserve"><tspan
+         id="tspan4283"
+         y="87.362183"
+         x="281"
+         sodipodi:role="line">Living cell with 1 live</tspan><tspan
+         y="104.86218"
+         x="281"
+         sodipodi:role="line"
+         id="tspan4287">neighbor dies.</tspan></text>
+    <path
+       style="fill:none;stroke:#929292;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2MendcA)"
+       d="m 96,154.91869 c 73.02245,-22.59012 211.96907,-53.49539 362,1"
+       id="path4289"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       x="281"
+       y="145.36218"
+       id="text4291"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="281"
+         y="145.36218"
+         id="tspan4293">Living cell with 5 live</tspan><tspan
+         id="tspan4295"
+         sodipodi:role="line"
+         x="281"
+         y="162.86218">neighbors dies.</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4297"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       transform="translate(3,36)"><flowRegion
+         id="flowRegion4299"><rect
+           id="rect4301"
+           width="188"
+           height="26"
+           x="148"
+           y="105.36218" /></flowRegion><flowPara
+         id="flowPara4303"></flowPara></flowRoot>    <path
+       style="fill:none;stroke:#929292;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2MendcA)"
+       d="m 56,194.91869 c 87.87693,-7.73296 158.51662,-16.47741 362,1"
+       id="path4318"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4320"
+       y="205.36218"
+       x="281"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       xml:space="preserve"><tspan
+         id="tspan4322"
+         y="205.36218"
+         x="281"
+         sodipodi:role="line">Living cell with 3 live</tspan><tspan
+         y="222.86218"
+         x="281"
+         sodipodi:role="line"
+         id="tspan4324">neighbors stays alive.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       x="85"
+       y="228.36218"
+       id="text4326"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4328"
+         x="85"
+         y="228.36218"
+         style="fill:#800000">Step N</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text4334"
+       y="228.36218"
+       x="451"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       xml:space="preserve"><tspan
+         y="228.36218"
+         x="451"
+         id="tspan4336"
+         sodipodi:role="line"
+         style="fill:#800000">Step N+1</tspan></text>
+  </g>
+</svg>

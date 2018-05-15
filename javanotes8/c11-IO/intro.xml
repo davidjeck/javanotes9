@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE intro SYSTEM "../javanotes7.dtd" >
+
+<intro>
+<p><start><big>C</big>omputer programs are</start> only useful if they interact
+with the rest of the world in some way. This interaction is referred to as
+<newword>input/output</newword>, or <newword>I/O</newword>. 
+Up until now, this book has concentrated on just one 
+type of interaction: interaction with the user, through either a
+graphical user interface or a command-line interface. But the user is only one
+possible source of information and only one possible destination for
+information. We have already encountered one other type of input/output, since
+<classname>TextIO</classname> can read data from files and write data
+to files.  However, Java has an input/output framework that provides much
+more power and flexibility than does <classname>TextIO</classname>,
+and that covers other kinds of I/O in addition to files.  Most importantly,
+it supports communication over network connections.
+In Java, the most common type of input/output involving files and networks is based on
+<newword>streams</newword>, which are objects that support I/O
+commands that are similar to those that you have already used.
+In fact, standard output (<code>System.out</code>) and
+standard input (<code>System.in</code>) are examples of streams.</p>
+
+<p>Working with files and networks requires familiarity with exceptions, which
+were covered in <localref href="robustness.3"/>. Many of
+the subroutines that are used can throw checked exceptions, which require mandatory
+exception handling. This generally means calling the subroutine in a
+<code>try..catch</code> statement that can deal with the exception if one
+occurs.  Effective network communication also requires the use of
+threads, which will be covered in <localref href="threads"/>.
+We will look at the basic networking API in this chapter, but
+we will return to the topic of threads and networking in <localref href="threads.4"/>.
+</p>
+</intro>

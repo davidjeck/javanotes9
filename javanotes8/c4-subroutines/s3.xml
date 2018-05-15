@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="subroutines.3" title="Parameters">
+
+<p><start><big>I</big>f a subroutine is a black box</start>, then a parameter
+is something that
+provides a mechanism for passing information from the outside world into the
+box. Parameters are part of the interface of a subroutine. They allow you to
+customize the behavior of a subroutine to adapt it to a particular
+situation.</p>
+
+<p>As an analogy, consider a thermostat&mdash;a black box whose task it is to keep
+your house at a certain temperature. The thermostat has a parameter, namely the
+dial that is used to set the desired temperature. The thermostat always
+performs the same task: maintaining a constant temperature. However, the exact
+task that it performs&mdash;that is, <b>which</b> temperature it
+maintains&mdash;is customized by the setting on its dial.</p>
+   
+<subsection id="subroutines.3.1" title="Using Parameters">
+
+<p>As an example, let's go back to the "3N+1" problem that was discussed in
+<localref href="control.2.2"/>. (Recall that a 3N+1 sequence is
+computed according to the rule, "if N is odd, multiply it by 3 and add 1; if N is
+even, divide it by 2; continue until N is equal to 1." For example, starting from
+N=3 we get the sequence: 3, 10, 5, 16, 8, 4, 2, 1.) Suppose that we want to
+write a subroutine to print out such sequences. The subroutine will always
+perform the same task: Print out a 3N+1 sequence. But the exact sequence it
+prints out depends on the starting value of N. So, the starting value of N
+would be a parameter to the subroutine. The subroutine can be written like
+this:</p>
+
+<pre>/**
+ * This subroutine prints a 3N+1 sequence to standard output, using
+ * startingValue as the initial value of N.  It also prints the number 
+ * of terms in the sequence. The value of the parameter, startingValue, 
+ * must  be a positive integer.
+ */
+
+static void print3NSequence(int startingValue) {
+      
+   int N;      // One of the terms in the sequence.
+   int count;  // The number of terms.
+  
+   N = startingValue;  // The first term is whatever value
+                       //    is passed to the subroutine as 
+                       //    a parameter.
+   
+   count = 1; // We have one term, the starting value, so far.
+   
+   System.out.println("The 3N+1 sequence starting from " + N);
+   System.out.println();
+   System.out.println(N);  // print initial term of sequence
+ 
+   while (N &gt; 1) {
+       if (N % 2 == 1)     // is N odd?
+          N = 3 * N + 1;
+       else
+          N = N / 2;
+       count++;   // count this term
+       System.out.println(N);  // print this term
+   }
+   
+   System.out.println();
+   System.out.println("There were " + count + " terms in the sequence.");
+
+}  // end print3NSequence</pre>
+
+<np>The parameter list of this subroutine, "<code>(int&nbsp;startingValue)</code>",
+specifies that the subroutine has one parameter, of type <ptype>int</ptype>.   Within
+the body of the subroutine, the parameter name can be used in the same way as a
+variable name.  But notice that there is nothing in the subroutine definition that
+gives a value to the parameter!
+The parameter gets its initial value from <b>outside</b> the subroutine.  When the
+subroutine is called, a value must be provided for the parameter in the subroutine call 
+statement.  This value
+will be assigned to <code>startingValue</code> before the body of the
+subroutine is executed.  For example, the subroutine could be called using the
+subroutine call statement "<code>print3NSequence(17);</code>". When the computer
+executes this statement, the computer first assigns the value 17 to
+<code>startingValue</code> and then executes the statements in the subroutine. This
+prints the 3N+1 sequence starting from 17. If <code>K</code> is a variable of type
+<ptype>int</ptype>, then the subroutine can be called by saying "<code>print3NSequence(K);</code>".
+When the computer executes this subroutine call statement, it takes the value of the variable
+<code>K</code>, assigns that value to <code>startingValue</code>, and then executes the body
+of the subroutine.</np>
+
+<p>The class that contains <code>print3NSequence</code> can contain a
+<code>main()</code> routine (or other subroutines) that call
+<code>print3NSequence</code>. For example, here is a <code>main()</code> program that
+prints out 3N+1 sequences for various starting values specified by the
+user:</p>
+
+<pre>public static void main(String[] args) {
+   System.out.println("This program will print out 3N+1 sequences");
+   System.out.println("for starting values that you specify.");
+   System.out.println();
+   int K;  // Input from user; loop ends when K &lt; 0.
+   do {
+      System.out.println("Enter a starting value.");
+      System.out.print("To end the program, enter 0: ");
+      K = TextIO.getInt();  // Get starting value from user.
+      if (K &gt; 0)   // Print sequence, but only if K is &gt; 0.
+         print3NSequence(K);
+   } while (K &gt; 0);   // Continue only if K &gt; 0.
+} // end main</pre>
+   
+<np>Remember that before you can use this program, the definitions of
+<code>main</code> and of <code>print3NSequence</code> must both be
+wrapped inside a class definition.</np>
+
+</subsection>
+   
+<subsection id="subroutines.3.2" title="Formal and Actual Parameters">
+
+<p>Note that the term "parameter" is used to refer to two different, but
+related, concepts. There are parameters that are used in the definitions of
+subroutines, such as <code>startingValue</code> in the above example. And there are
+parameters that are used in subroutine call statements, such as the <code>K</code>
+in the statement "<code>print3NSequence(K);</code>". Parameters in a subroutine
+definition are called <newword>formal parameters</newword> or
+<newword>dummy parameters</newword>. The parameters that are passed
+to a subroutine when it is called are called <newword>actual parameters</newword>
+or <newword>arguments</newword>.
+When a subroutine is called, the actual parameters in the
+subroutine call statement are evaluated and the values are assigned to the
+formal parameters in the subroutine's definition. Then the body of the
+subroutine is executed.</p>
+
+<p>A formal parameter must be a <b>name</b>, that is, a simple identifier.
+A formal parameter is very much like a variable, and&mdash;like a variable&mdash;it
+has a specified type such as <ptype>int</ptype>, <ptype>boolean</ptype>,
+<classname>String</classname>, or <atype>double[]</atype>. 
+An actual parameter is a <b>value</b>, and so it can
+be specified by any expression, provided that the expression computes a value
+of the correct type. The type of the actual parameter must be one that could
+legally be assigned to the formal parameter with an assignment statement. For
+example, if the formal parameter is of type <ptype>double</ptype>, then it would be
+legal to pass an <ptype>int</ptype> as the actual parameter since <ptype>ints</ptype> can
+legally be assigned to <ptype>doubles</ptype>.  When you call a subroutine, you must
+provide one actual parameter for each formal parameter in the subroutine's
+definition. Consider, for example, a subroutine</p>
+
+<pre>static void doTask(int N, double x, boolean test) {
+    // statements to perform the task go here
+}</pre>
+
+<np>This subroutine might be called with the statement</np>
+
+<pre>doTask(17, Math.sqrt(z+1), z &gt;= 10);</pre>
+
+<np>When the computer executes this statement, it has essentially the same
+effect as the block of statements:</np>
+
+<pre>{
+  int N;       // Allocate memory locations for the formal parameters.
+  double x;
+  boolean test;
+  N = 17;              // Assign 17 to the first formal parameter, N.
+  x = Math.sqrt(z+1);  // Compute Math.sqrt(z+1), and assign it to
+                       //    the second formal parameter, x.
+  test = (z &gt;= 10);    // Evaluate "z &gt;= 10" and assign the resulting
+                       //     true/false value to the third formal 
+                       //     parameter, test.
+   // statements to perform the task go here
+}</pre>
+
+<np>(There are a few technical differences between this and
+"<code>doTask(17,Math.sqrt(z+1),z&gt;=10);</code>" &mdash;besides the amount of typing&mdash;because 
+of questions about scope of variables and what happens when several
+variables or parameters have the same name.)</np>
+
+<p>Beginning programming students often find parameters to be surprisingly
+confusing. Calling a subroutine that already exists is not a problem&mdash;the
+idea of providing information to the subroutine in a parameter is clear enough.
+Writing the subroutine definition is another matter. A common beginner's mistake is to
+assign values to the formal parameters at the beginning of the subroutine, or
+to ask the user to input their values. <b>This represents a fundamental
+misunderstanding.</b> When the statements in the subroutine are executed, the
+formal parameters have already been assigned initial values!  The computer automatically 
+assigns values to the parameters before it starts executing the code inside the
+subroutine. The values come from the subroutine
+call statement. Remember that a subroutine is not independent. It is called by
+some other routine, and it is the subroutine call statement's responsibility to provide
+appropriate values for the parameters.</p>
+
+</subsection>
+   
+<subsection id="subroutines.3.3" title="Overloading">
+
+<p>In order to call a subroutine legally, you need to know its name, you need
+to know how many formal parameters it has, and you need to know the type of
+each parameter. This information is called the subroutine's <newword>signature</newword>.
+The signature of the subroutine <code>doTask</code>, used as an example above, can
+be expressed as: <code>doTask(int,double,boolean)</code>. Note that the signature does
+<b>not</b> include the names of the parameters; in fact, if you just
+want to <b>use</b> the subroutine, you don't even need to know what
+the formal parameter names are, so the names are not part of the interface.</p>
+
+<p>Java is somewhat unusual in that it allows two different subroutines in the
+same class to have the same name, provided that their signatures are different.
+When this happens, we say that
+the name of the subroutine is <newword>overloaded</newword> because
+it has several different meanings. The computer doesn't get the subroutines
+mixed up. It can tell which one you want to call by the number and types of the
+actual parameters that you provide in the subroutine call statement. You have
+already seen overloading used with <classname>System.out</classname>. This object includes
+many different methods named <code>println</code>, for example. These methods all
+have different signatures, such as:</p>
+
+<pre>
+println(int)                   println(double)
+println(char)                  println(boolean)
+println()</pre>
+
+<np>The computer knows which of these subroutines you want to use based on
+the type of the actual parameter that you provide.  <code>System.out.println(17)</code>
+calls the subroutine with signature <code>println(int)</code>, while
+<code>System.out.println('A')</code> calls the subroutine with signature <code>println(char)</code>.
+Of course all these different subroutines are semantically related, which is
+why it is acceptable programming style to use the same name for them all. But
+as far as the computer is concerned, printing out an <ptype>int</ptype> is very
+different from printing out a <ptype>char</ptype>, which is different from printing
+out a <ptype>boolean</ptype>, and so forth&mdash;so that each of these operations
+requires a different subroutine.</np>
+
+<p>Note, by the way, that the signature does <b>not</b> include the
+subroutine's return type. It is illegal to have two subroutines in the same
+class that have the same signature but that have different return types. For
+example, it would be a syntax error for a class to contain two subroutines defined
+as:</p>
+
+<pre>int    getln() { ... }
+double getln() { ... }</pre>
+
+<np>This is why in the <classname>TextIO</classname> class, the subroutines
+for reading different types are not all named <code>getln()</code>. In a given
+class, there can only be one routine that has the name <code>getln</code> with
+no parameters. So, the input routines in <classname>TextIO</classname> are distinguished by
+having different names, such as <code>getlnInt()</code> and
+<code>getlnDouble()</code>.</np>
+   
+</subsection>
+   
+   
+<subsection id="subroutines.3.4" title="Subroutine Examples">
+
+<p>Let's do a few examples of writing small subroutines to perform assigned
+tasks. Of course, this is only one side of programming with subroutines. The
+task performed by a subroutine is always a subtask in a larger program. The art
+of designing those programs&mdash;of deciding how to break them up into subtasks&mdash;is
+the other side of programming with subroutines. We'll return to the
+question of program design in <localref href="subroutines.6"/>.</p>
+
+<p>As a first example, let's write a subroutine to compute and print out all
+the divisors of a given positive integer. The integer will be a parameter to
+the subroutine. Remember that the syntax of any subroutine is:</p>
+
+<pre><bnf>modifiers</bnf>  <bnf>return-type</bnf>  <bnf>subroutine-name</bnf>  ( <bnf>parameter-list</bnf> ) {
+    <bnf>statements</bnf>
+}</pre>
+
+<np>Writing a subroutine always means filling out this format. In this case,
+the statement of the problem
+tells us that there is one parameter, of type <ptype>int</ptype>, and it tells us
+what the statements in the body of the subroutine should do. Since we are only
+working with static subroutines for now, we'll need to use <code>static</code> as a
+modifier. We could add an access modifier (<code>public</code> or
+<code>private</code>), but in the absence of any instructions, I'll leave it out.
+Since we are not told to return a value, the return type is <code>void</code>.
+Since no names are specified, we'll have to make up names for the formal
+parameter and for the subroutine itself. I'll use <code>N</code> for the parameter
+and <code>printDivisors</code> for the subroutine name. The subroutine will look
+like</np>
+
+<pre>static void printDivisors( int N ) {
+    <bnf>statements</bnf>
+}</pre>
+
+<np>and all we have left to do is to write the statements that make up the body
+of the routine. This is not difficult. Just remember that you have to write the
+body assuming that <code>N</code> already has a value! The algorithm is: "For each
+possible divisor <code>D</code> in the range from <code>1</code> to <code>N</code>, if
+<code>D</code> evenly divides <code>N</code>, then print <code>D</code>." Written in Java,
+this becomes:</np>
+
+<pre>/**
+ * Print all the divisors of N.
+ * We assume that N is a positive integer.
+ */
+static void printDivisors( int N ) {
+    int D;   // One of the possible divisors of N.
+    System.out.println("The divisors of " + N + " are:");
+    for ( D = 1; D &lt;= N; D++ ) {
+       if ( N % D == 0 )  // Does D evenly divide N?
+          System.out.println(D);
+    }
+}</pre>
+
+<np>I've added a comment before the subroutine definition
+indicating the contract of the subroutine&mdash;that is,
+what it does and what assumptions it makes. The contract includes the
+assumption that <code>N</code> is a positive integer.   It is up to the caller of the
+subroutine to make sure that this assumption is satisfied.</np>
+
+<p>As a second short example, consider the problem: Write a <code>private </code>subroutine named
+<code>printRow</code>. It should have a parameter <code>ch</code> of type <ptype>char</ptype>
+and a parameter <code>N</code> of type <ptype>int</ptype>. The subroutine should print
+out a line of text containing <code>N</code> copies of the character
+<code>ch</code>.</p>
+
+<p>Here, we are told the name of the subroutine and the names of the two
+parameters, and we are told that the subroutine is <code>private</code>,
+so we don't have much choice about the first line of the subroutine
+definition. The task in this case is pretty simple, so the body of the
+subroutine is easy to write. The complete subroutine is given by</p>
+
+<pre>/**
+ * Write one line of output containing N copies of the
+ * character ch.  If N &lt;= 0, an empty line is output.
+ */
+private static void printRow( char ch, int N ) {
+    int i;  // Loop-control variable for counting off the copies.
+    for ( i = 1; i &lt;= N; i++ ) {
+        System.out.print( ch );
+    }
+    System.out.println();
+}</pre>
+
+<np>Note that in this case, the contract makes no assumption about <code>N</code>,
+but it makes it clear what will happen in all cases, including the unexpected
+case that <code>N &lt; 0</code>.</np>
+
+<p>Finally, let's do an example that shows how one subroutine can build on
+another. Let's write a subroutine that takes a <classname>String</classname> as a parameter.
+For each character in the string, it should print a line of output containing 25
+copies of that character. It should use the <code>printRow()</code> subroutine to
+produce the output.</p>
+
+<p>Again, we get to choose a name for the subroutine and a name for the
+parameter. I'll call the subroutine <code>printRowsFromString</code> and the
+parameter <code>str</code>. The algorithm is pretty clear: For each position
+<code>i</code> in the string <code>str</code>, call <code>printRow(str.charAt(i),25)</code>
+to print one line of the output. So, we get:</p>
+
+<pre>/**
+ * For each character in str, write a line of output
+ * containing 25 copies of that character.
+ */
+private static void printRowsFromString( String str ) {
+    int i;  // Loop-control variable for counting off the chars.
+    for ( i = 0; i &lt; str.length(); i++ ) {
+        printRow( str.charAt(i), 25 );
+    }
+}</pre>
+
+<np>We could use <code>printRowsFromString</code> in a <code>main()</code> routine such
+as</np>
+
+<pre>public static void main(String[] args) {
+    String inputLine;  // Line of text input by user.
+    System.out.print("Enter a line of text: ");
+    inputLine = TextIO.getln();
+    System.out.println();
+    printRowsFromString( inputLine );
+}</pre>
+
+<p>Of course, the three routines, <code>main()</code>,
+<code>printRowsFromString()</code>, and <code>printRow()</code>, would have to be
+collected together inside the same class. The program is rather useless, but it
+does demonstrate the use of subroutines. You'll find the program in the file
+<sourceref href="RowsOfChars.java"/>, if you want to take a
+look.</p>
+
+
+</subsection>
+
+
+<subsection id="subroutines.3.4a" title="Array Parameters">
+
+<p>It's possible for the type of a parameter to be an array type.  This means that
+an entire array of values can be passed to the subroutine as a single parameter.
+For example, we might want a subroutine to print all the values in an integer array
+in a neat format, separated by commas and enclosed in a pair of square brackets.
+To tell it which array to print, the subroutine would have a parameter of
+type <atype>int[]</atype>:</p>
+
+<pre>static void printValuesInList( int[] list ) {
+    System.out.print('[');
+    int i;
+    for ( i = 0; i &lt; list.length; i++ ) {
+        if ( i &gt; 0 )
+            System.out.print(','); // No comma in front of list[0]
+        System.out.print(list[i]);
+    }
+    System.out.println(']');
+}</pre>
+
+<np>To use this subroutine, you need an actual array.  Here is a legal, though not very
+realistic, code segment that creates an array just to pass it as an argument to
+the subroutine:</np>
+
+<pre>int[] numbers;
+numbers = new int[3];
+numbers[0] = 42;
+numbers[1] = 17;
+numbers[2] = 256;
+printValuesInList( numbers );</pre>
+  
+<np>The output produced by the last statement would be <code>[42,17,256]</code>.</np>
+
+
+</subsection>
+
+
+<subsection id="subroutines.3.4b" title="Command-line Arguments">
+
+
+
+<p>The <code>main</code> routine of a program has a parameter of type
+<atype>String[]</atype>.  When the main routine is called, some actual array
+of <classname>String</classname> must be passed to <code>main()</code> as the value 
+of the parameter.  The system provides the actual parameter when it calls <code>main()</code>,
+so the values come from outside the program.  Where do the strings in the array 
+come from, and what do they mean?  The
+strings in the array are <newword>command-line arguments</newword> from the
+command that was used to run the program.
+When using a command-line interface, the user types a
+command to tell the system to execute a program. The user can include extra
+input in this command, beyond the name of the program. This extra input becomes
+the command-line arguments.   The system takes the command-line arguments,
+puts them into an array of strings, and passes that array to <code>main()</code>.</p>
+
+<p>For example, if the name of the program is <code>myProg</code>, then the user can type
+"<code>java&nbsp;myProg</code>" to execute the program. In this case, there are no
+command-line arguments. But if the user types the command</p>
+   
+<pre>java myProg one two three</pre>
+
+<np>then the command-line arguments are the strings "one", "two",
+and "three". The system puts these strings into an array of <classname>Strings</classname>
+and passes that array as a parameter to the <code>main()</code> routine. Here, for
+example, is a short program that simply prints out any command line arguments
+entered by the user:</np>
+
+<pre>public class CLDemo {
+   
+   public static void main(String[] args) {
+      System.out.println("You entered " + args.length
+                                  + " command-line arguments");
+      if (args.length &gt; 0) {
+         System.out.println("They were:");
+         int i;
+         for ( i = 0; i &lt; args.length; i++ )
+            System.out.println("   " + args[i]);
+      }
+   } // end main()
+   
+} // end class CLDemo</pre>
+
+<np>Note that the parameter, <code>args</code>, can be an array of length
+zero.  This just means that the user did not include any command-line arguments
+when running the program. </np>
+
+<p>In practice, command-line arguments are often used to pass the names of 
+files to a program.  For example, consider the following program for making
+a copy of a text file.  It does this by copying one line at a time from
+the original file to the copy, using TextIO.  The function 
+<code>TextIO.eof()</code> is a <ptype>boolean</ptype>-valued function that
+is <code>true</code> if the end of the file has been reached.</p>
+  
+<pre>/**
+ *  Requires two command line arguments, which must be file names.  The
+ *  the first must be the name of an existing file.  The second is the name
+ *  of a file to be created by the program.  The contents of the first file
+ *  are copied into the second.  WARNING:  If the second file already 
+ *  exists when the program is run, its previous contents will be lost!
+ *  This program only works for plain text files.
+ */
+public class CopyTextFile {
+
+    public static void main( String[] args ) {
+        if (args.length &lt; 2 ) {
+            System.out.println("Two command-line arguments are required!");
+            System.exit(1);
+        }
+        TextIO.readFile( args[0] );   // Open the original file for reading.
+        TextIO.writeFile( args[1] );  // Open the copy file for writing.
+        int lineCount;  // Number of lines copied
+        lineCount = 0;
+        while ( TextIO.eof() == false ) {
+            // Read one line from the original file and write it to the copy.
+            String line;
+            line = TextIO.getln();
+            TextIO.putln(line);
+            lineCount++;
+        }
+        System.out.printf( "%d lines copied from %s to %s%n",
+                                lineCount, args[0], args[1] );
+    }
+
+}</pre>
+
+<p>Since most programs are run in a GUI environment these days, command-line arguments
+aren't as important as they used to be.  But at least they provide a nice example
+of how array parameters can be used.</p>
+   
+</subsection>
+
+   
+<subsection id="subroutines.3.5" title="Throwing Exceptions">
+   
+<p>I have been talking about the "contract" of a subroutine.  The contract says
+what the subroutine will do, provided that the caller of the subroutine
+provides acceptable values for the subroutine's parameters.  The question
+arises, though, what should the subroutine do when the caller violates
+the contract by providing bad parameter values?</p>
+   
+<p>We've already seen that some subroutines respond to bad parameter
+values by throwing exceptions.  (See <localref href="control.7"/>.)
+For example, the contract of the built-in subroutine
+<code>Double.parseDouble</code> says that the parameter should be
+a string representation of a number of type <ptype>double</ptype>;
+if this is true, then the subroutine will convert the string into the
+equivalent numeric value.  If the caller violates the contract by
+passing an invalid string as the actual parameter, the subroutine responds by
+throwing an exception of type <classname>NumberFormatException</classname>.</p>
+   
+<p>Many subroutines throw <classname>IllegalArgumentExceptions</classname>
+in response to bad parameter values.  You might want to do the same
+in your own subroutines.  This can be done with a <newword>throw statement</newword>.
+An exception is an object, and in order to throw an exception, you must
+create an exception object.  You won't officially learn how to do this until <localref href="OOP"/>,
+but for now, you can use the following syntax for a <code>throw</code>
+statement that throws an <classname>IllegalArgumentException</classname>:</p>
+
+<pre>throw  new  IllegalArgumentException( <bnf>error-message</bnf> );</pre>
+   
+<np>where <bnf>error-message</bnf> is a string that describes the error that
+has been detected.   (The word "new" in this statement is what creates the object.)
+To use this statement in a subroutine, you would check whether the values
+of the parameters are legal.  If not, you would throw the exception. For
+example, consider the <code>print3NSequence</code> subroutine from
+the beginning of this section.  The parameter of <code>print3NSequence</code>
+is supposed to be a positive integer.  We can modify the subroutine definition
+to make it throw an exception when this condition is violated:</np>
+
+<pre>static void print3NSequence(int startingValue) {
+   
+   <newcode>if (startingValue &lt;= 0)  // The contract is violated!
+      throw new IllegalArgumentException( "Starting value must be positive." );</newcode>
+   .
+   .  // (The rest of the subroutine is the same as before.)
+   .</pre>
+   
+<p>If the start value is bad, the computer executes the <code>throw</code> statement.
+This will immediately terminate the subroutine, without executing the rest of the
+body of the subroutine.  Furthermore, the program as a whole will crash unless
+the exception is "caught" and handled elsewhere in the program by a
+<code>try..catch</code> statement, as discussed in <localref href="control.7"/>.
+For this to work, the subroutine call would have to be in the "try" part of
+the statement.</p>
+
+</subsection>
+      
+<subsection id="subroutines.3.6" title="Global and Local Variables">
+   
+<p>I'll finish this section on parameters by noting that we now have three
+different sorts of variables that can be used inside a subroutine: local
+variables declared in the subroutine, formal parameter names, and static member
+variables that are declared outside the subroutine.</p>
+
+<p>Local variables have no connection to the outside world; they are purely
+part of the internal working of the subroutine.</p>
+
+<p>Parameters are used to "drop"
+values into the subroutine when it is called, but once the subroutine starts
+executing, parameters act much like local variables. Changes made inside a
+subroutine to a formal parameter have no effect on the rest of the program (at
+least if the type of the parameter is one of the primitive types&mdash;things are
+more complicated in the case of arrays and objects, as we'll see later).</p>
+
+<p>Things are different when a subroutine uses a variable that is defined
+outside the subroutine. That variable exists independently of the subroutine,
+and it is accessible to other parts of the program as well. 
+Such a variable is said to be <newword>global</newword>
+to the subroutine, as opposed to the local variables defined inside the
+subroutine. A global variable can be used in the entire class in which
+it is defined and, if it is not <code>private</code>, in other classes as well.
+Changes made to a global variable can have effects that extend
+outside the subroutine where the changes are made. You've seen how this works
+in the last example in the <localref href="subroutines.2">previous section</localref>, where the
+values of the global variables, <code>gamesPlayed</code>
+and <code>gamesWon</code>, are computed inside a
+subroutine and are used in the <code>main()</code> routine.</p>
+
+<p>It's not always bad to use global variables in subroutines, but you should
+realize that the global variable then has to be considered part of the
+subroutine's interface. The subroutine uses the global variable to communicate
+with the rest of the program. This is a kind of sneaky, back-door communication
+that is less visible than communication done through parameters, and it risks
+violating the rule that the interface of a black box should be straightforward
+and easy to understand. So before you use a global variable in a subroutine,
+you should consider whether it's really necessary.</p>
+
+<p>I don't advise you to take an absolute stand against using global variables
+inside subroutines. There is at least one good reason to do it: If you think of
+the class as a whole as being a kind of black box, it can be very reasonable to
+let the subroutines inside that box be a little sneaky about communicating with
+each other, if that will make the class as a whole look simpler from the
+outside.</p>
+   
+</subsection>
+
+</section>

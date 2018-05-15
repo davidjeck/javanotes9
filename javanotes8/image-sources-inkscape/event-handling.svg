@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="event-handling.svg"
+   inkscape:export-filename="/home/eck/eclipse-workspace/javanotes7/c6-GUI1/event-handling.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="208"
+     inkscape:cy="840"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1680"
+     inkscape:window-height="995"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1" />
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Send"
+       style="overflow:visible;">
+      <path
+         id="path3792"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.2) rotate(180) translate(6,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Mend"
+       style="overflow:visible;">
+      <path
+         id="path3786"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         id="path3804" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Mendh"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mendh">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke-linejoin:round;stroke:#000080;stroke-width:0.62500000;fill:#000080;fill-rule:evenodd"
+         id="path4962" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1MendA"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1MendA"
+       style="overflow:visible;">
+      <path
+         id="path5806"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="stroke:#000080;stroke-width:1.0pt;fill:#000080;fill-rule:evenodd"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Mendhk"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mendhk">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke-linejoin:round;fill-rule:evenodd;stroke:#008000;stroke-width:0.62500000;fill:#008000"
+         id="path5905" />
+    </marker>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <rect
+       style="color:#000000;fill:#ffffff;stroke:#800000;stroke-width:0.99999994000000003;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect2987"
+       width="84.709991"
+       height="32.67873"
+       x="124.22252"
+       y="63.294289"
+       ry="11.233315" />
+    <rect
+       ry="9.6985664"
+       y="65.526649"
+       x="125.98731"
+       height="28.214012"
+       width="81.180405"
+       id="rect2985"
+       style="color:#000000;fill:none;stroke:#800000;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3757"
+       y="85.839905"
+       x="163.86456"
+       style="font-size:17.64083481px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#800000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans Bold"
+       xml:space="preserve"
+       transform="scale(1.0004013,0.99959884)"><tspan
+         y="85.839905"
+         x="163.86456"
+         id="tspan3759"
+         sodipodi:role="line">OK</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3761"
+       y="115.82932"
+       x="163.86456"
+       style="font-size:14.11266804px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       xml:space="preserve"
+       transform="scale(1.0004013,0.99959884)"><tspan
+         y="115.82932"
+         x="163.86456"
+         id="tspan3763"
+         sodipodi:role="line">Visible button,</tspan><tspan
+         id="tspan3765"
+         y="133.47015"
+         x="163.86456"
+         sodipodi:role="line">represented by</tspan><tspan
+         id="tspan3767"
+         y="151.11099"
+         x="163.86456"
+         sodipodi:role="line">a <tspan
+   id="tspan3769"
+   style="fill:#800000">JButton</tspan> object</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       id="path4219"
+       d="M 52.748466,39.07601 144.51762,83.160405"
+       style="fill:#008000;stroke:#008000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-mid:none;marker-end:url(#Arrow2Mendhk)" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4951"
+       y="15.039845"
+       x="88.008972"
+       style="font-size:14.11266804px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       xml:space="preserve"
+       transform="scale(1.0004013,0.99959885)"><tspan
+         y="15.039845"
+         x="88.008972"
+         id="tspan4953"
+         sodipodi:role="line"
+         style="fill:#000000">User clicks button,</tspan><tspan
+         id="tspan4955"
+         y="32.680683"
+         x="88.008972"
+         sodipodi:role="line"
+         style="fill:#000000">button generates event</tspan></text>
+    <rect
+       style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect5000"
+       width="180.89113"
+       height="71.233597"
+       x="380.11731"
+       y="42.537952"
+       ry="8.8976994" />
+    <text
+       xml:space="preserve"
+       style="font-size:12.34858418px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       x="470.81509"
+       y="57.54974"
+       id="text5002"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0004013,0.99959886)"><tspan
+         sodipodi:role="line"
+         id="tspan5004"
+         x="470.81509"
+         y="57.54974"
+         style="font-weight:bold;fill:#000000;-inkscape-font-specification:Serif Bold">instanceof <tspan
+   style="font-weight:normal;-inkscape-font-specification:Serif;fill:#000080"
+   id="tspan6047">ButtonHandler</tspan></tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 385.41165,61.935087 171.18477,0"
+       id="path5014"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:12.34858418px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       x="473.46121"
+       y="106.23393"
+       id="text5016"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0004013,0.99959886)"><tspan
+         sodipodi:role="line"
+         id="tspan5018"
+         x="473.46121"
+         y="106.23393">actionPerformed()</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       id="path5020"
+       d="m 430.18305,89.43922 81.64197,0"
+       style="fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-size:14.11266804px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       x="474.34326"
+       y="133.98576"
+       id="text5022"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0004013,0.99959886)"><tspan
+         sodipodi:role="line"
+         id="tspan5024"
+         x="474.34326"
+         y="133.98576">Event-handling object</tspan><tspan
+         sodipodi:role="line"
+         x="474.34326"
+         y="151.6266"
+         id="tspan5026">of type <tspan
+   style="fill:#800000"
+   id="tspan5792">ActionListener</tspan></tspan><tspan
+         sodipodi:role="line"
+         x="474.34326"
+         y="169.26744"
+         id="tspan5790">responds to the event</tspan></text>
+    <path
+       style="fill:none;stroke:#000080;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1MendA)"
+       d="m 211.34449,72.58015 c 66.8846,-43.49331 110.19194,-40.199538 161.47841,0"
+       id="path5028"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:14.11266804px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       x="297.46466"
+       y="17.040648"
+       id="text5784"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0004013,0.99959886)"><tspan
+         sodipodi:role="line"
+         id="tspan5786"
+         x="299.71112"
+         y="17.040648"><tspan
+   id="tspan5889"
+   style="fill:#800000">ActionEvent</tspan> object is </tspan><tspan
+         sodipodi:role="line"
+         x="297.46466"
+         y="34.681484"
+         id="tspan5788">sent to listener</tspan></text>
+  </g>
+</svg>

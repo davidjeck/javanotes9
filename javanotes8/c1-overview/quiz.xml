@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE quiz SYSTEM "../javanotes7.dtd">
+
+<quiz>
+
+<question>
+<ques><p>One of the components of a
+computer is its <i>CPU.</i> What is a CPU and what role does it play in a
+computer?</p></ques>
+<ans><p>The CPU, or Central Processing
+Unit, is the active part of the computer. Its function is to execute programs
+that are coded in machine language and stored in the main memory (RAM) of the
+computer. It does this by repeating the fetch-and-execute cycle over and over;
+that is, it repeatedly fetches a machine language instruction from memory and
+executes it.</p></ans>
+</question>
+
+<question>
+<ques><p>Explain what is meant by an
+"asynchronous event." Give some examples.</p></ques>
+<ans><p>An asynchronous event is one
+that occurs at an unpredictable time outside the control of the program that
+the CPU is running. It is not "synchronized" with the program. An example would
+be when the user presses a key on the keyboard or clicks the mouse button.
+(These events generate "interrupts" that cause the CPU to interrupt what it is
+doing and to take some action to handle the asynchronous event. After handling
+the event, the CPU returns to what it was doing before it was interrupted.)</p></ans>
+</question>
+
+<question>
+<ques><p>What is the difference
+between a "compiler" and an "interpreter"?</p></ques>
+<ans><p>Compilers and interpreters have
+similar functions: They take a program written in some programming language and
+translate it into machine language. A compiler does the translation all at
+once. It produces a complete machine language program that can then be
+executed. An interpreter, on the other hand, just translates one instruction at
+a time, and then executes that instruction immediately. (Java uses a compiler
+to translate java programs into Java Bytecode, which is a machine language for
+the imaginary Java Virtual Machine. Java Bytecode programs are then executed by
+an interpreter.)</p></ans>
+</question>
+   
+<question>
+<ques><p>Explain the difference
+between <i>high-level languages</i> and <i>machine language.</i></p></ques>
+<ans><p>Programs written in the machine
+language of a given type of computer can be directly executed by the CPU of
+that type of computer. High-level language programs must be translated into
+machine language before they can be executed. (Machine language instructions
+are encoded as binary numbers that are meant to be used by a machine, not read
+or written by people. High-level languages use a syntax that is closer to human
+language.)</p></ans>
+</question>
+
+<question>
+<ques><p>If you have the source code
+for a Java program, and you want to run that program, you will need both a
+<i>compiler</i> and an <i>interpreter.</i> What does the Java compiler do, and
+what does the Java interpreter do?</p></ques>
+<ans><p>The Java compiler translates
+Java programs into a language called Java bytecode. Although bytecode is
+similar to machine language, it is not the machine language of any actual
+computer. A Java interpreter is used to run the compiled Java bytecode program.
+(Each type of computer needs its own Java bytecode interpreter, but all these
+interpreters interpret the same bytecode language.)</p></ans>
+</question>
+   
+<question>
+<ques><p>What is a<i> subroutine?</i></p></ques>
+<ans><p>A subroutine is a set of
+instructions for performing some task that have been grouped together and given
+a name. Later, when that task needs to be performed, it is only necessary to
+call the subroutine by giving its name, rather than repeating the whole
+sequence of instructions.</p></ans>
+</question>
+   
+<question>
+<ques><p>Java is an object-oriented
+programming language. What is an <i>object</i>?</p></ques>
+<ans><p>An object consists of some data
+together with a set of subroutines that manipulate that data. (An object is a
+kind of "module," or self-contained entity that communicates with the rest of
+the world through a well-defined interface. An object should represent some
+coherent concept or real-world object.)</p></ans>
+</question>
+   
+<question>
+<ques><p>What is a <i>variable?</i>
+(There are four different ideas associated with variables in Java. Try to
+mention all four aspects in your answer. Hint: One of the aspects is the
+variable's name.)</p></ques>
+<ans><p>A variable is a <u>memory location</u> that has been given a <u>name</u> so that it can easily be
+referred to in a program. The variable holds a <u>value</u>, which must be of
+some specified <u>type</u>. The value can be changed during the course of the
+execution of the program.</p></ans>
+</question>
+   
+<question>
+<ques><p>Java is a
+"platform-independent language." What does this mean?</p></ques>
+<ans><p>A Java program can be compiled
+once into a Java Bytecode program. The compiled program can then be run on any
+computer that has an interpreter for the Java virtual machine. Other languages
+have to be re-compiled for each platform on which they are going to run. The
+point about Java is that it can be executed on many different types of
+computers without being recompiled.</p></ans>
+</question>
+   
+<question>
+<ques><p>What is the "Internet"?
+Give some examples of how it is used. (What kind of services does it
+provide?)</p></ques>
+<ans><p>The Internet is a network
+connecting millions of computers around the world. Computers connected to the
+Internet can communicate with each other. The Internet can be used for Email
+(which lets a user of one computer send a message to a user on another computer), file sharing
+(which is used to copy files between computers), and the World Wide Web (which
+lets a user view "pages" of information published on computers around the
+world).</p></ans>
+</question>
+
+</quiz>

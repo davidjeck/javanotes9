@@ -1,0 +1,2131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+<exercises>
+   
+<exercise>
+<exercise-question><p>In many textbooks, the first examples of recursion are
+the mathematical functions <i>factorial</i> and <i>fibonacci</i>.  These functions
+are defined for non-negative integers using the following recursive formulas:</p>
+<pre>factorial(0)  =  1
+factorial(N)  =  N*factorial(N-1)   for N &gt; 0
+
+fibonacci(0)  =  1
+fibonacci(1)  =  1
+fibonacci(N)  =  fibonacci(N-1) + fibonacci(N-2)   for N &gt; 1</pre>
+<np>Write recursive functions to compute <code>factorial(N)</code> and
+<code>fibonacci(N)</code> for a given non-negative integer&nbsp;<code>N</code>,
+and write a <code>main()</code> routine to test your functions. Consider
+using the <classname>BigInteger</classname> class (see <localref href="robustness.ex.2"/>)</np>
+<p>(In fact, <i>factorial</i> and <i>fibonacci</i> are really not very good
+examples of recursion, since the most natural way to compute them is to use
+simple <code>for</code> loops.  Furthermore, <i>fibonacci</i> is a particularly
+bad example, since the natural recursive approach to computing this function
+is extremely inefficient.)</p>
+</exercise-question>
+<exercise-discuss><p>The recursive definitions of the two functions can be translated
+rather easily into Java code.  Note that for <code>factorial(N)</code>, the base
+case is <code>N=0</code>, while <code>fibonacci(N)</code> has two base cases,
+<code>N=0</code> and <code>N=1</code>.  The obvious recursive function for
+computing <code>fibonacci(N)</code> is:</p>
+<pre>static int fibonacci( int N ) {
+    if ( N == 0 || N == 1 ) {
+           // Base cases; the answer is 1.
+        return 1;
+    }
+    else {
+           // Recursive case; the answer is obtained by applying the function
+           // recursively to N-1 and to N-2, and adding the two answers.
+        return fibonacci(N-1) + fibonacci(N-2);
+    }
+}</pre>
+<np>and for <code>factorial(N)</code> is</np>
+<pre>static int factorial( int N ) {
+   if ( N == 0) {
+          // Base case; the answer is 1.
+      return 1;
+   }
+   else {
+         // Recursive case; the answer is obtained by applying the function
+         // recursively to N-1 and multiplying the answer by N.
+      return factorial(N-1) * N;
+   }
+}</pre>
+<p>Adding a <code>main()</code> routine that calls these methods for several values
+of <code>N</code> would be an acceptable solution to the exercise.  However, when testing
+the program, you will quickly notice some problems.  First of all, the recursive algorithm
+for <code>fibonacci(N)</code> is so inefficient that it takes an unreasonably long
+time for it to run even for values of <code>N</code> as small as 40.  (In fact, the
+recursive evaluation of <code>fibonacci(N)</code> calls both <code>fibonacci(N-1)</code>
+and <code>fibonacci(N-2)</code> and so takes almost twice as long as the evaluation
+of <code>fibonacci(N-1)</code>; with the computation time for <code>fibonacci(N)</code>
+almost doubling every time <code>N</code> goes up by&nbsp;1, the computation time
+quickly becomes unreasonable.)  Although I include
+the recursive version of <code>fibonacci</code> in my solution, my program refuses to
+use this function if <code>N</code> is greater than 40.</p>
+<p>Another problem occurs because of the limited size of values of type <code>int</code>.
+The value of <code>factorial(N)</code> grows very quickly as <code>N</code> increases&mdash;so
+quickly that by the time <code>N</code> reaches 13, the value of <code>factorial(N)</code>
+is already too large to be expressed as a 32-bit integer!  So, the <code>factorial</code>
+function as defined above only gives the correct answer for numbers 0 through&nbsp;12.
+Although <code>fibonacci(N)</code> does not grow nearly so fast as <code>factorial(N)</code>,
+it is still true that by the time <code>N</code> reaches 46, <code>fibonacci(N)</code> is
+outside the range of 32-bit integers.</p>
+<p>The problem of the limited size of values of type <ptype>int</ptype>
+was discussed in <localref href="robustness.1.3"/>.  One approach to dealing with
+the problem was presented in <localref href="robustness.ex.2"/>: The class <code>java.math.BigInteger</code>
+represents integer values that can be arbitrarily large (within the limits of the computer's
+memory).  In my solution to the exercise, I decided to use <classname>BigInteger</classname>
+values to compute <code>factorial(N)</code> and to compute <code>fibonacci(N)</code> non-recursively.
+This allows my program to work even for fairly large values of <code>N</code>, say up to
+a few thousand.</p>
+<p>You can read my solution below to see how I used the <classname>BigInteger</classname> class
+and how I computed <code>fibonacci(N)</code> non-recursively.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="FibonacciAndFactorial">import java.math.BigInteger;
+
+/**
+ * Computes factorial(N) and fibonacci(N) for integers N entered by
+ * the user, as a demonstration of recursion.
+ */
+public class FibonacciAndFactorial {
+   
+   /**
+    * Main routine reads integers N from the user and prints the
+    * values of factorial(N) and fibonacci(N), stopping when the 
+    * user inputs a zero.
+    */
+   public static void main( String[] args ) {
+      while (true) {
+         System.out.print("\n\nEnter a postive integer, or 0 to end:  ");
+         int N = TextIO.getlnInt();
+         if (N == 0)
+            break;
+         else if (N &lt; 0) {
+            System.out.println("Negative numbers are not allowed.");
+            continue;
+         }
+         BigInteger NasBigInteger = BigInteger.valueOf(N);
+         System.out.println("\n  factorial(" + N + ") is " + factorial(NasBigInteger));
+         if (N &gt; 40) {
+            System.out.println("\n  N is too big to compute fibonacci(N) recursively");
+         }
+         else {
+            System.out.println("\n  fibonacci(" + N + ") is " + 
+                  fibonacci(N) + "   (recursively)");
+         }
+         System.out.println("\n  fibonacci(" + N + ") is " + 
+                  fibonacci_nonrecursive(N) + "   (non-recursively)");
+      }
+   }
+   
+   
+   /**
+    * Compute fibonacci(N) using recursion.  Because this is so inefficient,
+    * even for fairly small values of N, N should be less than or equal to 40.
+    * Also, N must be greater than or equal to zero, or an infinite recursion
+    * will occur.
+    */
+   static int fibonacci( int N ) {
+       assert N &gt;= 0 : "fibonacci(n) is only defined for non-negative n";
+       assert N &lt;= 40 : "n is to large to compute fibonacci(N) recursively";
+       if ( N == 0 || N == 1 ) {
+                // Base cases; the answer is 1.
+           return 1;
+       }
+       else {
+              // Recursive case; the answer is obtained by applying the function
+              // recursively to N-1 and to N-2, and adding the two answers.
+           return fibonacci(N-1) + fibonacci(N-2);
+       }
+   }
+   
+   
+   /**
+    * Compute fibonacci(N) using a for loop.  The answer is returned as
+    * a BigInteger and can be very large even for fairly small values
+    * of N.  N must be greater than or equal to zero.
+    */
+   static BigInteger fibonacci_nonrecursive( int N ) {
+      assert N &gt;= 0 : "fibonacci(n) is only defined for non-negative n";
+      if (N == 0 || N == 1) {
+             // fibonacci(0) = fibonacci(1) = 1;
+         return BigInteger.ONE;
+      }
+      else {
+         BigInteger f0 = BigInteger.ONE;  // In the loop, this is fibonacci(i-2)
+         BigInteger f1 = BigInteger.ONE;  // In the loop, this is fibonacci(i-1)
+         for (int i = 2; i &lt;= N; i++) {
+            BigInteger fi = f0.add(f1);  // Computes fibonacci(i)
+            f0 = f1;  // Update to account for i++
+            f1 = fi;  // Update to account for i++
+         }
+         return f1;  // Final value of f1 is fibonacci(N)
+      }
+   }
+
+   
+   /**
+    * Compute factorial(N) using recursion.  The computation is done using
+    * BigIntegers and can be very large even for fairly small values of N.
+    * N must be greater than or equal to zero.
+    */
+   static BigInteger factorial( BigInteger N ) {
+      assert N.signum() &gt;= 0 : "factorial(n) is only defined for non-negative n";
+       if ( N.equals(BigInteger.ZERO) ) {
+              // Base case; the answer is 1.
+           return BigInteger.ONE;
+       }
+       else {
+              // Recursive case; the answer is obtained by applying the function
+              // recursively to N-1 and multiplying the answer by N.
+           BigInteger factorialOfNMinus1 = factorial(N.subtract(BigInteger.ONE));
+           return N.multiply(factorialOfNMinus1);
+       }
+   }
+
+}
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+<exercise>
+<exercise-question><p><localref href="arrays.ex.6"/> asked you to read a file, make an 
+alphabetical list of all the words that occur in the file, and write the list to another
+file.  In that exercise, you were asked to use an <atype>ArrayList&lt;String&gt;</atype> to
+store the words.  Write a new version of the same program that stores the words
+in a binary sort tree instead of in an arraylist.  You can use the binary sort tree
+routines from <sourceref href="SortTreeDemo.java"/>, which was discussed in 
+<localref href="recursion.4.2"/>.</p>
+</exercise-question>
+<exercise-discuss><p>In my solution to <localref href="arrays.ex.6"/>, words are added to an
+arraylist in the order in which they are encountered.  After the file has been
+completely read, the arraylist is sorted into alphabetical order before the list of
+words is printed.   Since a binary sort tree is
+designed to store words in alphabetical order at all times, there is no need
+for sorting.   At the end of the program, an inorder traversal of the tree can
+be used to output the words to the file.   Using an inorder traversal guarantees
+that the words will be output in increasing order.</p>
+
+<p>For my solution to this exercise, I copied the routines <code>treeInsert</code>,
+<code>treeContains</code>, and <code>countNodes</code> from <sourceref href="SortTreeDemo.java"/>.
+I also copied the declaration of <code>root</code> as a static member variable, since
+that's the variable that represents the tree itself.  (It's unfortunate that <code>root</code>
+has to be a global variable rather than a local variable in <code>main()</code>, 
+but it's used as a global variable in the <code>treeInsert</code> routine.  A better solution
+to the exercise would define a <classname>BinarySortTree</classname> class to
+encapsulate the data and routines needed to represent the tree and to use a variable of type
+<classname>BinarySortTree</classname> in the program.)</p>
+   
+<p>Only a few changes are needed in the <code>main()</code> routine of the original program. They are
+shown in &newcodestyle; in the solution shown below. All-in-all, the substitution of the binary tree 
+for the arraylist is very straightforward.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="ListAllWordsFromFileWithTree">/**
+ * Makes an alphabetical list of all the words in a file selected
+ * by the user.  The list can be written to a file.  
+ * <newcode>The words are stored in a binary sort tree.</newcode>
+ */
+public class ListAllWordsFromFileWithTree {
+
+   <newcode>private static TreeNode root;  // Pointer to the root node in a binary tree.
+                                  // This tree is used in this program as a 
+                                  // binary sort tree.  When the tree is empty, 
+                                  // root is null (as it is initially).</newcode>
+
+
+   
+   public static void main(String[] args) {
+      
+      System.out.println("\n\nThis program will ask you to select an input file");
+      System.out.println("It will read that file and make an alphabetical");
+      System.out.println("list of all the words in the file.  After reading");
+      System.out.println("the file, the program asks you to select an output");
+      System.out.println("file.  If you select a file, the list of words will");
+      System.out.println("be written to that file; if you cancel, the list");
+      System.out.println("be written to standard output.  All words are converted");
+      System.out.println("lower case, and duplicates are eliminated from the list.\n\n");
+      System.out.print("Press return to begin.");
+      TextIO.getln();  // Wait for user to press return.
+      
+      try {
+         if (TextIO.readUserSelectedFile() == false) {
+            System.out.println("No input file selected.  Exiting.");
+             System.exit(1);
+         }
+         <newcode>// ArrayList&lt;String&gt; wordList = new ArrayList&lt;String&gt;(); DELETED LINE</newcode>
+         String word = readNextWord();
+         while (word != null) {
+            word = word.toLowerCase();  // convert word to lower case
+            if ( <newcode>treeContains(root,word) == false</newcode> ) {
+                  // This is a new word, so add it to the list
+               <newcode>treeInsert(word);</newcode>
+            }
+            word = readNextWord();
+         }
+         <newcode>int wordsInTree = countNodes(root);</newcode>
+         System.out.println("Number of different words found in file:  " 
+               + wordsInTree);
+         System.out.println();
+         if (wordsInTree == 0) {
+            System.out.println("No words found in file.");
+            System.out.println("Exiting without saving data.");
+            System.exit(0);
+         }
+         <newcode>// selectionSort(wordList);  DELETED LINE</newcode>
+         TextIO.writeUserSelectedFile(); // If user cancels, output automatically
+                                         // goes to standard output.
+         System.out.println(wordsInTree + " words found in file:\n");
+         <newcode>treeList(root);</newcode>
+         System.out.println("\n\nDone.\n\n");
+      }
+      catch (Exception e) {
+         System.out.println("Sorry, an error has occurred.");
+         System.out.println("Error Message:  " + e.getMessage());
+      }
+      System.exit(0);  // Might be necessary, because of use of file dialogs.
+   }
+
+
+   /**
+    * Read the next word from TextIO, if there is one.  First, skip past
+    * and non-letters in the input.  If an end-of-file is encountered before 
+    * a word is found, return null.  Otherwise, read and return the word.
+    * A word is defined as a sequence of letters.  Also, a word can include
+    * an apostrophe if the apostrophe is surrounded by letters on each side.
+    * @return the next word from TextIO, or null if an end-of-file is encountered
+    */
+   private static String readNextWord() {
+      char ch = TextIO.peek(); // Look at next character in input.
+      while (ch != TextIO.EOF &amp;&amp; !Character.isLetter(ch)) {
+         TextIO.getAnyChar();  // Read the character.
+         ch = TextIO.peek();   // Look at the next character.
+      }
+      if (ch == TextIO.EOF) // Encountered end-of-file
+         return null;
+      // At this point, we know that the next character, so read a word.
+      String word = "";  // This will be the word that is read.
+      while (true) {
+         word += TextIO.getAnyChar();  // Append the letter onto word.
+         ch = TextIO.peek();  // Look at next character.
+         if ( ch == '\'' ) {
+               // The next character is an apostrophe.  Read it, and
+               // if the following character is a letter, add both the
+               // apostrophe and the letter onto the word and continue
+               // reading the word.  If the character after the apostrophe
+               // is not a letter, the word is done, so break out of the loop.
+            TextIO.getAnyChar();   // Read the apostrophe.
+            ch = TextIO.peek();    // Look at char that follows apostrophe.
+            if (Character.isLetter(ch)) {
+               word += "\'" + TextIO.getAnyChar();
+               ch = TextIO.peek();  // Look at next char.
+            }
+            else
+               break;
+         }
+         if ( ! Character.isLetter(ch) ) {
+               // If the next character is not a letter, the word is
+               // finished, so bread out of the loop.
+            break;
+         }
+         // If we haven't broken out of the loop, next char is a letter.
+      }
+      return word;  // Return the word that has been read.
+   }
+   
+  
+   <newcode>//------------- Binary Sort Tree data structures and methods ------------------</newcode>
+   <newcode>//------------- (Copied from SortTreeDemo.java) -------------------------------</newcode>
+   
+   /**
+    * An object of type TreeNode represents one node in a binary tree of strings.
+    */
+   private static class TreeNode {
+      String item;      // The data in this node.
+      TreeNode left;    // Pointer to left subtree.
+      TreeNode right;   // Pointer to right subtree.
+      TreeNode(String str) {
+             // Constructor.  Make a node containing the specified string.
+             // Note that left and right pointers are initially null.
+         item = str;
+      }
+   }  // end nested class TreeNode
+
+
+   /**
+    * Add the item to the binary sort tree to which the global variable 
+    * "root" refers.  (Note that root can't be passed as a parameter to 
+    * this routine because the value of root might change, and a change 
+    * in the value of a formal parameter does not change the actual parameter.)
+    */
+   private static void treeInsert(String newItem) {
+      if ( root == null ) {
+             // The tree is empty.  Set root to point to a new node containing
+             // the new item.  This becomes the only node in the tree.
+         root = new TreeNode( newItem );
+         return;
+      }
+      TreeNode runner;  // Runs down the tree to find a place for newItem.
+      runner = root;   // Start at the root.
+      while (true) {
+         if ( newItem.compareTo(runner.item) &lt; 0 ) {
+                // Since the new item is less than the item in runner,
+                // it belongs in the left subtree of runner.  If there
+                // is an open space at runner.left, add a new node there.
+                // Otherwise, advance runner down one level to the left.
+            if ( runner.left == null ) {
+               runner.left = new TreeNode( newItem );
+               return;  // New item has been added to the tree.
+            }
+            else
+               runner = runner.left;
+         }
+         else {
+                // Since the new item is greater than or equal to the item in
+                // runner it belongs in the right subtree of runner.  If there
+                // is an open space at runner.right, add a new node there.
+                // Otherwise, advance runner down one level to the right.
+            if ( runner.right == null ) {
+               runner.right = new TreeNode( newItem );
+               return;  // New item has been added to the tree.
+            }
+            else
+               runner = runner.right;
+         }
+      } // end while
+   }  // end treeInsert()
+
+
+   /**
+    * Return true if item is one of the items in the binary
+    * sort tree to which root points.   Return false if not.
+    */
+   static boolean treeContains( TreeNode root, String item ) {
+      if ( root == null ) {
+             // Tree is empty, so it certainly doesn't contain item.
+         return false;
+      }
+      else if ( item.equals(root.item) ) {
+             // Yes, the item has been found in the root node.
+         return true;
+      }
+      else if ( item.compareTo(root.item) &lt; 0 ) {
+             // If the item occurs, it must be in the left subtree.
+         return treeContains( root.left, item );
+      }
+      else {
+             // If the item occurs, it must be in the right subtree.
+         return treeContains( root.right, item );
+      }
+   }  // end treeContains()
+
+
+   /**
+    * Print the items in the tree in inorder, one item to a line.  
+    * Since the tree is a sort tree, the output  will be in increasing order.
+    */
+   private static void treeList(TreeNode node) {
+      if ( node != null ) {
+         treeList(node.left);             // Print items in left subtree.
+         System.out.println("  " + node.item);  // Print item in the node.
+         treeList(node.right);            // Print items in the right subtree.
+      }
+   } // end treeList()
+
+
+   /**
+    * Count the nodes in the binary tree.
+    * @param node A pointer to the root of the tree.  A null value indicates
+    * an empty tree
+    * @return the number of nodes in the tree to which node points.  For an
+    * empty tree, the value is zero.
+    */
+   private static int countNodes(TreeNode node) {
+      if ( node == null ) {
+            // Tree is empty, so it contains no nodes.
+         return 0;
+      }
+      else {
+            // Add up the root node and the nodes in its two subtrees.
+         int leftCount = countNodes( node.left );
+         int rightCount = countNodes( node.right );
+         return  1 + leftCount + rightCount;  
+      }
+   } // end countNodes()
+  
+}
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+<exercise>
+<exercise-question><p>Suppose that linked lists
+of integers are made from objects belonging to the class</p>
+
+<pre>class ListNode {
+   int item;       // An item in the list.
+   ListNode next;  // Pointer to the next node in the list.
+}</pre>
+
+<np>Write a subroutine that will make a copy of a list, with the order of the
+items of the list reversed. The subroutine should have a parameter of type
+<classname>ListNode</classname>, and it should return a value of type <classname>ListNode</classname>. The
+original list should not be modified.</np>
+
+<p>You should also write a <code>main()</code> routine to test your subroutine.</p>
+</exercise-question>
+<exercise-discuss><p>To make any linked list from scratch, you have to create nodes one-by-one
+and link them together. In this case, we want to make nodes that contain copies
+of the items from the original list. We can run through the original list, look
+at each item, create a new node that contains a copy of that item, and link
+that new node into the reversed list that we are constructing. We just have to
+make sure that the nodes in the new list are in the desired order.</p>
+
+<p>In fact this is pretty easy: As we run down the original list from start to
+finish, we need to build the reversed list from back to front. The first item
+in the original list should be at the back of the reversed list, the second
+item from the original goes in front of that item, and so on. This is
+equivalent to "pushing" the items onto the reversed list, using the same push
+operation that is used for a stack. An algorithm for this is:</p>
+
+<pre>Let rev be an empty list
+for each item in the original list:
+    Push the item onto rev
+    Move on to the next item</pre>
+
+<np>This can be coded into the subroutine we need as follows:</np>
+
+<pre>/**
+ * Return a new list containing the same items as the list,
+ * but in the reverse order.
+ */
+static ListNode reverse( ListNode list ) {
+   ListNode rev = null;     // rev will be the reversed list.
+   ListNode runner = list;  // For running through the nodes of list.
+   while (runner != null) {
+          // "Push" the next node of list onto the front of rev.
+      ListNode newNode = new ListNode();
+      newNode.item = runner.item;
+      newNode.next = rev;
+      rev = newNode;
+         // Move on to the next node in the list.
+      runner = runner.next; 
+   }
+   return rev;
+} // end reverse()</pre>
+
+<p>The exercise lets you design your own routine for testing the subroutine. It
+should be tested on several lists, including an empty list. It's important to
+test it on the empty list since a <code>null</code> pointer often represents a
+special case in an algorithm, and is therefore a common source of bugs. It's also a
+good idea to test a list of length one, for similar reasons. In my
+<code>main()</code> routine, I build up a random list one node at a time and test
+the <code>reverse()</code> subroutine on the list at each step. The <code>main()</code>
+routine was probably harder to write than the subroutine!</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="ReverseListDemo">/**
+ * This program includes a subroutine that makes a reversed copy of a
+ * list of ints.  The main program simply tests that routine on a few lists.
+ */
+public class ReverseListDemo {
+
+
+   /**
+    * Objects of type ListNode are linked together into linked lists.
+    */
+   static class ListNode {
+      int item;        // An item in the list.
+      ListNode next;   // Pointer to the next node in the list.
+   }
+   
+
+   /**
+    * Return a new list containing the same items as the list,
+    * but in the reverse order.
+    */
+   static ListNode reverse( ListNode list ) {
+      ListNode rev = null;     // rev will be the reversed list.
+      ListNode runner = list;  // For running through the nodes of list.
+      while (runner != null) {
+             // "Push" the next node of list onto the front of rev.
+         ListNode newNode = new ListNode();
+         newNode.item = runner.item;
+         newNode.next = rev;
+         rev = newNode;
+            // Move on to the next node in the list.
+         runner = runner.next;
+      }
+      return rev;
+   } // end reverse()
+   
+   
+   /**
+    * Prints the items in the list to which the parameter, start, points.
+    * They are printed on one line, separated by spaces and enclosed in 
+    * parentheses.
+    */
+   static void printList(ListNode start) {
+       ListNode runner;  // For running along the list.
+       runner = start;
+       System.out.print("(");
+       while (runner != null) {
+          System.out.print(" " + runner.item);
+          runner = runner.next;
+       }
+       System.out.print(" )");
+   } // end printList()
+   
+
+   public static void main(String[] args) {
+   
+      System.out.println("I will print out a list and its reverse, for");
+      System.out.println("several different lists.  The first list is empty.\n");
+      
+      ListNode list = null;   // A list, initially empty.
+      ListNode reversedList;  // The reversed list.
+      
+      int ct = 0;  // How many lists have we processed?
+      
+      while (true) {
+             // Print the current list and its reverse.  Then
+             // add a new node onto the head of the list before
+             // repeating.
+          System.out.print("The list:          ");
+          printList(list);
+          System.out.println();
+          reversedList = reverse(list);
+          System.out.print("The reversed list: ");
+          printList(reversedList);
+          System.out.println();
+          System.out.println();
+          ct++;
+          if (ct == 6)
+             break;
+          ListNode head = new ListNode();  // A new node to add to the list.
+          head.item = (int)(Math.random()*100);  // A random item.
+          head.next = list;
+          list = head;
+      }
+      
+   } // end main()
+   
+
+} // end class ReverseListDemo
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+<exercise>
+<exercise-question><p><localref href="recursion.4.1"/> 
+explains how to use recursion to print out the items in a binary tree
+in various orders. That section also notes that a non-recursive subroutine can
+be used to print the items, provided that a stack or queue is used as an
+auxiliary data structure. Assuming that a queue is used, here is an algorithm
+for such a subroutine:</p>
+<pre>Add the root node to an empty queue
+while the queue is not empty:
+   Get a node from the queue
+   Print the item in the node
+   if node.left is not null:
+      add it to the queue
+   if node.right is not null:
+      add it to the queue</pre>
+<np>Write a subroutine that implements this algorithm, and write a program to
+test the subroutine. Note that you will need a queue of <classname>TreeNodes</classname>, so
+you will need to write a class to represent such queues.</np>
+<p>(Note that the order in which items are printed by this algorithm is different
+from all three of the orders considered in <localref href="recursion.4.1"/>.)</p>
+</exercise-question>
+<exercise-discuss><p>There's really not a lot to think about here, since such a complete
+algorithm is given. However, we do have to assemble the pieces. I use the
+standard binary tree node from <localref href="recursion.4"/> (except that
+I changed the name of the tree node class to <classname>StrTreeNode</classname>). The
+algorithm needs a queue of tree nodes. To implement this, I copied the
+<classname>QueueOfInts</classname> class from <localref href="recursion.3.2"/> and changed
+the type of the items in the queue to <classname>StrTreeNode</classname>. I also changed the
+name to <classname>TreeQueue</classname>. I did this literally by copying the class from a
+Web browser window and pasting it into my source code file. With these classes
+in hand, the algorithm given in the exercise can be coded as:</p>
+
+<pre>/**
+ * Use a queue to print all the strings in the tree to which
+ * root points.  (The nodes will be listed in "level order",
+ * that is:  first the root, then children of the root, then
+ * grandchildren of the root, and so on.)
+ */
+static void levelOrderPrint(StrTreeNode root) {
+    if (root == null)
+       return;  // There is nothing to print in an empty tree.
+    TreeQueue queue;   // The queue.
+    queue = new TreeQueue();
+    queue.enqueue(root);
+    while ( queue.isEmpty() == false ) {
+       StrTreeNode node = queue.dequeue();
+       System.out.println( node.item );
+       if ( node.left != null )
+          queue.enqueue( node.left );
+       if ( node.right != null )
+          queue.enqueue( node.right );
+    }
+} // end levelOrderPrint()</pre>
+
+<p>The name of this routine comes from the order in which it prints out the
+nodes of the tree. Think of the root of the tree as being on the top "level" of
+the tree, the children of the root on the second level, the children of the
+children of the root on the third level, and so on. Then the subroutine prints
+the items in <newword>level order</newword>. That is, all the nodes
+on one level are printed before any of the nodes on the next level. This is a
+consequence of the way the algorithm processes the items. As items from one
+level are removed from the queue and printed, their children (which are the
+nodes on the next level) are added to the <b>back</b> of the queue. Just after
+all the items from one level have been processed, the queue contains all the
+children of those items, ready to be processed, and those children are
+exactly the nodes on the next level of the tree. Level-order tree
+traversals can't be done by recursion, and they are a standard application of
+queues.</p>
+
+<p>To test my subroutine, I wanted a reasonably large tree whose structure I
+knew, so I could check whether the nodes are printed in the correct order.
+(Since you didn't know about level-order traversals until now, on the other
+hand, you should have been mainly concerned with checking that all the nodes in
+the tree are printed, period.) I decided to create the binary sort tree shown
+in <localref href="recursion.4.2"/>. To do this, I copied the
+<code>treeInsert()</code>subroutine from that section and used it to add names to
+the tree in an order that would produce the tree I wanted. Finally, I called
+<code>levelOrderPrint()</code> to output the names from the tree. (It worked!)</p>
+
+<p>By the way, you might notice that the <code>levelOrderPrint()</code> routine is
+very similar to the technique used in the grid-marking algorithm in the sample program
+<sourceref href="DepthBreadth.java"/> from
+<localref href="recursion.3.2"/>. In fact they are just variations on the same idea.
+One difference is that in <sourceref href="DepthBreadth.java"/>, the squares of the grid had to be
+marked as "visited" as they were processed to avoid going into an infinite
+loop. The <code>levelOrderPrint()</code> subroutine doesn't have to do the same
+type of marking because it is working on a tree. One of the defining properties
+of a tree is that it cannot contain a loop of nodes. That is, it is not
+possible for a node to be its own descendant. This restriction guarantees that
+<code>levelOrderPrint()</code> will not go into an infinite loop. The same property
+guarantees that all of our recursive tree-processing methods will not suffer
+from infinite recursion when they are applied to a tree. You should note,
+however, that it is possible to connect tree nodes into data structures that
+contain loops and are therefore not trees at all. 
+While these data structures are not trees, they might have other
+uses. Many of the subroutines we've looked will fail if applied to these loopy
+structures.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="TreePrintNonRecursive">/**
+ * This program includes a non-recursive subroutine that prints the
+ * nodes of a binary tree, using a queue.  The main program simply
+ * tests that routine.  (The nodes are printed in what is called
+ * "level order".)
+ * 
+ * This file defines the queue and tree classes as nested classes.
+ * Since they are general-purpose classes, it would really be better
+ * to put them in separate files.
+ */
+   
+
+public class TreePrintNonRecursive {  
+
+
+   //--------------------------------- NESTED CLASSES -----------------------
+   
+   /**
+    * An object in this class is a node in a binary tree
+    * in which the nodes contain items of type String.
+    */
+   static class StrTreeNode {
+      String item;  // The item
+      StrTreeNode left;  // Pointer to left subtree.
+      StrTreeNode right; // Pointer to right subtree.
+      StrTreeNode( String str ) {
+            // Constructor.  Make a node to contain str.
+         item = str;
+      }
+   } // end class StrTreeNode
+   
+   
+   /**
+    * An object of this type represents a queue of StrTreeNodes,
+    * with the usual operations: dequeue, enqueue, isEmpty.
+    */
+   static class TreeQueue {
+   
+      /**
+       * An object of type Node holds one of the items
+       * in the linked list that represents the queue.
+       */
+      private static class Node {
+         StrTreeNode item;
+         Node next;
+      }
+   
+      private Node head = null;  // Points to first Node in the queue.
+                                 // The queue is empty when head is null.
+      
+      private Node tail = null;  // Points to last Node in the queue.
+   
+      /**
+       * Add N to the back of the queue.
+       */
+      void enqueue( StrTreeNode tree ) {
+         Node newTail = new Node();  // A Node to hold the new item.
+         newTail.item = tree;
+         if (head == null) {
+               // The queue was empty.  The new Node becomes
+               // the only node in the list.  Since it is both
+               // the first and last node, both head and tail
+               // point to it.
+            head = newTail;
+            tail = newTail;
+         }
+         else {
+               // The new node becomes the new tail of the list.
+               // (The head of the list is unaffected.)
+            tail.next = newTail;
+            tail = newTail;
+         }
+      }
+   
+      /**
+       * Remove and return the front item in the queue.
+       * Throws an IllegalStateException if the queue is empty.
+       */
+      StrTreeNode dequeue() {
+         if ( head == null)
+             throw new IllegalStateException("Can't dequeue from an empty queue."); 
+         StrTreeNode firstItem = head.item;
+         head = head.next;  // The previous second item is now first.
+         if (head == null) {
+               // The queue has become empty.  The Node that was
+               // deleted was the tail as well as the head of the
+               // list, so now there is no tail.  (Actually, the
+               // class would work fine without this step.)
+            tail = null;
+         } 
+         return firstItem;
+      }
+      
+      /**
+       * Return true if the queue is empty, false if contains one
+       * or more items
+       */
+      boolean isEmpty() {
+         return (head == null);
+      }
+         
+   } // end class TreeQueue
+ 
+   
+   //-------------------- END OF NESTED CLASSES ---------------------------
+   
+
+   static StrTreeNode root;  // A pointer to the root of the binary tree.
+   
+   
+   /**
+    * Use a queue to print all the strings in the tree to which
+    * root points.  (The nodes will be listed in "level order",
+    * that is:  first the root, then children of the root, then
+    * grandchildren of the root, and so on.)
+    */
+   static void levelOrderPrint(StrTreeNode root) {
+       if (root == null)
+          return;  // There is nothing to print in an empty tree.
+       TreeQueue queue;   // The queue, which will only hold non-null nodes.
+       queue = new TreeQueue();
+       queue.enqueue(root);
+       while ( queue.isEmpty() == false ) {
+          StrTreeNode node = queue.dequeue();
+          System.out.println( node.item );
+          if ( node.left != null )
+             queue.enqueue( node.left );
+          if ( node.right != null )
+             queue.enqueue( node.right );
+       }
+   } // end levelOrderPrint()
+   
+   
+   /**
+    * Add the word to the binary sort tree to which the
+    * global variable "root" refers.  I will use this 
+    * routine only to create the sample tree on which
+    * I will test levelOrderPrint().
+    */
+   static void treeInsert(String newItem) {
+      if ( root == null ) {
+              // The tree is empty.  Set root to point to a new node 
+              // containing the new item.
+          root = new StrTreeNode( newItem );
+          return;
+       }
+       StrTreeNode runner; // Runs down the tree to find a place for newItem.
+       runner = root;   // Start at the root.
+       while (true) {
+          if ( newItem.compareTo(runner.item) &lt; 0 ) {
+                   // Since the new item is less than the item in runner,
+                   // it belongs in the left subtree of runner.  If there
+                   // is an open space at runner.left, add a node there.
+                   // Otherwise, advance runner down one level to the left.
+             if ( runner.left == null ) {
+                runner.left = new StrTreeNode( newItem );
+                return;  // New item has been added to the tree.
+             }
+             else
+                runner = runner.left;
+          }
+          else {
+                   // Since the new item is greater than or equal to the 
+                   // item in runner, it belongs in the right subtree of
+                   // runner.  If there is an open space at runner.right, 
+                   // add a new node there.  Otherwise, advance runner
+                   // down one level to the right.
+             if ( runner.right == null ) {
+                runner.right = new StrTreeNode( newItem );
+                return;  // New item has been added to the tree.
+             }
+             else
+                runner = runner.right;
+           }
+       } // end while
+   }  // end treeInsert()
+   
+   
+   /**
+    * Make a tree with a known form, then call levelOrderPrint()
+    * for that tree.  (I want to check that all the items from
+    * the tree are printed, and I want to see the order in which
+    * they are printed.  The expected order of output is
+    * judy bill mary alice fred tom dave jane joe.  The
+    * tree that is built here is from an illustration in
+    * Section 9.4.)
+    */
+   public static void main(String[] args) {
+      treeInsert("judy");
+      treeInsert("bill");
+      treeInsert("fred");
+      treeInsert("mary");
+      treeInsert("dave");
+      treeInsert("jane");
+      treeInsert("alice");
+      treeInsert("joe");
+      treeInsert("tom");
+      levelOrderPrint(root);
+   } // end main()
+
+
+} // end class TreePrintNonRecursive
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+<exercise>
+<exercise-question><p>In <localref href="recursion.4.2"/>, I say that "if the
+[binary sort] tree is created by 
+inserting items in a random order, there is a high probability that the tree 
+is approximately balanced."
+For this exercise, you will do an experiment to test whether that is true.</p>
+<p>The <newword>depth</newword> of a node in a binary tree is the
+length of the path from the root of the tree to that node. That is, the root
+has depth 0, its children have depth 1, its grandchildren have depth 2, and so
+on. In a balanced tree, all the leaves in the tree are about the same depth.
+For example, in a perfectly balanced tree with 1023 nodes, all the leaves are
+at depth 9. In an approximately balanced tree with 1023 nodes, the average
+depth of all the leaves should be not too much bigger than 9.</p>
+<p>On the other hand, even if the tree is approximately balanced, there might
+be a few leaves that have much larger depth than the average, so we might also
+want to look at the maximum depth among all the leaves in a tree.</p>
+<p>For this exercise, you should create a random binary sort tree with 1023
+nodes. The items in the tree can be real numbers, and you can create the tree
+by generating 1023 random real numbers and inserting them into the tree, using
+the usual <code>treeInsert()</code> method for binary sort trees. Once you have the
+tree, you should compute and output the average depth of all the leaves in the
+tree and the maximum depth of all the leaves. To do this, you will need three
+recursive subroutines: one to count the leaves, one to find the sum of the
+depths of all the leaves, and one to find the maximum depth. The latter two
+subroutines should have an <ptype>int</ptype>-valued parameter, <code>depth</code>, that
+tells how deep in the tree you've gone. When you call this routine from the main
+program, the <code>depth</code> parameter is 0; when you call the routine recursively,
+the parameter increases by 1.</p>
+</exercise-question>
+<exercise-discuss><p>To create the tree, I copied the <classname>TreeNode</classname> class and the
+<classname>insertTree()</classname> subroutine from <localref href="recursion.4.2"/>, and I
+changed the type of the items in the tree from <classname>String</classname> to
+<ptype>double</ptype>. The main program uses a <code>for</code> loop to add 1023 random
+real numbers to the tree:</p>
+
+<pre>for (int i = 0; i &lt; 1023; i++)
+    treeInsert(Math.random()); </pre>
+
+<np>After that, it's just a matter of writing the routines described in the
+exercise and calling them to get the desired statistics.</np>
+
+<p>A routine for counting the leaves in the tree is similar to the
+<code>countNodes()</code> routine from <localref href="recursion.4.2"/>. That
+routine, however, counts every node in the tree and now we only want to count
+the leaves. A leaf is defined to be a node in which both the <code>left</code> and
+<code>right</code> pointers are <code>null</code>. In the recursion, one of the base
+cases is when we come to a tree that consists of nothing but a leaf. In that
+case, the number of leaves is 1. If the node is not a leaf, then we have to
+count the number of leaves in each of its subtrees and add the results:</p>
+
+<pre>/**
+ * Return the number of leaves in the tree to which node points.
+ */
+static int countLeaves(TreeNode node) {
+    if (node == null)
+       return 0;  // An empty tree has no leaves.
+    else if (node.left == null &amp;&amp; node.right == null)
+       return 1;  // Node is a leaf.
+    else
+       return countLeaves(node.left) + countLeaves(node.right);
+} // end countNodes()</pre>
+
+<p>In general structure, the other two routines are similar. That is, there are
+two base cases: an empty tree and a tree consisting just of a leaf. In the
+remaining case&mdash;a node that has one or both subtrees non-empty&mdash;the routine
+has to be applied recursively to the subtrees of the node. Look, for example,
+at the routine for finding the sum of the depths of all the leaves in the
+tree:</p>
+
+<pre>/**
+ * When called as sumOfLeafDepths(root,0), this will compute the
+ * sum of the depths of all the leaves in the tree to which root
+ * points.  When called recursively, the depth parameter gives
+ * the depth of the node, and the routine returns the sum of the
+ * depths of the leaves in the subtree to which node points.
+ * In each recursive call to this routine, depth goes up by one.
+ */
+static int sumOfLeafDepths( TreeNode node, int depth ) {
+    if ( node == null ) {
+          // Since the tree is empty and there are no leaves,
+          // the sum is zero.
+       return 0;
+    }
+    else if ( node.left == null &amp;&amp; node.right == null) {
+          // The node is a leaf, and there are no subtrees of node, so
+          // the sum of the leaf depths is just the depth of this node.
+       return depth;
+    }
+    else {
+          // The node is not a leaf.  Return the sum of the
+          // the depths of the leaves in the subtrees.
+       return sumOfLeafDepths(node.left, depth + 1) 
+                   + sumOfLeafDepths(node.right, depth + 1);
+    }
+} // end sumOfLeafDepth()</pre>
+
+<np>The most interesting aspect of this routine is the way it uses its
+<code>depth</code> parameter, which is used to keep track of the depth of the
+<code>node</code> in the complete tree (not just the subtree to which <code>node</code>
+points). For the <code>root</code>, the depth is 0. Each time the subroutine is
+called recursively, the <code>node</code> is one level deeper in the tree, and the
+<code>depth</code> parameter is correspondingly increased by 1. When we get down to
+a leaf node, where <code>node.left</code> and <code>node.right</code> are
+<code>null</code>, the value of <code>depth</code> is the depth of that node in the
+original tree, and the sum of the depths of the leaves in the subtree, which
+consists of just this one leaf node, is <code>depth</code>. When <code>node</code> is
+not a leaf, the sums for the two subtrees of <code>node</code> are computed
+recursively and are added together to give the sum for all the leaves in the
+whole subtree to which <code>node</code> refers. (If you have trouble believing
+that this works, remember that recursion works if it works for the base cases
+and if it correctly breaks down big problems into smaller problems. You don't
+have to follow the details.)</np>
+
+<p>The routine for computing the maximum depth is similar.</p>
+
+<p>When I ran my program several times, I found that the average depth of the
+leaves in the tree tended to be about 12&mdash;higher than I expected but still
+only 1/3 more than the average depth in a perfectly balanced tree. The height
+of the tree tended to be about 20.  (The <newword>height</newword> of a
+tree is defined to be the maximum depth of any node in the tree.)</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="RandomSortTree">/**  
+  * This program makes a random binary sort tree containing 1023 random
+  * real numbers.  It then computes the height of the tree and the
+  * average depth of the leaves of the tree.  Hopefully, the average
+  * depth will tend to be close to 9, which is what it would be
+  * if the tree were perfectly balanced.  The height of the tree,
+  * which is the same as the maximum depth of any leaf, can be
+  * significantly larger.
+  */
+public class RandomSortTree {
+
+
+   static TreeNode root;   // Pointer to the binary sort tree.
+
+   
+   /**
+    * An object of type TreeNode represents one node in a binary tree of real numbers.
+    */
+   static class TreeNode {
+       double item;      // The data in this node.
+       TreeNode left;    // Pointer to left subtree.
+       TreeNode right;   // Pointer to right subtree.
+       TreeNode(double x) {
+              // Constructor.  Make a node containing x.
+          item = x;
+       }
+   } // end class TreeNode
+
+
+   /**
+    * Add x to the binary sort tree to which the global variable "root" refers.
+    */
+   static void treeInsert(double x) {
+      if ( root == null ) {
+              // The tree is empty.  Set root to point to a new node 
+              // containing the new item.
+          root = new TreeNode( x );
+          return;
+       }
+       TreeNode runner; // Runs down the tree to find a place for newItem.
+       runner = root;   // Start at the root.
+       while (true) {
+          if ( x &lt; runner.item ) {
+                   // Since the new item is less than the item in runner,
+                   // it belongs in the left subtree of runner.  If there
+                   // is an open space at runner.left, add a node there.
+                   // Otherwise, advance runner down one level to the left.
+             if ( runner.left == null ) {
+                runner.left = new TreeNode( x );
+                return;  // New item has been added to the tree.
+             }
+             else
+                runner = runner.left;
+          }
+          else {
+                   // Since the new item is greater than or equal to the 
+                   // item in runner, it belongs in the right subtree of
+                   // runner.  If there is an open space at runner.right, 
+                   // add a new node there.  Otherwise, advance runner
+                   // down one level to the right.
+             if ( runner.right == null ) {
+                runner.right = new TreeNode( x );
+                return;  // New item has been added to the tree.
+             }
+             else
+                runner = runner.right;
+           }
+       } // end while
+   }  // end treeInsert()
+
+
+   /**
+    * Return the number of leaves in the tree to which node points.
+    */
+   static int countLeaves(TreeNode node) {
+       if (node == null)
+          return 0;
+       else if (node.left == null &amp;&amp; node.right == null)
+          return 1;  // Node is a leaf.
+       else
+          return countLeaves(node.left) + countLeaves(node.right);
+   } // end countNodes()
+   
+
+   /**
+    * When called as sumOfLeafDepths(root,0), this will compute the
+    * sum of the depths of all the leaves in the tree to which root
+    * points.  When called recursively, the depth parameter gives
+    * the depth of the node, and the routine returns the sum of the
+    * depths of the leaves in the subtree to which node points.
+    * In each recursive call to this routine, depth goes up by one.
+    */   
+   static int sumOfLeafDepths( TreeNode node, int depth ) {
+       if ( node == null ) {
+             // Since the tree is empty and there are no leaves,
+             // the sum is zero.
+          return 0;
+       }
+       else if ( node.left == null &amp;&amp; node.right == null) {
+             // The node is a leaf, and there are no subtrees of node, so
+             // the sum of the leaf depth is just the depths of this node.
+          return depth;
+       }
+       else {
+             // The node is not a leaf.  Return the sum of the
+             // the depths of the leaves in the subtrees.
+          return sumOfLeafDepths(node.left, depth + 1) 
+                      + sumOfLeafDepths(node.right, depth + 1);
+       }
+   } // end sumOfLeafDepths()
+   
+   
+   /**
+    * When called as maximumLeafDepth(root,0), this will compute the
+    * max of the depths of all the leaves in the tree to which root
+    * points.  When called recursively, the depth parameter gives
+    * the depth of the node, and the routine returns the max of the
+    * depths of the leaves in the subtree to which node points.
+    * In each recursive call to this routine, depth goes up by one.
+    */
+   static int maximumLeafDepth( TreeNode node, int depth ) {
+       if ( node == null ) {
+            // The tree is empty.  Return 0.
+          return 0;
+       }
+       else if ( node.left == null &amp;&amp; node.right == null) {
+             // The node is a leaf, so the maximum depth in this
+             // subtree is the depth of this node (the only leaf 
+             // that it contains).
+          return depth;
+       }
+       else {
+             // Get the maximum depths for the two subtrees of this
+             // node.  Return the larger of the two values, which
+             // represents the maximum in the tree overall.
+          int leftMax = maximumLeafDepth(node.left, depth + 1);
+          int rightMax =  maximumLeafDepth(node.right, depth + 1);
+          if (leftMax &gt; rightMax)
+             return leftMax;
+          else
+             return rightMax;
+       }
+   } // end maximumLeafDepth()
+   
+   
+   /**
+    * The main routine makes the random tree and prints the statistics.
+    */
+   public static void main(String[] args) {
+         
+      root = null;  // Start with an empty tree.  Root is a global
+                    // variable, defined at the top of the class.
+         
+      // Insert 1023 random items.
+         
+      for (int i = 0; i &lt; 1023; i++)
+          treeInsert(Math.random()); 
+          
+      // Get the statistics.
+          
+      int leafCount = countLeaves(root);
+      int depthSum = sumOfLeafDepths(root,0);
+      int depthMax = maximumLeafDepth(root,0);
+      double averageDepth = ((double)depthSum) / leafCount;
+      
+      // Display the results.
+      
+      System.out.println("Number of leaves:         " + leafCount);
+      System.out.println("Average depth of leaves:  " + averageDepth);
+      System.out.println("Maximum depth of leaves:  " + depthMax);
+
+   }  // end main()
+
+
+} // end class RandomSortTree
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+<exercise id="recursion.ex.6">
+<exercise-question><p> The parsing programs in
+<localref href="recursion.5"/> work with expressions made up of numbers and operators. We can
+make things a little more interesting by allowing the variable "x" to occur.
+This would allow expression such as "<code>3*(x-1)*(x+1)</code>", for example. Make
+a new version of the sample program <sourceref href="SimpleParser3.java"/> that can work with such
+expressions. In your program, the <code>main()</code> routine can't simply print
+the value of the expression, since the value of the expression now depends on
+the value of <code>x</code>. Instead, it should print the value of the expression
+for <code>x=0</code>, <code>x=1</code>, <code>x=2</code>, and <code>x=3</code>.</p>
+<p>The original program will have to be modified in several other ways.
+Currently, the program uses classes <classname>ConstNode</classname>, <classname>BinOpNode</classname>, and
+<classname>UnaryMinusNode</classname> to represent nodes in an expression tree. Since
+expressions can now include&nbsp;<code>x</code>, you will need a new class,
+<classname>VariableNode</classname>, to represent an occurrence of <code>x</code> in the
+expression.</p>
+<p>In the original program, each of the node classes has an instance method,
+"<code>double&nbsp;value()</code>", which returns the value of the node. But in your
+program, the value can depend on <code>x</code>, so you should replace this method
+with one of the form "<code>double&nbsp;value(double&nbsp;xValue)</code>", where the
+parameter <code>xValue</code> is the value of&nbsp;<code>x</code>.</p>
+<p>Finally, the parsing subroutines in your program will have to take into
+account the fact that expressions can contain <code>x</code>. There is just one
+small change in the BNF rules for the expressions: A <code>&lt;factor&gt;</code> is
+allowed to be the variable <code>x</code>:</p>
+<pre>&lt;factor&gt;  ::=  &lt;number&gt;  |  &lt;x-variable&gt;  |  "(" &lt;expression&gt; ")"</pre>
+<np>where <code>&lt;x-variable&gt;</code> can be either a lower case or an upper
+case "X". This change in the BNF requires a change in the <code>factorTree()</code>
+subroutine.</np>
+</exercise-question>
+<exercise-discuss>
+<p>Like the other expression node classes, the <classname>VariableNode</classname> class is a
+subclass of <classname>ExpNode</classname>, and it must implement the <code>value(x)</code> and
+<code>printStackCommands()</code> methods that it inherits from that class. The
+<code>value(x)</code> method has been modified to have a parameter of type
+<ptype>double</ptype>, which gives the value of the variable x. Since a
+<classname>VariableNode</classname> represents an occurrence of the variable x, the value of
+the node is simply the value of x. As for the stack commands to evaluate the
+node: When we encounter an x in an expression, we need to push the value of x
+onto the stack, just as we would push a constant value onto the stack. I
+represent this with a stack operation "Push X". Note that x can have different
+values at different times, so we can't say what value will be pushed. We are
+generating instructions for a stack machine. At the time when the stack machine
+<b>evaluates</b> the expression, it has to know the value of x. The "Push X"
+command tells it to push a copy of that value onto the stack. The
+<classname>VariableNode</classname> class is defined as:</p>
+
+<pre>/**
+ * An expression node that represents a reference to the variable, x.
+ */
+private static class VariableNode extends ExpNode {
+   VariableNode() {
+          // Construct a VariableNode. (There is nothing to do!)
+   }
+   double value(double xValue) {
+         // The value of the node is the value of x.
+      return xValue;
+   }
+   void printStackCommands() {
+         // On a stack machine, just push the value of X onto the stack.
+      System.out.println("  Push X"); 
+   }
+}</pre>
+
+<p>One curious thing about this class is that it doesn't have any instance
+variables. A <classname>VariableNode</classname> represents an occurrence of x. There is no
+other information to record. It's not like a <classname>ConstNode</classname> where we need
+an instance variable to tell us <b>which</b> numerical constant has been found.
+There is only one "x". Of course, if we expanded our definition of expression
+to allow other variables such as y and z, we might add an instance variable to
+<classname>VariableNode</classname> to say which of the possible variables is
+represented.</p>
+
+<p>The <code>factorTree()</code> subroutine from <sourceref href="SimpleParser3.java"/> has to be
+modified to check for an x. If it finds one, it has to return a new
+<classname>VariableNode</classname>. This change and the others you have to make are fairly
+straightforward. They are shown in &newcodestyle; in the solution that follows.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="SimpleParser4">/*
+    This program reads standard expressions typed in by the user. 
+    The program constructs an expression tree to represent the
+    expression.  It then prints the value of the tree.  It also uses
+    the tree to print out a list of commands that could be used
+    on a stack machine to evaluate the expression.
+    The expressions can use <newcode>the variable "x"</newcode>, positive real numbers, and
+    the binary operators +, -, *, and /.  The unary minus operation
+    is supported.  The expressions are defined by the BNF rules:
+
+            &lt;expression&gt;  ::=  [ "-" ] &lt;term&gt; [ [ "+" | "-" ] &lt;term&gt; ]...
+
+            &lt;term&gt;  ::=  &lt;factor&gt; [ [ "*" | "/" ] &lt;factor&gt; ]...
+
+            &lt;factor&gt;  ::=  &lt;number&gt;  |  <newcode>&lt;x-variable&gt; |</newcode> "(" &lt;expression&gt; ")"
+
+    A number must begin with a digit (i.e., not a decimal point).
+    A line of input must contain exactly one such expression.  If extra
+    data is found on a line after an expression has been read, it is
+    considered an error.
+
+    In addition to the main program class, SimpleParser4, this program
+    defines a set of <newcode>five</newcode> nested classes for implementing expression trees.
+
+ */
+
+public class SimpleParser4 {
+
+//   -------------------- Nested classes for Expression Trees ------------------------------
+
+
+   /**
+    *  An abstract class representing any node in an expression tree.
+    *  The <newcode>four</newcode> concrete node classes are concrete subclasses.
+    *  Two instance methods are specified, so that they can be used with
+    *  any ExpNode.  The value() method returns the value of the
+    *  expression <newcode>for a specified value of the variable, x</newcode>.  
+    *  The printStackCommands() method prints a list
+    *  of commands that could be used to evaluate the expression on
+    *  a stack machine (assuming that the value of the expression is
+    *  to be left on the stack).
+    */
+   abstract private static class ExpNode {
+      abstract double value(<newcode>double xValue</newcode>); 
+      abstract void printStackCommands();
+   }
+
+   /**
+    * Represents an expression node that holds a number.
+    */
+   private static class ConstNode extends ExpNode {
+      double number;  // The number.
+      ConstNode(double val) {
+             // Construct a ConstNode containing the specified number.
+         number = val;
+      }
+      double value(<newcode>double xValue</newcode>) {
+             // The value of the node is the number that it contains.
+         return number;
+      }
+      void printStackCommands() {
+             // On a stack machine, just push the number onto the stack.
+         System.out.println("  Push " + number); 
+      }
+   }
+
+   
+   /**
+    * An expression node representing a binary operator,
+    */
+   private static class BinOpNode extends ExpNode {
+      char op;        // The operator.
+      ExpNode left;   // The expression for its left operand.
+      ExpNode right;  // The expression for its right operand.
+      BinOpNode(char op, ExpNode left, ExpNode right) {
+             // Construct a BinOpNode containing the specified data.
+         assert op == '+' || op == '-' || op == '*' || op == '/';
+         assert left != null &amp;&amp; right != null;
+         this.op = op;
+         this.left = left;
+         this.right = right;
+      }
+      double value(<newcode>double xValue</newcode>) {
+             // The value is obtained by evaluating the left and right
+             // operands and combining the values with the operator.
+         double x = left.value(<newcode>xValue</newcode>);
+         double y = right.value(<newcode>xValue</newcode>);
+         switch (op) {
+         case '+':  return x + y;
+         case '-':  return x - y;
+         case '*':  return x * y;
+         case '/':  return x / y;
+         default:   return Double.NaN;  // Bad operator!
+         }
+      }
+      void  printStackCommands() {
+             // To evaluate the expression on a stack machine, first do
+             // whatever is necessary to evaluate the left operand, leaving
+             // the answer on the stack.  Then do the same thing for the
+             // second operand.  Then apply the operator (which means popping
+             // the operands, applying the operator, and pushing the result).
+         left.printStackCommands();
+         right.printStackCommands();
+         System.out.println("  Operator " + op);
+      }
+   }
+
+   
+   /**
+    * An expression node to represent a unary minus operator.
+    */
+   private static class UnaryMinusNode extends ExpNode {
+      ExpNode operand;  // The operand to which the unary minus applies.
+      UnaryMinusNode(ExpNode operand) {
+             // Construct a UnaryMinusNode with the specified operand.
+         assert operand != null;
+         this.operand = operand;
+      }
+      double value(<newcode>double xValue</newcode>) {
+             // The value is the negative of the value of the operand.
+         double neg = operand.value(<newcode>xValue</newcode>);
+         return -neg;
+      }
+      void printStackCommands() {
+             // To evaluate this expression on a stack machine, first do
+             // whatever is necessary to evaluate the operand, leaving the
+             // operand on the stack.  Then apply the unary minus (which means
+             // popping the operand, negating it, and pushing the result).
+         operand.printStackCommands();
+         System.out.println("  Unary minus");
+      }
+   }
+
+
+   <newcode>/**
+    * An expression node that represents a reference to the variable, x.
+    */
+   private static class VariableNode extends ExpNode {
+      VariableNode() {
+             // Construct a VariableNode. (There is nothing to do!)
+      }
+      double value(double xValue) {
+            // The value of the node is the value of x.
+         return xValue;
+      }
+      void printStackCommands() {
+            // On a stack machine, just push the value of X onto the stack.
+         System.out.println("  Push X"); 
+      }
+   }</newcode>
+   
+   
+//   -------------------------------------------------------------------------------
+   
+
+   /**
+    * An object of type ParseError represents a syntax error found in 
+    * the user's input.
+    */
+   private static class ParseError extends Exception {
+      ParseError(String message) {
+         super(message);
+      }
+   } // end nested class ParseError
+
+
+   public static void main(String[] args) {
+
+      while (true) {
+         System.out.println("\n\nEnter an expression, or press return to end.");
+         System.out.print("\n?  ");
+         TextIO.skipBlanks();
+         if ( TextIO.peek() == '\n' )
+            break;
+         try {
+            ExpNode exp = expressionTree();
+            TextIO.skipBlanks();
+            if ( TextIO.peek() != '\n' )
+               throw new ParseError("Extra data after end of expression.");
+            TextIO.getln();
+            <newcode>System.out.println("\nValue at x = 0 is " + exp.value(0));
+            System.out.println("Value at x = 1 is " + exp.value(1));
+            System.out.println("Value at x = 2 is " + exp.value(2));
+            System.out.println("Value at x = 3 is " + exp.value(3));</newcode>
+            System.out.println("\nOrder of postfix evaluation is:\n");
+            exp.printStackCommands();
+         }
+         catch (ParseError e) {
+            System.out.println("\n*** Error in input:    " + e.getMessage());
+            System.out.println("*** Discarding input:  " + TextIO.getln());
+         }
+      }
+
+      System.out.println("\n\nDone.");
+
+   } // end main()
+
+
+   /**
+    * Reads an expression from the current line of input and builds
+    * an expression tree that represents the expression.
+    * @return an ExpNode which is a pointer to the root node of the 
+    *    expression tree
+    * @throws ParseError if a syntax error is found in the input
+    */
+   private static ExpNode expressionTree() throws ParseError {
+      TextIO.skipBlanks();
+      boolean negative;  // True if there is a leading minus sign.
+      negative = false;
+      if (TextIO.peek() == '-') {
+         TextIO.getAnyChar();
+         negative = true;
+      }
+      ExpNode exp;       // The expression tree for the expression.
+      exp = termTree();  // Start with the first term.
+      if (negative)
+         exp = new UnaryMinusNode(exp);
+      TextIO.skipBlanks();
+      while ( TextIO.peek() == '+' || TextIO.peek() == '-' ) {
+             // Read the next term and combine it with the
+             // previous terms into a bigger expression tree.
+         char op = TextIO.getAnyChar();
+         ExpNode nextTerm = termTree();
+         exp = new BinOpNode(op, exp, nextTerm);
+         TextIO.skipBlanks();
+      }
+      return exp;
+   } // end expressionTree()
+
+
+   /**
+    * Reads a term from the current line of input and builds
+    * an expression tree that represents the expression.
+    * @return an ExpNode which is a pointer to the root node of the 
+    *    expression tree
+    * @throws ParseError if a syntax error is found in the input
+    */
+   private static ExpNode termTree() throws ParseError {
+      TextIO.skipBlanks();
+      ExpNode term;  // The expression tree representing the term.
+      term = factorTree();
+      TextIO.skipBlanks();
+      while ( TextIO.peek() == '*' || TextIO.peek() == '/' ) {
+             // Read the next factor, and combine it with the
+             // previous factors into a bigger expression tree.
+         char op = TextIO.getAnyChar();
+         ExpNode nextFactor = factorTree();
+         term = new BinOpNode(op,term,nextFactor);
+         TextIO.skipBlanks();
+      }
+      return term;
+   } // end termValue()
+
+
+   /**
+    * Reads a factor from the current line of input and builds
+    * an expression tree that represents the expression.
+    * @return an ExpNode which is a pointer to the root node of the 
+    *    expression tree
+    * @throws ParseError if a syntax error is found in the input
+    */
+
+   private static ExpNode factorTree() throws ParseError {
+      TextIO.skipBlanks();
+      char ch = TextIO.peek();
+      if ( Character.isDigit(ch) ) {
+             // The factor is a number.  Return a ConstNode.
+         double num = TextIO.getDouble();
+         return new ConstNode(num);
+      }
+      <newcode>else if ( ch == 'x' || ch == 'X' ) { 
+             // The factor is the variable x.
+         TextIO.getAnyChar();   // Read the X.
+         return new VariableNode();
+      }</newcode>
+      else if ( ch == '(' ) {
+             // The factor is an expression in parentheses.
+             // Return a tree representing that expression.
+         TextIO.getAnyChar();  // Read the "("
+         ExpNode exp = expressionTree();
+         TextIO.skipBlanks();
+         if ( TextIO.peek() != ')' )
+            throw new ParseError("Missing right parenthesis.");
+         TextIO.getAnyChar();  // Read the ")"
+         return exp;
+      }
+      else if ( ch == '\n' )
+         throw new ParseError("End-of-line encountered in the middle of an expression.");
+      else if ( ch == ')' )
+         throw new ParseError("Extra right parenthesis.");
+      else if ( ch == '+' || ch == '-' || ch == '*' || ch == '/' )
+         throw new ParseError("Misplaced operator.");
+      else
+         throw new ParseError("Unexpected character \"" + ch + "\" encountered.");
+   }  // end factorTree()
+
+
+} // end class SimpleParser4
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+<exercise id="recursion.ex.7">
+<exercise-question><p>This exercise builds on
+the previous exercise, <localref href="recursion.ex.6"/>. To
+understand it, you should have some background in Calculus. The derivative of
+an expression that involves the variable <code>x</code> can be defined by a few
+recursive rules:</p>
+
+<ul>
+<li>The derivative of a constant is 0.</li>
+
+<li>The derivative of <code>x</code> is 1.</li>
+
+<li>If <code>A</code> is an expression, let <code>dA</code> be the derivative of
+<code>A</code>. Then the derivative of <code>-A</code> is <code>-dA</code>.</li>
+
+<li>If <code>A</code> and <code>B</code> are expressions, let <code>dA</code> be the
+derivative of <code>A</code> and let <code>dB</code> be the derivative of <code>B</code>.
+Then the derivative of <code>A+B</code> is <code>dA+dB</code>.</li>
+
+<li>The derivative of <code>A-B</code> is <code>dA-dB</code>.</li>
+
+<li>The derivative of <code>A*B</code> is <code>A*dB + B*dA</code>.</li>
+
+<li>The derivative of <code>A/B</code> is <code>(B*dA - A*dB) / (B*B)</code>.</li>
+</ul>
+
+<p>For this exercise, you should modify your program from the previous exercise
+so that it can compute the derivative of an expression. You can do this by
+adding a derivative-computing method to each of the node classes. First, add
+another abstract method to the <classname>ExpNode</classname> class:</p>
+
+<pre>abstract ExpNode derivative();</pre>
+
+<np>Then implement this method in each of the four subclasses of
+<classname>ExpNode</classname>. All the information that you need is in the rules given
+above. In your main program, instead of printing the stack operations for the original 
+expression, you should print out the stack operations that define the derivative.
+Note that the formula that you get for the derivative can be much more
+complicated than it needs to be. For example, the derivative of <code>3*x+1</code>
+will be computed as <code>(3*1+0*x)+0</code>. This is correct, even though it's
+kind of ugly, and it would be nice for it to be simplified.  However, simplifying
+expressions is not easy.</np>
+
+<p>As an alternative to printing out stack operations, you might want to print
+the derivative as a fully parenthesized expression. You can do this by adding a
+<code>printInfix()</code> routine to each node class. It would be nice to leave
+out unnecessary parentheses, but again, the problem of deciding which
+parentheses can be left out without altering the meaning of the expression is a
+fairly difficult one, which I don't advise you to attempt.</p>
+
+<p>(There is one curious thing that happens here: If you apply the rules, as
+given, to an expression tree, the result is no longer a tree, since the same
+subexpression can occur at multiple points in the derivative. For example, if
+you build a node to represent <code>B*B</code> by saying "<code>new
+BinOpNode('*',B,B)</code>", then the left and right children of the new node are
+actually the same node! This is not allowed in a tree. However, the difference
+is harmless in this case since, like a tree, the structure that you get has no
+loops in it. Loops, on the other hand, would be a disaster in most of the
+recursive tree-processing subroutines that we have written, since it would
+lead to infinite recursion.  The type of structure that is built by the
+derivative functions is technically referred to as a <newword>directed acyclic graph</newword>.)</p>
+
+</exercise-question>
+<exercise-discuss><p>The solution to <localref href="recursion.ex.6"/> already
+allows the variable x to occur in expressions. Since we are building on that
+solution, no changes are needed in the parsing routines. There are a few easy
+changes in the <code>main()</code> routine, since it must take the derivative of
+the expression entered by the user and then work with that derivative. The
+changes are shown in the solution that is given below.</p>
+
+<p>Aside from that, we only need to add the "<code>ExpNode&nbsp;derivative()</code>"
+method to each of the node classes. Since I want to print out the derivative in
+fully parenthesized infix form, I also add another method, "<code>void&nbsp;printInfix()</code>". 
+Since this is not a required part of the exercise&mdash;and
+since it's fairly simple to do&mdash;I won't discuss the <code>printInfix()</code>
+method further.</p>
+
+<p>All the information that is needed for writing the <code>derivative()</code>
+methods is given in the derivative rules that are listed in the exercise. The
+first three rules are pretty simple:</p>
+
+<ul>
+<li>Since the derivative of a constant is 0, the <code>derivative()</code> method
+in the <classname>ConstNode</classname> class has to return an <classname>ExpNode</classname> that
+represents the expression "0". That's easy. We just need a constant node that
+contains the number 0. The definition of <code>derivative()</code> in the
+<classname>ConstNode</classname> class is just: "<code>return new ConstNode(0);</code>".</li>
+
+<li>Similarly, the derivative of x is 1, so the definition of
+<code>derivative()</code> in the <classname>VariableNode</classname> class is "<code>return new
+ConstNode(1);</code>".</li>
+
+<li>The derivative of <code>-A</code> is <code>-dA</code>, that is, it consists of a
+unary minus operator applied to the derivative of the operand A. So, in the
+<classname>UnaryMinusNode</classname> class, we have to compute the derivative of the
+<code>operand</code> and then create an <classname>ExpNode</classname> that applies a unary minus
+to that derivative. The derivative of <code>operand</code> is
+<code>operand.derivative()</code>, so we only need to "<code>return new
+UnaryMinusNode(operand.derivative());</code>".</li>
+</ul>
+
+<p>In the <classname>BinOpNode</classname> class, the derivative rule that we need to apply
+depends on the value of the binary operator, <code>+</code>, <code>-</code>, <code>*</code>, or&nbsp;<code>/</code>.
+The rules for <code>A+B</code> and <code>A-B</code> are easy to implement. Let's look
+at the case of <code>*</code>, where the rule is that the derivative of
+<code>A*B</code> is <code>A*dB+B*dA</code>. In the <classname>BinOpNode</classname> class, <code>A</code>
+is the <code>left</code> operand and <code>B</code> is the right operand. We can
+compute the derivatives <code>dA</code> and <code>dB</code> as
+<code>left.derivative()</code> and <code>right.derivative()</code>. We then have to
+build an expression tree to represent <code>A*dB+B*dA</code>. We need one node to
+represent the <code>+</code> operation and two more nodes to represent the two <code>*</code>
+operations. We can create the tree step-by-step:</p>
+
+<pre>ExpNode dA = left.derivative();
+ExpNode dB = right.derivative();
+ExpNode firstHalf = new BinOpNode('*', left, dB);   // A*dB
+ExpNode secondHalf = new BinOpNode('*', right, dA); // B*dA
+ExpNode answer = new BinOpNode('+', firstHalf, secondHalf);
+return answer;  // This is the derivative we want!</pre>
+
+<np>In my solution, however, I did the same thing in one statement:</np>
+
+<pre>return new BinOpNode( '+',
+                  new BinOpNode('*', left, right.derivative()),
+                  new BinOpNode('*', right, left.derivative()) );</pre>
+
+<np>This uses the fact that a constructor call is an expression and can be used
+as an actual parameter in a subroutine. This statement returns a node that
+represents the sum of two things. The first thing is a node that represents the
+product of <code>left</code> and <code>right.derivative()</code>, and the second is a
+node that represents the product of <code>right</code> and
+<code>left.derivative()</code>. This is exactly the same thing that is returned by
+the previous sequence of six statements. There are reasonable arguments for
+doing things either way.</np>
+
+<p>The rule for <code>A/B</code> is even more complicated: <code>(B*dA-A*dB)/(B*B)</code>. 
+Nevertheless, using <code>left</code> for <code>A</code> and <code>right</code>
+for <code>B</code>, I can compute the value with a single statement:</p>
+
+<pre>return new BinOpNode( '/',
+            new BinOpNode('-', 
+                    new BinOpNode('*', right, left.derivative()),
+                    new BinOpNode('*', left, right.derivative())),
+            new BinOpNode('*', right, right) );</pre>
+
+<np>As an exercise, you might try doing the same thing with a sequence of simple
+statements.</np>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="SimpleParser5">/*
+    This program reads standard expressions typed in by the user. 
+    The program constructs an expression tree to represent the
+    expression.  <newcode>It computes the derivative of the expression and
+    prints out the derivative and the value of the derivative at
+    several values of x.  It also prints out a list of commands 
+    that could be used on a stack machine to evaluate the derivative.</newcode>
+    The expressions can use the variable "x", positive real numbers, and
+    the binary operators +, -, *, and /.  The unary minus operation
+    is supported.  The expressions are defined by the BNF rules:
+
+            &lt;expression&gt;  ::=  [ "-" ] &lt;term&gt; [ [ "+" | "-" ] &lt;term&gt; ]...
+
+            &lt;term&gt;  ::=  &lt;factor&gt; [ [ "*" | "/" ] &lt;factor&gt; ]...
+
+            &lt;factor&gt;  ::=  &lt;number&gt;  |  &lt;x-variable&gt; | "(" &lt;expression&gt; ")"
+
+    A number must begin with a digit (i.e., not a decimal point).
+    A line of input must contain exactly one such expression.  If extra
+    data is found on a line after an expression has been read, it is
+    considered an error.
+
+    In addition to the main program class, SimpleParser5, this program
+    defines a set of five nested classes for implementing expression trees.
+
+ */
+
+public class SimpleParser5 {
+
+//   -------------------- Nested classes for Expression Trees ------------------------------
+
+
+   /**
+    *  An abstract class representing any node in an expression tree.
+    *  The four concrete node classes are concrete subclasses.
+    *  Two instance methods are specified, so that they can be used with
+    *  any ExpNode.  The value() method returns the value of the
+    *  expression for a specified value of the variable, x.  
+    *  The printStackCommands() method prints a list
+    *  of commands that could be used to evaluate the expression on
+    *  a stack machine (assuming that the value of the expression is
+    *  to be left on the stack).
+    <newcode>*  The derivative() method returns an expression tree for the derivative 
+    *  of the expression (with no attempt at simplification).  Actually,
+    *  this might not be a tree, but it is a "directed acyclic graph",
+    *  with no loops, so it's OK for our purposes.  The printInfix()
+    *  method prints the expression in fully parenthesized form.</newcode>
+    */
+   abstract private static class ExpNode {
+      abstract double value(double xValue); 
+      abstract void printStackCommands();
+      <newcode>abstract void printInfix();</newcode>       
+      <newcode>abstract ExpNode derivative();</newcode>
+   }
+
+   /**
+    * Represents an expression node that holds a number.
+    */
+   private static class ConstNode extends ExpNode {
+      double number;  // The number.
+      ConstNode(double val) {
+             // Construct a ConstNode containing the specified number.
+         number = val;
+      }
+      double value(double xValue) {
+             // The value of the node is the number that it contains.
+         return number;
+      }
+      void printStackCommands() {
+             // On a stack machine, just push the number onto the stack.
+         System.out.println("  Push " + number); 
+      }
+      <newcode>void printInfix() {
+         System.out.print(number);
+      }
+      ExpNode derivative() {
+             // The derivative of a constant is zero.
+         return new ConstNode(0);
+      }</newcode>
+   }
+
+   
+   /**
+    * An expression node representing a binary operator,
+    */
+   private static class BinOpNode extends ExpNode {
+      char op;        // The operator.
+      ExpNode left;   // The expression for its left operand.
+      ExpNode right;  // The expression for its right operand.
+      BinOpNode(char op, ExpNode left, ExpNode right) {
+             // Construct a BinOpNode containing the specified data.
+         assert op == '+' || op == '-' || op == '*' || op == '/';
+         assert left != null &amp;&amp; right != null;
+         this.op = op;
+         this.left = left;
+         this.right = right;
+      }
+      double value(double xValue) {
+             // The value is obtained by evaluating the left and right
+             // operands and combining the values with the operator.
+         double x = left.value(xValue);
+         double y = right.value(xValue);
+         switch (op) {
+         case '+':  return x + y;
+         case '-':  return x - y;
+         case '*':  return x * y;
+         case '/':  return x / y;
+         default:   return Double.NaN;  // Bad operator!
+         }
+      }
+      void  printStackCommands() {
+             // To evaluate the expression on a stack machine, first do
+             // whatever is necessary to evaluate the left operand, leaving
+             // the answer on the stack.  Then do the same thing for the
+             // second operand.  Then apply the operator (which means popping
+             // the operands, applying the operator, and pushing the result).
+         left.printStackCommands();
+         right.printStackCommands();
+         System.out.println("  Operator " + op);
+      }
+      <newcode>void printInfix() {              
+             // Print the expression, in parentheses.
+         System.out.print('(');
+         left.printInfix();
+         System.out.print(" " + op + " ");
+         right.printInfix();
+         System.out.print(')');
+      }
+      ExpNode derivative() {
+             // Apply the derivative formulas.
+         switch (op) {
+         case '+':
+            return new BinOpNode('+', left.derivative(), right.derivative());
+         case '-':
+            return new BinOpNode('-', left.derivative(), right.derivative());
+         case '*':
+            return new BinOpNode( '+',
+                  new BinOpNode('*', left, right.derivative()),
+                  new BinOpNode('*', right, left.derivative()) );
+         case '/':
+            return new BinOpNode( '/',
+                  new BinOpNode('-', 
+                        new BinOpNode('*', right, left.derivative()),
+                        new BinOpNode('*', left, right.derivative())),
+                        new BinOpNode('*', right, right) );
+         default:
+            return null;
+         }
+      }</newcode>
+   }
+
+   
+   /**
+    * An expression node to represent a unary minus operator.
+    */
+   private static class UnaryMinusNode extends ExpNode {
+      ExpNode operand;  // The operand to which the unary minus applies.
+      UnaryMinusNode(ExpNode operand) {
+             // Construct a UnaryMinusNode with the specified operand.
+         assert operand != null;
+         this.operand = operand;
+      }
+      double value(double xValue) {
+             // The value is the negative of the value of the operand.
+         double neg = operand.value(xValue);
+         return -neg;
+      }
+      void printStackCommands() {
+             // To evaluate this expression on a stack machine, first do
+             // whatever is necessary to evaluate the operand, leaving the
+             // operand on the stack.  Then apply the unary minus (which means
+             // popping the operand, negating it, and pushing the result).
+         operand.printStackCommands();
+         System.out.println("  Unary minus");
+      }
+      <newcode>void printInfix() {             
+         // Print the expression, in parentheses.
+         System.out.print("(-");
+         operand.printInfix();
+         System.out.print(')');
+      }
+      ExpNode derivative() {
+         // The derivative of -A is -(derivative of A).
+         return new UnaryMinusNode(operand.derivative());
+      }</newcode>
+   }
+
+
+   /**
+    * An expression node that represents a reference to the variable, x.
+    */
+   private static class VariableNode extends ExpNode {
+      VariableNode() {
+             // Construct a VariableNode. (There is nothing to do!)
+      }
+      double value(double xValue) {
+            // The value of the node is the value of x.
+         return xValue;
+      }
+      void printStackCommands() {
+            // On a stack machine, just push the value of X onto the stack.
+         System.out.println("  Push X"); 
+      }
+      <newcode>void printInfix() {         
+         System.out.print("x");
+      }
+      ExpNode derivative() {
+            // The derivative of x is the constant 1.
+         return new ConstNode(1);
+      }</newcode>
+   }
+
+   
+   //   -------------------------------------------------------------------------------
+   
+
+   /**
+    * An object of type ParseError represents a syntax error found in 
+    * the user's input.
+    */
+   private static class ParseError extends Exception {
+      ParseError(String message) {
+         super(message);
+      }
+   } // end nested class ParseError
+
+
+   public static void main(String[] args) {
+
+      while (true) {
+         System.out.println("\n\nEnter an expression, or press return to end.");
+         System.out.print("\n?  ");
+         TextIO.skipBlanks();
+         if ( TextIO.peek() == '\n' )
+            break;
+         try {
+            ExpNode exp = expressionTree();
+            TextIO.skipBlanks();
+            if ( TextIO.peek() != '\n' )
+               throw new ParseError("Extra data after end of expression.");
+            TextIO.getln();
+            <newcode>ExpNode deriv = exp.derivative();
+            System.out.println("\nA fully parenthesized expression for the derivative is:");
+            System.out.print("   ");
+            deriv.printInfix();
+            System.out.println();
+            System.out.println("\nValue of derivative at x = 0 is " + deriv.value(0));
+            System.out.println("Value of derivative at x = 1 is " + deriv.value(1));
+            System.out.println("Value of derivative at x = 2 is " + deriv.value(2));
+            System.out.println("Value of derivative at x = 3 is " + deriv.value(3));
+            System.out.println("\nOrder of postfix evaluation for derivative is:\n");
+            deriv.printStackCommands();</newcode>
+         }
+         catch (ParseError e) {
+            System.out.println("\n*** Error in input:    " + e.getMessage());
+            System.out.println("*** Discarding input:  " + TextIO.getln());
+         }
+      }
+
+      System.out.println("\n\nDone.");
+
+   } // end main()
+
+
+   /**
+    * Reads an expression from the current line of input and builds
+    * an expression tree that represents the expression.
+    * @return an ExpNode which is a pointer to the root node of the 
+    *    expression tree
+    * @throws ParseError if a syntax error is found in the input
+    */
+   private static ExpNode expressionTree() throws ParseError {
+      TextIO.skipBlanks();
+      boolean negative;  // True if there is a leading minus sign.
+      negative = false;
+      if (TextIO.peek() == '-') {
+         TextIO.getAnyChar();
+         negative = true;
+      }
+      ExpNode exp;       // The expression tree for the expression.
+      exp = termTree();  // Start with the first term.
+      if (negative)
+         exp = new UnaryMinusNode(exp);
+      TextIO.skipBlanks();
+      while ( TextIO.peek() == '+' || TextIO.peek() == '-' ) {
+             // Read the next term and combine it with the
+             // previous terms into a bigger expression tree.
+         char op = TextIO.getAnyChar();
+         ExpNode nextTerm = termTree();
+         exp = new BinOpNode(op, exp, nextTerm);
+         TextIO.skipBlanks();
+      }
+      return exp;
+   } // end expressionTree()
+
+
+   /**
+    * Reads a term from the current line of input and builds
+    * an expression tree that represents the expression.
+    * @return an ExpNode which is a pointer to the root node of the 
+    *    expression tree
+    * @throws ParseError if a syntax error is found in the input
+    */
+   private static ExpNode termTree() throws ParseError {
+      TextIO.skipBlanks();
+      ExpNode term;  // The expression tree representing the term.
+      term = factorTree();
+      TextIO.skipBlanks();
+      while ( TextIO.peek() == '*' || TextIO.peek() == '/' ) {
+             // Read the next factor, and combine it with the
+             // previous factors into a bigger expression tree.
+         char op = TextIO.getAnyChar();
+         ExpNode nextFactor = factorTree();
+         term = new BinOpNode(op,term,nextFactor);
+         TextIO.skipBlanks();
+      }
+      return term;
+   } // end termValue()
+
+
+   /**
+    * Reads a factor from the current line of input and builds
+    * an expression tree that represents the expression.
+    * @return an ExpNode which is a pointer to the root node of the 
+    *    expression tree
+    * @throws ParseError if a syntax error is found in the input
+    */
+
+   private static ExpNode factorTree() throws ParseError {
+      TextIO.skipBlanks();
+      char ch = TextIO.peek();
+      if ( Character.isDigit(ch) ) {
+             // The factor is a number.  Return a ConstNode.
+         double num = TextIO.getDouble();
+         return new ConstNode(num);
+      }
+      else if ( ch == 'x' || ch == 'X' ) { 
+             // The factor is the variable x.
+            TextIO.getAnyChar();   // Read the X.
+            return new VariableNode();
+         }
+      else if ( ch == '(' ) {
+             // The factor is an expression in parentheses.
+             // Return a tree representing that expression.
+         TextIO.getAnyChar();  // Read the "("
+         ExpNode exp = expressionTree();
+         TextIO.skipBlanks();
+         if ( TextIO.peek() != ')' )
+            throw new ParseError("Missing right parenthesis.");
+         TextIO.getAnyChar();  // Read the ")"
+         return exp;
+      }
+      else if ( ch == '\n' )
+         throw new ParseError("End-of-line encountered in the middle of an expression.");
+      else if ( ch == ')' )
+         throw new ParseError("Extra right parenthesis.");
+      else if ( ch == '+' || ch == '-' || ch == '*' || ch == '/' )
+         throw new ParseError("Misplaced operator.");
+      else
+         throw new ParseError("Unexpected character \"" + ch + "\" encountered.");
+   }  // end factorTree()
+
+
+} // end class SimpleParser5
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+</exercises>

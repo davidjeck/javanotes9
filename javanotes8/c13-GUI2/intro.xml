@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE intro SYSTEM "../javanotes7.dtd" >
+
+<intro>
+<p><start><big>I</big>t's possible to program</start> a wide variety of GUI
+applications using only the techniques covered in <localref href="GUI1"/>. In many
+cases, the basic events, components, layouts, and graphics routines covered in
+that chapter suffice. But the Swing graphical user interface library is far
+richer than what we have seen so far, and it can be used to build highly
+sophisticated applications. This chapter is a further introduction to Swing
+and other aspects of GUI programming.
+Although the title of the chapter is "Advanced GUI Programming," it is still
+just an introduction. Full coverage of this topic would require at least another
+complete book.</p>
+   
+</intro>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE quiz SYSTEM "../javanotes7.dtd" >
+
+<quiz>
+
+
+<question>
+<ques><p>What is meant by the <i>basetype</i> of an array?</p>
+</ques>
+<ans><p>The base type of an array refers
+to the type of the items that can be stored in that array. For example, the
+base type of the array of type <atype>Color[]</atype> is 
+<classname>Color</classname>.</p>
+</ans>
+</question>
+
+
+<question>
+<ques><p>What is the purpose of the following variable-arity method? What are
+the values of <code>same(1,2,3)</code>, <code>same(17,17,17,17)</code>,
+and <code>same(2)</code>?  Why?</p>
+<pre>static double same( int... value ) {
+    for (int i = 1; i &lt; value.length; i++) {
+        if ( value[i-1] != value[i] )
+            return false;
+    }
+    return true;
+}</pre>
+</ques>
+<ans><p>This function can be called with any number of integer parameters. It tests
+whether all of the parameter values are equal.  The value of
+<code>same(1,2,3)</code> is <code>false</code>.  The function begins by 
+comparing 1 and 2; since they are not equal, it immediately returns <code>false</code>.
+The value of <code>same(17,17,17,17)</code> is <code>true</code>.  The function compares
+<code>value[0]</code> with <code>value[1]</code>, <code>value[1]</code> with <code>value[2]</code>,
+and <code>value[2]</code> with <code>value[3]</code>.  All of these values are 17, so the routine
+goes through the <code>for</code> loop without returning <code>false</code>, and the
+"<code>return true</code>" statement after the end of the loop is executed.
+For <code>same(2)</code>, <code>value.length</code> is 1, and the body of the
+<code>loop</code> is never executed; the return value is <code>true</code>.</p></ans>
+</question>
+   
+   
+<question>
+<ques><p>What does it mean to sort an array?</p>
+</ques>
+<ans><p>To sort an array means to
+rearrange the items in the array so that they are in increasing or decreasing
+order (according to some criterion).</p>
+<p>(Note: To be more accurate, we should say "non-decreasing" instead of
+"increasing" and "non-increasing" instead of "decreasing."  An array can
+contain duplicate values, and in that case, its elements can'be be put
+into strictly increasing or strictly decreasing order.)</p>
+</ans>
+</question>
+
+
+<question>
+<ques><p>What is the main advantage of binary search over linear search?  What is the
+main disadvantage?</p></ques>
+<ans><p>The advantage of binary search is that it is much faster.  On a list of
+one million items, linear search would take an average of five hundred thousand steps to find an
+item, whereas binary search would take only 20 steps.  The disadvantage is that
+binary search only works on a sorted list, so some extra work must be done to
+sort the list or to keep the list in sorted order as it is created.</p></ans>
+</question>
+
+
+<question>
+<ques><p>What is meant by a
+<i>dynamic array?</i> What is the advantage of a dynamic array over a regular
+array?</p></ques>
+<ans><p>A dynamic array is like an array
+in that it is a data structure that stores a sequence of items, all of the same
+type, in numbered locations. It is different from an array in that there is no
+preset upper limit on the number of items that it can contain. This is an
+advantage in situations where a reasonable value for the size of the array is
+not known at the time it is created.</p></ans>
+</question>
+
+
+<question>
+<ques><p>What does it mean to say that <classname>ArrayList</classname> is a
+parameterized type?</p></ques>
+<ans><p>A class name is a type, but as a parameterized type, 
+<classname>ArrayList</classname> does not define just one type.
+Instead, for every object type <classname>T</classname>, there is a type
+<atype>ArrayList&lt;T&gt;</atype>.  <classname>T</classname>&nbsp;is a
+"type parameter."  An object of type <atype>ArrayList&lt;T&gt;</atype> is a list that can only hold objects of
+type <classname>T</classname>.  We can have <atype>ArrayList&lt;String&gt;</atype> to
+represent lists of <classname>Strings</classname>, <atype>ArrayList&lt;Integer&gt;</atype>
+to represent lists of <classname>Integers</classname>, and so one.  The fact that
+<classname>ArrayList</classname> is a parameterized type means that we don't have
+to create a new class for each type of list.</p></ans>
+</question>
+   
+
+<question>
+<ques><p>Suppose that a variable <code>strlst</code> has been declared as</p>
+<pre>ArrayList&lt;String&gt; strlst = new ArrayList&lt;String&gt;();</pre>
+<np>Assume that the list is not empty and that all the items in the list
+are non-null. Write a code segment that will find and print the string in the list
+that comes first in lexicographic order.</np>
+</ques> 
+<ans><p>Strings can be compared for lexicographic order using the <code>compareTo</code>
+instance method in the <classname>String</classname> class.
+We can find the smallest string as follows:</p>
+<pre>String smallest = strlst.get(0);
+for (int i = 1; i &lt; strlist.size(); i++) {
+   String nextString = strlst.get(i);
+   if ( nextString.compareTo(smallest) &lt; 0 ) 
+       smallest = nextString;
+}
+System.out.println("The smallest string lexicographically is " + smallest);</pre>
+<np>Alternatively, a for-each loop could be used:</np>
+<pre>String smallest = strlst.get(0);
+for (String item : strlst) {
+   if ( item.compareTo(smallest) &lt; 0 ) 
+       smallest = item;
+}
+System.out.println("The smallest string lexicographically is " + smallest)</pre>
+<p>Not that in this version, the first item in the list is compared to itself
+as the first step in the loop.  There is no easy way to leave that item out
+of the for-each loop.</p>
+</ans>
+</question>
+
+
+<question>
+<ques><p>Show the exact output
+produced by the following code segment.</p>
+<pre>char[][] pic = new char[6][6];
+for (int i = 0; i &lt; 6; i++)
+   for (int j = 0; j &lt; 6; j++) {
+      if ( i == j  ||  i == 0  ||  i == 5 )
+         pic[i][j] = '*';
+      else
+         pic[i][j] = '.';
+   }
+for (int i = 0; i &lt; 6; i++) {
+   for (int j = 0; j &lt; 6; j++)
+      System.out.print(pic[i][j]);
+   System.out.println();
+}</pre></ques>
+<ans><p>The output consists of six
+lines, with each line containing six characters. In the first line, <code>i</code>
+is 0, so all the characters are *'s. In the last line, i is 5, so all the
+characters are *'s. In each of the four lines in the middle, one of the
+characters is a * and the rest are periods. The output is</p>
+<pre>******
+.*....
+..*...
+...*..
+....*.
+******</pre>
+<p>It might help to look at the array items that are printed on each line. Note
+that <code>pic[row][col]</code> is '*' if <code>row</code> is 0 or if <code>row</code> is 5
+or if <code>row</code> and <code>col</code> are equal.</p>
+<pre>pic[0][0] pic[0][1] pic[0][2] pic[0][3] pic[0][4] pic[0][5] 
+pic[1][0] pic[1][1] pic[1][2] pic[1][3] pic[1][4] pic[1][5] 
+pic[2][0] pic[2][1] pic[2][2] pic[2][3] pic[2][4] pic[2][5] 
+pic[3][0] pic[3][1] pic[3][2] pic[3][3] pic[3][4] pic[3][5] 
+pic[4][0] pic[4][1] pic[4][2] pic[4][3] pic[4][4] pic[4][5] 
+pic[5][0] pic[5][1] pic[5][2] pic[5][3] pic[5][4] pic[5][5]</pre>
+</ans>
+</question>
+
+
+<question>
+<ques><p>Write a complete static method
+that finds the largest value in an array of <code>ints</code>. The method
+should have one parameter, which is an array of type <code>int[]</code>. The
+largest number in the array should be returned as the value of the
+method.</p></ques>
+<ans><p>One possible answer is:</p>
+<pre>public static int getMax(int[] list) {
+   
+   int max = list[0];  // This is the largest item seen so far.
+   
+   for (int i = 1; i &lt; list.length; i++) {
+         // Look at each item in the array.  If the item is
+         // bigger than max, then set max equal to the item.
+       if (list[i] &gt; max)
+          max = list[i];
+   }
+   
+   // At this point, max is the largest item in the whole array.
+   
+   return max;
+   
+} // end getMax</pre>
+<np>(Note that this method throws an exception if the
+parameter <code>list</code> is null or if it is an array of
+length&nbsp;0.  The exception is thrown by the line
+"<code>int&nbsp;max&nbsp;=&nbsp;list[0];".  The reference
+to <code>list[0]</code> causes a <classname>NullPointerException</classname></code>
+if <code>list</code> is null and an <classname>ArrayIndexOutOfBoundsException</classname>
+if the array has length zero.)</np>
+</ans>
+</question>
+
+   
+<question>
+<ques><p>Suppose that temperature
+measurements were made on each day of 2014 in each of 100 cities. The
+measurements have been stored in an array</p>
+<pre>int[][]  temps  =  new  int[100][365];</pre>
+<np>where <code>temps[c][d]</code> holds the measurement for city number <code>c</code>
+on the <code>d</code><sup>th</sup> day of the year. Write a code segment that will
+print out the average temperature, over the course of the whole year, for each
+city. The average temperature for a city can be obtained by adding up all 365
+measurements for that city and dividing the answer by 365.0.</np></ques>
+<ans><p>A pseudocode outline of the
+answer is</p>
+<pre>For each city {
+   Add up all the temperatures for that city
+   Divide the total by 365 and print the answer
+}</pre>
+<np>Adding up all the temperatures for a given city itself requires a for loop,
+so the code segment looks like this:</np>
+<pre>for (int city = 0; city &lt; 100; city++) {
+    int total = 0;  // total of temperatures for this city
+    for (int day = 0; day &lt; 365; day++)
+       total = total + temps[city][day];
+    double avg = total / 365.0;  // average temp for this city
+    System.out.println("Average temp for city number " 
+             + city + " is " + avg);
+}</pre></ans>
+</question>
+
+
+<question>
+<ques><p>Suppose that a class,
+<classname>Employee,</classname> is defined as follows:</p>
+<pre>class Employee {
+   String lastName;
+   String firstName;
+   double hourlyWage;
+   int yearsWithCompany;
+}</pre>
+<np>Suppose that data about 100 employees is <b>already</b> stored in an
+array:</np>
+<pre>Employee[] employeeData = new Employee[100];</pre>
+<np>Write a code segment that will output the first name, last name, and hourly
+wage of each employee who has been with the company for 20 years or more.  Write two
+versions of the code segment, one that uses a regular <code>for</code> loop, and one that 
+uses a for-each loop.</np></ques>
+<ans><p>(The data for the i-th employee
+is stored in an object that can be referred to as <code>employeeData[i]</code>. The
+four pieces of data about that employee are members of this object and can be
+referred to as:</p>
+<ul>
+<li><code>employeeData[i].firstName</code></li>
+<li><code>employeeData[i].lastName</code></li>
+<li><code>employeeData[i].hourlyWage</code></li>
+<li><code>employeeData[i].yearsWithCompany</code></li>
+</ul>
+<np>The code segment uses a for loop to consider each employee in the
+array.)</np>
+<pre>for (int i=0; i &lt; 100; i++) {
+    if ( employeeData[i].yearsWithCompany &gt;= 20 )
+        System.out.println(employeeData[i].firstName + " " +
+                      employeeData[i].lastName + ": " +
+                      employeeData[i].hourlyWage);
+}</pre>
+<np>Using a for-each loop:</np>
+<pre>for ( Employee emp : employeeData ) {
+    if ( emp.yearsWithCompany &gt;= 20 )
+        System.out.println(emp.firstName + " " +
+                      emp.lastName + ": " +
+                      emp.hourlyWage);
+}</pre>
+</ans>
+</question>
+
+
+<question>
+<ques><p>What is the purpose of the
+following subroutine? What is the meaning of the value that it returns, in
+terms of the value of its parameter?</p>
+<pre>static double[] sums( double[][] data ) {
+    double[] answers = new double[ data.length ];
+    for (int i = 0; i &lt; data.length; i++) {
+        double sum = 0;
+        for (int j = 0; j &lt; data[i].length; i++)
+            sum = sum + data[i][j];
+        answers[i] = sum;
+    }
+    return answers;
+}</pre>
+</ques>
+<ans><p>The purpose of this subroutine is to find the sum of the numbers in each
+row of the parameter array <code>data</code>.  The answer is returned as 
+a one-dimensional array of double.  The value of <code>answers[i]</code> is the
+sum of the numbers in row number <code>i</code> of <code>data</code>.
+</p>
+<p>(In the first two lines of the method, <code>data.length</code> is the
+number of rows in <code>data</code>.  In the nested <code>for</code> loop,
+<code>data[i].length</code> is the number of values in the <code>i</code>-th row.)</p></ans>
+</question>
+
+
+
+</quiz>

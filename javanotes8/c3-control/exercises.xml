@@ -1,0 +1,1598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+
+<exercises>
+
+
+<exercise id="control.ex.1">
+<exercise-question><p>How many times do you have
+to roll a pair of dice before they come up snake eyes? You could do the
+experiment by rolling the dice by hand. Write a computer program that simulates
+the experiment. The program should report the number of rolls that it makes
+before the dice come up snake eyes. (Note: "Snake eyes" means that both dice
+show a value of 1.) <localref href="basics.ex.2"/> explained how to simulate rolling a pair of dice.</p>
+</exercise-question>   
+<exercise-discuss><p>Since we want to roll the dice at least once, a <code>do..while</code> is
+appropriate. A pseudocode algorithm for the program is</p>
+
+<pre>Let countRolls = 0
+do:
+    roll the dice
+    count this roll by adding 1 to countRolls
+while the roll is not snake eyes
+Output the value of countRolls</pre>
+
+<np>As in <localref href="basics.ex.2"/>, we can simulate
+rolling one die by computing <code>(int)(Math.random()*6)&nbsp;+&nbsp;1</code>.</np>
+
+<p>We want to <b>stop</b> rolling the dice when the roll is a double
+1. We want to <b>continue</b> rolling the dice while the roll is
+<b>not</b> a double 1. If <code>die1</code> and <code>die2</code> are
+variables representing the values of the dice, the condition for continuing to
+roll can be expressed as</p>
+
+<pre>while ( ! (die1 == 1 &amp;&amp; die2 == 1) )</pre>
+
+<np>The exclamation point means "not", so the condition says that it is not the
+case that (both <code>die1</code> is 1 and <code>die2</code> is 1). That is, it is not
+the case that the dice came up snake eyes. Another way to express the same
+condition is that at least one of the dice is <b>not</b> 1, that is, that either
+<code>die1</code> is not 1 <b>or</b> <code>die2</code> is not 1. In Java
+code, this is written:</np>
+
+<pre>while ( die1 != 1  ||  die2 != 1 )</pre>
+
+<np>This is the test that I use in my program. Students often get the
+<code>&amp;&amp;</code> and <code>||</code> operators mixed up, especially when
+negation is involved. (In this case, we could have avoided the problem by
+testing <code>while (die1+die2 != 2)</code>.)</np>
+
+<p>Filling in some details gives an algorithm that can be easily converted into
+a program, which is shown below:</p>
+
+<pre>Let countRolls = 0
+do:
+    die1 = (int)(Math.random()*6) + 1
+    die2 = (int)(Math.random()*6) + 1
+    count this roll by adding 1 to countRolls
+while die1 is not 1 or die2 is not 1
+Output the value of countRolls</pre>
+
+<p>You could of course write the program using a regular <code>while</code> loop
+instead of <code>do..while</code>.  But if you move the test to the start of the
+loop, you have to make sure that the variables are given values before you try to
+test those values.  You need to "prime" the loop that exist only to ensure that it runs the
+first time.  The pseudocode then becomes</p>
+<pre>Let countRolls = 0
+Let die1 = 0 // Prime the loop with any value except 1
+Let die2 = 0
+while die1 is not 1 or die2 is not 1:
+    die1 = (int)(Math.random()*6) + 1
+    die2 = (int)(Math.random()*6) + 1
+    count this roll by adding 1 to countRolls
+Output the value of countRolls</pre>
+<np>Another option would be to use a "while(true)" loop.  In that case, the test that
+is needed is the condition for stopping the loop, which is often easier to come up with
+than the test for continuing the loop, and no priming is necessary:</np>
+<pre>Let countRolls = 0
+while true:
+    die1 = (int)(Math.random()*6) + 1
+    die2 = (int)(Math.random()*6) + 1
+    count this roll by adding 1 to countRolls
+    if die1 is 1 and die2 is 1
+        break
+Output the value of countRolls</pre>
+
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="SnakeEyes">/**  
+ * This program simulates rolling a pair of dice until they
+ * come up snake eyes.  It reports how many rolls were needed.
+ */
+
+public class SnakeEyes {
+  
+   public static void main(String[] args) {
+   
+       int die1, die2;   // The values rolled on the two dice.
+       
+       int countRolls;   // Used to count the number of rolls.
+       
+       countRolls = 0;
+       
+       do {
+          die1 = (int)(Math.random()*6) + 1;   // roll the dice
+          die2 = (int)(Math.random()*6) + 1;
+          countRolls++;                        // and count this roll
+       } while ( die1 != 1 || die2 != 1 );
+       
+       System.out.println("It took " + countRolls + " rolls to get snake eyes.");
+   
+   }  // end main()
+
+}  // end class</prog></pre>
+</exercise-code>
+</exercise>
+
+
+<exercise id="control.ex.2">
+<exercise-question><p>Which integer between 1
+and 10000 has the largest number of divisors, and how many divisors does it
+have? Write a program to find the answers and print out the results. It is
+possible that several integers in this range have the same, maximum number of
+divisors. Your program only has to print out one of them.  An example in
+<localref href="control.4.2"/> discussed divisors. The source code for
+that example is <sourceref href="CountDivisors.java"/>.</p>
+
+<p>You might need some hints about how to find a maximum value. The basic idea
+is to go through all the integers, keeping track of the largest number of
+divisors that you've seen <i>so far</i>. Also, keep track of the integer that
+had that number of divisors.</p>
+</exercise-question>   
+<exercise-discuss>
+<p>Let's use a variable named <code>maxDivisors</code> to keep track of the largest
+number of divisors we have seen so far and use <code>numWithMax</code> to store the
+number that had that many divisors. We have to compute the number of divisors
+of each integer from 1 to 10000. Whenever we find a larger number of divisors
+than <code>maxDivisors</code>, we have to make note of that fact by changing the
+values of <code>maxDivisors</code> and <code>numWithMax</code>. At the end of the
+process, <code>maxDivisors</code> will be the absolute maximum number of divisors
+and <code>numWithMax</code> will be a number that had that many divisors. These are
+the values we want to print out. We can express this with a pseudocode
+algorithm</p>
+
+<pre>for each integer N from 1 to 10000:
+   Count the number of divisors of N
+   If that number is greater than maxDivisors:
+       Let maxDivisors = the number of divisors of N
+       Let numWithMax = N
+Output maxDivisors and numWithMax</pre>
+
+<p>However, there is a problem here: The very first time <code>maxDivisors</code>
+is used in the test "If that number is greater than maxDivisors," the variable
+<code>maxDivisors</code> hasn't yet been assigned a value. The computer will report
+this as an error. This can be fixed by assigning a value to
+<code>maxDivisors</code> before the beginning of the <code>for</code> loop. One way to
+do this is to handle <code>N=1</code> as a special case before the loop and then to
+let <code>N</code> go from 2 to 10000 in the for loop. We know that <code>N=1</code>
+has just 1 divisor:</p>
+
+<pre>Let maxDivisors = 1  // number of divisors of 1
+Let numWithMax = 1
+for each integer N from 2 to 10000:
+   Count the number of divisors of N
+   If that number is greater than maxDivisors:
+       Let maxDivisors = the number of divisors of N
+       Let numWithMax = N
+Output maxDivisors and numWithMax</pre>
+
+<p>Here's a curious thing: If you leave out the line "<code>numWithMax = 1</code>"
+from the program, the computer will report a syntax error where you try to
+output the value of <code>numWithMax</code>. It will say that the variable
+<code>numWithMax</code> might not have been initialized. That is, it might never
+have been assigned a value. Now, <b>you</b> know that it will be
+assigned a value (since when <code>N=2</code> is processed, <code>numWithMax</code>
+will become 2). However, when the computer compiles the program,
+<b>it</b> doesn't know whether the body of the <code>if</code> statement
+will ever be executed, so it doesn't know whether <code>numWithMax</code> will ever
+be assigned a value. The syntax rule is that every variable must be "definitely
+assigned" before its value is used. This means that it is assigned a value on
+every possible execution path through the program.  Definite assignment was
+discussed in <localref href="control.1.4"/>.</p>
+
+<p>We still have to expand the step "Count the number of divisors of N." This
+was already done in <localref href="control.4.2"/> for the example program
+<code>CountDivisors.java</code>. This step requires another <code>for</code> loop, so
+we have here an example of one <code>for</code> loop nested inside another. Here is
+a complete algorithm, which can be translated into a program:</p>
+
+<pre>Let maxDivisors = 1  // number of divisors of 1
+Let numWithMax = 1
+for each integer N from 2 to 10000:
+    Let divisorCount = 0
+    for each D from 1 to N:
+        if D is a divisor of N:
+            add 1 to divisorCount
+    If divisorCount is greater than maxDivisors:
+        Let maxDivisors = the number of divisors of N
+        Let numWithMax = N
+Output maxDivisors and numWithMax</pre>
+
+<p>This can be translated pretty much directly into a program. By the way, the
+maximum number of divisors is 64. There are two numbers between 1 and 10000
+that have 64 divisors, 7560 and 9240. The program will output the first of
+these. (It would output the second if the test "<code>if (divisorCount &gt;
+maxDivisors)</code>" were changed to "<code>if (divisorCount &gt;=
+maxDivisors)</code>". Do you see why?)</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="MostDivisors">/**
+ * This program finds an integer between 1 and 10000 that has
+ * the largest number of divisors.  It prints out the maximum
+ * number of divisors and an integer that has that many divisors.
+ */
+
+public class MostDivisors {
+
+   public static void main(String[] args) {
+   
+       int N;            // One of the integers whose divisors we have to count.
+       int maxDivisors;  // Maximum number of divisors seen so far.
+       int numWithMax;   // A value of N that had the given number of divisors.
+       
+       maxDivisors = 1;  // Start with the fact that 1 has 1 divisor.
+       numWithMax = 1;
+
+       /* Process all the remaining values of N from 2 to 10000, and
+          update the values of maxDivisors and numWithMax whenever we
+          find a value of N that has more divisors than the current value
+          of maxDivisors.
+       */
+       
+       for ( N = 2;  N &lt;= 10000;  N++ ) {
+       
+           int D;  // A number to be tested to see if it's a divisor of N.
+           int divisorCount;  // Number of divisors of N.
+           
+           divisorCount = 0;
+           
+           for ( D = 1;  D &lt;= N;  D++ ) {  // Count the divisors of N.
+              if ( N % D == 0 )
+                 divisorCount++;
+           }
+           
+           if (divisorCount &gt; maxDivisors) {
+              maxDivisors = divisorCount;
+              numWithMax = N;
+           }
+       
+       }
+       
+       System.out.println("Among integers between 1 and 10000,");
+       System.out.println("The maximum number of divisors is " + maxDivisors);
+       System.out.println("A number with " + maxDivisors + " divisors is " + numWithMax);
+   
+   } // end main()
+
+}</prog></pre>
+</exercise-code>
+</exercise>
+
+
+
+<exercise>
+<exercise-question><p>Write a program that will
+evaluate simple expressions such as 17 + 3 and 3.14159 * 4.7. The expressions
+are to be typed in by the user. The input always consists of a number, followed
+by an operator, followed by another number. The operators that are allowed are
++, -, *, and /. You can read the numbers with <code>TextIO.getDouble()</code> and
+the operator with <code>TextIO.getChar()</code>. Your program should read an
+expression, print its value, read another expression, print its value, and so
+on. The program should end when the user enters 0 as the first number on the
+line.</p>
+</exercise-question>   
+<exercise-discuss>
+<p>We need a loop to read and evaluate expressions. It's easiest to use a
+<code>break</code> statement to end the loop at the appropriate time:</p>
+
+<pre>Repeat indefinitely:
+    Get the user's input.
+    if the first number is 0:
+        Break out of the loop
+    Find the value of the expression
+    Display the value.</pre>
+
+<p>Getting the user's input involves reading three data values. We need three
+variables to store these values. It's best to test whether the first number is
+0 right after we read it, so the user will just have to type a 0 to end the
+program, not a complete expression such as 0 + 0. "Repeat indefinitely" can be
+written as "<code>while (true)</code>":</p>
+
+<pre>while (true):
+    Let firstNum = TextIO.getDouble()
+    if firstNum is 0:
+        Break out of the loop
+    Let operator = TextIO.getChar()
+    Let secondNum = TextIO.getlnDouble()
+    Find the value of the expression
+    Display the value.</pre>
+
+<p>To evaluate the user's expression, we have to test the <code>operator</code> to
+find out which operation to compute. We can do this with either a multi-way
+<code>if</code> statement or with a <code>switch</code> statement. In the program
+below, I use a <code>switch</code>. The <code>if</code> statement would be:</p>
+
+<pre>if ( operator == '+' )
+   value = firstNum + secondNum;
+else if ( operator == '-' )
+   value = firstNum - secondNum;
+else if ( operator == '*' )
+   value = firstNum * secondNum;
+else if ( operator == '/' )
+   value = firstNum / secondNum;
+else {
+   System.out.println("Unknown operator: " + operator);
+   continue;  // back to start of loop
+}</pre>
+
+<np>The computer won't let you get away without the <code>else</code> part of the
+<code>if</code> statement or the <code>default</code> case in the <code>switch</code>,
+since that would leave a possibility that the variable, <code>value</code>, is not
+assigned a value before it is printed out, which violates the definite assignment rule.  
+Note that <ptype>char</ptype> values are
+tested for equality using the <code>==</code> operator.  Chars are not Strings!
+Strings would have to be compared using the <code>equals()</code> method from
+the <classname>String</classname> class; <ptype>chars</ptype> however are primitive
+type values, and they don't even include any methods.</np>
+
+<p>This program could be improved by having it print out an error message if
+the user tries to divide by zero.</p>
+
+<p>(This program could use a <classname>Scanner</classname> instead of <classname>TextIO</classname>
+for input, replacing <code>TextIO.getDouble()</code> with <code>stdin.nextDouble()</code>
+and <code>TextIO.getChar()</code> with <code>stdin.next()</code>, where <code>stdin</code>
+is the <classname>Scanner</classname>.  (See <localref href="basics.4.6"/>)  One difference between the
+behavior of the two versions of the program would be that the <code>TextIO</code> version
+would accept expressions that have no spaces, such as <code>17+42</code>, whereas the
+<code>Scanner</code> version would give an error for such an expression.  Another is that
+<code>scanner.next()</code> returns a <classname>String</classname> rather than
+a <ptype>char</ptype>, and the character that you want would be the first, and only,
+character in that string.)</p>
+
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="SimpleCalculator">/**
+ *  This program evaluates simple expressions such as 2 + 2
+ *  and 34.2 * 7.81, consisting of a number, an operator,
+ *  and another number.  The operators +, -, *, / are allowed.
+ *  The program will read and evaluate expressions until
+ *  the user inputs a line that starts with the number 0.
+ */
+
+public class SimpleCalculator {
+
+   public static void main(String[] args) {
+   
+      double firstNum;    // First number in the expression.
+      double secondNum;   // Second number in the expression.
+      char operator;      // The operator in the expression.
+      double value;       // The value of the expression.
+      
+      System.out.println("Enter expressions such as  2 + 2  or  34.2 * 7.81");
+      System.out.println("using any of the operators +, -, *, /.");
+      System.out.println("To end, enter a 0.");
+      System.out.println();
+      
+      while (true) {
+          
+          /* Get user's input, ending program if first number is 0. */
+      
+          System.out.print("? ");
+          firstNum = TextIO.getDouble();
+          if (firstNum == 0)
+             break;
+          operator = TextIO.getChar();
+          secondNum = TextIO.getlnDouble();
+          
+          /* Compute the value of the expression. */
+          
+          switch (operator) {
+              case '+':
+                 value = firstNum + secondNum;
+                 break;
+              case '-':
+                 value = firstNum - secondNum;
+                 break;
+              case '*':
+                 value = firstNum * secondNum;
+                 break;
+              case '/':
+                 value = firstNum / secondNum;
+                 break;
+              default:
+                 System.out.println("Unknown operator: " + operator);
+                 continue;  // Back to start of loop!
+          } // end switch
+          
+          /* Display the value. */
+          
+          System.out.println("Value is " + value);
+          System.out.println();
+                    
+      } // end while
+      
+      System.out.println("Good bye");
+   
+   }  // end main()
+
+}  // end class SimpleCalculator</prog></pre>
+</exercise-code>
+</exercise>
+
+
+
+<exercise id="control.ex.4">
+<exercise-question><p>Write a program that reads
+one line of input text and breaks it up into words. The words should be output
+one per line. A word is defined to be a sequence of letters. Any characters in
+the input that are not letters should be discarded. For example, if the user
+inputs the line</p>
+
+<pre>He said, "That's not a good idea."</pre>
+
+<np>then the output of the program should be</np>
+
+<pre>He
+said
+That
+s
+not
+a
+good
+idea</pre>
+
+<np>An improved version of the program would list "that's" as a single word. An
+apostrophe can be considered to be part of a word if there is a letter on each
+side of the apostrophe.</np>
+
+<p>To test whether a character is a letter, you might use <code>(ch &gt;= 'a'
+&amp;&amp; ch &lt;= 'z') || (ch &gt;= 'A' &amp;&amp; ch &lt;= 'Z')</code>.
+However, this only works in English and similar languages. A better choice is
+to call the standard function <code>Character.isLetter(ch)</code>, which returns a
+boolean value of <code>true</code> if <code>ch</code> is a letter and <code>false</code> if
+it is not. This works for any Unicode character.</p>
+</exercise-question>   
+<exercise-discuss><p>There are many ways to approach this problem, and probably all of them are
+sort of tricky to get right. Here's a simple idea that almost works: Go through
+all the characters in the string. If the character is a letter, write it out.
+If it's not a letter, write a carriage return instead. If <code>line</code> is a
+<classname>String</classname> variable representing the line of text, this algorithm can be
+coded as</p>
+
+<pre>for ( i = 0;  i &lt; line.length(); i++ ) {
+   ch = line.charAt(i);
+   if ( Character.isLetter(ch) )
+      System.out.print(ch);
+   else
+      System.out.println();   
+}</pre>
+
+<np>This prints all the letters in a word on the same line of output. Since
+words in the string are separated by non-letter characters, and the computer
+prints a carriage return when it finds a non-letter, words in the output are
+separated by carriage returns. But there are is a problem with this: If two
+words in the string are separated by <b>several</b> non-letters, then
+there will be one or more blank lines between the words in the output. We don't
+want to output two carriage returns in a row. To avoid this, we can keep track
+of whether the previous output was a letter or a carriage return. When we find
+a non-letter, we will output a carriage return only if the previous output was
+<b>not</b> a carriage return. To keep track of the necessary
+information, I'll use a <ptype>boolean</ptype> variable named <code>didCR</code>. The
+value of this variable will be true if the previous output was a carriage
+return. I have to remember to set the value of <code>didCR</code> each time I
+output something. With this modification, the code becomes:</np>
+
+<pre>for ( i = 0;  i &lt; line.length(); i++ ) {
+   ch = line.charAt(i);
+   if ( Character.isLetter(ch) ) {
+      System.out.print(ch);
+      didCR = false;  // previous output was not a CR
+   }
+   else {
+      if ( didCR == false ) {  // output CR, if previous output was NOT a CR
+         System.out.println();
+         didCR = true;  // previous output was a CR
+      }
+   }
+}</pre>
+
+<p>The program requires an initial value for <code>didCR</code>. In the program
+below, I output a carriage return before the <code>for</code> loop and set
+<code>didCR</code> to true. You should be able to follow the rest of the
+program.</p>
+
+<p>An entirely different approach to this problem is given by the algorithm,
+"while there are more words in the string, get the next word and print it."
+This turns out to be even harder to implement than the above.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="ListWordsInString">/**  
+ *  This program will read one line of input typed by the user.
+ *  It will print the words from the input, one word to a line.
+ *  A word is defined to be a sequence of letters.  All non-letters
+ *  in the input are discarded.
+ */
+
+public class ListWordsInString {
+
+   public static void main(String[] args) {
+   
+       String line;    // A line of text, typed in by the user.
+       int i;          // Position in line, from 0 to line.length() - 1.
+       char ch;        // One of the characters in line.
+       boolean didCR;  // Set to true if the previous output was a carriage return.
+       
+       System.out.println("Enter a line of text.");
+       System.out.print("? ");
+       line = TextIO.getln();
+       
+       System.out.println();
+       didCR = true;
+       
+       for ( i = 0;  i &lt; line.length();  i++ ) {
+          ch = line.charAt(i);
+          if ( Character.isLetter(ch) ) {
+             System.out.print(ch);
+             didCR = false;
+          }
+          else {
+             if ( didCR == false ) {
+                System.out.println();
+                didCR = true;
+             }
+          }
+       }
+       
+       System.out.println();  // Make sure there's at least one carriage return at the end.
+         
+   }  // end main()
+
+}  // end class ListWordsInString</prog></pre>
+</exercise-code>
+</exercise>
+
+
+<exercise>
+<exercise-question><p>Suppose that a file contains information about sales 
+figures for a company in various cities.
+Each line of the file contains a city name, followed by a colon&nbsp;(:) followed by the data for that
+city.  The data is a number of type <ptype>double.</ptype>
+However, for some cities, no data was available.  In these lines, the data is replaced by
+a comment explaining why the data is missing.  For example, several lines from the file might
+look like:</p>
+<pre>San Francisco:  19887.32
+Chicago:  no report received
+New York: 298734.12</pre>
+<np>Write a program that will compute and print the total sales from all the cities together. The
+program should also report the number of cities for which data was not available.  The name of the
+file is "sales.dat".</np>
+<p>To complete this program, you'll need one fact about file input with <classname>TextIO</classname>
+that was not covered in <localref href="basics.4.4"/>.  Since you don't know in advance how many
+lines there are in the file, you need a way to tell when you have gotten to the end of the file.
+When <classname>TextIO</classname> is reading from a file, the function <code>TextIO.eof()</code>
+can be used to test for <newword>end of file</newword>.  This <ptype>boolean</ptype>-valued
+function returns <code>true</code> if the file has been entirely read and returns <code>false</code>
+if there is more data to read in the file.  This means that you can read the lines of the
+file in a loop <code>while&nbsp;(TextIO.eof()&nbsp;==&nbsp;false)&dots;</code>. The loop will end
+when all the lines of the file have been read.</p>
+<p>Suggestion:  For each line, read and ignore characters up to the colon.  Then read the rest
+of the line into a variable of type <classname>String</classname>.  Try to convert the string
+into a number, and use <code>try..catch</code> to test whether the conversion succeeds.</p>
+</exercise-question>   
+<exercise-discuss>
+<p>The statement <code>TextIO.readFile("sales.dat")</code> can be used at the beginning of
+the program to make <classname>TextIO</classname> read from the file instead of from the user's input.
+This statement throws an <classname>IllegalArgumentException</classname> if the file can't be
+found.  Although it's not required by the statement of the problem, it would be nice to detect
+the exception and print an error message about the missing file.  This can be done as follows,
+using <code>System.exit</code> to end the program if the error occurs:</p>
+   
+<pre>try {
+   TextIO.readFile("sales.dat");
+}
+catch (IllegalArgumentException e) {
+   System.out.println("Can't open file \"sales.dat\" for reading!");
+   System.out.println("Please make sure the file is present before");
+   System.out.println("running the program.");
+   System.exit(1);  // Terminates the program.
+}</pre>
+   
+<p>We have two main quantities to keep track of in the program:  The total amount of sales and
+the number of cities for which data is missing.  These quantities can be represented by
+two variables, <code>salesTotal</code> of type <ptype>double</ptype> and <code>missingCount</code>
+of type <ptype>int</ptype>.  These variables are initialized to zero before processing any data
+from the file, and their values are output at the end of the program, after reading the
+entire file.</p>
+   
+<p>The main processing loop of the program is the <code>while</code> loop mentioned in the
+statement of the exercise, which begins <code>while&nbsp;(TextIO.eof()&nbsp;==&nbsp;false)</code>.  
+(In my program, I've chosen to use the equivalent but more elegant test
+<code>while&nbsp;(&nbsp;!&nbsp;TextIO.eof()&nbsp;)</code>; you should try to understand why
+this is equivalent&mdash;and why it is more elegant!)  In pseudocode form, we want a loop
+that does the following:</p>
+
+<pre>while there are more lines in the file:
+   read the name of the city and the colon that follows it
+   read the rest of the line into a string
+   try to convert the string into a number
+      if the conversion succeeds, add the number to the total sales
+      otherwise add 1 to the count of missing data</pre>
+   
+<np>To read past the name of the city, we can simply read characters using
+<code>TextIO.getChar()</code> until we get to the colon:</np>
+   
+<pre>do {  // Read past characters up to the ':'.
+   ch = TextIO.getChar();
+} while (ch != ':');</pre>
+   
+<np>where <code>ch</code> is a variable of type <ptype>char</ptype>.  We can read the rest
+of the line using <code>TextIO.getln()</code>.  (As a side note, it's important here
+that we read the entire line, including the carriage return at the end.  <code>TextIO.getln()</code>
+does this.  If we neglected to read the carriage return at the end of the line,
+<code>TextIO.eof()</code> would not detect the end of the file correctly.  After the
+data from the last line is read, the carriage return character would still be there in
+the file waiting to be read; since there is still something left to read in the file,
+<code>TextIO.eof()</code> would be false <code>false</code> and the while loop would
+continue, even though all the cities have already been processed.  In fact, the program
+would crash while looking for the next&nbsp;':', which is not there.  Text processing
+can be surprisingly subtle!)</np>
+   
+<p>Once we have the information in the form of a <classname>String</classname>, we can try to
+convert the string into a number with <code>Double.parseDouble</code>.  If the string is
+not a number, this will throw an exception of type <classname>NumberFormatException</classname>.
+We can catch the error in a <code>try..catch</code> statement.  The "missing data"
+processing is done in the <code>catch</code> part of this statement.  In the program,
+this takes the form:</p>
+<pre>try {
+   sales = Double.parseDouble(dataString);
+   salesTotal += sales;  // This is skipped if the conversion fails.
+}
+catch (NumberFormatException e) {
+       // The dataString is not a number, so it counts as
+       // missing data.  Add 1 to the missing data count.
+   missingCount++;
+}</pre>
+   
+<p>(Note that my solution assumes that the data file (if it exists at all) has exactly the
+format that is specified in the problem.  The problem would be more difficult if we had
+to check the format of the file, to see whether it conforms to the specification.)</p>
+</exercise-discuss>
+<exercise-code>
+<pre>/**
+ * This program reads from a file named "sales.dat".  Each line of the
+ * file contains the name of a city, followed by a colon, followed by
+ * either a number giving the amount of sales in that city or by a
+ * message saying why the sales figure is not available.  The program
+ * prints the total sales for all cities and the number of cites for
+ * which the figure was not available.
+ */
+   
+public class SalesFigures {
+   
+   public static void main( String[] args ) {
+      
+      /* Open file for reading; if it can't be opened, end the program */
+      
+      try {
+         TextIO.readFile("sales.dat");
+      }
+      catch (IllegalArgumentException e) {
+         System.out.println("Can't open file \"sales.dat\" for reading!");
+         System.out.println("Please make sure the file is present before");
+         System.out.println("running the program.");
+         System.exit(1);  // Terminates the program.
+      }
+      
+      /* Read the file, keeping track of total sales and missing data. */
+      
+      double salesTotal;  // Total of all sales figures seen so far.
+      int missingCount;   // Number of cities for which data is missing.
+      
+      salesTotal = 0;
+      missingCount = 0;
+      
+      while ( ! TextIO.eof() ) {  // process one line of data.
+         
+         char ch;  // For reading past the name of the city.
+         String dataString;  // Contents of line, after the city name.
+         double sales;  // The sales figure for the city.
+         
+         do {  // Read past characters up to the ':'.
+            ch = TextIO.getChar();
+         } while (ch != ':');
+         
+         dataString = TextIO.getln();  // Get the rest of the line.
+         
+         try {
+            sales = Double.parseDouble(dataString);
+            salesTotal += sales;  // This is skipped if the conversion fails.
+         }
+         catch (NumberFormatException e) {
+                // The dataString is not a number, so it counts as
+                // missing data.  Add 1 to the missing data count.
+            missingCount++;
+         }
+   
+      } // end while
+      
+      /* Report the results. */
+      
+      System.out.printf("Total sales recorded from all cities: $%1.2f\n\n", salesTotal);
+      if (missingCount == 0)
+         System.out.println("Data was received from all cities.");
+      else if (missingCount == 1)
+         System.out.println("Data was missing from 1 city.");
+      else
+         System.out.printf("Data was missing from %d cities.\n", missingCount);
+      
+   } // end main()
+   
+} // end class SalesFigures
+</pre>
+</exercise-code>
+</exercise>
+
+
+<exercise>
+<exercise-question><p><localref href="control.ex.2"/> asked you to find the
+number in the range 1 to 10000 that has the largest number of divisors.  You
+only had to print out one such number.  Revise the program so that it will
+print out <b>all</b> numbers that have the maximum number of divisors.  Use an
+array as follows:  As you count the divisors for each number, store each
+count in an array.  Then at the end of the program, 
+you can go through the array and print out all the numbers
+that have the maximum count.  The output from the program should look
+something like this:</p>
+<pre>Among integers between 1 and 10000,
+The maximum number of divisors was 64
+Numbers with that many divisors include:
+   7560
+   9240</pre>
+</exercise-question>   
+<exercise-discuss>
+<p>This is a fairly straightforward exercise in using arrays. We need to save 10000
+numbers in an array.  The numbers are the divisor counts for the numbers 1 through 10000.
+The numbers that we want to store in the array are of type <ptype>int</ptype>,
+so <ptype>int</ptype> is the base type of the array.
+In the program, I use an array named <code>saveCount</code> of type <atype>int[]</atype>
+to store the data.  It seems natural to store the divisor count for N in
+array element <code>saveCount[N]</code>, but note that in that case, we don't use
+array element number 0, and we need an array element number 10000.  Ignoring element
+0 is fine, but for <code>saveCount[10000]</code> to exist, the length of the array
+must be at least 10001.  I use an array of length 10001:</p>
+<pre>saveCount = new int[10001];</pre>
+<np>(An alternative would be to store the advisor count for N in
+<code>saveCount[N-1]</code>.  In that case, we wouldn't need the extra array element,
+and the length of the array would be 10000.)</np>
+<p>After computing each divisor count, we store the count in the array.  At the same
+time, we are keeping track of the maximum number of divisors.  After the end of the <code>for</code>
+loop that does the counting, we know the divisor count for each number and we know the
+maximum number of divisors.  We just have to go through the array and print out
+every integer N for which the divisor count is equal to the maximum:</p>
+<pre>System.out.println("Numbers with that many divisors include:");
+for ( N = 1; N &lt;= 10000; N++ ) {
+    if ( saveCount[N] == maxDivisors ) {
+        System.out.println( "   " + N );
+    }
+}</pre>
+<np>Note that this code checks whether the number in the array, <code>saveCount[N]</code>,
+is equal to the maximum, but it prints the array index, <code>N</code>, which is the
+integer that has that many divisors.</np>
+</exercise-discuss>
+<exercise-code>
+<p>New code that involves the array is shown in &newcodestyle;.</p>
+<pre><prog name="MostDivisorsWithArray">/**
+ * This program counts the number of divisors for integers in the range
+ * 1 to 10000.  It finds the maximum divisor count.  It outputs the
+ * maximum divisor count and a list of all integers in the range that 
+ * have the maximum number of divisors.
+ */
+
+public class MostDivisorsWithArray {
+
+   public static void main(String[] args) {
+   
+       int N;            // One of the integers whose divisors we have to count.
+       int maxDivisors;  // Maximum number of divisors seen so far.
+       
+       <newcode>int[] saveCount;  // Store the number of divisors for each number
+       
+       saveCount = new int[10001];</newcode>
+       
+       maxDivisors = 1;  // Start with the fact that 1 has 1 divisor.
+       <newcode>saveCount[1] = 1;</newcode>
+
+       /* Process all the remaining values of N from 2 to 10000, and store
+          all the divisor counts in the array.  Update the value of maxDivisor
+          whenever we find a value of N that has more divisors than the current
+          value.
+       */
+       
+       for ( N = 2;  N &lt;= 10000;  N++ ) {
+       
+           int D;  // A number to be tested to see if it's a divisor of N.
+           int divisorCount;  // Number of divisors of N.
+           
+           divisorCount = 0;
+           
+           for ( D = 1;  D &lt;= N;  D++ ) {  // Count the divisors of N.
+              if ( N % D == 0 )
+                 divisorCount++;
+           }
+           
+           <newcode>saveCount[N] = divisorCount;  // Record the count for N in the array</newcode>
+           
+           if (divisorCount &gt; maxDivisors) {
+              maxDivisors = divisorCount;
+           }
+       
+       }
+       
+       System.out.println("Among integers between 1 and 10000,");
+       System.out.println("The maximum number of divisors was " + maxDivisors);
+       <newcode>System.out.println("Numbers with that many divisors include:");
+       for ( N = 1; N &lt;= 10000; N++ ) {
+           if ( saveCount[N] == maxDivisors ) {
+               System.out.println( "   " + N );
+           }
+       }</newcode>
+   
+   } // end main()
+
+}</prog></pre>
+</exercise-code>
+</exercise>
+
+
+<exercise>
+<exercise-question><p>An example in <localref href="control.7a.3"/>
+tried to answer the question, How many random people
+do you have to select before you find a duplicate birthday? The source code for
+that program can be found in the file
+<sourceref href="BirthdayProblem.java"/>. Here are
+some related questions:</p>
+<ul>
+<li>How many random people do you have to select before you find <b>three</b>
+people who share the same birthday? (That is, all three people were born on the
+same day in the same month, but not necessarily in the same year.)</li>
+<li>Suppose you choose 365 people at random. How many different birthdays will
+they have? (The number could theoretically be anywhere from 1 to 365).</li>
+<li>How many different people do you have to check before you've found at least
+one person with a birthday on each of the 365 days of the year?</li>
+</ul>
+<p>Write <b>three</b> programs to answer these questions. Each of your programs should simulate
+choosing people at random and checking their birthdays. (In each case, ignore
+the possibility of leap years.)</p>
+</exercise-question>
+<exercise-discuss>
+<p>The original program and the three programs for this exercise have some similarities,
+and we will use ideas from the original program.  However, each part of this exercise
+presents its own problem.</p>
+<p>The first question asks how many people you have to choose at random before
+finding three who share the same birthday. This is similar to the original
+program, but instead of just checking whether or not a given birthday has
+already been found, we need to keep track of how many people have been found
+with each birthday. Where the original program used an array of
+<code>booleans</code>, here we need an array of <code>ints</code>. We still want to
+count the number of people we check and output that count at the end. An
+algorithm for the simulation is:</p>
+
+<pre>Let count = 0
+Repeat:
+   Select a birthday at random
+   Add one to count
+   If this is the third time that birthday has occurred:
+       break out of the loop
+   Add one to the number of times that birthday has been found
+Output the count</pre>
+
+<p>The original program used a <ptype>boolean</ptype> array to keep track of whether
+or not each day had been seen.  For this proble, we need to know <i>how many times</i>
+each day has been seen.  That means that instead of one boolean value for each day,
+we need one integer value for each day.  So,
+to do the counting, we need an array "<code>int[] numFound</code>", where
+<code>numFound[i]</code> will be the number of times the <code>i</code>-th day of the
+year has occurred as a birthday. Since <code>numFound[i]</code> can be used in any
+way that any <ptype>int</ptype> variable can be used, we can add one to the number
+stored in <code>numFound[i]</code> by saying "<code>numFound[i]++</code>"
+or "<code>numFound[i]&nbsp;=&nbsp;numFound[i]&nbsp;+&nbsp;1</code>". When we
+create the array with the command "<code>numFound&nbsp;=&nbsp;new&nbsp;int[365]</code>", all the
+elements of the array are automatically initialized to zero. This is the
+initial value that we want. (This is an important thing to remember! In some
+programming languages, arrays are not automatically filled with zeros, so it
+would be necessary to use a <code>for</code> loop to store a zero into each place
+in the array. Even in Java, if you reuse
+the same array rather than creating a new one for each use, you would
+have to remember to set initialize each element of the array before reusing it.)</p>
+
+<p>Given all this, we can translate the algorithm into Java as follows:</p>
+
+<pre><newcode>int[] numFound;  // numFound[i] will be the number of people
+                 // who have been found who have a birthday
+                 // on the i-th day of the year</newcode>
+
+int count;       // The number of people who have been checked.
+
+<newcode>numFound = new int[365];  // Initially, all entries are 0.</newcode>
+
+count = 0;
+
+while (true) {
+       // Select a birthday at random, from 0 to 364.
+       // If the same birthday was already seen twice
+       // before, then quit.  Otherwise, add one to
+       // the corresponding entry in the numFound array
+       // to record that a person with that birthday
+       // has been found.
+   int birthday;  // The selected birthday.
+   birthday = (int)(Math.random()*365);
+   count++;
+   <newcode>if ( numFound[birthday] == 2 )
+       break;  // It's the third time we've found this birthday.
+   numFound[birthday]++;</newcode>
+}
+
+System.out.println("It took " + count + 
+        " tries to find three people with the same birthday.");</pre>
+
+<np>The lines shown in &newcodestyle; are the ones that differ significantly from the
+original program. This becomes the body of the <code>main()</code>
+subroutine in the first program.</np>
+
+
+<break/>
+
+<p>For the second program, we know exactly how many people we want to check:
+365. This calls for using a for loop. The information we need for each birthday
+is whether or not that birthday has occurred. For that, we can use an array of
+<ptype>booleans</ptype>.  After the <code>for</code> loop,
+value stored in position <code>i</code> of the array will
+<code>true</code> if the <code>i</code>-th day of the year has occurred as a birthday
+and is <code>false</code> if not. After checking 365 people, we have to go through
+the boolean array and count the number of entries in the array that are <code>true</code>.
+This is the number of different birthdays that have been found. The algorithm
+can be expressed as:</p>
+
+<pre>Let used = new boolean[365]
+Repeat 365 times:
+   Select a birthday at random
+   Store true into the corresponding location in the array, used
+Let count = 0
+for day = 0 to 364:
+   If used[day] is true:
+      Add 1 to count
+Output the value of count</pre>
+
+<np>This translates easily into Java code:</np>
+
+<pre>boolean used[];  // used[i] will be true if a person is found
+                 // whose birthday is the i-th day of the year.
+
+used = new boolean[365];  // <b>Initially, all entries are false!</b>
+
+for (i = 0; i &lt; 365; i++) {
+      // Select a random birthday and record it.
+   int birthday;  // The selected birthday.
+   birthday = (int)(Math.random()*365);
+   used[birthday] = true;
+}
+
+int count = 0;
+
+for (day = 0; day &lt; 365; day++) {
+       // If this day occurred as a birthday, count it.
+   if (used[day] == true)
+      count++;
+}
+
+System.out.println("Among 365 people, there were " + count
+                                + " different birthdays.");</pre>
+
+<p>It might be worth noting that the test "<code>if&nbsp;(used[day]&nbsp;==&nbsp;true)</code>" can
+be written more simply&mdash;and elegantly&mdash;as 
+"<code>if&nbsp;(used[day])</code>". Also, the three lines in
+the first <code>for</code> loop could be reduced to the single command
+"<code>used[(int)(Math.random()*365)]&nbsp;=&nbsp;true;</code>". Of course, this one-line
+version is harder to understand.</p>
+
+<break/>
+
+<p>The third program is just a little bit trickier. We have to continue
+selecting people at random until we have found 365 different birthdays. We can
+use a counter to keep track of how many different birthdays we have found. We
+have to continue until this counter reaches 365. We need a second counter to
+keep track of how many different people we have checked. It's the second
+counter whose value we want to output at the end. Now, we have to be able to
+recognize whether a birthday we've just found is new, or whether we've
+encountered it previously. For this, we can again use an array of
+<ptype>booleans</ptype>. An algorithm for the simulation is:</p>
+
+<pre>Let used = new boolean[365]
+Let count = 0   // The number of people checked
+Let birthdaysFound = 0   // The number of different birthdays found
+while birthdaysFound &lt; 365:
+   Add one to count
+   Select a birthday at random
+   if used[birthday] is false:
+       Add one to birthdaysFound  // since this is a new birthday
+   Let used[birthday] = true   // so we don't count it again
+Output the value of count</pre>
+
+<np>In Java, this algorithm becomes:</np>
+
+<pre>boolean[] used;  // For recording the possible birthdays
+                 //   that have been seen so far.
+int count;       // The number of people who have been checked.
+int birthdaysFound;   // The number of different birthdays that
+                      // have been found.
+
+used = new boolean[365];  // Initially, all entries are false.
+count = 0;
+birthdaysFound = 0;
+
+while (birthdaysFound &lt; 365) {
+       // Select a birthday at random, from 0 to 364.
+       // If the birthday has not already been used,
+       // add 1 to birthdaysFound.
+   int birthday;  // The selected birthday.
+   birthday = (int)(Math.random()*365);
+   count++;
+   if ( used[birthday] == false )
+      birthdaysFound++;
+   used[birthday] = true;
+}
+
+System.out.println( count + " people were checked." );</pre>
+</exercise-discuss>
+<exercise-code>
+<p><b>Finding three people with the same birthday:</b>
+</p>
+
+<pre><prog name="BirthdayProblem2">/**
+ *  How many random people do you have to select before you find
+ *  THREE with the same birthday (that is, three people who were born 
+ *  on the same day of the same month, but not necessarily in the 
+ *  same year).  This program simulates the process.  (It ignores the
+ *  possibility of people born on leap day.)
+ */
+
+public class BirthdayProblem2 {
+
+   /**
+    * Simulate choosing people at random and checking the
+    * day of the year they were born on.  If the person is
+    * the third who was born on that day of the year, stop,
+    * and output the number of people who were checked.
+    */
+   public static void main(String[] args) {
+
+      int[] numFound;  // numFound[i] will be the number of people
+                       // who have been found who have a birthday
+                       // on the i-th day of the year
+      
+      int count;       // The number of people who have been checked.
+
+      numFound = new int[365];  // Initially, all entries are 0.
+      
+      count = 0;
+
+      while (true) {
+             // Select a birthday at random, from 0 to 364.
+             // If the same birthday was already seen twice
+             // before, then quit.  Otherwise, add one to
+             // the corresponding entry in the numFound array 
+             // to record that a person with that birthday
+             // has been found.
+         int birthday;  // The selected birthday.
+         birthday = (int)(Math.random()*365);
+         count++;
+         if ( numFound[birthday] == 2 )
+            break;
+         numFound[birthday]++;
+      }
+
+      System.out.println("It took " + count + 
+               " tries to find three people with the same birthday.");
+
+   }
+ 
+   
+} // end class BirthdayProblem2</prog>
+   
+</pre>
+
+<p><b>How many different birthdays do 365 people have?</b>
+</p>
+
+<pre><prog name="BirthdayProblem3">/**
+ * This program simulates selecting 365 people at random and finding
+ * how many different birthdays they have among them.
+ */
+
+public class BirthdayProblem3 {
+
+   /**
+    * Simulate choosing people at random and checking the
+    * day of the year they were born on.  The number of
+    * different days found among 365 people is counted
+    * and output.
+    */
+   public static void main(String[] args) {
+      
+      boolean used[];  // used[i] will be true if a person is found
+                       // whose birthday is on the i-th day of the year.
+      
+      used = new boolean[365];  // Initially, all entries are false.
+      
+      /* Choose 365 days at random, and mark each day by
+         setting the corresponding entry in the array, used,
+         to true.  (If the value is already true, it doesn't 
+         matter.  We are only interested in whether or not
+         the birthday occurs, not how many times it occurs.)
+      */
+      
+      int i;
+      for (i = 0; i &lt; 365; i++) {
+         int birthday;  // The selected birthday.
+         birthday = (int)(Math.random()*365);
+         used[birthday] = true;
+      }
+      
+      /* Now, count how many entries in the used array are true.
+         This is how many different birthdays were found.
+      */
+      
+      int count = 0;
+      int day;
+      
+      for (day = 0; day &lt; 365; day++) {
+             // If this day occurred as a birthday, count it.
+         if (used[day] == true)
+            count++;
+      }
+
+      System.out.println("Among 365 people, there were " + count
+                                      + " different birthdays.");
+
+   } 
+ 
+   
+} // end class BirthdayProblem3</prog>
+
+
+</pre>
+
+<p><b>Finding 365 different birthdays:</b>
+</p>
+
+<pre><prog name="BirthdayProblem4">/**
+ * How many random people do you have to select before you 
+ *  have found someone with every possible birthday (ignoring
+ *  leap years)?  This program simulates the process.
+ */
+ 
+public class BirthdayProblem4 {
+ 
+    /**
+     * Simulate choosing people at random and checking the
+     * day of the year they were born on.  People are chosen
+     * until all 365 possible birthdays (ignoring leap years)
+     * have been found.  Then the number of people surveyed
+     * is output.
+     */
+   public static void main(String[] args) {
+ 
+       boolean[] used;  // For recording the possible birthdays
+                        //   that have been seen so far.  A value
+                        //   of true in used[i] means that a person
+                        //   whose birthday is the i-th day of the
+                        //   year has been found.
+ 
+       int count;       // The number of people who have been checked.
+       
+       int birthdaysFound;   // The number of different birthdays that
+                             // have been found.
+ 
+       used = new boolean[365];  // Initially, all entries are false.
+       
+       count = 0;
+       
+       birthdaysFound = 0;
+ 
+       while (birthdaysFound &lt; 365) {
+              // Select a birthday at random, from 0 to 364.
+              // If the birthday has not already been used,
+              // add 1 to birthdaysFound.
+          int birthday;  // The selected birthday.
+          birthday = (int)(Math.random()*365);
+          count++;
+          if ( used[birthday] == false )
+             birthdaysFound++;
+          used[birthday] = true;
+       }
+ 
+       System.out.println( count + " people were checked." );
+ 
+    }
+  
+    
+} // end class BirthdayProblem4</prog>
+</pre>
+</exercise-code>
+</exercise>   
+
+   
+
+<exercise id="control.ex.6">
+<exercise-question><p>Write a GUI program that draws
+a checkerboard.  Base your solution on the sample program
+<sourceref href="SimpleAnimationStarter.java"/>, even though you are
+creating only a static picture rather than an animation.  You will draw
+the checkerboard in the <code>drawFrame()</code> subroutine.  You should
+read the comments in the file to discover other changes that you might
+need to make.</p>
+
+<p>Assume that the size of the drawing area is 400-by-400  pixels.  A checkerboard
+contains 8 rows and 8 columns of squares.  If the size of the drawing area is 400,
+that means that each square can be 50-by-50 pixels.  
+The squares are red and black (or whatever other colors you choose). Here is a tricky way
+to determine whether a given square should be red or black: The rows and columns can be
+thought of as numbered from 0 to 7.  If the row number of the square and the
+column number of the square are either both even or both odd, then the square is red.
+Otherwise, it is black. Note that a square is just a rectangle in which the
+height is equal to the width, so you can use the subroutine
+<code>g.fillRect()</code> to draw the squares. Here is a reduced-size image of the
+checkerboard that you want to draw:</p>
+
+<img src="checkerboard.png" alt="checkerboard" width="170" height="169" tex="checkerboard.eps"/>
+
+</exercise-question>   
+<exercise-discuss>
+<p>The basic algorithm is obvious:</p>
+
+<pre>for each row of the checkerboard:
+    Draw all the squares in that row</pre>
+
+<np>Since any given row contains eight squares, one in each column of the
+checkerboard, we can expand the body of the for loop into another for loop:</np>
+
+<pre>for each of the eight rows of the checkerboard:
+    for each of the eight columns:
+        Draw the square in that row and column</pre>
+
+<p>Each square is a rectangle with height 50 and width 50, so it can be drawn
+with the command <code>g.fillRect(x,y,50,50)</code>, where <code>x</code> and
+<code>y</code> are the coordinates of the top-left corner of the square. Before
+drawing the square, we have to determine whether it should be red or black, and
+we have to set the correct color with <code>g.setColor</code>. So, the algorithm
+becomes</p>
+
+<pre>for each row on the checkerboard:
+    for each of the eight columns:
+        Compute x,y for the top-left corner of the square
+        if it's a red square:
+           g.setColor(Color.RED)
+        else
+           g.setColor(Color.BLACK)
+        g.fillRect(x,y,20,20)</pre>
+
+<p>The top of the first row of squares is at <code>y=0</code>. Since each square is
+50 pixels high, the top of the second row is at <code>y=50</code>, followed by 100
+for the third row, then 150, 200, 250, 300, and 350. If we assume that the rows
+are numbered 0, 1, 2, &dots;, 7, then the tops are given by <code>y&nbsp;=&nbsp;row*50</code>,
+where <code>row</code> is the row number. (If you number the rows 1, 2, &dots;, 8, the
+formula would be <code>(row-1)*20</code>. The simpler formula in this and in many
+similar cases is one reason why computer scientists like to start counting with
+0 instead of 1.) Similarly, the left edge of the squares in column <code>col</code>
+is given by <code>x&nbsp;=&nbsp;col*50</code>, where again the columns are numbered 0, 1, 2,
+&dots;, 7. I'll use "<code>for&nbsp;(row=0;&nbsp;row&lt;8;&nbsp;row++)</code>" to count off the rows,
+rather than the equivalent "<code>for (row=0;&nbsp;row&lt;=7;&nbsp;row++)</code>". The 8
+reminds me that I am counting off the <b>eight</b> numbers 0, 1, 2,
+&dots;, 7. Again, this is typical computer science style.</p>
+
+<p>The only problem remaining is how to determine whether the square is red. As
+noted in the exercise, a square is red if <code>row</code> and <code>col</code> are
+either both even or both odd. Since an integer <code>N</code> is even if
+<code>N%2</code> is 0, the test could be expressed as</p>
+
+<pre>if ((row%2 == 0 &amp;&amp; col%2 == 0) || (row%2 == 1 &amp;&amp; col%2 == 1))</pre>
+
+<np>However,
+note that this is the same as asking whether <code>row%2</code> and <code>col%2</code>
+have the same value. So the test can be written more simply as 
+"<code>if&nbsp;(row%2&nbsp;==&nbsp;col%2)</code>". Putting this all together into syntactically correct Java
+code, the algorithm becomes</np>
+
+<pre>for ( row = 0;  row &lt; 8;  row++ ) {
+   for ( col = 0;  col &lt; 8;  col++ ) {
+       x = 50*col;
+       y = 50*row;
+       if ( (row % 2) == (col % 2) )
+          g.setColor(Color.RED);
+       else
+          g.setColor(Color.BLACK);
+       g.fillRect(x,y,50,50);
+   }
+}</pre>
+
+<p>Of course, the variables <code>row</code>, <code>col</code>, <code>x</code>, and
+<code>y</code> have to be declared to be of type <ptype>int</ptype>. Then, the code goes
+into the body of the <code>drawFrame()</code>subroutine.</p>
+
+<p>The complete program is shown below.  In the original program, the size of the
+drawing area was 600-by-450.  As noted in a comment, to change the size to
+400-by-400, I had to change one of the lines in the main routine, replacing 600 and
+450 by 400 to get:</p>
+
+<pre>drawingArea.setPreferredSize(new Dimension(400,400));</pre>
+
+<np>You don't need to understand what this means or how it works to make the
+change.  I also wanted to stop the user from changing the size of the window,
+to change the text in the title bar of the window, and to change the name of the class from
+<classname>SimpleAnimationStarter</classname> to <classname>Checkerboard</classname>.
+All these things were easy to do following instructions in the program.  (That leaves
+the program drawing the same checkerboard 50 times every second.  Although the comments
+in the original program don't tell you how to prevent that, I did it by commenting out
+the very last line of <code>main()</code>.  Without that line, the animation is never
+started, and the checkerboard doesn't get redrawn over and over unnecessarily.)
+</np>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="Checkerboard">
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class Checkerboard extends JPanel implements ActionListener {
+
+   public void drawFrame(Graphics g, int frameNumber, int width, int height) {
+
+      int row;   // Row number, from 0 to 7
+      int col;   // Column number, from 0 to 7
+      int x,y;   // Top-left corner of square
+
+      for ( row = 0;  row &lt; 8;  row++ ) {
+
+         for ( col = 0;  col &lt; 8;  col++) {
+            x = col * 50;
+            y = row * 50;
+            if ( (row % 2) == (col % 2) )
+               g.setColor(Color.RED);
+            else
+               g.setColor(Color.BLACK);
+            g.fillRect(x, y, 50, 50);
+         } 
+
+      }
+      
+   }
+   
+   //------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS ------
+   
+   
+   public static void main(String[] args) {
+      
+      JFrame window = new JFrame("Checkerboard");
+      Checkerboard drawingArea = new Checkerboard();
+      drawingArea.setBackground(Color.WHITE);
+      window.setContentPane(drawingArea);
+      drawingArea.setPreferredSize(new Dimension(400,400));
+      window.pack();
+      window.setLocation(100,50);
+      window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      window.setResizable(false); // The user can't change the size.
+      Timer frameTimer = new Timer(20,drawingArea);
+      window.setVisible(true);
+      //frameTimer.start(); // commented out so we don't get an animation
+
+   } // end main
+
+   private int frameNum;
+   
+   public void actionPerformed(ActionEvent evt) {
+      frameNum++;
+      repaint();
+   }
+   
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      drawFrame(g, frameNum, getWidth(), getHeight());
+   }
+
+}
+</prog></pre>
+</exercise-code>
+</exercise>
+
+
+<exercise>
+<exercise-question><p>Often, some element of an animation repeats over and over, every so many frames.
+Sometimes, the repetition is "cyclic,"  meaning that at the end it jumps back to the start.
+Sometimes the repetition is "oscillating," like a back-and-forth motion where the second
+half is the same as the first half played in reverse.</p>
+<p>Write an animation that demonstrates both cyclic and oscillating motions at various speeds.
+For cyclic motion, you can use a square that moves across the drawing area, then jumps back to
+the start, and then repeats the same motion over and over.  For oscillating motion, you can do something
+similar, but the square should move back and forth between the two edges of the drawing area; that is,
+it moves left-to-right during the first half of the animation and then backwards from right-to-left
+during the second half.  To write the program, you can start with a copy of
+the sample program <sourceref href="SimpleAnimationStarter.java"/>, as in the previous exercise.</p>
+<p>A cyclic motion has to repeat every N frames for some value of N.  What you draw in some
+frame of the animation depends on the <code>frameNumber</code>.  The <code>frameNumber</code> just keeps
+increasing forever.  To implement cyclic motion, what you really want is a "cyclic frame number" that
+takes on the values 0, 1, 2, &dots;, (N-1), 0, 1, 2, &dots;, (N-1), 0, 1, 2, &dots;.  You can derive
+the value that you need from <code>frameNumber</code> simply by saying</p>
+<pre>cyclicFrameNumber = frameNumber % N;</pre>
+<np>Then, you just have to base what you draw on <code>cyclicFrameNumber</code> instead of on
+<code>frameNumber</code>.  Similarly, for an oscillating animation, you need an
+"oscillation frame number" that takes on the values  0, 1, 2, &dots; (N-1), N, (N-1), (N-2), &dots; 2, 1, 0, 1, 2, 
+and so on, repeating the back and forth motion forever.  You can compute the value that you need with</np>
+<pre>oscilationFrameNumber = frameNumber % (2*N);
+if (oscillationFrameNumber &gt; N)
+   oscillationFrameNumber = (2*N) - oscillationFrameNumber;</pre>
+<p>Here is a screen shot from my version of the program.  I use
+six squares.  The top three do cyclic motion at various speeds, while the bottom three do
+oscillating motion.  I drew black lines across the drawing area to separate the squares and to give
+them "channels" to move in.
+</p>
+<img src="motion-demo.png" width="320" height="120" alt="screenshot from CyclicAndOscillatingMotionDemo"
+      tex="motion-demo.eps" texscale="0.8"/>
+</exercise-question>
+<exercise-discuss>
+<p>This exercise exists mostly to introduce you to cyclic and oscillating motion and the formulas
+that are used to implement them.  But it's also a good exercise in designing an animation
+and working with coordinates.</p>
+<p>Some decisions have to be made before you can start writing code.  I decided to use
+rather small squares.  (Actually, I tried it with big squares and didn't like the appearance
+as much.)  The size of my squares is 20-by-20 pixels.  For my first cyclic motion, I decided 
+to make the length of the frame 300 frames, or about 6 seconds.  This means that 
+<code>cyclicFrameNumber</code> can be computed as <code>frameNumber&nbsp;%&nbsp;300</code>.
+And I decided to move the
+square at one pixel per frame; that lets me use <code>cyclicFrameNumber</code> as
+the x-coordinate for the square.  The top square moves along the top edge of the
+window, so its y-coordinate is 0.  The code for the first square is:</p>
+<pre>cyclicFrameNum = frameNumber % 300;  // Repeats every 300 frames
+g.setColor(Color.RED);
+g.fillRect( cyclicFrameNum, 0, 20, 20 );</pre>
+<p>The exercise asks for cyclic motion at different speeds.  If the second square
+is to be faster than the first, it should cross the drawing area in a smaller
+number of frames.  If it is twice as fast, it will only need half as many frames to
+make it across the drawing area.  For the second square, I use a cycle length of 150
+instead of 300.  To cross the entire area, the x-coordinate of the square must
+get to 300 after just 150 frames.  We can accomplish that by using
+<code>2*cyclicFrameNumber</code> as the x-coord.  (Another way to think about it:
+A square with x-coord <code>2*cyclicFrameNumber</code> moves twice as fast as
+one with x-coord <code>cyclicFrameNumber</code>.  And it will finish the journey after
+150 frames instead of 300, so the length of the cycle should be 150 frames.)  The
+code for the second square is</p>
+<pre>cyclicFrameNum = frameNumber % 150;  // Repeats every 150 frames
+g.setColor(Color.GREEN);
+g.fillRect( 2*cyclicFrameNum, 20, 20, 20 );</pre>
+<p>The y-coord is 20, since the top square occupies 20 pixels at top of the window.
+The third square moves three times as fast as the first, and its code is similar.</p>
+<p>For the fourth square, I want an oscillating motion.  Like the first square, it takes
+300 frames to move across the window from left to right.  But then it takes another
+300 frames to move back from right to left.  The total length of the motion is 600.
+(In the formula given in the exercise, N is 300 and 2*N is 600.)  The formula for the
+oscilation frame number is</p>
+<pre>oscilationFrameNum = frameNumber % 600;
+if (oscilationFrameNum > 300)
+    oscilationFrameNum = 600 - oscilationFrameNum;</pre>
+<np>You should study how this works.  When <code>oscilationFrameNumber</code> is between
+300 and 600, the formula <code>600-oscilationFrameNumber</code> gives an answer between
+0 and 300.  And as <code>oscilationFrameNumber</code> gets bigger, 
+<code>600-oscilationFrameNumber</code> gets smaller (which will mean that the x-coord
+of the square is decreasing).  From there, you should be able to figure out the
+rest of the program.</np>
+<p>One more small issue is the size of the drawing area.  Since there are 6 squares,
+and each is 20 pixels high, the height of the drawing area must be 120.
+You might think at first that the width should be 300, since the x-coordinate of
+the square goes up to 300.  But that x-coordinate is actually where the left edge
+of the square is.  When the left edge is at 300, the right edge is at 320.  So for the
+entire square to be visible, we have to make the width 320.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="CyclicAndOscillatingMotionDemo">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**
+ * This program demonstrates cyclic and oscillating animations.  For cyclic animation,
+ * it repeats itself every N frames, for some value of N.  An oscillating animation also
+ * repeats, but the repetition is "back-and-forth."  That is, the second half
+ * of the repeated animation is the same as the first half played backwards.
+ */
+public class CyclicAndOscillatingMotionDemo extends JPanel implements ActionListener {
+
+    public void drawFrame(Graphics g, int frameNumber, int width, int height) {
+
+        
+        /* Show cyclic motion at three speeds.  In each case, a square 
+         * moves across the drawing area from left to right, then jumps
+         * back to the start.
+         */
+
+        int cyclicFrameNum;
+        
+        cyclicFrameNum = frameNumber % 300;  // Repeats every 300 frames
+        g.setColor(Color.RED);
+        g.fillRect( cyclicFrameNum, 0, 20, 20 );
+        
+        cyclicFrameNum = frameNumber % 150;  // Repeats every 150 frames
+        g.setColor(Color.GREEN);
+        g.fillRect( 2*cyclicFrameNum, 20, 20, 20 );
+        
+        cyclicFrameNum = frameNumber % 100;  // Repeats every 100 frames
+        g.setColor(Color.BLUE);
+        g.fillRect( 3*cyclicFrameNum, 40, 20, 20 );
+        
+
+        /* Show oscillating motion at three speeds.  In each case, a square 
+         * moves across the drawing area from left to right, then reverses
+         * direction to move from right to left back to its starting point.
+         */
+        
+        int oscillationFrameNum;
+        
+        oscillationFrameNum = frameNumber % 600;  // repeats every 600 frames
+        if (oscillationFrameNum &gt; 300)
+            oscillationFrameNum = 600 - oscillationFrameNum; // after 300, the values go backwards back to 0
+        g.setColor(Color.CYAN);
+        g.fillRect( oscillationFrameNum, 60, 20, 20 );
+        
+        oscillationFrameNum = frameNumber % 300; // repeats every 300 frames
+        if (oscillationFrameNum &gt; 150)
+            oscillationFrameNum = 300 - oscillationFrameNum; // after 150, the values go backwards back to 0
+        g.setColor(Color.MAGENTA);
+        g.fillRect( 2*oscillationFrameNum, 80, 20, 20 );
+        
+        oscillationFrameNum = frameNumber % 200; // repeats every 200 frames
+        if (oscillationFrameNum &gt; 100)
+            oscillationFrameNum = 200 - oscillationFrameNum; // after 100, the values go backwards back to 0
+        g.setColor(Color.YELLOW);
+        g.fillRect( 3*oscillationFrameNum, 100, 20, 20 );
+        
+        
+        /* Draw horizontal black lines across the window to separate the
+         * regions used by the six squares.  Also draw a box around the outside,
+         * mostly for the picture that I need for the web page!
+         */
+        
+        int y;
+        g.setColor(Color.BLACK);
+        for ( y = 20; y &lt; 120; y = y + 20 )
+            g.drawLine(0,y,320,y);
+        g.drawRect(0,0,319,119);  // Why not (0,0,320,120)? This is a technicality.
+                                  // If you use 320 and 120, the right and bottom edges
+                                  // of the rect will actually be outside the drawing area.        
+    }
+    
+    //------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS ------
+    
+    
+    public static void main(String[] args) {
+        
+        JFrame window = new JFrame("Cyclic and Oscillating Motion");
+        CyclicAndOscillatingMotionDemo drawingArea = new CyclicAndOscillatingMotionDemo();
+        drawingArea.setBackground(Color.WHITE);
+        window.setContentPane(drawingArea);
+        drawingArea.setPreferredSize(new Dimension(320,120));  // size is 320 by 120
+        window.pack();
+        window.setLocation(100,50);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false); // The user can't change the size.
+        Timer frameTimer = new Timer(20,drawingArea);
+        window.setVisible(true);
+        frameTimer.start();
+
+    } // end main
+
+    private int frameNum;
+    
+    public void actionPerformed(ActionEvent evt) {
+        frameNum++;
+        repaint();
+    }
+    
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        drawFrame(g, frameNum, getWidth(), getHeight());
+    }
+
+}
+</prog></pre>
+</exercise-code>
+</exercise>
+
+
+</exercises>

@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="OOP.1" title="Objects, Instance Methods, and Instance Variables" shorttitle="Objects and Instance Methods">
+
+<p><start><big>O</big>bject-oriented programming</start> (OOP) represents an
+attempt to make programs more closely model the way people think about and deal
+with the world. In the older styles of programming, a programmer who is faced
+with some problem must identify a computing task that needs to be performed in
+order to solve the problem. Programming then consists of finding a sequence of
+instructions that will accomplish that task. But at the heart of
+object-oriented programming, instead of tasks we find objects&mdash;entities that
+have behaviors, that hold information, and that can interact with one another.
+Programming consists of designing a set of objects that somehow model the
+problem at hand. Software objects in the program can represent real or abstract
+entities in the problem domain. This is supposed to make the design of the
+program more natural and hence easier to get right and easier to
+understand.</p>
+
+<p>To some extent, OOP is just a change in point of view. We can think of an
+object in standard programming terms as nothing more than a set of variables
+together with some subroutines for manipulating those variables. In fact, it is
+possible to use object-oriented techniques in any programming language.
+However, there is a big difference between a language that makes OOP possible
+and one that actively supports it. An object-oriented programming language such
+as Java includes a number of features that make it very different from a
+standard language. In order to make effective use of those features, you have
+to "orient" your thinking correctly.</p>
+
+<p>As I have mentioned before, in the context of object-oriented programming,
+subroutines are often referred to as <newword>methods</newword>.  Now that
+we are starting to use objects, I will be using the term "method" more often
+than "subroutine."</p>
+
+<subsection id="OOP.1.1" title="Objects, Classes, and Instances">
+
+<p>Objects are closely related to classes. We have already been working with
+classes for several chapters, and we have seen that a class can contain
+variables and methods (that is, subroutines). If an object is also a collection of variables and
+methods, how do they differ from classes? And why does it require a
+different type of thinking to understand and use them effectively? In the one
+section where we worked with objects rather than classes, 
+<localref href="control.8"/>, it didn't seem to make much difference: We
+just left the word "<code>static</code>" out of the subroutine definitions!</p>
+
+<p>I have said that classes "describe" objects, or more exactly that the
+non-static portions of classes describe objects. But it's probably not very
+clear what this means. The more usual terminology is to say that objects
+<newword>belong to</newword> classes, but this might not be much
+clearer. (There is a real shortage of English words to properly distinguish all
+the concepts involved. An object certainly doesn't "belong" to a class in the
+same way that a member variable "belongs" to a class.) From the point of view
+of programming, it is more exact to say that classes are used to create
+objects. A class is a kind of factory&mdash;or blueprint&mdash;for constructing objects. The non-static
+parts of the class specify, or describe, what variables and methods the
+objects will contain. This is part of the explanation of how objects differ
+from classes: Objects are created and destroyed as the program runs, and there
+can be many objects with the same structure, if they are created using the same
+class.</p>
+
+<p>Consider a simple class whose job is to group together a few static member
+variables. For example, the following class could be used to store information
+about the person who is using the program:</p>
+
+<pre>class UserData {
+    static String name;
+    static int age;
+}</pre>
+
+<np>In a program that uses this class, there is only one copy of each of the
+variables <code>UserData.name</code> and <code>UserData.age</code>.  When the class is
+loaded into the computer, there is a section of memory devoted to the class, and
+that section of memory includes space for the values of the variables <code>name</code>
+and <code>age.</code>  We can picture the class in memory as looking like this:</np>
+
+<img src="class-userdata.png" width="165" height="128" alt="the UserData class in memory, with space for name and age"
+       tex="class-userdata.eps" texscale="0.75"/>
+
+<p>An important point is that the static member variables are part of the representation 
+of the class in memory.  
+Their full names, <code>UserData.name</code> and <code>UserData.age</code>,
+use the name of the class, since they are part of the class. 
+When we use class <classname>UserData</classname> to represent the user of the program,
+there can only be <b>one</b> user, since we only have memory space to store data about one user. Note that
+the class, <code>UserData</code>, and the variables it contains exist as long as the
+program runs. (That is essentially what it means to be "static.")
+Now, consider a similar class that includes some non-static variables:</p>
+
+<pre>class PlayerData {
+   static int playerCount;
+   String name;
+   int age;
+}</pre>
+
+<np>I've also included a static variable in the <classname>PlayerData</classname> class.
+Here, the static variable <code>playerCount</code> is stored as part of the representation of the class in memory.
+Its full name is <code>PlayerData.playerCount</code>, and there is only one of it, which exists
+as long as the program runs.  However, the other two variables in the class definition are non-static.
+There is no such variable as <code>PlayerData.name</code> or
+<code>PlayerData.age</code>, since non-static variables do not become part of the
+class itself.  But the <classname>PlayerData</classname> class can
+be used to create objects.   There can be many objects created using the class, and each 
+one will have its <b>own</b> variables called <code>name</code> and <code>age</code>.  
+This is what it means for the non-static parts of the class to be a template for objects: 
+Every object gets its own copy of the non-static part of the class.  We can visualize
+the situation in the computer's memory after several object have been created like this:</np>
+
+
+<img src="instance-of-PlayerData.png" width="573" height="358" alt="the PlayerData class and three objects in memory"
+     tex="instance-of-PlayerData.eps" texscale="0.75"/>
+
+<np>Note that the static variable <code>playerCount</code> is part of the class, and there
+is only one copy.  On the other hand, every object contains a <code>name</code> and an 
+<code>age</code>.  An object that is created from a class is called an <newword>instance</newword> of
+that class, and as the picture shows every object "knows" which class was used to create it.
+I've shown class <classname>PlayerData</classname> as containing something called a
+"constructor;" the constructor is a subroutine that creates objects.</np>
+
+<p>Now there can
+be many "players" because we can make new objects to represent new players on
+demand.  A program might use the <classname>PlayerData</classname> class to store information about multiple
+players in a game. Each player has a name and an age. When a player joins the
+game, a new <code>PlayerData</code> object can be created to represent that player.
+If a player leaves the game, the <code>PlayerData</code> object that represents
+that player can be destroyed. A system of objects in the program is being used
+to <newword>dynamically</newword> model what is happening in the game.
+You can't do this with static variables!  "Dynamic" is the opposite of "static."</p>
+
+<break/>
+
+<p>An object that is created using a class is said to be an <newword>instance</newword> 
+of that class.  We will sometimes say that the object <newword>belongs</newword> to the class.
+The variables that the object contains
+are called <newword>instance variables</newword>. The methods (that is, subroutines)
+that the object contains are called <newword>instance methods</newword>. 
+For example, if the
+<code>PlayerData</code> class, as defined above, is used to create an object, then
+that object is an instance of the <code>PlayerData</code> class, and <code>name</code>
+and <code>age</code> are instance variables in the object.</p>
+
+<p>My examples here don't include any methods, but methods work similarly to variables.
+Static methods are part of the class; non-static, or instance, methods become part of
+objects created from the class.  It's not literally true that each object contains
+its own copy of the actual compiled code for an instance method. But logically an instance
+method is part of the object, and I will continue to say that the object "contains"
+the instance method.</p>
+
+<p>Note that you should distinguish between
+the <b>source code</b> for the class, and the <b>class itself</b> (in memory).  The
+source code determines both the class and the objects that are created from
+that class.  The "static" definitions in the source code specify the things
+that are part of the class itself (in the computer's memory), whereas the non-static definitions in the
+source code specify things that will become part of every instance object
+that is created from the class.   By the way, static member
+variables and static member subroutines in a class are sometimes called
+<newword>class variables</newword> and <newword>class methods</newword>, 
+since they belong to the class itself, rather than to instances
+of that class.</p>
+
+<p>As you can see, the static and the non-static portions of a class are very
+different things and serve very different purposes. Many classes contain only
+static members, or only non-static, and we will see only a few examples of
+classes that contain a mixture of the two.  </p>
+
+</subsection>
+
+<subsection id="OOP.1.2" title="Fundamentals of Objects">
+   
+<p>So far, I've been talking mostly in generalities, and I haven't given you
+much of an idea about what you have to put in a program if you want to work with objects.
+Let's look at a specific example to see how it works. Consider this extremely
+simplified version of a <code>Student</code> class, which could be used to store
+information about students taking a course:</p>
+
+<pre>public class Student {
+
+   public String name;  // Student's name.
+   public double test1, test2, test3;   // Grades on three tests.
+   
+   public double getAverage() {  // compute average test grade
+      return (test1 + test2 + test3) / 3;
+   }
+   
+}  // end of class Student</pre>
+
+<p>None of the members of this class are declared to be <code>static</code>, so the
+class exists only for creating objects. This class definition says that any
+object that is an instance of the <code>Student</code> class will include instance
+variables named <code>name</code>, <code>test1</code>, <code>test2</code>, and
+<code>test3</code>, and it will include an instance method named
+<code>getAverage()</code>. The names and tests in different objects will generally
+have different values. When called for a particular student, the method
+<code>getAverage()</code> will compute an average using <b>that
+student's</b> test grades. Different students can have different averages.
+(Again, this is what it means to say that an instance method belongs to an
+individual object, not to the class.)</p>
+
+<p>In Java, a class is a <b>type</b>, similar to the built-in types
+such as <ptype>int</ptype> and <ptype>boolean</ptype>. So, a class name can be used to
+specify the type of a variable in a declaration statement, or the type of a formal
+parameter, or the return type of a function. For example, a program could
+define a variable named <code>std</code> of type <code>Student</code> with the
+statement</p>
+
+<pre>Student std;</pre>
+
+<np>However, declaring a variable does <b>not</b> create an object!
+This is an important point, which is related to this Very Important Fact:</np>
+
+<centered><p><b>In Java, no variable can ever hold an object.<br/>
+A variable can only hold a reference to an object.</b></p></centered>
+
+<p>You should think of objects as floating around independently in the
+computer's memory. In fact, there is a special portion of memory called the
+<newword>heap</newword> where objects live. Instead of holding an
+object itself, a variable holds the information necessary to find the object in
+memory. This information is called a <newword>reference</newword> or
+<newword>pointer</newword> to the object. In effect, a reference to
+an object is the address of the memory location where the object is stored.
+When you use a variable of object type, the computer uses the reference in the
+variable to find the actual object.</p>
+
+<p>In a program, objects are created using an operator called <code>new</code>, which
+creates an object and returns a reference to that object.  (In fact, the <code>new</code> operator
+calls a special subroutine called a "constructor" in the class.)
+For example, assuming that <code>std</code> is a variable of type <code>Student</code>, declared as above,
+the assignment statement</p>
+
+<pre>std = new Student();</pre>
+
+<np>would create a new object which is an instance of the class
+<code>Student</code>, and it would store a reference to that object in the variable
+<code>std</code>. The value of the variable is a reference, or pointer, to the object.
+The object itself is somewhere in the heap.
+It is not quite true, then, to say that the object is the "value
+of the variable <code>std</code>" (though sometimes it is hard to avoid using this
+terminology). It is certainly <b>not at all true</b> to say that the
+object is "stored in the variable <code>std</code>." The proper terminology is that
+"the variable <code>std</code> <newword>refers to</newword> or <newword>points to</newword>
+the object," and I will try to stick to that terminology as much as possible.
+If I ever say something like "std <b>is</b> an object," you should read it as
+meaning "std is a variable that refers to an object."</np>
+
+<p>So, suppose that the variable <code>std</code> refers to an object that is an instance of
+class <code>Student</code>. That object contains instance variables <code>name</code>,
+<code>test1</code>, <code>test2</code>, and <code>test3</code>. These instance variables
+can be referred to as <code>std.name</code>, <code>std.test1</code>,
+<code>std.test2</code>, and <code>std.test3</code>. This follows the usual naming
+convention that when <code>B</code> is part of <code>A</code>, then the full name of
+<code>B</code> is <code>A.B</code>. For example, a program might include the lines</p>
+
+<pre>System.out.println("Hello, "  +  std.name  +  ".  Your test grades are:");
+System.out.println(std.test1);
+System.out.println(std.test2);
+System.out.println(std.test3);</pre>
+
+<np>This would output the name and test grades from the object to which
+<code>std</code> refers. Similarly, <code>std</code> can be used to call the
+<code>getAverage()</code> instance method in the object by saying
+<code>std.getAverage()</code>. To print out the student's average, you could
+say:</np>
+
+<pre>System.out.println( "Your average is "  +  std.getAverage() );</pre>
+
+<p>More generally, you could use <code>std.name</code> any place where a variable
+of type <classname>String</classname> is legal. You can use it in expressions. You can assign
+a value to it. You can even use it to call subroutines from the <classname>String</classname>
+class. For example, <code>std.name.length()</code> is the number of characters in
+the student's name.</p>
+
+<p>It is possible for a variable like <code>std</code>, whose type is given by a
+class, to refer to no object at all. We say in this case that <code>std</code>
+holds a <newword>null pointer</newword> or <newword>null reference</newword>. The null pointer is
+written in Java as "<code>null</code>". You can store a null reference in the
+variable <code>std</code> by saying</p>
+
+<pre>std = null;</pre>
+
+<np><code>null</code> is an actual value that is stored in the variable, not a pointer
+to something else.  It is <b>not</b> correct to say that the variable "points to null";
+in fact, the variable <b>is</b> null.  For example,
+you can test whether the value of <code>std</code> is null by testing</np>
+
+<pre>if (std == null) . . .</pre>
+
+<p>If the value of a variable is <code>null</code>, then it is, of course, illegal
+to refer to instance variables or instance methods through that variable&mdash;since
+there <b>is</b> no object, and hence no instance variables to refer to!  For
+example, if the value of the variable <code>std</code> is <code>null</code>, then it
+would be illegal to refer to <code>std.test1</code>. If your program attempts to
+use a null pointer illegally in this way, the result is an error called a
+<newword>null pointer exception</newword>.  When this happens while the program
+is running, an exception of type <classname>NullPointerException</classname>
+is thrown.
+</p>
+
+<p>Let's look at a sequence of statements that work with objects:</p>
+
+<pre>Student std, std1,       // Declare four variables of
+          std2, std3;    //   type Student.
+
+std = new Student();     // Create a new object belonging
+                         //   to the class Student, and
+                         //   store a reference to that
+                         //   object in the variable std.
+
+std1 = new Student();    // Create a second Student object
+                         //   and store a reference to
+                         //   it in the variable std1.
+
+std2 = std1;             // Copy the reference value in std1
+                         //   into the variable std2.
+
+std3 = null;             // Store a null reference in the
+                         //   variable std3.
+                         
+std.name = "John Smith";  // Set values of some instance variables.
+std1.name = "Mary Jones";
+
+     // (Other instance variables have default
+     //    initial values of zero.)</pre>
+
+<np>After the computer executes these statements, the situation in the
+computer's memory looks like this:</np>
+
+<img height="425" width="537" alt="Objects and variables created by the above code" 
+        src="objects-in-heap.png" tex="objects-in-heap.eps" texscale="0.75"/>
+
+
+<np>In this picture, when a variable
+contains a reference to an object, the value of that variable is shown as an
+arrow pointing to the object.   Note, by the way, that the <classname>Strings</classname>
+are objects!  The variable <code>std3</code>, with a value of
+<code>null</code>, doesn't point anywhere. The arrows from <code>std1</code> and
+<code>std2</code> both point to the same object. This illustrates a Very Important
+Point:</np>
+
+<centered><p><b>When one object variable is assigned<br/>
+to another, only a reference is copied.<br/>
+The object referred to is not copied.</b></p></centered>
+
+<np>When the assignment "<code>std2 = std1</code>;" was executed, no new object was
+created. Instead, <code>std2</code> was set to refer to the very same object that
+<code>std1</code> refers to.   This is to be expected, since the assignment
+statement just copies the value that is stored in <code>std1</code> into 
+<code>std2</code>, and that value is a pointer, not an object.
+But this has some consequences that might be surprising.
+For example, <code>std1.name</code> and <code>std2.name</code> are two different names for the
+same variable, namely the instance variable in the object that both
+<code>std1</code> and <code>std2</code> refer to. After the string <code>"Mary
+Jones"</code> is assigned to the variable <code><b>std1</b>.name</code>, it is also
+true that the value of <code><b>std2</b>.name</code> is <code>"Mary Jones"</code>.
+There is a potential for a lot of confusion here, but you can help protect
+yourself from it if you keep telling yourself, "The object is not in the
+variable. The variable just holds a pointer to the object."</np>
+
+<p>You can test objects for equality and inequality using the operators <code>==</code> and
+<code>!=</code>, but here again, the semantics are different from what you are used to. When
+you make a test "<code>if&nbsp;(std1&nbsp;==&nbsp;std2)</code>", you are testing whether the
+values stored in <code>std1</code> and <code>std2</code> are the same. But the values that you are comparing
+are references to objects; they are not objects. So, you are testing whether
+<code>std1</code> and <code>std2</code> refer to the same object, that is, whether they
+point to the same location in memory. This is fine, if it's what you want to do.
+But sometimes, what you want to check is whether the instance variables in the
+objects have the same values. To do that, you would need to ask whether 
+"<code>std1.test1 == std2.test1 &amp;&amp; std1.test2 == std2.test2 &amp;&amp;
+std1.test3 == std2.test3 &amp;&amp; std1.name.equals(std2.name)</code>".</p>
+
+<p>I've remarked previously that <classname>Strings</classname> are objects, and I've shown
+the strings <code>"Mary Jones"</code> and <code>"John Smith"</code> as objects in the
+above illustration.  (Strings are special objects, treated by Java in a special way, and I
+haven't attempted to show the actual internal structure of the <classname>String</classname> objects.)
+Since strings are objects, a variable of type <classname>String</classname> can only hold a
+reference to a string, not the string itself.  This
+explains why using the <code>==</code> operator to test strings for equality is not
+a good idea. Suppose that <code>greeting</code> is a variable of type
+<classname>String</classname>, and that it refers to the string <code>"Hello"</code>. Then
+would the test <code>greeting&nbsp;==&nbsp;"Hello"</code> be true? Well, maybe, maybe not.
+The variable <code>greeting</code> and the <classname>String</classname> literal <code>"Hello"</code>
+each refer to a string that contains the characters H-e-l-l-o. But the strings
+could still be different objects, that just happen to contain the same
+characters; in that case, <code>greeting&nbsp;==&nbsp;"Hello"</code> would be false.
+The function <code>greeting.equals("Hello")</code> tests whether
+<code>greeting</code> and <code>"Hello"</code> contain the same characters, which is
+almost certainly the question you want to ask. The expression 
+<code>greeting&nbsp;==&nbsp;"Hello"</code> tests whether <code>greeting</code> 
+and <code>"Hello"</code> contain the same characters <b>stored in the same memory location</b>.
+(Of course, a <classname>String</classname> variable such as <code>greeting</code>
+can also contain the special value <code>null</code>, and it <b>would</b> make
+sense to use the <code>==</code> operator to test whether "<code>greeting&nbsp;==&nbsp;null</code>".)
+</p>
+
+<break/>
+
+<p>The fact that variables hold references to objects, not objects themselves,
+has a couple of other consequences that you should be aware of. They follow
+logically, if you just keep in mind the basic fact that the object is not
+stored in the variable. The object is somewhere else; the variable points to it.</p>
+
+<p>Suppose that a variable that refers to an object is declared to be
+<code>final</code>. This means that the value stored in the variable can never be
+changed, once the variable has been initialized. The value stored in the
+variable is a reference to the object. So the variable will continue to refer
+to the same object as long as the variable exists. However, this does not
+prevent the data <b>in the object</b> from changing. The variable is
+<code>final</code>, not the object. It's perfectly legal to say</p>
+
+<pre>final Student stu = new Student();
+
+stu.name = "John Doe";  // Change data in the object;
+                        // The value stored in stu is not changed!
+                        // It still refers to the same object.</pre>
+
+<p>Next, suppose that <code>obj</code> is a variable that refers to an object.
+Let's consider what happens when <code>obj</code> is passed as an actual parameter
+to a subroutine. The value of <code>obj</code> is assigned to a formal parameter in
+the subroutine, and the subroutine is executed. The subroutine has no power to
+change the value stored in the variable, <code>obj</code>. It only has a copy of
+that value. However, the value is a reference to an object. Since the
+subroutine has a reference to the object, it can change the data stored <b>in</b> the
+object. After the subroutine ends, <code>obj</code> still points to the same
+object, but the data stored <b>in the object</b> might have changed.
+Suppose <code>x</code> is a variable of type <ptype>int</ptype> and <code>stu</code> is a
+variable of type <code>Student</code>. Compare:</p>
+
+<pre>void dontChange(int z) {                void change(Student s) {
+    z = 42;                                  s.name = "Fred";
+}                                       }
+
+<newcode>The lines:                              The lines:</newcode>
+
+   x = 17;                                 stu.name = "Jane";
+   dontChange(x);                          change(stu);
+   System.out.println(x);                  System.out.println(stu.name);
+ 
+<newcode>output the value 17.                    output the value "Fred".
+ 
+The value of x is <b>not</b>                   The value of stu is not
+changed by the subroutine,              changed, but stu.name <b>is</b> changed.
+which is equivalent to                  This is equivalent to</newcode>
+
+   z = x;                                  s = stu;
+   z = 42;                                 s.name = "Fred";</pre>
+   
+</subsection>
+   
+<subsection id="OOP.1.3" title="Getters and Setters">
+
+<p>When writing new classes, it's a good idea to pay attention to the issue
+of access control.  Recall that making a member of a class <code>public</code>
+makes it accessible from anywhere, including from other classes.  On the
+other hand, a <code>private</code> member can only be used in the class
+where it is defined.</p>
+   
+<p>In the opinion of many programmers, almost all member variables should
+be declared <code>private</code>.  This gives you complete control over what
+can be done with the variable.  Even if the variable itself is private,
+you can allow other classes to find out what its value is by providing
+a <code>public</code> <newword>accessor method</newword> that returns the
+value of the variable.  For example, if your class contains a <code>private</code>
+member variable, <code>title</code>, of type <classname>String</classname>, you
+can provide a method</p>
+
+<pre>public String getTitle() {
+    return title;
+}</pre>
+
+   
+<np>that returns the value of <code>title</code>.  By convention, the name of
+an accessor method for a variable is obtained by capitalizing the name of variable and
+adding "get" in front of the name.  So, for the variable <code>title</code>, we get
+an accessor method named "get" <code>+</code> "Title", or <code>getTitle()</code>.
+Because of this naming convention, accessor methods are more often referred to
+as <newword>getter methods</newword>.  A getter method provides "read access" to
+a variable.  (Sometimes for <ptype>boolean</ptype> variables, "is" is used in place
+of "get".  For example, a getter for a <ptype>boolean</ptype> member variable named
+<code>done</code> might be called <code>isDone()</code>.)</np>
+   
+<p>You might also want to allow "write access" to a <code>private</code> variable.
+That is, you might want to make it possible for other classes to specify a new value
+for the variable.  This is done with a <newword>setter method</newword>.  (If you don't
+like simple, Anglo-Saxon words, you can use the fancier term <newword>mutator method</newword>.)
+The name of a setter method should consist of "set" followed by a capitalized copy of
+the variable's name, and it should have a parameter with the same type as the
+variable.  A setter method for the variable <code>title</code> could be written</p>
+   
+<pre>public void setTitle( String newTitle ) {
+   title = newTitle;
+}</pre>
+   
+<p>It is actually very common to provide both a getter and a setter method for
+a private member variable.  Since this allows other classes both to see and to
+change the value of the variable, you might wonder why not just make the
+variable <code>public</code>?  The reason is that getters and setters are not
+restricted to simply reading and writing the variable's value.  In fact,
+they can take any action at all.  For example, a getter method might keep
+track of the number of times that the variable has been accessed:</p>
+
+<pre>public String getTitle() {
+    titleAccessCount++;  // Increment member variable titleAccessCount.
+    return title;
+}</pre>
+
+<np>and a setter method might check that the value that is being
+assigned to the variable is legal:</np>
+   
+<pre>public void setTitle( String newTitle ) {
+   if ( newTitle == null )   // Don't allow null strings as titles!
+      title = "(Untitled)";  // Use an appropriate default value instead.
+   else
+      title = newTitle;
+}</pre>
+   
+<np>Even if you can't think of any extra chores to do in a getter or setter
+method, you might change your mind in the future when you redesign and
+improve your class.  If you've used a getter and setter from the beginning,
+you can make the modification to your class without affecting any of the
+classes that use your class.  The <code>private</code> member variable
+is not part of the public interface of your class; only the <code>public</code>
+getter and setter methods are, and you are free to change their implementations
+without changing the public interface of your class.
+If you <b>haven't</b> used get and set from
+the beginning, you'll have to contact everyone who uses your class and
+tell them, "Sorry people, you'll have to track down every use that you've
+made of this variable and change your code to use my new get and set
+methods instead."</np>
+   
+<p>A couple of final notes:  Some advanced aspects of Java rely on the
+naming convention for getter and setter methods, so it's a good idea to
+follow the convention rigorously.  And though I've been talking about using
+getter and setter methods for a variable, you can define get and set
+methods even if there is no variable.  A getter and/or setter method defines
+a <newword>property</newword> of the class, that might or might not correspond
+to a variable.  For example, if a class includes a <code>public</code> <code>void</code>
+instance method with signature <code>setValue(double)</code>, then the class
+has a "property" named <code>value</code> of type <ptype>double</ptype>, and
+it has this property whether or not the class has a member variable
+named <code>value</code>.
+</p>
+
+</subsection>
+
+<subsection id="OOP.1.4" title="Arrays and Objects">
+
+<p>As I noted in <localref href="control.7a.1"/>, arrays are objects.  Like <classname>Strings</classname>
+they are special objects, with their own unique syntax.  An array type such as
+<atype>int[]</atype> or <atype>String[]</atype> is actually a class, and arrays
+are created using a special version of the <code>new</code> operator.
+As in the case for other object variables,  an array variable can never
+hold an actual array&mdash;only a reference to an array object.  The array object 
+itself exists in the heap.  It is possible for an array variable to hold the value
+<code>null</code>, which means there is no actual array.</p>
+
+<p>For example, suppose that <code>list</code> is a variable of type <atype>int[]</atype>.
+If the value of <code>list</code> is <code>null</code>, then any attempt to access
+<code>list.length</code> or an array element <code>list[i]</code> would be an error
+and would cause an exception of type <classname>NullPointerException</classname>.  If
+<code>newlist</code> is another variable of type <atype>int[]</atype>, then the
+assignment statement</p>
+
+<pre>newlist = list;</pre>
+
+<np>only copies the reference value in <code>list</code> into <code>newlist</code>.
+If <code>list</code> is <code>null</code>, the result is that <code>newlist</code> will also be <code>null</code>.
+If <code>list</code> points to an array, the assignment statement does <b>not</b> make a copy of the
+array.  It just sets <code>newlist</code> to refer to the same array as <code>list</code>.  For
+example, the output of the following code segment</np>
+
+<pre>list = new int[3];
+list[1] = 17;
+newlist = list; // newlist points to the same array as list!
+newlist[1] = 42;
+System.out.println( list[1] );</pre>
+
+<np>would be 42, not 17, since <code>list[1]</code> and <code>newlist[1]</code> are just different names
+for the same element in the array.  All this is very natural, once you understand that
+arrays are objects and array variables hold pointers to arrays.</np>
+
+<p>This fact also comes into play when an array is passed as a parameter to a subroutine.
+The value that is copied into the subroutine is a pointer to the array.  The array is
+not copied.  Since the subroutine has a reference to the original array, any changes that
+it makes to elements of the array are being made to the original and will persist after
+the subroutine returns.</p>
+
+<break/>
+
+<p>Arrays are objects.  They can also hold objects.
+The base type of an array can be a class.  We have already seen this when we used
+arrays of type <atype>String[]</atype>, but any class can be used as the base type.
+For example, suppose <classname>Student</classname> is the class defined earlier in
+this section.  Then we can have arrays of type <atype>Student[]</atype>.  For an array
+of type <atype>Student[]</atype>, each element of the array is a variable of type
+<classname>Student</classname>.  To store information about 30 students,
+we could use an array</p>
+
+<pre>Student[] classlist;  // Declare a variable of type Student[].
+classlist = new Student[30];  // The variable now points to an array.</pre>
+
+<np>The array has 30 elements, <code>classlist[0]</code>, <code>classlist[1]</code>, 
+&dots; <code>classlist[29]</code>.  When the array is created, it is filled with the
+default initial value, which for an object type is <code>null</code>.  So, although
+we have 30 array elements of type <classname>Student</classname>, we don't yet have
+any actual <classname>Student</classname> objects!  All we have is 30 nulls.
+If we want student objects, we have to create them:</np>
+
+<pre>Student[] classlist;
+classlist = new Student[30];
+for ( int i = 0; i &lt; 30; i++ ) {
+    classlist[i] = new Student();
+}</pre>
+
+<np>Once we have done this, each <code>classlist[i]</code> points to an object of type
+<classname>Student</classname>.  If we want to talk about the name of student number 3,
+we can use <code>classlist[3].name</code>.  The average for student number <code>i</code>
+can be computed by calling <code>classlist[i].getAverage()</code>.  You can do anything
+with <code>classlist[i]</code> that you could do with any other variable of type
+<classname>Student</classname>.</np>
+
+</subsection>
+
+</section>

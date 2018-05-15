@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE javanotes SYSTEM "javanotes7.dtd" [
+   <!ENTITY pi "@pi@">
+   <!ENTITY Omega "@Omega@">
+   <!ENTITY Theta "@Theta@">
+   <!ENTITY nbsp "~">
+   <!ENTITY BigOh "@BigOh@">
+   <!ENTITY dots "@dots@">
+   <!ENTITY mdash "---">
+   <!ENTITY leftquote "``">  <!-- for forcing `` in place of " where it is not done automatically-->
+   <!ENTITY textitlebreak "\\">
+   <!ENTITY newcodestyle "italic">
+]>
+
+<javanotes>
+   &includes;
+</javanotes>

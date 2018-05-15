@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="control.7a" title="Introduction to Arrays">
+
+<p><start><big>I</big>n previous sections of this chapter,</start> we have 
+already covered all of Java's control structures.  But before moving on to the next chapter, we will
+take preliminary looks at two additional topics that are at least somewhat related to control structures.</p>
+<p>This section
+is an introduction to arrays.  Arrays are a basic and very commonly used
+data structure, and array processing is often an exercise in using control
+structures. The <localref href="control.8">next section</localref> will
+introduce computer graphics and will allow you to apply what you know
+about control structures in another context.
+</p>
+
+<subsection title="Creating and Using Arrays" id="control.7a.1">
+
+<p>A <newword>data structure</newword> consists of a number of data items
+chunked together so that they can be treated as a unit.  An <newword>array</newword> is
+a data structure in which the items are arranged as a numbered sequence,
+so that each individual item can be referred to by its position number.
+In Java&mdash;but not in other programming languages&mdash;all the items must 
+be of the same type, and the numbering always starts at zero.
+You will need to learn several new terms to talk about arrays:
+The number of items in an array is called the
+<newword>length</newword> of the array. 
+The type of the individual items in an array is called the 
+<newword>base type</newword> of the array. And the position number of an
+item in an array is called the <newword>index</newword> of that item.</p>
+
+<p>Suppose that you want to write a program that will process the names of, say, one thousand people.
+You will need a way to deal with all that data.  Before you knew about arrays,
+you might have thought that the program would need a thousand variables to hold
+the thousand names, and if you wanted to print out all the names, you would need
+a thousand print statements.  Clearly, that would be ridiculous!  In reality,
+you can put all the names into an array.  The array is a represented by a single
+variable, but it holds the entire list of names.  The length of the array would
+be 1000, since there are 1000 individual names.  The base type of the array
+would be <classname>String</classname> since the items in the array are
+strings.  The first name would be at index 0 in the array, the second name
+at index 1, and so on, up to the thousandth name at index 999.</p>
+
+<p>The base type of an array can be any Java type, but for now, we will stick to
+arrays whose base type is <classname>String</classname> or one of the eight primitive
+types.   If the base type of an
+array is <ptype>int</ptype>, it is referred to as an "array of <ptype>ints</ptype>." An
+array with base type <classname>String</classname> is referred to as an "array of
+<classname>Strings</classname>." However, an array is not, properly speaking, a list of
+integers or strings or other <b>values</b>. It is better thought of
+as a list of <b>variables</b> of type <ptype>int</ptype>, or a list of variables of type
+<classname>String</classname>, or of some other type. As always, there is some potential for
+confusion between the two uses of a variable: as a name for a memory location
+and as a name for the value stored in that memory location. Each position in an
+array acts as a variable. Each position can hold a value of a specified type
+(the base type of the array), just as a variable can hold a value.
+The value can be changed at any time, just as the value of a variable can be
+changed.  The items in an array&mdash;really, the individual variables that make up the
+array&mdash;are more often referred to as the <newword>elements</newword> 
+of the array.</p>
+
+<p>As I mentioned above, when you use an array in a program, you can use a variable
+to refer to array as a whole.  But you often need to refer to the individual elements
+of the array.  The name for an element of an array is based on the name for the array
+and the index number of the element.  The syntax for referring to an element
+looks, for example, like this:  <code>namelist[7]</code>.  Here, <code>namelist</code>
+is the variable that names the array as a whole, and <code>namelist[7]</code> refers to the
+element at index 7 in that array.   That is, to refer to an element of an array,
+you use the array name, followed by element index enclosed in square brackets.
+An element name of this form can be used like any other variable: You can assign
+a value to it, print it out, use it in an expression.</p>
+
+<p>An array also contains a kind of variable representing its length.  For example,
+you can refer to the length of the array <code>namelist</code> as <code>namelist.length</code>.
+However, you cannot assign a value to <code>namelist.length</code>, since the length of an
+array cannot be changed.
+</p>
+
+<p>Before you can use a variable to refer to an array, that
+variable must be declared, and it must
+have a type.  For an array of <classname>Strings</classname>, for example,
+the type for the array variable would be <atype>String[]</atype>, and
+for an array of <ptype>ints</ptype>, it would be <atype>int[]</atype>.
+In general, an array type consists of the base type of the array followed
+by a pair of empty square brackets.  Array types can be used to declare
+variables; for example,</p>
+
+<pre>String[] namelist;
+int[] A;
+double[] prices;
+</pre>
+
+<np>and variables declared in this way can refer to arrays.  However, declaring
+a variable does not make the actual array.  Like all variables, an array variable has
+to be assigned a value before it can be used.  In this case, the value is
+an array.  Arrays have to be created using a special syntax.  (The syntax
+is related to the fact that arrays in Java are actually objects, but that doesn't
+need to concern us here.)  Arrays are created with an operator named <newword>new</newword>.
+Here are some examples:</np>
+
+<pre>namelist = new String[1000];
+A = new int[5];
+prices = new double[100];</pre>
+
+<np>The general syntax is</np>
+
+<pre><bnf>array-variable</bnf> = new <bnf>base-type</bnf>[<bnf>array-length</bnf>];</pre>
+
+<np>The length of the array can be given as either an integer or an integer-valued
+expression.  For example, after the assignment statement
+"<code>A&nbsp;=&nbsp;new&nbsp;int[5];</code>", <code>A</code> is an array
+containing the five integer elements <code>A[0]</code>, <code>A[1]</code>, <code>A[2]</code>, 
+<code>A[3]</code>, and <code>A[4]</code>.  Also, <code>A.length</code> would have
+the value&nbsp;5.  It's useful to have a picture in mind:</np>
+
+<img src="array-of-ints.png" width="573" height="149" alt="illustration of an array of 5 ints"
+   tex="array-of-ints.eps" texscale="0.75" bordered="true"/>
+   
+<p>When you create an array of <ptype>int</ptype>, each element of the array is
+automatically initialized to zero.  Any array of numbers is filled with zeros
+when it is created.  An array of <ptype>boolean</ptype> is filled with the
+value <code>false</code>.  And an array of <ptype>char</ptype> is filled
+with the character that has Unicode code number zero.  (For an array of
+<classname>String</classname>, the initial value is <code>null</code>,
+a special value used for objects that we won't encounter officially until
+<localref href="OOP.1"/>.)</p>
+
+</subsection>
+
+
+<subsection title="Arrays and For Loops" id="control.7a.2">
+
+<p>A lot of the real power of arrays comes from the fact that
+the index of an element can be given by an integer variable or
+even an integer-valued expression.  For example, if <code>list</code>
+is an array and <code>i</code> is a variable of type <ptype>int</ptype>,
+then you can use <code>list[i]</code> and even <code>list[2*i+1]</code>
+as variable names.  The meaning of <code>list[i]</code> depends on
+the value of <code>i</code>.  This becomes especially useful when we want to
+process all the elements of an array, since that can be
+done with a <code>for</code> loop.  For example, to print out
+all the items in an array, <code>list</code>, we can just
+write</p>
+
+<pre>
+int i;  // the array index
+for (i = 0; i &lt; list.length; i++) {
+    System.out.println( list[i] );
+}</pre>
+
+<np>The first time through the loop, <code>i</code> is 0, and <code>list[i]</code>
+refers to <code>list[0]</code>. So, it is the value stored in the variable
+<code>list[0]</code> that is printed. The second time through the loop, <code>i</code>
+is 1, and the value stored in <code>list[1]</code> is printed. The loop ends after
+printing the value of <code>list[4]</code>, when <code>i</code> becomes equal to 5 and
+the continuation condition "<code>i&nbsp;&lt;&nbsp;list.length</code>" is no longer true. This
+is a typical example of using a loop to process an array.</np>
+
+<p>Let's look at a few more examples.  Suppose that <code>A</code> is an array
+of <ptype>double</ptype>, and we want to find the average of all the elements of
+the array.  We can use a <code>for</code> loop to add up the numbers, and then
+divide by the length of the array to get the average:</p>
+
+<pre>double total;    // The sum of the numbers in the array.
+double average;  // The average of the numbers.
+int i;  // The array index.
+total = 0;
+for ( i = 0; i &lt; A.length; i++ ) {
+    total = total + A[i];  // Add element number i to the total.
+}
+average = total / A.length;  // A.length is the number of items</pre>
+
+<p>Another typical problem is to find the largest number in the array <code>A</code>. The
+strategy is to go through the array, keeping track of the largest number found
+so far. We'll store the largest number found so far in a variable called
+<code>max</code>. As we look through the array, whenever we find a number larger
+than the current value of <code>max</code>, we change the value of <code>max</code> to
+that larger value. After the whole array has been processed, <code>max</code> is
+the largest item in the array overall. The only question is, what should the
+original value of <code>max</code> be? One possibility is to start with
+<code>max</code> equal to <code>A[0]</code>, and then to look through the rest of the
+array, starting from <code>A[1]</code>, for larger items:</p>
+
+<pre>double max;  // The largest number seen so far.
+max = A[0];   // At first, the largest number seen is A[0].
+int i;
+for ( i = 1; i &lt; A.length; i++ ) {
+    if (A[i] &gt; max) {
+       max = A[i];
+    }
+}
+// at this point, max is the largest item in A</pre>
+
+<p>Sometimes, you only want to process some elements of the array.  In that
+case, you can use an <code>if</code> statement inside the <code>for</code>
+loop to decide whether or not to process a given element.  Let's look
+at the problem of averaging the elements of an array, but this time,
+suppose that we only want to average the non-zero elements.  In this case,
+the number of items that we add up can be less than the length of the array,
+so we will need to keep a count of the number of items added to the sum:</p>
+
+<pre>double total;    // The sum of the non-zero numbers in the array.
+int count;       // The number of non-zero numbers.
+double average;  // The average of the non-zero numbers.
+int i;
+total = 0;
+count = 0;
+for ( i = 0; i &lt; A.length; i++ ) {
+    if ( A[i] != 0 ) {
+        total = total + A[i];  // Add element to the total
+        count = count + 1;     //      and count it.
+    }
+}
+if (count == 0) {
+    System.out.println("There were no non-zero elements.");
+}
+else {
+    average = total / count;  // Divide by number of items
+    System.out.printf("Average of %d elements is %1.5g%n",
+                            count, average);
+}</pre>
+
+</subsection>
+
+
+
+<subsection title="Random Access" id="control.7a.3">
+
+<p>So far, my examples of array processing have used <newword>sequential access</newword>. 
+That is, the elements of the array were
+processed one after the other in the sequence in which they occur in the array.
+But one of the big advantages of arrays is that they allow <newword>random access</newword>. 
+That is, every element of the array is equally accessible at any given time.</p>
+
+<p>As an example, let's look at a well-known problem called the birthday
+problem: Suppose that there are <code>N</code> people in a room. What's the chance
+that there are two people in the room who have the same birthday? (That is,
+they were born on the same day in the same month, but not necessarily in the
+same year.) Most people severely underestimate the probability. We will actually
+look at a different version of the question:  Suppose you choose people at random
+and check their birthdays. How many people will you check before you find one
+who has the same birthday as someone you've already checked? Of course, the
+answer in a particular case depends on random factors, but we can simulate the
+experiment with a computer program and run the program several times to get an
+idea of how many people need to be checked on average.</p>
+
+<p>To simulate the experiment, we need to keep track of each birthday that we
+find. There are 365 different possible birthdays. (We'll ignore leap years.)
+For each possible birthday, we need to keep track of whether or not we
+have already found a person who has that birthday.
+The answer to this question is a boolean value, true or false. To hold the data
+for all 365 possible birthdays, we can
+use an array of 365 boolean values:</p>
+
+<pre>boolean[] used; 
+used = new boolean[365];</pre>
+
+<p>For this problem, the days of the year are numbered from 0 to 364. The value of
+<code>used[i]</code> is true if someone has been selected whose birthday is day
+number <code>i</code>. Initially, all the values in the array are
+false. (Remember that this is done automatically when the array is created.)
+When we select someone whose birthday is day number <code>i</code>, we first
+check whether <code>used[i]</code> is <code>true</code>. If it is <code>true</code>, then this is the second person
+with that birthday. We are done. On the other hand, if <code>used[i]</code> is <code>false</code>, we set
+<code>used[i]</code> to be <code>true</code> to record the fact that we've encountered someone
+with that birthday, and we go on to the next person. Here is a program that
+carries out the simulated experiment (of course, in the program, there are
+no simulated people, only simulated birthdays):</p>
+
+<pre>/**
+ * Simulate choosing people at random and checking the day of the year they 
+ * were born on.  If the birthday is the same as one that was seen previously, 
+ * stop, and output the number of people who were checked.
+ */
+public class BirthdayProblem {
+
+   public static void main(String[] args) {
+
+       boolean[] used;  // For recording the possible birthdays
+                        //   that have been seen so far.  A value
+                        //   of true in used[i] means that a person
+                        //   whose birthday is the i-th day of the
+                        //   year has been found.
+
+       int count;       // The number of people who have been checked.
+
+       used = new boolean[365];  // Initially, all entries are false.
+   
+       count = 0;
+
+       while (true) {
+             // Select a birthday at random, from 0 to 364.
+             // If the birthday has already been used, quit.
+             // Otherwise, record the birthday as used.
+
+          int birthday;  // The selected birthday.
+          birthday = (int)(Math.random()*365);
+          count++;
+
+          System.out.printf("Person %d has birthday number %d", count, birthday);
+          System.out.println();
+
+          if ( used[birthday] ) {  
+                // This day was found before; it's a duplicate.  We are done.
+             break;
+          }
+
+          used[birthday] = true;
+
+       } // end while
+
+       System.out.println();
+       System.out.println("A duplicate birthday was found after " 
+                                             + count + " tries.");
+   }
+
+} // end class BirthdayProblem</pre>
+
+
+<np>You should study the program to understand how it works and how
+it uses the array.  Also,
+try it out!  You will probably find that a duplicate
+birthday tends to occur sooner than you expect.</np>
+
+
+</subsection>
+
+
+<subsection title="Partially Full Arrays" id="control.7a.4">
+
+<p>Consider an application where the number of items that we want to store in
+an array changes as the program runs. Since the size of the array can't
+be changed, a separate counter variable must be used to keep track of
+how many spaces in the array are in use. (Of course, every space in the array
+has to contain something; the question is, how many spaces contain useful or
+valid items?)</p>
+
+<p>Consider, for example, a program that reads positive integers entered by the
+user and stores them for later processing. The program stops reading when the
+user inputs a number that is less than or equal to zero. The input numbers can
+be kept in an array, <code>numbers</code>, of type <atype>int[]</atype>. Let's say that
+no more than 100 numbers will be input. Then the size of the array can be fixed
+at 100. But the program must keep track of how many numbers have actually been
+read and stored in the array. For this, it can use an integer variable.
+Each time a number is stored in the array, we have to count it;
+that is, value of the counter variable must be incremented by one. 
+One question is, when we add a new item to the array, where do we put
+it?  Well, if the number of items is <code>count</code>, then they would
+be stored in the array in positions number 0, 1, &dots;, (count-1).
+The next open spot would be position number <code>count</code>, so that's
+where we should put the new item.</p>
+
+<p>As a rather silly example, let's write a program that
+will read the numbers input by the user and then print them in the reverse of the
+order in which they were entered.  Assume that an input value equal to zero
+marks the end of the data.
+(This is, at least, a processing task that requires that the numbers be saved
+in an array. Note that many types of processing, such as finding the sum or
+average or maximum of the numbers, can be done without saving the individual
+numbers.)</p>
+
+<pre>public class ReverseInputNumbers {
+
+   public static void main(String[] args) {
+   
+     int[] numbers;  // An array for storing the input values.
+     int count;      // The number of numbers saved in the array.
+     int num;        // One of the numbers input by the user.
+     int i;          // for-loop variable.
+     
+     numbers = new int[100];   // Space for 100 ints.
+     count = 0;                // No numbers have been saved yet.
+     
+     System.out.println("Enter up to 100 positive integers; enter 0 to end.");
+     
+     while (true) {   // Get the numbers and put them in the array.
+        System.out.print("? ");
+        num = TextIO.getlnInt();
+        if (num &lt;= 0) {
+              // Zero marks the end of input; we have all the numbers.
+           break;
+        }
+        numbers[count] = num;  // Put num in position count.
+        count++;  // Count the number
+     }
+     
+     System.out.println("\nYour numbers in reverse order are:\n");
+     
+     for ( i = count - 1; i &gt;= 0; i-- ) {
+         System.out.println( numbers[i] );
+     }
+     
+   } // end main();
+   
+}  // end class ReverseInputNumbers</pre>
+
+<p>It is especially important to note how the variable <code>count</code> plays a
+dual role. It is the number of items that have been entered into the array.
+But it is also the index of the next available spot in the array.</p>
+
+<p> When the time comes to print
+out the numbers in the array, the last occupied spot in the array is location
+<code>count&nbsp;-&nbsp;1</code>, so the <code>for</code> loop prints out values starting from
+location <code>count&nbsp;-&nbsp;1</code> and going down to 0.  This is also a nice
+example of processing the elements of an array in reverse order.</p>
+
+<break/>
+
+<p>You might wonder what would happen in this program if the user tries to input
+more than 100 numbers.  The result would be an error that would crash the
+program.  When the user enters the 101-st number, the program tries to store
+that number in an array element <code>number[100]</code>.  However, there is
+no such array element.  There are only 100 items in the array, and the index
+of the last item is 99.  The attempt to use <code>number[100]</code>
+generates an exception of type <classname>ArrayIndexOutOfBoundsException</classname>.
+Exceptions of this type are a common source of run-time errors in programs that use arrays.</p>
+
+
+</subsection>
+
+<subsection id="control.7a.5" title="Two-dimensional Arrays">
+
+<p>The arrays that we have considered so far are "one-dimensional."  This means that the
+array consists of a sequence of elements that can be thought of as being laid out along a line.
+It is also possible to have <newword>two-dimensional arrays</newword>, where the elements can
+be laid out in a rectangular grid.  We consider them only briefly here, but will return
+to the topic in <localref href="arrays.5"/>.</p>
+
+<p>In a two-dimensional, or "2D," array, the elements can be
+arranged in rows and columns.  Here, for example, is a 2D array of <ptype>int</ptype>
+that has five rows and seven columns:</p>
+
+<img src="two-d-array.png" width="" height="" alt="an array of its with 5 rows and 7 columns"
+       tex="two-d-array.eps" texscale="0.75"/>
+
+<np>This 5-by-7 grid contains a total of 35 elements.
+The rows in a 2D array are numbered 0, 1, 2, &dots;, up to the number of rows minus one.
+Similarly, the columns are numbered from zero up to the number of columns minus one.  Each individual
+element in the array can be picked out by specifying its row number and its column number.
+(The illustration shown here is not what the array actually looks like in the computer's
+memory, but it does show the logical structure of the array.)</np>
+
+<p>In Java, the syntax for two-dimensional arrays is similar to the syntax for one-dimensional
+arrays, except that an extra index is involved, since picking out an element requires both
+a row number and a column number.  For example, if <code>A</code> is a 2D array of <ptype>int</ptype>, then
+<code>A[3][2]</code> would be the element in row&nbsp;3, column&nbsp;2.  That would pick out the
+number 17 in the array shown above.  The type for <code>A</code>
+would be given as <atype>int[][]</atype>, with two pairs of empty brackets.  To declare the
+array variable and create the array, you could say,</p>
+
+<pre>int[][]  A;
+A  =  new int[5][7];</pre>
+
+<np>The second line creates a 2D array with 5 rows and 7 columns.  Two-dimensional arrays
+are often processed using nested <code>for</code> loops.  For example, the following code 
+segment will print out the elements of <code>A</code> in neat columns:</np>
+
+<pre>int row, col;  // loop-control-variables for accessing rows and columns in A
+for ( row = 0; row &lt; 5; row++ ) {
+    for ( col = 0; col &lt; 7; col++ ) {
+        System.out.printf( "%7d",  A[row][col] );
+    }
+    System.out.println();
+}</pre>
+
+
+<np>The base type of a 2D array can be anything, so you can have arrays of type
+<atype>double[][]</atype>, <atype>String[][]</atype>, and so on.</np>
+
+<p>There are some natural uses for 2D arrays.  For example,
+a 2D array can be used to store the contents of the board in a game such as
+chess or checkers.  And an example in <localref href="subroutines.6.3"/> uses a 2D array
+to hold the colors of a grid of colored squares.  But sometimes 
+two-dimensional arrays are used in problems in which the grid is
+not so visually obvious. Consider a company that owns 25 stores. Suppose that
+the company has data about the profit earned at each store for each month in
+the year 2014. If the stores are numbered from 0 to 24, and if the twelve
+months from January 2014 through December 2014 are numbered from 0 to 11, then
+the profit data could be stored in an array, <code>profit</code>, created as
+follows:</p>
+
+<pre>double[][]  profit;
+profit  =  new double[25][12];</pre>
+
+<np><code>profit[3][2]</code> would be the amount of profit earned at store number 3
+in March, and more generally, <code>profit[storeNum][monthNum]</code> would be the
+amount of profit earned in store number <code>storeNum</code> in month number
+<code>monthNum</code> (where the numbering, remember, starts from zero).</np>
+
+<p>Let's assume that the <code>profit</code> array has already been filled with
+data. This data can be processed in a lot of interesting ways. For example, the
+total profit for the company&mdash;for the whole year from all its stores&mdash;can
+be calculated by adding up all the entries in the array:</p>
+
+<pre>double totalProfit;  // Company's total profit in 2014.
+int store, month;  // variables for looping through the stores and the months
+totalProfit = 0;
+for ( store = 0; store &lt; 25; store++ ) {
+   for ( month = 0; month &lt; 12; month++ )
+      totalProfit += profit[store][month];
+}</pre>
+
+<p>Sometimes it is necessary to process a single row or a single column of an
+array, not the entire array. For example, to compute the total profit earned by
+the company in December, that is, in month number 11, you could use the
+loop:</p>
+
+<pre>double decemberProfit;
+int storeNum;
+decemberProfit = 0.0;
+for ( storeNum = 0; storeNum &lt; 25; storeNum++ ) {
+   decemberProfit += profit[storeNum][11];
+}</pre>
+
+<p>Two-dimensional arrays are sometimes useful, but they are much less common
+than one-dimensional arrays.  Java actually allows arrays of even higher dimension,
+but they are only rarely encountered in practice.</p>
+
+</subsection>
+
+
+</section>

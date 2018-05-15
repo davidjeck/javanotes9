@@ -1,0 +1,1390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+
+<exercises>
+   
+<exercise>
+<exercise-question><p>To "capitalize" a string
+means to change the first letter of each word in the string to upper case (if
+it is not already upper case). For example, a capitalized version of "Now is
+the time to act!" is "Now Is The Time To Act!". Write a subroutine named
+<code>printCapitalized</code> that will print a capitalized version of a string to
+standard output. The string to be printed should be a parameter to the
+subroutine. Test your subroutine with a <code>main()</code> routine that gets a
+line of input from the user and applies the subroutine to it.</p>
+<p>Note that a letter is the first letter of a word if it is not immediately
+preceded in the string by another letter. Recall from <localref href="control.ex.4"/> that there is a standard
+<ptype>boolean</ptype>-valued function <code>Character.isLetter(char)</code> that can be
+used to test whether its parameter is a letter. There is another standard
+<ptype>char</ptype>-valued function, <code>Character.toUpperCase(char)</code>, that
+returns a capitalized version of the single character passed to it as a
+parameter. That is, if the parameter is a letter, it returns the upper-case
+version. If the parameter is not a letter, it just returns a copy of the
+parameter.</p></exercise-question>
+<exercise-discuss><p>We are told the name of the subroutine and that it has one parameter of type
+<classname>String</classname>. The name of the parameter is not specified. I will use
+<code>str</code>. The return type is <code>void</code> because the subroutine does not
+return a value. (It displays a value to the user, but to <b>return</b> a value means
+to return it to the line in the program where the function is called. The value
+returned by a function is generally <b>not</b> displayed to the user
+by the function.) The first line of the subroutine definition will be:</p>
+
+<pre>static  void  printCapitalized( String str )</pre>
+
+<np>The subroutine must look at each character in <code>str</code> and decide
+whether to capitalize it or not. An algorithm for the subroutine is</np>
+
+<pre>for each character in str:
+    if the character is the first letter of a word:
+        Print a capitalized version of the character
+    else:
+        Print the character
+Print a carriage return to end the line of output</pre>
+
+<p>The test as to whether a character is the first letter of a word is
+surprisingly complicated. A test that almost works is: "If the character is a
+letter and the preceding character is not a letter." The problem is that if the
+character is the first character is the string, then there is no preceding
+character! If the character is <code>str.charAt(i)</code>, then the preceding
+character would be <code>str.charAt(i-1)</code>, but <code>str.charAt(i-1)</code>
+doesn't exist if <code>i</code> is <code>0</code>. You should notice the
+problem when you look at <code>str.charAt(i-1)</code> and remember that
+the <code>charAt()</code> method has the precondition that its parameter
+must be greater than or equal to zero.  When <code>i</code> is zero in
+<code>str.charAt(i-1)</code>, that precondition is not satisfied.
+</p>
+
+<p>Let's look at Java code that suffers
+from this bug. Recall that the operator "<code>!</code>" stands for "not."</p>
+
+<pre>for ( i = 0;  i &lt; str.length();  i++ ) {        // <newcode>BUGGY CODE!</newcode>
+    ch = str.charAt( i );
+    if ( Character.isLetter(ch) &amp;&amp; ! Character.isLetter(str.charAt(i-1)) )
+        System.out.print( Character.toUpperCase(ch) );
+    else
+        System.out.print( ch );
+}
+System.out.println();</pre>
+
+<np>This will crash when <code>i</code> is zero, if the first character in the string
+is indeed a letter. There are several ways to work
+around the problem, and all of them are techniques that are worth knowing. The
+first is to use a more complicated test in the <code>if</code> statement: "if the
+character is a letter and either it's the first character in the string or the
+previous character is not a letter". In Java, this is:</np>
+
+<pre>if (Character.isLetter(ch) &amp;&amp; (i==0 || ! Character.isLetter(str.charAt(i-1))))</pre>
+   
+<np>This avoids testing <code>str.charAt(i-1)</code> in the case when <code>i</code> is zero.
+But it can be difficult to get
+such a complicated test right. Another possibility is a bit sneaky: Add an
+extra character onto the beginning of <code>str</code>, and then start the
+<code>for</code> loop with <code>i=1</code>. Any character will do, as long as it's not
+a letter. For example, you could say "<code>str&nbsp;=&nbsp;"."&nbsp;+&nbsp;str;</code>" Since the
+<code>for</code> loop starts at <code>i=1</code>, the "." is not copied to output, and
+the problem of <code>i&nbsp;==&nbsp;0</code> doesn't arise. The method that I will use is
+similar, but it doesn't require any modification of <code>str</code>. I'll use
+another variable to represent the preceding character in the string, except
+that at the beginning of the string, I'll set it to the arbitrary value, '.'.
+At the end of the loop, the character that we have just processed becomes the
+"previous character" in the next iteration of the loop. Here is the complete
+subroutine, using this method:</np>
+
+<pre>static void printCapitalized( String str ) {
+   char ch;       // One of the characters in str.
+   char prevCh;   // The character that comes before ch in the string.
+   int i;         // A position in str, from 0 to str.length()-1.
+   prevCh = '.';  // Prime the loop with any non-letter character.
+   for ( i = 0;  i &lt; str.length();  i++ ) {
+      ch = str.charAt(i);
+      if ( Character.isLetter(ch)  &amp;&amp;  ! Character.isLetter(prevCh) )
+          System.out.print( Character.toUpperCase(ch) );
+      else
+          System.out.print( ch );
+      prevCh = ch;  // prevCh for next iteration is ch.
+   }
+   System.out.println();
+}</pre>
+
+<p>Keeping track of a previous value in a loop is a very common programming pattern.
+This doesn't exhaust the possibilities. Another idea, for example, would be
+to use a boolean variable to keep track of whether the previous character was a
+letter.</p>
+
+<p>Finally, we should add a <localref href="subroutines.5.4">Javadoc comment</localref> to document the subroutine.
+Writing a <code>main()</code> routine to test this subroutine on a line of input
+is easy.</p>
+</exercise-discuss>
+<exercise-code>
+<pre>
+<prog name="CapitalizeOneString">/**
+ * This program will get a line of input from the user and will print a copy
+ * of the line in which the first character of each word has been changed to 
+ * upper case.  The program was written to test the printCapitalized
+ * subroutine.  It depends on the non-standard TextIO class.
+ */
+
+public class CapitalizeOneString {
+  
+   public static void main(String[] args) {
+      String line;  // Line of text entered by user.
+      System.out.println("Enter a line of text.");
+      line = TextIO.getln();
+      System.out.println();
+      System.out.println("Capitalized version:");
+      printCapitalized( line );
+   }
+   
+   /**
+    *  Print a copy of a string to standard output, with the first letter
+    *  of each word in the string changed to upper case.
+    *  @param str the string that is to be output in capitalized form
+    */
+   static void printCapitalized( String str ) {
+      char ch;       // One of the characters in str.
+      char prevCh;   // The character that comes before ch in the string.
+      int i;         // A position in str, from 0 to str.length()-1.
+      prevCh = '.';  // Prime the loop with any non-letter character.
+      for ( i = 0;  i &lt; str.length();  i++ ) {
+         ch = str.charAt(i);
+         if ( Character.isLetter(ch)  &amp;&amp;  ! Character.isLetter(prevCh) )
+            System.out.print( Character.toUpperCase(ch) );
+         else
+            System.out.print( ch );
+         prevCh = ch;  // prevCh for next iteration is ch.
+      }
+      System.out.println();
+   }
+ 
+} // end CapitalizeOneString</prog>
+</pre>
+</exercise-code>
+</exercise> 
+
+ 
+    
+<exercise>
+<exercise-question><p>The hexadecimal digits are
+the ordinary, base-10 digits '0' through '9' plus the letters 'A' through 'F'.
+In the hexadecimal system, these digits represent the values 0 through 15,
+respectively. Write a function named <code>hexValue</code> that uses a
+<code>switch</code> statement to find the hexadecimal value of a given character.
+The character is a parameter to the function, and its hexadecimal value is the
+return value of the function. You should count lower case letters 'a' through
+'f' as having the same value as the corresponding upper case letters. If the
+parameter is not one of the legal hexadecimal digits, return <code>-1</code> as the value of
+the function.</p>
+
+<p>A hexadecimal integer is a sequence of hexadecimal digits, such as 34A7,
+ff8, 174204, or FADE. If <code>str</code> is a string containing a hexadecimal
+integer, then the corresponding base-10 integer can be computed as follows:</p>
+
+<pre>value = 0;
+for ( i = 0; i &lt; str.length();  i++ )
+   value = value*16 + hexValue( str.charAt(i) );</pre>
+
+<np>Of course, this is not valid if <code>str</code> contains any characters that
+are not hexadecimal digits. Write a program that reads a string from the user.
+If all the characters in the string are hexadecimal digits, print out the
+corresponding base-10 value. If not, print out an error message.</np>
+</exercise-question>
+<exercise-discuss><p>The subroutine has a parameter of type <ptype>char</ptype> and a return value of
+type <ptype>int</ptype>. It's easy to write the <code>switch</code> statement, although
+it's tedious because of the number of cases. A little creative cut-and-paste
+can help. The <code>switch</code> statement has a <code>default</code> case that covers
+all the characters that are not hexadecimal digits. For such characters, a
+value of <code>-1</code> is returned.   The subroutine is shown in the program below, and I
+will not repeat it here.  Note that in this <code>switch</code> statement, the cases are
+terminated by <code>return</code> statements, rather than <code>break</code>.</p>
+
+<p>In the main program, I will use <code>TextIO.getlnWord()</code> to read the
+user's input, rather than <code>TextIO.getln()</code>. This has the advantage that
+it will return a non-empty string that is guaranteed not to contain any blanks.
+We still have the problem of checking whether the user's input contains only
+valid hexadecimal digits. One approach is to check all the characters first and
+use a <ptype>boolean</ptype> variable to record whether they are all valid. We can test
+whether an individual character, <code>ch</code>, is valid by checking whether
+<code>hexValue(ch)</code> is <code>-1</code>.  Let
+<code>hex</code> be a <classname>String</classname> holding the user's input. Then we have:</p>
+
+<pre>boolean valid; // Flag variable for testing whether the string is valid.
+valid = true;  // Assume that the input is valid, and change our
+               // mind if we find an invalid character.
+for ( i = 0; i &lt; hex.length(); i++ ) {
+    if ( hexValue(hex.charAt(i)) == -1 ) {  // Character number i is bad.
+       valid = false;
+       break; // Leave the for loop, since we are now sure of the answer.
+    }
+}
+
+// At the point, valid is true if and only if we have examined all the
+// characters in the string and found that each one is a hex digit.
+
+if ( valid ) {  // If the input is valid, compute and print base-10 value
+   dec = 0;
+   for ( i = 0; i &lt; hex.length(); i++ )
+      dec = 16*dec + hexValue( hex.charAt(i) );
+   System.out.println("Base-10 value is:  " + dec);
+}
+else {  // Input is not valid, print an error message
+   System.out.println("Error:  Input is not a hexadecimal number.");
+}</pre>
+
+<p>This works, but we have to process the string twice. We can avoid this by
+checking the input at the same time that we do the conversion. If the input is
+illegal, I want to end the program. I use the fact that a <code>return</code>
+statement in the <code>main()</code> routine will end the program, since it returns
+control back to the system:</p>
+
+<pre>dec = 0;
+for ( i = 0; i &lt; hex.length(); i++) {
+   int digit = hexValue( hex.charAt(i) );
+   if (digit == -1) {
+       System.out.println("Error:  Input is not a hexadecimal number.");
+       return;  // Ends the main() routine.
+   }
+   dec = 16*dec + digit;
+}
+System.out.println("Base-10 value:  " + dec);</pre>
+
+<np>This is the code that is used in the <code>main()</code> routine of the program
+to do the conversion. Note that I declared <code>dec</code> to be of type
+<ptype>long</ptype> to allow bigger values than would fit in a variable of type
+<ptype>int</ptype>. The program still has a problem if the user enters too many
+characters. (It gets the wrong answer.)</np>
+
+<p>It would probably be better to write a function to do the conversion of a
+string to base-10. It could return a <code>-1</code> if the string is not a legal
+hexadecimal number. The <code>main()</code> routine could then call the function
+and check its return value to find out whether there was an error.</p>
+   
+<break/>
+
+<p>In this exercise, a special value, <code>-1</code>, is returned by a subroutine
+to indicate that its parameter value is not valid.  An alternative approach would be
+to throw an <localref href="subroutines.3.5">exception</localref> if the parameter value is
+not legal.  Instead of saying "<code>return&nbsp;-1</code>", the <code>default</code> case of
+the <code>switch</code> statement in the subroutine could read:</p>
+   
+<pre>default:
+   throw new IllegalArgumentException("Not a legal hexadecimal digit: '" + ch + "'.");</pre>
+   
+<np>The <code>main</code> program would then do the conversion from string to hexadecimal
+in a <code>try..catch</code> statement.  If an exception occurs, the <code>catch</code> part
+of the statement can print an error message:</np>
+   
+<pre>try {    // <newcode>IF WE WERE USING AN EXCEPTION-THROWING VERSION OF hexValue</newcode>
+    dec = 0;
+    for ( i = 0; i &lt; hex.length(); i++ ) {
+       int digit = hexValue( hex.charAt(i) );  // Might throw an exception.
+       dec = 16*dec + digit;
+    }
+    // We get here only if no exception occurred.
+    System.out.println("Base-10 value:  " + dec);  
+}
+catch ( IllegalArgumentException e ) {
+   System.out.println("Error:  Input is not a hexadecimal number.");
+}</pre>
+
+<np>I think that this approach is much neater!</np>
+</exercise-discuss>
+<exercise-code><pre>
+<prog name="Hex2Dec">/**
+ * This program reads a hexadecimal number input by the user and prints the 
+ * base-10 equivalent.  If the input contains characters that are not 
+ * hexadecimal numbers, then an error message is printed.
+ */
+
+public class Hex2Dec {
+ 
+    public static void main(String[] args) {
+       String hex;  // Input from user, containing a hexadecimal number.
+       long dec;    // Decimal (base-10) equivalent of hexadecimal number.
+       int i;       // A position in hex, from 0 to hex.length()-1.
+       System.out.print("Enter a hexadecimal number: ");
+       hex = TextIO.getlnWord();
+       dec = 0;
+       for ( i = 0; i &lt; hex.length(); i++ ) {
+          int digit = hexValue( hex.charAt(i) );
+          if (digit == -1) {
+              System.out.println("Error:  Input is not a hexadecimal number.");
+              return;  // Ends the main() routine.
+          }
+          dec = 16*dec + digit;
+       }
+       System.out.println("Base-10 value:  " + dec);
+    }  // end main
+    
+    /**
+     * Returns the hexadecimal value of a given character, or -1 if it is not
+     * a valid hexadecimal digit.
+     * @param ch the character that is to be converted into a hexadecimal digit
+     * @return the hexadecimal value of ch, or -1 if ch is not 
+     *     a legal hexadecimal digit
+     */
+    public static int hexValue(char ch) {
+       switch (ch) {
+          case '0':
+             return 0;
+          case '1':
+             return 1;
+          case '2':
+             return 2;
+          case '3':
+             return 3;
+          case '4':
+             return 4;
+          case '5':
+             return 5;
+          case '6':
+             return 6;
+          case '7':
+             return 7;
+          case '8':
+             return 8;
+          case '9':
+             return 9;
+          case 'a':     // Note:  Handle both upper and lower case letters.
+          case 'A':
+             return 10;
+          case 'b':
+          case 'B':
+             return 11;
+          case 'c':
+          case 'C':
+             return 12;
+          case 'd':
+          case 'D':
+             return 13;
+          case 'e':
+          case 'E':
+             return 14;
+          case 'f':
+          case 'F':
+             return 15;
+          default:
+             return -1;
+       }
+    }  // end hexValue
+
+}</prog></pre>
+</exercise-code>
+</exercise> 
+
+ 
+    
+<exercise id="subroutines.ex.3">
+<exercise-question><p>Write a function that
+simulates rolling a pair of dice until the total on the dice comes up to be a
+given number. The number that you are rolling for is a parameter to the
+function. The number of times you have to roll the dice is the return value of
+the function. The parameter should be one of the possible totals:
+2, 3, &dots;, 12.  The function should throw an <classname>IllegalArgumentException</classname>
+if this is not the case.  Use your function in a program that computes and prints the
+number of rolls it takes to get snake eyes. (Snake eyes means that the total
+showing on the dice is 2.)</p></exercise-question>
+<exercise-discuss><p>The subroutine we have to write is very similar to the program from
+<localref href="control.ex.1"/>. The main difference is that
+instead of rolling until both dice come up 1, we roll until the total showing
+on the dice is equal to some specified value.    That value is given by the
+parameter to the function.  Of course, the first thing that the subroutine
+should do is check that the value of the parameter is in the range of
+possible rolls of a pair of dice; if not, it should throw an exception.
+Note that without this check, the subroutine would go into an infinite loop
+when the parameter is outside the range of possible values.
+I named the function <code>rollFor</code>:</p>
+
+<pre>public static int rollFor( int N ) {
+    if ( N &lt; 2 || N &gt; 12 )
+       throw new IllegalArgumentException("Impossible total for a pair of dice.");
+    int die1, die2;  // Numbers between 1 and 6 representing the dice.
+    int roll;        // Total showing on dice.
+    int rollCt;      // Number of rolls made.
+    rollCt = 0;
+    do {
+       die1 = (int)(Math.random()*6) + 1;
+       die2 = (int)(Math.random()*6) + 1;
+       roll = die1 + die2;
+       rollCt++;
+    } while ( roll != N );
+    return rollCt;
+}</pre>
+   
+<np>In the actual program, I've added an appropriate Javadoc comment.</np>
+   
+<p>You should understand the contract of this subroutine. The parameter, 
+<code>N</code>, is supposed to be one of the numbers that could possibly come up on a
+pair of dice. That is, <code>N</code> must be one of 2, 3, &dots;, or 12. 
+The condition that <code>N</code> have a valid value is a precondition for the subroutine.  If the caller of
+the function violates this precondition, the subroutine can't give any sort of
+correct answer, so it responds by throwing an exception.</p>
+
+<p>The <code>main()</code> routine for this program is trivial. In fact, it could
+even be shortened to:</p>
+
+<pre>public static void main(String[] args) {
+   System.out.println("It took " + rollFor(2) + " rolls to get snake eyes.");
+}  // end main()</pre>
+</exercise-discuss>
+<exercise-code><pre><prog name="RollFor2">/**
+ * This program simulates rolling a pair of dice over and over until the
+ * total showing on the two dice is 2.  It reports the number of rolls 
+ * it took to get a 2.  (This was written to test the subroutine, rollFor.)
+ */
+public class RollFor2 {
+  
+   public static void main(String[] args) {
+      int numberOfRolls;  // Number of rolls to get a 2.
+      numberOfRolls = rollFor(2);
+      System.out.println("It took " + numberOfRolls + " rolls to get snake eyes.");
+   }  // end main()
+   
+   /**
+    * Simulates rolling a pair of dice until a given total comes up.
+    * Precondition:  The desired total is between 2 and 12, inclusive.
+    * @param N the total that we want to get on the dice
+    * @return the number of times the dice are rolled before the
+    *    desired total occurs
+    * @throws IllegalArgumentException if the parameter, N, is not a number
+    *    that could possibly come up on a pair of dice
+    */
+   public static int rollFor( int N ) {
+       if ( N &lt; 2 || N &gt; 12 )
+          throw new IllegalArgumentException("Impossible total for a pair of dice.");
+       int die1, die2;  // Numbers between 1 and 6 representing the dice.
+       int roll;        // Total showing on dice.
+       int rollCt;      // Number of rolls made.
+       rollCt = 0;
+       do {
+          die1 = (int)(Math.random()*6) + 1;
+          die2 = (int)(Math.random()*6) + 1;
+          roll = die1 + die2;
+          rollCt++;
+       } while ( roll != N );
+       return rollCt;
+   }
+
+}  // end class RollFor2</prog></pre>
+</exercise-code>
+</exercise> 
+
+ 
+    
+<exercise id="subroutines.ex.4">
+<exercise-question><p>This exercise builds on <localref href="subroutines.ex.3"/>.
+Every time you roll the dice repeatedly, trying to get a given
+total, the number of rolls it takes can be different. The question naturally
+arises, what's the average number of rolls to get a given total? Write a function that performs the
+experiment of rolling to get a given total 10000 times. The desired total is a
+parameter to the subroutine. The average number of rolls is the return value.
+Each individual experiment should be done by calling the function you wrote for
+<localref href="subroutines.ex.3"/>. Now, write a main program that will call your function once for
+each of the possible totals (2, 3, ..., 12). It should make a table of the
+results, something like:</p>
+
+<pre>Total On Dice     Average Number of Rolls
+-------------     -----------------------
+       2               35.8382
+       3               18.0607
+       .                .
+       .                .</pre>
+</exercise-question>
+<exercise-discuss><p>The solution uses the subroutine, <code>rollFor</code>, from
+<localref href="subroutines.ex.3"/>.  That subroutine will throw an exception if
+its parameter is not valid.  However, in my program, I <b>know</b> that the values
+that I pass to the <code>rollFor</code> subroutine are valid and that no
+exception will occur.  So, there is no need to use a <code>try..catch</code> statement
+to handle the exception.</p>
+
+<p>The <code>main()</code> program simply prints a heading for the output, then
+uses a <code>for</code> loop to compute and print the data for each of the possible
+rolls from 2 to 12. It is not difficult to write it, with a little care to get
+the formatting right (using formatted output).</p>
+
+<p>The only thing left is to write a function to find the average number of
+rolls to get a given total on the dice. The average will be a real number, so
+the return type of the function is <ptype>double</ptype>. The subroutine has a
+parameter of type <ptype>int</ptype> that specifies the number we are rolling for.
+I'll call the parameter "<code>roll</code>". An algorithm for the subroutine is</p>
+
+<pre>Let totalRolls = 0
+Repeat 10000 times:
+   Call rollFor(roll) to run the experiment once
+   Add the returned value to totalRolls
+Compute the average by dividing totalRolls by 10000
+Return the average</pre>
+
+<p>In my program, I use a <localref href="subroutines.7.2">named constant</localref>, 
+<code>NUMBER_OF_EXPERIMENTS</code>, to
+specify the number of experiments to be performed. This constant replaces the
+value 10000, making it easier to read the program and easier to change the
+number of experiments if I decide I want to do more experiments or fewer. This
+gives the subroutine:</p>
+
+<pre>public static double getAverageRollCount( int roll ) {
+    int rollCountThisExperiment;  // Number of rolls in one experiment.
+    int rollTotal;  // Total number of rolls in all the experiments.
+    double averageRollCount;  // Average number of rolls per experiment.
+    rollTotal = 0;
+    for ( int i = 0;  i &lt; NUMBER_OF_EXPERIMENTS;  i++ ) {
+       rollCountThisExperiment = rollFor( roll );
+       rollTotal += rollCountThisExperiment;
+    }
+    averageRollCount = ((double)rollTotal) / NUMBER_OF_EXPERIMENTS;
+    return averageRollCount;
+}</pre>
+
+<p>Note that when the average is computed, a type-cast is used to convert
+<code>rollTotal</code> to type <ptype>double</ptype>. This is necessary since
+<code>rollCount</code> and <code>NUMBER_OF_EXPERIMENTS</code> are integers, and the
+computer would evaluate the quotient <code>rollCount / NUMBER_OF_EXPERIMENTS</code>
+as an integer.</p>
+
+<p>By the way, this subroutine could be substantially abbreviated at the
+expense of being somewhat less easy to understand:</p>
+
+<pre>public static double getAverageRollCount( int roll ) {
+    int rollTotal = 0;  // Total number of rolls in all the experiments.
+    for ( int i = 0;  i &lt; NUMBER_OF_EXPERIMENTS;  i++ )
+       rollTotal += rollFor( roll );
+    return ((double)rollTotal) / NUMBER_OF_EXPERIMENTS;
+}</pre>
+</exercise-discuss>
+<exercise-code><pre><prog name="DiceRollStats">/**
+ * This program performs the following type of experiment:  Given a desired 
+ * total roll, such as 7, roll a pair of dice until the given total comes up, 
+ * and count how many rolls are necessary.  Now do that over and over, and
+ * find the average number of rolls.  The number of times the experiment is 
+ * repeated is given by the constant, NUMBER_OF_EXPERIMENTS.  The average is
+ * computed and printed out for each possible roll = 2, 3, ..., 12. 
+ */
+
+public class DiceRollStats {
+
+   /**
+    * The number of times that the experiment "roll for a given total"
+    * is to be repeated.  The program performs this many experiments, and
+    * prints the average of the result, for each possible roll value, 
+    */
+   public static final int NUMBER_OF_EXPERIMENTS = 10000;
+
+   public static void main(String[] args) {
+       double average;  // The average number of rolls to get a given total.
+       System.out.println("Total On Dice     Average Number of Rolls");
+       System.out.println("-------------     -----------------------");
+       for ( int dice = 2;  dice &lt;= 12;  dice++ ) {
+          average = getAverageRollCount( dice );
+          System.out.printf("%10d%22.4f\n", dice, average);
+             // Use 10 spaces to output dice, and use 22 spaces to output
+             // average, with 4 digits after the decimal.
+       }
+   } 
+   
+   /**
+    * Find the average number of times a pair of dice must be rolled to get
+    * a given total.  The experiment of rolling for the given total is
+    * repeated NUMBER_OF_EXPERIMENTS times and the average number of rolls
+    * over all the experiments is computed.
+    * Precondition:  The given total must be be between 2 and 12, inclusive.
+    * @param roll the total that we want to get on the dice
+    * @return the average number of rolls that it takes to get the specified
+    *    total
+    */
+   public static double getAverageRollCount( int roll ) {
+       int rollCountThisExperiment;  // Number of rolls in one experiment.
+       int rollTotal;  // Total number of rolls in all the experiments.
+       double averageRollCount;  // Average number of rolls per experiment.
+       rollTotal = 0;
+       for ( int i = 0;  i &lt; NUMBER_OF_EXPERIMENTS;  i++ ) {
+          rollCountThisExperiment = rollFor( roll );
+          rollTotal += rollCountThisExperiment;
+       }
+       averageRollCount = ((double)rollTotal) / NUMBER_OF_EXPERIMENTS;
+       return averageRollCount;
+   }
+   
+   /**
+    * Simulates rolling a pair of dice until a given total comes up.
+    * Precondition:  The desired total is between 2 and 12, inclusive.
+    * @param N the total that we want to get on the dice
+    * @return the number of times the dice are rolled before the
+    *    desired total occurs
+    * @throws IllegalArgumentException if the parameter, N, is not a number
+    *    that could possibly come up on a pair of dice
+    */
+   public static int rollFor( int N ) {
+       if ( N &lt; 2 || N &gt; 12 )
+          throw new IllegalArgumentException("Impossible total for a pair of dice.");
+       int die1, die2;  // Numbers between 1 and 6 representing the dice.
+       int roll;        // Total showing on dice.
+       int rollCt;      // Number of rolls made.
+       rollCt = 0;
+       do {
+          die1 = (int)(Math.random()*6) + 1;
+          die2 = (int)(Math.random()*6) + 1;
+          roll = die1 + die2;
+          rollCt++;
+       } while ( roll != N );
+       return rollCt;
+   }
+   
+}  // end DiceRollStats</prog></pre>
+</exercise-code>
+</exercise> 
+
+ 
+    
+<exercise>
+<exercise-question><p>The sample program
+<sourceref href="RandomMosaicWalk.java"/> from
+<localref href="subroutines.6"/> shows a "disturbance" that wanders around a
+grid of colored squares. When the disturbance visits a square, the color of
+that square is changed.  Here's an idea for a variation on that program.
+In the new version, all the squares start
+out with the default color, black. Every time the disturbance visits a square,
+a small amount is added to the green component of the color of that square.
+The result will be a visually interesting effect, as the path followed by the
+disturbance gradually turns a brighter and brighter green.</p>
+<p>Write a subroutine that will add 25 to the green component of one of the squares in the
+mosaic.  (But don't let the green component go over 255, since that's the largest
+legal value for a color component.)
+The row and column numbers of the square should be given as parameters
+to the subroutine. Recall that you can discover the current green component of
+the square in row <code>r</code> and column <code>c</code> with the function call
+<code>Mosaic.getGreen(r,c)</code>. Use your subroutine as a substitute for the
+<code>changeToRandomColor()</code> subroutine in the program <sourceref href="RandomMosaicWalk2.java"/>.
+(This is the improved version of the program from <localref href="subroutines.7"/> that uses named constants for
+the number of rows, number of columns, and square size.) Set the number of rows
+and the number of columns to 80. Set the square size to 5.</p>
+<p>By default, the rectangles in the mosaic have a "3D" appearance and a gray border that makes
+them look nicer in the random walk program.  But for this program, you want to turn off that
+effect.  To do so, call <code>Mosaic.setUse3DEffect(false)</code> in the main program.</p>
+<p>Don't forget that you will need <sourceref href="Mosaic.java"/> and <sourceref href="MosaicPanel.java"/>
+to compile and run your program, since they define non-standard classes that are required by the program.
+</p>
+</exercise-question>
+<exercise-discuss><p>This is an exercise in making a rather small modification to a relatively
+complicated existing program.</p>
+
+<p>The only real problem is to write a new subroutine, which I will call
+<code>brightenSquare</code>. Much of the program comes directly from
+<sourceref href="RandomMosaicWalk2.java"/>. The
+<code>randomMove()</code> routine is unchanged. The only changes in the
+<code>main()</code> routine are to substitute a call to <code>brightenSquare</code> for
+the call to <code>changeToRandomColor</code> and to add the line calling <code>Mosaic.setUse3DEffect</code>. 
+The subroutines
+<code>fillWithRandomColors</code> and <code>changeToRandomColor</code> in the
+<code>RandomMosaicWalk2</code> program are not needed in the new program and should be removed. In the
+three lines that define the constants, the values are changed according the
+instructions in the exercise:</p>
+
+<pre>final static int ROWS = 80;        // Number of rows in the mosaic.
+final static int COLUMNS = 80;     // Number of columns in the mosaic.
+final static int SQUARE_SIZE = 5;  // Size of each square in the mosaic.</pre>
+
+<np>With these values, the program is interesting to watch for a while.   You
+might want to try using shades of red, blue, or gray, instead of green.  Or even
+use three disturbances, one incrementing the red component of the color, one incrementing
+the green component, and one incrementing the blue.</np>
+
+<p>An outline for the <code>brightenSquare</code> routine is clear, remembering that
+the green component can't be more than 255:</p>
+
+<pre>Let g be the current green component of the square
+Add 25 to g
+If g is greater than 255
+    set g = 255
+Set the color components of the square to  0, g, 0</pre>
+
+<np>The red and blue components of the color will always be zero. However,
+they must be specified in the <code>Mosaic.setColor()</code> routine. Written in
+Java, the body of the routine is just three lines long:</np>
+
+<pre>static void brightenSquare(int row, int col) {
+    int g = Mosaic.getGreen(row,col);
+    g += 25;
+    if (g &gt; 255)
+        g = 255;
+    Mosaic.setColor(row,col,0,g,0);
+}</pre>
+
+<webdiv><p>Here's a screenshot from my program after it was allowed to run for a
+while:</p>
+<img src="exercise-mosaic-brighten.png" width="400" height="400" alt="screenshot from RandomBrighten"/>
+</webdiv>
+
+
+
+</exercise-discuss>
+<exercise-code><pre><prog name="RandomBrighten">/**
+ * This program opens a Mosaic window that is initially filled with black.
+ * A "disturbance" moves randomly around in the window.  Each time it visits
+ * a square, the green component of the color of that square is increased
+ * until, after about ten visits, it has reached the maximum possible level.
+ * The animation continues until the user closes the window.
+ */
+
+public class RandomBrighten {
+   
+   final static int ROWS = 80;        // Number of rows in the mosaic.
+   final static int COLUMNS = 80;     // Number of columns in the mosaic.
+   final static int SQUARE_SIZE = 5;  // Size of each square in the mosaic.
+   
+   static int currentRow;    // Row currently containing the disturbance.
+   static int currentColumn; // Column currently containing disturbance.
+   
+   /**
+    * The main program creates the window, fills it with random colors,
+    * and then moves the disturbance in a random walk around the window
+    * as long as the window is open.
+    */
+   public static void main(String[] args) {
+      Mosaic.open( ROWS, COLUMNS, SQUARE_SIZE, SQUARE_SIZE );
+      currentRow = ROWS / 2;   // start at center of window
+      currentColumn = COLUMNS / 2;
+      Mosaic.setUse3DEffect(false);
+      while (Mosaic.isOpen()) {
+         brightenSquare(currentRow, currentColumn);
+         randomMove();
+         Mosaic.delay(1);
+      }
+   }  // end main
+   
+   /**
+    * Add a bit of green to the rectangle in a given row and column.
+    * Precondition:   The specified rowNum and colNum are in the valid range
+    *                 of row and column numbers.
+    * Postcondition:  The green component of the color of the square has
+    *                 been increased by 25, except that it does not go
+    *                 over its maximum possible value, 255.
+    */
+   static void brightenSquare(int row, int col) {
+      int g = Mosaic.getGreen(row,col);
+      g += 25;
+      if (g &gt; 255)
+          g = 255;
+      Mosaic.setColor(row,col,0,g,0);
+   }
+   
+   /**
+    * Move the disturbance.
+    * Precondition:   The global variables currentRow and currentColumn
+    *                 are within the legal range of row and column numbers.
+    * Postcondition:  currentRow or currentColumn is changed to one of the
+    *                 neighboring positions in the grid -- up, down, left, or
+    *                 right from the current position.  If this moves the
+    *                 position outside of the grid, then it is moved to the
+    *                 opposite edge of the grid.
+    */
+   static void randomMove() {
+      int directionNum; // Randomly set to 0, 1, 2, or 3 to choose direction.
+      directionNum = (int)(4*Math.random());
+      switch (directionNum) {
+      case 0:  // move up 
+         currentRow--;
+         if (currentRow &lt; 0)
+            currentRow = ROWS - 1;
+         break;
+      case 1:  // move right
+         currentColumn++;
+         if (currentColumn &gt;= COLUMNS)
+            currentColumn = 0;
+         break; 
+      case 2:  // move down
+         currentRow ++;
+         if (currentRow &gt;= ROWS)
+            currentRow = 0;
+         break;
+      case 3:  // move left  
+         currentColumn--;
+         if (currentColumn &lt; 0)
+            currentColumn = COLUMNS - 1;
+         break; 
+      }
+   }  // end randomMove
+   
+} // end class RandomBrighten</prog></pre>
+</exercise-code>
+</exercise> 
+
+
+
+<exercise>
+<exercise-question><p>For this exercise, you will do something even more interesting
+with the <classname>Mosaic</classname> class that was discussed in <localref href="subroutines.6"/>.
+(Again, don't forget that you will need <sourceref href="Mosaic.java"/> and <sourceref href="MosaicPanel.java"/>
+to compile and run your program.)
+</p>
+<p>The program that you write for this exercise should start by filling a mosaic with
+random colors.  Then repeat the following until the user closes the mosaic window:
+Select one of the rectangles in the mosaic at random.  Then select one of the
+neighboring rectangles&mdash;above it, below it, to the left of it, or to the right of it.
+Copy the color of the originally selected rectangle to the selected neighbor, so that
+the two rectangles now have the same color.
+</p> 
+<p>As this process is repeated over and over, it becomes more and more likely that neighboring
+ squares will have the same color.  The result is to build up larger color patches.  On the other
+ hand, once the last square of a given color disappears, there is no way for that color to
+ ever reappear. (Extinction is forever!)  If you let the program run long enough, eventually
+ the entire mosaic will be one uniform color.</p>
+</exercise-question>
+<exercise-discuss>
+<p>I will call the program <classname>RandomConvert</classname>, since the basic operation
+is to convert one square to be the same color as a neighboring square.  An outline for the
+main program is easy:</p>
+<pre>Open a mosaic window
+Fill the mosaic with random colors
+while the window is open:
+   Select one of the rectangles at random
+   Convert the color of one of that rectangle's neighbors
+   Short delay</pre>
+   
+<p>We have already seen a subroutine for filling the mosaic with random color, in
+<localref href="subroutines.6.2"/>.  I will also write a subroutine to do the second
+step in the while loop.  There is some question about what it means to "select one
+of the rectangles at random."  A rectangle in the mosaic is specified by a 
+row number and a column number.  We can select a random rectangle by choosing a
+row number and a column number at random.  Assuming that <code>ROWS</code> and
+<code>COLUMNS</code> are constants that give the number of rows and the number of
+columns, we can do that by saying</p>
+
+<pre>int randomRow = (int)(ROWS * Math.random());
+int randomColumn = (int)(COLUMNS * Math.random());</pre>
+
+<np>where I have declared each variable and initialized it in one step, as
+discussed in <localref href="subroutines.7.1"/>.  For the "convert" subroutine
+to do its work, we will have to tell it which rectangle has been selected, so
+<code>randomRow</code> and <code>randomColumn</code> will be parameters to 
+that subroutine.  The code for the program's <code>main()</code> routine
+becomes:</np>
+
+<pre>Mosaic.open(ROWS, COLUMNS, SQUARE_SIZE, SQUARE_SIZE);
+fillWithRandomColors();
+while (Mosaic.isOpen()) {
+   int randomRow = (int)(ROWS * Math.random());
+   int randomColumn = (int)(COLUMNS * Math.random());
+   convertRandomNeighbor(randomRow, randomColumn);
+   Mosaic.delay(1);
+}</pre>
+
+<p>All that remains is to write the <code>convertRandomNeighbor()</code> subroutine.
+This routine should pick a random neighbor of a given rectangle and change its color.
+A rectangle in the mosaic has four neighbors, above, below, to the left, and to the right.
+We can pick one at random by selecting a random integer less than four and using that
+integer to decide which neighbor to select.
+We have a problem, though, if the rectangle is on the edge of the mosaic.  For example,
+if the rectangle is in the top row, then there is no neighbor <b>above</b>
+that rectangle in the mosaic.  One solution to this problem is to wrap around to the
+bottom of the mosaic and use a square from the bottom row as the neighbor.  Essentially,
+we think of the top of the mosaic as connected to the bottom and the left edge as
+connected to the right.  We have seen something like this in <localref href="subroutines.6.3"/>,
+in the <code>randomMove()</code> subroutine.  The <code>convertRandomNeighbor()</code> code
+can use some basic ideas from <code>randomMove()</code>.  
+Here is a version of <code>convertRandomNeighbor()</code>
+that would work:
+</p>
+
+<pre>static void convertRandomNeighbor(int row, int col) {
+
+   /* Choose a random direction, and get the row and column
+    * numbers of the neighbor that lies in that direction. */
+
+   int neighborRow;       // row number of selected neighbor
+   int neighborColumn;    // column number of selected neighbor
+
+   int directionNum = (int)(4*Math.random());  // random direction;
+
+   switch (directionNum) {
+   case 0:    // Choose neighbor above.
+      neighborColumn = col;        // Neighbor is in the same column.
+      neighborRow = row - 1;       // Subtract 1 to get neighbor's row number.
+      if (neighborRow &lt; 0)         // Neighbor's row number is outside the mosaic.
+         neighborRow = ROWS - 1;  // So wrap around to bottom of the mosaic.
+      break;
+   case 1:    // Choose neighbor to the right.
+      neighborRow = row;               // Same row.
+      neighborColumn = col + 1;        // Column to the right.
+      if (neighborColumn &gt;= COLUMNS)   // Outside the mosaic?
+         neighborColumn = 0;          // Wrap around to the left edge
+      break; 
+   case 2:    // Choose neighbor below.
+      neighborColumn = col;
+      neighborRow = row + 1;
+      if (neighborRow &gt;= ROWS)
+         neighborRow = 0;
+      break;
+   default:    // Choose neighbor to the left.
+      neighborRow = row;
+      neighborColumn = col - 1;
+      if (neighborColumn &lt; 0)
+         neighborColumn = COLUMNS - 1;
+      break; 
+   }
+       
+   /* Get the color components for position (row,col) */
+   
+   int red = Mosaic.getRed(row,col);
+   int green = Mosaic.getGreen(row,col);
+   int blue = Mosaic.getBlue(row,col);
+   
+   /* Change the color of the neighbor to color of the original square. */
+       
+   Mosaic.setColor(neighborRow,neighborColumn,red,green,blue);
+    
+}</pre>
+
+<np>Note the use of a <code>default</code> case at the end of the <code>switch</code>
+statement.  Saying "<code>case&nbsp;3</code>" will not work here, because the computer would
+not be able to verify that values have definitely been assigned to <code>neighborRow</code>
+and <code>neighborColumn</code>.</np>
+
+<p>In my program, I actually used a different algorithm that requires somewhat less code.
+My algorithm goes like this:</p>
+
+<pre>Get the color components for the rectangle at position (row,col).
+Modify the value of row or col to point to a neighboring rectangle.
+Set the color of position (row,col).</pre>
+
+<np>This is a little tricky, since the variables <code>row</code> and <code>col</code> are 
+used both for getting the color and for setting it.  But by the time <code>row</code>
+and <code>col</code> are used for setting the color, they are referring to a different
+rectangle.  You can see my version of <code>convertRandomNeighbor</code> in the full
+source code listing below.</np>
+
+<p>In the end, I made one change in the program.  I found that I wanted the process to
+go more quickly, but leaving out the delay altogether made it much too fast.  My solution 
+was to do several conversions each time through the while loop in the main routine, instead
+of just one.  I added a <code>BATCH_SIZE</code> constant to say how many conversions to
+do at a time, and I added a <code>for</code> loop in the main program to implement the
+multiple conversions.  A <code>BATCH_SIZE</code> of 10 or even 100 gives a much more
+satisfactory animation.</p>
+
+<webdiv><p>Here's a screenshot from my program after it was allowed to run for a
+while:</p>
+<img src="exercise-mosaic-convert.png" width="400" height="400" alt="screenshot from convert"/>
+</webdiv>
+
+</exercise-discuss>
+ 
+ <exercise-code>
+ <pre><prog name="RandomConvert">/**
+ * This program fills a mosaic with random colors.  It then enters
+ * a loop in which it randomly selects one of the squares in the
+ * mosaic, then randomly selects one of the four neighbors of that
+ * square and converts the selected neighbor to the color of the
+ * originally selected square.  The effect is to gradually build
+ * up larger patches of uniform color.  The animation continues 
+ * until the user closes the window.  This program depends on
+ * the non-standard classes Mosaic and MosaicCanvas.
+ */
+
+public class RandomConvert {
+
+    final static int ROWS = 40;        // Number of rows in the mosaic. 
+    final static int COLUMNS = 40;     // Number of columns in the mosaic.
+    final static int SQUARE_SIZE = 10; // Size of each square in the mosaic.
+    final static int DELAY = 1;        // Millisecond delay after each convert.
+    final static int BATCH_SIZE = 10;  // The number of squares tested/converted at a time.
+
+
+    /**
+     * The main() routine opens the mosaic window, then enters into
+     * a loop in which it repeatedly converts the color of one square.
+     * The loop ends when the user closes the mosaic window.
+     */
+    public static void main(String[] args) {
+        Mosaic.setUse3DEffect(false);
+        Mosaic.open(ROWS, COLUMNS, SQUARE_SIZE, SQUARE_SIZE);
+        fillWithRandomColors();
+        while (Mosaic.isOpen()) {
+            for (int i = 0; i &lt; BATCH_SIZE; i++) {
+                int randomRow = (int)(ROWS * Math.random());
+                int randomColumn = (int)(COLUMNS * Math.random());
+                convertRandomNeighbor(randomRow, randomColumn);
+            }
+            Mosaic.delay(DELAY);
+        }
+    }
+
+
+    /**
+     * Set each square in the mosaic to be a randomly selected color.
+     */
+    static void fillWithRandomColors() {
+        for (int row = 0; row &lt; ROWS; row++) {
+            for (int col = 0; col &lt; COLUMNS; col++) {
+                int r = (int)(256*Math.random());
+                int g = (int)(256*Math.random());
+                int b = (int)(256*Math.random());
+                Mosaic.setColor(row,col,r,g,b);
+            }
+        }
+    }
+
+
+    /**
+     * Select one of the neighbors of the square at position (row,column) in
+     * the mosaic.  Change the color at position (row, column) to match the
+     * color of the selected neighbor.   The neighbors of a square are the
+     * squares above, below, to the left, and to the right of the square.
+     * For squares on the edge of the mosaic, wrap around to the opposite
+     * edge.
+     */
+    static void convertRandomNeighbor(int row, int col) {
+
+        /* Get the color components for position (row,col) */
+
+        int red = Mosaic.getRed(row,col);
+        int green = Mosaic.getGreen(row,col);
+        int blue = Mosaic.getBlue(row,col);
+
+        /* Choose a random direction, and change the value of row
+         * or col to refer to the neighbor that lies in that direction. */
+
+        int directionNum = (int)(4*Math.random());
+        switch (directionNum) {
+        case 0:    // Choose neighbor above.
+            row--;  // Move row number one row up.
+            if (row &lt; 0)  // row number is outside the mosaic.
+                row = ROWS - 1;  // Wrap around to bottom of the mosaic.
+            break;
+        case 1:    // Choose neighbor to the right.
+            col++;
+            if (col &gt;= COLUMNS)
+                col = 0;
+            break; 
+        case 2:    // Choose neighbor below.
+            row++;
+            if (row &gt;= ROWS)
+                row = 0;
+            break;
+        case 3:    // Choose neighbor to the left.
+            col--;
+            if (col &lt; 0)
+                col = COLUMNS - 1;
+            break; 
+        }
+
+        /* Change the color of the neighbor to color of the original square. */
+
+        Mosaic.setColor(row,col,red,green,blue);
+    }
+
+}
+</prog></pre>
+ </exercise-code>
+ </exercise>
+    
+
+<exercise id="subroutines.ex.7">
+<exercise-question><p>Write a program that administers a basic addition quiz to the user.
+There should be ten questions.  Each question is a simple addition problem such as
+<code>17&nbsp;+&nbsp;42</code>, where the numbers in the problem are chosen at random
+(and are not too big).  The program should ask the user all ten questions and get
+the user's answers.  After asking all the questions, the user should print each question
+again, with the user's answer.  If the user got the answer right, the program should
+say so; if not, the program should give the correct answer.  At the end, tell the user
+their score on the quiz, where each correct answer counts for ten points.</p>
+<p>The program should use three subroutines, one to create the quiz, one to administer
+the quiz, and one to grade the quiz.  It can use three arrays, with three global variables of type
+<atype>int[]</atype>, to refer to the arrays.  The first array holds the first number from every
+question, the second holds the second number from every questions, and the third holds
+the user's answers.</p>
+</exercise-question>
+<exercise-discuss>
+<p>The statement of the problem has already made a lot of decisions for us.  We are told
+to use three global variables of type <atype>int[]</atype>.  The variables must be <code>static</code>,
+and I have chosen to make them <code>private</code>, so the declarations become:
+</p>
+<pre>private static int[] firstNumbers;  // The first numbers in all ten questions.
+private static int[] secondNumbers; // The second numbers in all ten questions.
+private static int[] userAnswers;   // The user's answers to the ten questions.
+</pre>
+<np>Note that these declarations are not in any subroutine.  These statements only create variables, not
+arrays. We still need to create three arrays of length 10.  The arrays can be created using 
+the <code>new</code> operator.  This initialization could in fact be combined with the
+declaration of the variables:</np>
+<pre>private static int[] firstNumbers = new int[10];
+private static int[] secondNumbers = new int[10];
+private static int[] userAnswers = new int[10];</pre>
+<np>Another possibility would be to create the three arrays at the beginning of the
+<code>main()</code> routine.  In fact, I chose to create them in the subroutines where
+they are first used.</np>
+<p>The program has three stages&mdash;create the problems, administer the quiz, and grade the
+quiz&mdash;and we are told to write a subroutine to do each stage.  The main program simply
+has to call the subroutines:</p>
+<pre>public static void main(String[] args) {
+    createQuiz();
+    administerQuiz();
+    gradeQuiz();
+}</pre>
+<np>(However, I added a couple of output statements at the start.)  
+This is an example of using subroutines to break up a large task into several simpler
+subtasks, so that programming each subtask becomes a separate problem.  The subroutines
+are short and not too hard to write.  Looking at <code>administerQuiz()</code> as an example,
+note that the user's answers have to be stored in the array, <code>userAnswers</code>,
+so that they can be used when grading the quiz.  I create the array itself before asking
+any questions, and then store the user's responses into the array as they are read
+from the user.  On the other hand, the arrays that hold the numbers that occur in the
+questions have already been created and filled before <code>administerQuiz()</code> is called.
+Here's the subroutine:
+</np>
+<pre>private static void administerQuiz() {
+    userAnswers = new int[10];
+    for (int i = 0; i &lt; 10; i++) {
+        int questionNum = i + 1;
+        System.out.printf("Question %2d:  What is %2d + %2d  ? ",
+                      questionNum, firstNumbers[i], secondNumbers[i]);
+        userAnswers[i] = TextIO.getlnInt();
+    }
+}</pre>
+
+<p>A couple notes about the output:  I wanted to number the questions
+1, 2, &dots;, 10, but the elements of the arrays are numbered 0, 1, &dots;, 9.
+This means that the question number that I output has to be one more than the
+array index.  Also, all the numbers that occur in my program are either one or
+two digits.  By allowing exactly two digits for each number in the output, I can
+get everything to line up neatly.  Here's the I/O for a sample run of the
+program:</p>
+<pre>Welcome to the addition quiz!
+
+Question  1:  What is 40 + 14  ? 54
+Question  2:  What is 18 + 38  ? 46
+Question  3:  What is 21 + 31  ? 52
+Question  4:  What is 18 + 36  ? 54
+Question  5:  What is 43 + 12  ? 55
+Question  6:  What is 21 + 17  ? 38
+Question  7:  What is 33 + 25  ? 58
+Question  8:  What is 39 + 21  ? 70
+Question  9:  What is  1 + 25  ? 26
+Question 10:  What is 39 + 26  ? 65
+
+Here are the correct answers:
+   Question  1:  40 + 14  =  54.  You were CORRECT.
+   Question  2:  18 + 38  =  56.  You said 46, which is INCORRECT.
+   Question  3:  21 + 31  =  52.  You were CORRECT.
+   Question  4:  18 + 36  =  54.  You were CORRECT.
+   Question  5:  43 + 12  =  55.  You were CORRECT.
+   Question  6:  21 + 17  =  38.  You were CORRECT.
+   Question  7:  33 + 25  =  58.  You were CORRECT.
+   Question  8:  39 + 21  =  60.  You said 70, which is INCORRECT.
+   Question  9:   1 + 25  =  26.  You were CORRECT.
+   Question 10:  39 + 26  =  65.  You were CORRECT.
+
+You got 8 questions correct.
+Your grade on the quiz is 80</pre>
+<break/>
+<p>I noted in <localref href="subroutines.3.6"/> that it's considered bad style to use global
+variables where parameters could be used instead, and that some people are quite hostile
+to unnecessary global variables.  You might ask, how bad was it to use global variables in
+this case?  To some extent this is a matter of opinion.  You could argue that the whole
+program revolves around the three arrays, so it makes sense for them to be global in the
+program.  On the other hand, it is possible to avoid using globals in this case.
+The three array variables can be declared in <code>main()</code> and the three arrays
+can be created there and passed as parameters to the subroutines.  Here is a main
+routine that does that:
+</p>
+<pre>public static void main(String[] args) {
+    int[] firstNums = new int[10];  // The first numbers in the ten problems
+    int[] secondNums = new int[10]; // The second numbers in the ten problems
+    int[] answers = new int[10];    // The user's answers.
+    System.out.println();
+    System.out.println("Welcome to the addition quiz!");
+    System.out.println();
+    createQuiz(firstNums,secondNums);
+    administerQuiz(firstNums,secondNums,answers);
+    gradeQuiz(firstNums,secondNums,answers);
+}</pre>
+<np>A complete second version of the program, with no global variables, is given below.
+One reason that I asked you to use global variables is that understanding exactly how
+arrays work as parameters requires an understanding of objects and how they are
+passed as parameters.  Without that understanding, it's hard to get the global-less
+version correct.  You will learn about passing objects as parameters in the
+next chapter.</np>
+</exercise-discuss>
+<exercise-code>
+<pre>
+<b>Here is the original program, using global variables:</b>
+
+
+<prog name="AdditionQuiz">/**
+ * This program administers a ten-question addition quiz to the user.  The numbers
+ * for the problem are chosen at random.  The numbers and the answers are one or
+ * two digits.  After asking the user the ten questions, the computer grades the
+ * quiz, telling the user the correct answer for any problem they got wrong.
+ */
+public class AdditionQuiz {
+    
+    private static int[] firstNumbers;  // The first numbers in all ten questions.
+    private static int[] secondNumbers; // The second numbers in all ten questions.
+    private static int[] userAnswers;   // The user's answers to the ten questions.
+    
+    
+    public static void main(String[] args) {
+        System.out.println();
+        System.out.println("Welcome to the addition quiz!");
+        System.out.println();
+        createQuiz();
+        administerQuiz();
+        gradeQuiz();
+    }
+    
+    
+    /**
+     * Creates the arrays that hold the numbers for the questions and fills
+     * them with random numbers.  
+     */
+    private static void createQuiz() {
+        firstNumbers = new int[10];
+        secondNumbers = new int[10];
+        for ( int i = 0; i &lt; 10; i++ ) {
+            firstNumbers[i] = (int)(Math.random() * 50 + 1);  // in the range 1 to 50
+            secondNumbers[i] = (int)(Math.random() * 50); // in the range 0 to 49
+        }
+    }
+    
+    
+    /**
+     * Asks the user each of the ten quiz questions and gets the user's answers.
+     * The answers are stored in an array, which is created in this subroutine.
+     */
+    private static void administerQuiz() {
+        userAnswers = new int[10];
+        for (int i = 0; i &lt; 10; i++) {
+            int questionNum = i + 1;
+            System.out.printf("Question %2d:  What is %2d + %2d  ? ",
+                          questionNum, firstNumbers[i], secondNumbers[i]);
+            userAnswers[i] = TextIO.getlnInt();
+        }
+    }
+    
+    
+    /**
+     * Shows all the questions, with their correct answers, and computes a grade
+     * for the quiz.  For each question, the user is told whether they got
+     * it right.
+     */
+    private static void gradeQuiz() {
+        System.out.println();
+        System.out.println("Here are the correct answers:");
+        int numberCorrect = 0;
+        int grade;
+        for (int i = 0; i &lt; 10; i++) {
+            int questionNum = i + 1;
+            int correctAnswer = firstNumbers[i] + secondNumbers[i];
+            System.out.printf("   Question %2d:  %2d + %2d  =  %2d.  ",
+                questionNum, firstNumbers[i], secondNumbers[i], correctAnswer);
+            if ( userAnswers[i] == correctAnswer ) {
+                System.out.println("You were CORRECT.");
+                numberCorrect++;
+            }
+            else {
+                System.out.println("You said " + userAnswers[i] + ", which is INCORRECT.");
+            }
+        }
+        grade = numberCorrect * 10;
+        System.out.println();
+        System.out.println("You got " + numberCorrect + " questions correct.");
+        System.out.println("Your grade on the quiz is " + grade);
+        System.out.println();
+    }
+
+} // end class AdditionQuiz</prog>
+
+
+<b>Here is a version that uses parameters and no global variables:</b>
+
+
+<prog name="AdditionQuizNoGlobals">/**
+ * This program administers a ten-question addition quiz to the user.  The numbers
+ * for the problem are chosen at random.  The numbers and the answers are one or
+ * two digits.  After asking the user the ten questions, the computer grades the
+ * quiz, telling the user the correct answer for any problem they got wrong.
+ */
+public class AdditionQuizNoGlobals {
+        
+    
+    public static void main(String[] args) {
+        int[] firstNums = new int[10];  // The first numbers in the ten problems
+        int[] secondNums = new int[10]; // The second numbers in the ten problems
+        int[] answers = new int[10];    // The user's answers.
+        System.out.println();
+        System.out.println("Welcome to the addition quiz!");
+        System.out.println();
+        createQuiz(firstNums,secondNums);
+        administerQuiz(firstNums,secondNums,answers);
+        gradeQuiz(firstNums,secondNums,answers);
+    }
+    
+    
+    /**
+     * Creates the arrays that hold the numbers for the questions and fills
+     * them with random numbers.  The parameters are arrays that will hold
+     * the random numbers for the first and second operands of each addition
+     * problem.  The arrays must have already been created when this subroutine
+     * is called!
+     */
+    private static void createQuiz(int[] firstNumbers, int[] secondNumbers) {
+        for ( int i = 0; i &lt; 10; i++ ) {
+            firstNumbers[i] = (int)(Math.random() * 50 + 1);  // in the range 1 to 50
+            secondNumbers[i] = (int)(Math.random() * 50); // in the range 0 to 49
+        }
+    }
+    
+    
+    /**
+     * Asks the user each of the ten quiz questions and gets the user's answers.
+     * The answers are stored in an array, which is created in this subroutine.
+     * The first two parameters hold the operands for the quiz questions.  The user's
+     * answers to the ten problems will be stored in the third array.
+     */
+    private static void administerQuiz(int[] firstNumbers, int[] secondNumbers, int[] userAnswers) {
+        for (int i = 0; i &lt; 10; i++) {
+            int questionNum = i + 1;
+            System.out.printf("Question %2d:  What is %2d + %2d  ? ",
+                          questionNum, firstNumbers[i], secondNumbers[i]);
+            userAnswers[i] = TextIO.getlnInt();
+        }
+    }
+    
+    
+    /**
+     * Shows all the questions, with their correct answers, and computes a grade
+     * for the quiz.  For each question, the user is told whether they got
+     * it right.  The first two parameters hold the operands for the quiz questions,
+     * and the third parameter holds the answers that the user gave to the quiz.
+     */
+    private static void gradeQuiz(int[] firstNumbers, int[] secondNumbers, int[] userAnswers) {
+        System.out.println();
+        System.out.println("Here are the correct answers:");
+        int numberCorrect = 0;
+        int grade;
+        for (int i = 0; i &lt; 10; i++) {
+            int questionNum = i + 1;
+            int correctAnswer = firstNumbers[i] + secondNumbers[i];
+            System.out.printf("   Question %2d:  %2d + %2d  =  %2d.  ",
+                questionNum, firstNumbers[i], secondNumbers[i], correctAnswer);
+            if ( userAnswers[i] == correctAnswer ) {
+                System.out.println("You were CORRECT.");
+                numberCorrect++;
+            }
+            else {
+                System.out.println("You said " + userAnswers[i] + ", which is INCORRECT.");
+            }
+        }
+        grade = numberCorrect * 10;
+        System.out.println();
+        System.out.println("You got " + numberCorrect + " questions correct.");
+        System.out.println("Your grade on the quiz is " + grade);
+        System.out.println();
+    }
+
+}  // end class AdditionQuizNoGlobals
+</prog>
+
+</pre>
+</exercise-code>
+</exercise>
+
+    
+</exercises>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE intro SYSTEM "../javanotes7.dtd" >
+
+<intro>
+<p><start><big>C</big>omputers get a lot of their power</start> from working
+with <newword>data structures</newword>. A data structure is an
+organized collection of related data. An object is a data structure, but this
+type of data structure&mdash;consisting of a fairly small number of named instance
+variables&mdash;is just the beginning. In many cases, programmers build
+complicated data structures by hand, by linking objects together. We'll look at
+these custom-built data structures in <localref href="recursion"/>. But there is one type of
+data structure that is so important and so basic that it is built into every
+programming language: the array.</p>
+
+<p>You have already encountered arrays in <localref href="control.7a"/>
+and <localref href="OOP.1.4"/>.  We continue the study of arrays in this chapter,
+including some new details of their use and some additional array-processing
+techniques.  In particular, we will look at the important topic of algorithms for
+searching and sorting an array.</p>
+
+<p>An array has a fixed size that can't be changed after the array is created.
+But in many cases, it is useful to have a data structure that can grow and shrink
+as necessary.  In this chapter, we will look at a standard class, 
+<classname>ArrayList</classname>, that represents such a data structure.</p>
+
+</intro>

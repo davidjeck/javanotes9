@@ -1,0 +1,3008 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+
+<exercises>
+   
+<exercise>
+<exercise-question><p><localref href="threads.1.3"/> discusses the need for synchronization
+in multithreaded programs, and it defines a <classname>ThreadSafeCounter</classname> class with
+the necessary synchronization.  Is this really important?  Can you really get errors
+by using an unsynchronized counter with multiple threads?  Write a program to find out.
+Use the following unsynchronized counter class, which you can include as a nested class in
+your program:</p>
+<pre>static class Counter {
+    int count;
+    void inc() {
+        count = count+1;
+    }
+    int getCount() {
+        return count;
+    }
+}</pre>
+<np>Write a thread class that will call the <code>inc()</code> method in this class a
+specified number of times.  Create several threads, start them all, and wait for all
+the threads to terminate.  Print the final value of the counter, and see whether it
+is correct.</np>
+<p>Let the user enter the number of threads and the number of times that each thread
+will increment the counter.  You might need a fairly large number of increments to
+see an error.  And of course there can never be any error if you use just one
+thread.  Your program can use <code>join()</code> to wait for a thread to
+terminate (see <localref href="threads.1.2"/>).</p>
+</exercise-question>
+<exercise-discuss><p>The necessary thread class is very simple to write.  In my
+program, it's a static nested class that uses two global variables, which
+represent the counter and the number of times that the thread is to increment
+the counter:</p>
+<pre>static Counter counter;          // The counter that will be incremented.
+static int numberOfIncrements;   // Number of times each thread will increment it.
+
+static class IncrementerThread extends Thread {
+    public void run() {
+        for (int i = 0; i &lt; numberOfIncrements; i++) {
+            counter.inc();
+        }
+    }
+}</pre>
+<np>Note that since the counter is a global static variable, it is used by
+all threads of type <classname>IncrementerThread</classname>.  It is a shared
+resource.</np>
+<p>In the <code>main()</code> routine, after getting the number of threads and
+the number of increments from the user, we need to create the threads, start them,
+and wait for them to terminate.  We have to do the part about starting all the
+threads before we get to the part about waiting for threads to terminate, so
+we need an array to hold the threads:</p>
+<pre>IncrementerThread[] workers = new IncrementerThread[numberOfThreads];
+counter = new Counter();
+for (int i = 0; i &lt; numberOfThreads; i++)
+    workers[i] = new IncrementerThread();
+for (int i = 0; i &lt; numberOfThreads; i++)
+    workers[i].start();
+
+/* Wait for all threads to terminate. */
+
+for (int i = 0; i &lt; numberOfThreads; i++) {
+    try {
+        workers[i].join();
+    }
+    catch (InterruptedException e) {
+    }
+}</pre>
+<np>(I hope that it's clear that you can't start a thread, wait for it to finish,
+start another thread, wait for it to finish, and so on.  If you did that, you'd only
+have one thread running at any given time, and you would certainly not see any
+errors in the counter!)</np>
+<p>My program actually runs in a loop, so the user can run several experiments
+without restarting the program every time.</p>
+<p>In my own experiments, I saw a lot of errors when the number of increments per
+thread was one million, even with just two threads.  For small numbers of increments, less than about 1000, I never
+saw any errors. (This might be because the threads didn't run long enough to actually
+get more than one running at a time.)  I saw a few errors when I used a large number
+of threads with 1000 increments per thread.</p>
+<p>Making <code>inc()</code> into a synchronized method completely solves the problem.
+If you try that, you should find that the program takes noticeably longer to run, because
+of the extra overhead associated with the synchronization.  Simply declaring the
+variable <code>count</code> to be <code>volatile</code> does <b>not</b> fix the
+problem, since the race condition still exists. (In fact, curiously, I found that the
+number of errors increased when I made <code>count</code> <code>volatile</code>, possibly because
+accessing the volatile variable can cause a thread to block briefly and give another 
+thread the chance to jump in.)</p>
+<p>This exercise shows that synchronization errors can happen.  In many programs,
+they would be very rare, but serious when they occur.  Unfortunately, when trying to
+track down a bug that is due to a synchronization error, it might be very difficult
+to reproduce the error, since such errors depend on accidents of timing between
+two threads that are running independently.  This makes it all the more important to
+analyze your program carefully and get it right when you are writing it in the first place, 
+rather than count on your ability to debug it later.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="UnsynchronizedCounterTest">import java.util.Scanner;
+
+/**
+ * A demo program to see how hard it is to get an
+ * error while using an unsynchronized counter with
+ * several threads.  The program runs one or more
+ * threads.  Each thread increments the counter a
+ * specified number of times.  After all the threads
+ * have completed, the value of the counter is 
+ * printed out so it can be compared to the correct
+ * value.  The user specifies the number of threads
+ * and the number of times each thread increments the
+ * counter.  (To see an error, the number of increments
+ * probably has to be pretty large.  Try 1000000.)
+ */
+public class UnsynchronizedCounterTest {
+    
+    /**
+     * A class representing a counter with a method for
+     * incrementing the counter.  No synchronization is
+     * used, so this counter is not "thread-safe".
+     */
+    static class Counter {
+        int count;
+        void inc() {
+            count = count+1;
+        }
+        int getCount() {
+            return count;
+        }
+    }
+    
+
+    static Counter counter;          // The counter that will be incremented.
+    static int numberOfIncrements;   // Number of times each thread will increment it.
+    
+    
+    /**
+     * The class that defines one of the threads.  The thread
+     * simply increments counter numberOfIncrements times, in
+     * a for loop.
+     */
+    static class IncrementerThread extends Thread {
+        public void run() {
+            for (int i = 0; i &lt; numberOfIncrements; i++) {
+                counter.inc();
+            }
+        }
+    }
+    
+    
+    /**
+     * The main program runs in a loop until the user wants to exit.
+     * Each time through the loop, it runs one experiment.  It gets
+     * the number of threads and the number of increments per thread
+     * from the user.  It creates and starts the threads, and then
+     * waits for them all to finish.  It prints the final value of
+     * the counter, as well as the expected value.  The program ends
+     * when the user enters a number less than or equal to zero as
+     * the number of threads.
+     */
+    public static void main(String[] args) {
+
+        Scanner in = new Scanner(System.in);  // For reading the user's inputs.
+        
+        while (true) {
+            
+            /* Get number of threads and number of increments per thread
+             * from the user.  Exit if number of threads is &lt;= 0. */
+            
+            System.out.println();
+            System.out.print("How many threads do you want to run (Enter 0 to end)? ");
+            int numberOfThreads = in.nextInt();
+            if (numberOfThreads &lt;= 0) 
+                break;
+            
+            do {
+                System.out.println();
+                System.out.println("How many times should each thread increment the counter? ");
+                numberOfIncrements = in.nextInt();
+                if (numberOfIncrements &lt; 1) {
+                    System.out.println("Number of increments must be positive.");
+                    numberOfIncrements = 1;
+                }
+            } while (numberOfIncrements &lt;= 0);
+            
+            System.out.println();
+            System.out.println("Using " + numberOfThreads + " threads.");
+            System.out.println("Each thread increments the counter " 
+                                             + numberOfIncrements + " times.");
+            
+            /* Create the threads and start them. */
+            
+            System.out.println();
+            System.out.println("Working...");
+            System.out.println();
+            IncrementerThread[] workers = new IncrementerThread[numberOfThreads];
+            counter = new Counter();
+            for (int i = 0; i &lt; numberOfThreads; i++)
+                workers[i] = new IncrementerThread();
+            for (int i = 0; i &lt; numberOfThreads; i++)
+                workers[i].start();
+            
+            /* Wait for all threads to terminate. */
+            
+            for (int i = 0; i &lt; numberOfThreads; i++) {
+                try {
+                    workers[i].join();
+                }
+                catch (InterruptedException e) {
+                }
+            }
+            
+            /* Display the results. */
+            
+            System.out.println("The final value of the counter should be "
+                                                     + (numberOfIncrements*numberOfThreads));
+            System.out.println("Actual final value of counter is: " + counter.getCount());
+            System.out.println();
+            System.out.println();
+            
+        } // end while
+        
+    } // end main()
+    
+
+} // end class UnsynchronizedCounterTest
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+
+<exercise id="threads.ex.2">
+<exercise-question><p><localref href="control.ex.2"/> asked
+you to find the integer in the range 1 to 10000 that has the largest
+number of divisors.  Now write a program that uses multiple threads to
+solve the same problem, but for the range 1 to 100000 (or less, if you
+don't have a fast computer).  By using threads, your program will take less time
+to do the computation when it is run on a multiprocessor computer.
+At the end of the program, output the elapsed time, the integer that
+has the largest number of divisors, and the number of divisors that it has.
+The program can be modeled on the sample prime-counting program 
+<sourceref href="ThreadTest2.java"/> from <localref href="threads.1.3"/>.
+For this exercise, you should simply divide up the problem into parts
+and create one thread to do each part.</p>
+</exercise-question>
+<exercise-discuss>
+<p>Pseudocode for solving this problem without using threads is:</p>
+<pre>maxDivisors = 0    // Maximum number of divisors seen so far
+for N from 1 to 100000:
+   Let count be the number of divisors of N
+   if (count &gt; maxDivisors):
+      maxDivisors = count  // New maximum number of divisors
+      whichInt = N         // The integer that gave the maximum</pre>
+<np>To turn this into a multithreaded program, we have to divide the
+integers between 1 and 100000 into groups and assign each group of integers
+to a thread.  In its run method, each thread finds the maximum number of
+divisors for integers in its assigned group.  This is very similar to what
+was done in the prime-counting program <sourceref href="ThreadTest2.java"/>.
+The only problem is combining the final results of all the threads.
+In <code>ThreadTest2.java</code>, each thread counted some primes and
+recorded its results by calling a method</np>
+<pre>synchronized private static void addToTotal(int x)</pre>
+<np>We can do something similar here.  The thread actually has two
+pieces of data to report, the maximum number of divisors that it
+found and the integer that had that many divisors.  The data from
+the thread has to be combined with the overall information about the
+maximum found by any thread so far.  So, the reporting method
+becomes:</np>
+<pre>/**
+ * This method is called by a thread when it has completed its computation,
+ * to report the largest number of divisors that it found in its assigned
+ * range of integers.  The information is used to update the variables
+ * maxDivisorCount and intWithMaxDivisorCount.
+ * @param maxCountFromThread largest divisor count in the thread's assigned
+ *          range
+ * @param intWithMaxFromThread the integer that had the maximum number
+ *          of divisors
+ */
+synchronized private static void report(int maxCountFromThread, 
+         int intWithMaxFromThread) {
+   if (maxCountFromThread &gt; maxDivisorCount) {
+      maxDivisorCount = maxCountFromThread;
+      intWithMaxDivisorCount = intWithMaxFromThread;
+   }
+}</pre>
+<p>The class that defines the threads, <classname>CountDivisorsThread</classname>,
+is very similar to the thread class from <code>ThreadTest2.java</code>.  You can
+see it in the complete solution below.</p>
+<p>In the program <code>ThreadTest2.java</code>, the number of integers to be
+processed was chosen to be evenly divisible by the number of threads.  This made
+it easier to divide the integers among the threads, since every thread can
+be assigned exactly the same number of integers to process.  For this program,
+I decided to drop the assumption that the number of integers is divisible by
+the number of threads.  This makes the program more general, but it's a little
+harder to decide how to assign the integers to the threads.</p>
+<p>If there are <code>T</code> threads and <code>N</code> integers, then
+each thread gets at least <code>N/T</code> integers (where <code>N/T</code>
+means the integer quotient, discarding any remainder).  But after assigning
+<code>N/T</code> integers to each thread, there might still be a few integers
+left over.  (The number of leftovers is actually <code>N&nbsp;%&nbsp;T</code>.)
+In my program, I just add these extra integers onto the group of integers
+assigned to the last thread, so the last thread might have more integers to
+process than the other threads.  I do this by making sure that the last number
+assigned to the last thread is 100000.)</p>
+<pre>int integersPerThread = 100000/numberOfThreads; 
+int start = 1;  // Starting point of the range of ints for first thread.
+int end = start + integersPerThread - 1;   // End point of the range of ints.
+for (int i = 0; i &lt; numberOfThreads; i++) {
+   if (i == numberOfThreads - 1) {
+      end = 100000;  // Make sure that the last thread's range goes all
+                     // the way up to 100000.  Because of rounding, this
+                     // is not automatic.
+   }
+   worker[i] = new CountDivisorsThread( start, end );
+   start = end+1;    // Determine the range of ints for the NEXT thread.
+   end = start + integersPerThread - 1;
+}</pre>
+<p>As one final change, instead of using the literal number 100000 as the number of
+integers to be processed in my program, I use a constant named <code>MAX</code>
+to make it easier to change the range of integers that is considered.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="CountDivisorsUsingThreads">/**
+ * This program finds the number in the range 1 to some maximum that has the 
+ * largest number of divisors.  It prints that number and the number of divisors 
+ * that it has.  Note that there might be several numbers that have the maximum
+ * number of divisors.  Only one of them is output.
+ * 
+ * The program's work is divided among one to ten threads.  The number 
+ * of threads is chosen by the user.
+ */
+public class CountDivisorsUsingThreads {
+
+   /**
+    * The upper limit of the range of integers that is to be tested.
+    */
+   private final static int MAX = 100000;
+   
+   /**
+    * The largest number of divisors found so far.  (Note: This is
+    * volatile since it is referenced in unsynchronized code in the
+    * countDivisorsWithThreads() method.)
+    */
+   private volatile static int maxDivisorCount = 0;
+   
+   /**
+    * An integer that has the maximum number of divisors seen so far.
+    */
+   private volatile static int intWithMaxDivisorCount;
+   
+   /**
+    * This method is called by a thread when it has completed its computation,
+    * to report the largest number of divisors that it found in its assigned
+    * range of integers.  The information is used to update the variables
+    * maxDivisorCount and intWithMaxDivisorCount.
+    * @param maxCountFromThread largest divisor count in the thread's assigned
+    *          range
+    * @param intWithMaxFromThread the integer that had the maximum number
+    *          of divisors
+    */
+   synchronized private static void report(int maxCountFromThread, 
+         int intWithMaxFromThread) {
+      if (maxCountFromThread &gt; maxDivisorCount) {
+         maxDivisorCount = maxCountFromThread;
+         intWithMaxDivisorCount = intWithMaxFromThread;
+      }
+   }
+   
+   /**
+    * A thread belonging to this class counts the number of divisors for all
+    * the integers in an assigned range of integers.  The range is specified
+    * in the constructor.  The thread finds the integer in the range that 
+    * has the largest number of divisors, and a number that has that many
+    * divisors.  At the end of its computation, the thread reports its answer 
+    * by calling the report() method.
+    */
+   private static class CountDivisorsThread extends Thread {
+      int min, max;
+      public CountDivisorsThread(int min, int max) {
+         this.min = min;
+         this.max = max;
+      }
+      public void run() {
+//         System.out.println("Thread " + this + " testing range " +
+//               min + " to " + max);  // For testing.
+//         long startTime = System.currentTimeMillis();
+         int maxDivisors = 0;
+         int whichInt = 0;
+         for (int i = min; i &lt; max; i++) {
+            int divisors = countDivisors(i);
+            if (divisors &gt; maxDivisors) {
+               maxDivisors = divisors;
+               whichInt = i;
+            }
+         }
+//         long elapsedTime = System.currentTimeMillis() - startTime;
+//         System.out.println("Thread " + this + " used " +
+//               (elapsedTime/1000.0) + " seconds.");   // for testing.
+         report(maxDivisors,whichInt);
+      }
+   }
+   
+   /**
+    * Finds the number in the range 1 to MAX that has the largest number of
+    * divisors, dividing the work among a specified number of threads.
+    */
+   private static void countDivisorsWithThreads(int numberOfThreads) {
+      System.out.println("\nCounting divisors using " + 
+            numberOfThreads + " threads...");
+      long startTime = System.currentTimeMillis();
+      CountDivisorsThread[] worker = new CountDivisorsThread[numberOfThreads];
+      int integersPerThread = MAX/numberOfThreads; 
+      int start = 1;  // Starting point of the range of ints for first thread.
+      int end = start + integersPerThread - 1;   // End point of the range of ints.
+      for (int i = 0; i &lt; numberOfThreads; i++) {
+         if (i == numberOfThreads - 1) {
+            end = MAX;  // Make sure that the last thread's range goes all
+                        // the way up to MAX.  Because of rounding, this
+                        // is not automatic.
+         }
+         worker[i] = new CountDivisorsThread( start, end );
+         start = end+1;    // Determine the range of ints for the NEXT thread.
+         end = start + integersPerThread - 1;
+      }
+      maxDivisorCount = 0;
+      for (int i = 0; i &lt; numberOfThreads; i++)
+         worker[i].start();
+      for (int i = 0; i &lt; numberOfThreads; i++) {
+             // Wait for each worker thread to die, because the results
+             // are not complete until all threads have completed and
+             // reported their results.
+         while (worker[i].isAlive()) {
+            try {
+               worker[i].join();
+            }
+            catch (InterruptedException e) {
+            }
+         }
+      }
+      long elapsedTime = System.currentTimeMillis() - startTime;
+      System.out.println("\nThe largest number of divisors " + 
+            "for numbers between 1 and " + MAX + " is " + maxDivisorCount);
+      System.out.println("An integer with that many divisors is " + 
+            intWithMaxDivisorCount);
+      System.out.println("Total elapsed time:  " + 
+            (elapsedTime/1000.0) + " seconds.\n");
+   }
+   
+   /**
+    * Gets the number of threads from the user and calls countDivisorsWithThreads()
+    * to do the actual work.
+    */
+   public static void main(String[] args) {
+      int numberOfThreads = 0;
+      while (numberOfThreads &lt; 1 || numberOfThreads &gt; 10) {
+         System.out.print("How many threads do you want to use  (1 to 10) ?  ");
+         numberOfThreads = TextIO.getlnInt();
+         if (numberOfThreads &lt; 1 || numberOfThreads &gt; 10)
+            System.out.println("Please enter a number from 1 to 10 !");
+      }
+      countDivisorsWithThreads(numberOfThreads);
+   }
+   
+    /**
+     * Finds the number of divisors of the integer N.  Note that this method does
+     * the counting in a stupid way, since it tests every integer in the range
+     * 1 to N to see whether it evenly divides N.
+     */
+   public static int countDivisors(int N) {
+      int count = 0;
+      for (int i = 1; i &lt;= N ; i++) {
+         if ( N % i == 0 )
+            count ++;
+      }
+      return count;
+   }
+   
+}
+</prog></pre>
+</exercise-code>
+</exercise>
+
+
+
+<exercise>
+<exercise-question><p>In the <localref href="threads.ex.2">previous exercise</localref>,
+you divided up a large task into a small number of large pieces and created a thread to 
+execute each task.  Because of the nature of the problem, this meant that some threads
+had much more work to do than others&mdash;it is much easier to find the number of 
+divisors of a small number than it is of a big number.  As discussed in <localref href="threads.3.1"/>,
+a better approach is to break up the problem into a fairly large number of smaller
+problems.  <localref href="threads.3.2"/> shows how to use a thread pool to execute the
+tasks: Each thread in the pool runs in a loop in which it repeatedly takes a task
+from a queue and carries out that task.  Implement a thread pool strategy for
+solving the same maximum-number-of-divisors problem as in the previous exercise.</p>
+<p>To make things even more interesting, you should try a new technique for combining
+the results from all the tasks:  Use two queues in your program.  Use a queue of tasks,
+as usual, to hold the tasks that will be executed by the thread pool (<localref href="threads.3.2"/>).  But also use a queue
+of results produced by the threads.  When a task completes, the result from that task
+should be placed into the result queue.  The main program can read results from the
+second queue as they become available, and combine all the results to get the final
+answer.   The result queue will have to be a blocking queue (<localref href="threads.3.3"/>), since
+the main program will have to wait for results to become available.  Note that the
+main program knows the exact number of results that it expects to read from the
+queue, so it can do so in a <code>for</code> loop; when the <code>for</code> loop
+completes, the main program knows that all the tasks have been executed.</p>
+</exercise-question>
+<exercise-discuss>
+<!-- Results from previous exercise:
+Thread Thread[Thread-0,5,main] used 2.257 seconds.
+Thread Thread[Thread-1,5,main] used 6.423 seconds.
+Thread Thread[Thread-2,5,main] used 12.915 seconds.
+Thread Thread[Thread-3,5,main] used 20.404 seconds.
+
+The largest number of divisors for numbers between 1 and 100000 is 128
+An integer with that many divisors is 83160
+Total elapsed time:  20.408 seconds.
+
+From this exercise:
+The largest number of divisors for numbers between 1 and 100000 is 128
+An integer with that many divisors is 83160
+Total elapsed time:  10.919 seconds.
+ -->
+ <p>I ran the solution to <localref href="threads.ex.2"/> on a computer with
+four processors, using four threads.  The four threads took widely varying amounts
+of time to complete:  2.6 seconds, 6.4 seconds, 12.9 seconds, and
+20.4 seconds.  The program ran for just over 20.4 seconds. For a lot
+of that time, there were only one or two threads running, leaving several
+processors idle.  By using a thread pool as required by the current
+exercise,  I was able to bring the total time for solving the problem down to 
+10.9 seconds.  With the thread pool, the job was divided more evenly among
+the processors, and none of the processors were idle for very long.
+</p>
+<p>In my solution, I decided to use a <classname>ConcurrentLinkedQueue</classname>
+for the task queue and a <classname>LinkedBlockingQueue</classname> for the
+result queue.  Both of these classes are discussed in <localref href="threads.3"/>,
+and a <classname>ConcurrentLinkedQueue</classname> is used for the task queue
+in the sample program <sourceref href="MultiprocessingDemo2.java"/> from that section.
+(I could have used a blocking queue for the task queue too, as I'll discuss below.)</p>
+
+<pre>private static ConcurrentLinkedQueue&lt;Task&gt; taskQueue;
+private static LinkedBlockingQueue&lt;Result&gt; resultQueue;</pre>
+
+<np>We need objects to put in the queues, to represent the tasks and the results.
+I decided to write a nested class to represent tasks and another nested class
+to represent results.  A task is assigned a range of integers and has to find
+the largest number of divisors for any integer in that range.  We also need to
+know which integer gave that maximum number.  When the task is completed, the
+results from the task have to be added to the result queue.  Here are the
+<classname>Task</classname> and <classname>Result</classname> classes:</np>
+
+<pre>private static class Task {
+    int min, max; // Start and end of the range of integers for this task.
+    Task(int min, int max) {
+        this.min = min;
+        this.max = max;
+    }
+    public void compute() {
+        int maxDivisors = 0;
+        int whichInt = 0;
+        for (int i = min; i &lt; max; i++) {
+            int divisors = countDivisors(i);
+            if (divisors > maxDivisors) {
+                maxDivisors = divisors;
+                whichInt = i;
+            }
+        }
+        resultQueue.add( new Result(maxDivisors, whichInt) );
+    }
+}
+
+private static class Result {
+    int maxDivisorFromTask;  // Maximum number of divisors found.
+    int intWithMaxFromTask;  // Which integer gave that maximum number.
+    Result(int maxDivisors, int whichInt) {
+        maxDivisorFromTask = maxDivisors;
+        intWithMaxFromTask = whichInt;
+    }
+}</pre>
+
+<p>The big idea when using a thread pool and load balancing is to divide up the overall
+problem into a fairly large number of fairly small (but not too small) subtasks.  In my program, each
+task is assigned a range of 1000 integers to work on.  Since there are 100000 integers
+in the overall problem, there will be 100 subtasks.  The question of how big the subtasks
+should be does not have a definite answer, but this choice seemed to work well, since the
+work was divided pretty evenly among the processors.</p>
+
+<p>Once the tasks have been created and the threads have been started, 
+the main thread has to collect and process all the results from the tasks.
+As each task completes, it places its result into the result queue.
+A result can be removed from the queue by calling <code>resultQueue.take()</code>,
+which will block if the queue is empty until a result becomes available.
+So the for loop that processes results won't be able to complete until all the tasks have
+been completed and all the threads have terminated:
+</p>
+
+<pre>int maxDivisorCount = 0;         // Overall maximum found by any task.
+int intWithMaxDivisorCount = 0;  // Which integer gave that maximum?
+for (int i = 0; i &lt; numberOfTasks; i++) {
+    try {
+        Result result = resultQueue.take();
+        if (result.maxDivisorFromTask > maxDivisorCount) { // new maximum.
+            maxDivisorCount = result.maxDivisorFromTask;
+            intWithMaxDivisorCount = result.intWithMaxFromTask;
+        }
+    }
+    catch (InterruptedException e) { // Won't happen in this program!
+    }
+}</pre>
+
+<np>Once the for loop ends, the final answers, taking into account the results
+from every thread, are in the variables <code>maxDivisorCount</code>
+and <code>intWithMaxDivisorCount</code>.</np>
+
+<break/>
+
+<p>My solution uses a <classname>ConcurrentLinkedQueue</classname> for the
+task queue.  This is a little touchy, since we have to be careful not
+to start the threads until the tasks are in the queue.  This is because
+the threads are programmed to terminate as soon as they see an empty queue:</p>
+
+<pre>private static class CountDivisorsThread extends Thread {
+    public void run() {
+        while (true) {
+            Task task = taskQueue.poll();
+            if (task == null)
+                break; // queue is empty; terminate
+            task.compute();
+        }
+    }
+}</pre>
+
+<np>If the queue is empty when the thread starts, it will terminate
+immediately.  Furthermore, terminating the threads after the job is
+done is fine in this program, but often when we use a thread pool,
+we want to keep the threads around to work on more than one job.</np>
+
+<p>One solution is to use a <classname>LinkedBlockingQueue</classname>
+for the task queue, instead of a <classname>ConcurrentLinkedQueue</classname>.
+When a blocking queue is faced with an empty queue, it waits for an item
+to become available in the queue.  We can then start the queue whenever
+we want, and the threads will wait, if necessary, for tasks to be added
+to the queue.  If we had more jobs for the thread pool, the threads would
+just wait around between jobs and would become active again as soon as
+tasks from a new job are enqueued.  Here is a version of the thread
+class that will work with a blocking queue of tasks:
+</p>
+
+<pre>private static class CountDivisorsThread extends Thread {
+    CountDivisorsThread() {
+        setDaemon(true);
+    }
+    public void run() {
+        while (true) {
+            try {
+                Task task = blockingTaskQueue.take();
+                task.compute();
+            }
+            catch (InterruptedException e) {
+            }
+        }
+    }
+}</pre>
+
+<np>Note that I've made the thread into a daemon thread.  This will allow the Java
+Virtual Machine to exit, even though the thread still exists, as long as all the
+non-daemon threads have exited.  For this exercise, if the threads were not
+daemon threads, the program would not actually end after completing the job,
+since the non-daemon thread-pool threads would still be around.  (However,
+you could still make the program end by calling <code>System.exit()</code>.)</np>
+
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="CountDivisorsUsingThreadPool">import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+/**
+ * This program finds the number in the range 1 to some maximum that has the 
+ * largest number of divisors.  It prints that number and the number of divisors 
+ * that it has.  Note that there might be several numbers that have the maximum
+ * number of divisors.  Only one of them is output.
+ * 
+ * The program's work is divided into a large number of tasks that are executed
+ * by a thread pool.  Each task consists of finding the maximum number of 
+ * divisors among a sequence of 1000 integers.
+ */
+public class CountDivisorsUsingThreadPool {
+
+    /**
+     * The upper limit of the range of integers that is to be tested.
+     * (This must be a fairly large multiple of 1000 for the thread
+     * pool load-balancing strategy to be effective.)
+     */
+    private final static int MAX = 100000;
+
+    /**
+     * A queue to hold the tasks.  Tasks are represented as objects
+     * of type Task, a nested class that is defined below.  Note
+     * that queue operations must be synchronized because the
+     * queue is used by multiple threads.  A ConcurrentLinkedQueue
+     * handles synchronization internally.
+     */
+    private static ConcurrentLinkedQueue&lt;Task&gt; taskQueue;
+
+    /**
+     * A queue to hold the results from the tasks.  Results
+     * are defined by the nested class, Result, which is defined
+     * below.  This is a blocking queue since the thread
+     * that takes results from the queue should block when
+     * the queue is empty until a result becomes available.
+     * (Note:  The Task class could have been used to represent
+     * results as well; I am using a separate Result class
+     * for clarity in this example.)
+     */
+    private static LinkedBlockingQueue&lt;Result&gt; resultQueue;
+    
+    
+    /**
+     * A class to represent the task of finding the number in
+     * a given range of integers that has the largest number of
+     * divisors.  The range is specified in the constructor.
+     * The task is executed when the compute() method is 
+     * called.  At the end of the compute() method, a Result
+     * object is created to represent the results from this
+     * task, and the result object is added to resultQueue.
+     */
+    private static class Task {
+        int min, max; // Start and end of the range of integers for this task.
+        Task(int min, int max) {
+            this.min = min;
+            this.max = max;
+        }
+        public void compute() {
+            int maxDivisors = 0;
+            int whichInt = 0;
+            for (int i = min; i &lt; max; i++) {
+                int divisors = countDivisors(i);
+                if (divisors > maxDivisors) {
+                    maxDivisors = divisors;
+                    whichInt = i;
+                }
+            }
+            resultQueue.add( new Result(maxDivisors, whichInt) );
+        }
+    }
+    
+    
+    /**
+     * A class to represent the result from one task.  The
+     * result consists of the maximum number of divisors in
+     * the range of integers assigned to that task, and the
+     * integer in the range that gave the maximum number of
+     * divisors.
+     */
+    private static class Result {
+        int maxDivisorFromTask;  // Maximum number of divisors found.
+        int intWithMaxFromTask;  // Which integer gave that maximum number.
+        Result(int maxDivisors, int whichInt) {
+            maxDivisorFromTask = maxDivisors;
+            intWithMaxFromTask = whichInt;
+        }
+    }
+    
+    
+    /**
+     * A thread belonging to this class counts the number of divisors for all
+     * the integers in an assigned range of integers.  The range is specified
+     * in the constructor.  The thread finds the integer in the range that 
+     * has the largest number of divisors, and a number that has that many
+     * divisors.  At the end of its computation, the thread reports its answer 
+     * by calling the report() method.
+     */
+    private static class CountDivisorsThread extends Thread {
+        public void run() {
+            while (true) {
+                Task task = taskQueue.poll();
+                if (task == null)
+                    break;
+                task.compute();
+            }
+        }
+    }
+    
+
+    /**
+     * Finds the number in the range 1 to MAX that has the largest number of
+     * divisors, dividing the work into tasks that will be executed by threads
+     * in a thread pool.  This method creates the task and result queues.
+     * It adds all the tasks to the task queue.  Then it creates the threads
+     * for the thread pool and starts them.  (Note that this must be done
+     * AFTER all the tasks are in the task queue, since the threads exit
+     * when they see an empty queue.)  Finally, it reads results from
+     * the result queue and combines them to get the overall answer.
+     * @param numberOfThreads the number of threads in the thread pool. 
+     */
+    private static void countDivisorsWithThreads(int numberOfThreads) {
+        
+        System.out.println("\nCounting divisors using " + 
+                                            numberOfThreads + " threads...");
+        
+        /* Create the queues and the thread pool, but don't start
+         * the threads yet. */
+        
+        long startTime = System.currentTimeMillis();
+        resultQueue = new LinkedBlockingQueue&lt;Result&gt;();
+        
+        taskQueue = new ConcurrentLinkedQueue&lt;Task&gt;();
+        CountDivisorsThread[] workers = new CountDivisorsThread[numberOfThreads];
+        for (int i = 0; i &lt; workers.length; i++)
+            workers[i] = new CountDivisorsThread();
+
+        /* Create the tasks and add them to the task queue.  Each
+         * task consists of a range of 1000 integers, so the number of
+         * tasks is (MAX+999)/1000.  (The "+999"  gives the correct number
+         * of tasks when MAX is not an exact multiple of 1000.  The last
+         * task in that case will consist of the last (MAX%1000)) ints. */
+        
+        int numberOfTasks = (MAX + 999) / 1000;
+        for (int i = 0; i &lt; numberOfTasks; i++) {
+            int start = i*1000 + 1;
+            int end = (i+1)*1000;
+            if (end > MAX)
+                end = MAX;
+            //System.out.println(start + " " + end);  // for testing
+            taskQueue.add( new Task(start,end) );
+        }
+        
+        /* Now that the tasks are in the task queue, start the threads. */
+        
+        for (int i = 0; i &lt; numberOfThreads; i++)
+            workers[i].start();
+        
+        /* The threads will execute the tasks and results will be placed
+         * into the result queue.  This method now goes on to read all
+         * the results from the result queue and combine them to give
+         * the overall answer. */
+
+        int maxDivisorCount = 0;         // Over maximum found by any task.
+        int intWithMaxDivisorCount = 0;  // Which integer gave that maximum?
+        for (int i = 0; i &lt; numberOfTasks; i++) {
+            try {
+                Result result = resultQueue.take();
+                if (result.maxDivisorFromTask > maxDivisorCount) { // new maximum.
+                    maxDivisorCount = result.maxDivisorFromTask;
+                    intWithMaxDivisorCount = result.intWithMaxFromTask;
+                }
+            }
+            catch (InterruptedException e) {
+            }
+        }
+        
+        /* Report the results. */
+        
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        System.out.println("\nThe largest number of divisors " + 
+                "for numbers between 1 and " + MAX + " is " + maxDivisorCount);
+        System.out.println("An integer with that many divisors is " + 
+                intWithMaxDivisorCount);
+        System.out.println("Total elapsed time:  " + 
+                (elapsedTime/1000.0) + " seconds.\n");
+        
+    } // end countDivisorsWithThreads()
+
+    
+    /**
+     * The main() routine just gets the number of threads from the user and 
+     * calls countDivisorsWithThreads() to do the actual work.
+     */
+    public static void main(String[] args) {
+        int numberOfThreads = 0;
+        while (numberOfThreads &lt; 1 || numberOfThreads > 10) {
+            System.out.print("How many threads do you want to use  (1 to 10) ?  ");
+            numberOfThreads = TextIO.getlnInt();
+            if (numberOfThreads &lt; 1 || numberOfThreads > 10)
+                System.out.println("Please enter a number from 1 to 10 !");
+        }
+        countDivisorsWithThreads(numberOfThreads);
+    }
+    
+
+    /**
+     * Finds the number of divisors of the integer N.  Note that this method does
+     * the counting in a stupid way, since it tests every integer in the range
+     * 1 to N to see whether it evenly divides N.
+     */
+    private static int countDivisors(int N) {
+        int count = 0;
+        for (int i = 1; i &lt;= N ; i++) {
+            if ( N % i == 0 )
+                count ++;
+        }
+        return count;
+    }
+
+} // end CountDivisorsUsingThreadPool
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+
+<exercise id="threads.ex.4">
+<exercise-question><p>In <localref href="IO.ex.3"/>, you wrote a network server program
+that can send text files from a specified directory to clients.  That program used
+a single thread, which handled all the communication with each client.  Modify the
+program to turn it into a multithreaded server.  Use a thread pool of
+connection-handling threads and use an <classname>ArrayBlockingQueue</classname>
+to get connected sockets from the <code>main()</code> routine to the threads.
+The sample program <sourceref href="DateServerWithThreads.java"/> from <localref href="threads.4.3"/>
+is an example of a multithreaded server that works in this way.
+Your server program will work with the same client program as the
+original server.  You wrote the client program as the solution to 
+<localref href="IO.ex.4"/>.</p>
+</exercise-question>
+<exercise-discuss><p>This is not a difficult exercise, given the model in 
+<code>DateServerWithThreads.java</code>.   My solution to
+<localref href="IO.ex.3"/>, <code>FileServer,java</code>, already has a method</p>
+<pre>private static void handleConnection(File directory, Socket connection)</pre>
+<np>to handle a connection with one client.  
+The connection in this method is represented by a <classname>Socket</classname>.
+The <classname>File</classname> in this method represents the directory that 
+contains the file server's files; it is set at the beginning of the program
+and does not change after that.  So, the only thing that we have to send
+in the queue from the main program to the connection-handling threads is
+the socket that represents a given connection.  So, the queue can be a 
+queue of <classname>Sockets</classname>:</np>
+<pre>private static ArrayBlockingQueue&lt;Socket&gt; connectionQueue;</pre>
+<np>A connection-handling thread runs in an infinite loop in which it 
+takes a socket from this queue and uses it to communicate with the client.
+I could have moved the code from the <code>handleConnection()</code>
+method into the run method of the thread, but I decided it would be 
+easier to have the <code>run()</code> method call the method that
+already exists.  I also need to pass the directory to the 
+<code>handleConnection()</code> method, so the thread needs some
+way of knowing the directory.  I pass the directory to the thread
+in the thread's constructor.  (An alternative would have been to
+make it a global variable, as I did for the queue.)  Here is
+the class that defines the connection-handling threads:</np>
+<pre>private static class ConnectionHandler extends Thread {
+    File directory;  // The directory that contains the files
+                     // that are made available on this server.
+    ConnectionHandler(File directory) {
+        this.directory = directory;
+        setDaemon(true);
+    }
+    public void run() {
+        while (true) {
+            try {
+                Socket connection = connectionQueue.take();
+                handleConnection(directory,connection);
+            }
+            catch (Exception e) {
+            }
+        }
+    }
+}</pre>
+<np>The main program creates and starts several threads belonging to this
+class, before it starts listening for connection requests.  Other changes
+are straightforward.  You can see the details in the complete solution,
+given below.</np>
+</exercise-discuss>
+<exercise-code>
+<p><b>Changes from the solution of <localref href="IO.ex.3"/> are shown in &newcodestyle;:</b></p>
+<pre><prog name="ThreadedFileServer">import java.net.*;
+import java.io.*;
+import java.util.Scanner;
+import java.util.concurrent.ArrayBlockingQueue;
+
+/**
+ * This program is a very simple network file server.  The 
+ * server has a list of available text files that can be
+ * downloaded by the client.  The client can also download
+ * the list of files.  When the connection is opened, the
+ * client sends one of two possible commands to the server:
+ * "index" or "get &lt;file-name&gt;".  The server replies to
+ * the first command by sending the list of available files.
+ * It responds to the second with a one-line message,
+ * either "ok" or "error".  If the message is "ok", it is
+ * followed by the contents of the file with the specified
+ * name.  The "error" message indicates that the specified
+ * file does not exist on the server. (The server can also
+ * respond with the message "unknown command" if the command
+ * it reads is not one of the two possible legal commands.)
+ * 
+ * The server program requires a command-line parameter
+ * that specifies the directory that contains the files
+ * that the server can serve.  The files should all be
+ * text files, but this is not checked.  Also, the server
+ * must have permission to read all the files.
+ * 
+ <newcode>* This version of the program defines a multithreaded
+ * server that uses a thread pool.  The threads handle
+ * all communication with the clients.  The main program
+ * simply accepts connections and puts them into a queue.
+ * The connection-handling threads in the thread pool remove
+ * connections from the queue as they become available.</newcode>
+ */
+public class ThreadedFileServer {
+
+    static final int LISTENING_PORT = 3210;
+    
+    <newcode>/**
+     * The number of threads in the thread pool.
+     */
+    private static final int THREAD_POOL_SIZE = 10;
+    
+    /**
+     * The length of the ArrayBlockingQueue of connections.
+     * This should not be too big, since connections in the
+     * queue are waiting for service and hopefully won't 
+     * spend too long in the queue.
+     */
+    private static final int CONNECTION_QUEUE_SIZE = 5;
+    
+    /**
+     * The queue that is used to send connections from the
+     * main program to the connection-handling threads.
+     * A connection is represented by a connected Socket.
+     */
+    private static ArrayBlockingQueue&lt;Socket&gt; connectionQueue;</newcode>
+    
+    
+    /**
+     * Main program <newcode>creates the thread pool</newcode>, then opens a
+     * server socket to listen for connection requests.
+     */
+    public static void main(String[] args) {
+
+        File directory;        // The directory from which the server
+        //    gets the files that it serves.
+
+        ServerSocket listener; // Listens for connection requests.
+
+        Socket connection;     // A socket for communicating with a client.
+
+
+        /* Check that there is a command-line argument.
+         If not, print a usage message and end. */
+
+        if (args.length == 0) {
+            System.out.println("Usage:  java FileServer &lt;directory&gt;");
+            return;
+        }
+
+        /* Get the directory name from the command line, and make
+         it into a file object.  Check that the file exists and
+         is in fact a directory. */
+
+        directory = new File(args[0]);
+        if ( ! directory.exists() ) {
+            System.out.println("Specified directory does not exist.");
+            return;
+        }
+        if (! directory.isDirectory() ) {
+            System.out.println("The specified file is not a directory.");
+            return;
+        }
+        
+        <newcode>/* Create the connection queue.  We want to do this before 
+         * creating the threads, which need to use the queue. */
+        
+        connectionQueue = new ArrayBlockingQueue&lt;Socket&gt;(CONNECTION_QUEUE_SIZE);
+        
+        /* Create the thread pool and start the threads.  The directory
+         * that contains the files is passed to each thread as a
+         * parameter to its constructor.  Note that there is no
+         * need to keep references to the threads, since we don't have
+         * to do anything with them in this program after they have
+         * been started.*/
+        
+        for (int i = 0; i &lt; THREAD_POOL_SIZE; i++) {
+            ConnectionHandler worker = new ConnectionHandler(directory);
+            worker.start();
+        }</newcode>
+
+        /* Listen for connection requests from clients.  For each 
+         * connection, add the connected socket to the connection
+         * queue.  The server runs until the program is terminated, 
+         * for example by a CONTROL-C. */
+
+        try {
+            listener = new ServerSocket(LISTENING_PORT);
+            System.out.println("Listening on port " + LISTENING_PORT);
+            while (true) {
+                connection = listener.accept();
+                <newcode>connectionQueue.add(connection);</newcode>
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Server shut down unexpectedly.");
+            System.out.println("Error:  " + e);
+            return;
+        }
+
+    } // end main()
+
+
+    <newcode>/**
+     * The class that defines the connection-handling threads in the
+     * thread pool.  The thread runs in an infinite loop in which
+     * it removes a connected socket from the connection queue and
+     * calls the handleConnection() method for that socket.
+     */
+    private static class ConnectionHandler extends Thread {
+        File directory;  // The directory that contains the files
+                         // that are made available on this server.
+        ConnectionHandler(File directory) {
+            this.directory = directory;
+            setDaemon(true);
+        }
+        public void run() {
+            while (true) {
+                try {
+                    Socket connection = connectionQueue.take();
+                    handleConnection(directory,connection);
+                }
+                catch (Exception e) {
+                }
+            }
+        }
+    }</newcode>
+    
+    
+    /**
+     * This method processes process the connection with one client.
+     * It creates streams for communicating with the client,
+     * reads a command from the client, and carries out that
+     * command.  The connection is also logged to standard output.
+     * An output beginning with ERROR indicates that a network
+     * error occurred.  A line beginning with OK means that
+     * there was no network error, but does not imply that the
+     * command from the client was a legal command.
+     */
+    private static void handleConnection(File directory, Socket connection) {
+        Scanner incoming;       // For reading data from the client.
+        PrintWriter outgoing;   // For transmitting data to the client.
+        String command = "Command not read";
+        try {
+            incoming = new Scanner( connection.getInputStream() );
+            outgoing = new PrintWriter( connection.getOutputStream() );
+            command = incoming.nextLine();
+            if (command.equals("index")) {
+                sendIndex(directory, outgoing);
+            }
+            else if (command.startsWith("get")){
+                String fileName = command.substring(3).trim();
+                sendFile(fileName, directory, outgoing);
+            }
+            else {
+                outgoing.println("unsupported command");
+                outgoing.flush();
+            }
+            System.out.println("OK    " + connection.getInetAddress()
+                    + " " + command);
+        }
+        catch (Exception e) {
+            System.out.println("ERROR " + connection.getInetAddress()
+                    + " " + command + " " + e);
+        }
+        finally {
+            try {
+                connection.close();
+            }
+            catch (IOException e) {
+            }
+        }
+    }
+
+    /**
+     * This is called by the run() method in response to an "index" command
+     * from the client.  Send the list of files in the server's directory.
+     */
+    private static void sendIndex(File directory, PrintWriter outgoing) throws Exception {
+        String[] fileList = directory.list();
+        for (int i = 0; i &lt; fileList.length; i++)
+            outgoing.println(fileList[i]);
+        outgoing.flush();
+        outgoing.close();
+        if (outgoing.checkError())
+            throw new Exception("Error while transmitting data.");
+    }
+
+    /**
+     * This is called by the run() command in response to "get &lt;fileName&gt;" 
+     * command from the client.  If the file doesn't exist, send the message "error".
+     * Otherwise, send the message "ok" followed by the contents of the file.
+     */
+    private static void sendFile(String fileName, File directory, PrintWriter outgoing) throws Exception {
+        File file = new File(directory,fileName);
+        if ( (! file.exists()) || file.isDirectory() ) {
+            // (Note:  Don't try to send a directory, which
+            // shouldn't be there anyway.)
+            outgoing.println("error");
+        }
+        else {
+            outgoing.println("ok");
+            BufferedReader fileIn = new BufferedReader( new FileReader(file) );
+            while (true) {
+                // Read and send lines from the file until
+                // an end-of-file is encountered.
+                String line = fileIn.readLine();
+                if (line == null)
+                    break;
+                outgoing.println(line);
+            }
+        }
+        outgoing.flush(); 
+        outgoing.close();
+        if (outgoing.checkError())
+            throw new Exception("Error while transmitting data.");
+    }
+
+
+} //end class ThreadedFileServer
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+
+<exercise>
+<exercise-question><p>It is possible to get an estimate of the mathematical constant &pi; by using a random
+process.  The idea is based on the fact that the area of a circle of radius&nbsp;1 is equal to&nbsp;&pi;,
+and the area of a <i>quarter</i> of that circle is&nbsp;&pi;/4.  Here is a picture of a quarter
+of a circle of radius&nbsp;1, inside a 1-by-1 square: 
+</p>
+
+<img src="estimate_pi_figure.png" width="131" height="132" tex="estimate_pi_figure.eps" texscale="0.5"/>
+
+<np>The area of the whole square is one, while the area of the part inside the circle is &pi;/4.  If
+we choose a point in the square at random, the probability that it is inside the circle is &pi;/4.
+If we choose <code>N</code> points in the square at random, and if <code>C</code> of them are
+inside the circle, we expect the fraction <code>C/N</code> of points that fall inside the
+circle to be about &pi;/4. That is, we expect <code>4*C/N</code> to be close to&nbsp;&pi;.
+If <code>N</code> is large, we can expect <code>4*C/N</code> to be a good estimate for &pi;,
+and as <code>N</code> gets larger and larger, the estimate is likely to improve.</np>
+
+<p>We can pick a random point in the square by choosing numbers <code>x</code> and <code>y</code> in
+the range 0 to&nbsp;1 (using <code>Math.random()</code>).  Since the equation of the circle
+is <code>x*x+y*y=1</code>, the point lies inside the circle if <code>x*x+y*y</code> is less than&nbsp;1.
+One trial consists of picking <code>x</code> and <code>y</code> and testing whether 
+<code>x*x+y*y</code> is less than&nbsp;1.  To get an estimate for &pi;, you have to do many trials, 
+count the trials, and count the number of trials in which <code>x*x+y*y</code> is less than&nbsp;1,
+</p>
+
+<p>For this exercise, you should write a GUI program that does this computation and 
+displays the result.  The computation should be done in a separate thread, and the
+results should be displayed periodically.  The program can use <classname>JLabels</classname>
+to the display the results.  It should set the text on the labels after running each
+batch of, say, one million trials.  (Setting the text after each trial doesn't
+make sense, since millions of trials can be done in one second, and trying to change
+the display millions of times per second would be silly.</p>
+
+<p>Your program should have a "Run"/"Pause" button that controls the computation.  When
+the program starts, clicking "Run" will start the computation and change the text on
+the button to "Pause".  Clicking "Pause" will cause the computation to pause.  The thread
+that does the computation should be started at the beginning of the program, but should
+immediately go into the paused state until the "Run" button is pressed.  Use the
+<code>wait()</code> method in the thread to make it wait until "Run" is pressed.  Use
+the <code>notify()</code> method when the "Run" button is pressed to wake up the thread.
+Use a <ptype>boolean</ptype> signal variable <code>running</code> to control whether
+the computation thread is paused. (The <code>wait()</code> and <code>notify()</code>
+methods are covered in <localref href="threads.3.4"/>.)</p>
+
+<p>Here is a picture of the program after it has run many trials:</p>
+
+<img src="estimating-pi.png" width="472" height="150" alt="screenshot showing estimate for pi"
+    tex="estimating-pi.eps" texscale="0.6"/>
+
+<p>You might want to start with a version of the program with no control button.  In that
+version, the computation
+thread can run continually from the time it is started.  Once that is working, you
+can add the button and the control feature.</p>
+
+<p>To get you started, here is the code from the thread in my solution that runs one batch
+of trials and updates the display labels:</p>
+
+<pre>for (int i = 0; i &lt; BATCH_SIZE; i++) {
+    double x = Math.random();
+    double y = Math.random();
+    trialCount++;
+    if (x*x + y*y &lt; 1)
+        inCircleCount++;                        
+}
+double estimateForPi = 4 * ((double)inCircleCount / trialCount);
+countLabel.setText(      " Number of Trials:   " + trialCount);
+piEstimateLabel.setText( " Current Estimate:   " + estimateForPi);</pre>
+
+<np>The variables <code>trialCount</code> and <code>inCircleCount</code> are of
+type <ptype>long</ptype> in order to allow the number of trials to be more
+than the two billion or so that would be possible with a variable of type
+<ptype>int</ptype>.</np>
+
+<p>(I was going to ask you to use multiple computation threads, one for each
+available processor, but I ran into an issue when using the <code>Math.random()</code>
+method in several threads.  This method requires synchronization, which causes
+serious performance problems when several threads are using it to generate
+large amounts of random numbers.  A solution to this problem is to have
+each thread use its own object of type <code>java.util.Random</code> to
+generate its random numbers (see <localref href="OOP.3.1"/>).  My<tex> on-line</tex>
+solution to this exercise discusses this problem further.)</p>
+
+</exercise-question>
+
+<exercise-discuss>
+<p>I will present three versions of the solution: one without a control button,
+one with the button and a single computation thread, and one that uses
+multiple threads.  But first, you might be interested in how I set
+up the <classname>JLabels</classname>:</p>
+
+<pre>countLabel =      new JLabel(" Number of Trials:   0");
+piEstimateLabel = new JLabel(" Current Estimate:   (none)");
+JLabel piLabel =  new JLabel(" Actual value of pi: " + Math.PI + "  ");
+Font bigMonospace = new Font("Monospaced", Font.PLAIN, 20);
+countLabel.setFont(bigMonospace);
+piEstimateLabel.setFont(bigMonospace);
+piLabel.setFont(bigMonospace);
+countLabel.setOpaque(true);
+piEstimateLabel.setOpaque(true);
+piLabel.setOpaque(true);</pre>
+
+<np>I used a monospaced font (in which all the characters are the same
+width) so that the characters on the three labels would line
+up neatly.  I set the labels to be opaque to make sure that
+they would use their own background color rather than let the 
+color of the panel show through.</np>
+
+<break/>
+
+<p>For the first version of the program, I simply wrapped the
+code given in the exercise for doing one batch of trials inside
+an infinite <code>while</code> loop, and made that the <code>run()</code>
+method of the thread:</p>
+
+<pre>private class ComputationThread extends Thread {
+    final int BATCH_SIZE = 1000000;  // Number of trials between updates of the display.
+    long trialCount;     // Total number of trials that have been performed.
+    long inCircleCount;  // Number of trials in which x*x+y*y is less than 1.
+    public ComputationThread() {
+        setDaemon(true);
+        setPriority(Thread.currentThread().getPriority() - 1);
+    }
+    public void run() {
+        while (true) {
+            for (int i = 0; i &lt; BATCH_SIZE; i++) {
+                double x = Math.random();
+                double y = Math.random();
+                trialCount++;
+                if (x*x + y*y &lt; 1)
+                    inCircleCount++;                        
+            }
+            double estimateForPi = 4 * ((double)inCircleCount / trialCount);
+            countLabel.setText(      " Number of Trials:   " + trialCount);
+            piEstimateLabel.setText( " Current Estimate:   " + estimateForPi);
+        }
+    }
+}</pre>
+
+<np>The thread is created and started in the constructor of the panel.  It's quite possible
+that several batches of trials are done before the labels ever appear on the screen.  That's
+OK because it's OK to call a label's <code>setText()</code> method even before
+the label appears.</np>
+
+<break/>
+
+<p>The first version of the program is pretty short and simple, and it's not too
+hard to add the control button to get the second version.  First of all, I added the <code>volatile</code>
+<ptype>boolean</ptype> variable, <code>running</code> to the program, and I added
+the following code at the beginning of the <code>while</code> loop in the thread to make
+the thread pause when the value of  <code>running</code> is <code>false</code>:</p>
+
+<pre>synchronized(this) {
+    while ( ! running ) { // wait for running to be true
+        try {
+            wait();
+        }
+         catch (InterruptedException e) {
+        }
+     }
+ }</pre>
+
+<np>When <code>running</code> is <code>false</code>, this code calls the <code>wait()</code>
+method to go to sleep.  It will require a call to <code>notify()</code> elsewhere in the
+program to wake the thread so that it can continue.  Note that the synchronization is
+on the object "<code>this</code>", which refers here to the thread object.  (Recall that
+<code>obj.wait()</code> must always be called in code that is synchronized on <code>obj</code>.
+In this case, <code>this</code> plays the role of <code>obj</code> because a simple
+call to <code>wait()</code> is really a call to <code>this.wait()</code>.)  A <code>while</code>
+loop is used in this code rather than an <code>if</code> statement to be absolutely sure
+that <code>running</code> is true before continuing.</np>
+
+<p>When the thread is first started at the beginning of the program, the value of
+<code>running</code> is false.  The thread sees this value and calls <code>wait()</code>
+as soon as it starts, and the thread remains in this waiting state until the user
+clicks the "Run" button.  The <code>actionPerformed()</code> method that responds
+to the button has to set the value of <code>running</code> to <code>true</code>.
+It also has to call <code>notify()</code> to wake up the thread so it can see the
+new value.  The <code>notify()</code> method must be called on the same object
+as the thread used to call <code>wait()</code>&mdash;that is, on the thread object
+itself.  The program has a variable named <code>runner</code> that refers to the
+thread, so the thread is woken with the code:</p>
+
+<pre>synchronized(runner) {
+    running = true;
+    runner.notify(); 
+}</pre>
+
+<np>It's important, by the way, that the statement that sets <code>running</code> to
+<code>true</code> is inside the <code>synchronized</code> statement here, and that
+the code in the thread that tests the value of <code>running</code> is also
+inside a statement that is synchronized on the same object.  This avoids a race
+condition:  Suppose these statements are not synchronized.  Then it is possible
+that the thread might test the value  of <code>running</code>, find it to be
+<code>false</code>, and decide to call <code>wait()</code>.  However,
+before it actually calls <code>wait()</code>, the event-handling thread
+might set <code>running</code> to <code>true</code> <b>and</b> call <code>notify()</code>.
+So it's possible for the <code>notify()</code> to come before the <code>wait()</code>,
+which means the thread will be left waiting for a notification that was already given!
+Proper synchronization prevents the thread from being interrupted between the 
+time it decides to call <code>wait()</code> and the time it actually does so.
+</np>
+
+<break/>
+
+<p>As I mentioned in the statement of the exercise, I actually wanted to use
+several computation threads&mdash;one for each available processor.  When I wrote
+that program, however, I was dismayed to find that it was much <b>slower</b> than
+the single-threaded program.  After trying for a while to track down the reason,
+I eventually remembered that the call to <code>Math.random()</code> has to be
+synchronized internally (because there is a race condition in the way that the next
+random number in a sequence is generated).  There is a significant overhead
+involved in synchronization, which can really slow down a program when it is
+done too often.  In this case, when <code>Math.random()</code> was called
+millions of times per second by several different threads, the slowdown
+was by a factor of about 100!</p>
+
+<p>Behind the scenes, <code>Math.random()</code>
+uses an object of type <code>java.util.Random</code> to generate the random
+numbers.  By having each thread create and use its own object of
+this type, instead of calling <code>Math.random()</code>, I avoided the
+synchronization problem.  (I am honestly not sure how Java avoids the
+overhead of a <code>synchronized</code> statement when there is only
+one thread that is synchronizing on a given object.)</p>
+
+<p>Aside from that problem, the main issue introduced by using multiple
+threads is how to combine the results from the different threads.  In the
+first two versions of the program, the thread keeps track of the total number
+of trials and the number of trials where <code>x*x+y*y</code> is less than&nbsp;1.
+It uses this information to figure out what to put on the display labels.
+However, when there are two or more threads, the data that is needed to
+update the display is not available to any one thread.  So, someone else
+has to collect the data from the threads and combine all the data to
+get the overall total number of trials and the overall total number of
+trials in which <code>x*x+y*y&lt;1</code>.</p>
+
+<p>There are several ways to do this.  I decided to use a queue to
+transport the results from the computation threads to another thread
+that combines the results and updates the display accordingly.  In fact,
+the role of the other thread is played by the event-handling thread.
+There is a timer that goes off every 1/10 of a second.  The <code>actionPerformed()</code>
+method that
+is called in response to the timer removes all the data that have been collected
+in the queue and uses it to update the display.</p>
+
+<p>Trials are run in batches of 1,000,000.  Each batch produces one
+result.  The result is simply the number of trials in that batch for
+which <code>x*x+y*y&lt;1</code>.  The result is an integer, so
+for the result queue I use a queue of <classname>Integers</classname>.
+Each result in the queue corresponds to 1,000,000 trials, so each 
+time I process a result, I add 1000000 to the total number of trials
+and add the number from the queue to the number or trials in which
+<code>x*x+y*y&lt;1</code>.</p>
+
+<p>For the queue, I used a <classname>LinkedBlockingQueue</classname>.  Since the
+queue is being used by several threads, I need a queue where the operations
+are properly synchronized.  In fact, I don't need the blocking behavior
+of the blocking queue, but a <classname>LinkedBlockingQueue</classname>
+has a nice, synchronized method, <code>drainTo()</code>, for retrieving
+all the items from a queue in one step.  I would have used
+<classname>ConcurrentLinkedQueue</classname> if it had a similar method.</p>
+
+<p>I won't discuss the third version of the program further.  You can see
+the source code, which is well commented, below.</p>
+
+</exercise-discuss>
+
+<exercise-code>
+
+<p><b>The first version of the program, with no control button:</b></p>
+
+<pre>
+<prog name="EstimatePi_1">import java.awt.*;
+import javax.swing.*;
+
+/**
+ * This program uses a probabilistic technique to estimate the
+ * value of the mathematical constant pi.  The technique is to
+ * choose random numbers x and y in the range 0 to 1, and to
+ * compute x*x + y*y.  The probability that x*x + y*y is less than
+ * 1 is pi/4.  If many trials are performed, and the number of
+ * trials in which x*x+y*y is less than 1 is divided by the total
+ * number of trials, the result is an approximation for pi/4.
+ * Multiplying this by 4 gives an approximation for pi.
+ * 
+ * The program shows the estimate produced by this procedure, along
+ * with the number of trials that have been done and, for comparison,
+ * the actual value of pi.  These values are shown in three JLabels.
+ * The computation is done by a separate thread that updates the
+ * contents of the labels after every millionth trial.
+ * 
+ * In this version of the program, the computation thread runs
+ * continually from the time the program is started until it
+ * ends.  It is run at a reduced priority so that it does not
+ * interfere with the GUI thread.
+ */
+public class EstimatePi_1 extends JPanel {
+    
+    /**
+     * Main program just creates a window to show the panel that
+     * contains the JLabels.
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Estimating Pi Probabilistically");
+        EstimatePi_1 content = new EstimatePi_1();
+        window.setContentPane(content);
+        window.pack(); 
+        window.setResizable(false);
+        window.setLocation( 300, 200 );
+        window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        window.setVisible(true);
+    }
+    
+    private JLabel piEstimateLabel;  // A label for showing the current estimate of pi.
+    private JLabel countLabel;       // A label for showing the number of trials.
+    
+    private ComputationThread runner;  // The thread that does the computation.
+    
+    
+    /**
+     * Constructor creates the three display labels and adds them to this
+     * panel.  It also creates and starts the computation thread.
+     */
+    public EstimatePi_1() {
+
+        setLayout(new GridLayout(0, 1, 2, 2));
+        setBackground(Color.BLUE);
+        setBorder(BorderFactory.createLineBorder(Color.BLUE,2));
+        
+        countLabel =      new JLabel(" Number of Trials:   0");
+        piEstimateLabel = new JLabel(" Current Estimate:   (none)");
+        JLabel piLabel =  new JLabel(" Actual value of pi: " + Math.PI + "  ");
+        Font bigMonospace = new Font("Monospaced", Font.PLAIN, 20);
+        countLabel.setFont(bigMonospace);
+        piEstimateLabel.setFont(bigMonospace);
+        piLabel.setFont(bigMonospace);
+        countLabel.setOpaque(true);
+        piEstimateLabel.setOpaque(true);
+        piLabel.setOpaque(true);
+        add(piLabel);
+        add(piEstimateLabel);
+        add(countLabel);
+        
+        runner = new ComputationThread();
+        runner.start();
+        
+    } // end constructor
+
+    
+    /**
+     *  This class defines the thread that does the computation.
+     *  The thread runs in an infinite loop in which it performs
+     *  batches of 1000000 trials and then updates the display labels.
+     */
+    private class ComputationThread extends Thread {
+        final int BATCH_SIZE = 1000000;  // Number of trials between updates of the display.
+        long trialCount;     // Total number of trials that have been performed.
+        long inCircleCount;  // Number of trials in which x*x+y*y is less than 1.
+        public ComputationThread() {
+            setDaemon(true);
+            setPriority(Thread.currentThread().getPriority() - 1);
+        }
+        public void run() {
+            while (true) {
+                for (int i = 0; i &lt; BATCH_SIZE; i++) {
+                    double x = Math.random();
+                    double y = Math.random();
+                    trialCount++;
+                    if (x*x + y*y &lt; 1)
+                        inCircleCount++;                        
+                }
+                double estimateForPi = 4 * ((double)inCircleCount / trialCount);
+                countLabel.setText(      " Number of Trials:   " + trialCount);
+                piEstimateLabel.setText( " Current Estimate:   " + estimateForPi);
+            }
+        }
+    }
+    
+    
+} // end class EstimatePi_1
+</prog>
+
+</pre>
+
+<p><b>The second version of the program, with a control button and just one thread.  Significant
+changes from the first version are shown in &newcodestyle;:</b></p>
+
+<pre>
+<prog name="EstimatePi_2">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**
+ * This program uses a probabilistic technique to estimate the
+ * value of the mathematical constant pi.  The technique is to
+ * choose random numbers x and y in the range 0 to 1, and to
+ * compute x*x + y*y.  The probability that x*x + y*y is less than
+ * 1 is pi/4.  If many trials are performed, and the number of
+ * trials in which x*x+y*y is less than 1 is divided by the total
+ * number of trials, the result is an approximation for pi/4.
+ * Multiplying this by 4 gives an approximation for pi.
+ * 
+ * The program shows the estimate produced by this procedure, along
+ * with the number of trials that have been done and, for comparison,
+ * the actual value of pi.  These values are shown in three JLabels.
+ * The computation is done by a separate thread that updates the
+ * contents of the labels after every millionth trial.
+ * 
+ <newcode>* In this version of the program, there is a "Run"/"Pause" button
+ * that controls the computation thread.  Clicking the button once
+ * starts the thread; clicking it again pauses it.  Initially, the
+ * thread is paused.</newcode>
+ */
+public class EstimatePi_2 extends JPanel implements ActionListener {
+    
+    /**
+     * Main program just creates a window to show the panel that
+     * contains the JLabels and the Run/Pause button.
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Estimating Pi Probabilistically");
+        EstimatePi_2 content = new EstimatePi_2();
+        window.setContentPane(content);
+        window.pack(); 
+        window.setResizable(false);
+        window.setLocation( 300, 200 );
+        window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        window.setVisible(true);
+    }
+    
+    private JLabel piEstimateLabel;  // A label for showing the current estimate of pi.
+    private JLabel countLabel;       // A label for showing the number of trials.
+    
+   <newcode> private JButton runPauseButton;  // Button to control the thread.  Clicking this
+                                     // button will pause the thread if it is running
+                                     // and will restart it if it is paused.</newcode>
+    
+    private ComputationThread runner;  // The thread that does the computation.
+    
+    <newcode>private volatile boolean running;  // Control variable for signaling the thread to
+                                       // run or pause.  Initially, this is false, so
+                                       // the thread pauses as soon as it is created,
+                                       // until the user clicks the "Run" button.</newcode>
+    
+    
+    /**
+     * Constructor creates the three display labels and adds them to this
+     * panel.  It adds a "Run"/"Pause" button below the labels.  
+     * It also creates and starts the computation thread.
+     */
+    public EstimatePi_2() {
+
+        setLayout(new GridLayout(4, 1, 2, 2));
+        setBackground(Color.BLUE);
+        setBorder(BorderFactory.createLineBorder(Color.BLUE,2));
+        
+        countLabel =      new JLabel(" Number of Trials:   0");
+        piEstimateLabel = new JLabel(" Current Estimate:   (none)");
+        JLabel piLabel =  new JLabel(" Actual value of pi: " + Math.PI + " ");
+        Font bigMonospace = new Font("Monospaced", Font.PLAIN, 20);
+        countLabel.setFont(bigMonospace);
+        piEstimateLabel.setFont(bigMonospace);
+        piLabel.setFont(bigMonospace);
+        countLabel.setOpaque(true);
+        piEstimateLabel.setOpaque(true);
+        piLabel.setOpaque(true);
+        add(piLabel);
+        add(piEstimateLabel);
+        add(countLabel);
+        
+        <newcode>JPanel bottom = new JPanel();
+        add(bottom);
+        runPauseButton = new JButton("Run");
+        bottom.add(runPauseButton);
+        runPauseButton.addActionListener(this);</newcode>
+        
+        runner = new ComputationThread();
+        runner.start();
+        
+    } // end constructor
+
+
+    <newcode>/**
+     * This method responds to clicks on the button, by
+     * toggling the value of the signal variable from true
+     * to false or from false to true.  The text on the 
+     * button is changed to match the state.  When
+     * running is set to true, notify() is called to wake
+     * up the thread.
+     */
+    public void actionPerformed(ActionEvent evt) {
+        if (running) {
+            runPauseButton.setText("Run");
+            running = false;
+        }
+        else {
+            runPauseButton.setText("Pause");
+            synchronized(runner) {
+                running = true;
+                runner.notify(); 
+            }
+        }
+    }</newcode>
+    
+    
+    /**
+     *  This class defines the thread that does the computation.
+     *  The thread runs in an infinite loop in which it performs
+     *  batches of 1000000 trials and then updates the display labels.
+     <newcode>*  Just after it starts and between batches, the thread tests
+     *  the value of the signal variable, running.  If this variable
+     *  is false, then the thread sleeps until the value of running
+     *  is set to true.</newcode>
+     */
+    private class ComputationThread extends Thread {
+        final int BATCH_SIZE = 1000000;  // Number of trials between updates of the display.
+        long trialCount;     // Total number of trials that have been performed.
+        long inCircleCount;  // Number of trials in which x*x+y*y is less than 1.
+        public ComputationThread() {
+            setDaemon(true);
+            setPriority(Thread.currentThread().getPriority() - 1);
+        }
+        public void run() {
+            while (true) {
+                <newcode>synchronized(this) {
+                    while ( ! running ) { // wait for running to be true
+                        try {
+                            wait();
+                        }
+                        catch (InterruptedException e) {
+                        }
+                    }
+                }</newcode>
+                for (int i = 0; i &lt; BATCH_SIZE; i++) {
+                    double x = Math.random();
+                    double y = Math.random();
+                    trialCount++;
+                    if (x*x + y*y &lt; 1)
+                        inCircleCount++;                        
+                }
+                double estimateForPi = 4 * ((double)inCircleCount / trialCount);
+                countLabel.setText(      " Number of Trials:   " + trialCount);
+                piEstimateLabel.setText( " Current Estimate:   " + estimateForPi);
+            }
+        }
+    }
+    
+    
+}  // end class EstimatePi_2
+</prog>
+
+</pre>
+
+<p><b>The third version of the program, with a control button and multiple threads.
+Significant changes from the previous versions are shown in &newcodestyle;</b></p>
+
+<pre>
+<prog name="EstimatePi_3">import java.awt.*;
+import java.awt.event.*;
+<newcode>import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.LinkedBlockingQueue;</newcode>
+import javax.swing.*;
+
+/**
+ * This program uses a probabilistic technique to estimate the
+ * value of the mathematical constant pi.  The technique is to
+ * choose random numbers x and y in the range 0 to 1, and to
+ * compute x*x + y*y.  The probability that x*x + y*y is less than
+ * 1 is pi/4.  If many trials are performed, and the number of
+ * trials in which x*x+y*y is less than 1 is divided by the total
+ * number of trials, the result is an approximation for pi/4.
+ * Multiplying this by 4 gives an approximation for pi.
+ * 
+ * The program shows the estimate produced by this procedure, along
+ * with the number of trials that have been done and, for comparison,
+ * the actual value of pi.  These values are shown in three JLabels.
+ * The computation is done by <newcode>several separate threads.  Periodically,
+ * these threads place their results into a queue.  Another thread,
+ * the event-handling thread in a method called by a Timer, removes
+ * results from the queue and applies them to the labels every
+ * 1/10 second.</newcode>
+ * 
+ * In this version of the program, there is a "Run"/"Pause" button
+ * that controls the computation threads.  Clicking the button once
+ * starts the threads; clicking it again pauses them.  Initially, the
+ * threads are paused.
+ */
+public class EstimatePi_3 extends JPanel implements ActionListener {
+    
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Estimating Pi Probabilistically");
+        EstimatePi_3 content = new EstimatePi_3();
+        window.setContentPane(content);
+        window.pack(); 
+        window.setResizable(false);
+        window.setLocation( 300, 200 );
+        window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        window.setVisible(true);
+    }
+    
+    private final static int BATCH_SIZE = 1000000;  // This is the number of trials
+                                     // in a batch.  A computation thread runs this
+                                     // many trials in a fast for loop, without checking
+                                     // the value of running and without reporting its
+                                     // results.  After the for loop, the thread puts
+                                     // the result from that batch into the queue.  It
+                                     // then checks the value of running and will pause
+                                     // if running is false.
+    
+    <newcode>private long totalTrialCount;    // Total number of trials considered so far.
+    private long totalInCircleCount; // Number of those trials for which x*x+y*y &lt; 1.</newcode>
+
+    private JLabel piEstimateLabel;  // A label for showing the current estimate of pi.
+    private JLabel countLabel;       // A label for showing the number of trials.
+    
+    private JButton runPauseButton;  // Button to control the threads.  Clicking this
+                                     // button will pause the threads if they are running
+                                     // and will restart it if it is paused.
+    
+    private volatile boolean running;  // Control variable for signaling the threads to
+                                       // run or pause.  Initially, this is false, so
+                                       // the thread pauses as soon as it is created,
+                                       // until the user clicks the "Run" button.
+
+        
+    <newcode>private LinkedBlockingQueue&lt;Integer&gt; resultsQueue; // Results from the computation
+                                 // threads are placed into this queue.  Every number
+                                 // in the queue represents the results from running
+                                 // a batch of trials, of size BATCH_SIZE.  The number
+                                 // in the queue is the number of trials in that batch
+                                 // that resulted in x*x+y*y being less than 1.  (Note
+                                 // that I use a blocking queue rather than a 
+                                 // ConcurrentLinkedQueue only because the blocking
+                                 // queue has a convenient drainTo() method for getting
+                                 // all the items out of the queue at once, with correct
+                                 // synchronization.)
+    
+    private Timer resultsTimer;  // While the computation is running, this timer is
+                                 // also running.  Every 1/10 second, it grabs the
+                                 // results from the queue and applies them to the
+                                 // display labels.  (Note that some results can be
+                                 // left in the queue while the timer and threads are
+                                 // paused.  This seems harmless.)</newcode>
+    
+    
+    /**
+     * Constructor creates the three display labels and adds them to this
+     * panel.  It adds a "Run"/"Pause" button below the labels.  
+     <newcode>* It also creates and starts the computation threads and the timer
+     * that takes the results from the threads and updates the labels
+     * every 1/10 second.</newcode>
+     */
+    public EstimatePi_3() {
+
+        setLayout(new GridLayout(4, 1, 2, 2));
+        setBackground(Color.BLUE);
+        setBorder(BorderFactory.createLineBorder(Color.BLUE,2));
+        
+        countLabel =      new JLabel(" Number of Trials:   0");
+        piEstimateLabel = new JLabel(" Current Estimate:   (none)");
+        JLabel piLabel =  new JLabel(" Actual value of pi: " + Math.PI + " ");
+        Font bigMonospace = new Font("Monospaced", Font.PLAIN, 20);
+        countLabel.setFont(bigMonospace);
+        piEstimateLabel.setFont(bigMonospace);
+        piLabel.setFont(bigMonospace);
+        countLabel.setOpaque(true);
+        piEstimateLabel.setOpaque(true);
+        piLabel.setOpaque(true);
+        add(piLabel);
+        add(piEstimateLabel);
+        add(countLabel);
+        
+        JPanel bottom = new JPanel();
+        add(bottom);
+        runPauseButton = new JButton("Run");
+        bottom.add(runPauseButton);
+        runPauseButton.addActionListener(this);
+        
+        <newcode>resultsQueue = new LinkedBlockingQueue&lt;Integer&gt;();
+        int threadCount = Runtime.getRuntime().availableProcessors();
+        for (int i = 0; i &lt; threadCount; i++) {
+            ComputationThread runner = new ComputationThread();
+            runner.start();
+        }
+        
+        resultsTimer = new Timer(100, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                grabResults();
+            }
+        });</newcode>
+        
+    } // end constructor
+
+    
+    /**
+     * This method responds to clicks on the button, by
+     * toggling the value of the signal variable from true
+     * to false or from false to true.  The text on the 
+     * button is changed to match the state.  The timer
+     * that grabs the results is also started or stopped,
+     * depending on whether the computation is running.  When
+     * running is set to true, <newcode>notifyAll()</newcode> is called to wake
+     * up all the threads.  (Note that the synchronization
+     * for controlling the threads is on the panel object,
+     * this.  The threads have to synchronize on the same 
+     * object when testing the value of running.)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        if (running) {
+            <newcode>resultsTimer.stop();</newcode>
+            runPauseButton.setText("Run");
+            running = false;
+        }
+        else {
+            <newcode>runPauseButton.setText("Pause");</newcode>
+            resultsTimer.start();
+            synchronized(<newcode>this</newcode>) { <newcode>// IMPORTANT: Synchronization is now on this JPanel object!</newcode>
+                running = true;
+                <newcode>notifyAll(); // IMPORTANT: Use notifyAll(), not notify(), to wake all computation threads</newcode>
+            }
+        }
+    }
+    
+    
+    <newcode>/**
+     * This method is called by the timer, every 1/10 second while the
+     * computation is running.  It grabs the entire contents of the
+     * queue that is used to send results from the threads to
+     * this method.  Each value in the queue represents the number of
+     * trials, out of a batch of size BATCH_SIZE, in which x*x+y*Y was
+     * less than 1.  This method updates the total number of trials that 
+     * have been performed and the total number of trials for which
+     * x*x+y*y was less than 1.  It then updates the display labels
+     * with the new data.
+     */
+    private void grabResults() {
+        ArrayList&lt;Integer&gt; results = new ArrayList&lt;Integer&gt;();
+        resultsQueue.drainTo(results);  // Get entire contents of queue.
+                                        // Using this method avoids having to synchronize
+                                        // the entire process of removing items from the
+                                        // queue one at a time.  (And doing that without
+                                        // synchronization would introduce a race condition.)
+        for (int inCircleCount : results) {
+            totalTrialCount += BATCH_SIZE;
+            totalInCircleCount += inCircleCount;
+        }
+        double estimateOfPi = 4 * ((double)totalInCircleCount / totalTrialCount);
+        countLabel.setText(      " Number of Trials:   " + totalTrialCount);
+        piEstimateLabel.setText( " Current Estimate:   " + estimateOfPi);
+        // System.out.println("Got " + results.size() + " results.");  // for testing
+    }</newcode>
+    
+    
+    /**
+     *  This class defines the thread that does the computation.
+     *  The thread runs in an infinite loop in which it performs
+     *  batches of 1000000 trials and <newcode>places the result in the queue.</newcode>
+     *  Just after it starts and between batches, the thread tests
+     *  the value of the signal variable, running.  If this variable
+     *  is false, then the thread sleeps until the value of running
+     *  is set to true.  <newcode>Note that this method creates and uses its
+     *  own object of type Random to generate random numbers. (Because
+     *  access to Math.random() has to be synchronized, using it
+     *  in multiple threads slowed things down immensely.)
+     *  Synchronization in this thread, as in the rest of the program,
+     *  is on the panel object, which is referred to here as
+     *  "EstimatePi_3.this".  The previous version used the thread
+     *  object for synchronization, but in this version there can
+     *  be multiple threads, so it seemed more natural to use the panel.</newcode>
+     */
+    private class ComputationThread extends Thread {
+        public ComputationThread() {
+            setDaemon(true);
+            setPriority(Thread.currentThread().getPriority() - 1);
+        }
+        public void run() {
+            <newcode>Random myRandom = new Random();</newcode>
+            while (true) {
+                synchronized(<newcode>EstimatePi_3.this</newcode>) { 
+                    while ( ! running ) {
+                        try {
+                            <newcode>EstimatePi_3.this.</newcode>wait();
+                        }
+                        catch (InterruptedException e) {
+                        }
+                    }
+                }
+                int inCircleCount = 0;
+                for (int i = 0; i &lt; BATCH_SIZE; i++) {
+                    double x = myRandom.nextDouble();
+                    double y = myRandom.nextDouble();
+                    if (x*x + y*y &lt; 1)
+                        inCircleCount++;                        
+                }
+                <newcode>resultsQueue.add(inCircleCount);</newcode>
+            }
+        }
+    }
+    
+    
+} // end class EstimatePi_3
+</prog>
+</pre>
+</exercise-code>
+
+</exercise>
+
+
+<exercise id="threads.ex.6">
+
+<exercise-question><p>The chat room example from <localref href="threads.5.2"/>
+can be improved in several ways.  First, it would be nice if the participants
+in the chat room could be identified by name instead of by number.
+Second, it would be nice if one person could send a private message to
+another person that would be seen just by that person rather than by
+everyone.   Make these two changes.  You can start with a copy of the
+package <sourceref href="netgame/chat/">netgame.chat</sourceref>.
+You will also need the package <sourceref href="netgame/common/">netgame.common</sourceref>,
+which defines the netgame framework.</p>
+
+<p>To make the first change, you will have to implement a subclass of <classname>Hub</classname>
+that can keep track of client names as well as numbers.  To get the name of a client to
+the hub, you can override the <code>extraHandshake()</code> method both in
+the <classname>Hub</classname> subclass and in the <classname>Client</classname> subclass.
+The <code>extraHandshake()</code> method is called as part of setting up the connection
+between the client and the hub.  It is called after the client has been assigned
+an ID number but before the connection is considered to be fully connected.  It should
+throw an <classname>IOException</classname> if some error occurs during the setup process.
+Note that any messages that are sent by the hub as part of the handshake
+must be read by the client and vice versa.
+The <code>extraHandshake()</code> method in the Client is defined as:
+</p>
+
+<pre>protected void extraHandshake(ObjectInputStream in, ObjectOutputStream out) 
+                                                    throws IOException</pre>
+                                                             
+<np>while in the Hub, there is an extra parameter that tells the ID number of
+the client whose connection is being set up:</np>
+
+<pre>protected void extraHandshake(in playerID, ObjectInputStream in, 
+                              ObjectOutputStream out) throws IOException</pre>
+
+
+<np>In the <sourceref href="netgame/chat/ChatRoomWindow.java">ChatRoomWindow</sourceref> class,
+the <code>main()</code> routine asks the user for the name of the computer where the
+server is running.  You can add some code there to ask the user their name.  You will
+have to decide what to do if two users want to use the same name.  You might consider
+having a list of users who are allowed to join the chat room.  You might even assign
+them passwords.</np>
+
+<p>For the second improvement, personal messages, I suggest
+defining a <classname>PrivateMessage</classname> class.  A <classname>PrivateMessage</classname>
+object would include both the string that represents the message and the
+ID numbers of the player to whom the message is being sent and the player who sent the
+message.  The hub will have to be programmed to know how to deal with such messages.
+A <classname>PrivateMessage</classname> should only be sent by the hub to the client who is
+listed as the recipient of the message.  You need to decide how the user will
+input a private message and how the user will select the recipient of the
+message.</p>
+
+<p>If you attempt this exercise, you are likely to find it quite challenging. </p>
+
+</exercise-question>
+
+<exercise-discuss>
+<p>My solution defines a subclass, <classname>NewChatRoomHub</classname>, of
+<classname>Hub</classname> to make it possible to manage user names.  
+I also wrote <classname>NewChatRoomWindow</classname> class, but not
+as a subclass; instead it is a modified copy of <classname>ChatRoomWindow</classname>.
+the <classname>Hub</classname> class, users are identified by ID numbers.
+In some ways, it would have been easier to modify <classname>Hub</classname>,
+instead of creating a subclass.  However, I wanted to build on the
+package <sourceref href="netgame/common/">netgame.common</sourceref>,
+without modifying the existing classes.  The <classname>NewChatRoomHub</classname>
+class has an instance variable</p>
+
+<pre>private TreeMap&lt;Integer,String&gt; nameMap = new TreeMap&lt;Integer,String&gt;();</pre>
+
+<np>to keep track of client names by associating each client's name to that
+client's ID number.  That is, <code>nameMap.get(id)</code> is the name of
+the client whose ID number is <code>id</code>.  There has to be a way to
+add a user name to <code>nameMap</code> when a new client connects,
+and there has to be a way to remove a client from <code>nameMap</code>
+when that client disconnects.  There also has to be a way for a client
+to get a name in the first place.</np>
+
+<p>It might have been nice to have a list of authorized users, and give
+each authorized user a name and a password.  The hub would then require a
+name and a password before it would let a client connect.  The list of
+names and passwords could be stored in a file or, if there are a lot of
+them, in a database. However, I decided to keep things simple. Clients choose their names
+when they connect.  The client's selected name is sent to the hub
+as part of the <code>extraHandshake()</code> method.  To avoid having
+duplicate names, the hub will modify the client's name if there is
+already someone in the chat room using that name.  For example, if the
+client wants to be "Fred" and there is already a Fred, then the 
+hub will assign the name "Fred#2" to the client.  Since the hub can
+modify the name, it sends the client's name back to the client, possibly
+with some modification.  The client reads the returned name as part
+of the handshake.  To implement this idea, the <code>extraHandshake()</code> method in
+the client simply sends the client's requested name to the hub by
+writing the name to the connection's output stream.  It then reads
+the possibly modified name from the connection's input stream:</p>
+
+<pre>protected void extraHandshake(ObjectInputStream in, ObjectOutputStream out) throws IOException {
+    try {
+        out.writeObject(myName);  // Send user's name request to the server. 
+        myName = (String)in.readObject();  // Get the actual, possibly modified, name from the server.
+    }
+    catch (Exception e) {
+        throw new IOException("Error while setting up connection: " + e);
+    }
+}</pre>
+
+<np>(This code is from the <classname>ChatClient</classname> class, which is a nested
+subclass of <classname>NewChatRoomWindow</classname>.)</np>
+
+<p>The corresponding <code>extraHandshake()</code> method in the <classname>NewChatRoomHub</classname>
+class has to read the name that was sent by the client, possibly modify the name, and write the
+name back to the client.  It also adds the client to <code>nameMap</code>, which contains the
+names of all connected clients.  My code is very careful to produce a name that is non-null,
+non-empty, and unique:</p>
+
+<pre>protected void extraHandshake(int playerID, 
+                  ObjectInputStream in, ObjectOutputStream out) throws IOException {
+    try {
+        String name = (String)in.readObject(); // Read requested name from client.
+        if (name == null)
+            name = "noname";
+        if (name.length() > 15)
+            name = name.substring(0,15).trim();
+        if (name.equals(""))
+            name = "noname";
+        synchronized(nameMap) {
+               // Synchronized to be absolutely sure that there will be
+               // no duplicate names.
+            if (nameMap.containsValue(name)) {
+                String approvedName = name;
+                int num = 2;
+                while (nameMap.containsValue(approvedName)) {
+                    approvedName = name + "#" + num;
+                    num++;
+                }
+                name = approvedName;
+            }
+        }
+        out.writeObject(name);      // Send actual name to client.
+        nameMap.put(playerID,name); // Add client's name to nameMap.
+    }
+    catch (Exception e) {
+        throw new IOException("Error while setting up connection: " + e);
+    }
+}</pre>
+
+<break/>
+
+<p>In order to get private messages from one player to another, I defined a
+<classname>PrivateMessage</classname> class, as suggested in the exercise.
+An object <code>pm</code> of type <classname>PrivateMessage</classname>
+has public instance variables <code>pm.senderID</code> and <code>pm.recipientID</code>
+to hold the ID numbers of the sender and the recipient, and it has
+<code>pm.message</code> to hold the message itself.  The hub has to know what
+to do with such a message.  Messages are processed in the hub by the
+<code>messageReceived()</code> method.  I overrode this method in
+<classname>NewChatRoomHub</classname> to handle <classname>PrivateMessage</classname>
+and to pass messages of other types on to the superclass.  One interesting
+point is that the hub sets the <code>senderID</code> in the message to be
+the ID number of the client that actually sent the message.  This is done
+to prevent clients from sending forged messages that appear to be from
+someone else.  Here is the <code>messageReceived()</code> method from
+<classname>NewChatRoomHub</classname>:
+</p>
+
+<pre>/**
+ * This method is overridden to provide support for PrivateMessages.
+ * If a PrivateMessage is received from some client, this method
+ * will set the senderID field in the message to be the ID number
+ * of the client who sent the message.  It will then send the
+ * message on to the specified recipient.  If some other type
+ * of message is received, it is handled by the messageReceived()
+ * method in the superclass (which will wrap it in a ForwardedMessage
+ * and send it to all connected clients).
+ */
+protected void messageReceived(int playerID, Object message) {
+    if (message instanceof PrivateMessage) {
+        PrivateMessage pm = (PrivateMessage)message;
+        pm.senderID = playerID;
+        sendToOne(pm.recipientID, pm);
+    }
+    else
+        super.messageReceived(playerID, message);
+}</pre>
+
+<p>It is easy enough to add some extra inputs to the original window
+from <classname>ChatRoomWindow</classname> to make it possible
+for the user to send private messages.  Just add a text input
+box for the message, a button to send the message, and
+a <classname>JComboBox</classname> that contains a list of
+possible recipients.  The user enters a message, selects
+the recipient from the list, and clicks the button to send.
+The program constructs a <classname>PrivateMessage</classname>
+containing the message and the ID number of the recipient,
+and it sends the <classname>PrivateMessage</classname> to
+the hub, which forwards it on to the intended recipient.
+This code can be found in <classname>NewChatRoomWindow.</classname></p>
+
+<p>At least, it <b>would</b> be easy if not for the fact that
+I want users of the chat room to be identified by name,
+not ID number.  The whole point of using names is that they
+provide a more meaningful way to refer to users.  Each client
+already gets a list of ID numbers of all connected clients,
+but I want each client to have a list of <b>names</b> of
+connected clients.  The hub has that information.  I just
+needed a way to get that information to the clients.  Since
+the client list changes every time a client connects or
+disconnects, the hub will have to send new information
+to the clients every time that happens.  I was able to
+program this behavior by overriding the <code>playerConnected()</code>
+and <code>playerDisconnected()</code> methods from
+the <classname>Hub</classname> class.  My <classname>NewChatRoomHub</classname>
+class includes the following definitions for those methods (which
+do nothing in class <classname>Hub</classname>):
+</p>
+
+<pre>/**
+ *  This method is called when a new client connects.  It is called
+ *  after the extraHandshake() method has been called, so that the
+ *  client's name has already been added to nameMap.  This method
+ *  creates a ClientConnectedMessage and sends it to all connected
+ *  clients to announce the new participant in the chat room.
+ */
+protected void playerConnected(int playerID) {
+    resetOutput(); // Reset the output stream before resending nameMap.
+    sendToAll(new ClientConnectedMessage(playerID,nameMap));
+}
+
+/**
+ * This method is called when a client has been disconnected from
+ * this hub.  It removes the client from the nameMap and sends
+ * a ClientDisconnectMessage to all connected players to
+ * announce the fact that the client has left the chat room. 
+ */
+protected void playerDisconnected(int playerID) {
+    String name = nameMap.get(playerID); // Get the departing player's name.
+    nameMap.remove(playerID);  // Remove the player from nameMap.
+    resetOutput(); // Reset the output stream before resending nameMap.
+    sendToAll(new ClientDisconnectedMessage(playerID, name, nameMap));
+}</pre>
+
+<np>It actually took me quite a while to get this right.  To simplify the
+processing, I ended up defining new message types,
+<classname>ClientConnectedMessage</classname> and
+<classname>ClientDisconnectedMessage</classname>, to
+hold the information that I wanted to send to the clients.  A
+<classname>ClientConnectedMessage</classname> includes the
+ID number of the client who has just connected, as well as the
+<code>nameMap</code> that contains the ID numbers and names
+of all connected clients.  When a client receives this message,
+it can inform the user that someone has entered the chat
+room, and it can use the <code>nameMap</code> to construct
+the list of names of possible recipients of private messages.
+<classname>ClientDisconnectedMessages</classname> are similar.</np>
+
+<p>Not for the first time, I introduced a bug by forgetting that an
+<classname>ObjectOuputStream</classname> has to be reset if it is used to send
+the same object twice, with modifications between the two transmissions.
+This is necessary in this example because the same object, <code>nameMap</code>,
+is transmitted as part of every <classname>ClientConnectedMessage</classname> and
+every <classname>ClientDisconnectedMessage</classname>.  When I didn't
+reset the output, the changes that I made to that object were not seen
+by the clients that received those messages.  In my code, the
+method <code>resetOuput()</code> will cause the output stream leading
+to every client to be reset.
+</p>
+
+<break/>
+
+<p>Back in the <classname>NewChatRoomWindow</classname> class, the chat room
+client has to be prepared to receive <classname>PrivateMessages</classname>,
+<classname>ClientConnectedMessages</classname>, and <classname>ClientDisconnectedMessages</classname>.
+It can also receive <classname>ForwardedMessages</classname> which are used, as in the
+original chat room application, to broadcast a message from one client to all
+connected clients.  In each case, the client will add an appropriate message to the
+transcript.  It uses <code>clientNameMap</code>&mdash;the local copy of <code>nameMap</code>&mdash;to
+translate ID numbers from the messages into the names of the corresponding chat room users:
+</p>
+
+
+<pre>protected void messageReceived(Object message) {
+    if (message instanceof ForwardedMessage) {
+        ForwardedMessage fm = (ForwardedMessage)message;
+        String senderName = clientNameMap.get(fm.senderID);
+        addToTranscript(senderName + " SAYS:  " + fm.message);
+    }
+    else if (message instanceof PrivateMessage) {
+        PrivateMessage pm = (PrivateMessage)message;
+        String senderName = clientNameMap.get(pm.senderID);
+        addToTranscript("PRIVATE MESSAGE FROM " + senderName + ":  " + pm.message);
+    }
+    else if (message instanceof ClientConnectedMessage) {
+        ClientConnectedMessage cm = (ClientConnectedMessage)message;
+        addToTranscript('"' + cm.nameMap.get(cm.newClientID) + "\" HAS JOINED THE CHAT ROOM.");
+        newNameMap(cm.nameMap);
+    }
+    else if (message instanceof ClientDisconnectedMessage) {
+        ClientDisconnectedMessage dm = (ClientDisconnectedMessage)message;
+        addToTranscript('"' + clientNameMap.get(dm.departingClientID) + "\" HAS LEFT THE CHAT ROOM.");
+        newNameMap(dm.nameMap);
+    }
+}</pre>
+
+<np>The <code>newNameMap()</code> method, which is called twice in the above code,
+will assign the <code>nameMap</code> from the message to <code>clientNameMap</code>.
+It also updates the <classname>JComboBox</classname>, <code></code>, which stores
+the list of names of connected users (leaving out the name of the user who is using
+the program, since he won't want to send a private message to himself):</np>
+
+<pre>private void newNameMap(final TreeMap&lt;Integer,String&gt; nameMap) {
+    SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+            clientNameMap = nameMap;
+            clientList.removeAllItems();
+            boolean someoneIsThere = false;
+            for (String str: nameMap.values()) {
+                if (!str.equals(myName)) {
+                    clientList.addItem(str);
+                    someoneIsThere = true;
+                }
+            }
+            privateMessageInput.setEditable(someoneIsThere);
+            privateMessageInput.setEnabled(someoneIsThere);
+            sendPrivateButton.setEnabled(someoneIsThere);
+            if (!someoneIsThere)
+                clientList.addItem("(no one available)");
+        }
+    });
+}</pre>
+
+<p>The complete source code for the new chat room application is shown below.  It consists
+of six classes, which I defined in a package named <code>netgame.newchat</code>.  These
+classes depend on the classes from the <sourceref href="netgame/common/">netgame.common</sourceref>
+package.</p>
+
+</exercise-discuss>
+
+<exercise-code>
+
+<p><b><code>NewChatRoomServer</code> is a short class with a main routine that simply creates a 
+hub that acts as the server for the application:</b></p>
+
+<pre><prog name="NewChatRoomServer">package netgame.newchat;
+
+import java.io.IOException;
+
+/**
+ * This class contains just a small main class that creates a NewChatRoomHub
+ * and starts it listening on port 37830.  This port is used
+ * by the NewChatRoomWindow application.  This program should be run
+ * on the computer that "hosts" the chat room.  See the NewChatRoomWindow
+ * class for more details.  Once the server starts listening, it
+ * will listens for connection requests from clients until the
+ * NewChatRoomServer program is terminated (for example by a 
+ * Control-C).
+ */
+public class NewChatRoomServer {
+
+    private final static int PORT = 37830;
+    
+    public static void main(String[] args) {
+        try {
+            new NewChatRoomHub(PORT);
+        }
+        catch (IOException e) {
+            System.out.println("Can't create listening socket.  Shutting down.");
+        }
+    }
+    
+}
+</prog>
+
+
+</pre>
+
+
+<p><b>There are three short classes that define various types of messages which are used
+in the application:</b></p>
+
+<pre><prog name="PrivateMessage">package netgame.newchat;
+
+import java.io.Serializable;
+
+/**
+ * Represents a string sent as a message from one client
+ * to another client.  Note:  The ChatRoomHub will set the
+ * senderID of a PrivateMessage to be the ID number of the
+ * client who actually sent the message, in order to avoid
+ * the possibility of rogue clients that try to forge 
+ * messages that appear to come from other clients.
+ */
+public class PrivateMessage implements Serializable {
+    
+    public int senderID;    // The ID number of the sender.
+    public int recipientID; // The ID number of the recipient.
+    public String message;  // The message.
+
+    /**
+     *  Create a private message from one user to another.
+     *  The senderID of the message will be set by the hub.
+     */
+    public PrivateMessage(int recipientID, String message) {
+        this.recipientID = recipientID;
+        this.message = message;
+    }
+
+}
+</prog>
+ 
+
+<prog name="ClientConnectedMessage">package netgame.newchat;
+
+import java.io.Serializable;
+import java.util.TreeMap;
+
+/**
+ * A message of this type will be sent by the hub to all
+ * connected clients when a new client joins the chat room
+ */
+public class ClientConnectedMessage implements Serializable {
+    
+    public int newClientID;  // The ID number of the client who has connected.
+    public TreeMap&lt;Integer,String&gt; nameMap;  // Map of all connected client IDs to their names.
+    
+    public ClientConnectedMessage(int newClientID, TreeMap&lt;Integer,String&gt; nameMap) {
+        this.newClientID = newClientID;
+        this.nameMap = nameMap;
+    }
+
+}
+</prog>
+
+
+<prog name="ClientDisconnectedMessage">package netgame.newchat;
+
+import java.io.Serializable;
+import java.util.TreeMap;
+
+/**
+ * A message of this type will be sent by the hub to all
+ * remaining connected clients when a client leaves the
+ * chat room.
+ */
+public class ClientDisconnectedMessage implements Serializable {
+    
+    public int departingClientID;  // The ID number of the client who has left the chat room.
+    public String departingClientName;  // The name of the departing client
+    public TreeMap&lt;Integer,String&gt; nameMap;  // Map of all connected client IDs to their names.
+                                             //  (Note that the departing client is not included.)
+
+    public ClientDisconnectedMessage(int departingClientID,
+            String departingClientName, TreeMap&lt;Integer,String&gt; nameMap) {
+        this.departingClientID = departingClientID;
+        this.departingClientName = departingClientName;
+        this.nameMap = nameMap;
+    }
+    
+
+}
+</prog>
+
+</pre>
+
+
+<p><b>The subclass of <classname>Hub</classname> that defines the server for the application:</b></p>
+
+<pre><prog name="NewChatRoomHub">package netgame.newchat;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.TreeMap;
+
+import netgame.common.*;
+
+/**
+ *  This class defines the "hub" that acts as a server for the
+ *  chat room application.  It extends the basic Hub class in
+ *  order to support names for clients, as well as ID numbers.
+ */
+public class NewChatRoomHub extends Hub {
+    
+    /**
+     * This map keeps track of the names of all connected clients.
+     * It maps client ID numbers to client names.
+     */
+    private TreeMap&lt;Integer,String&gt; nameMap = new TreeMap&lt;Integer,String&gt;();
+
+    /**
+     * Create a NewChatRoomHub, which will listen for connections on
+     * a specified port.
+     * @param port the port on which to listen for connections
+     * @throws IOException if it is not possible to create a listening socket
+     */
+    public NewChatRoomHub(int port) throws IOException {
+        super(port);
+    }
+
+    /**
+     * This method is called as part of the connection setup between this hub
+     * and a client that has requested a connection.  It is overridden in this
+     * class so that a name can be assigned to the client as part of the setup
+     * process.  This method works in cooperation with the extraHandshake()
+     * method in the client class (which is defined as a nested class inside
+     * NewChatRoomWindow).  In this method, the Hub reads a string from the
+     * user that contains the name that the client wants to use.  The name
+     * can be modified to make sure that it is non-null, 15 characters or less.
+     * The resulting name is further modified by adding a suffix such as
+     * "#2" or "#3" if the name is already in use by another client.  Finally,
+     * the possibly modified name is sent back to the client, which will use
+     * the returned value as the name that identifies the client in the chat
+     * room.
+     */
+    protected void extraHandshake(int playerID, 
+                      ObjectInputStream in, ObjectOutputStream out) throws IOException {
+        try {
+            String name = (String)in.readObject();
+            if (name == null)
+                name = "noname";
+            if (name.length() > 15)
+                name = name.substring(0,15).trim();
+            if (name.equals(""))
+                name = "noname";
+            synchronized(nameMap) {
+                if (nameMap.containsValue(name)) {
+                    String approvedName = name;
+                    int num = 2;
+                    while (nameMap.containsValue(approvedName)) {
+                        approvedName = name + "#" + num;
+                        num++;
+                    }
+                    name = approvedName;
+                }
+            }
+            out.writeObject(name);
+            nameMap.put(playerID,name);
+        }
+        catch (Exception e) {
+            throw new IOException("Error while setting up connection: " + e);
+        }
+    }
+
+    /**
+     * This method is overridden to provide support for PrivateMessages.
+     * If a PrivateMessage is received from some client, this method
+     * will set the senderID field in the message to be the ID number
+     * of the client who sent the message.  It will then send the
+     * message on to the specified recipient.  If some other type
+     * of message is received, it is handled by the messageReceived()
+     * method in the superclass (which will wrap it in a ForwardedMessage
+     * and send it to all connected clients).
+     */
+    protected void messageReceived(int playerID, Object message) {
+        if (message instanceof PrivateMessage) {
+            PrivateMessage pm = (PrivateMessage)message;
+            pm.senderID = playerID;
+            sendToOne(pm.recipientID, pm);
+        }
+        else
+            super.messageReceived(playerID, message);
+    }
+
+    /**
+     *  This method is called when a new client connects.  It is called
+     *  after the extraHandshake() method has been called, so that the
+     *  client's name has already been added to nameMap.  This method
+     *  creates a ClientConnectedMessage and sends it to all connected
+     *  clients to announce the new participant in the chat room.
+     */
+    protected void playerConnected(int playerID) {
+        resetOutput(); // Reset the output stream before resending nameMap.
+        sendToAll(new ClientConnectedMessage(playerID,nameMap));
+    }
+
+    /**
+     * This method is called when a client has been disconnected from
+     * this hub.  It removes the client from the nameMap and sends
+     * a ClientDisconnectedMessage to all connected players to
+     * announce the fact that the client has left the chat room. 
+     */
+    protected void playerDisconnected(int playerID) {
+        String name = nameMap.get(playerID); // Get the departing player's name.
+        nameMap.remove(playerID);  // Remove the player from nameMap.
+        resetOutput(); // Reset the output stream before resending nameMap.
+        sendToAll(new ClientDisconnectedMessage(playerID, name, nameMap));
+    }
+    
+}
+</prog>
+
+
+</pre>
+
+
+<p><b>And finally, the class that defines the clients, <classname>NewChatRoomWindow</classname>.  
+This class is a modified version of <sourceref href="netgame/chat/ChatRoomWindow.java">ChatRoomWindow</sourceref>
+from the original chat room application.  Significant changes from the original are shown in &newcodestyle;.</b></p>
+
+<pre><prog name="NewChatRoomWindow">package netgame.newchat;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+<newcode>import java.util.TreeMap;</newcode>
+
+import javax.swing.*;
+import netgame.common.*;
+
+/**
+ * This class represents a client for a "chat room" application.  The chat
+ * room is hosted by a server running on some computer.  The user of this
+ * program must know the host name (or IP address) of the computer that
+ * hosts the chat room.  When this program is run, it asks for that
+ * information <newcode>and for the name that the user wants to use in the chat
+ * room</newcode>.  Then, it opens a window that has an input box where the
+ * user can enter messages to be sent to the chat room.  The message is 
+ * sent when the user presses return in the input box or when the
+ * user clicks a Send button.  There is also a text area that shows 
+ * a transcript of all messages from participants in the chat room.
+ * <newcode>&lt;p&gt;The user can also send private messages to individual users.
+ * The user selects the recipient's name from a pop-up list of
+ * connected users.</newcode>
+ * &lt;p&gt;Participants in the chat room are represented by ID numbers
+ * that are assigned to them by the server when they connect. <newcode>They
+ * also have names which they select.</newcode>
+ */
+public class NewChatRoomWindow extends JFrame {
+    
+    private final static int PORT = 37830; // The ChatRoom port number; can't be 
+                                           // changed here unless the ChatRoomServer
+                                           // program is also changed.
+
+    /**
+     * Gets the host name (or IP address) of the chat room server from the
+     * user, gets the user's name, and opens a NewChatRoomWindow.  The program ends 
+     * when the user closes the window.
+     */
+    public static void main(String[] args) {
+        String host = JOptionPane.showInputDialog(
+                       "Enter the host name of the\ncomputer that hosts the chat room:");
+        if (host == null || host.trim().length() == 0)
+            return;
+        <newcode>String name = JOptionPane.showInputDialog(
+                       "Enter that name that you want\nto use in the chat room.");
+        if (name == null || name.trim().length() == 0)
+            return;</newcode>
+        NewChatRoomWindow window = new NewChatRoomWindow(host,<newcode>name.trim()</newcode>);
+        window.setLocation(200,100);
+        window.setVisible(true);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    
+    /**
+     * A ChatClient connects to the Hub and is used to send messages to
+     * and receive messages from a Hub.  Four types of message are
+     * received from the Hub.  A ForwardedMessage represents a message
+     * that was entered by some user and sent to all users of the
+     * chat room.  <newcode>A PrivateMessage represents a message that was
+     * sent by another user only to this user.  A ClientConnectedMessage
+     * is sent when a new user enters the room.  A ClientDisconnectedMessage
+     * is sent when a user leaves the room.</newcode>
+     */
+    private class ChatClient extends Client {
+        
+        /**
+         * Opens a connection the chat room server on a specified computer.
+         */
+        ChatClient(String host) throws IOException {
+            super(host, PORT);
+        }
+        
+        /**
+         * Responds when a message is received from the server.
+         */
+        protected void messageReceived(Object message) {
+            if (message instanceof ForwardedMessage) {
+                ForwardedMessage fm = (ForwardedMessage)message;
+                <newcode>String senderName = clientNameMap.get(fm.senderID);</newcode>
+                addToTranscript(<newcode>senderName</newcode> + " SAYS:  " + fm.message);
+            }
+            <newcode>else if (message instanceof PrivateMessage) {
+                PrivateMessage pm = (PrivateMessage)message;
+                String senderName = clientNameMap.get(pm.senderID);
+                addToTranscript("PRIVATE MESSAGE FROM " + senderName + ":  " + pm.message);
+            }
+            else if (message instanceof ClientConnectedMessage) {
+                ClientConnectedMessage cm = (ClientConnectedMessage)message;
+                addToTranscript('"' + cm.nameMap.get(cm.newClientID) + "\" HAS JOINED THE CHAT ROOM.");
+                newNameMap(cm.nameMap);
+            }
+            else if (message instanceof ClientDisconnectedMessage) {
+                ClientDisconnectedMessage dm = (ClientDisconnectedMessage)message;
+                addToTranscript('"' + clientNameMap.get(dm.departingClientID) + "\" HAS LEFT THE CHAT ROOM.");
+                newNameMap(dm.nameMap);
+            }</newcode>
+        }
+        
+        <newcode>/**
+         * This method is part of the connection set up.  It sends the user's selected
+         * name to the hub by writing that name to the output stream.  The hub will
+         * respond by sending the name back to this client, possibly modified if someone
+         * is the chat room is already using the selected name.
+         */
+        protected void extraHandshake(ObjectInputStream in, ObjectOutputStream out) throws IOException {
+            try {
+                out.writeObject(myName);  // Send user's name request to the server. 
+                myName = (String)in.readObject();  // Get the actual, possibly modified, name from the server.
+            }
+            catch (Exception e) {
+                throw new IOException("Error while setting up connection: " + e);
+            }
+        }</newcode>
+
+        /**
+         * Called when the connection to the client is shut down because of some
+         * error message.  (This will happen if the server program is terminated.)
+         */
+        protected void connectionClosedByError(String message) {
+            addToTranscript("Sorry, communication has shut down due to an error:\n     " + message);
+            sendButton.setEnabled(false);
+            messageInput.setEnabled(false);
+            messageInput.setEditable(false);
+            messageInput.setText("");
+            <newcode>sendPrivateButton.setEnabled(false);
+            privateMessageInput.setEnabled(false);
+            privateMessageInput.setEditable(false);</newcode>
+            connected = false;
+            connection = null;
+        }
+        
+        <newcode>// Note:  the methods playerConnected() and playerDisconnected(), which where present here
+        // in ChatRoomWindow, were removed, since their functionality (to announce arrivals
+        // and departures) has been taken over by ClientConnectedMessage and ClientDisconnectedMessage.</newcode>
+
+    } // end nested class ChatClient
+    
+
+    <newcode>private volatile String myName;   // The name that this client uses in the chat room.
+                                      // Originally selected by the user, but might be modified
+                                      // if there is already a client of the same name connected
+                                      // to the Hub.
+    
+    private volatile TreeMap&lt;Integer,String&gt; clientNameMap = new TreeMap&lt;Integer, String&gt;();
+                 // The clientNameMap maps client ID numbers to the names that they are
+                 // using in the chat room.  Every time a client connects or disconnects,
+                 // the Hub sends a new, modified name map to each connected client.  When
+                 // that message is received, the clientNameMap is replaced with the new value,
+                 // and the content of the clientList is replaced with info from the nameMap.
+    
+    private JComboBox clientList;      // List of connected client names, where the user can select
+                                       //   the client who is to receive the private message.</newcode>
+
+    private JTextField messageInput;   // For entering messages to be sent to the chat room
+    private JButton sendButton;        // Sends the contents of the messageInput.
+    private JButton quitButton;        // Leaves the chat room cleanly, by sending a DisconnectMessage
+    
+    <newcode>private JTextField privateMessageInput;  // For entering messages to be set to individual clients.
+    private JButton sendPrivateButton; // Sends the contents of privateMesssageInput to the user selected
+                                       //   in the clientList.</newcode>
+
+    private JTextArea transcript;      // Contains all messages sent by chat room participant, as well
+                                       // as a few additional status messages, such as when a new user arrives.
+    
+    private ChatClient connection;      // Represents the connection to the Hub; used to send messages;
+                                        // also receives and processes messages from the Hub.
+    
+    private volatile boolean connected; // This is true while the client is connected to the hub.
+    
+    
+    /**
+     * Constructor creates the window and starts the process of connecting
+     * to the hub; the actual connection is done in a separate thread.
+     * @param host  The IP address or host name of the computer where the server is running.
+     */
+    private NewChatRoomWindow(final String host, <newcode>String clientName</newcode>) {
+        super("Chat Room");
+        <newcode>myName = clientName;</newcode>
+        setBackground(Color.BLACK);
+        setLayout(new BorderLayout(2,2));
+        transcript = new JTextArea(30,60);
+        transcript.setLineWrap(true);
+        transcript.setWrapStyleWord(true);
+        transcript.setMargin(new Insets(5,5,5,5));
+        transcript.setEditable(false);
+        add(new JScrollPane(transcript), BorderLayout.CENTER);
+        sendButton = new JButton("send to all");
+        quitButton = new JButton("quit");
+        <newcode>sendPrivateButton = new JButton("send to one");</newcode>
+        messageInput = new JTextField(40);
+        messageInput.setMargin(new Insets(3,3,3,3));
+        <newcode>privateMessageInput = new JTextField(40);
+        privateMessageInput.setMargin(new Insets(3,3,3,3));
+        clientList = new JComboBox();
+        clientList.addItem("(No one available)");</newcode>
+        ActionHandler ah = new ActionHandler();
+        sendButton.addActionListener(ah);
+        quitButton.addActionListener(ah);
+        sendPrivateButton.addActionListener(ah);
+        messageInput.addActionListener(ah);
+        <newcode>privateMessageInput.addActionListener(ah);
+        sendButton.setEnabled(false);
+        sendPrivateButton.setEnabled(false);</newcode>
+        messageInput.setEditable(false);
+        messageInput.setEnabled(false);
+        <newcode>privateMessageInput.setEditable(false);
+        privateMessageInput.setEnabled(false);</newcode>
+        JPanel bottom = new JPanel();
+        bottom.setBackground(Color.LIGHT_GRAY);
+        bottom.add(new JLabel("You say:"));
+        bottom.add(messageInput);
+        bottom.add(sendButton);
+        bottom.add(Box.createHorizontalStrut(30));
+        bottom.add(quitButton);
+        <newcode>JPanel bottom2 = new JPanel();
+        bottom2.setBackground(Color.LIGHT_GRAY);
+        bottom2.add(new JLabel("Say:"));
+        bottom2.add(privateMessageInput);
+        bottom2.add(new JLabel(" to: "));
+        bottom2.add(clientList);
+        bottom2.add(sendPrivateButton);
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(2,1,5,5));
+        panel.add(bottom);
+        panel.add(bottom2);</newcode>
+        add(panel,BorderLayout.SOUTH);
+        pack();
+        addWindowListener( new WindowAdapter() { // calls doQuit if user closes window
+            public void windowClosing(WindowEvent e) {
+                doQuit();
+            }
+        });
+        new Thread() {
+                // This is a thread that opens the connection to the server.  Since
+                // that operation can block, it's not done directly in the constructor.
+                // Once the connection is established, the user interface elements are
+                // enabled so the user can send messages.  The Thread dies after
+                // the connection is established or after an error occurs.
+            public void run() {
+                try {
+                    addToTranscript("Connecting to " + host + " ...");
+                    connection = new ChatClient(host);
+                    connected = true;
+                    messageInput.setEditable(true);
+                    messageInput.setEnabled(true);
+                    sendButton.setEnabled(true);
+                    messageInput.requestFocus();
+                    <newcode>setTitle("Chat Room: Connected as " + myName);</newcode>
+                }
+                catch (IOException e) {
+                    addToTranscript("Connection attempt failed.");
+                    addToTranscript("Error: " + e);
+                }
+            }
+        }.start();
+    }
+    
+    
+    /**
+     * Adds a string to the transcript area, followed by a blank line.
+     */
+    private void addToTranscript(String message) {
+        transcript.append(message);
+        transcript.append("\n\n");
+            // The following line is a nasty kludge that was the only way I could find to force
+            // the transcript to scroll so that the text that was just added is visible in
+            // the window.  Without this, text can be added below the bottom of the visible area
+            // of the transcript.
+        transcript.setCaretPosition(transcript.getDocument().getLength());
+    }
+    
+    
+    /**
+     * Called when the user clicks the Quit button or closes
+     * the window by clicking its close box.
+     */
+    private void doQuit() {
+        if (connected)
+            connection.disconnect();  // Sends a DisconnectMessage to the server.
+        dispose();
+        try {
+            Thread.sleep(1000); // Time for DisconnectMessage to actually be sent.
+        }
+        catch (InterruptedException e) {
+        }
+        System.exit(0);
+    }
+
+    <newcode>/**
+     * This method is called when a ClientConnectedMessage or ClientDisconnectedMessage
+     * is received from the hub.  Its job is to save the nameMap that is part of the
+     * message and use it to rebuild the contents of the JComboBox, clientList, where
+     * the user selects the recipient of a private message.  It also enables or
+     * disables the private message input box and send button, depending on whether
+     * there are any possible message recipients.
+     * @param nameMap the new nameMap, which will replace the value of clientNameMap.
+     */
+    private void newNameMap(final TreeMap&lt;Integer,String&gt; nameMap) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                clientNameMap = nameMap;
+                clientList.removeAllItems();
+                boolean someoneIsThere = false;
+                for (String str: nameMap.values()) {
+                    if (!str.equals(myName)) {
+                        clientList.addItem(str);
+                        someoneIsThere = true;
+                    }
+                }
+                privateMessageInput.setEditable(someoneIsThere);
+                privateMessageInput.setEnabled(someoneIsThere);
+                sendPrivateButton.setEnabled(someoneIsThere);
+                if (!someoneIsThere)
+                    clientList.addItem("(no one available)");
+            }
+        });
+    }</newcode>
+    
+    /**
+     * Defines the object that handles all ActionEvents for the program.
+     */
+    private class ActionHandler implements ActionListener {
+        public void actionPerformed(ActionEvent evt) {
+            Object src = evt.getSource();
+            if (src == quitButton) {  // Disconnect from the server and end the program.
+                doQuit();
+            }
+            else if (src == sendButton || src == messageInput) {
+                   // Send the string entered by the user as a message
+                   // to the Hub, using the ChatClient that handles communication
+                   // for this ChatRoomWindow.  Note that the string is not added
+                   // to the transcript here.  It will get added after the Hub
+                   // receives the message and broadcasts it to all clients,
+                   // including this one.
+                String message = messageInput.getText();
+                if (message.trim().length() == 0)
+                    return;
+                connection.send(message);
+                messageInput.selectAll();
+                messageInput.requestFocus();
+            }
+            <newcode>else if (src == sendPrivateButton || src == privateMessageInput) {
+                    // Send a private message to a specified recipient.
+                    // If the private message inputbox is empty, nothing is done.
+                String message = privateMessageInput.getText();
+                if (message.trim().length() == 0)
+                    return;
+                String recipient = (String)clientList.getSelectedItem(); // name of recipient.
+                int recipientID = -1;  // The ID number of the recipient
+                for (int id : clientNameMap.keySet()) {
+                        // Search the clientNameMap to find the ID number
+                        // corresponding to the specified recipient name.
+                    if (recipient.equals(clientNameMap.get(id))) {
+                        recipientID = id;
+                        break;
+                    }
+                }
+                if (recipientID == -1) {
+                    JOptionPane.showMessageDialog(NewChatRoomWindow.this,
+                            "Funny... The selected recipient\ndoesn't seem to exit???");
+                    return;
+                }
+                connection.send(new PrivateMessage(recipientID,message));
+                addToTranscript("Sent to " + recipient + ":  " + message);
+            }</newcode>
+        }
+    }
+    
+
+}
+</prog>
+</pre>
+
+</exercise-code>
+
+</exercise>
+
+   
+</exercises>

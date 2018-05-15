@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE intro SYSTEM "../javanotes7.dtd" >
+
+<intro><p><start><big>W</big>hereas a subroutine</start> represents a single task, an
+object can encapsulate both data (in the form of instance variables) and a
+number of different tasks or "behaviors" related to that data (in the form of
+instance methods). Therefore objects provide another, more sophisticated type
+of structure that can be used to help manage the complexity of large
+programs.</p>
+
+<p>The first four
+sections of this chapter introduce the basic things you need to know to work with objects
+and to define simple classes.  The remaining sections cover more advanced topics; you
+might not understand them fully the first time through.  In particular,
+<localref href="OOP.5"/> covers the most central ideas of object-oriented programming: inheritance and
+polymorphism.  However, in this textbook, we will generally use these ideas in a
+limited form, by creating independent classes and building on existing classes
+rather than by designing entire hierarchies of classes from scratch.  
+</p>
+
+</intro>

@@ -1,0 +1,3721 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+
+<exercises>
+
+   
+   
+<exercise id="GUI1.ex.1">
+<exercise-question><p>In the <classname>SimpleStamper</classname> example from
+<localref href="GUI1.4.3"/>, a rectangle or oval is drawn on the panel when
+the user clicks the mouse.  Except, when the user shift-clicks, the panel is cleared
+instead.  Modify this class so that the modified version will continue to draw figures as the user
+drags the mouse.  That is, the mouse will leave a trail of figures as the user
+drags.  However, if the user shift-clicks, the panel should simply be
+cleared and no figures should be drawn even if the user drags the mouse after
+shift-clicking. Here is a picture of my solution:</p>
+<img src="simple-stamper-with-drag.png" width="398" height="275" alt="the programming showing trails of ovals and rects"
+      tex="simple-stamper-with-drag.eps" texscale="0.6"/>
+<p>The source code for the original program is <sourceref href="SimpleStamper.java"/>.
+See the discussion of dragging in <localref href="GUI1.4.4"/>.
+(Note that the original version uses a black background, with a black border around
+each shape.  That didn't work well with a lot of closely spaced shapes, so the new
+version uses a white background.)</p>
+<p>If you want to make the problem a little more challenging, when drawing shapes
+during a drag operation, make sure that the shapes that are drawn are at least, say,
+5 pixels apart.  To implement this, you have to keep track of the position of the
+last shape that was drawn.</p>
+</exercise-question>
+<exercise-discuss><p>In order to implement dragging in the new version, we need a
+<classname>MouseMotionListener</classname> in addition to the <classname>MouseListener</classname>
+that is already present in the original version.  In the original, the panel
+class itself implements <classname>MouseListener</classname>, so I just added
+<classname>MouseMotionListener</classname>:</p>
+<pre>public class SimpleStamperWithDrag extends JPanel 
+                          implements MouseListener, <newcode>MouseMotionListener</newcode> { . . .</pre>
+<np>Of course, the mouse motion listener has to be registered with the panel
+in order for it to hear any events from the panel.  This is done by adding the line</np>
+<pre>addMouseMotionListener(this);</pre>
+<np>to the constructor.  Here "this" refers to the panel object itself and is used because
+the panel itself implements <classname>MouseMotionListener</classname>, and it
+will listen for mouse motion events from itself.  (It's awfully easy to forget this step when
+implementing event-handling!  Nothing will happen when the event occurs, and it can be hard
+to realize what the problem is.)</np>
+<p>To finish the implementation of the mouse motion listener interface, 
+the <code>mouseMoved</code> and <code>mouseDragged</code> methods must be added to
+the class.  The program does not respond when the user moves the mouse without holding
+down any mouse button, so the <code>mouseMoved</code> method is empty.
+The <code>mouseDragged</code> method must draw a figure at the current mouse
+position; the code for this is almost identical to the existing drawing code in
+the <code>mousePressed</code> routine and can be copied from there.  However,
+nothing should be drawn in the <code>mouseDragged</code> method if the user
+started the mouse drag gesture by shift-clicking. The discussion of
+dragging in <localref href="GUI1.4.4"/>, suggests that the program should use an 
+instance variable named <code>dragging</code> to keep track of whether or not to
+draw anything in the <code>mouseDragged</code> method.  In the <code>mousePressed</code>
+routine, this variable is set to <code>false</code> if the user shift-clicked, and
+to <code>true</code> otherwise.  The <code>mouseDragged</code> routine checks the
+value of <code>dragging</code>; if the value is <code>false</code>, it means that
+the drag started with a shift-click and therefore nothing should be drawn.
+The complete source code is shown below.</p>
+<break/>
+<p>The picture produced by the program would look better if there were always
+at least a few pixels between the shapes that are drawn as the user drags the
+mouse, as suggested at the end of the exercise.  It is not difficult to make
+the change.  The panel needs two new instance variables, <code>prevX</code>
+and <code>prevY</code>, of type <ptype>int</ptype>, to store the position of
+the shape that was drawn most recently.  Their values should be set after
+drawing a shape in both <code>mousePressed()</code> and <code>mouseDragged()</code>
+with the statements</p>
+<pre>prevX = x;
+prevY = y;</pre>
+<np>The values of <code>prevX</code> and <code>prevY</code> can then be
+tested at the beginning of the <code>mouseDragged()</code> method to decide
+whether or not to draw a shape.  The shape should be drawn only if either
+the x-coordinate or the y-coordinate has changed by at least 5 pixels since
+the last time a shape was drawn.  For example, <code>mouseDragged()</code>
+could make the test as follows:</np>
+<pre>public void mouseDragged(MouseEvent evt) {
+      if (dragging == false) {
+         return;
+      }
+      int x = evt.getX();  // x-coordinate where user clicked.
+      int y = evt.getY();  // y-coordinate where user clicked.
+      <newcode>if ( Math.abs( prevX - x ) &lt; 5 &amp;&amp; Math.abs( prevY - y) &lt; 5 )
+         return;</newcode>
+      .
+      .
+      .</pre>
+</exercise-discuss>
+<exercise-code><p>Here is the code for the modified panel class, with changes from the
+original (<sourceref href="SimpleStamper.java"/>) shown in &newcodestyle;:</p>
+<pre><prog name="SimpleStamperWithDrag">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**
+ * A simple demonstration of MouseEvents.  Shapes are drawn
+ * on a black background when the user clicks the panel.  If
+ * the user Shift-clicks, the panel is cleared.  If the user
+ * right-clicks the panel, a blue oval is drawn.  Otherwise,
+ * when the user clicks, a red rectangle is drawn.  The contents of
+ * the panel are not persistent.  For example, they might disappear 
+ * if the panel is resized or is covered and uncovered.
+ * <newcode>Ovals and rects continue to be drawn as the user drags the mouse.</newcode>
+ * This class has a main() routine to allow it to be run as an application.
+ */
+public class SimpleStamperWithDrag extends JPanel 
+                               implements MouseListener, <newcode>MouseMotionListener</newcode> {
+
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Simple Stamper");
+        SimpleStamperWithDrag content = new SimpleStamperWithDrag();
+        window.setContentPane(content);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setLocation(120,70);
+        window.setSize(400,300);
+        window.setVisible(true);
+    }
+
+    // ----------------------------------------------------------------------
+
+    <newcode>/**
+     * This variable is set to true during a drag operation, unless the
+     * user was holding down the shift key when the mouse was first
+     * pressed (since in that case, the mouse gesture simply clears the
+     * panel and no figures should be drawn if the user drags the mouse).
+     */
+    private boolean dragging;</newcode>
+    
+
+    /**
+     * This constructor simply sets the background color of the panel to be black
+     * and sets the panel to listen for mouse events on itself.
+     */
+    public SimpleStamperWithDrag() {
+        setBackground(Color.<newcode>WHITE</newcode>);
+        addMouseListener(this);
+        <newcode>addMouseMotionListener(this);</newcode>
+    }
+
+
+    /**
+     *  Since this panel has been set to listen for mouse events on itself, 
+     *  this method will be called when the user clicks the mouse on the panel.
+     *  This method is part of the MouseListener interface.
+     */
+    public void mousePressed(MouseEvent evt) {
+
+        if ( evt.isShiftDown() ) {
+                // The user was holding down the Shift key.  Just repaint the panel.
+                // Since this class does not define a paintComponent() method, the 
+                // method from the superclass, JPanel, is called.  That method simply
+                // fills the panel with its background color, which is black.  The 
+                // effect is to clear the panel.
+            <newcode>dragging = false;</newcode>
+            repaint();
+            return;
+        }
+
+        <newcode>dragging = true;</newcode>
+
+        int x = evt.getX();  // x-coordinate where user clicked.
+        int y = evt.getY();  // y-coordinate where user clicked.
+
+        Graphics g = getGraphics();  // Graphics context for drawing directly.
+                                     // NOTE:  This is considered to be bad style!
+
+        if ( evt.isMetaDown() ) {
+                // User right-clicked at the point (x,y). Draw a blue oval centered 
+                // at the point (x,y). (A black outline around the oval will make it 
+                // more distinct when shapes overlap.)
+            g.setColor(Color.BLUE);  // Blue interior.
+            g.fillOval( x - 30, y - 15, 60, 30 );
+            g.setColor(Color.BLACK); // Black outline.
+            g.drawOval( x - 30, y - 15, 60, 30 );
+        }
+        else {
+                // User left-clicked (or middle-clicked) at (x,y). 
+                // Draw a red rectangle centered at (x,y).
+            g.setColor(Color.RED);   // Red interior.
+            g.fillRect( x - 30, y - 15, 60, 30 );
+            g.setColor(Color.BLACK); // Black outline.
+            g.drawRect( x - 30, y - 15, 60, 30 );
+        }
+
+        g.dispose();  // We are finished with the graphics context, so dispose of it.
+        
+
+    } // end mousePressed();
+
+
+    <newcode>/**
+     *  This method is called when the user drags the mouse.  If a the value of the
+     *  instance variable dragging is true, it will draw a rect or oval at the
+     *  current mouse position.
+     */
+    public void mouseDragged(MouseEvent evt) {
+        if ( dragging == false ) { 
+            return;
+        }
+        int x = evt.getX();  // x-coordinate where user clicked.
+        int y = evt.getY();  // y-coordinate where user clicked.
+        Graphics g = getGraphics();  // Graphics context for drawing directly.
+                                     // NOTE:  This is considered to be bad style!
+        if ( evt.isMetaDown() ) {
+                // The user is using the right mouse button; draw an oval.
+            g.setColor(Color.BLUE);  // Blue interior.
+            g.fillOval( x - 30, y - 15, 60, 30 );
+            g.setColor(Color.BLACK); // Black outline.
+            g.drawOval( x - 30, y - 15, 60, 30 );
+        }
+        else {
+            g.setColor(Color.RED);   // Red interior.
+            g.fillRect( x - 30, y - 15, 60, 30 );
+            g.setColor(Color.BLACK); // Black outline.
+            g.drawRect( x - 30, y - 15, 60, 30 );
+        }
+        g.dispose();  // We are finished with the graphics context, so dispose of it.
+    } // end mouseDragged();</newcode>
+
+
+    // The next four empty routines are required by the MouseListener interface.
+    // They don't do anything in this class, so their definitions are empty.
+
+    public void mouseEntered(MouseEvent evt) { }
+    public void mouseExited(MouseEvent evt) { }
+    public void mouseClicked(MouseEvent evt) { }
+    public void mouseReleased(MouseEvent evt) { }
+
+    <newcode>// The next routines is required by the MouseMotionListener interface.
+
+    public void mouseMoved(MouseEvent evt) { }</newcode>
+
+} // end class SimpleStamperWithDrag</prog>
+</pre>
+</exercise-code>
+</exercise>
+   
+   
+
+<exercise id="GUI1.ex.2">
+<exercise-question><p>Write a program that shows a small red square and a small blue
+square. The user should be able to drag either square with the mouse.
+(You'll need an instance variable to remember which square the user is
+dragging.) The user can drag the square out of the panel if she wants; if she
+does this, there is no
+way to get it back.</p>
+<p>Note that for this exercise, you should do all the drawing in the
+<code>paintComponent()</code> method (as indeed you should whenever possible).</p>
+</exercise-question>
+<exercise-discuss><p>To write this program, you need to understand dragging, as discussed in
+<localref href="GUI1.4.4"/>. To support dragging, you have to implement
+both the <classname>MouseListener</classname> and <classname>MouseMotionListener</classname> interfaces and
+register some object to listen for both mouse and mouse motion events. The code
+for dragging a square is spread out over three methods, <code>mousePressed</code>,
+<code>mouseReleased</code>, and <code>mouseDragged</code>. Several instance variables
+are needed to keep track of what is going on while a dragging operation is
+being executed. A general framework for dragging is given in <localref href="GUI1.4.4"/>. This
+example is simplified a bit because while dragging the square, we only need to
+know the current position of the mouse, so that we can move the square to that
+position. We don't need to keep track of the previous position of the
+mouse.  In my solution, I decided to write a nested class inside the panel class
+to define the listening object.  Another possibility would have been to let
+the panel class implement <classname>MouseListener</classname> and
+<classname>MouseMotionListener</classname>, and then register the panel with
+itself to listen for events.</p>
+
+<p>As usual for dragging, I use a boolean variable,
+<code>dragging</code>, to keep track of whether or not a drag operation is in
+progress. Not every mouse press starts a drag operation. If the user clicks the
+panel outside of the squares, there is nothing to drag, and <code>dragging</code>
+is set to false in the <code>mousePressed</code> method.  If the user clicks one 
+of the squares, <code>dragging</code> is set to true. Since there are two
+squares to be dragged, we have to keep track of which is being dragged. I use a
+boolean variable, <code>dragRedSquare</code>, which is true if the red square is
+being dragged and is false if the blue square is being dragged. (A boolean
+variable is actually not the best choice in this case. It would be a problem if
+we wanted to add another square. A boolean variable only has two possible
+values, so an integer variable would probably be a better choice.) I keep track
+of the locations of the squares with integer instance variables <code>x1</code> and
+<code>y1</code> for the upper left corner of the red square and <code>x2</code> and
+<code>y2</code> for the upper left corner of the blue square.  These variables
+are in the main class, not the nested class that defines the listener, since the
+panel needs to use the location of the squares 
+in the <code>paintComponent()</code> method.</p>
+
+<p>There is one little problem. The mouse location is a single <code>(x,y)</code>
+point. A square occupies a whole bunch of points. When we move the square to
+follow the mouse, where exactly should we put the square? One possibility is to
+put the upper left corner of the square at the mouse location. If we did this,
+the <code>mouseDragged</code> routine would look like:</p>
+
+<pre>public void mouseDragged(MouseEvent evt) { 
+    if (dragging == false)  
+      return;
+    int x = evt.getX();  // Get mouse position.
+    int y = evt.getY();
+    if (dragRedSquare) {  // Move the red square.
+       x1 = x;  // Put top-left corner at mouse position.
+       y1 = y;
+    }
+    else {   // Move the blue square.
+       x2 = x;  // Put top-left corner at mouse position.
+       y2 = y;
+    }
+    repaint();
+}</pre>
+
+<np>This works, but it is not very aesthetic. When the user starts dragging a
+square, no matter where in the square the user clicks, the square will jump so
+that its top-left corner is at the mouse position. This is not what a user
+typically expects. If I grab a square by clicking its center, then I want the
+center to stay under the mouse cursor as I move it. If I grab the lower right
+corner, I want the lower right corner to follow the mouse, not the upper left
+corner. There is a solution to this, and it's one that is often needed for
+dragging operations. We need to record the original position of the mouse
+relative to the upper left corner of the square. This tells us where in the
+square the user clicked. This is done in the <code>mousePressed</code> routine by
+assigning appropriate values to instance variables <code>offsetX</code> and
+<code>offsetY</code>:</np>
+
+<pre>int x = evt.getX();  // Location where user clicked.
+int y = evt.getY();
+
+if (x &gt;= x2 &amp;&amp; x &lt; x2+30 &amp;&amp; y &gt;= y2 &amp;&amp; y &lt; y2+30) {
+      // It's the blue square (which should be checked first,
+      // since it's drawn on top of the red square.)
+   dragging = true;
+   dragRedSquare = false;
+   offsetX = x - x2;  // Distance from corner of square to (x,y).
+   offsetY = y - y2;
+}
+else if (x &gt;= x1 &amp;&amp; x &lt; x1+30 &amp;&amp; y &gt;= y1 &amp;&amp; y &lt; y1+30) {
+      // It's the red square.
+   dragging = true;
+   dragRedSquare = true;
+   offsetX = x - x1;  // Distance from corner of square to (x,y).
+   offsetY = y - y1;
+}</pre>
+
+<np>In <code>mouseDragged</code>, when the mouse moves to a new <code>(x,y)</code>
+point, we move the square so that the vertical and horizontal distances between
+the mouse location and the top left corner of the square remain the same:</np>
+
+<pre>if (dragRedSquare) {  // Move the red square.
+   x1 = x - offsetX;  // Offset corner from mouse location.
+   y1 = y - offsetY;
+}
+else {   // Move the blue square.
+   x2 = x - offsetX;  // Offset corner from mouse location.
+   y2 = y - offsetY;
+}</pre>
+
+<p>The program is written as a subclass of <classname>JPanel</classname>.
+I included a <code>main()</code> routine in the class, to allow it to be run
+as an application, but <code>main()</code> could also be in its own class.
+The constructor in the <classname>DrawTwoSquares</classname> class sets up 
+the initial positions of the two
+squares, creates a listening object, and registers the listening object to
+listen for mouse and mouse motion events.  It also adds a border around the
+panel to make it more attractive.  The class has
+a <code>paintComponent()</code> method, which just has to draw the two
+squares in their current positions; this is easy to write.
+The mouse-handling code is in a nested class.  Note that the nested class
+is non-static, since it need access to instance variables from the main class.</p>
+
+<p>By the way, if you wanted to stop the user from dragging the square outside
+the panel, you would just have to add code to the <code>mouseDragged</code>
+routine to "clamp" the variables <code>x1</code>, <code>y1</code>, <code>x2</code>, and
+<code>y2</code> so that they lie in the acceptable range. Here is a modified
+routine that keeps the square entirely within the panel:</p>
+
+<pre>public void mouseDragged(MouseEvent evt) { 
+    if (dragging == false)  
+      return;
+    int x = evt.getX();
+    int y = evt.getY();
+    if (dragRedSquare) {  // Move the red square.
+       x1 = x - offsetX;
+       y1 = y - offsetY;
+       if (x1 &lt; 0)  // Clamp (x1,y1) so the square lies in the panel.
+          x1 = 0;
+       else if (x1 &gt;= getWidth() - 30)
+          x1 = getWidth() - 30;
+       if (y1 &lt; 0)
+          y1 = 0;
+       else if (y1 &gt;= getHeight() - 30)
+          y1 = getHeight() - 30;
+    }
+    else {   // Move the blue square.
+       x2 = x - offsetX;
+       y2 = y - offsetY;
+       if (x2 &lt; 0)  // Clamp (x2,y2) so the square lies in the panel.
+          x2 = 0;
+       else if (x2 &gt;= getWidth() - 30)
+          x2 = getWidth() - 30;
+       if (y2 &lt; 0)
+          y2 = 0;
+       else if (y2 &gt;= getHeight() - 30)
+          y2 = getHeight() - 30;
+    }
+    repaint();
+}</pre>
+</exercise-discuss>
+<exercise-code><pre>
+<prog name="DragTwoSquares">import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+/**
+ * A panel showing a red square and a blue square that the user
+ * can drag with the mouse.   The user can drag the squares off
+ * the panel and drop them.  There is no way of getting them back.
+ */
+public class DragTwoSquares extends JPanel {
+
+
+    /**
+     * A main routine allows this class to be run as an application.
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Drag Either Square");
+        DragTwoSquares content = new DragTwoSquares();
+        window.setContentPane(content);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setLocation(120,70);
+        window.setSize(400,300);
+        window.setVisible(true);
+    }
+
+    //---------------------------------------------------------------------
+
+
+    private int x1, y1;   // Coords of top-left corner of the red square.
+    private int x2, y2;   // Coords of top-left corner of the blue square.
+
+
+    /**
+     *  The constructor places the two squares in their initial positions and
+     *  sets up listening for mouse events and mouse motion events.
+     */
+    public DragTwoSquares() {
+
+        x1 = 10;  // Set up initial positions of the squares.
+        y1 = 10;
+        x2 = 50;
+        y2 = 10;
+
+        setBackground(Color.LIGHT_GRAY);  // Set up appearance of the panel
+        setBorder(BorderFactory.createLineBorder(Color.BLACK, 1) );
+
+        Dragger listener = new Dragger();  // Listening object, belonging to a nested
+        //     class that is defined below.
+
+        addMouseListener(listener);        // Set up listening.
+        addMouseMotionListener(listener);
+
+    } 
+
+
+    /**
+     * paintComponent just draws the two squares in their current positions.
+     */
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);  // Fill with background color.
+        g.setColor(Color.RED);
+        g.fillRect(x1, y1, 30, 30);
+        g.setColor(Color.BLUE);
+        g.fillRect(x2, y2, 30, 30);
+    }
+
+
+    /**
+     *  This private class is used to define the listener that listens
+     *  for mouse events and mouse motion events on the panel.
+     */
+    private class Dragger implements MouseListener, MouseMotionListener {
+
+        /* Some variables used during dragging */
+
+        boolean dragging;      // Set to true when a drag is in progress.
+
+        boolean dragRedSquare; // True if red square is being dragged, false
+                               //    if blue square is being dragged.
+
+        int offsetX, offsetY;  // Offset of mouse-click coordinates from the
+                               //   top-left corner of the square that was
+                               //   clicked.
+
+        /**
+         * Respond when the user presses the mouse on the panel.
+         * Check which square the user clicked, if any, and start
+         * dragging that square.
+         */
+        public void mousePressed(MouseEvent evt) { 
+
+            if (dragging)  // Exit if a drag is already in progress.
+                return;
+
+            int x = evt.getX();  // Location where user clicked.
+            int y = evt.getY();
+
+            if (x &gt;= x2 &amp;&amp; x &lt; x2+30 &amp;&amp; y &gt;= y2 &amp;&amp; y &lt; y2+30) {
+                    // It's the blue square (which should be checked first,
+                    // since it's drawn on top of the red square.)
+                dragging = true;
+                dragRedSquare = false;
+                offsetX = x - x2;  // Distance from corner of square to (x,y).
+                offsetY = y - y2;
+            }
+            else if (x &gt;= x1 &amp;&amp; x &lt; x1+30 &amp;&amp; y &gt;= y1 &amp;&amp; y &lt; y1+30) {
+                    // It's the red square.
+                dragging = true;
+                dragRedSquare = true;
+                offsetX = x - x1;  // Distance from corner of square to (x,y).
+                offsetY = y - y1;
+            }
+
+        }
+
+        /**
+         * Dragging stops when user releases the mouse button.
+         */
+        public void mouseReleased(MouseEvent evt) { 
+            dragging = false;
+        }
+
+        /**
+         * Respond when the user drags the mouse.  If a square is 
+         * not being dragged, then exit. Otherwise, change the position
+         * of the square that is being dragged to match the position
+         * of the mouse.  Note that the corner of the square is placed
+         * in the same relative position with respect to the mouse that i
+         * had when the user started dragging it.
+         */
+        public void mouseDragged(MouseEvent evt) { 
+
+            if (dragging == false)  
+                return;
+            int x = evt.getX();
+            int y = evt.getY();
+            if (dragRedSquare) {  // Move the red square.
+                x1 = x - offsetX;
+                y1 = y - offsetY;
+            }
+            else {   // Move the blue square.
+                x2 = x - offsetX;
+                y2 = y - offsetY;
+            }
+            repaint();  // (Calls the repaint() method in the DragTwoSquaresPanel class.)
+        }
+
+
+        public void mouseMoved(MouseEvent evt) { }  // empty methods required by interfaces.
+        public void mouseClicked(MouseEvent evt) { }
+        public void mouseEntered(MouseEvent evt) { }
+        public void mouseExited(MouseEvent evt) { }
+
+    } // end nested class Dragger
+
+
+} // end class DragTwoSquaresPanel
+</prog>
+</pre>
+</exercise-code>
+</exercise>
+   
+   
+
+<exercise id="GUI1.ex.3">
+<exercise-question><p>Write a program that shows
+a pair of dice.  When the user clicks on the panel in the program, the dice should be rolled
+(that is, the dice should be assigned newly computed random values). Each die
+should be drawn as a square showing from 1 to 6 dots. Since you have to draw
+two dice, its a good idea to write a subroutine, "<code>void drawDie(Graphics g,
+int val, int x, int y)</code>", to draw a die at the specified <code>(x,y)</code>
+coordinates. The second parameter, <code>val</code>, specifies the value that is
+showing on the die. Assume that the size of the panel is 100 by 100 pixels.
+Here is a picture of the panel that displays the dice:</p>
+<img src="roll-dice-gui.png" width="" height="" alt="a pair of dice" tex="roll-dice-gui.eps" texscale="0.75"/>
+</exercise-question>
+<exercise-discuss><p>This is largely an exercise in precision drawing.</p>
+   
+<p>We need a subclass of <code>JPanel</code> to make the panel.
+We will also need an object to respond to mouse events. As always, there are several
+ways to approach this:  Let the panel implement <classname>MouseListener</classname>
+and listen for events on itself, use a separate class to define the listener object,
+or use an anonymous inner class (see <localref href="GUI1.4.5"/>).  In this case, I decided
+to use an anonymous class, since the mouse-handling code is very simple.  
+The listener object is created and registered to listen
+for mouse events in the constructor of the main class:</p>
+   
+<pre>addMouseListener( new MouseAdapter() {
+    public void mousePressed(MouseEvent evt) {
+        roll();
+    }
+});</pre>
+   
+<np>By using <classname>MouseAdapter</classname> instead of
+<classname>MouseListener</classname> as the superclass for the listener, I
+avoid the necessity of providing empty definitions for <code>mouseReleased</code>,
+<code>mouseClicked</code>, <code>mouseEntered</code>, and <code>mouseExited</code>.
+<classname>MouseAdapter</classname> is discussed in <localref href="GUI1.4.5"/>.
+In the <code>mousePressed()</code> method, <code>roll()</code> is a method that 
+is defined in the main class; it just rolls the dice.  It would be
+reasonable to put the code for rolling the dice in <code>mousePressed()</code>,
+but writing a subroutine to do it makes the program a little easier to
+modify for the next exercise. Anyway, when you can identify a
+self-contained, meaningful task to be performed, it's never a bad a idea to
+write a subroutine to do it. It will make the program more readable, if nothing
+else. My roll subroutine assigns random values to the dice and calls
+<code>repaint()</code> so that the new values will be shown.</np>
+
+<p>The hardest part of this exercise is drawing the dice. I made each die 35
+pixels wide, leaving a 10 pixel border on each side and 10 pixels between the
+dice, for a total of 100 pixels.
+The top left corner of the left die is at <code>(10,10)</code>, the top left
+corner of the right die is at <code>(55,55)</code>. The 55 includes the 10 pixel
+border on the left, the 35 pixel width of the other die, and the 10 pixels
+between the dice. The <code>paintComponent()</code>
+method calls a <code>drawDie()</code> routine to draw
+each die, using the commands:</p>
+
+<pre>drawDie(g, die1, 10, 10);
+drawDie(g, die2, 55, 55);</pre>
+
+<np>where <code>die1</code> is the numerical value shown on the first die and
+<code>die2</code> is the numerical value of the second die.</np>
+
+<p>As for the <code>drawDie</code> routine, there are two quite different
+algorithms that could have been used for drawing the dots. Either:</p>
+
+<pre>if the value shown is 1
+    draw 1 dot (in the center)
+else if the value shown is 2
+    draw 2 dots (in the top-left and bottom-right corners)
+  .
+  .
+  .
+else if the value shown is 6
+    draw 6 dots (along the left and right edges)</pre>
+
+<np>Or:</np>
+
+<pre>if the value has a dot in the top-left corner
+     draw the top-left dot
+else if the value has a dot in the top-right corner
+     draw the top-right dot
+   .
+   .
+   .
+else if the value has a dot in the bottom-right corner
+     draw the bottom-right dot</pre>
+
+<np>Although the first algorithm is more obvious, the second requires much less
+typing. (The first algorithm ends up using 21 <code>drawOval()</code> commands,
+while the second uses only 7.) Furthermore, after drawing the dice on paper, I
+found that the conditions for testing when a given dot needs to be drawn are
+simpler than I expected. For example, the values that need a dot in the
+top-left position are all the values greater than 1. The algorithm leads to my
+<code>drawDie()</code> routine:</np>
+
+<pre>/**
+ * Draw a die with upper left corner at (x,y).  The die is
+ * 35 by 35 pixels in size.  The val parameter gives the
+ * value showing on the die (that is, the number of dots).
+ */
+private void drawDie(Graphics g, int val, int x, int y) {
+     g.setColor(Color.white);
+     g.fillRect(x, y, 35, 35);
+     g.setColor(Color.black);
+     g.drawRect(x, y, 34, 34);
+     if (val &gt; 1)  // upper left dot
+        g.fillOval(x+3, y+3, 9, 9);
+     if (val &gt; 3)  // upper right dot
+        g.fillOval(x+23, y+3, 9, 9);
+     if (val == 6) // middle left dot
+        g.fillOval(x+3, y+13, 9, 9);
+     if (val % 2 == 1) // middle dot (for odd-numbered val's)
+        g.fillOval(x+13, y+13, 9, 9);
+     if (val == 6) // middle right dot
+        g.fillOval(x+23, y+13, 9, 9);
+     if (val &gt; 3)  // bottom left dot
+        g.fillOval(x+3, y+23, 9, 9);
+     if (val &gt; 1)  // bottom right dot
+        g.fillOval(x+23, y+23, 9,9);
+}</pre>
+
+<p>It took some care to figure out the numbers to use in the <code>fillOval</code>
+commands. The individual dots have a diameter of 9 pixels. There are three rows
+of dots, which have a combined height of 27 pixels. That leaves 35 minus 27, or 8
+pixels for spacing. I use 3 pixels between the dots and the edge of the die,
+and 1 pixel between rows. This puts the tops of the rows at 3, 3+9+1, and
+3+9+1+9+1, that is, at 3, 13, and 23. The columns use the same numbers. (If you
+believe that I got all this right the first time, I won't disillusion you!)</p>
+
+<p>The <code>paintComponent</code> method just draws the two dice and the border around
+the panel</p>
+
+<pre>public void paintComponent(Graphics g) {
+   super.paintComponent(g);  // fill with background color.
+   Graphics2D g2 = (Graphics2D)g;
+   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                               RenderingHints.VALUE_ANTIALIAS_ON);
+   g.setColor( Color.BLUE );
+   g.drawRect(0,0,99,99);
+   g.drawRect(1,1,97,97);
+   drawDie(g, die1, 10, 10);
+   drawDie(g, die2, 55, 55);
+}</pre>
+
+<np>The <code>paintComponent()</code>
+method turns on antialiasing, since without it the dots on the dice have a jagged appearance
+(see <localref href="GUI1.3.5"/>).</np>
+
+<p>One more small remark on the solution:  The constructor of the <classname>DicePanel</classname>
+class sets the preferred size of the panel to be 100-by-100 pixels, using the command:</p>
+   
+<pre>setPreferredSize( new Dimension(100,100) );</pre>
+
+<np>Since the <code>main()</code> routine for the program will use the
+<code>pack()</code> method to set the size of the frame, it is essential that
+the panel have a preferred size.  If not, the size of the frame will not
+be set correctly.</np>
+   
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="DicePanel">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**
+ * Shows a pair of dice that are rolled when the user clicks on the
+ * program.  It is assumed that the panel is 100-by-100 pixels.
+ */
+public class DicePanel extends JPanel {
+ 
+    /**
+     * A main routine allows this class to be run as an application.
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Dice");
+        DicePanel content = new DicePanel();
+        window.setContentPane(content);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setLocation(120,70);
+        window.pack();
+        window.setVisible(true);
+    }
+
+    //---------------------------------------------------------------------
+
+    private int die1 = 4;  // The values shown on the dice.
+    private int die2 = 3;
+ 
+    /**
+     *  The constructor adds a mouse listener to the panel.  The listener
+     *  will roll the dice when the user clicks the panel.  Also, the
+     *  background color and the preferred size of the panel are set.
+     */
+    public DicePanel() {
+       setPreferredSize( new Dimension(100,100) );
+       setBackground( new Color(200,200,255) );  // light blue
+       addMouseListener( new MouseAdapter() {
+           public void mousePressed(MouseEvent evt) {
+               roll();
+           }
+       });
+    }
+    
+    /**
+     * Draw a die with upper left corner at (x,y).  The die is
+     * 35 by 35 pixels in size.  The val parameter gives the
+     * value showing on the die (that is, the number of dots).
+     */
+    private void drawDie(Graphics g, int val, int x, int y) {
+       g.setColor(Color.white);
+       g.fillRect(x, y, 35, 35);
+       g.setColor(Color.black);
+       g.drawRect(x, y, 34, 34);
+       if (val &gt; 1)  // upper left dot
+          g.fillOval(x+3, y+3, 9, 9);
+       if (val &gt; 3)  // upper right dot
+          g.fillOval(x+23, y+3, 9, 9);
+       if (val == 6) // middle left dot
+          g.fillOval(x+3, y+13, 9, 9);
+       if (val % 2 == 1) // middle dot (for odd-numbered val's)
+          g.fillOval(x+13, y+13, 9, 9);
+       if (val == 6) // middle right dot
+          g.fillOval(x+23, y+13, 9, 9);
+       if (val &gt; 3)  // bottom left dot
+          g.fillOval(x+3, y+23, 9, 9);
+       if (val &gt; 1)  // bottom right dot
+          g.fillOval(x+23, y+23, 9,9);
+    }
+ 
+ 
+    /**
+     * Roll the dice by randomizing their values.  Tell the
+     * system to repaint the panel, to show the new values.
+     */
+    void roll() {
+       die1 = (int)(Math.random()*6) + 1;
+       die2 = (int)(Math.random()*6) + 1;
+       repaint();
+    }
+    
+    
+    /**
+     * The paintComponent method just draws the two dice and draws
+     * a one-pixel wide blue border around the panel.  Antialiasing
+     * is turned on to make the ovals look nicer.
+     */
+    public void paintComponent(Graphics g) {
+       super.paintComponent(g);  // fill with background color.
+       Graphics2D g2 = (Graphics2D)g;
+       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                   RenderingHints.VALUE_ANTIALIAS_ON);
+       g.setColor( Color.BLUE );
+       g.drawRect(0,0,99,99);
+       g.drawRect(1,1,97,97);
+       drawDie(g, die1, 10, 10);
+       drawDie(g, die2, 55, 55);
+    }
+ 
+} // end class DicePanel
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+
+<exercise id="GUI1.ex.4">
+<exercise-question><p>In <localref href="GUI1.ex.3"/>,
+you wrote a pair-of-dice panel where the dice are rolled when the user clicks on
+the panel. Now make a pair-of-dice program in which the user rolls the
+dice by clicking a button.  The button should appear under the
+panel that shows the dice.  Also make the following change:  When the
+dice are rolled, instead of just showing the new value, show a short animation
+during which the values on the dice are changed in every frame.  The animation
+is supposed to make the dice look more like they are actually rolling.</p>
+</exercise-question>
+<exercise-discuss><p>In <localref href="GUI1.ex.3"/>, there was a single panel,
+which was being used as a drawing surface.  In the new version, there are two
+panels: One is the drawing surface on which the dice are drawn; the other is
+a container that holds the button and the drawing surface panel.  If we write
+a class to define the container, we need another class to define the drawing
+surface.  One way to write that class is as a simple nested class that contains only a
+<code>paintComponent</code> method.  Since it is so simple, I decided to
+define it as an anonymous inner class:</p>
+<pre>JPanel dicePanel = new JPanel() {
+   public void paintComponent(Graphics g) { 
+      super.paintComponent(g);  // fill with background color.
+      Graphics2D g2 = (Graphics2D)g;
+      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                             RenderingHints.VALUE_ANTIALIAS_ON);
+      drawDie(g, die1, 10, 10); // Just draw the dice.
+      drawDie(g, die2, 55, 55);
+   }
+};</pre>
+<np>This just makes <code>dicePanel</code> into a <classname>JPanel</classname> object
+that contains a <code>paintComponent</code> method that differs from the one
+defined in the <classname>JPanel</classname> class.</np>
+<p>The constructor of the main class is responsible for setting up the user
+interface and the event handling.  It sets the layout manager of the panel to be a
+<classname>BorderLayout</classname>, creates the drawing surface and button, adds
+the drawing surface in the <code>CENTER</code> position and the button in the
+<code>SOUTH</code> position.  It adds a blue border to the panel, and leaves a gap
+in the border layout through which a blue background color will show.
+It also adds an action listener to the button
+that will call the <code>roll()</code> method to roll the dice when the button
+is pressed.  Here is the complete constructor:</p>
+<pre>public DicePanelWithButton() {
+   
+   setLayout(new BorderLayout(2,2));
+   setBackground(Color.BLUE);  // Will show through the gap in the BorderLayout.
+   setBorder(BorderFactory.createLineBorder(Color.BLUE,2));
+   
+   JPanel dicePanel = new JPanel() { // the drawing surface, where dice are shown
+      public void paintComponent(Graphics g) { 
+         super.paintComponent(g);  // fill with background color.
+         Graphics2D g2 = (Graphics2D)g;
+         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                RenderingHints.VALUE_ANTIALIAS_ON);
+         drawDie(g, die1, 10, 10); // Just draw the dice.
+         drawDie(g, die2, 55, 55);
+      }
+   };
+   dicePanel.setPreferredSize( new Dimension(100,100) );
+   dicePanel.setBackground( new Color(200,200,255) );  // light blue
+   add(dicePanel, BorderLayout.CENTER);
+   
+   JButton rollButton = new JButton("Roll!");  // the button that rolls the dice
+   rollButton.addActionListener( new ActionListener() {
+      public void actionPerformed(ActionEvent evt) {
+         roll();
+      }
+   });
+   add(rollButton, BorderLayout.SOUTH);
+   
+} // end constructor</pre>
+<p>The method for drawing the dice was discussed in the solution to
+<localref href="GUI1.ex.3"/>.  But we still have to think about animating
+the rolling of the dice.  The <code>roll()</code> method is responsible
+for rolling the dice.  In the original version, this method simply set
+the numbers showing on the dice to random values and called <code>repaint()</code>.
+In the new version, we want to repeat this action several times over a period
+of time.  That is, we want an animation in which the action for each frame
+is to randomize the numbers on the dice and call <code>repaint()</code>.
+The code for doing one frame goes in the <classname>ActionListener</classname>
+that responds to events from the timer.  The <code>roll()</code> method
+simply creates the timer and starts it running.  (Timers and animation
+are discussed in <localref href="GUI1.5.1"/>.)</p>
+<p>There is, however, one big problem:  How is the timer stopped?  If it's
+not stopped, the dice will keep rolling forever!  The solution is not so hard.
+We have to stop the timer after a certain number of frames.  The
+action listener can keep track of how many frames it has handled, and after
+a certain number of frames it can stop the timer.  After some experimentation,
+I found that 10 frames, with a delay between frames of 100 milliseconds, looks
+pretty good.  So in the tenth frame, the <code>actionPerformed</code> method
+stops the timer.</p>
+<p>There is still one little problem:  The user might click the "Roll" button
+while the animation is in progress.  If the dice are already ready rolling,
+it doesn't make sense to start another animation.  So, the program needs
+a way of determining whether an animation is in progress when the "Roll" button
+is clicked; if it is, then the click should be ignored.  In my program,
+there is a <classname>Timer</classname> variable that is set to a non-null
+value when an animation is in progress.  When the timer is stopped, the
+animation is finished, and the <classname>Timer</classname> variable is
+set back to null. The <code>roll()</code> method checks the <classname>Timer</classname>
+variable to determine whether or not an animation is already in progress.
+(Another way of handling the problem would be to disable the Roll button while
+the animation is in progress.)
+Here's the <code>roll()</code> method.  Note that the <classname>ActionListener</classname>
+for the timer is defined as an anonymous inner class.</p>
+<pre>/**
+ * Run an animation that randomly changes the values shown on
+ * the dice 10 times, every 100 milliseconds.
+ */
+private void roll() {
+   if (timer != null)
+      return;
+   timer = new Timer(100, new ActionListener() {
+      int frames = 1;
+      public void actionPerformed(ActionEvent evt) {
+         die1 = (int)(Math.random()*6) + 1;
+         die2 = (int)(Math.random()*6) + 1;
+         repaint();
+         frames++;
+         if (frames == 10) {
+            timer.stop();
+            timer = null;
+         }
+      }
+   });
+   timer.start();
+}</pre>
+<p>For this program, I decided to put the <code>main()</code> routine for the program in
+a separate class, just to remind you that it can be done that way!</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="DicePanelWithButton">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**
+ * Shows a pair of dice that are rolled when the user clicks a button
+ * that appears below the dice.
+ */
+public class DicePanelWithButton extends JPanel {
+   
+   private int die1 = 4;  // The values shown on the dice.
+   private int die2 = 3;
+   
+   private Timer timer;   // Used to animate rolling of the dice.
+   
+   /**
+    *  The constructor sets up the panel.  It creates the button and
+    *  the drawing surface panel on which the dice are drawn and puts
+    *  them into a BorderLayout.  It adds an ActionListener to the button
+    *  that rolls the dice when the user clicks the button.
+    */
+   public DicePanelWithButton() {
+      
+      setLayout(new BorderLayout(2,2));
+      setBackground(Color.BLUE);  // Will show through the gap in the BorderLayout.
+      setBorder(BorderFactory.createLineBorder(Color.BLUE,2));
+      
+      JPanel dicePanel = new JPanel() {
+         public void paintComponent(Graphics g) { 
+            super.paintComponent(g);  // fill with background color.
+            drawDie(g, die1, 10, 10); // Just draw the dice.
+            drawDie(g, die2, 55, 55);
+         }
+      };
+      dicePanel.setPreferredSize( new Dimension(100,100) );
+      dicePanel.setBackground( new Color(200,200,255) );  // light blue
+      add(dicePanel, BorderLayout.CENTER);
+      
+      JButton rollButton = new JButton("Roll!");
+      rollButton.addActionListener( new ActionListener() {
+         public void actionPerformed(ActionEvent evt) {
+            roll();
+         }
+      });
+      add(rollButton, BorderLayout.SOUTH);
+      
+   } // end constructor
+   
+   /**
+    * Draw a die with upper left corner at (x,y).  The die is
+    * 35 by 35 pixels in size.  The val parameter gives the
+    * value showing on the die (that is, the number of dots).
+    */
+   void drawDie(Graphics g, int val, int x, int y) {
+      g.setColor(Color.white);
+      g.fillRect(x, y, 35, 35);
+      g.setColor(Color.black);
+      g.drawRect(x, y, 34, 34);
+      if (val &gt; 1)  // upper left dot
+         g.fillOval(x+3, y+3, 9, 9);
+      if (val &gt; 3)  // upper right dot
+         g.fillOval(x+23, y+3, 9, 9);
+      if (val == 6) // middle left dot
+         g.fillOval(x+3, y+13, 9, 9);
+      if (val % 2 == 1) // middle dot (for odd-numbered val's)
+         g.fillOval(x+13, y+13, 9, 9);
+      if (val == 6) // middle right dot
+         g.fillOval(x+23, y+13, 9, 9);
+      if (val &gt; 3)  // bottom left dot
+         g.fillOval(x+3, y+23, 9, 9);
+      if (val &gt; 1)  // bottom right dot
+         g.fillOval(x+23, y+23, 9,9);
+   }
+   
+   
+   /**
+    * Run an animation that randomly changes the values shown on
+    * the dice 10 times, every 100 milliseconds.
+    */
+   private void roll() {
+      if (timer != null)
+         return;
+      timer = new Timer(100, new ActionListener() {
+         int frames = 1;
+         public void actionPerformed(ActionEvent evt) {
+            die1 = (int)(Math.random()*6) + 1;
+            die2 = (int)(Math.random()*6) + 1;
+            repaint();
+            frames++;
+            if (frames == 10) {
+               timer.stop();
+               timer = null;
+            }
+         }
+      });
+      timer.start();
+   }
+   
+   
+} // end class DicePanelWithButton
+</prog></pre>
+<p>To use this in a stand-alone application, we need a class that defines the <code>main()</code>
+routine of the program.  For this exercise, I used a separate class, which can be written as follows:</p>
+<pre><prog name="DiceWithButtonMain">import javax.swing.JFrame;
+
+/**
+ * A main program that just opens a window that shows a DicePanelWithButton.
+ */
+public class DiceWithButtonMain {
+   
+   public static void main(String[] args) {
+      JFrame window = new JFrame();
+      DicePanelWithButton content = new DicePanelWithButton();
+      window.setContentPane(content);
+      window.pack();
+      window.setLocation(100,100);
+      window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+      window.setResizable(false);  // User can't change the window's size.
+      window.setVisible(true);
+   }
+   
+}
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+
+<exercise>
+<exercise-question><p>In <localref href="control.ex.6"/>, you drew a checkerboard. For this
+exercise, write a program where the user can select a square by
+clicking on it.  (Use a <classname>JPanel</classname> for the checkerboard.)
+Highlight the selected square by drawing a colored border around
+it. When the program starts, no square is selected. When the user
+clicks on a square that is not currently selected, it becomes selected (and the
+previously selected square, if any, is unselected). If the
+user clicks the square that is selected, it becomes unselected. Assume that the
+size of the panel is exactly 160 by 160 pixels, so that each square on the
+checkerboard is 20 by 20 pixels.  Here is my checkerboard, with the square in
+row 3, column 3 selected:</p>
+<img src="clickable-checkerboard.png" width="160" height="160" alt="checkerboard"
+    tex="clickable-checkerboard.eps" texscale="0.75"/>
+</exercise-question>
+<exercise-discuss><p>See the solution to <localref href="control.ex.6"/> for
+a discussion of how to draw the checkerboard. In that exercise, the code for
+drawing the board was in a <code>drawFrame()</code> method.  
+Now, we can use a <classname>JPanel</classname>
+as a drawing surface for the checkerboard, with the drawing code in the panel's
+<code>paintComponent()</code> method.  The code for drawing the checkerboard
+is the same.</p>
+
+<p>As always, there are many ways to organize the program.  In this case, I decided to
+let the main panel class implement <classname>MouseListener</classname>.  The panel listens
+for mouse events on itself.</p>
+
+<p>To keep track of which square is selected, if any, the  class
+contains instance variables, <code>selectedRow</code> and <code>selectedCol</code>.
+When no square is selected, <code>selectedRow</code> is -1 (and I don't care what
+<code>selectedCol</code> is). When a square is selected, <code>selectedRow</code> is
+the number of the row that contains that square and <code>selectedCol</code> is the
+number of the column that contains the selected square. Remember that rows and
+columns are numbered from 0 to 7. This makes some of the calculations easier
+than numbering them from 1 to 8.</p>
+
+<p>After drawing the checkerboard, the <code>paintComponent()</code> 
+method has to highlight the selected square, if there is one. I do
+this by drawing a cyan border around the inside of the selected square. This is
+the new code that is added to the checkerboard-drawing code:</p>
+
+<pre>if (selectedRow &gt;= 0) {
+      // Since there is a selected square, draw a cyan
+      // border around it.
+   g.setColor(Color.CYAN);
+   y = selectedRow * 20;
+   x = selectedCol * 20;
+   g.drawRect(x, y, 19, 19);
+   g.drawRect(x+1, y+1, 17, 17);
+}</pre>
+
+<p>Since the squares are 20 pixels on each side, you might wonder why the first
+<code>drawRect()</code> command specifies a width and height of 19 instead of 20.
+In the <code>fillRect()</code> method that is used earlier in the <code>paintComponent()</code>
+method to fill in the square, a width and height of 20 is used. Remember that
+the <code>drawRect()</code> method actually draws a rectangle whose width and
+height are one more than the values specified in the parameters. (Remember the
+bit about the pen that hangs one pixel outside the rectangle?)</p>
+
+<p>To respond to user mouse clicks, the panel must implement the
+<classname>MouseListener</classname> interface. The constructor calls
+<code>addMouseListener(this)</code> to register the board to listen for mouse
+events on itself. (Remember that calling <code>addMouseListener(this)</code> is the
+same as calling <code>this.addMouseListener(this)</code>.) Of the five methods
+specified in the <classname>MouseListener</classname> interface, only <code>mousePressed</code>
+has a non-empty definition. This method must figure out which square the user
+clicked and adjust the values of the instance variables <code>selectedRow</code>
+and <code>selectedCol</code> accordingly.</p>
+
+<p>Let's say that the user clicked at the point <code>(x,y)</code>. The problem is
+to determine which square on the checkerboard contains that point. The column
+number of the square is obtained by dividing the <code>x</code> coordinate by the
+width of the squares. Since the squares are 20 pixels wide, the row number of
+the clicked square is <code>x/20</code>. For values of <code>x</code> between 0 and 19,
+this gives a column number of 0, which is correct. For the next 20 pixels, from
+20 to 39, <code>x/20</code> is 1, which is the correct column number. For the next
+strip of pixels, from 40 to 59, the answer is 2. And so on. Similarly,
+<code>y/20</code> gives the row number of the square where the user clicked.
+(I often get rows and columns mixed up&mdash;remember that the x coordinate corresponds to
+columns and the y coordinate corresponds to rows.)</p>
+
+<p>Once we know the row and column where the user clicked, we can compare them
+to <code>selectedRow</code> and <code>selectedCol</code>. If the values are the same,
+then the user clicked in a square that was already selected. We want to remove
+the highlighting. That can be done by setting <code>selectedRow = -1</code>, the value
+that indicates that no square is selected. Otherwise, the values of
+<code>selectedRow</code> and <code>selectedCol</code> are set to the row and column
+that the user clicked.  In the end, <code>repaint()</code> is called so that the
+change will be reflected in what is shown on the screen.</p>
+
+<p>All this explains the reasoning behind the <code>mousePressed()</code> routine,
+which you can see below.</p>
+</exercise-discuss>
+<exercise-code>
+<pre>
+<prog name="ClickableCheckerboard">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**  
+ *  This program draws a red-and-black checkerboard.
+ *  It is assumed that the size of the panel is 160
+ *  by 160 pixels.  When the user clicks a square, that
+ *  square is selected, unless it is already selected.
+ *  When the user clicks the selected square, it is
+ *  unselected.  If there is a selected square, it is
+ *  highlighted with a cyan border.
+ */
+public class ClickableCheckerboard extends JPanel implements MouseListener {
+
+    /**
+     * A main routine lets this class be run as an application.
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Clickable Checkerboard");
+        ClickableCheckerboard content = new ClickableCheckerboard();
+        window.setContentPane(content);
+        window.pack(); // Size the window to the preferred size of its content.
+        window.setLocation(100,100);
+        window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        window.setResizable(false);  // User can't change the window's size.
+        window.setVisible(true);
+    }
+
+    //-------------------------------------------------------------------
+
+
+    int selectedRow; // Row and column of selected square.  If no
+    int selectedCol; //      square is selected, selectedRow is -1.
+
+    /**
+     * Constructor.  Set selectedRow to -1 to indicate that
+     * no square is selected.  And set the board object
+     * to listen for mouse events on itself.
+     */
+    public ClickableCheckerboard() {
+        selectedRow = -1;     
+        addMouseListener(this);
+        setPreferredSize( new Dimension(160,160) );
+    }
+
+    /**
+     * Draw the checkerboard and highlight selected square, if any.
+     * (Note: super.paintComponent(g) is not necessary, since this
+     * method already paints the entire surface of the object.
+     * This assumes that the object is exactly 160-by-160 pixels.
+     */
+    public void paintComponent(Graphics g) {
+
+        int row;   // Row number, from 0 to 7
+        int col;   // Column number, from 0 to 7
+        int x,y;   // Top-left corner of square
+
+        for ( row = 0;  row &lt; 8;  row++ ) {
+
+            for ( col = 0;  col &lt; 8;  col++) {
+                x = col * 20;
+                y = row * 20;
+                if ( (row % 2) == (col % 2) )
+                    g.setColor(Color.red);
+                else
+                    g.setColor(Color.black);
+                g.fillRect(x, y, 20, 20);
+            } 
+
+        } // end for row
+
+        if (selectedRow &gt;= 0) {
+                // Since there is a selected square, draw a cyan
+                // border around it.  (If selectedRow &lt; 0, then
+                // no square is selected and no border is drawn.)
+            g.setColor(Color.CYAN);
+            y = selectedRow * 20;
+            x = selectedCol * 20;
+            g.drawRect(x, y, 19, 19);
+            g.drawRect(x+1, y+1, 17, 17);
+        }
+
+    }  // end paint()
+
+    /**
+     * When the user clicks on the panel, figure out which
+     * row and column the click was in and change the
+     * selected square accordingly.
+     */
+    public void mousePressed(MouseEvent evt) {
+
+        int col = evt.getX() / 20;   // Column where user clicked.
+        int row = evt.getY() / 20;   // Row where user clicked.
+
+        if (selectedRow == row &amp;&amp; selectedCol == col) {
+                // User clicked on the currently selected square.
+                // Turn off the selection by setting selectedRow to -1.
+            selectedRow = -1;
+        }
+        else {
+                // Change the selection to the square the user clicked on.
+            selectedRow = row;
+            selectedCol = col;
+        }
+        repaint();
+
+    }  // end mousePressed()
+
+
+    public void mouseReleased(MouseEvent evt) { }
+    public void mouseClicked(MouseEvent evt) { }
+    public void mouseEntered(MouseEvent evt) { }
+    public void mouseExited(MouseEvent evt) { }
+
+} // end class ClickableCheckerboard
+</prog>
+</pre>
+</exercise-code>
+</exercise>
+   
+   
+
+<exercise>
+<exercise-question><p>For this exercise, you
+should modify the SubKiller game from <localref href="GUI1.5.4"/>. You
+can start with the existing source code, from the file 
+<sourceref href="SubKiller.java"/>. Modify the game so it
+keeps track of the number of hits and misses and displays these quantities.
+That is, every time the depth charge blows up the sub, the number of hits goes
+up by one. Every time the depth charge falls off the bottom of the screen
+without hitting the sub, the number of misses goes up by one. There is room at
+the top of the panel to display these numbers. To do this exercise, you only
+have to add a half-dozen lines to the source code. But you have to figure out
+what they are and where to add them. To do this, you'll have to read the source
+code closely enough to understand how it works.</p>
+</exercise-question>
+<exercise-discuss><p>You can do this exercise by adding just seven lines to the original
+version, <sourceref href="SubKiller.java"/> (plus changing the name of the class, if you want to do that).
+I used two lines to declare instance variables named <code>hits</code> and
+<code>misses</code>. These variables have to be updated whenever the depth charge
+hits the sub or falls off the bottom of the panel. These events are already
+detected by the panel, in the <code>updateForNextFrame()</code> method of the
+<classname>Bomb</classname> class. At the point
+where this method detects that the depth charge has hit the sub, I add the
+command "<code>hits++;</code>" to chalk up another hit for the user. At the point
+in where it is determined that the <code>y</code>-coordinate
+of the depth charge has exceeded the height of the panel, I add the command
+"<code>misses++;</code>" to record the fact that the sub has escaped destruction
+this time.</p>
+
+<p>The only other thing to do is to display the number of hits and misses at
+the top of the panel. This is part of drawing the picture, so it is done in the
+<code>paintComponent()</code> method. The information is output with two
+<code>drawString</code> commands. We need one more command to make sure that the
+strings are displayed in a color that can be seen:</p>
+
+<pre>g.setColor(Color.BLACK);
+g.drawString("Number of hits:   " + hits, 15, 24);
+g.drawString("Number of misses: " + misses, 15, 45);</pre>
+
+<p>(Using the coordinates in these statements, the messages about hits and misses were
+drawn over the "CLICK TO ACTIVATE" message, so I also move the
+"CLICK TO ACIVATE" message to the bottom of the screen.)</p>
+   
+<p>I made one further change when I decided that I wanted the output to be
+displayed in a larger font. I create a new font, store it in an instance
+variable named <code>infoFont</code>, and use the command
+"<code>g.setFont(infoFont);</code>" before drawing the strings.</p>
+
+<p>The source code is shown below. Changes from the original version are shown
+in &newcodestyle;.</p>
+</exercise-discuss>
+<exercise-code>
+<pre>
+<prog name="SubKillerWithScore">import java.awt.*;        
+import java.awt.event.*;
+import javax.swing.*;
+
+
+/**
+ * This panel implements a simple arcade game in which the user tries to blow
+ * up a "submarine" (a black oval) by dropping "depth charges" (a red disk) from 
+ * a "boat" (a blue roundrect).  The user moves the boat with the left- and 
+ * right-arrow keys and drops the depth charge with the down-arrow key.
+ * The sub moves left and right erratically along the bottom of the panel.
+ * This class contains a main() routine to allow it to be run as a program.
+ * <newcode>The number of hits and the number of misses are shown at the top of the panel.</newcode>
+ */
+public class SubKillerWithScore extends JPanel {
+    
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Sub Killer Game");
+        <newcode>SubKillerWithScore content = new SubKillerWithScore();</newcode>
+        window.setContentPane(content);
+        window.setSize(600, 480);
+        window.setLocation(100,100);
+        window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        window.setResizable(false);  // User can't change the window's size.
+        window.setVisible(true);
+    }
+    
+    //------------------------------------------------------------------------
+
+    private Timer timer;        // Timer that drives the animation.
+
+    private int width, height;  // The size of the panel -- the values are set
+                                //    the first time the paintComponent() method
+                                //    is called.  This class is not designed to
+                                //    handle changes in size; once the width and
+                                //    height have been set, they are not changed.
+                                //    Note that width and height cannot be set
+                                //    in the constructor because the width and
+                                //    height of the panel have not been set at
+                                //    the time that the constructor is called.
+
+    private Boat boat;          // The boat, bomb, and sub objects are defined
+    private Bomb bomb;          //    by nested classes Boat, Bomb, and Submarine,
+    private Submarine sub;      //    which are defined later in this class.
+                                //    Note that the objects are created in the
+                                //    paintComponent() method, after the width
+                                //    and height of the panel are known.
+
+    <newcode>private int hits;           // The number of times the user has hit the sub.
+    private int misses;         // The number of times the user has missed the sub.
+
+    private Font infoFont = new Font("Monospaced", Font.PLAIN, 16);
+                            // A font for displaying the numbers of hits and misses.</newcode>
+     
+    /**
+     * The constructor sets the background color of the panel, creates the
+     * timer, and adds a KeyListener, FocusListener, and MouseListener to the
+     * panel.  These listeners, as well as the ActionListener for the timer
+     * are defined by anonymous inner classes.  The timer will run only
+     * when the panel has the input focus.
+     */
+    public SubKillerWithScore() {
+
+        setBackground( new Color(0,200,0) ); 
+
+        ActionListener action = new ActionListener() {
+                // Defines the action taken each time the timer fires.
+            public void actionPerformed(ActionEvent evt) {
+                if (boat != null) {
+                    boat.updateForNewFrame();
+                    bomb.updateForNewFrame();
+                    sub.updateForNewFrame();
+                }
+                repaint();
+            }
+        };
+        timer = new Timer( 30, action );  // Fires every 30 milliseconds.
+
+        addMouseListener( new MouseAdapter() {
+                // The mouse listener simply requests focus when the user
+                // clicks the panel.
+            public void mousePressed(MouseEvent evt) {
+                requestFocus();
+            }
+        } );
+
+        addFocusListener( new FocusListener() {
+                // The focus listener starts the timer when the panel gains
+                // the input focus and stops the timer when the panel loses
+                // the focus.  It also calls repaint() when these events occur.
+            public void focusGained(FocusEvent evt) {
+                timer.start();
+                repaint();
+            }
+            public void focusLost(FocusEvent evt) {
+                timer.stop();
+                repaint();
+            }
+        } );
+
+        addKeyListener( new KeyAdapter() {
+                // The key listener responds to keyPressed events on the panel. Only
+                // the left-, right-, and down-arrow keys have any effect.  The left- and
+                // right-arrow keys move the boat while down-arrow releases the bomb.
+            public void keyPressed(KeyEvent evt) {
+                int code = evt.getKeyCode();  // Which key was pressed?
+                if (code == KeyEvent.VK_LEFT) {
+                        // Move the boat left.  (If this moves the boat out of the frame, its
+                        // position will be adjusted in the boat.updateForNewFrame() method.)
+                    boat.centerX -= 15;
+                }
+                else if (code == KeyEvent.VK_RIGHT) {  
+                        // Move the boat right.  (If this moves boat out of the frame, its
+                        // position will be adjusted in the boat.updateForNewFrame() method.)
+                    boat.centerX += 15;
+                }
+                else if (code == KeyEvent.VK_DOWN) {
+                        // Start the bomb falling, if it is not already falling.
+                    if ( bomb.isFalling == false )
+                        bomb.isFalling = true;
+                }
+            }
+        } );
+
+    } // end constructor
+
+
+    /**
+     * The paintComponent() method draws the current state of the game.  It
+     * draws a gray or cyan border around the panel to indicate whether or not
+     * the panel has the input focus.  It draws the boat, sub, and bomb by
+     * calling their respective draw() methods.
+     */
+    public void paintComponent(Graphics g) {
+
+        super.paintComponent(g);  // Fill panel with background color, green.
+        
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        if (boat == null) {
+                // The first time that paintComponent is called, it assigns
+                // values to the instance variables.
+            width = getWidth();
+            height = getHeight();
+            boat = new Boat();
+            sub = new Submarine();
+            bomb = new Bomb();
+        }
+
+        if (hasFocus())
+            g.setColor(Color.CYAN);
+        else {
+            g.setColor(Color.BLACK);
+            g.drawString("CLICK TO ACTIVATE", 20, <newcode>height - 10</newcode>);
+            g.setColor(Color.GRAY);
+        }
+        g.drawRect(0,0,width-1,height-1);  // Draw a 3-pixel border.
+        g.drawRect(1,1,width-3,height-3);
+        g.drawRect(2,2,width-5,height-5);
+
+        boat.draw(g);
+        sub.draw(g);
+        bomb.draw(g);
+
+        <newcode>g.setFont(infoFont);
+        g.setColor(Color.BLACK);
+        g.drawString("Number of hits:   " + hits, 15, 24);
+        g.drawString("Number of misses: " + misses, 15, 45);</newcode>
+        
+    } // end paintComponent()
+
+
+    /**
+     * This nested class defines the boat.  Note that its constructor cannot
+     * be called until the width of the panel is known!
+     */
+    private class Boat {
+        int centerX, centerY;  // Current position of the center of the boat.
+        Boat() { // Constructor centers the boat horizontally, 80 pixels from top.
+            centerX = width/2;
+            centerY = 80;
+        }
+        void updateForNewFrame() { // Makes sure boat has not moved off screen.
+            if (centerX &lt; 0)
+                centerX = 0;
+            else if (centerX &gt; width)
+                centerX = width;
+        }
+        void draw(Graphics g) {  // Draws the boat at its current location.
+            g.setColor(Color.BLUE);
+            g.fillRoundRect(centerX - 40, centerY - 20, 80, 40, 20, 20);
+        }
+    } // end nested class Boat
+
+
+    /**
+     * This nested class defines the bomb. 
+     */
+    private class Bomb {
+        int centerX, centerY; // Current position of the center of the bomb.
+        boolean isFalling;    // If true, the bomb is falling; if false, it
+                             // is attached to the boat.
+        Bomb() { // Constructor creates a bomb that is initially attached to boat.
+            isFalling = false;
+        }
+        void updateForNewFrame() {  // If bomb is falling, take appropriate action.
+            if (isFalling) {
+                if (centerY &gt; height) {
+                        // Bomb has missed the submarine.  It is returned to its
+                        // initial state, with isFalling equal to false.
+                    isFalling = false;
+                    <newcode>misses++;   // USER HAS MISSED THE SUB</newcode>
+                }
+                else if (Math.abs(centerX - sub.centerX) &lt;= 36 &amp;&amp;
+                        Math.abs(centerY - sub.centerY) &lt;= 21) {
+                        // Bomb has hit the submarine.  The submarine
+                        // enters the "isExploding" state.
+                    sub.isExploding = true;
+                    sub.explosionFrameNumber = 1;
+                    isFalling = false;  // Bomb reappears on the boat.
+                    <newcode>hits++;   // USER HAS HIT THE SUB</newcode>
+                }
+                else {
+                        // If the bomb has not fallen off the panel or hit the
+                        // sub, then it is moved down 10 pixels.
+                    centerY += 10;
+                }
+            }
+        }
+        void draw(Graphics g) { // Draw the bomb.
+            if ( ! isFalling ) {  // If not falling, set centerX and centerY
+                                  // to show the bomb on the bottom of the boat.
+                centerX = boat.centerX;
+                centerY = boat.centerY + 23;
+            }
+            g.setColor(Color.RED);
+            g.fillOval(centerX - 8, centerY - 8, 16, 16);
+        }
+    } // end nested class Bomb
+
+
+    /**
+     * This nested class defines the sub.  Note that its constructor cannot
+     * be called until the width of the panel is known!
+     */
+    private class Submarine {
+        int centerX, centerY; // Current position of the center of the sub.
+        boolean isMovingLeft; // Tells whether the sub is moving left or right
+        boolean isExploding;  // Set to true when the sub is hit by the bomb.
+        int explosionFrameNumber;  // If the sub is exploding, this is the number
+                                   //   of frames since the explosion started.
+        Submarine() {  // Create the sub at a random location 40 pixels from bottom.
+            centerX = (int)(width*Math.random());
+            centerY = height - 40;
+            isExploding = false;
+            isMovingLeft = (Math.random() &lt; 0.5);
+        }
+        void updateForNewFrame() { // Move sub or increase explosionFrameNumber.
+            if (isExploding) {
+                    // If the sub is exploding, add 1 to explosionFrameNumber.
+                    // When the number reaches 15, the explosion ends and the
+                    // sub reappears in a random position.
+                explosionFrameNumber++;
+                if (explosionFrameNumber == 15) { 
+                    centerX = (int)(width*Math.random());
+                    centerY = height - 40;
+                    isExploding = false;
+                    isMovingLeft = (Math.random() &lt; 0.5);
+                }
+            }
+            else { // Move the sub.
+                if (Math.random() &lt; 0.04) {  
+                        // In one frame out of every 25, on average, the sub
+                        // reverses its direction of motion.
+                    isMovingLeft = ! isMovingLeft; 
+                }
+                if (isMovingLeft) { 
+                        // Move the sub 5 pixels to the left.  If it moves off
+                        // the left edge of the panel, move it back to the left
+                        // edge and start it moving to the right.
+                    centerX -= 5;  
+                    if (centerX &lt;= 0) {  
+                        centerX = 0; 
+                        isMovingLeft = false; 
+                    }
+                }
+                else {
+                        // Move the sub 5 pixels to the right.  If it moves off
+                        // the right edge of the panel, move it back to the right
+                        // edge and start it moving to the left.
+                    centerX += 5;         
+                    if (centerX &gt; width) {  
+                        centerX = width;   
+                        isMovingLeft = true; 
+                    }
+                }
+            }
+        }
+        void draw(Graphics g) {  // Draw sub and, if it is exploding, the explosion.
+            g.setColor(Color.BLACK);
+            g.fillOval(centerX - 30, centerY - 15, 60, 30);
+            if (isExploding) {
+                    // Draw an "explosion" that grows in size as the number of
+                    // frames since the start of the explosion increases.
+                g.setColor(Color.YELLOW);
+                g.fillOval(centerX - 4*explosionFrameNumber,
+                        centerY - 2*explosionFrameNumber,
+                        8*explosionFrameNumber,
+                        4*explosionFrameNumber);
+                g.setColor(Color.RED);
+                g.fillOval(centerX - 2*explosionFrameNumber,
+                        centerY - explosionFrameNumber/2,
+                        4*explosionFrameNumber,
+                        explosionFrameNumber);
+            }
+        }
+    } // end nested class Submarine    
+
+
+} // end class SubKillerWithScore
+</prog>
+</pre>
+</exercise-code>
+</exercise>
+   
+
+
+<exercise>
+<exercise-question><p><localref href="OOP.ex.2"/> involved a class, <sourceref chapter="5" href="StatCalc.java"/>,
+that could compute some statistics
+of a set of numbers. Write a GUI program that uses the <classname>StatCalc</classname> class to
+compute and display statistics of numbers entered by the user. The panel will
+have an instance variable of type <classname>StatCalc</classname> that does the computations.
+The panel should include a <classname>JTextField</classname> where the user enters a number.
+It should have four labels that display four statistics for the numbers that
+have been entered: the number of numbers, the sum, the mean, and the standard
+deviation. Every time the user enters a new number, the statistics displayed on
+the labels should change. The user enters a number by typing it into the
+<classname>JTextField</classname> and pressing return. There should be a "Clear" button that
+clears out all the data. This means creating a new <classname>StatCalc</classname> object and
+resetting the displays on the labels. My panel also has an "Enter" button that
+does the same thing as pressing the return key in the <classname>JTextField</classname>.
+(Recall that a <classname>JTextField</classname> generates an <classname>ActionEvent</classname> when the
+user presses return, so your panel should register itself to listen for
+<classname>ActionEvents</classname> from the <classname>JTextField</classname> as well as the buttons.)
+Here is a picture of my solution to this problem:</p>
+<img src="stat-calc-gui.png" width="348" height="175" alt="screenshot from StatCalcGUI program"
+        tex="stat-calc-gui.eps" texscale="0.6"/>
+</exercise-question>
+<exercise-discuss>
+<p>In my solution, I used four labels to display results and another label at the
+top of the panel to display a message to the user. Aside from these labels,
+one row of the panel holds three other components: a <classname>JTextField</classname> and
+two <classname>JButtons</classname>. The panel
+uses a <classname>GridLayout</classname> with six rows. Five of the rows hold
+<classname>JLabels</classname>. The other row contains a <classname>JPanel</classname> that holds the
+<classname>JTextField</classname> and <classname>JButtons</classname>. This <classname>JPanel</classname> uses a
+<classname>GridLayout</classname> with three columns and just one row.</p>
+
+<p>The constructor creates and lays out the
+components. Since I want the program to look nice, I set a background color and
+a foreground color for most of the components. I set the labels to
+be opaque, to make sure that the background of each label will actually be
+filled in with the label's background color. After looking at my first attempt,
+I decided to use a Monospaced font for the display labels. In a Monospaced
+font, all the characters are the same size. This makes it possible to line up
+the output values vertically by putting the same number of characters in each
+label. To make it easy to play with the colors and fonts, I declared three
+named constants</p>
+
+<pre>final static Color labelBG = new Color(240,225,200);  // beige
+final static Color labelFG = new Color(180,0,0);  // dark red
+final static Font labelFont = new Font("Monospaced", Font.PLAIN, 12);</pre>
+
+<np>I could then make one of the labels, such as <code>countLabel</code>, with the
+commands:</np>
+
+<pre>countLabel = new JLabel("Number of Entries:   0");
+countLabel.setBackground(labelBG);
+countLabel.setForeground(labelFG);
+countLabel.setOpaque(true);
+countLabel.setFont(labelFont);</pre>
+
+<np>However, since there are four labels to create, I wrote a subroutine to
+create a display label to show a given string:</np>
+
+<pre>/**
+ * A utility routine for creating the labels that are used
+ * for display.  This routine is called by the constructor.
+ * @param text The text to show on the label.
+ */
+private JLabel makeLabel(String text) {
+   JLabel label = new JLabel(text);
+   label.setBackground(labelBG);
+   label.setForeground(labelFG);
+   label.setOpaque(true);
+   label.setFont(labelFont);
+   return label;
+}</pre>
+
+<np>Then in the constructor, the labels can be created with four
+lines, instead of 16:</np>
+
+<pre>countLabel =   makeLabel(" Number of Entries:  0");
+sumLabel =     makeLabel(" Sum:                0.0");
+meanLabel =    makeLabel(" Average:            undefined");
+standevLabel = makeLabel(" Standard Deviation: undefined");</pre>
+
+<p>Utility routines like <code>makeLabel()</code> are very commonly used when there
+are a lot of similar components to create. Note that when the labels are first
+created, the text on the labels is appropriate for a dataset that contains zero
+elements. In particular, if there are no data, the average and standard
+deviation are undefined.</p>
+
+<p>The panel registers itself to listen for action events from the
+<classname>JTextField</classname> and from the <classname>JButtons</classname>. In the
+<code>actionPerformed()</code> method, the function <code>evt.getSource()</code> is
+called to find the <classname>Object</classname> that generated the event. This will be
+either the <code>numberInput</code> box, the <code>enterButton</code>, or the
+<code>clearButton</code>. The source of the event is checked to decide how to
+respond. (This is an alternative to checking the event's action command.)</p>
+
+<p>If the user clicked the "Clear" button, the response is to create a new
+<classname>StatCalc</classname> object and to reset the display labels to reflect the fact
+that there is no data in the dataset. It's important to understand the effect
+of the command "<code>stats&nbsp;=&nbsp;new&nbsp;StatCalc();</code>". The panel will continue to
+use the same <classname>StatCalc</classname> <b>variable</b>, <code>stats</code>. However, now
+the variable refers to a new <classname>StatCalc</classname> <b>object</b>. The new object
+does not yet have any data in its dataset. The next time the user enters a
+number, the dataset will get its first value. Always keep in mind the
+difference between variables and objects. Also, keep in mind that you have to
+think in terms of changing the state of the panel in response to events. I
+change the panel's state by starting to use a new <classname>StatCalc</classname> object,
+and the display labels are changed to keep them consistent with the new
+state.</p>
+
+<p>When the user clicks the "Enter" button or presses return in the
+<classname>JTextField</classname>, we have to get the user's input and add it to the
+<classname>StatCalc</classname> object. This will cause the values of the four statistics to
+change. We have to change the display labels to show the new values. The code
+for getting the user's number from the input box includes a check to make sure that the user's
+input is a legal number. If the input is not legal, then I show an error
+message in the <classname>JLabel</classname> named <code>message</code> and return from the
+<code>actionPerformed()</code> method without entering any new data:</p>
+
+<pre>double num;  // The user's number.
+try {
+   num = Double.parseDouble(numberInput.getText());
+}
+catch (NumberFormatException e) {
+       // The user's entry is not a legal number.  
+       // Put an error message in the message label
+       // and return without entering a number.
+   message.setText("\"" + numberInput.getText() + 
+                       "\" is not a legal number.");
+   numberInput.selectAll();
+   numberInput.requestFocus();
+   return;
+}</pre>
+
+<np>The commands "<code>numberInput.selectAll();</code>" and
+"<code>numberInput.requestFocus();</code>" are there as a convenience for the user.
+The first command, which was not covered in this chapter,
+selects all the text in the number input box. The second
+command gives the input focus to the input box. That way, the user can just
+start typing the next number, without having to click on the input box or erase
+the content of the box. (Since the contents of the box are selected, they will
+disappear automatically when the user starts typing, to be replaced with the
+new input. A surprising number of people have never learned that text
+selections work this way.)</np>
+
+<p>Once we have the user's number, the command "<code>stats.enter(num);</code>"
+adds the number <code>num</code> into the dataset. The statistics about the data
+set can be obtained by calling the functions <code>stats.getCount()</code>,
+<code>stats.getSum()</code>, <code>stats.getMean()</code>, and
+<code>stats.getStandardDeviation()</code>. This information can be found by reading
+the <sourceref chapter="5" href="StatCalc.java">source code</sourceref> for the <classname>StatCalc</classname>
+class.  These values are used on the labels that display the statistics.  For example,</p>
+
+<pre>countLabel.setText(" Number of Entries:  " + stats.getCount());</pre>
+
+<np>Returning to the topic of variables versus objects, a common novice mistake would
+be to try to change the text that is displayed on the label by saying</np>
+
+<pre>countLabel = new JLabel(" Number of Entries:  " + stats.getCount());  <newcode>// WRONG</newcode></pre>
+
+<np>since that type of command is what was used to set the text in the first
+place.  But this statement has no effect on what is displayed on the screen.
+The reason why this doesn't work is instructive:  The assignment
+command creates a new JLabel and sets <code>countLabel</code> to refer to
+that new object.  The new label does indeed have the desired text.  But the
+new label has nothing to do with what's on the screen!  The original label was
+created in the constructor and added to the panel.  The panel has a reference to
+the original label, and that original label continues to appear on the screen
+even if <code>countLabel</code> now refers to a new label.  The correct command,
+using <code>countLabel.setText()</code>, <b>modifies the original label</b>,
+which is what is shown on the screen.</np>
+
+<p>As a point of interest, I will mention another technique that has not been covered
+elsewhere in the book.  You might want to limit the number of decimal places that
+are displayed in the statistics.  You know how to do this in output to the command
+line, using <code>System.out.printf</code> or <code>TextIO.putf</code>, but we are not 
+outputting the data here, just putting it into a String.  The <classname>String</classname>
+class has a <code>static</code> method <code>String.format()</code> that solves this
+problem.  <code>String.format(fmtString,val,val,val,...)</code> works similarly
+to <code>System.out.prinf(fmtString,val,val,val,...)</code>, but instead of producing
+output, <code>String.format</code> just creates a string and returns it.
+To set the text of the label that displays the average, for example, you Might say:</p>
+
+<pre>meanLabel.setText( String.format(" Average:            %1.9g", stats.getMean()) );</pre>
+
+<np>I don't do this in my solution, but <code>String.format</code> can be very useful,
+especially in GUI programs.</np>
+   
+</exercise-discuss>
+<exercise-code>
+<pre> 
+<prog name="StatCalcGUI">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+ 
+/**
+ * In this panel, the user enters numbers in a text field box.
+ * After entering each number, the user presses return (or clicks
+ * on a button).  Some statistics are displayed about all the
+ * numbers that the user has entered.
+ */
+public class StatCalcGUI extends JPanel implements ActionListener {
+ 
+    /**
+     * A main routine allows this class to be run as an application.
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Stat Calc");
+        StatCalcGUI content = new StatCalcGUI();
+        window.setContentPane(content);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setLocation(120,70);
+        window.setSize(350,200);
+        window.setVisible(true);
+    }
+
+    //---------------------------------------------------------------------
+
+    final static Color labelBG = new Color(240,225,200);  // For creating labels
+    final static Color labelFG = new Color(180,0,0);
+    final static Font labelFont = new Font("Monospaced", Font.PLAIN, 12);
+    
+    private JLabel countLabel;    // A label for displaying the number of numbers.
+    private JLabel sumLabel;      // A label for displaying the sum of the numbers.
+    private JLabel meanLabel;     // A label for displaying the average.
+    private JLabel standevLabel;  // A label for displaying the standard deviation.
+    
+    private JLabel message;  // A message at the top of the panel.  It will
+                             //   show an error message if the user's input is
+                             //   not a legal number.  Otherwise, it just tells
+                             //   the user to enter a number and press return.
+    
+    private JButton enterButton;   // A button the user can press to enter a number.
+                                   //    This is an alternative to pressing return.
+    private JButton clearButton;   // A button that clears all the data that the
+                                   //    user has entered.
+    
+    private JTextField numberInput;  // The input box where the user enters numbers.
+    
+    private StatCalc stats;  // An object that keeps track of the statistics
+                             //   for all the numbers that have been entered.
+ 
+    /**
+     * The constructor creates the objects used by the panel.  The panel
+     * will listen for action events from the buttons and from the text
+     * field.  (A JTextField generates an ActionEvent when the user presses 
+     * return while typing in the text field.)
+     */
+    public StatCalcGUI() {
+    
+       stats = new StatCalc();
+       
+       numberInput = new JTextField();
+       numberInput.setBackground(Color.WHITE);
+       numberInput.addActionListener(this);
+       
+       enterButton = new JButton("Enter");
+       enterButton.addActionListener(this);
+       
+       clearButton = new JButton("Clear");
+       clearButton.addActionListener(this);
+       
+       JPanel inputPanel = new JPanel();  // A panel that will hold the
+                                          //   JTextField and JButtons.
+       inputPanel.setLayout( new GridLayout(1,3) );
+       inputPanel.add(numberInput);
+       inputPanel.add(enterButton);
+       inputPanel.add(clearButton);
+       
+       countLabel =   makeLabel(" Number of Entries:  0");
+       sumLabel =     makeLabel(" Sum:                0.0");
+       meanLabel =    makeLabel(" Average:            undefined");
+       standevLabel = makeLabel(" Standard Deviation: undefined");
+       
+       message = new JLabel("Enter a number, press return:",
+                                      JLabel.CENTER);
+       message.setBackground(labelBG);
+       message.setForeground(Color.BLUE);
+       message.setOpaque(true);
+       message.setFont(new Font("SansSerif", Font.BOLD, 12));
+       
+       /* Use a GridLayout with 6 rows and 1 column, and add all the
+          components that have been created to the panel. */
+       
+       setBackground(Color.BLUE);
+       setLayout( new GridLayout(6,1,2,2) );
+       add(message);
+       add(inputPanel);
+       add(countLabel);
+       add(sumLabel);
+       add(meanLabel);
+       add(standevLabel);
+
+       /* Add a blue border around the panel. */
+
+       setBorder( BorderFactory.createLineBorder(Color.BLUE, 2) );
+       
+    } // end constructor
+
+    
+    /**
+     * A utility routine for creating the labels that are used
+     * for display.  This routine is called by the constructor.
+     * @param text The text to show on the label.
+     */
+    private JLabel makeLabel(String text) {
+       JLabel label = new JLabel(text);
+       label.setBackground(labelBG);
+       label.setForeground(labelFG);
+       label.setFont(labelFont);
+       label.setOpaque(true);
+       return label;
+    }   
+    
+    
+    /**
+     * This is called when the user clicks one of the buttons or
+     * presses return in the input box.  The response to clicking
+     * on the Enter button is the same as the response to pressing
+     * return in the JTextField.
+     */
+    public void actionPerformed(ActionEvent evt) {
+    
+       Object source = evt.getSource();  // Object that generated 
+                                         //   the action event.
+       
+       if (source == clearButton) {
+             // Handle the clear button by starting with a new,
+             // empty StatCalc object and resetting the display
+             // labels to show no data entered.  The TextField
+             // is also made empty.
+          stats = new StatCalc();
+          countLabel.setText(" Number of Entries:  0");
+          sumLabel.setText(" Sum:                0.0");
+          meanLabel.setText(" Average:            undefined");
+          standevLabel.setText(" Standard Deviation: undefined");
+          numberInput.setText("");
+       }
+       else if (source == enterButton || source == numberInput) {
+             // Get the user's number, enter it into the StatCalc
+             // object, and set the display on the display labels
+             // to reflect the new data.
+          double num;  // The user's number.
+          try {
+             num = Double.parseDouble(numberInput.getText());
+          }
+          catch (NumberFormatException e) {
+                 // The user's entry is not a legal number.  
+                 // Put an error message in the message label 
+                 // and return without entering a number.
+             message.setText("\"" + numberInput.getText() + 
+                                  "\" is not a legal number.");
+             numberInput.selectAll();
+             numberInput.requestFocus();
+             return;
+          }
+          stats.enter(num);
+          countLabel.setText(" Number of Entries:  " + stats.getCount());
+          sumLabel.setText(" Sum:                " + stats.getSum());
+          meanLabel.setText(" Average:            " + stats.getMean());
+          standevLabel.setText(" Standard Deviation: " 
+                                                   + stats.getStandardDeviation());
+       }
+       
+       /* Set the message label back to its normal text, in case it has
+          been showing an error message.  For the user's convenience,
+          select the text in the TextField and give the input focus
+          to the text field.  That way the user can just start typing
+          the next number. */
+       
+       message.setText("Enter a number, press return:");
+       numberInput.selectAll();
+       numberInput.requestFocus();
+       
+    }  // end ActionPerformed
+ 
+}  // end StatsCalcGUI
+</prog></pre>
+</exercise-code>
+</exercise>
+
+   
+   
+
+<exercise>
+<exercise-question><p> Write a program that has a
+<classname>JTextArea</classname> where the user can enter some text. 
+Then program should have a
+button such that when the user clicks on the button, the panel will count the number
+of lines in the user's input, the number of words in the user's input, and the
+number of characters in the user's input. This information should be displayed
+on three labels. Recall that if <code>textInput</code> is a
+<classname>JTextArea</classname>, then you can get the contents of the <classname>JTextArea</classname> by
+calling the function <code>textInput.getText()</code>. This function returns a
+<classname>String</classname> containing all the text from the text area. The number
+of characters is just the length of this <classname>String</classname>. Lines in the
+<classname>String</classname> are separated by the new line character, <code>'\n'</code>, so the number of
+lines is just the number of new line characters in the <classname>String</classname>, plus
+one. Words are a little harder to count. <localref href="control.ex.4"/> 
+has some advice about finding the
+words in a <classname>String</classname>. Essentially, you want to count the number of
+characters that are first characters in words. Don't forget to put your
+<classname>JTextArea</classname> in a <classname>JScrollPane</classname>,
+and add the scroll pane to the container, not the text area. Scrollbars should appear when the
+user types more text than will fit in the available area. Here is a picture of my solution:</p>
+<img src="text-count.png" width="298" height="325" alt="TextCounter program showing some text and the numbers of words, lines and chars"
+      tex="text-count.eps" texscale="0.6"/>
+</exercise-question>
+<exercise-discuss><p>The panel contains five components. There are several ways to lay them out.
+A <code>GridLayout</code> with five rows certainly will <b>not</b> work, because the
+<classname>JTextArea</classname> should be taller than the other components. One possible
+layout is to use a <classname>GridLayout</classname> with two rows. The <classname>JTextArea</classname>
+would occupy the first row. The bottom half would contain a <classname>JPanel</classname>
+that holds the other four components. (A <classname>GridLayout</classname> with two columns
+and one row would also work, if you wanted a panel that was wider and not so
+tall. You could put the <classname>JTextArea</classname> in the left half and the other
+components in a <classname>JPanel</classname> in the right half.) However, I decided to use a
+<classname>BorderLayout</classname>. The <classname>JTextArea</classname> occupies the <code>CENTER</code> position, and
+the <code>SOUTH</code> position is occupied by a <classname>JPanel</classname> that contains the other
+components. The nested <classname>JPanel</classname> uses a <classname>GridLayout</classname> with four rows.
+My <code>main()</code> program sets the size of the window to 300-by-350, and the text area gets the
+space not occupied by the bottom panel.
+Once this choice has been made, writing the constructor is not hard.</p>
+
+<p>I use an anonymous inner class to listen for <classname>ActionEvents</classname>
+from the button.   The <code>actionPerformed()</code> method of the listener
+just calls a method named <code>processInput()</code> in the main class; this
+method does the real work.
+The <code>processInput()</code> method just has to get the text from the <code>JTextArea</code>, do the
+counting, and set the labels. The only interesting part is counting the words.
+Back in <localref href="control.ex.4"/>, words such as
+"can't", that contain an apostrophe, were counted as two words. This time
+around, let's handle this special case. Two letters with an apostrophe between
+them should be counted as part of the same word. The algorithm for counting
+words is still</p>
+
+<pre>wordCt = 0
+for each character in the string:
+   if the character is the first character of a word:
+      Add 1 to wordCt</pre>
+
+<np>but testing whether a given character is the first character in a word has
+gotten a little more complicated. To make the test easier, I use a boolean
+variable, <code>startOfWord</code>. The value of this variable is set to true if
+the character is the start of a word and to false if not. That is, the
+algorithm becomes:</np>
+
+<pre>wordCt = 0
+for each character in the string:
+   Let startOfWord be true if at start of word, false otherwise
+   if startOfWord is true:
+      Add 1 to wordCt</pre>
+
+<np>The use of a "flag variable" like <code>startOfWord</code> can simplify the
+calculation of a complicated boolean condition. The value is computed as a
+series of tests:</np>
+
+<pre>boolean startOfWord;  // Is character i the start of a word?
+if ( Character.isLetter(text.charAt(i)) == false )
+   startOfWord = false;  // No.  It's not a letter.
+else if (i == 0)
+   startOfWord = true;   // Yes.  It's a letter at start of text.
+else if ( Character.isLetter(text.charAt(i-1)) )
+   startOfWord = false;  // No.  It's a letter preceded by a letter.
+else if ( text.charAt(i-1) == '\'' &amp;&amp; i &gt; 1 
+                     &amp;&amp; Character.isLetter(text.charAt(i-2)) )
+   startOfWord = false;  // No.  It's a continuation of a word
+                         //      after an apostrophe.
+else
+   startOfWord = true;   // Yes.  It's a letter preceded by
+                         //       a non-letter.</pre>
+
+<np>The first test checks whether the character in position <code>i</code> is a
+letter. If it is not, then we know that it can't be the start of a word, so
+<code>startOfWord</code> is false. If it is a letter, it might be the start of a
+word, so we go on to make additional tests. Note that if we get to the other
+tests at all, we already know that the character in position <code>i</code> is a
+letter. And so on. This style of "cascading tests" is very useful. In each
+test, we already have all the information from the previous tests. Note that
+the cascade effect works only with "<code>else if</code>". Using "<code>if</code>" in
+place of "<code>else if</code>" in the preceding code would not give the right
+answer. (You should be sure to understand why this is so.)  You should
+also note why the test <code>if&nbsp;(i&nbsp;==&nbsp;0)</code> has to 
+be made before the test <code>if&nbsp;(&nbsp;Character.isLetter(text.charAt(i-1))&nbsp;)</code>&mdash;it's
+because <code>text.charAt(i-1)</code> gives an index-out-of-bounds exception if <code>i</code> is zero.</np>
+
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="TextCounter">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**
+ * In this panel, the user types some text in a JTextArea and presses
+ * a button.  The panel computes and displays the number of lines
+ * in the text, the number of words in the text, and the number of
+ * characters in the text.  A word is defined to be a sequence of
+ * letters, except that an apostrophe with a letter on each side
+ * of it is considered to be a letter.  (Thus "can't" is one word,
+ * not two.)
+ */
+public class TextCounter extends JPanel {
+
+	/**
+	 * A main routine allows this class to be run as an application.
+	 */
+	public static void main(String[] args) {
+		JFrame window = new JFrame("Text Counter");
+		TextCounter content = new TextCounter();
+		window.setContentPane(content);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setLocation(120,70);
+		window.setSize(300,350);
+		window.setVisible(true);
+	}
+
+	//---------------------------------------------------------------------
+
+	private JTextArea textInput;     // For the user's input text.
+
+	private JLabel lineCountLabel;   // For displaying the number of lines.
+	private JLabel wordCountLabel;   // For displaying the number of words.
+	private JLabel charCountLabel;   // For displaying the number of chars.
+
+
+	/**
+	 * The constructor creates components and lays out the panel.
+	 */ 
+	public TextCounter() {
+
+		setBackground(Color.DARK_GRAY);
+
+		/* Create the text input area and make sure it has a
+             white background. */
+
+		textInput = new JTextArea();
+		textInput.setBackground(Color.WHITE);
+
+		/* Create a panel to hold the button and three display
+             labels.  These will be laid out in a GridLayout with
+             4 rows and 1 column. */
+
+		JPanel south = new JPanel();
+		south.setBackground(Color.DARK_GRAY);
+		south.setLayout( new GridLayout(4,1,2,2) );
+
+		/* Create the button and a listener to listen for
+             clicks on the button, and add it to the panel. */
+
+		JButton countButton = new JButton("Process the Text");
+		countButton.addActionListener( new ActionListener() { 
+			public void actionPerformed(ActionEvent evt) {
+				processInput();
+			}
+		});
+		south.add(countButton);
+
+		/* Create each of the labels, set their colors, and
+             add them to the panel. */
+
+		lineCountLabel = new JLabel("  Number of lines:");
+		lineCountLabel.setBackground(Color.WHITE);
+		lineCountLabel.setForeground(Color.BLUE);
+		lineCountLabel.setOpaque(true);
+		south.add(lineCountLabel);
+
+		wordCountLabel = new JLabel("  Number of words:");
+		wordCountLabel.setBackground(Color.WHITE);
+		wordCountLabel.setForeground(Color.BLUE);
+		wordCountLabel.setOpaque(true);
+		south.add(wordCountLabel);
+
+		charCountLabel = new JLabel("  Number of chars:");
+		charCountLabel.setBackground(Color.WHITE);
+		charCountLabel.setForeground(Color.BLUE);
+		charCountLabel.setOpaque(true);
+		south.add(charCountLabel);
+
+		/* Use a BorderLayout on the panel.  Although a BorderLayout
+             is the default, I want one with a vertical gap of two
+             pixels, to let the dark gray background color show through.
+             Also add a gray border around the panel. */
+
+		setLayout( new BorderLayout(2,2) );
+		setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+
+		/* The text area is put into a JScrollPane to provide
+             scroll bars for the TextArea, and the scroll pane is put in
+             the Center position.  The panel that holds the button and
+             labels is in the South position.  Note that the text area
+             will be sized to fill the space that is left after the
+             panel is assigned its preferred height. */
+
+		JScrollPane scroller = new JScrollPane( textInput );
+		add(scroller, BorderLayout.CENTER);
+		add(south, BorderLayout.SOUTH);
+
+
+	} // end constructor
+
+
+	/**
+	 * This will be called by the action listener for the button when the user
+	 * clicks the button.  It gets the text from the text area, counts the number
+	 * of chars, words, and lines that it contains, and sets the labels to
+	 * display the results.
+	 */
+	public void processInput() {
+
+		String text;  // The user's input from the text area.
+
+		int charCt, wordCt, lineCt;  // Char, word, and line counts.
+
+		text = textInput.getText();
+
+		charCt = text.length();  // The number of characters in the
+		                         //    text is just its length.
+
+		/* Compute the wordCt by counting the number of characters
+              in the text that lie at the beginning of a word.  The
+              beginning of a word is a letter such that the preceding
+              character is not a letter.  This is complicated by two
+              things:  If the letter is the first character in the
+              text, then it is the beginning of a word.  If the letter
+              is preceded by an apostrophe, and the apostrophe is
+              preceded by a letter, than its not the first character
+              in a word.
+		 */
+
+		wordCt = 0;
+		for (int i = 0; i &lt; charCt; i++) {
+			boolean startOfWord;  // Is character i the start of a word?
+			if ( Character.isLetter(text.charAt(i)) == false )
+				startOfWord = false;  // No.  It's not a letter.
+			else if (i == 0)
+				startOfWord = true;   // Yes.  It's a letter at start of text.
+			else if ( Character.isLetter(text.charAt(i-1)) )
+				startOfWord = false;  // No.  It's a letter preceded by a letter.
+			else if ( text.charAt(i-1) == '\'' &amp;&amp; i &gt; 1 
+					&amp;&amp; Character.isLetter(text.charAt(i-2)) )
+				startOfWord = false;  // No.  It's a continuation of a word
+			                          //      after an apostrophe.
+			else
+				startOfWord = true;   // Yes.  It's a letter preceded by
+			                          //       a non-letter.
+			if (startOfWord)
+				wordCt++;
+		}
+
+		/* The number of lines is just one plus the number of times the
+              end of line character, '\n', occurs in the text. */
+
+		lineCt = 1;
+		for (int i = 0; i &lt; charCt; i++) {
+			if (text.charAt(i) == '\n')
+				lineCt++;
+		}
+
+		/* Set the labels to display the data. */
+
+		lineCountLabel.setText("  Number of Lines:  " + lineCt);
+		wordCountLabel.setText("  Number of Words:  " + wordCt);
+		charCountLabel.setText("  Number of Chars:  " + charCt);
+
+	}  // end processInput()
+
+
+} // end class TextCounter
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+   
+<exercise>
+<exercise-question><p> A <newword>polygon</newword> 
+is a geometric figure made up of a sequence of
+connected line segments. The points where the line segments meet are called the
+<newword>vertices</newword> of the polygon. The <classname>Graphics</classname>
+class includes commands for drawing and filling polygons. For these commands,
+the coordinates of the vertices of the polygon are stored in arrays. If
+<code>g</code> is a variable of type <classname>Graphics</classname> then</p>
+<ul>
+<li><codedef>g.drawPolygon(xCoords, yCoords,
+pointCt)</codedef> will draw the outline of the polygon with vertices at the points
+<code>(xCoords[0],yCoords[0])</code>, <code>(xCoords[1],yCoords[1])</code>, &dots;,
+<code>(xCoords[pointCt-1],yCoords[pointCt-1])</code>. The third parameter,
+<code>pointCt</code>, is an <ptype>int</ptype> that specifies the number of vertices of
+the polygon. Its value should be 3 or greater. The first two parameters are
+arrays of type <code>int[]</code>. Note that the polygon automatically includes a
+line from the last point, <code>(xCoords[pointCt-1],yCoords[pointCt-1])</code>,
+back to the starting point <code>(xCoords[0],yCoords[0])</code>.</li>
+<li><codedef>g.fillPolygon(xCoords, yCoords,
+pointCt)</codedef> fills the interior of the polygon with the current drawing
+color. The parameters have the same meaning as in the <code>drawPolygon()</code>
+method. Note that it is OK for the sides of the polygon to cross each other,
+but the interior of a polygon with self-intersections might not be exactly what
+you expect.</li>
+</ul>
+<p>Write a program that lets the user draw polygons.  As the user clicks a
+sequence of points, count them and store their x- and y-coordinates in two
+arrays. These points will be the vertices of the polygon. As the user is creating
+the polygon, you should just connect all the points with line segments.
+When the user clicks near the starting point, draw the complete polygon. Draw
+it with a red interior and a black border.  Once the user has completed a
+polygon, the next click will clear the data and start a new polygon from scratch.
+All drawing should be done in the <code>paintComponent()</code> method.</p>
+<p>Here is a picture of my solution after the user has drawn a fairly complex polygon:</p>
+<img src="polygon.png" width="300" height="300" alt="screen shot of the solution"
+       tex="polygon.eps" texscale="0.5"/>
+</exercise-question>
+<exercise-discuss>
+<p>This is an exercise in using arrays, but it is also an exercise in using instance
+variables to record the state of the program.  The <code>paintComponent()</code>
+method needs enough information to correctly draw the picture.  Obviously, that includes
+the coordinate arrays and the number of points that have been stored in the arrays.
+But the picture is different depending on whether or not the user has completed
+the polygon.  If the polygon is complete, the picture shows a polygon; if not,
+the picture shows line segments connecting each point to the next.  We need to 
+record that basic distinction as part of the state.  We can do that using a
+boolean variable, <code>complete</code>, which is true when a complete polygon should
+be drawn and <code>false</code> while the polygon is under construction.
+So, here are the necessary instance variables:</p>
+
+<pre>int[] xCoord, yCoord;  // Arrays to hold the coordinates for up to 500 points.
+int pointCt;           // Number of points in the arrays.
+boolean complete;      // Set to true when a polygon is complete.</pre>
+
+<np>The arrays <code>xCoord</code> and <code>yCoord</code> are examples of partially
+full arrays, although there is only one counter variable that applies to both arrays.</np>
+
+<p>Given these instance variables, the <code>paintComponent()</code> method can
+be written.  To make the picture look nicer, I decided to use two Graphics2D
+features: antialiasing and wide lines. (See <localref href="GUI1.3.5"/>).
+There is also a question about what to draw when there is only one point.  It's nice
+if the user can see that the point has been added to the data, but one point is not
+enough to draw a line or polygon.  I decided to draw a small rectangle at the point,
+just to make it visible.
+</p>
+
+<pre>protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    if (pointCt == 0)
+        return; // Nothing at all to draw
+    Graphics2D g2 = (Graphics2D)g;
+    g2.setStroke( new BasicStroke(2) );
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+            RenderingHints.VALUE_ANTIALIAS_ON);
+    if (pointCt == 1) {
+            // just one point -- draw a small dot there
+        g.fillRect(xCoord[0], yCoord[0], 2, 2);
+    }
+    else if (complete) { 
+            // The polygon is complete; draw it, with a black border
+        g.setColor(polygonColor);
+        g.fillPolygon(xCoord, yCoord, pointCt);
+        g.setColor(Color.BLACK);
+        g.drawPolygon(xCoord, yCoord, pointCt);
+    }
+    else { 
+            // The polygon is not complete, just draw a series of lines.
+        for (int i = 0; i &lt; pointCt - 1; i++)
+            g.drawLine( xCoord[i], yCoord[i], xCoord[i+1], yCoord[i+1]);
+    }
+}</pre>
+
+
+<p>The rest of the program logic is in the <code>mousePressed()</code> routine.
+In that method, state variables have to change in response to the user's actions.
+It requires some care to do things in the right order.  The three things that
+can happen are that the user starts a new polygon, the user completes the current
+polygon, or the user just adds a point to the current polygon.  The conditions should
+be tested in that order:</p>
+
+<pre>if the current polygon is complete
+    start a new polygon with the point where the user clicked
+else if the user clicked near the starting point
+    complete the current polygon
+else
+    add the point that the user clicked to the data
+call repaint() to make the change visible</pre>
+
+<p>Actually, in my solution, I decided to add another case: The polygon 
+can also be completed by right-clicking, or&mdash;to be very safe&mdash;if the number of points
+has reached 500.  Also, there is a <b>bug</b> in the algorithm as
+stated, where it tests "if the user clicked near the first point". This test
+doesn't make sense unless there actually is a first point, that is unless
+<code>pointCt</code> is greater than zero. The test should really read "if
+<code>pointCt</code> &gt; 0 and if the user clicked near
+<code>(xCoord[0],yCoord[0])</code>."</p>
+
+<p>To complete a polygon just means setting the value of the variable <code>complete</code>
+to true.  When <code>repaint()</code> is called, the data will be displayed as a polygon.
+When a new polygon is stated, the value of the variable <code>complete</code>
+has to be reset to false.  Also, the first point on the polygon has to be put into
+the coordinate arrays, and <code>pointCt</code> must be set to&nbsp;1 to indicate that
+there is only one point in the data. This much is pretty straightforward to implement.</p>
+
+<p>The only thing in the algorithm that still needs implementing is to test
+whether the user clicks "near the starting point". The starting point has
+coordinates <code>(xCoord[0],yCoord[0])</code> and the point where the user clicked
+has coordinates <code>(evt.getX(),evt.getY())</code>. In my program, I check whether
+the <code>x</code>-coordinates of these points are three pixels or less apart and the
+<code>y</code>-coordinates are also two pixels or less apart. This is done by
+checking whether "<code>Math.abs(xCoord[0]&nbsp;-&nbsp;evt.getX()) &lt;=&nbsp;3 &amp;&amp;
+Math.abs(yCoord[0]&nbsp;-&nbsp;evt.getY()) &lt;=&nbsp;3</code>".</p>
+
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="SimplePolygons">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+
+/**
+ * This program lets the user draw colored polygons.
+ * The user inputs a polygon by clicking a series of points.
+ * The points are connected with lines from each point to the
+ * next Clicking near the starting point (within 3 pixels) or
+ * right-clicking (or Command-clicking) will complete the
+ * polygon, so the user can begin a new one.  As soon as the
+ * user begins drawing a new polygon, the old one is discarded.
+ */
+public class SimplePolygons extends JPanel implements MouseListener {
+
+    /**
+     * A main() routine to allow this program to be run as an application.
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("SimplePolygons");
+        SimplePolygons content = new SimplePolygons();
+        window.setContentPane(content);
+        window.pack();
+        window.setLocation(100,100);
+        window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        window.setResizable(false);  
+        window.setVisible(true);
+    }
+
+
+    /* Variables for implementing polygon input. */
+
+    private int[] xCoord, yCoord;   // Arrays containing the points of 
+                                    //   the polygon.  Up to 500 points 
+                                    //   are allowed.
+
+    private int pointCt;  // The number of points that have been input.
+
+    private boolean complete;   // Set to true when the polygon is complete.
+                                // When this is false, only a series of lines are drawn.
+                                // When it is true, a filled polygon is drawn.
+
+    private final static Color polygonColor = Color.RED;  
+    // Color that is used to draw the polygons.  
+
+
+    /**
+     * Initialize the panel and its data; add a black border and set
+     * the panel to listen for mouse events on itself.  Also sets
+     * the preferred size of the panel to be 300-by-300.
+     */
+    public SimplePolygons() {
+        setBackground(Color.WHITE);
+        setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
+        setPreferredSize( new Dimension(300,300) );
+        addMouseListener(this);
+        xCoord = new int[500];
+        yCoord = new int[500];
+        pointCt = 0;
+    }
+
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (pointCt == 0)
+            return;
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setStroke( new BasicStroke(2) );
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        if (pointCt == 1) {
+            g.fillRect(xCoord[0], yCoord[0], 2, 2);
+        }
+        else if (complete) { // draw a polygon
+            g.setColor(polygonColor);
+            g.fillPolygon(xCoord, yCoord, pointCt);
+            g.setColor(Color.BLACK);
+            g.drawPolygon(xCoord, yCoord, pointCt);
+        }
+        else { // draw a series of lines
+            for (int i = 0; i &lt; pointCt - 1; i++)
+                g.drawLine( xCoord[i], yCoord[i], xCoord[i+1], yCoord[i+1]);
+        }
+    }
+
+
+    /**
+     * Processes a mouse click.
+     */
+    public void mousePressed(MouseEvent evt) { 
+
+        if (complete) {
+                // Start a new polygon at the point that was clicked.
+            complete = false;
+            xCoord[0] = evt.getX();
+            yCoord[0] = evt.getY();
+            pointCt = 1;
+        }
+        else if ( pointCt &gt; 0 &amp;&amp; pointCt &gt; 0 &amp;&amp; (Math.abs(xCoord[0] - evt.getX()) &lt;= 3)
+                &amp;&amp; (Math.abs(yCoord[0] - evt.getY()) &lt;= 3) ) {
+                // User has clicked near the starting point.
+                // The polygon is complete.
+            complete = true;
+        }
+        else if (evt.isMetaDown() || pointCt == 500) {
+                // The polygon is complete.
+            complete = true;
+        }
+        else {
+                // Add the point where the user clicked to the list of
+                // points in the polygon, and draw a line between the
+                // previous point and the current point.  A line can
+                // only be drawn if there are at least two points.
+            xCoord[pointCt] = evt.getX();
+            yCoord[pointCt] = evt.getY();
+            pointCt++;
+        }
+        repaint();  // in all cases, repaint.
+    } // end mousePressed()
+
+    public void mouseReleased(MouseEvent evt) { }
+    public void mouseClicked(MouseEvent evt) { }
+    public void mouseEntered(MouseEvent evt) { }
+    public void mouseExited(MouseEvent evt) { }
+
+
+}  // end class SimplePolygons
+
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+
+
+<exercise id="GUI1.ex.9">
+<exercise-question><p>Write a GUI Blackjack program
+that lets the user play a game of Blackjack, with the computer as the dealer.
+The program should draw the user's cards and the dealer's cards, just as was
+done for the graphical HighLow card game in  <localref href="GUI1.7.6"/>.
+You can use the source code for that game, <sourceref href="HighLowGUI.java"/>, for some ideas about how to
+write your Blackjack game. The structures of the HighLow panel and the
+Blackjack panel are very similar. You will certainly want to use the
+<code>drawCard()</code> method from the HighLow program.</p>
+
+<p>You can find a description of the game of Blackjack in <localref href="OOP.ex.5"/>. 
+Add the following rule to that
+description: If a player takes five cards without going over 21, that player
+wins immediately. This rule is used in some casinos. For your program, it means
+that you only have to allow room for five cards. You should assume that the
+panel is just wide enough to show five cards, and that it is tall enough 
+show the user's hand and the dealer's hand.</p>
+
+<p>Note that the design of a GUI Blackjack game is very different from the
+design of the text-oriented program that you wrote for <localref href="OOP.ex.5"/>. The user
+should play the game by clicking on "Hit" and "Stand" buttons. There should be
+a "New Game" button that can be used to start another game after one game ends.
+You have to decide what happens when each of these buttons is pressed. You
+don't have much chance of getting this right unless you think in terms of the
+states that the game can be in and how the state can change.</p>
+
+<p>Your program will need the classes defined in 
+<sourceref href="Card.java"/>,
+<sourceref href="Hand.java"/>,
+<sourceref href="Deck.java"/>, and
+<sourceref href="BlackjackHand.java"/>.</p>
+
+<p>The <localref href="GUI1.ex.10">next exercise</localref> has a picture of a blackjack game that
+you can use a guide, except that the version for this exercise does not allow betting.</p>
+
+</exercise-question>
+<exercise-discuss><p>The constructor for this exercise can be almost identical to that in
+the <sourceref href="HighLowGUI.java">HighLow</sourceref> game.  The text of the buttons
+just has to be changed from "Higher" and "Lower" to "Hit" and "Stand".  However,
+the nested class, <classname>CardPanel</classname> has to be rewritten to
+implement a game of Blackjack instead of a game of HighLow. The basic structure
+of the revised class remains similar to the original.
+All the programming for the game is in this class.</p>
+
+<p>In the HighLow game, there is one "hand," which holds all the cards that
+have been dealt. Blackjack is a two-player game, so there are two hands, one
+for the player and one for the dealer. These hands are of type
+<code>BlackjackHand</code>. So, we need instance variables</p>
+
+<pre>BlackjackHand dealerHand;   // The dealer's cards.
+BlackjackHand playerHand;   // The user's cards.</pre>
+
+<p>We also need a <code>deck</code> and a boolean-valued instance variable,
+<code>gameInProgress</code>, to keep track of the two basic states of the game: Is
+a game in progress, or are we between games. Finally, there is a
+<code>message</code> variable, which holds the string that is shown at the bottom
+of the game board.</p>
+
+<p>The <code>paintComponent()</code> method uses the information in the
+<code>dealerHand</code>, <code>playerHand</code>, <code>message</code>, and
+<code>gameInProgress</code> variables. The reason it needs to look at the
+<code>gameInProgress</code> variable is that when a game is in progress, one of the
+dealer's cards is drawn face down, so the user can't see it. Once the game is
+over, the card is drawn face up so the user can see what the dealer was
+holding. Note that there is no point in the program where I say, "turn the
+dealer's first card face up"! It happens automatically because the state of the
+game changes, and the <code>paintComponent()</code> method checks the state when it
+draws the panel. If the game is over, the card is face up. If the game is in
+progress, the card is face down. This is nice
+example of state-machine thinking.</p>
+
+<p>Note that writing the <code>paintComponent()</code> method required some
+calculation. The cards are 80 pixels wide and 100 pixels tall. Horizontally,
+there is a gap of 10 pixels between cards, and there are gaps of 10 pixels
+between the cards and the left and right edges. The total width needed for the
+card panel, 460, allows for five 80-pixel cards and six 10-pixel gaps:
+ 5*80 + 6*10  = 460.  The panel is another 6 pixels wide because of a 3-pixel wide
+border on each side. The <code>N</code>-th card,
+counting from 0, has its left edge at <code>10+90*N</code>. It might be easier to
+see this as <code>10+80*N+10*N</code>, 10 pixels on the left plus <code>N</code>
+80-pixel cards, plus <code>N</code> 10-pixel gaps between cards. Vertically, I
+allow 30 pixels for each string, "Dealer's Cards" and "Your Cards". This puts
+the top of the first row of cards at <code>y=30</code>. Allowing 100 pixels for
+that row of cards and 30 pixels for the string "Your Cards", the top of the
+second row of cards is at 160. Given all this, you should be able to understand
+the <code>paintComponent()</code> method. Allowing 100 pixels for the second row of
+cards and 30 pixels for the message at the bottom of the board, we need a
+height of at least 290 pixels for the drawing area. I set the preferred height of the CardPanel to
+310 to for some extra space between the cards and the message at the bottom of the
+panel.</p>
+
+<p>In this GUI version of Blackjack, things happen when the user clicks the
+"Hit", "Stand", and "New Game" buttons. The program handles these events by
+calling the routines <code>doHit()</code>, <code>doStand()</code>, and
+<code>doNewGame()</code>. Each of these routines has responsibility for one part of
+the game of Blackjack. Note that each routine starts by checking the state of
+the game to make sure that it is legal to call the routine at this time. If
+<code>gameInProgress</code> is true, the user can legally click "Hit" or "Stand".
+If <code>gameInProgress</code> is false, the user can legally click "New Game". If
+the user made an illegal move, an error message is stored in the
+<code>message</code> variable, and <code>repaint()</code> is called so the user will
+see the new message. This is similar to the way the three buttons in HighLowGUI
+are handled.</p>
+
+<p>The <code>doNewGame()</code> routine has to set up a new game. This means
+creating the deck and hands, shuffling the deck and dealing two cards into each
+hand. At this point, the first time I wrote the game, I just set
+<code>gameInProgress</code> to true, to record the fact that the state of the game
+has changed. Later, I realized that the <code>doNewGame()</code> routine also has
+to check whether one of the players has Blackjack, since there is really no
+other place where this can be done. If one of the players has Blackjack, the
+game is over as soon as it starts, so <code>gameIsProgress</code> has to be false, and the only action
+that the user can take at that point is to click the "New Game" button again.
+(Note that the <code>doNewGame()</code> routine is also called by the constructor
+of the <code>CardPanel</code> class. This sets up the first game, when the
+panel is first created, so the user doesn't have to click on the "New Game"
+button to start the first game.)</p>
+
+<p>When the user clicks "Hit", if the game is in progress, we deal a card into
+the user's hand. At this point, the state of the game might have changed. If
+the user has over 21, the user loses and the game is over. If the user has
+taken 5 cards without going over 21, the user wins and the game is over. In
+either of these cases, the value of the state variable <code>gameInProgress</code>
+becomes <code>false</code>. Otherwise, <code>gameInProgress</code> retains the value
+<code>true</code>, and the game will continue. Since <code>gameInProgress</code> is
+<code>true</code>, the user still has the choice of clicking "Hit" or "Stand".
+(Note that there is no loop in the program that says "while the user continues
+to hit." The progress of the game is driven by events.)</p>
+
+<p>Finally, when the user clicks "Stand", the game is definitely over, so
+<code>gameInProgress</code> is set to false. However, before the game can end, the
+dealer gets to draw cards and a winner is determined. This all has to be done
+in the <code>doStand()</code> routine. Then, the panel is repainted to show the
+final state of the game.</p>
+</exercise-discuss>
+<exercise-code>
+<pre>
+<prog name="BlackjackGUI">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+
+/**
+ * In this program, the user plays a game of Blackjack.  The
+ * computer acts as the dealer.  The user plays by clicking
+ * "Hit!" and "Stand!" buttons.
+ * 
+ * This class defines a panel, but it also contains a main()
+ * routine that makes it possible to run the program as a
+ * stand-alone application.  
+ *
+ * This program depends on the following classes:  Card, Hand,
+ * BlackjackHand, Deck.
+ */
+public class BlackjackGUI extends JPanel {
+   
+   /**
+    * The main routine simply opens a window that shows a BlackjackGUI.
+    */
+   public static void main(String[] args) {
+      JFrame window = new JFrame("Blackjack");
+      BlackjackGUI content = new BlackjackGUI();
+      window.setContentPane(content);
+      window.pack();  // Set size of window to preferred size of its contents.
+      window.setResizable(false);  // User can't change the window's size.
+      Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+      window.setLocation( (screensize.width - window.getWidth())/2, 
+            (screensize.height - window.getHeight())/2 );
+      window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+      window.setVisible(true);
+   }
+      
+   
+   /**
+    * The constructor lays out the panel.  A CardPanel occupies the CENTER 
+    * position of the panel (where CardPanel is a subclass of JPanel that is 
+    * defined below).  On the bottom is a panel that holds three buttons.  
+    * The CardPanel listens for ActionEvents from the buttons and does all 
+    * the real work of the program.
+    */
+   public BlackjackGUI() {
+      
+      setBackground( new Color(130,50,40) );
+      
+      setLayout( new BorderLayout(3,3) );
+      
+      CardPanel board = new CardPanel();
+      add(board, BorderLayout.CENTER);
+      
+      JPanel buttonPanel = new JPanel();
+      buttonPanel.setBackground( new Color(220,200,180) );
+      add(buttonPanel, BorderLayout.SOUTH);
+      
+      JButton hitButton = new JButton( "Hit!" );
+      hitButton.addActionListener(board);
+      buttonPanel.add(hitButton);
+      
+      JButton standButton = new JButton( "Stand!" );
+      standButton.addActionListener(board);
+      buttonPanel.add(standButton);
+      
+      JButton newGame = new JButton( "New Game" );
+      newGame.addActionListener(board);
+      buttonPanel.add(newGame);
+      
+      setBorder(BorderFactory.createLineBorder( new Color(130,50,40), 3) );
+      
+   }  // end constructor
+   
+   
+   
+   /**
+    * A nested class that displays the game and does all the work
+    * of keeping track of the state and responding to user events.
+    */
+   private class CardPanel extends JPanel implements ActionListener {
+      
+      Deck deck;         // A deck of cards to be used in the game.
+      
+      BlackjackHand dealerHand;   // Hand containing the dealer's cards.
+      BlackjackHand playerHand;   // Hand containing the user's cards.
+      
+      String message;  // A message drawn on the canvas, which changes
+                       //    to reflect the state of the game.
+      
+      boolean gameInProgress;  // Set to true when a game begins and to false
+                               //   when the game ends.
+      
+      Font bigFont;      // Font that will be used to display the message.
+      Font smallFont;    // Font that will be used to draw the cards.
+      
+      
+      /**
+       * The constructor creates the fonts and starts the first game.
+       * It also sets a preferred size of 460-by-310 for the panel.
+       * The paintComponent() method assumes that this is in fact the
+       * size of the panel (although it can be a little taller with
+       * no bad effect).
+       */
+      CardPanel() {
+         setPreferredSize( new Dimension(460,310) );
+         setBackground( new Color(0,120,0) );
+         smallFont = new Font("SansSerif", Font.PLAIN, 12);
+         bigFont = new Font("Serif", Font.BOLD, 14);
+         doNewGame();
+      }
+      
+      /**
+       * Respond when the user clicks on a button by calling the appropriate 
+       * method.  Note that the buttons are created and listening is set
+       * up in the constructor of the BlackjackGUI class.
+       */
+      public void actionPerformed(ActionEvent evt) {
+         String command = evt.getActionCommand();
+         if (command.equals("Hit!"))
+            doHit();
+         else if (command.equals("Stand!"))
+            doStand();
+         else if (command.equals("New Game"))
+            doNewGame();
+      }
+      
+      
+      /**
+       * This method is called when the user clicks the "Hit!" button.  First 
+       * check that a game is actually in progress.  If not, give  an error 
+       * message and exit.  Otherwise, give the user a card.  The game can end 
+       * at this point if the user goes over 21 or if the user has taken 5 cards 
+       * without going over 21.
+       */
+      void doHit() {
+         if (gameInProgress == false) {
+            message = "Click \"New Game\" to start a new game.";
+            repaint();
+            return;
+         }
+         playerHand.addCard( deck.dealCard() );
+         if ( playerHand.getBlackjackValue() &gt; 21 ) {
+            message = "You've busted!  Sorry, you lose.";
+            gameInProgress = false;
+         }
+         else if (playerHand.getCardCount() == 5) {
+            message = "You win by taking 5 cards without going over 21.";
+            gameInProgress = false;
+         }
+         else {
+            message = "You have " + playerHand.getBlackjackValue() + ".  Hit or Stand?";
+         }
+         repaint();
+      }
+      
+      
+      /**
+       * This method is called when the user clicks the "Stand!" button.
+       * Check whether a game is actually in progress.  If it is, the game 
+       * ends.  The dealer takes cards until either the dealer has 5 cards 
+       * or more than 16 points.  Then the  winner of the game is determined. 
+       */
+      void doStand() {
+         if (gameInProgress == false) {
+            message = "Click \"New Game\" to start a new game.";
+            repaint();
+            return;
+         }
+         gameInProgress = false;
+         while (dealerHand.getBlackjackValue() &lt;= 16 &amp;&amp; dealerHand.getCardCount() &lt; 5)
+            dealerHand.addCard( deck.dealCard() );
+         if (dealerHand.getBlackjackValue() &gt; 21)
+            message = "You win!  Dealer has busted with " + dealerHand.getBlackjackValue() + ".";
+         else if (dealerHand.getCardCount() == 5)
+            message = "Sorry, you lose.  Dealer took 5 cards without going over 21.";
+         else if (dealerHand.getBlackjackValue() &gt; playerHand.getBlackjackValue())
+            message = "Sorry, you lose, " + dealerHand.getBlackjackValue()
+                        + " to " + playerHand.getBlackjackValue() + ".";
+         else if (dealerHand.getBlackjackValue() == playerHand.getBlackjackValue())
+            message = "Sorry, you lose.  Dealer wins on a tie.";
+         else
+            message = "You win, " + playerHand.getBlackjackValue()
+                        + " to " + dealerHand.getBlackjackValue() + "!";
+         repaint();
+      }
+      
+      
+      /**
+       * Called by the constructor, and called by actionPerformed() if  the 
+       * user clicks the "New Game" button.  Start a new game.  Deal two cards 
+       * to each player.  The game might end right then  if one of the players 
+       * had blackjack.  Otherwise, gameInProgress is set to true and the game 
+       * begins.
+       */
+      void doNewGame() {
+         if (gameInProgress) {
+               // If the current game is not over, it is an error to try
+               // to start a new game.
+            message = "You still have to finish this game!";
+            repaint();
+            return;
+         }
+         deck = new Deck();   // Create the deck and hands to use for this game.
+         dealerHand = new BlackjackHand();
+         playerHand = new BlackjackHand();
+         deck.shuffle();
+         dealerHand.addCard( deck.dealCard() );  // Deal two cards to each player.
+         dealerHand.addCard( deck.dealCard() );
+         playerHand.addCard( deck.dealCard() );
+         playerHand.addCard( deck.dealCard() );
+         if (dealerHand.getBlackjackValue() == 21) {
+            message = "Sorry, you lose.  Dealer has Blackjack.";
+            gameInProgress = false;
+         }
+         else if (playerHand.getBlackjackValue() == 21) {
+            message = "You win!  You have Blackjack.";
+            gameInProgress = false;
+         }
+         else {
+            message = "You have " + playerHand.getBlackjackValue() + ".  Hit or stand?";
+            gameInProgress = true;
+         }
+         repaint();
+      }  // end newGame();
+      
+      
+      /**
+       * The paint method shows the message at the bottom of the
+       * canvas, and it draws all of the dealt cards spread out
+       * across the canvas.
+       */
+      public void paintComponent(Graphics g) {
+         
+         super.paintComponent(g); // fill with background color.
+         
+         g.setFont(bigFont);
+         g.setColor(Color.GREEN);
+         g.drawString(message, 10, getHeight() - 10);
+         
+         // Draw labels for the two sets of cards.
+         
+         g.drawString("Dealer's Cards:", 10, 23);
+         g.drawString("Your Cards:", 10, 153);
+         
+         // Draw dealer's cards.  Draw first card face down if
+         // the game is still in progress,  It will be revealed
+         // when the game ends.
+         
+         g.setFont(smallFont);
+         if (gameInProgress)
+            drawCard(g, null, 10, 30);
+         else
+            drawCard(g, dealerHand.getCard(0), 10, 30);
+         for (int i = 1; i &lt; dealerHand.getCardCount(); i++)
+            drawCard(g, dealerHand.getCard(i), 10 + i * 90, 30);
+         
+         // Draw the user's cards.
+         
+         for (int i = 0; i &lt; playerHand.getCardCount(); i++)
+            drawCard(g, playerHand.getCard(i), 10 + i * 90, 160);
+         
+      }  // end paint();
+      
+      
+      /**
+       * Draws a card as a 80 by 100 rectangle with upper left corner at (x,y).
+       * The card is drawn in the graphics context g.  If card is null, then
+       * a face-down card is drawn.  (The cards are rather primitive!)
+       */
+      void drawCard(Graphics g, Card card, int x, int y) {
+         if (card == null) {  
+               // Draw a face-down card
+            g.setColor(Color.blue);
+            g.fillRect(x,y,80,100);
+            g.setColor(Color.white);
+            g.drawRect(x+3,y+3,73,93);
+            g.drawRect(x+4,y+4,71,91);
+         }
+         else {
+            g.setColor(Color.white);
+            g.fillRect(x,y,80,100);
+            g.setColor(Color.gray);
+            g.drawRect(x,y,79,99);
+            g.drawRect(x+1,y+1,77,97);
+            if (card.getSuit() == Card.DIAMONDS || card.getSuit() == Card.HEARTS)
+               g.setColor(Color.red);
+            else
+               g.setColor(Color.black);
+            g.drawString(card.getValueAsString(), x + 10, y + 30);
+            g.drawString("of", x+ 10, y + 50);
+            g.drawString(card.getSuitAsString(), x + 10, y + 70);
+         }
+      }  // end drawCard()
+      
+      
+   } // end nested class CardPanel
+   
+   
+} // end class BlackjackGUI
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+<exercise id="GUI1.ex.10">
+<exercise-question><p>In the Blackjack game 
+from <localref href="GUI1.ex.9"/>, the user can click on the "Hit",
+"Stand", and "NewGame" buttons even when it doesn't make sense to do so. It
+would be better if the buttons were disabled at the appropriate times. The "New
+Game" button should be disabled when there is a game in progress. The "Hit" and
+"Stand" buttons should be disabled when there is not a game in progress. The
+instance variable <code>gameInProgress</code> tells whether or not a game is in
+progress, so you just have to make sure that the buttons are properly enabled
+and disabled whenever this variable changes value. 
+I strongly advise writing a subroutine that can be called whenever it is
+necessary to set the value of the <code>gameInProgress</code> variable. Then the
+subroutine can take responsibility for enabling and disabling the buttons.
+Recall that if <code>bttn</code> is a variable of type <code>JButton</code>, then
+<code>bttn.setEnabled(false)</code> disables the button and
+<code>bttn.setEnabled(true)</code> enables the button.</p>
+
+<p>As a second (and more difficult) improvement, make it possible
+for the user to place bets on the Blackjack game. When the program starts, give
+the user $100. Add a <classname>JTextField</classname> to the strip of controls along the
+bottom of the panel. The user can enter the bet in this <classname>JTextField</classname>.
+When the game begins, check the amount of the bet. You should do this when the
+game begins, not when it ends, because several errors can occur: The contents
+of the <classname>JTextField</classname> might not be a legal number, the bet that the user
+places might be more money than the user has, or the bet might be &lt;= 0. You
+should detect these errors and show an error message instead of starting the
+game. The user's bet should be an integral number of dollars.</p>
+
+<p>It would be a good idea to make the <classname>JTextField</classname> uneditable while the
+game is in progress. If <code>betInput</code> is the <classname>JTextField</classname>, you can
+make it editable and uneditable by the user with the commands
+<code>betInput.setEditable(true)</code> and <code>betInput.setEditable(false)</code>.</p>
+
+<p>In the <code>paintComponent()</code> method, you should include commands to
+display the amount of money that the user has left.</p>
+
+<p>There is one other thing to think about: Ideally, the program should not start a new
+game when it is first created. The user should have a chance to set a bet
+amount before the game starts. So, in the constructor for the drawing surface class, you
+should not call <code>doNewGame()</code>. You might want to display a message such
+as "Welcome to Blackjack" before the first game starts.</p>
+   
+<p>Here is a picture of my program:</p>
+<img src="blackjack-gui.png" width="466" height="374" alt="a blackjack game in progress"
+       tex="blackjack-gui.eps" texscale="0.5"/>
+</exercise-question>
+<exercise-discuss> <p>In the original program, the button variables are declared in the
+constructor of the main class, where the buttons are created. There are
+no instance variables that refer to the buttons, so it is not possible to do
+anything with the buttons outside the constructor. For this
+exercise, references to the buttons must be stored in instance variables. 
+The program uses instance variables <code>hitButton</code>, <code>standButton</code>, and
+<code>newGameButton</code> to refer to the buttons. These
+variables are required in order to call the buttons' <code>setEnabled()</code>
+methods.  I also introduced a <classname>JTextField</classname>, <code>betInput</code>, as an instance
+variable and modified the constructor so that it creates the text field and adds it
+to the panel that occupies the <code>SOUTH</code> position in the main panel.</p>
+
+
+<p>The buttons must be enabled and
+disabled whenever the value of the variable <code>gameInProgress</code> changes. 
+At the same time, the text field should be made editable or non-editable.  As
+recommended in the exercise, I wrote a method for changing the value of 
+<code>gameInProgress</code>. This method also sets the buttons and text field to reflect the
+state of the program, which allows the state of the buttons and text field
+to be controlled in one location:</p>
+
+<pre>/**
+ * This method is called whenever the value of the gameInProgress
+ * property has to be changed.  In addition to setting the value
+ * of the gameInProgress variable, it also enables and disables
+ * the buttons and text input box to reflect the state of the
+ * game.
+ * @param inProgress The new value of gameInProgress.
+ */
+private void setGameInProgress( boolean inProgress ) {
+   gameInProgress = inProgress;
+   if (gameInProgress) {
+      hitButton.setEnabled(true);
+      standButton.setEnabled(true);
+      newGameButton.setEnabled(false);
+      betInput.setEditable(false);
+   }
+   else {
+      hitButton.setEnabled(false);
+      standButton.setEnabled(false);
+      newGameButton.setEnabled(true);
+      betInput.setEditable(true);
+   }
+}</pre>
+
+<p>Once this routine is available, then any line in the old program that said
+"<code>gameInProgress&nbsp;=&nbsp;false;</code>" should be changed to
+"<code>setGameInProgress(false);</code>". And any line that said
+"<code>gameInProgress&nbsp;=&nbsp;true;</code>" should be changed to
+"<code>setGameInProgress(true);</code>". In this way, we can be sure that the
+buttons are always properly enabled and disabled.  Note that I added
+lines to the <classname>BlackjackGUI2</classname> constructor to disable
+<code>hitButton</code> and <code>standButton</code> when they are created.
+This ensures that they have the correct state at the start of the program,
+before the first game has been started.</p>
+
+<p>You should understand why I used a subroutine to set the value of
+<code>gameInProgress</code>. Every time <code>gameInProgress</code> changes, each of
+the buttons has to be enabled or disabled and the text field has
+to be made editable or uneditable. That's four extra lines of code
+each time the program says <code>gameInProgress&nbsp;=&nbsp;true</code> 
+or <code>gameInProgress&nbsp;=&nbsp;false</code>. We can avoid some extra typing by calling the subroutine.
+Furthermore, if we always call the subroutine to set the value of
+<code>gameInProgress</code>, we can be sure that the states of the buttons and text field will
+always be set correctly to match the value of <code>gameInProgress</code>.
+</p>
+   
+<p>The changes that I've discussed so far are enough to complete the first part
+of the exercise, enabling and disabling the buttons.  We still have to implement
+betting.</p>
+   
+<break/>
+   
+<p>The <classname>JTextField</classname> for the user's input
+is created with the command "<code>betInput = new
+JTextField("10",5);</code>". The first parameter in the constructor specifies the
+initial content of the text input box. This is meant as a reasonable value for
+the bet, but the user can change it if he wants to. The second parameter is
+important. It specifies the number of characters that the text field
+is designed to hold. The preferred size of the <classname>JTextField</classname> is computed
+based on this number of characters. If the text field were being used
+in a context where it would be stretched to fit the available size, such as in
+a <classname>GridLayout</classname>, the preferred size would not be so important. However, in
+this program, the <classname>JTextField</classname> is used with a <classname>FlowLayout</classname>, and it
+will appear at exactly its preferred size. If you leave out the second
+parameter in the constructor, the <code>JTextField</code> will be sized to fit its
+contents, "10", and it will look too small.</p>
+
+<p>The <classname>CardPanel</classname> class contains two new instance variables for
+managing the user's bets. One variable, <code>usersMoney</code>, records the amount
+of money that the user has. The other, <code>betAmount</code>, records the amount
+of the user's bet on the current game. The value of <code>usersMoney</code> is
+initialized to 100 in the constructor. At the end of a game, if the user wins,
+the <code>betAmount</code> is added to the user's money, and if the user loses, the
+<code>betAmount</code> is subtracted from the user's money. We have to decide what
+happens if the user runs out of money. One possibility would be to shut the
+game down, but that seems drastic since it's only play money anyway. So, if the
+value of <code>usersMoney</code> drops to zero, I give the user another $100 at the
+start of the next game.</p>
+   
+<p>At the beginning of a game, the program has to look at the number in the text
+field to determine how much money the user wants to bet on the game.  Several things
+can go wrong at this time.  Since it's a little complicated, I wrote a method
+to check the contents of <code>betInput</code>:</p>
+   
+<pre>/**
+ * This is called when the user wants to start a new game.  It tries to
+ * read the amount of the user's bet from the betInput text field.  If an error
+ * occurs, the message in the panel is changed to inform the user of the error.
+ * @return true if the bet is read without error, or false if an error occurs
+ */
+private boolean checkBet() {
+   int amount;
+   try {
+      amount = Integer.parseInt( betInput.getText() );
+   }
+   catch (NumberFormatException e) {
+      message = "The bet amount must be a legal positive integer.";
+      repaint();
+      return false;
+   }
+   if (amount &lt;= 0) {
+      message = "The bet amount must be a positive integer.";
+      repaint();
+      return false;
+   }
+   if (amount > usersMoney) {
+      message = "You can't bet more money than you have!";
+      repaint();
+      return false;
+   }
+   betAmount = amount;
+   return true;
+}</pre>
+
+<p>The <code>doNewGame()</code> method starts by checking if <code>usersMoney</code> is
+0; if so, it gives the user another $100 by setting <code>usersMoney</code> to 100.
+Then it checks the user's bet by calling the <code>checkBet()</code> method.
+If the return value is false, meaning that the value in the text field was not
+a valid bet, then the <code>doNewGame()</code> method returns without starting
+a new game.  Otherwise, it starts the game as it did in the old program.</p>
+  
+<p>When the game ends for any reason, the user's money has to be adjusted. There are many points
+in the source code where the game ends. In each of those places, I inserted a line
+"<code>usersMoney = usersMoney + betAmount</code>" if the user won or
+"<code>usersMoney = usersMoney - betAmount</code>" if the user lost.  It might
+have been a good idea to write another subroutine to handle this task.</p>
+   
+<p>I also added some code to the <code>paintComponent()</code> method to display
+the user's current amount of money. To accommodate this, this version of the panel has to
+be about 30 pixels taller than the previous version.</p>
+
+<p>One of the tricky parts of this assignment is to arrange things so that a
+game does not start as soon as the panel is created. It's no problem to take
+the "<code>doNewGame();</code>" statement out of the constructor in the
+<code>CardPanel</code> class. Some initialization has to be done there
+instead:</p>
+
+<pre>usersMoney = 100;
+message = "Welcome to Blackjack!  You start with $100.";</pre>
+   
+<p>However, when I did this,  I ran into a <classname>NullPointerException</classname> in the
+<code>paintComponent()</code> method because the
+<code>paintComponent()</code> method assumed that two <classname>Hand</classname> objects,
+<code>dealerHand</code> and <code>playerHand</code>, exist. These
+objects are created in the <code>doNewGame()</code> method,
+so removing the call to <code>doNewGame()</code> from the constructor meant that the
+hands were <code>null</code> when <code>paintComponent()</code> was first called.
+This just required a simple modification in the
+<code>paintComponent()</code> method to deal with this possibility. I decided simply to
+return from <code>paintComponent()</code> after drawing the messages, 
+if the hands don't exist. (An
+alternative would be to have some fancy introductory screen.)</p>
+
+<p>(I should also confess that I had problems with null pointer exceptions
+when I tried to run the program <i>without</i> removing the call to
+<code>doNewGame()</code> from the constructor. In this case, the problem was more
+subtle:  The <classname>CardPanel</classname> constructor was being called
+before the button and text field objects had been created, so 
+<code>doNewGame()</code> was trying to enable/disable buttons that didn't
+exist yet.)</p>
+</exercise-discuss>
+<exercise-code>
+<p>Here is the new version of the blackjack source code, with changes from
+<localref href="GUI1.ex.9"/> shown in &newcodestyle;:</p>
+<pre>
+<prog name="BlackjackGUI2">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**
+ * In this program, the user plays a game of Blackjack.  The
+ * computer acts as the dealer.  The user plays by clicking
+ * "Hit!" and "Stand!" buttons.  <newcode>The user can place bets.
+ * At the beginning of the game, the user is given $100.</newcode>
+ * 
+ * This class defines a panel, but it also contains a main()
+ * routine that makes it possible to run the program as a
+ * stand-alone application. 
+ *
+ * This program depends on the following classes:  Card, Hand,
+ * BlackjackHand, Deck.
+ */
+public class BlackjackGUI2 extends JPanel {
+   
+   /**
+    * The main routine simply opens a window that shows a BlackjackGUI2.
+    */
+   public static void main(String[] args) {
+      JFrame window = new JFrame("Blackjack");
+      BlackjackGUI2 content = new BlackjackGUI2();
+      window.setContentPane(content);
+      window.pack();  // Set size of window to preferred size of its contents.
+      window.setResizable(false);  // User can't change the window's size.
+      Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+      window.setLocation( (screensize.width - window.getWidth())/2, 
+            (screensize.height - window.getHeight())/2 );
+      window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+      window.setVisible(true);
+   }
+      
+
+   <newcode>private JButton hitButton;     // The three buttons that control the game.
+   private JButton standButton;
+   private JButton newGameButton;
+   private JTextField betInput;  // Where the user inputs the amount of his bet.</newcode>
+   
+   
+   /**
+    * The constructor lays out the panel.  A CardPanel occupies the CENTER 
+    * position of the panel (where CardPanel is a subclass of JPanel that is 
+    * defined below).  On the bottom is a panel that holds three buttons.  
+    * The CardPanel listens for ActionEvents from the buttons and does all 
+    * the real work of the program.
+    */
+   public BlackjackGUI2() {
+      
+      setBackground( new Color(130,50,40) );
+      
+      setLayout( new BorderLayout(3,3) );
+      
+      CardPanel board = new CardPanel();
+      add(board, BorderLayout.CENTER);
+      
+      JPanel buttonPanel = new JPanel();
+      buttonPanel.setBackground( new Color(220,200,180) );
+      add(buttonPanel, BorderLayout.SOUTH);
+      
+      <newcode>// NOTE: Declarations of hitButton, standButton, newGameButton were moved
+      // out of the constructor.  Previously, they were local variables.</newcode>
+   
+      hitButton = new JButton( "Hit!" );
+      <newcode>hitButton.setEnabled(false);</newcode>
+      hitButton.addActionListener(board);
+      buttonPanel.add(hitButton);
+      
+      standButton = new JButton( "Stand!" );
+      <newcode>standButton.setEnabled(false);</newcode>
+      standButton.addActionListener(board);
+      buttonPanel.add(standButton);
+      
+      newGameButton = new JButton( "New Game" );
+      newGameButton.addActionListener(board);
+      buttonPanel.add(newGameButton);
+      
+      <newcode>buttonPanel.add(new JLabel("  Bet:", JLabel.RIGHT));
+      
+      betInput = new JTextField("10", 5);
+      betInput.setMargin( new Insets(3,3,3,3) );
+      buttonPanel.add(betInput);</newcode>
+      
+      setBorder(BorderFactory.createLineBorder( new Color(130,50,40), 3) );
+      
+   }  // end constructor
+   
+   
+   
+   /**
+    * A nested class that displays the game and does all the work
+    * of keeping track of the state and responding to user events.
+    */
+   private class CardPanel extends JPanel implements ActionListener {
+      
+      Deck deck;         // A deck of cards to be used in the game.
+      
+      BlackjackHand dealerHand;   // Hand containing the dealer's cards.
+      BlackjackHand playerHand;   // Hand containing the user's cards.
+      
+      String message;  // A message drawn on the canvas, which changes
+                       //    to reflect the state of the game.
+      
+      boolean gameInProgress;  // Set to true when a game begins and to false
+                               //   when the game ends.
+      
+      Font bigFont;      // Font that will be used to display the message.
+      Font smallFont;    // Font that will be used to draw the cards.
+
+      <newcode>int usersMoney;    // The amount of money that the user currently has.
+      int betAmount;     // The bet amount, read from betInput when game starts.</newcode>
+
+      
+      /**
+       * The constructor creates the fonts and starts the first game.
+       * It also sets a preferred size of 460-by-330 for the panel.
+       * The paintComponent() method assumes that this is in fact the
+       * size of the panel (although it can be a little taller with
+       * no bad effect).
+       */
+      CardPanel() {
+         setPreferredSize( new Dimension(460,<newcode>330</newcode>) );
+         setBackground( new Color(0,120,0) );
+         smallFont = new Font("SansSerif", Font.PLAIN, 12);
+         bigFont = new Font("Serif", Font.BOLD, 14);
+         <newcode>usersMoney = 100;
+         message = "Welcome to Blackjack!  You start with $100.";</newcode>
+      }
+      
+      
+      <newcode>/**
+       * This method is called whenever the value of the gameInProgress
+       * property has to be changed.  In addition to setting the value
+       * of the gameInProgress variable, it also enables and disables
+       * the buttons and text input box to reflect the state of the
+       * game.
+       * @param inProgress The new value of gameInProgress.
+       */
+      private void setGameInProgress( boolean inProgress ) {
+         gameInProgress = inProgress;
+         if (gameInProgress) {
+            hitButton.setEnabled(true);
+            standButton.setEnabled(true);
+            newGameButton.setEnabled(false);
+            betInput.setEditable(false);
+         }
+         else {
+            hitButton.setEnabled(false);
+            standButton.setEnabled(false);
+            newGameButton.setEnabled(true);
+            betInput.setEditable(true);
+         }
+      }
+      
+      
+      /**
+       * This is called when the user wants to start a new game.  It tries to
+       * read the amount of the user's bet from the betInput text field.  If an error
+       * occurs, the message in the panel is changed to inform the user of the error.
+       * @return true if the bet is read without error, or false if an error occurs
+       */
+      private boolean checkBet() {
+         int amount;
+         try {
+            amount = Integer.parseInt( betInput.getText() );
+         }
+         catch (NumberFormatException e) {
+            message = "The bet amount must be a legal positive integer.";
+            repaint();
+            return false;
+         }
+         if (amount &lt;= 0) {
+            message = "The bet amount must be a positive integer.";
+            repaint();
+            return false;
+         }
+         if (amount &gt; usersMoney) {
+            message = "You can't bet more money than you have!";
+            repaint();
+            return false;
+         }
+         betAmount = amount;
+         return true;
+      }</newcode>
+   
+      
+      /**
+       * Respond when the user clicks on a button by calling the appropriate 
+       * method.  Note that the buttons are created and listening is set
+       * up in the constructor of the BlackjackPanel class.
+       */
+      public void actionPerformed(ActionEvent evt) {
+         String command = evt.getActionCommand();
+         if (command.equals("Hit!"))
+            doHit();
+         else if (command.equals("Stand!"))
+            doStand();
+         else if (command.equals("New Game"))
+            doNewGame();
+      }
+      
+      
+      /**
+       * This method is called when the user clicks the "Hit!" button.  First 
+       * check that a game is actually in progress.  If not, give  an error 
+       * message and exit.  Otherwise, give the user a card.  The game can end 
+       * at this point if the user goes over 21 or if the user has taken 5 cards 
+       * without going over 21.
+       */
+      void doHit() {
+         if (gameInProgress == false) {  <newcode>// Should not be possible!</newcode>
+            message = "Click \"New Game\" to start a new game.";
+            repaint();
+            return;
+         }
+         playerHand.addCard( deck.dealCard() );
+         if ( playerHand.getBlackjackValue() &gt; 21 ) {
+            <newcode>usersMoney = usersMoney - betAmount;</newcode>
+            message = "You've busted!  Sorry, you lose.";
+            <newcode>setGameInProgress(false);</newcode>
+         }
+         else if (playerHand.getCardCount() == 5) {
+            <newcode>usersMoney = usersMoney + betAmount;</newcode>
+            message = "You win by taking 5 cards without going over 21.";
+            <newcode>setGameInProgress(false);</newcode>
+         }
+         else {
+            message = "You have " + playerHand.getBlackjackValue() + ".  Hit or Stand?";
+         }
+         repaint();
+      }
+      
+      
+      /**
+       * This method is called when the user clicks the "Stand!" button.
+       * Check whether a game is actually in progress.  If it is, the game 
+       * ends.  The dealer takes cards until either the dealer has 5 cards 
+       * or more than 16 points.  Then the  winner of the game is determined. 
+       */
+      void doStand() {
+         if (gameInProgress == false) {  <newcode>// Should not be possible!</newcode>
+            message = "Click \"New Game\" to start a new game.";
+            repaint();
+            return;
+         }
+         <newcode>setGameInProgress(false);</newcode>
+         while (dealerHand.getBlackjackValue() &lt;= 16 &amp;&amp; dealerHand.getCardCount() &lt; 5)
+            dealerHand.addCard( deck.dealCard() );
+         if (dealerHand.getBlackjackValue() &gt; 21) {
+            <newcode>usersMoney = usersMoney + betAmount;</newcode>  
+            message = "You win!  Dealer has busted with " + dealerHand.getBlackjackValue() + ".";
+         }
+         else if (dealerHand.getCardCount() == 5) {
+            <newcode>usersMoney = usersMoney - betAmount;</newcode> 
+            message = "Sorry, you lose.  Dealer took 5 cards without going over 21.";
+         }
+         else if (dealerHand.getBlackjackValue() &gt; playerHand.getBlackjackValue()) {
+            <newcode>usersMoney = usersMoney - betAmount;</newcode>
+            message = "Sorry, you lose, " + dealerHand.getBlackjackValue()
+               +    " to " + playerHand.getBlackjackValue() + ".";
+         }
+         else if (dealerHand.getBlackjackValue() == playerHand.getBlackjackValue()) {
+            <newcode>usersMoney = usersMoney - betAmount;</newcode> 
+            message = "Sorry, you lose.  Dealer wins on a tie.";
+         }
+         else {
+            <newcode>usersMoney = usersMoney + betAmount;</newcode> 
+            message = "You win, " + playerHand.getBlackjackValue()
+                  + " to " + dealerHand.getBlackjackValue() + "!";
+         }
+         repaint();
+      }
+      
+      
+      /**
+       * Called by the constructor, and called by actionPerformed() if  the 
+       * user clicks the "New Game" button.  Start a new game.  Deal two cards 
+       * to each player.  The game might end right then  if one of the players 
+       * had blackjack.  Otherwise, gameInProgress is set to true and the game 
+       * begins.
+       */
+      void doNewGame() {
+         if (gameInProgress) {
+               // If the current game is not over, it is an error to try
+               // to start a new game.  <newcode>This shouldn't be possible because
+               // the new game button is disabled while a game is in progress,
+               // but it doesn't hurt anything to check anyway.</newcode>
+            message = "You still have to finish this game!";
+            repaint();
+            return;
+         }
+         <newcode>if (usersMoney == 0) {
+               // The user has run out of money; give the user another $100.
+            usersMoney = 100;
+         }
+         if ( ! checkBet() ) {
+               // The user's bet was not legal, so we can't start a game.
+               // The checkBet method has already given an error message.
+            return;
+         }</newcode>
+         deck = new Deck();   // Create the deck and hands to use for this game.
+         dealerHand = new BlackjackHand();
+         playerHand = new BlackjackHand();
+         deck.shuffle();
+         dealerHand.addCard( deck.dealCard() );  // Deal two cards to each player.
+         dealerHand.addCard( deck.dealCard() );
+         playerHand.addCard( deck.dealCard() );
+         playerHand.addCard( deck.dealCard() );
+         if (dealerHand.getBlackjackValue() == 21) {
+            message = "Sorry, you lose.  Dealer has Blackjack.";
+            <newcode>usersMoney = usersMoney - betAmount; 
+            setGameInProgress(false);</newcode>
+         }
+         else if (playerHand.getBlackjackValue() == 21) {
+            message = "You win!  You have Blackjack.";
+            <newcode>usersMoney = usersMoney + betAmount;  
+            setGameInProgress(false);</newcode>
+         }
+         else {
+            message = "You have " + playerHand.getBlackjackValue() + ".  Hit or stand?";
+            <newcode>setGameInProgress(true);</newcode>
+         }
+         repaint();
+      }  // end newGame();
+      
+      
+      /**
+       * The paint method shows the message at the bottom of the
+       * canvas, and it draws all of the dealt cards spread out
+       * across the canvas.
+       */
+      public void paintComponent(Graphics g) {
+         
+         super.paintComponent(g); // fill with background color.
+         
+         g.setFont(bigFont);
+         g.setColor(Color.GREEN);
+         g.drawString(message, 10, getHeight() - 10);
+         
+         <newcode>// Draw a message telling how much money the user has.
+         
+         g.setColor(Color.YELLOW);
+         if (usersMoney &gt; 0)
+            g.drawString("You have $" + usersMoney, 10, getHeight() - 35);
+         else
+            g.drawString("YOU ARE BROKE!  (I will give you another $100.)", 
+                  10, getHeight() - 32 );
+         
+         if (dealerHand == null)
+            return;  // the first game has not yet started.</newcode>
+         
+         // Draw labels for the two sets of cards.
+         
+         g.setColor(Color.GREEN);
+         g.drawString("Dealer's Cards:", 10, 23);
+         g.drawString("Your Cards:", 10, 153);
+         
+         // Draw dealer's cards.  Draw first card face down if
+         // the game is still in progress,  It will be revealed
+         // when the game ends.
+         
+         g.setFont(smallFont);
+         if (gameInProgress)
+            drawCard(g, null, 10, 30);
+         else
+            drawCard(g, dealerHand.getCard(0), 10, 30);
+         for (int i = 1; i &lt; dealerHand.getCardCount(); i++)
+            drawCard(g, dealerHand.getCard(i), 10 + i * 90, 30);
+         
+         // Draw the user's cards.
+         
+         for (int i = 0; i &lt; playerHand.getCardCount(); i++)
+            drawCard(g, playerHand.getCard(i), 10 + i * 90, 160);
+         
+      }  // end paintComponent();
+      
+      
+      /**
+       * Draws a card as a 80 by 100 rectangle with upper left corner at (x,y).
+       * The card is drawn in the graphics context g.  If card is null, then
+       * a face-down card is drawn.  (The cards are rather primitive!)
+       */
+      void drawCard(Graphics g, Card card, int x, int y) {
+         if (card == null) {  
+               // Draw a face-down card
+            g.setColor(Color.blue);
+            g.fillRect(x,y,80,100);
+            g.setColor(Color.white);
+            g.drawRect(x+3,y+3,73,93);
+            g.drawRect(x+4,y+4,71,91);
+         }
+         else {
+            g.setColor(Color.white);
+            g.fillRect(x,y,80,100);
+            g.setColor(Color.gray);
+            g.drawRect(x,y,79,99);
+            g.drawRect(x+1,y+1,77,97);
+            if (card.getSuit() == Card.DIAMONDS || card.getSuit() == Card.HEARTS)
+               g.setColor(Color.red);
+            else
+               g.setColor(Color.black);
+            g.drawString(card.getValueAsString(), x + 10, y + 30);
+            g.drawString("of", x+ 10, y + 50);
+            g.drawString(card.getSuitAsString(), x + 10, y + 70);
+         }
+      }  // end drawCard()
+      
+      
+   } // end nested class CardPanel
+   
+   
+} // end class BlackjackGUI2
+</prog></pre>
+</exercise-code>
+</exercise>
+
+</exercises>

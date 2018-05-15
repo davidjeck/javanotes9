@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="arrays.3" title="ArrayList">
+   
+   
+<p><start><big>A</big>s we have just seen</start> in <localref href="arrays.2.4"/>,
+we can easily encode the dynamic array pattern into a class, but it looks like
+we need a different class for each data type.  In fact, Java has a feature called
+"parameterized types" that makes it possible to avoid the multitude of classes, and
+Java has a single class named <classname>ArrayList</classname> that implements the
+dynamic array pattern for all data types.</p>
+ 
+
+<subsection id="arrays.3.1" title="ArrayList and Parameterized Types">   
+
+<p>Java has a standard type <atype>ArrayList&lt;String&gt;</atype> that represents
+dynamic arrays of <classname>Strings</classname>.  Similarly, there is a type <atype>ArrayList&lt;JButton&gt;</atype>
+that can be used to represent dynamic arrays of <classname>JButtons</classname>.  And if
+<classname>Player</classname> is a class representing players in a game, then
+the type <atype>ArrayList&lt;Player&gt;</atype> can be used to represent a dynamic
+array of <classname>Players</classname>.</p>
+
+<p>It might look like we still have a multitude of classes here, but in fact there
+is only one class, the <classname>ArrayList</classname> class, defined in the package
+<code>java.util</code>.  But <classname>ArrayList</classname> is a 
+<newword>parameterized type</newword>.  A parameterized type can take a type
+parameter, so that from the single class <classname>ArrayList</classname>,
+we get a multitude of types including <atype>ArrayList&lt;String&gt;</atype>,
+<atype>ArrayList&lt;JButton&gt;</atype>, and in fact <atype>ArrayList&lt;T&gt;</atype>
+for any object type <classname>T</classname>.  The type parameter <classname>T</classname>
+must be an object type such as a class name or an interface name.  It cannot be
+a primitive type.  This means that, unfortunately, you can not have an ArrayList of
+<ptype>int</ptype> or an ArrayList of <ptype>char</ptype>.</p>
+
+<p>Consider the type <atype>ArrayList&lt;String&gt;</atype>.  As a type, it can
+be used to declare variables, such as</p>
+
+<pre>ArrayList&lt;String&gt; namelist;</pre>
+
+<np>It can also be used as the type of a formal parameter in a subroutine definition,
+or as the return type of a subroutine.  It can be used with the <code>new</code>
+operator to create objects:</np>
+
+<pre>namelist = new ArrayList&lt;String&gt;();</pre>
+
+<np>The object created in this way is of type <atype>ArrayList&lt;String&gt;</atype> and
+represents a dynamic list of strings.  It has instance methods such as
+<code>namelist.add(str)</code> for adding a <classname>String</classname> to the list,
+<code>namelist.get(i)</code> for getting the string at index <code>i</code>,
+and <code>namelist.size()</code> for getting the number of items currently in the list.</np>
+
+<p>But we can also use <classname>ArrayList</classname> with other types.
+If <classname>Player</classname> is a class representing players in a game, we can
+create a list of players with</p>
+
+<pre>ArrayList&lt;Player&gt; playerList = new ArrayList&lt;Player&gt;();</pre>
+
+<np>Then to add a player, <code>plr</code>, to the game, we just have to say
+<code>playerList.add(plr)</code>.  And we can remove player number <code>k</code>
+with <code>playerList.remove(k)</code>.</np>
+
+<p>When you use a type such as <atype>ArrayList&lt;T&gt;</atype>, the compiler will
+ensure that only objects of type <classname>T</classname> can be added to the list.
+An attempt to add an object that is not of type <classname>T</classname> will be
+a syntax error, and the program will not compile.  However, note that objects
+belonging to a subclass of <classname>T</classname> can be added to the list, since
+objects belonging to a subclass of <classname>T</classname> are still considered to
+be of type <classname>T</classname>. Thus, for example, a variable of type
+<atype>ArrayList&lt;JComponent&gt;</atype> can be used to hold objects of type
+<classname>JButton</classname>, <classname>JPanel</classname>, <classname>JTextField</classname>,
+or any other subclass of <classname>JComponent</classname>.
+(Of course, this is the same way arrays work:  An object of type <atype>T[]</atype>
+can hold objects belonging to any subclass of <classname>T</classname>.)
+Similarly, if <classname>T</classname> is an interface, then any object that 
+implements interface <classname>T</classname> can be added to the list.</p>
+
+<p>An object of type <atype>ArrayList&lt;T&gt;</atype> has all of the instance methods
+that you would expect in a dynamic array implementation.  Here are some of the most
+useful.  Suppose that <code>list</code> is a variable of type <atype>ArrayList&lt;T&gt;</atype>.
+Then we have:</p>
+
+<ul>
+<li><codedef>list.size()</codedef> &mdash; This function returns
+the current size of the list, that is, the number of items currently in the list. 
+The only valid positions in the
+list are numbers in the range <code>0</code> to <code>list.size()-1</code>. Note that
+the size can be zero. A call to the default constructor <code>new&nbsp;ArrayList&lt;T&gt;()</code> 
+creates a list of size zero.</li>
+<li><codedef>list.add(obj)</codedef> &mdash; Adds an object onto
+the end of the list, increasing the size by&nbsp;1. The parameter,
+<code>obj</code>, can refer to an object of type <classname>T</classname>, 
+or it can be <code>null</code>.</li>
+<li><codedef>list.get(N)</codedef> &mdash; This function returns
+the value stored at position <code>N</code> in the list.  The return type of
+this function is&nbsp;<classname>T</classname>. <code>N</code>
+must be an integer in the range <code>0</code> to <code>list.size()-1</code>. If
+<code>N</code> is outside this range, an error of type <classname>IndexOutOfBoundsException</classname>
+occurs. Calling this function is
+similar to referring to <code>A[N]</code> for an array, <code>A</code>, except that you
+can't use <code>list.get(N)</code> on the left side of an assignment statement.</li>
+<li><codedef>list.set(N, obj)</codedef> &mdash; Assigns the
+object, <code>obj</code>, to position <code>N</code> in the <classname>ArrayList</classname>,
+replacing the item previously stored at position <code>N</code>. The parameter <code>obj</code>
+must be of type <classname>T</classname>.  The integer
+<code>N</code> must be in the range from <code>0</code> to <code>list.size()-1</code>. A
+call to this function is equivalent to the command <code>A[N]&nbsp;=&nbsp;obj</code> for an
+array&nbsp;<code>A</code>.</li>
+<li><codedef>list.remove(N)</codedef> &mdash; For an integer,
+<code>N</code>, this removes the <code>N-th</code> item in the <classname>ArrayList</classname>.
+<code>N</code> must be in the range <code>0</code> to <code>list.size()-1</code>. Any items
+in the list that come after the removed item are moved down one position. The
+size of the list decreases by 1.</li>
+<li><codedef>list.remove(obj)</codedef> &mdash; If the specified
+object occurs somewhere in the list, it is removed from the list.
+Any items in the list that come after the removed item are moved down one
+position. The size of the <classname>ArrayList</classname> decreases by 1. If <code>obj</code>
+occurs more than once in the list, only the first copy is removed.</li>
+<li><codedef>list.indexOf(obj)</codedef> &mdash; A function that
+searches for the object, <code>obj</code>, in the list. If the object
+is found in the list, then the position number where it is found is returned.
+If the object is not found, then <code>-1</code> is returned.</li>
+</ul>
+
+<np>For the last two methods listed here, <code>obj</code> is compared to
+an item in the list by calling <code>obj.equals(item)</code>, unless <code>obj</code>
+is null.  This means, for example, that strings are tested for equality by checking
+the contents of the strings, not their location in memory.</np>
+
+<p>Java comes with several parameterized classes representing different data structures.
+Those classes make up the <newword>Java Collection Framework</newword>.  Here we consider
+only <classname>ArrayList</classname>, but we will return to this important topic in
+much more detail in <localref href="generics"/>.</p>
+
+<p>By the way, <classname>ArrayList</classname> can also be used as a non-parametrized
+type.  This means that you can declare variables and create objects of type <classname>ArrayList</classname>
+such as</p>
+
+<pre>ArrayList list = new ArrayList();</pre>
+
+<np>The effect of this is similar to declaring <code>list</code> to be of type
+<atype>ArrayList&lt;Object&gt;</atype>.  That is, <code>list</code> can hold
+any object that belongs to a subclass of <classname>Object</classname>.  Since every
+class is a subclass of <classname>Object</classname>, this means that <b>any</b>
+object can be stored in <code>list</code>.</np>
+
+</subsection>
+   
+<subsection  id="arrays.3.2" title="Wrapper Classes">
+   
+<p>As I have already noted, parameterized types don't work with the primitive types.
+There is no such thing as "<atype>ArrayList&lt;int&gt;</atype>".  However, this limitation
+turns out not to be very limiting after all, because of the so-called
+<newword>wrapper classes</newword> such as <classname>Integer</classname>
+and <classname>Character</classname>.</p>
+ 
+<p>We have already briefly encountered the classes <classname>Double</classname> and
+<classname>Integer</classname> in <localref href="basics.5"/>.  These classes
+contain the <code>static</code> methods <code>Double.parseDouble</code>
+and <code>Integer.parseInteger</code> that are used to convert strings to
+numerical values, and constants such as <code>Integer.MAX_VALUE</code> and <code>Double.NaN</code>.
+We have also encountered the <classname>Character</classname>
+class in some examples, with the static method <code>Character.isLetter</code>,
+that can be used to test whether a given value of type <code>char</code> is a
+letter.  There is a similar class for each of the other primitive types,
+<classname>Long</classname>, <classname>Short</classname>, <classname>Byte</classname>, 
+<classname>Float</classname>, and <classname>Boolean</classname>.
+These classes are wrapper classes.  Although they
+contain useful <code>static</code> members, they have another use as
+well:  They are used for creating objects that represent primitive type
+values.</p>
+   
+<p>Remember that the primitive types are not classes, and values of primitive type
+are not objects.  However, sometimes it's useful to treat a primitive value
+as if it were an object.  This is true, for example, when you would like to store
+primitive type values in an <classname>ArrayList</classname>.
+You can't do that literally, but you can "wrap" the
+primitive type value in an object belonging to one of the wrapper classes.</p>
+   
+<p>For example, an object of type <classname>Double</classname> contains a single instance
+variable, of type <ptype>double</ptype>.  The object is a "wrapper" 
+for the <ptype>double</ptype> value.
+You can create an object that
+wraps the <ptype>double</ptype> value <code>6.0221415e23</code> with</p>
+   
+<pre>Double d = new Double(6.0221415e23);</pre>
+   
+<np>The value of <code>d</code> contains the same information as the value of type
+<ptype>double</ptype>, but it is an object.   If you want to retrieve the <ptype>double</ptype>
+value that is wrapped in the object, you can call the function <code>d.doubleValue()</code>.
+Similarly, you can wrap an <ptype>int</ptype>
+in an object of type <classname>Integer</classname>, a <ptype>boolean</ptype> value
+in an object of type <classname>Boolean</classname>, and so on.</np>
+   
+<p>Furthermore, to make these classes even easier to use, there is automatic
+conversion between a primitive type and the corresponding wrapper class.  For example,
+if you use a value of type <ptype>int</ptype> in a context that requires an object
+of type <classname>Integer</classname>, the <ptype>int</ptype> will automatically be
+wrapped in an <classname>Integer</classname> object. If you say</p>
+   
+<pre>Integer answer = 42;</pre>
+   
+<np>and the computer will silently read this as if it were</np>
+   
+<pre>Integer answer = new Integer(42);</pre>
+   
+<np>This is called <newword>autoboxing</newword>.   It works in the other direction, too. For example, if
+<code>d</code> refers to an object of type <code>Double</code>, you can use <code>d</code>
+in a numerical expression such as <code>2*d</code>.  The <ptype>double</ptype> value inside
+<code>d</code> is automatically <newword>unboxed</newword> and multiplied by&nbsp;2.  Autoboxing
+and unboxing also apply to subroutine calls.  For example, you can pass an actual parameter of type
+<ptype>int</ptype> to a subroutine that has a formal parameter of type <classname>Integer</classname>.
+In fact, autoboxing and unboxing make it possible in many circumstances to ignore the difference
+between primitive types and objects.</np>
+ 
+<p>This is true in particular for parameterized types.  Although there is no such thing
+as "<atype>ArrayList&lt;int&gt;</atype>", there is <atype>ArrayList&lt;Integer&gt;</atype>.
+An <atype>ArrayList&lt;Integer&gt;</atype> holds objects of type <classname>Integer</classname>,
+but any object of type <classname>Integer</classname> really just represents an <ptype>int</ptype>
+value in a rather thin wrapper.  Suppose that we have an object of type 
+<atype>ArrayList&lt;Integer&gt;</atype>:</p>
+
+<pre>ArrayList&lt;Integer&gt; integerList;
+integerList = new ArrayList&lt;Integer&gt;();</pre>
+
+<np>Then we can, for example, add an object to <code>integerList</code> that represents the number 42:</np>
+  
+<pre>integerList.add( new Integer(42) );</pre>
+
+<np>but because of autoboxing, we can actually say</np>
+
+<pre>integerList.add( 42 );</pre>
+
+<np>and the compiler will automatically wrap 42 in an object of type <classname>Integer</classname>
+before adding it to the list.  Similarly, we can say</np>
+
+<pre>int num = integerList.get(3);</pre>
+
+<np>The value returned by <code>integerList.get(3)</code> is of type <classname>Integer</classname>
+but because of unboxing, the compiler will automatically convert the return value into an
+<ptype>int</ptype>, as if we had said</np>
+
+<pre>int num = integerList.get(3)<newcode>.intValue()</newcode>;</pre>
+
+<np>So, in effect, we can pretty much use <code>integerList</code> as if it were
+a dynamic array of <ptype>int</ptype> rather than a dynamic array of <classname>Integer</classname>.
+Of course, a similar statement holds for lists of other wrapper classes such as
+<atype>ArrayList&lt;Double&gt;</atype> and <atype>ArrayList&lt;Character&gt;</atype>.
+(There is one issue that sometimes causes problems:  A list can hold <code>null</code>
+values, and a <code>null</code> does not correspond to any primitive type value.  This
+means, for example, that the statement "<code>int num = integerList.get(3);</code>"
+can produce a null pointer exception in the case where <code>integerList.get(3)</code>
+returns <code>null</code>.  Unless you are sure that all the values in your list are
+non-null, you need to take this possibility into account.)
+</np>
+
+</subsection>
+
+
+<subsection  id="arrays.3.3" title="Programming With ArrayList">
+
+<p>As a simple first example, we can redo <sourceref href="ReverseWithDynamicArray.java"/>,
+from the <localref href="arrays.2.4">previous section</localref>, using an
+ArrayList instead of a custom dynamic array class.  In this case, we want
+to store integers in the list, so we should use <atype>ArrayList&lt;Integer&gt;</atype>.
+Here is the complete program:</p>
+   
+<pre>import java.util.ArrayList;
+
+/**
+ * Reads a list of non-zero numbers from the user, then prints
+ * out the input numbers in the reverse of the order in which
+ * the were entered.  There is no limit on the number of inputs.
+ */
+public class ReverseWithArrayList {
+    
+    public static void main(String[] args) {
+        <newcode>ArrayList&lt;Integer&gt; list;
+        list = new ArrayList&lt;Integer&gt;();</newcode>
+        System.out.println("Enter some non-zero integers.  Enter 0 to end.");
+        while (true) {
+            System.out.print("? ");
+            int number = TextIO.getlnInt();
+            if (number == 0)
+                break;
+            <newcode>list.add(number);</newcode>
+        }
+        System.out.println();
+        System.out.println("Your numbers in reverse are:");
+        for (int i = <newcode>list.size()</newcode> - 1; i >= 0; i--) {
+            System.out.printf("%10d%n", <newcode>list.get(i)</newcode>);
+        }
+    }
+
+}</pre>
+
+<p>As illustrated in this example, ArrayLists are commonly processed using
+<code>for</code> loops, in much the same way that arrays are processed.
+for example, the following loop prints out all the items for a variable <code>namelist</code> of type
+<atype>ArrayList&lt;String&gt;</atype>:</p>
+
+<pre>for ( int i = 0; i &lt; namelist.size(); i++ ) {
+    String item = namelist.get(i);
+    System.out.println(item);
+}</pre>
+
+<np>You can also use for-each loops with ArrayLists, so this example could also be written</np>
+
+<pre>for ( String item : namelist ) {
+    System.out.println(item);
+}</pre>
+
+<p>When working with wrapper classes, the loop control variable in the for-each loop
+can be a primitive type variable.  This works because of unboxing.  For example,
+if <code>numbers</code> is of type <atype>ArrayList&lt;Double&gt;</atype>, then
+the following loop can be used to add up all the values in the list:</p>
+  
+<pre>double sum = 0;
+for ( double num : numbers ) {
+   sum = sum + num;
+}</pre>
+
+<np>This will work as long as none of the items in the list are <code>null</code>.
+If there is a possibility of null values, then you will want to use a loop control
+variable of type <classname>Double</classname> and test for nulls.  For example,
+to add up all the non-null values in the list:</np>
+ 
+<pre>double sum;
+for ( Double num : numbers ) {
+    if ( num != null ) {
+        sum = sum + num;  // Here, num is SAFELY unboxed to get a double.
+    }
+}</pre> 
+
+<break/>
+
+<p>For a more complete and useful example, we will look at the program
+<sourceref href="SimplePaint2.java"/>.  This is a much improved version of
+<sourceref chapter="6" href="SimplePaint.java"/> from <localref href="GUI1.4.4"/>.
+In the new program, the user can sketch curves in a drawing area
+by clicking and dragging with the mouse.  The curves can be of any color, and
+the user can select the drawing color using a menu.  The background color of the
+drawing area can also be selected using a menu.  And there is a "Control"
+menu that contains several commands:  An "Undo" command, which removes the
+most recently drawn curve from the screen, a "Clear" command that removes
+all the curves, and a "Use Symmetry" checkbox that turns a symmetry feature
+on and off. Curves that are drawn by the user when the symmetry option is on
+are reflected horizontally and vertically to produce a symmetric pattern.
+(Symmetry is there just to look pretty.)</p>
+
+<p>Unlike the original SimplePaint program, this new version
+uses a data structure to store information about the picture that has been
+drawn by the user.
+This data is used in the <code>paintComponent()</code> method
+to redraw the picture whenever necessary.  The data
+structure is implemented using <classname>ArrayLists</classname>.</p>
+   
+<p>The main data for a curve consists of a list of the points on the curve.  This
+data can be stored in an object of type <atype>ArrayList&lt;Point&gt;</atype>,
+where <code>java.awt.Point</code> is one of Java's standard classes.
+(A <classname>Point</classname> object contains two public integer variables
+<code>x</code> and <code>y</code> that represent the pixel coordinates of a
+point.)  However, to redraw the curve, we also need to know its color,
+and we need to know whether the symmetry option should be applied to the curve.
+All the data that is needed to redraw the curve can be grouped into
+an object of type <classname>CurveData</classname> that is defined as</p>
+   
+<pre>private static class CurveData {
+   Color color;  // The color of the curve.
+   boolean symmetric;  // Are horizontal and vertical reflections also drawn?
+   ArrayList&lt;Point&gt; points;  // The points on the curve.
+}</pre>
+   
+<np>However, a picture can contain many curves, not just one, so to store
+all the data necessary to redraw the entire picture, we need a <b>list</b>
+of objects of type <classname>CurveData</classname>.  For this list,
+we can use a variable <code>curves</code> declared as</np>
+   
+<pre>ArrayList&lt;CurveData&gt; curves = new ArrayList&lt;CurveData&gt;();</pre>
+   
+<np>Here we have a list of objects, where each object contains a list of
+points as part of its data!  Let's look at a few examples of processing
+this data structure.  When the user clicks the mouse on the drawing surface,
+it's the start of a new curve, and a new <classname>CurveData</classname>
+object must be created and added to the list of curves.  The instance
+variables in the new <classname>CurveData</classname> object must
+also be initialized.  Here is the code from the <code>mousePressed()</code>
+routine that does this:</np>
+     
+<pre>
+currentCurve = new CurveData();        // Create a new CurveData object.
+
+currentCurve.color = currentColor;     // The color of the curve is taken from an
+                                       // instance variable that represents the
+                                       // currently selected drawing color.
+
+currentCurve.symmetric = useSymmetry;  // The "symmetric" property of the curve
+                                       // is also copied from the current value
+                                       // of an instance variable, useSymmetry.
+
+currentCurve.points = new ArrayList&lt;Point&gt;();  // Create a new point list object.
+
+currentCurve.points.add( new Point(evt.getX(), evt.getY()) );
+           // The point where the user pressed the mouse is the first point on
+           // the curve.  A new Point object is created to hold the coordinates
+           // of that point and is added to the list of points for the curve.
+   
+curves.add(currentCurve);   // Add the CurveData object to the list of curves.</pre>
+   
+<np>As the user drags the mouse, new points are added to <code>currentCurve</code>,
+and <code>repaint()</code> is called.  When the picture is redrawn, the new
+point will be part of the picture.</np>
+
+<p>The <code>paintComponent()</code> method has to use the data in <code>curves</code>
+to draw all the curves.  The basic structure is a for-each loop that processes
+the data for each individual curve in turn.  This has the form:</p>
+   
+<pre>for ( CurveData curve : curves ) {
+   .
+   .  // Draw the curve represented by the object, curve, of type CurveData.
+   .  
+}</pre>
+   
+<np>In the body of this loop, <code>curve.points</code> is a variable of
+type <atype>ArrayList&lt;Point&gt;</atype> that holds the list of 
+points on the curve.  The <code>i-th</code> point on the curve can be
+obtained by calling the <code>get()</code> method of this list:
+<code>curve.points.get(i)</code>.  This returns a value of type
+<classname>Point</classname> which contains instance variables named
+<code>x</code> and <code>y</code>.  We can refer directly to the
+x-coordinate of the <code>i-th</code> point as:</np>
+   
+<pre>curve.points.get(i).x</pre>
+   
+<np>This might seem rather complicated, but it's a nice example of a complex name
+that specifies a path to a desired piece of data: Go to the object, <code>curve</code>.
+Inside <code>curve</code>, go to <code>points</code>.  Inside <code>points</code>,
+get the <code>i-th</code> item.  And from that item, get the instance variable
+named&nbsp;<code>x</code>.  Here is the complete definition of the
+<code>paintComponent()</code> method:</np>
+   
+<pre>public void paintComponent(Graphics g) {
+   super.paintComponent(g);
+   Graphics2D g2 = (Graphics2D)g;
+   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                                   RenderingHints.VALUE_ANTIALIAS_ON);   
+   for ( CurveData curve : curves) {
+      g.setColor(curve.color);
+      for (int i = 1; i &lt; curve.points.size(); i++) {
+            // Draw a line segment from point number i-1 to point number i.
+         int x1 = curve.points.get(i-1).x;
+         int y1 = curve.points.get(i-1).y;
+         int x2 = curve.points.get(i).x;
+         int y2 = curve.points.get(i).y;
+         g.drawLine(x1,y1,x2,y2);
+         if (curve.symmetric) {
+               // Also draw the horizontal and vertical reflections
+               // of the line segment.
+            int w = getWidth();
+            int h = getHeight();
+            g.drawLine(w-x1,y1,w-x2,y2);
+            g.drawLine(x1,h-y1,x2,h-y2);
+            g.drawLine(w-x1,h-y1,w-x2,h-y2);
+         }
+      }
+   }
+} // end paintComponent()</pre>
+   
+<p>I encourage you to read the full source code, <sourceref href="SimplePaint2.java"/>,
+and to try out the program.
+In addition to serving as an example of using parameterized types, it also serves
+as another example of creating and using menus.</p>
+
+
+</subsection>
+
+
+<subsection  id="arrays.3.4" title="Vectors">
+  
+<p>Early versions of Java did not include <classname>ArrayList</classname>, but they did have
+a very similar class named <code>java.util.Vector</code> that serves much the same purpose.
+You can still see
+<classname>Vectors</classname> used in older code and in many of Java's standard classes, so
+it's worth knowing about them.  <classname>Vector</classname> is a parameterized class,
+so that you can use types such as <atype>Vector&lt;String&gt;</atype> and
+<atype>Vector&lt;Integer&gt;</atype>, but you will often see it used without the
+type parameter, which is essentially equivalent to using <atype>Vector&lt;Object&gt;</atype>.</p>
+
+<p>Using a <classname>Vector</classname> is similar to using an
+<classname>ArrayList</classname>, except that different names are used for some commonly used
+instance methods, and some instance methods in one class don't correspond to
+any instance method in the other class.
+Suppose that <code>vec</code> is a variable of type <atype>Vector&lt;T&gt;</atype>. Then we have
+instance methods:</p>
+
+<ul>
+<li><codedef>vec.size()</codedef> &mdash; a function that returns the number of elements
+currently in the vector.</li>
+
+<li><codedef>vec.elementAt(N)</codedef> &mdash; returns the <code>N-th</code> element of the vector, for an
+integer <code>N</code>. <code>N</code> must be in the range 0 to <code>vec.size()-1</code>.
+This is the same as <code>get(N)</code> for an <classname>ArrayList</classname>.</li>
+
+<li><codedef>vec.setElementAt(obj,N)</codedef> &mdash; sets the <code>N-th</code> element in
+the vector to be <code>obj</code>. <code>N</code> must be in the range 0 to <code>vec.size()-1</code>.
+This is the same as <code>set(N,obj)</code> for an <classname>ArrayList</classname>.</li>
+
+<li><codedef>vec.addElement(obj)</codedef> &mdash; adds the <classname>Object</classname>, <code>obj</code>, to
+the end of the vector. This is the same as the <code>add()</code> method of an
+<classname>ArrayList</classname>.</li>
+
+<li><codedef>vec.removeElement(obj)</codedef> &mdash; removes <code>obj</code> from the vector, if it
+occurs. Only the first occurrence is removed. This is the same as
+<code>remove(obj)</code> for an <classname>ArrayList</classname>.</li>
+
+<li><codedef>vec.removeElementAt(N)</codedef> &mdash; removes the <code>N-th</code> element, for an
+integer <code>N</code>. <code>N</code> must be in the range 0 to <code>vec.size()-1</code>.
+This is the same as <code>remove(N)</code> for an <classname>ArrayList</classname>.</li>
+
+<li><codedef>vec.setSize(N)</codedef> &mdash; sets the size of the vector to <code>N</code>. If there
+were more than <code>N</code> elements in <code>vec</code>, the extra elements are
+removed. If there were fewer than <code>N</code> elements, extra spaces are filled
+with <code>null</code>. The <classname>ArrayList</classname> class, unfortunately, does not have a
+corresponding <code>setSize()</code> method.</li>
+</ul>
+
+  
+</subsection>
+
+
+</section>

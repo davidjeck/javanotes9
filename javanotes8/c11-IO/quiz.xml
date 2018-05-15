@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE quiz SYSTEM "../javanotes7.dtd" >
+
+<quiz>
+   
+<question>
+<ques><p>In Java, input/output is
+done using streams. Streams are an <i>abstraction.</i> Explain what this means
+and why it is important.</p>
+</ques>
+<ans><p>A stream represents a source
+from which data can be read or a destination to which data can be written. A
+stream is an abstraction because it represents the abstract idea of a source or
+destination of data, as opposed to specific, concrete sources and destinations
+such as a particular file or network connection. The stream abstraction is
+important because it allows programmers to do input/output using the same
+methods for a wide variety of data sources and destinations. It hides the
+details of working with files, networks, and the screen and keyboard.</p>
+</ans>
+</question>
+   
+   
+<question>
+<ques><p>Java has two types of
+streams: character streams and byte streams. Why? What is the difference
+between the two types of streams?</p>
+</ques>
+<ans><p>Character streams are for
+working with data in human-readable format, that is, data expressed as
+sequences of characters. Byte streams are for data expressed in the
+machine-readable format that is used internally in the computer to represent
+the data while a program is running. It is very efficient for a computer to
+read and write data in machine format, since no translation of the data is
+necessary. However, if a person must deal directly with the data, then
+character streams should be used so that the data is presented in
+human-readable form.</p>
+</ans>
+</question>
+   
+   
+<question>
+<ques><p>What is a <i>file?</i> Why are files necessary?</p>
+</ques>
+<ans><p>A file is a collection of data
+that has been given a name and stored on some permanent storage device such as
+a hard disk or USB memory stick. Files are necessary because data stored in the
+computer's RAM is lost whenever the computer is turned off. Data that is to be
+saved permanently must be stored in a file. (Furthermore, RAM is very expensive
+compared to space on a disk drive, so a computer's hard disk can typically
+store much more data than would fit in the computer's RAM, even if the computer
+were left turned on all the time.)</p>
+</ans>
+</question>
+   
+   
+<question>
+<ques><p>What is the point of the
+following statement?</p>
+<pre>out = new PrintWriter( new FileWriter("data.dat") );</pre>
+<np>Why would you need a statement that involves two different stream classes,
+<classname>PrintWriter</classname> and <classname>FileWriter</classname>?</np>
+</ques>
+<ans><p> The <classname>PrintWriter</classname> class
+is being used as a "wrapper" for the <classname>FileWriter</classname> class. A
+<classname>FileWriter</classname> is a stream object that knows how to send individual
+characters to a file. By wrapping this in a <classname>PrintWriter</classname>, you get the
+ability to write other data types such as <ptype>ints</ptype>, <ptype>doubles</ptype>, and
+<classname>Strings</classname> to the file using the <classname>PrintWriter's</classname> <code>print()</code>
+and <code>println()</code> methods. Wrapping the <code>FileWriter</code> in a
+<classname>PrintWriter</classname> adds capabilities to the file output stream but still
+sends the data to the same destination.</p>
+</ans>
+</question>
+   
+   
+<question>
+<ques><p>The package <code>java.io</code>
+includes a class named <classname>URL</classname>. What does an object of type <classname>URL</classname>
+represent, and how is it used?</p>
+</ques>
+<ans><p>A url is an address for a web
+page (or other information) on the Internet. For example,
+"http://math.hws.edu/javanotes/index.html" is a url that refers to the main
+page of the current edition of this on-line textbook. A <classname>URL</classname> object
+represents such an address. Once you have a <classname>URL</classname> object, you can call
+its <code>openConnection()</code> method to access the information at the web
+address that it represents.</p>
+</ans>
+</question>
+
+<question>
+<ques><p>What is the purpose of the <classname>JFileChooser</classname>
+class?</p>
+</ques>
+<ans><p>An object of type <classname>JFileChooser</classname> represents a
+dialog box that can be used in a GUI program to let the user select a file
+that is to be used for input or for output.</p>
+</ans>
+</question>
+   
+   
+<question>
+<ques><p>Explain what is meant by the
+<i>client / server</i> model of network communication.</p>
+</ques>
+<ans><p>In the client/server model, a
+server program runs on a computer somewhere on the Internet and "listens" for
+connection requests from client programs. The server makes some service
+available. A client program connects to the server to access that service. For
+example, a Web server has a collection of Web pages. A Web browser acts as a
+client for the Web server. It makes a connection to the server and sends a
+request for one of its pages. The server responds by transmitting a copy of the
+requested page back to the client.</p>
+</ans>
+</question>
+   
+   
+<question>
+<ques><p>What is a <i>socket</i>?</p>
+</ques>
+<ans><p>A socket represents one endpoint
+of a network connection. A program uses a socket to communicate with another
+program over the network. Data written by a program to the socket at one end of
+the connection is transmitted to the socket on the other end of the connection,
+where it can be read by the program at that end.</p>
+</ans>
+</question>
+   
+   
+<question>
+<ques><p>What is a <classname>ServerSocket</classname> and how is it used?</p>
+</ques>
+<ans><p>A <classname>ServerSocket</classname> is used
+by a server program to listen for connection requests from client programs. If
+<code>listener</code> refers to an object that belongs to Java's
+<classname>ServerSocket</classname> class, then calling the function
+<code>listener.accept()</code> will wait for a connection request and will return a
+<classname>Socket</classname> object that can be used to communicate with the client that
+made the request.</p>
+</ans>
+</question>
+   
+   
+   
+<question>
+<ques><p>What is meant by an <i>element</i> in an XML document?</p>
+</ques>
+<ans><p>An element consists of a tag (possibly containing attributes), a matching end-tag, 
+and everything in between.  There are also empty elements where an empty element consists
+of a single self-closing tag.  An element can contain textual content and nested
+elements.  For example, in the XML fragment</p>
+<pre>
+&lt;testresult score="82"&gt;&lt;name&gt;Joe Smith&lt;/name&gt;&lt;subject&gt;Math&lt;/subject&gt;&lt;/testresult&gt;
+</pre>
+<np>the entire fragment is an element, while <code>&lt;name&gt;Joe Smith&lt;/name&gt;</code>
+and <code>&lt;subject&gt;Math&lt;/subject&gt;</code> are nested elements inside
+the <code>&lt;testresult&gt;</code> element.  "Joe Smith" and "Math" are examples of
+textual content, and <code>score</code> is an attribute with value <code>82</code>.</np>
+</ans>
+</question>
+   
+   
+<question>
+<ques><p>What is it about XML that makes it suitable for representing
+almost any type of data?</p>
+</ques>
+<ans><p>XML is a syntax for building data representation languages.  In XML,
+the names of tags and the structure of a document can be chosen to be whatever
+is most appropriate for the type of data that is being represented.  The
+tag names can be chosen to give <i>meaningful</i> descriptions of the data.
+This contrasts with HTML documents, which can include only a certain fixed
+set of tags.  (XML also has the advantage of being a widely accepted standard
+that is supported in just about every programming language.)</p>
+</ans>
+</question>
+   
+   
+<question>
+<ques><p>Write a complete program
+that will display the first ten lines from a text file. The lines should be
+written to standard output, <code>System.out</code>. The file name is given as the
+command-line argument <code>args[0]</code>. You can assume that the file contains
+at least ten lines. Don't bother to make the program robust.  Do not use
+<classname>TextIO</classname> to process the file; read from the file using
+methods covered in this chapter.</p>
+</ques>
+<ans><p>I will give three different solutions.  The first uses the non-standard
+<classname>TextReader</classname> class from <localref href="IO.1.4"/> to read the
+lines from the file. The other two solutions use the standard classes
+<classname>BufferedReader</classname> and <classname>Scanner</classname>.
+All of these classes make it easy to read a line of text from an input stream.</p>
+
+<p>For each program, I do everything in one big <code>try</code> statement. If
+anything goes wrong, an error message is printed in the <code>catch</code> clause
+of the <code>try</code> statement. For example, if the program is run with no
+command-line argument, an <classname>IndexOutOfBoundsException</classname> will be generated
+when the program refers to <code>args[0]</code>. If a file is specified, but it
+doesn't exist, then a <classname>FileNotFoundException</classname> will occur. (The
+exercise says to assume that the file has at least ten lines, but if there are
+fewer than ten lines in the file, <classname>TextReader</classname> and 
+<classname>Scanner</classname> will throw an exception, while <classname>BufferedReader</classname>
+will just print a <code>null</code> for each missing line.)</p>
+
+
+<pre>import java.io.*;
+// (TextReader.class must be made available to this program.)
+public class TenLinesWithTextReader {
+
+   public static void main(String[] args) {
+      try {
+         TextReader in = new TextReader( new FileReader(args[0]) );
+         for (int lineCt = 0; lineCt &lt; 10; lineCt++)) {
+            String line = in.getln();
+            System.out.println(line);
+         }
+      }
+      catch (Exception e) {
+         System.out.println("Error: " + e);
+      }
+   }
+   
+}  // end class TenLinesWithTextReader
+
+//-----------------------------------------------------------------   
+   
+import java.io.*;
+public class TenLinesWithBufferedReader {
+
+   public static void main(String[] args) {
+      try {
+         BufferedReader in = new BufferedReader( new FileReader(args[0]) );
+         for (int lineCt = 0; lineCt &lt; 10; lineCt++)) {
+            String line = in.readLine();
+            System.out.println(line);
+         }
+      }
+      catch (Exception e) {
+         System.out.println("Error: " + e);
+      }
+   }
+   
+}  // end class TenLinesWithBufferedReader
+
+//-----------------------------------------------------------------   
+
+import java.io.*;
+import java.util.Scanner;
+public class TenLinesWithScanner {
+
+   public static void main(String[] args) {
+      try {
+         Scanner scanner = new Scanner( new File(args[0]) );
+         for (int lineCt = 0; lineCt &lt; 10; lineCt++)) {
+            String line = scanner.nextLine();
+            System.out.println(line);
+         }
+      }
+      catch (Exception e) {
+         System.out.println("Error: " + e);
+      }
+   }
+   
+}  // end class TenLinesWithScanner</pre>
+</ans>
+</question>
+   
+   
+</quiz>

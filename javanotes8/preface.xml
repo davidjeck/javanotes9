@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE preface SYSTEM "javanotes7.dtd">
+
+<preface>
+<p><start><big>I</big>ntroduction to Programming Using Java</start> is a free
+introductory computer programming textbook that uses Java as the language of
+instruction.  It is suitable for use in an introductory programming course
+and for people who are trying to learn programming on their own. There are
+no prerequisites beyond a general familiarity with the ideas of computers and
+programs.  There is enough material for a full year of college-level
+programming.  Chapters 1 through 7 can be used as a textbook in a one-semester
+college-level course or in a year-long high school course.  The remaining
+chapters can be covered in a second course.</p>
+
+<p>The Seventh Edition of the book covers "Java&nbsp;7."  The most recent
+version of Java is 8, but this book has only a few very short mentions of
+the new features in Java&nbsp;8.</p>
+   
+<p>The home web site for this book is
+<a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.
+The page at that address contains links for downloading a copy of
+the web site and for downloading PDF versions of the book.
+The web site&mdash;and the web site download&mdash;includes source code for the sample programs that are
+discussed in the text, answers to end-of-chapter quizzes and a discussion
+and solution for each end-of-chapter exercises.  Readers are encouraged
+to download the source code for the examples and to read and run the
+programs as they read the book.  Readers are also strongly encouraged
+to read the exercise solutions if they want to get the most out of this book.</p>
+
+
+<p>In style, this is a textbook rather than a tutorial. That is, it
+concentrates on explaining concepts rather than giving step-by-step
+how-to-do-it guides.
+I have tried to use a conversational writing style that
+might be closer to classroom lecture than to a typical textbook. This is
+certainly not a Java reference book, and it is not a
+comprehensive survey of all the features of Java. It is <b>not</b> written as
+a quick introduction to Java for people who already know another programming
+language. Instead, it is directed mainly towards people who are learning
+programming for the first time, and it is as much about general programming
+concepts as it is about Java in particular. I believe that <i>Introduction to
+Programming using Java</i> is fully competitive with the conventionally
+published, printed programming textbooks that are available on the market.
+(Well, all right, I'll confess that I think it's better.)</p>
+
+<p>There are several approaches to teaching Java. One approach uses
+graphical user interface programming from the very beginning. Some people
+believe that object oriented programming should also be emphasized from the
+very beginning. This is <b>not</b> the approach that I take. The approach that I favor
+starts with the more basic building blocks of programming and builds from
+there. After an introductory chapter,
+I cover procedural programming in Chapters 2, 3, and&nbsp;4.
+Object-oriented programming is introduced in Chapter&nbsp;5. Chapter&nbsp;6
+covers the closely related topic of event-oriented programming and
+graphical user interfaces. Arrays are introduced in Chapter&nbsp;3 with a full treatment in Chapter&nbsp;7.
+Chapter&nbsp;8 is a short chapter that marks a turning point in the book, moving beyond the
+fundamental ideas of programming to cover more advanced topics.
+Chapter&nbsp;8 is about writing robust, correct, and efficient programs.
+Chapters&nbsp;9 and 10 cover recursion and data structures, including the Java Collection
+Framework.  Chapter&nbsp;11 is about files and networking.  Chapter&nbsp;12
+covers threads and parallel processing.  Finally,
+Chapter&nbsp;13 returns to the topic of graphical user interface programming
+to cover some of Java's more advanced capabilities.</p>
+
+<break/>
+
+<p>The Seventh Edition of "Introduction to Programming using Java" is not a huge update from
+the sixth edition.  In fact, my main motivation for the new version was to remove any 
+use of applets or coverage of applets from the book.  Applets are Java programs that run on a web page.
+When Java first came out, they were exciting, and it seemed like they would become a major
+way of creating active content for the Web.  Up until the sixth edition, the web pages for this
+book included applets for running many of the sample programs.
+However, because of security issues and the emergence of other technologies, applets are 
+no longer widely used.  Furthermore, the most recent versions of 
+Java  made it fairly difficult and unpleasant to use the applets in the book.  In place
+of applets, I have tried to make it as easy as possible for readers to download the
+sample programs and run them on their own computers.</p>
+
+<p>Another significant change in the seventh edition is that arrays are now introduced in
+Chapter&nbsp;3 in a basic form that is used throughout the next three chapters.  Previously,
+arrays were not introduced until Chapter&nbsp;7, after objects and GUI programming had already
+been covered.  Much of the more advanced coverage of arrays is still in Chapter&nbsp;7.</p>
+
+<p>Aside from that, there are many small improvements throughout, mostly related to features
+that were new in Java&nbsp;7.  Version 7.0.3 is the final release of the seventh edition.</p>
+
+<break/>
+   
+
+<p>The latest complete edition of <i>Introduction to Programming using Java</i> is available on line at
+<a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.
+The first version of the book was written in 1996, and there have
+been several editions since then.  All editions are archived (at least until my retirement) 
+at the following Web addresses:</p>
+   
+<ul>
+<li>First edition: <a href=
+"http://math.hws.edu/eck/cs124/javanotes1/">http://math.hws.edu/eck/cs124/javanotes1/</a> (Covers Java 1.0.)</li>
+<li>Second edition: <a href=
+"http://math.hws.edu/eck/cs124/javanotes2/">http://math.hws.edu/eck/cs124/javanotes2/</a> (Covers Java 1.1.)</li>
+<li>Third edition: <a href=
+"http://math.hws.edu/eck/cs124/javanotes3/">http://math.hws.edu/eck/cs124/javanotes3/</a> (Covers Java 1.1.)</li>
+<li>Fourth edition: <a href=
+"http://math.hws.edu/eck/cs124/javanotes4/">http://math.hws.edu/eck/cs124/javanotes4/</a> (Covers Java 1.4.)</li>
+<li>Fifth edition: <a href=
+"http://math.hws.edu/eck/cs124/javanotes5/">http://math.hws.edu/eck/cs124/javanotes5/</a> (Covers Java 5.0.)</li>
+<li>Sixth edition: <a href=
+"http://math.hws.edu/eck/cs124/javanotes6/">http://math.hws.edu/eck/cs124/javanotes6/</a> (Covers Java 5.0, with a bit of 6.0.)</li>
+<li>Seventh edition: <a href=
+"http://math.hws.edu/eck/cs124/javanotes7/">http://math.hws.edu/eck/cs124/javanotes7/</a> (Covers Java 7.)</li>
+</ul>
+   
+
+<p><i>Introduction to Programming using Java</i> is <b>free</b>, but it is not in the
+public domain. Version&nbsp;7 is published under the terms of the
+Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License. 
+To view a copy of this license, visit 
+<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">http://creativecommons.org/licenses/by-nc-sa/3.0/</a>.
+For example, you can:</p>
+
+<ul>
+<li>Post an unmodified copy of the on-line version on your own Web site (including
+the parts that list the author and state the license under which it is distributed!).
+</li>
+
+<li>Give away unmodified copies of this book or sell them at cost of production, as long as they
+meet the requirements of the license.</li>
+
+<li>Make modified copies of the complete book or parts of it
+and post them on the web or otherwise distribute them non-commercially, provided that attribution
+to the author is given, the modifications are clearly noted, and the modified copies
+are distributed under the same license as the original.  This includes translations
+to other languages.</li>
+
+</ul>
+
+<p>For uses of the book in ways not covered by the license, permission of the
+author is required.</p>
+
+<p>While it is not actually required by the license, I do appreciate hearing
+from people who are using or distributing my work.</p>
+   
+<break/>
+   
+
+<p><b>A technical note on production:</b> The on-line and PDF versions of this
+book are created from a single source, which is written largely in XML. 
+To produce the
+PDF version, the XML is processed into a form that can be used by the TeX
+typesetting program.  In addition to
+XML files, the source includes DTDs, XSLT transformations, Java source code files,
+image files, a TeX macro file, and a couple of scripts that are used in processing.
+The scripts work on Linux and on Mac&nbsp;OS.
+</p>
+
+<p><b>I have made the complete source files available for download at
+the following address:</b></p>
+
+<p align="center"><a href="http://math.hws.edu/eck/cs124/downloads/javanotes7-full-source.zip">http://math.hws.edu/eck/cs124/downloads/javanotes7-full-source.zip</a></p>
+
+<p>These files were not originally meant for publication, and therefore are not very
+cleanly written.  Furthermore, it requires a fair amount of expertise to use them.
+However, I have had several requests for the sources and have made
+them available on an "as-is" basis.  For more information about the sources and
+how they are used see the <tex>README file</tex><web><a href="README-full-source.txt">README&nbsp;file</a></web> from
+the source download.</p>
+   
+<break/> 
+
+<np>Professor David J. Eck<br />
+Department of Mathematics and Computer Science<br />
+Hobart and William Smith Colleges<br />
+300 Pulteney Street<br />
+Geneva, New York 14456, USA<br />
+Email: <a href="mailto:eck@hws.edu">eck@hws.edu</a><br />
+WWW: <a href="http://math.hws.edu/eck/">http://math.hws.edu/eck/</a><br /><br />
+</np>
+
+
+
+  
+   
+</preface>

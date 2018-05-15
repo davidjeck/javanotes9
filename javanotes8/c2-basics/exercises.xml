@@ -1,0 +1,803 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+
+<exercises>
+
+<exercise>
+   <exercise-question><p>Write a program that will
+print your initials to standard output in letters that are nine lines tall.
+Each big letter should be made up of a bunch of *'s. For example, if your
+initials were "DJE", then the output would look something like:</p>
+
+<pre>******           *************        **********
+**    **                **            **
+**     **               **            **
+**      **              **            **
+**      **              **            ********
+**      **       **     **            **
+**     **         **    **            **
+**    **           **  **             **
+*****               ****              ********** </pre>
+   </exercise-question>
+   <exercise-discuss>
+<p>This is a very simple program. It consists of nothing but a sequence of
+<code>System.out.println</code> statements.  The hard part is designing the letters. You have to
+experiment in your text editor until you get letters that look right to you.
+Add <code>System.out.println("</code> at the beginning of the first line, then
+copy-and-paste it to the beginning of each of the other lines. (You don't need
+to type it out on each line! Creative use of copy-and-paste can save you a lot
+of work.) Then add <code>");</code> to the end of each line. In my program, I've
+also added a <code>System.out.println()</code> statement at the beginning and the
+end. The extra blank lines make the output look better.</p>
+
+<p>Don't forget that in order to have a complete program, you have to put the
+program statements in a <code>main</code> subroutine and put that subroutine in a
+<code>public</code> <code>class</code>.  Also, the name of the file must correspond to the
+name of the class; in this case, the file must be named PrintInitials.java.</p>
+   </exercise-discuss>
+   <exercise-code>
+<pre><prog name="PrintInitials">
+    public class PrintInitials {
+      
+       /*  This program prints my initials (DJE) in big letters,
+           where each letter is nine lines tall.
+       */
+    
+       public static void main(String[] args) {
+          System.out.println();
+          System.out.println("           ******           *************        **********");
+          System.out.println("           **    **                **            **");
+          System.out.println("           **     **               **            **");
+          System.out.println("           **      **              **            **");
+          System.out.println("           **      **              **            ********");
+          System.out.println("           **      **       **     **            **");
+          System.out.println("           **     **         **    **            **");
+          System.out.println("           **    **           **  **             **");
+          System.out.println("           *****               ****              **********");
+          System.out.println();
+       }  // end main()
+
+    }  // end class
+   </prog></pre>
+   </exercise-code> 
+</exercise>
+
+
+   
+<exercise id="basics.ex.2">
+   <exercise-question><p> Write a program that
+simulates rolling a pair of dice. You can simulate rolling one die by choosing
+one of the integers 1, 2, 3, 4, 5, or 6 at random. The number you pick
+represents the number on the die after it is rolled. As pointed out in <localref href="basics.5"/>, the expression</p>
+
+<pre>(int)(Math.random()*6) + 1</pre>
+
+<np>does the computation to select a random integer between 1 and 6.
+You can assign this value to a variable to represent one of the dice that are
+being rolled. Do this twice and add the results together to get the total roll.
+Your program should report the number showing on each die as well as the total
+roll. For example:</np>
+
+<pre>The first die comes up 3
+The second die comes up 5
+Your total roll is 8</pre>
+   </exercise-question>
+   <exercise-discuss>
+<p>When designing a program, one of the first things you should ask yourself
+is, "What values do I need to represent?" The answer helps you decide what
+variables to declare in the program. This program will need some variables to
+represent the numbers showing on each die and the total of the two dice. Since
+these numbers are all integers, we can use three variables of type
+<ptype>int</ptype>. I'll call the variables <code>die1</code>, <code>die2</code>, and
+<code>roll</code>. The program begins by declaring the variables:</p>
+
+<pre>int die1;
+int die2;
+int roll;</pre>
+
+<np>In the actual program, of course, I've added a comment to explain the
+purpose of each variable. The values of <code>die1</code> and <code>die2</code> can be
+computed using the expression given in the exercise:</np>
+
+<pre>die1 = (int)(Math.random()*6) + 1;
+die2 = (int)(Math.random()*6) + 1;</pre>
+
+<np>Note that even though the expressions on the right-hand sides of these
+assignment statements are the same, the values can be different because the
+function <code>Math.random()</code> can return different values when it is called
+twice.</np>
+
+<p>We can then compute <code>roll = die1 + die2</code> and use three
+<code>System.out.println</code> statements to display the three lines of
+output:</p>
+
+<pre>System.out.println("The first die comes up " + die1);
+System.out.println("The second die comes up " + die2);
+System.out.println("Your total roll is " + roll);</pre>
+
+<np>Note that I've chosen to use the concatenation operator, <code>+</code>, to
+append the value of <code>die1</code> onto the string "The first die comes up".
+Alternatively, I could use two output statements:</np>
+
+<pre>System.out.print("The first die comes up ");
+System.out.println(die1);</pre>
+
+<np>Yet another possibility is to use <code>System.out.printf</code>:</np>
+
+<pre>System.out.printf("The first die comes up %d%n", die1);</pre>
+
+<np>I'll also note that I could get away without the variable <code>roll</code>,
+since I could output the value of the expression <code>die1 + die2</code>
+directly:</np>
+
+<pre>System.out.println("Your total roll is " + (die1 + die2));</pre>
+
+<np>However, it's generally better style to have a meaningful name for a
+quantity. By the way, the parentheses around <code>(die1 + die2)</code> are
+essential because of the precedence rules for the <code>+</code> operator. You
+might try to experiment with leaving them out and see what happens.</np>
+   </exercise-discuss>
+   <exercise-code>
+<pre><prog name="RollTheDice">
+public class RollTheDice {
+   
+    /*  This program simulates rolling a pair of dice.
+        The number that comes up on each die is output,
+        followed by the total of the two dice.
+    */
+ 
+    public static void main(String[] args) {
+    
+        int die1;   // The number on the first die.
+        int die2;   // The number on the second die.
+        int roll;   // The total roll (sum of the two dice).
+        
+        die1 = (int)(Math.random()*6) + 1;
+        die2 = (int)(Math.random()*6) + 1;
+        roll = die1 + die2;
+        
+        System.out.println("The first die comes up " + die1);
+        System.out.println("The second die comes up " + die2);
+        System.out.println("Your total roll is " + roll);
+
+    }  // end main()
+ 
+}  // end class
+</prog></pre>
+   </exercise-code> 
+</exercise>
+
+
+   
+<exercise>
+   <exercise-question><p>Write a program that asks
+the user's name, and then greets the user by name. Before outputting the user's
+name, convert it to upper case letters. For example, if the user's name is
+Fred, then the program should respond "Hello, FRED, nice to meet you!".</p>
+   </exercise-question>
+   <exercise-discuss>
+<p>In order to read the name typed in by the user, this program uses one of the
+input routines from the non-standard <classname>TextIO</classname> class. So, this program
+can only be run if that class is available to the program.  I will use <code>System.out</code>
+for output.  (Although it is possible to use <code>TextIO</code> for output as
+well as for input, I will generally avoid that option in my examples.)</p>
+
+<p>A name is a sequence of characters, so it is a value of type
+<classname>String</classname>. The program must declare a variable of type <classname>String</classname> to
+hold the user's name. I declare another variable to hold the user's name with
+all the letters in the name converted to upper case. The conversion might be
+difficult, except that <classname>String</classname> objects have a function that lets you do the
+conversion with one line of code. If <code>usersName</code> is the variable that refers to the name that
+the user enters, then the function call <code>usersName.toUpperCase()</code>
+returns the string obtained by replacing any lower case letters in the name
+with upper case letters.</p>
+
+<p>There are several functions in the <classname>TextIO</classname> class that can be used for
+reading <code>Strings</code>: <code>getWord()</code>, <code>getlnWord()</code>, and
+<code>getln()</code>. The first two routines only read a single word, so if the
+user entered "David J. Eck", they would only read the first name, "David". The
+<code>getln()</code> routine will read the entire line, and so would get the whole
+name. For this program, I use <code>getln()</code>, but you might prefer to use just
+the first name.</p>
+
+<p>I also give a version of the program that uses the built-in
+class <classname>Scanner</classname>, instead of <classname>TextIO</classname>, for
+reading input from the user.  See <localref href="basics.4.6"/> for a discussion of
+the <classname>Scanner</classname> class.  In the second version of the program,
+a <classname>Scanner</classname> named <code>stdin</code> is created, and
+the user's input is read using the function <code>stdin.nextLine()</code>, which
+has essentially the same functionality as <code>TextIO.getln()</code>.</p>
+
+<p>(For this program, by the way, <code>TextIO.getWord()</code> and <code>TextIO.getlnWord()</code>
+would be equivalent. They return the same value. The second version of the
+routine, <code>getlnWord()</code>, would then discard the rest of the user's line
+of input. However, since this program is only doing one input operation, it
+doesn't matter whether it's discarded. It would only matter when it came time
+to read a second value from input.)</p>
+
+   </exercise-discuss>
+   <exercise-code>
+<pre><prog name="Greeting">
+public class Greeting {
+   
+    /*  This program asks the user's name and then
+        greets the user by name.  This program depends
+        on the non-standard class, TextIO.
+    */
+ 
+    public static void main(String[] args) {
+    
+        String usersName;      // The user's name, as entered by the user.
+        String upperCaseName;  // The user's name, converted to upper case letters.
+        
+        System.out.print("Please enter your name: ");
+        usersName = TextIO.getln();
+        
+        upperCaseName = usersName.toUpperCase();
+        
+        System.out.println("Hello, " + upperCaseName + ", nice to meet you!");
+    
+    }  // end main()
+ 
+}  // end class
+</prog></pre>
+
+<np><b><u>A version using <classname>Scanner</classname> for input:</u></b>
+</np>
+
+<pre><prog name="GreetingWithScanner"><newcode>import java.util.Scanner;</newcode>
+
+public class GreetingWithScanner {
+    
+    public static void main(String[] args) {
+    
+        <newcode>Scanner stdin = new Scanner( System.in );</newcode>
+    
+        String usersName;      // The user's name, as entered by the user.
+        String upperCaseName;  // The user's name, converted to upper case letters.
+        
+        System.out.print("Please enter your name: ");
+        usersName = <newcode>stdin.nextLine()</newcode>;
+        
+        upperCaseName = usersName.toUpperCase();
+        
+        System.out.println("Hello, " + upperCaseName + ", nice to meet you!");
+    
+    }  // end main()
+ 
+}  // end class
+</prog></pre>
+   </exercise-code> 
+</exercise>
+
+
+   
+<exercise>
+   <exercise-question><p>Write a program that helps
+the user count his change. The program should ask how many quarters the user
+has, then how many dimes, then how many nickels, then how many pennies. Then
+the program should tell the user how much money he has, expressed in
+dollars.</p>
+   </exercise-question>
+   <exercise-discuss>
+<p>The program will need variables to represent the number of each type of
+coin. Since the number of coins has to be an integer, these variables are of
+type <ptype>int</ptype>. I'll call the variables <code>quarters</code>, <code>dimes</code>,
+<code>nickels</code>, and <code>pennies</code>.</p>
+
+<p>The total value of the coins, when expressed in dollars, can be a
+non-integer number such as 1.57 or 3.02. Since the total value in dollars is a
+real number, I will use a variable of type <ptype>double</ptype> to represent it. The
+variable is named <code>dollars</code></p>
+
+<p>The outline of the program is clear enough:</p>
+
+<pre>Declare the variables.
+Ask the user for the number of each type of coin, and read the responses.
+Compute the total value of the coins, in dollars.
+Display the result to the user.</pre>
+
+<np>The function <code>TextIO.getlnInt()</code> can be used to read each of the
+user's responses. The alternative function <code>TextIO.getInt()</code> could also
+be used, but it is less safe. Suppose, for example, that the user responds to
+the request to type in the number of quarters by entering "7 quarters". After
+<code>TextIO.getlnInt()</code> reads the number 7, it will discard the extra input
+"quarters". <code>TextIO.getInt()</code> will read the 7 correctly, but the extra
+input is not discarded. Later, when the program tries to read the number of
+dimes, it sees the left-over input and tries to read that, without giving the
+user a chance to type in another response. You might want to experiment and see
+what happens if you change <code>getlnInt()</code> to <code>getInt()</code>. (Of
+course, if the user's response is "I have 7 quarters" or "seven", then you are
+out of luck in any case.)</np>
+
+<p>Since one quarter is worth 0.25 dollars, the number of dollars in N quarters
+is 0.25*N. Similarly, a dime is worth 0.10 dollars, a nickel is 0.05 dollars,
+and a penny is 0.01 dollars. So, to get the total value of all the user's
+coins, I just have to add up <code>(0.25*quarters) + (0.10*dimes) +
+(0.05*nickels) + (0.01*pennies)</code>. This value is assigned to the variable,
+<code>dollars</code>, and that is the result that is displayed to the user.
+Formatted output, using <code>System.out.printf</code>,
+can be used to specify that the output value should be printed with two
+digits after the decimal point.</p>
+
+<p>Alternatively, I could first have computed the total number of cents in all
+the coins, and then divided by 100 to convert the amount into dollars:</p>
+
+<pre>int totalCents;   // Total number of cents in the coins.
+
+totalCents = 25*quarters + 10*dimes + 5*nickels + pennies;
+dollars = totalCents/100.0;</pre>
+
+<np>Since <code>totalCents</code> is of type <ptype>int</ptype>, it is essential here that
+I compute <code>dollars</code> as <code>totalCents/100.0</code> and not as
+<code>totalCents/100</code>. The value computed by <code>totalCents/100</code> is an
+integer. For example, if <code>totalCents</code> is 397, then
+<code>totalCents/100</code> is 3. Using <code>totalCents/100.0</code> forces the
+computer to compute the answer as a real number, giving 3.97.</np>
+
+<p>A second version of the program, using a <classname>Scanner</classname> for input,
+is also given.  (See <localref href="basics.4.6"/>.)  A <classname>Scanner</classname>
+named <code>stdio</code> is created, and integers are read using the function
+<code>stdio.nextInt()</code>.  This method corresponds to <code>TextIO.getInt()</code>,
+not <code>TextIO.getlnInt()</code>.  To get something equivalent to <code>TextIO.getlnInt()</code>,
+we can follow the call to <code>stdio.nextInt()</code> with a call to <code>stdio.nextLine()</code>.
+The call to <code>stdio.nextLine()</code> will read and discard any extra characters on the
+same line after the integer that was read by <code>stdio.nextInt()</code>.  If you are not
+worried about the user typing extra stuff on a line, you can leave out the calls to
+<code>stdio.nextInt()</code>.</p>
+
+   </exercise-discuss>
+   <exercise-code>
+<pre><prog name="CountChange">public class CountChange {
+  
+   /*  This program will add up the value of a number of quarters,
+       dimes, nickels, and pennies.  The number of each type of 
+       coin is input by the user.  The total value is reported
+       in dollars.  This program depends on the non-standard class,
+       TextIO.
+   */
+
+   public static void main(String[] args) {
+   
+      int quarters;   // Number of quarters, to be input by the user.
+      int dimes;      // Number of dimes, to be input by the user.
+      int nickels;    // Number of nickels, to be input by the user.
+      int pennies;    // Number of pennies, to be input by the user.
+      
+      double dollars; // Total value of all the coins, in dollars.
+      
+      /* Ask the user for the number of each type of coin. */
+      
+      System.out.print("Enter the number of quarters:  ");
+      quarters = TextIO.getlnInt();
+      
+      System.out.print("Enter the number of dimes:     ");
+      dimes = TextIO.getlnInt();
+      
+      System.out.print("Enter the number of nickels:   ");
+      nickels = TextIO.getlnInt();
+      
+      System.out.print("Enter the number of pennies:   ");
+      pennies = TextIO.getlnInt();
+      
+      /* Add up the values of the coins, in dollars. */
+      
+      dollars = (0.25 * quarters) + (0.10 * dimes) 
+                          + (0.05 * nickels) + (0.01 * pennies); 
+      
+      /* Report the result back to the user. */
+      
+      System.out.println();
+      System.out.print("The total in dollars is $");
+      System.out.printf("%1.2f", dollars);  // Formatted output!
+      System.out.println();
+   
+   }  // end main()
+ 
+}  // end class
+</prog></pre>
+
+
+<np><b><u>A version using <classname>Scanner</classname> for input:</u></b>
+</np>
+
+<pre><prog name="CountChangeWithScanner"><newcode>import java.util.Scanner;</newcode>
+
+public class CountChangeWithScanner {
+  
+   public static void main(String[] args) {
+   
+      int quarters;   // Number of quarters, to be input by the user.
+      int dimes;      // Number of dimes, to be input by the user.
+      int nickels;    // Number of nickels, to be input by the user.
+      int pennies;    // Number of pennies, to be input by the user.
+      
+      <newcode>Scanner stdio = new Scanner( System.in );</newcode>
+      
+      double dollars; // Total value of all the coins, in dollars.
+      
+      /* Ask the user for the number of each type of coin. */
+      
+      System.out.print("Enter the number of quarters:  ");
+      quarters = <newcode>stdio.nextInt();
+      stdio.nextLine();</newcode>
+      
+      System.out.print("Enter the number of dimes:     ");
+      dimes = <newcode>stdio.nextInt();
+      stdio.nextLine();</newcode>
+      
+      System.out.print("Enter the number of nickels:   ");
+      nickels = <newcode>stdio.nextInt();
+      stdio.nextLine();</newcode>
+      
+      System.out.print("Enter the number of pennies:   ");
+      pennies = <newcode>stdio.nextInt();
+      stdio.nextLine();</newcode>
+      
+      /* Add up the values of the coins, in dollars. */
+      
+      dollars = (0.25 * quarters) + (0.10 * dimes) 
+                          + (0.05 * nickels) + (0.01 * pennies); 
+      
+      /* Report the result back to the user. */
+      
+      System.out.println();
+      System.out.print("The total in dollars is $");
+      System.out.printf("%1.2f", dollars);  // Formatted output!
+      System.out.println();
+   
+   }  // end main()
+ 
+}  // end class
+</prog></pre>
+
+   </exercise-code> 
+</exercise>
+
+
+   
+<exercise>
+   <exercise-question><p>If you have <code>N</code>
+eggs, then you have <code>N/12</code> dozen eggs, with <code>N%12</code> eggs left
+over. (This is essentially the definition of the <code>/</code> and <code>%</code>
+operators for integers.) Write a program that asks the user how many eggs she
+has and then tells the user how many dozen eggs she has and how many extra eggs
+are left over.</p>
+<p>A gross of eggs is equal to 144 eggs. Extend your program so that it will
+tell the user how many gross, how many dozen, and how many left over eggs she
+has. For example, if the user says that she has 1342 eggs, then your program
+would respond with</p>
+
+<pre>Your number of eggs is 9 gross, 3 dozen, and 10</pre>
+
+<np>since 1342 is equal to 9*144 + 3*12 + 10.</np>
+   </exercise-question>
+   <exercise-discuss>
+<p>All the variables for the program will be of type <ptype>int</ptype>. The
+quantities that we have to represent are: the number of eggs, the number of
+dozens in that many eggs, and the number of left over eggs. I will declare
+variables named <code>eggs</code>, <code>dozens</code>, and <code>extras</code> to
+represent these quantities.</p>
+
+<p>The number of eggs can be read from the user's input using <code>eggs =
+TextIO.getlnInt()</code>.</p>
+
+<p>The description of the problem already tells us that <code>dozens</code> can be
+computed as <code>eggs/12</code> and <code>extras</code> can be computed as
+<code>eggs%12</code>. So, the first version of the program is easy to write.
+Note that the entire output from this program could have been done with
+one <code>System.out.printf</code>:</p>
+
+<pre>System.out.print("Your number of eggs is %d dozen and %d extras%n", 
+                                 dozens, extras);</pre>
+
+<p>The improved version requires a little thought. Given a pile of eggs that
+you want to divide into gross, dozens, and extras, you could first remove as
+many gross as possible, leaving a pile of between 0 and 143 eggs. This is just
+like dividing the pile into dozens, except that the unit of measure is 144 eggs
+instead of 12. So, <code>eggs/144</code> will give the number of gross, and
+<code>eggs%144</code> is the number of eggs left over. Next, the eggs in the left-over
+pile still have to be divided into dozens, plus some extra number of eggs
+between 0 and 11. Of course, we already know how to do this: If there are
+<code>N</code> eggs in the pile, the number of dozens is <code>N/12</code> and the
+number of extra eggs is <code>N%12</code>. This leads to the computation in the
+improved version of the program, shown below. (Note that this program uses the
+variable named <code>aboveGross</code> to represent a quantity that is not
+mentioned explicitly in the problem description. This is far from being
+unusual.)</p>
+   </exercise-discuss>
+   <exercise-code>
+<pre>
+<prog name="Dozens">public class Dozens {
+  
+   /*  This program will convert a given number of eggs into
+       the number of dozens plus the number of left over eggs.
+       For example, 57 eggs is 4 dozen eggs plus 9 eggs left over.
+       The number of eggs is input by the user, and the computed
+       results are displayed. 
+   */
+
+   public static void main(String[] args) {
+   
+      int eggs;    // Number of eggs, input by user.
+      int dozens;  // How many dozens in that number of eggs?
+      int extras;  // How many eggs are left over, above an integral
+                   //    number of dozens?  This value is in the
+                   //    range 0 to 11, and it is computed as
+                   //    the remainder when eggs is divided by 12.
+   
+      System.out.print("How many eggs do you have?  ");
+      eggs = TextIO.getlnInt();
+      
+      dozens = eggs / 12;
+      extras = eggs % 12;
+      
+      System.out.print("Your number of eggs is ");
+      System.out.print(dozens);
+      System.out.print(" dozen and ");
+      System.out.print(extras);
+      System.out.println();
+   
+   }  // end main()
+
+}  // end class
+</prog></pre>
+
+<np><b><u>Improved version:</u></b>
+</np>
+
+<pre><prog name="GrossAndDozens">
+public class GrossAndDozens {
+  
+   /*  This program will convert a given number of eggs into
+       the number of gross plus the number of dozens plus the
+       number of left over eggs.
+          For example, 1342 eggs is 9 gross plus 3 dozen plus 10.
+       The number of eggs is input by the user, and the computed
+       results are displayed. 
+   */
+
+   public static void main(String[] args) {
+   
+      int eggs;         // Number of eggs, input by user.
+      int gross;        // How many gross in that number of eggs?
+      int aboveGross;   // How many eggs are left over, above an
+                        //    integral number of gross?  This number
+                        //    can be computed as eggs % 144, and is
+                        //    in the range 0 to 143.  This number will
+                        //    be divided into dozens and extras.
+      int dozens;       // How many dozens in aboveGross?
+      int extras;       // How many eggs are left over, above integral
+                        //    numbers of gross and dozens? 
+   
+      System.out.print("How many eggs do you have?  ");
+      eggs = TextIO.getlnInt();
+      
+      gross = eggs / 144;
+      aboveGross = eggs % 144;
+      
+      dozens = aboveGross / 12;
+      extras = aboveGross % 12;          
+      
+      System.out.print("Your number of eggs is ");
+      System.out.print(gross);
+      System.out.print(" gross, ");
+      System.out.print(dozens);
+      System.out.print(" dozen, and ");
+      System.out.print(extras);
+      System.out.println();
+   
+   }  // end main()
+
+}  // end class
+</prog></pre>
+
+   </exercise-code> 
+</exercise>
+
+
+
+<exercise>
+<exercise-question><p>This exercise asks you to write a program that tests
+some of the built-in subroutines for working with <classname>Strings</classname>.
+The program should ask the user to enter their first name and their last name, separated
+by a space.  Read the user's response using <code>TextIO.getln()</code>.
+Break the input string up into two strings, one containing the first name
+and one containing the last name.  You can do that by using the <code>indexOf()</code>
+subroutine to find the position of the space, and then using <code>substring()</code>
+to extract each of the two names.  Also output the number of characters in each 
+name, and output the user's initials.  (The initials are the first letter of
+the first name together with the first letter of the last name.)
+ A sample run of the program should look something like this:</p>
+<pre>Please enter your first name and last name, separated by a space.
+? <newcode>Mary Smith</newcode>
+Your first name is Mary, which has 4 characters
+Your last name is Smith, which has 5 characters
+Your initials are MS</pre>
+</exercise-question>
+<exercise-discuss>
+<p>Once you have the first name and the last name in separate <classname>String</classname>
+variables, it's easy to produce the desired output.  The length of a string, <code>str</code>,
+can be obtained by calling the function <code>str.length()</code>.  To get the first
+character of <code>str</code>, you can call <code>str.charAt(0)</code>.  (Remember that
+characters are numbered starting from zero.)  If the first and last names are in the
+variables <code>firstName</code> and <code>lastName</code>, then the output of the
+program can be produced using</p>
+<pre>System.out.println("Your first name is " + firstName + ", which has "
+                          + firstName.length() + " characters.");
+System.out.println("Your last name is " + lastName + ", which has "
+                          + lastName.length() + " characters.");
+System.out.println("Your initials are " + firstName.charAt(0) + lastName.charAt(0));</pre>
+<np>Or, using formatted output to make it easier to read:</np>
+<pre>System.out.printf( "Your first name is %s, which has %d characters.%n",
+                                   firstName, firstName.length() );
+System.out.printf( "Your last name is %s, which has %d characters.%n",
+                                   lastName, lastName.length() );
+System.out.print( "Your initials are %s%s%n", 
+                                   firstName.charAt(0), lastName.charAt(0) );</pre>
+<np>Note that it is not necessary to put values like <code>firstName.length()</code>
+and <code>firstName.charAt(0)</code> into their own variables, if all that you want
+to do with them is print them out.  (But some people might consider it better style
+to use variables.)</np>
+<p>The harder part of the problem is breaking up the input string to get the first
+and last name.  If the user's input is in a <classname>String</classname> named
+<code>input</code>, then <code>input.indexOf('&nbsp;')</code> is an <ptype>int</ptype>
+that gives the position of the space in the string.  (Note that the space
+character is written as a literal that consists of a space between two left single 
+quotation marks.)</p>
+<p>Once you have the position of the space, you have to figure out how to use it to
+get the first and last name.  Let's look at exactly how the characters in a
+string are numbered:</p>
+<pre>         M  a  r  y     S  m  i  t  h
+         0  1  2  3  4  5  6  7  8  9</pre>
+<np>In this example, the space is at index 4.  We have to extract the substring in 
+positions 0 through 3 and the substring in positions 5 through 9.
+The value of <code>input.substring(start,end)</code>  will be a string that
+starts in position <code>start</code> and ends in position <code>end-1</code>.
+Note that the value of the second parameter is the position <b>after</b>
+the end of the substring.  So, the fist name in this case is <code>input.substring(0,4)</code>
+and the last name is <code>input.substring(5,10)</code>. (Even though there is no character
+in position 10, that's the correct value for the position after the end of the substring that
+we want.)  In fact, there's an easier way to get the last name, using another version 
+of <code>substring</code>: The value of <code>input.substring(start)</code>
+is the substring starting at position <code>start</code> and extending to the end
+of the string, so the last name in this example is <code>input.substring(4)</code>.</np>
+<p>The important thing to note here is that the "4" in <code>input.substring(0,4)</code>
+is the index of the space character, and the "5" in 
+<code>input.substring(5)</code> is that index plus&nbsp;1.  So we can
+get the first and last names using:</p>
+<pre>space = input.indexOf(' ');
+firstName = input.substring(0,space);  // Everything <b>before</b> the space
+lastName = input.substring(space+1);   // Everything <b>after</b> the space</pre>
+<p>By the way, this program will only work correctly if the user follows the
+instructions.  If the user's input does not contain a space, then the value of
+<code>input.indexOf('&nbsp;')</code> will be -1, and the -1 will cause the program
+to crash when used in the substring function.  And if the input doens't have exactly one
+space, then the program output won't be correct.  For now, you don't have any way
+to test the user's input to see whether it is correct.  To do that, you need to
+know about <code>if</code> statements, which you will learn about very soon.</p>
+<p>One more remark:  Instead of using <code>TextIO.getln()</code> to read a line
+of text and then breaking that line into two words, you could simply use
+<code>TextIO.getWord()</code> twice to read the two words from the same line of
+input&mdash;except that the exercise says to use <code>getln()</code>.</p>
+</exercise-discuss>
+<exercise-code><pre><prog name="FirstNameLastName">/**
+ * This program reads the user's first name and last name,
+ * separated by a space.  It then prints the user's first and
+ * last names separately, along with the number of characters
+ * in each name.  It also prints the user's initials.  Note that
+ * this program will crash if the user's input does not contain
+ * a space.
+ */
+public class FirstNameLastName {
+    
+    public static void main(String[] args) {
+        
+        String input;     // The input line entered by the user.
+        int space;        // The location of the space in the input.
+        String firstName; // The first name, extracted from the input.
+        String lastName;  // The last name, extracted from the input.
+        
+        System.out.println();
+        System.out.println("Please enter your first name and last name, separated by a space.");
+        System.out.print("? ");
+        input = TextIO.getln();
+        
+        space = input.indexOf(' ');
+        firstName = input.substring(0, space);
+        lastName = input.substring(space+1);
+        
+        System.out.println("Your first name is " + firstName + ", which has "
+                                  + firstName.length() + " characters.");
+        System.out.println("Your last name is " + lastName + ", which has "
+                                  + lastName.length() + " characters.");
+        System.out.println("Your initials are " + firstName.charAt(0) + lastName.charAt(0));
+        
+    }
+
+}
+</prog>
+</pre></exercise-code>
+</exercise>
+
+
+
+   
+<exercise>
+   <exercise-question><p>Suppose that a file named "testdata.txt" contains the following information:
+      The first line of the file is the name of a student.  Each of the next three
+      lines contains an integer.  The integers are the student's scores on three
+      exams.  Write a program that will read the information in the file
+      and display (on standard output) a message that contains the name of
+      the student and the student's average grade on the three exams.
+      The average is obtained by adding up the individual exam grades and
+      then dividing by the number of exams.
+      </p>
+   </exercise-question>
+   <exercise-discuss>
+      <p><classname>TextIO</classname> can be used to read data from a file; this is discussed
+      in <localref href="basics.4.4"/>.  To read data from a file named
+      "testdata.txt", all you need to do is say <code>TextIO.readFile("testdata.txt")</code>.
+      From then on, the input functions in <classname>TextIO</classname> will read from the file
+      instead of reading data typed in by the user.  (Note that this assumes that
+      the file is in the same directory with the program.)  In this case, we
+      can use <code>TextIO.getln()</code> to read the student's name from the first
+      line of the file, and then we can read the exam grades by calling
+      <code>TextIO.getln()</code> three times.</p>
+      <p>The average should be computed as a value of type double.  Don't forget
+      that if you divide an integer by an integer in Java, the result is an integer
+      and the remainder of the division is discarded.  To get the correct
+      average in this case, the program divides the sum of the three grades by
+      3.0 rather than by 3.
+      </p>
+      <p>One final technicality is that simply outputting a <ptype>double</ptype>
+      value might print out something like 83.333333333333333.  By default, all
+      significant digits in the number are output.  In this case, one digit
+      after the decimal point is probably sufficient.  The program
+      uses formatted output to achieve this:</p>
+      
+      <pre>System.out.printf("The average grade for %s was %1.1f", name, average);</pre>
+    
+      <np>The format string
+      "The average grade for %s was %1.1f" is used
+      to format the name and the average.  The name is substituted for the
+      format specifier <code>%s</code>, which means that the name is
+      printed as a string, with no extra spaces.  The average is substituted
+      for <code>%1.1f</code>, which means that the average
+      is printed as a floating point number with no extra spaces and with
+      1 digit after the decimal point.</np>
+      <p>You might want to run this program with no data file, or with a
+      data file that is not in the correct format, to see what happens.
+      (The program will crash and print an error message.)</p>
+   </exercise-discuss>
+   <exercise-code>
+<pre><prog name="FindAverage">
+public class FindAverage {
+
+   public static void main(String[] args) {
+
+       String name;     // The student's name, from the first line of the file.
+       int exam1, exam2, exam3;     // The student's grades on the three exams.
+       double average;  // The average of the three exam grades.
+
+       TextIO.readFile("testdata.txt");  // Read from the file.
+
+       name = TextIO.getln();  // Reads the entire first line of the file.
+       exam1 = TextIO.getlnInt();
+       exam2 = TextIO.getlnInt();
+       exam3 = TextIO.getlnInt();
+
+       average = ( exam1 + exam2 + exam3 ) / 3.0;
+
+       System.out.printf("The average grade for %s was %1.1f", name, average);
+       System.out.println();
+
+   }
+
+}
+</prog>
+</pre>
+   </exercise-code>
+</exercise>
+
+</exercises>

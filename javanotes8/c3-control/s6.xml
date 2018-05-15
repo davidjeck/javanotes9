@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="control.6" title="The switch Statement">
+   
+<p><start><big>T</big>he second branching statement</start> in Java is the
+<code>switch</code> statement, which is introduced in this section. The
+<code>switch</code> statement is used far less often than the <code>if</code> statement, but it
+is sometimes useful for expressing a certain type of multiway branch.</p>
+
+   
+<subsection id="control.6.1" title="The Basic switch Statement">
+
+<p>A switch statement allows you to test the value of an expression and,
+depending on that value, to jump directly to some location within the switch statement.
+Only expressions of certain types can be used.  The value of the expression
+can be one of the primitive integer types <ptype>int</ptype>,
+<ptype>short</ptype>, or <ptype>byte</ptype>.
+It can be the primitive <ptype>char</ptype> type.  
+It can be <classname>String</classname>.
+Or it can be an enum type (see <localref href="basics.3.4"/> for an introduction to enums).  
+In particular, note that the expression <b>cannot</b> be a <ptype>double</ptype> or 
+<ptype>float</ptype> value.  </p>
+
+<p>The positions within a switch statement to which it
+can jump are marked with <newword>case labels</newword> that take the form: 
+"case&nbsp;<bnf>constant</bnf>:".  The <bnf>constant</bnf> here is a literal of
+the same type as the expression in the <code>switch</code>.
+A case label marks the position the
+computer jumps to when the expression evaluates to the given <bnf>constant</bnf> value. 
+As the final case in a switch statement you can,
+optionally, use the label "default:", which provides a default jump point that
+is used when the value of the expression is not listed in any case label.</p>
+
+<p>A <code>switch</code> statement, as it is most often used, has the form:</p>
+
+<pre>switch (<bnf>expression</bnf>) {
+   case <bnf>constant-1</bnf>:
+      <bnf>statements-1</bnf>
+      break;
+   case <bnf>constant-2</bnf>:
+      <bnf>statements-2</bnf>
+      break;
+      .
+      .   // (more cases)
+      .
+   case <bnf>constant-N</bnf>:
+      <bnf>statements-N</bnf>
+      break;
+   default:  // optional default case
+      <bnf>statements-(N+1)</bnf>
+} // end of switch statement</pre>
+
+<np>This has exactly the same effect as the following multiway <code>if</code> statement,
+but the <code>switch</code> statement can be more efficient because the computer
+can evaluate one expression and jump directly to the correct case, 
+whereas in the <code>if</code> statement, the
+computer must evaluate up to <code>N</code> expressions before it knows which set of
+statements to execute:</np>
+
+<pre>if (<bnf>expression</bnf> == <bnf>constant-1</bnf>) { // but use .equals for String!!
+    <bnf>statements-1</bnf>
+} 
+else if (<bnf>expression</bnf> == <bnf>constant-2</bnf>) { 
+    <bnf>statements-2</bnf>
+} 
+else
+    .
+    .
+    .
+else if (<bnf>expression</bnf> == <bnf>constant-N</bnf>) { 
+    <bnf>statements-N</bnf>
+} 
+else {
+    <bnf>statements-(N+1)</bnf>
+}</pre>
+
+<p>The <code>break</code> statements in the <code>switch</code> are technically optional. The effect of a
+<code>break</code> is to make the computer jump past the end of the switch statement,
+skipping over all the remaining cases.
+If you leave out the break statement, the computer will just forge ahead after
+completing one case and will execute the statements associated with the next
+case label. This is rarely what you want, but it is legal. (I will note here&mdash;although 
+you won't understand it until you get to the next chapter&mdash;that
+inside a subroutine, the <code>break</code> statement is sometimes replaced by a
+<code>return</code> statement, which terminates the subroutine as well as the switch.)</p>
+
+<p>Note that you can leave out one of the groups of statements entirely
+(including the <code>break</code>). You then have two case labels in a row,
+containing two different constants. This just means that the computer will jump
+to the same place and perform the same action for each of the two
+constants.</p>
+
+<p>Here is an example of a switch statement. This is not a useful example, but
+it should be easy for you to follow. Note, by the way, that the constants in
+the case labels don't have to be in any particular order, but they must
+all be different:</p>
+
+<pre>switch ( N ) {   // (Assume N is an integer variable.)
+   case 1:
+      System.out.println("The number is 1.");
+      break;
+   case 2:
+   case 4:
+   case 8:
+      System.out.println("The number is 2, 4, or 8.");
+      System.out.println("(That's a power of 2!)");
+      break;
+   case 3:
+   case 6:
+   case 9:
+      System.out.println("The number is 3, 6, or 9.");
+      System.out.println("(That's a multiple of 3!)");
+      break;
+   case 5:
+      System.out.println("The number is 5.");
+      break;
+   default:
+      System.out.println("The number is 7 or is outside the range 1 to 9.");
+}</pre>
+
+   
+<p>The switch statement is pretty primitive as control structures go, and it's
+easy to make mistakes when you use it. Java takes all its control structures
+directly from the older programming languages C and C++. The switch statement
+is certainly one place where the designers of Java should have introduced some
+improvements.</p>
+
+   
+   
+</subsection>
+
+<subsection id="control.6.2" title="Menus and switch Statements">
+
+<p>One application of <code>switch</code> statements is in processing menus. A menu
+is a list of options. The user selects one of the options. The computer has to
+respond to each possible choice in a different way. If the options are numbered
+1, 2,&nbsp;&dots;, then the number of the chosen option can be used in a
+<code>switch</code> statement to select the proper response.</p>
+
+<p>In a <classname>TextIO</classname>-based program, the menu can be presented as a numbered
+list of options, and the user can choose an option by typing in its number.
+Here is an example that could be used in a variation of the
+<code>LengthConverter</code> example from the <localref href="control.5">previous
+section</localref>:</p>
+
+<pre>int optionNumber;   // Option number from menu, selected by user.
+double measurement; // A numerical measurement, input by the user.
+                    //    The unit of measurement depends on which
+                    //    option the user has selected.
+double inches;      // The same measurement, converted into inches.
+
+/* Display menu and get user's selected option number. */
+
+System.out.println("What unit of measurement does your input use?");
+System.out.println();
+System.out.println("         1.  inches");
+System.out.println("         2.  feet");
+System.out.println("         3.  yards");
+System.out.println("         4.  miles");
+System.out.println();
+System.out.println("Enter the number of your choice: ");
+optionNumber = TextIO.getlnInt();
+
+/* Read user's measurement and convert to inches. */
+
+switch ( optionNumber ) {
+   case 1:
+       System.out.println("Enter the number of inches: ");
+       measurement = TextIO.getlnDouble();
+       inches = measurement;
+       break;          
+   case 2:
+       System.out.println("Enter the number of feet: ");
+       measurement = TextIO.getlnDouble();
+       inches = measurement * 12;
+       break;          
+   case 3:
+       System.out.println("Enter the number of yards: ");
+       measurement = TextIO.getlnDouble();
+       inches = measurement * 36;
+       break;          
+   case 4:
+       System.out.println("Enter the number of miles: ");
+       measurement = TextIO.getlnDouble();
+       inches = measurement * 12 * 5280;
+       break;
+   default:
+       System.out.println("Error!  Illegal option number!  I quit!");
+       System.exit(1);          
+} // end switch
+
+/* Now go on to convert inches to feet, yards, and miles... */</pre>
+
+<np>This example could instead be written using a <classname>String</classname>
+in the <code>switch</code> statement:</np>
+
+<pre>String units;       // Unit of measurement, entered by user.
+double measurement; // A numerical measurement, input by the user.
+double inches;      // The same measurement, converted into inches.
+
+/* Read the user's unit of measurement. */
+
+System.out.println("What unit of measurement does your input use?");
+System.out.print("Legal responses: inches, feet, yards, or miles : ");
+units = TextIO.getln().toLowerCase();
+
+/* Read user's measurement and convert to inches. */
+
+System.out.print("Enter the number of " + units + ":  ");
+measurement = TextIO.getlnDouble();
+
+switch ( units ) {
+   case "inches":
+       inches = measurement;
+       break;          
+   case "feet":
+       inches = measurement * 12;
+       break;          
+   case "yards":
+       inches = measurement * 36;
+       break;          
+   case "miles":
+       inches = measurement * 12 * 5280;
+       break;
+   default:
+       System.out.println("Wait a minute!  Illegal unit of measure!  I quit!");
+       System.exit(1);          
+} // end switch</pre>
+
+   
+</subsection>
+
+<subsection id="control.6.3" title="Enums in switch Statements">
+   
+<p>The type of the expression in a <code>switch</code> can be an enumerated
+type.  In that case, the constants in the <code>case</code> labels must
+be values from the enumerated type.  For example, suppose that the type of
+the expression is the enumerated type <classname>Season</classname>
+defined by</p>
+
+<pre>enum Season { SPRING, SUMMER, FALL, WINTER }</pre>
+
+<np>and that the expression in a <code>switch</code> statement is an expression
+of type <classname>Season</classname>.  The constants in the case label must be chosen from among
+the values <code>Season.SPRING</code>, <code>Season.SUMMER</code>, <code>Season.FALL</code>, or
+<code>Season.WINTER</code>.  However, there is a quirk in the syntax:
+when an enum  constant is used in a <code>case</code> label, only the simple name,
+such as "<code>SPRING</code>" is used, not the full name, such as "<code>Season.SPRING</code>".
+Of course, the computer already knows that the value in the <code>case</code> label
+must belong to the enumerated type, since it can tell that from the type of expression
+used, so there is really no need to specify the type name in the constant.  For example,
+assuming that <code>currentSeason</code> is a variable of type <classname>Season</classname>,
+then we could have the <code>switch</code> statement:</np>
+  
+<pre>switch ( currentSeason ) {
+   case WINTER:    // ( NOT Season.WINTER ! )
+      System.out.println("December, January, February");
+      break;
+   case SPRING:
+      System.out.println("March, April, May");
+      break;
+   case SUMMER:
+      System.out.println("June, July, August");
+      break;
+   case FALL:
+      System.out.println("September, October, November");
+      break;
+}</pre>
+</subsection>
+
+<subsection id="control.6.4" title="Definite Assignment and switch Statements">
+   
+<p>As a somewhat more realistic example, the following <code>switch</code> statement
+makes a random choice among three possible alternatives.  Recall that the
+value of the expression <code>(int)(3*Math.random())</code> is one of the
+integers 0, 1, or 2, selected at random with equal probability, so the
+<code>switch</code> statement below will assign one of the values
+<code>"Rock"</code>, <code>"Paper"</code>, <code>"Scissors"</code> to <code>computerMove</code>,
+with probability 1/3 for each case:</p>
+
+<pre>switch ( (int)(3*Math.random()) ) {
+   case 0:
+      computerMove = "Rock";
+      break;
+   case 1:
+      computerMove = "Paper";
+      break;
+   case 2:
+      computerMove = "Scissors";
+      break;
+}</pre>
+
+<np>Now, this <code>switch</code> statement is perfectly OK, but suppose that we use it in the
+following code segment:</np>
+   
+<pre><newcode>String computerMove;</newcode>
+switch ( (int)(3*Math.random()) ) {
+   case 0:
+      computerMove = "Rock";
+      break;
+   case 1:
+      computerMove = "Paper";
+      break;
+   case 2:
+      computerMove = "Scissors";
+      break;
+}
+<newcode>System.out.println("The computer's move is " + computerMove);</newcode>  // ERROR!</pre>
+
+<np>Now there is a subtle error on the last line!  The problem here is due to
+definite assignment, the idea that the Java compiler must be able to determine
+that a variable has definitely been assigned a value before its value is used.
+Definite assignment was introduced in <localref href="control.1.4"/>.
+In this example, it's true that the three cases in the <code>switch</code>
+cover all the possibilities, but the compiler is not smart enough to figure
+that out; it just sees that there is an integer-valued expression in the <code>switch</code>
+but not all possible integer values are covered by the given cases.
+</np>
+
+<p>A simple solution is to replace the final <code>case</code> in the <code>switch</code>
+statement with <code>default</code>.  With a <code>default</code> case, all
+possible values of the expression in the <code>switch</code> are certainly covered,
+and the compiler knows that <code>computerMove</code> is definitely assigned
+a value:</p>
+
+<pre>String computerMove;
+switch ( (int)(3*Math.random()) ) {
+   case 0:
+      computerMove = "Rock";
+      break;
+   case 1:
+      computerMove = "Paper";
+      break;
+   <newcode>default</newcode>:
+      computerMove = "Scissors";
+      break;
+}
+System.out.println("The computer's move is " + computerMove);  // OK!</pre>
+
+
+</subsection>
+   
+</section>

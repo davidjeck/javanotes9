@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="control.4" title="The for Statement">
+   
+<p><start><big>W</big>e turn in this section</start> to another type of loop,
+the <code>for</code> statement. Any <code>for</code> loop is equivalent to some
+<code>while</code> loop, so the language doesn't get any additional power by having
+<code>for</code> statements. But for a certain type of problem, a <code>for</code> loop
+can be easier to construct and easier to read than the corresponding
+<code>while</code> loop. It's quite possible that in real programs, <code>for</code>
+loops actually outnumber <code>while</code> loops.</p>
+
+<subsection id="control.4.1" title="For Loops">
+
+<p>The <code>for</code> statement makes a common type of while loop easier to
+write. Many while loops have the general form:</p>
+
+<pre><bnf>initialization</bnf>
+while ( <bnf>continuation-condition</bnf> ) {
+    <bnf>statements</bnf>
+    <bnf>update</bnf>
+}</pre>
+
+<np>For example, consider this example, copied from an example in <localref href="control.2"/>:</np>
+
+<pre>years = 0;  // <b>initialize</b> the variable years
+while ( years &lt; 5 ) {   // <b>condition</b> for continuing loop
+
+    interest = principal * rate;    //
+    principal += interest;          // do three <b>statements</b>
+    System.out.println(principal);  //
+    
+    years++;   // <b>update</b> the value of the variable, years
+}</pre>
+
+<np>This loop can be written as the following equivalent <code>for</code>
+statement:</np>
+
+<pre>for ( years = 0;  years &lt; 5;  years++ ) {
+   interest = principal * rate;
+   principal += interest;
+   System.out.println(principal);
+}</pre>
+
+<np>The initialization, continuation condition, and updating have all been
+combined in the first line of the <code>for</code> loop. This keeps everything
+involved in the "control" of the loop in one place, which helps make the loop
+easier to read and understand. The <code>for</code> loop is executed in exactly the
+same way as the original code: The initialization part is executed once, before
+the loop begins. The continuation condition is executed before each execution
+of the loop, and the loop ends when this condition is <code>false</code>. The
+update part is executed at the end of each execution of the loop, just before
+jumping back to check the condition.</np>
+
+<p>The formal syntax of the <code>for</code> statement is as follows:</p>
+
+<pre>for ( <bnf>initialization</bnf>; <bnf>continuation-condition</bnf>; <bnf>update</bnf> )
+     <bnf>statement</bnf></pre>
+
+<np>or, using a block statement:</np>
+
+<pre>for ( <bnf>initialization</bnf>; <bnf>continuation-condition</bnf>; <bnf>update</bnf> ) {
+     <bnf>statements</bnf>
+}</pre>
+
+<np>The <bnf>continuation-condition</bnf> must be a
+boolean-valued expression. The <bnf>initialization</bnf>
+is usually a declaration or an assignment statement, but it
+can be any expression that would be allowed as a statement in a program.
+The <bnf>update</bnf> can be any simple statement, but is usually
+an increment, a decrement, or an assignment statement. Any
+of the three parts can be empty. If the continuation condition is empty, it is
+treated as if it were "<code>true</code>," so the loop will be repeated forever or
+until it ends for some other reason, such as a <code>break</code> statement. (Some
+people like to begin an infinite loop with "<code>for&nbsp;(;;)</code>" instead of
+"<code>while&nbsp;(true)</code>".)  Here's a flow control diagram for a <code>for</code>
+statement:</np>
+
+<img src="for-loop-flow-control.png" alt="control diagram for a for loop"
+   width="186" height="401" bordered="true" tex="for-loop-flow-control.eps" texscale="0.8"/>
+
+<p>Usually, the initialization part of a <code>for</code> statement assigns a value
+to some variable, and the update changes the value of that variable with an
+assignment statement or with an increment or decrement operation. The value of
+the variable is tested in the continuation condition, and the loop ends when
+this condition evaluates to <code>false</code>. A variable used in this way is
+called a <newword>loop control variable</newword>. In the
+example given above, the loop control variable was <code>years</code>.</p>
+
+<p>Certainly, the most common type of <code>for</code> loop is the <newword>counting loop</newword>, 
+where a loop control variable takes on all
+integer values between some minimum and some maximum value. A counting loop has
+the form</p>
+
+<pre>for ( <bnf>variable</bnf> = <bnf>min</bnf>;  <bnf>variable</bnf> &lt;= <bnf>max</bnf>; <bnf>variable</bnf>++ ) {
+     <bnf>statements</bnf>
+}</pre>
+
+<np>where <bnf>min</bnf> and <bnf>max</bnf> are integer-valued expressions (usually constants). The
+<bnf>variable</bnf> takes on the values <bnf>min</bnf>, <bnf>min</bnf>+1, 
+<bnf>min</bnf>+2,&nbsp;&dots;, <bnf>max</bnf>. The value
+of the loop control variable is often used in the body of the loop. The
+<code>for</code> loop at the beginning of this section is a counting loop in which
+the loop control variable, <code>years</code>, takes on the values 1, 2, 3, 4, 5.
+Here is an even simpler example, in which the numbers 1, 2,&nbsp;&dots;, 10 are
+displayed on standard output:</np>
+
+<pre>for ( N = 1 ;  N &lt;= 10 ;  N++ )
+   System.out.println( N );</pre>
+
+<np>For various reasons, Java programmers like to start counting at 0 instead of
+1, and they tend to use a "<code>&lt;</code>" in the condition, rather than a
+"<code>&lt;=</code>". The following variation of the above loop prints out the ten
+numbers 0, 1, 2,&nbsp;&dots;, 9:</np>
+
+<pre>for ( N = 0 ;  N &lt; 10 ;  N++ )
+   System.out.println( N );</pre>
+
+<np>Using <code>&lt;</code> instead of <code>&lt;=</code> in the test, or vice versa, is
+a common source of off-by-one errors in programs. You should always stop and
+think, Do I want the final value to be processed or not?</np>
+
+<p>It's easy to count down from 10 to 1 instead of counting up. Just start with
+10, decrement the loop control variable instead of incrementing it, and
+continue as long as the variable is greater than or equal to one.</p>
+
+<pre>for ( N = 10 ;  N &gt;= 1 ;  N-- )
+   System.out.println( N );</pre>
+
+<p>Now, in fact, the official syntax of a <code>for</code> statement actually
+allows both the initialization part and the update part to consist of several
+expressions, separated by commas. So we can even count up from 1 to 10 and
+count down from 10 to 1 at the same time!</p>
+
+<pre>for ( i=1, j=10;  i &lt;= 10;  i++, j-- ) {
+   System.out.printf("%5d", i); // Output i in a 5-character wide column.
+   System.out.printf("%5d", j); // Output j in a 5-character column 
+   System.out.println();       //     and end the line.
+}</pre>
+
+<p>As a final introductory example, let's say that we want to use a <code>for</code> loop that
+prints out just the even numbers between 2 and 20, that is: 2, 4, 6, 8, 10, 12,
+14, 16, 18, 20. There are several ways to do this. Just to show how even a very
+simple problem can be solved in many ways, here are four different solutions
+(three of which would get full credit):</p>
+
+<pre> (1)   // There are 10 numbers to print.           
+       // Use a for loop to count 1, 2,            
+       // ..., 10.  The numbers we want            
+       // to print are 2*1, 2*2, ... 2*10.         
+   
+       for (N = 1; N &lt;= 10; N++) {              
+          System.out.println( 2*N );                
+       }
+       
+       
+ (2)   // Use a for loop that counts
+       // 2, 4, ..., 20 directly by
+       // adding 2 to N each time through
+       // the loop.
+       
+       for (N = 2; N &lt;= 20; N = N + 2) {
+          System.out.println( N );
+       }
+       
+       
+ (3)   // Count off all the numbers    
+       // 2, 3, 4, ..., 19, 20, but                
+       // only print out the numbers               
+       // that are even.                           
+    
+       for (N = 2; N &lt;= 20; N++) {               
+          if ( N % 2 == 0 ) // is N even?           
+             System.out.println( N );               
+       } 
+   
+   
+ (4)   // Irritate the professor with
+       // a solution that follows the
+       // letter of this silly assignment
+       // while making fun of it.
+       
+       for (N = 1; N &lt;= 1; N++) {
+          System.out.println("2 4 6 8 10 12 14 16 18 20");
+       }
+</pre>
+
+   
+<p>Perhaps it is worth stressing one more time that a <code>for</code> statement,
+like any statement except for a variable declaration, never occurs on its own in a real program. A statement must
+be inside the <code>main</code> routine of a program or inside some other
+subroutine. And that subroutine must be defined inside a class. I should also
+remind you that every variable must be declared before it can be used, and that
+includes the loop control variable in a <code>for</code> statement. In all the
+examples that you have seen so far in this section, the loop control variables
+should be declared to be of type <ptype>int</ptype>. It is not required that a loop
+control variable be an integer. Here, for example, is a <code>for</code> loop in
+which the variable, <code>ch</code>, is of type <ptype>char</ptype>, using
+the fact that the <code>++</code> operator can be applied to characters as
+well as to numbers:</p>
+
+<pre>// Print out the alphabet on one line of output.
+char ch;  // The loop control variable; 
+          //       one of the letters to be printed.
+for ( ch = 'A';  ch &lt;= 'Z';  ch++ )
+    System.out.print(ch);
+System.out.println();</pre>
+   
+</subsection>
+<subsection id="control.4.2" title="Example: Counting Divisors">
+
+<p>Let's look at a less trivial problem that can be solved with a <code>for</code>
+loop. If <code>N</code> and <code>D</code> are positive integers, we say that
+<code>D</code> is a <newword>divisor</newword> of <code>N</code> if the
+remainder when <code>D</code> is divided into <code>N</code> is zero. (Equivalently, we
+could say that <code>N</code> is an even multiple of <code>D</code>.) In terms of Java
+programming, <code>D</code> is a divisor of <code>N</code> if <code>N&nbsp;%&nbsp;D</code> is
+zero.</p>
+
+<p>Let's write a program that inputs a positive integer, <code>N</code>, from the
+user and computes how many different divisors <code>N</code> has. The numbers that
+could possibly be divisors of <code>N</code> are 1, 2,&nbsp;&dots;,&nbsp;<code>N</code>. To compute
+the number of divisors of <code>N</code>, we can just test each possible divisor of
+<code>N</code> and count the ones that actually do divide <code>N</code> evenly. In
+pseudocode, the algorithm takes the form</p>
+
+<pre>Get a positive integer, N, from the user
+Let divisorCount = 0
+for each number, testDivisor, in the range from 1 to N:
+    if testDivisor is a divisor of N:
+        Count it by adding 1 to divisorCount
+Output the count</pre>
+
+<np>This algorithm displays a common programming pattern that is used when some,
+but not all, of a sequence of items are to be processed. The general pattern
+is</np>
+
+<pre>for each item in the sequence:
+   if the item passes the test:
+       process it</pre>
+
+<np>The <code>for</code> loop in our divisor-counting algorithm can be translated
+into Java code as</np>
+
+<pre>for (testDivisor = 1; testDivisor &lt;= N; testDivisor++) {
+   if ( N % testDivisor == 0 )
+      divisorCount++;
+}</pre>
+
+<p>On a modern computer, this loop can be executed very quickly. It is not
+impossible to run it even for the largest legal <ptype>int</ptype> value, 2147483647.
+(If you wanted to run it for even larger values, you could use variables of
+type <ptype>long</ptype> rather than <ptype>int</ptype>.) However, it does take a
+significant amount of time for very large numbers. So when I implemented this
+algorithm, I decided to output a dot every time the computer has tested one
+million possible divisors. In the improved version of the program, there are
+two types of counting going on. We have to count the number of divisors and we
+also have to count the number of possible divisors that have been tested. So
+the program needs two counters. When the second counter reaches 1000000, the program
+outputs a '.' and resets the counter to zero so that we can start counting the
+next group of one million. Reverting to pseudocode, the algorithm now looks
+like</p>
+
+<pre>Get a positive integer, N, from the user
+Let divisorCount = 0  // Number of divisors found.
+Let numberTested = 0  // Number of possible divisors tested
+                      //       since the last period was output.
+for each number, testDivisor, in the range from 1 to N:
+    if testDivisor is a divisor of N:
+        Count it by adding 1 to divisorCount
+    Add 1 to numberTested
+    if numberTested is 1000000:
+        print out a '.'
+        Reset numberTested to 0
+Output the count</pre>
+
+<np>Finally, we can translate the algorithm into a complete Java program:</np>
+
+<pre>/**
+ * This program reads a positive integer from the user.
+ * It counts how many divisors that number has, and
+ * then it prints the result.
+ */
+   
+public class CountDivisors {
+   
+   public static void main(String[] args) {
+      
+      int N;  // A positive integer entered by the user.
+              // Divisors of this number will be counted.
+              
+      int testDivisor;  // A number between 1 and N that is a
+                        // possible divisor of N.
+      
+      int divisorCount;  // Number of divisors of N that have been found.
+      
+      int numberTested;  // Used to count how many possible divisors
+                         // of N have been tested.  When the number
+                         // reaches 1000000, a period is output and
+                         // the value of numberTested is reset to zero.
+                         
+      /* Get a positive integer from the user. */
+   
+      while (true) {
+         System.out.print("Enter a positive integer: ");
+         N = TextIO.getlnInt();
+         if (N > 0)
+            break;
+         System.out.println("That number is not positive.  Please try again.");
+      }
+      
+      /* Count the divisors, printing a "." after every 1000000 tests. */
+    
+      divisorCount = 0;
+      numberTested = 0;
+      
+      for (testDivisor = 1; testDivisor &lt;= N; testDivisor++) {
+         if ( N % testDivisor == 0 )
+            divisorCount++;
+         numberTested++;
+         if (numberTested == 1000000) {
+            System.out.print('.');
+            numberTested = 0;
+         }
+      }
+      
+      /* Display the result. */
+      
+      System.out.println();
+      System.out.println("The number of divisors of " + N
+                          + " is " + divisorCount);
+      
+   } // end main()
+   
+} // end class CountDivisors
+</pre>
+
+
+</subsection>
+
+<subsection id="control.4.3" title="Nested for Loops">
+   
+<p>Control structures in Java are statements that contain other, simpler statements. In
+particular, control structures can contain control structures. You've already
+seen several examples of <code>if</code> statements inside loops, and one example of
+a <code>while</code> loop inside another <code>while</code>, but any
+combination of one control structure inside another is possible. We say that
+one structure is <newword>nested</newword> inside another. You can
+even have multiple levels of nesting, such as a <code>while</code> loop inside an
+<code>if</code> statement inside another <code>while</code> loop. The syntax of Java
+does not set a limit on the number of levels of nesting. As a practical matter,
+though, it's difficult to understand a program that has more than a few levels
+of nesting.</p>
+
+<p>Nested <code>for</code> loops arise naturally in many algorithms, and it is
+important to understand how they work. Let's look at a couple of examples.
+First, consider the problem of printing out a multiplication table like this
+one:</p>
+
+<pre> 1   2   3   4   5   6   7   8   9  10  11  12
+ 2   4   6   8  10  12  14  16  18  20  22  24
+ 3   6   9  12  15  18  21  24  27  30  33  36
+ 4   8  12  16  20  24  28  32  36  40  44  48
+ 5  10  15  20  25  30  35  40  45  50  55  60
+ 6  12  18  24  30  36  42  48  54  60  66  72
+ 7  14  21  28  35  42  49  56  63  70  77  84
+ 8  16  24  32  40  48  56  64  72  80  88  96
+ 9  18  27  36  45  54  63  72  81  90  99 108
+10  20  30  40  50  60  70  80  90 100 110 120
+11  22  33  44  55  66  77  88  99 110 121 132
+12  24  36  48  60  72  84  96 108 120 132 144</pre>
+
+<np>The data in the table are arranged into 12 rows and 12 columns. The process
+of printing them out can be expressed in a pseudocode algorithm as</np>
+
+<pre>for each rowNumber = 1, 2, 3, ..., 12:
+   Print the first twelve multiples of rowNumber on one line
+   Output a carriage return</pre>
+
+<np>The first step in the <code>for</code> loop can itself be expressed as a
+<code>for</code> loop.  We can expand "Print the first twelve multiples of <code>rowNumber</code> 
+on one line" as:</np>
+
+<pre>for N = 1, 2, 3, ..., 12:
+   Print N * rowNumber</pre>
+
+<np>so a refined algorithm for printing the table has one <code>for</code> loop
+nested inside another:</np>
+
+<pre>for each rowNumber = 1, 2, 3, ..., 12:
+   for N = 1, 2, 3, ..., 12:
+      Print N * rowNumber
+   Output a carriage return</pre>
+
+<np>We want to print the output in neat columns, with each output number
+taking up four spaces. This can be done using formatted output with format specifier <code>%4d</code>.
+Assuming that <code>rowNumber</code> and <code>N</code> have been declared to be
+variables of type <ptype>int</ptype>, the algorithm can be expressed in Java as</np>
+
+<pre>for ( rowNumber = 1;  rowNumber &lt;= 12;  rowNumber++ ) {
+   for ( N = 1;  N &lt;= 12;  N++ ) {
+               // print in 4-character columns
+      System.out.printf( "%4d", N * rowNumber );  // No carriage return !
+   }
+   System.out.println();  // Add a carriage return at end of the line.
+}</pre>
+
+<p>This section has been weighed down with lots of examples of numerical
+processing. For our next example, let's do some text processing. Consider the
+problem of finding which of the 26 letters of the alphabet occur in a given
+string. For example, the letters that occur in "Hello World" are D, E, H, L, O,
+R, and W. More specifically, we will write a program that will list all the
+letters contained in a string and will also count the number of different
+letters. The string will be input by the user. Let's start with a pseudocode
+algorithm for the program.</p>
+
+<pre>Ask the user to input a string
+Read the response into a variable, str
+Let count = 0  (for counting the number of different letters)
+for each letter of the alphabet:
+   if the letter occurs in str:
+      Print the letter
+      Add 1 to count
+Output the count</pre>
+
+<p>Since we want to process the entire line of text that is entered by the
+user, we'll use <code>TextIO.getln()</code> to read it. The line of the algorithm
+that reads "for each letter of the alphabet" can be expressed as "<code>for
+(letter='A'; letter&lt;='Z'; letter++)</code>". But the <code>if</code> statement inside the <code>for</code>
+loop needs still more thought before we can write the program. How do we check whether the given letter,
+<code>letter</code>, occurs in <code>str</code>? One idea is to look at each character in
+the string in turn, and check whether that character is equal to <code>letter</code>.
+We can get the <code>i</code>-th character of <code>str</code> with the function call
+<code>str.charAt(i)</code>, where <code>i</code> ranges from 0 to <code>str.length()&nbsp;-&nbsp;1</code>.</p>
+
+<p>One more difficulty: A letter such as 'A' can occur in <code>str</code> in
+either upper or lower case, 'A' or 'a'. We have to check for both of these. But
+we can avoid this difficulty by converting <code>str</code> to upper case before
+processing it. Then, we only have to check for the upper case letter. We can
+now flesh out the algorithm fully:</p>
+
+<pre>Ask the user to input a string
+Read the response into a variable, str
+Convert str to upper case
+Let count = 0
+for letter = 'A', 'B', ..., 'Z':
+    for i = 0, 1, ..., str.length()-1:
+        if letter == str.charAt(i):
+            Print letter
+            Add 1 to count
+            break  // jump out of the loop, to avoid counting letter twice
+Output the count</pre>
+
+<np>Note the use of <code>break</code> in the nested
+<code>for</code> loop. It is required to avoid printing or counting a given letter
+more than once (in the case where it occurs more than once in the string). 
+The <code>break</code> statement breaks out of the inner
+<code>for</code> loop, but not the outer <code>for</code> loop.  Upon executing the
+<code>break</code>, the computer continues the outer loop with the next value of
+<code>letter</code>.  You should try to figure out exactly what <code>count</code>
+would be at the end of this program, if the <code>break</code> statement were omitted.
+Here is the complete program:</np>
+
+
+<pre>/**
+ * This program reads a line of text entered by the user.
+ * It prints a list of the letters that occur in the text,
+ * and it reports how many different letters were found.
+ */
+
+public class ListLetters {
+   
+   public static void main(String[] args) {
+   
+      String str;  // Line of text entered by the user.
+      int count;   // Number of different letters found in str.
+      char letter; // A letter of the alphabet.
+      
+      System.out.println("Please type in a line of text.");
+      str = TextIO.getln();
+      
+      str = str.toUpperCase();
+      
+      count = 0;
+      System.out.println("Your input contains the following letters:");
+      System.out.println();
+      System.out.print("   ");
+      for ( letter = 'A'; letter &lt;= 'Z'; letter++ ) {
+          int i;  // Position of a character in str.
+          for ( i = 0; i &lt; str.length(); i++ ) {
+              if ( letter == str.charAt(i) ) {
+                  System.out.print(letter);
+                  System.out.print(' ');
+                  count++;
+                  break;
+              }
+          }
+      }
+      
+      System.out.println();
+      System.out.println();
+      System.out.println("There were " + count + " different letters.");
+   
+   } // end main()
+   
+} // end class ListLetters
+</pre>
+
+   
+<p>In fact, there is actually an easier way to determine whether a given letter occurs
+in a string, <code>str</code>. The built-in function <code>str.indexOf(letter)</code>
+will return <code>-1</code> if <code>letter</code> does <b>not</b> occur in
+the string. It returns a number greater than or equal to zero if it does occur.
+So, we could check whether <code>letter</code> occurs in <code>str</code> simply by
+checking "<code>if&nbsp;(str.indexOf(letter)&nbsp;&gt;=&nbsp;0)</code>". If we used this technique
+in the above program, we wouldn't need a nested <code>for</code> loop. This gives
+you a preview of how subroutines can be used to deal with complexity.</p>
+
+   
+</subsection>
+   
+
+</section>

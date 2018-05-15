@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="arrays.2" title="Array Processing">
+   
+   
+<p><start><big>M</big>ost examples of array processing</start> that we
+have looked at have actually been fairly straightforward: processing
+the elements of the array in order from beginning to end, or random
+access to an arbitrary element of the array.  In this section
+and later in the chapter, you'll see some of the more interesting
+things that you can do with arrays.</p>
+ 
+<subsection id="arrays.2.1" title="Some Processing Examples">   
+
+<p>To begin, here's an example to remind you to be careful about
+avoiding array indices outside the legal range.  Suppose that
+<code>lines</code> is an array of type <code>String[]</code>,
+and we want to know whether <code>lines</code> contains any
+duplicate elements in consecutive locations.  That is, we
+want to know whether <code>lines[i].equals(lines[i+1])</code>
+for any index&nbsp;<code>i</code>.  Here is a failed attempt
+to check that condition:</p>
+
+<pre>boolean dupp = false;  // Assume there are no duplicates
+for ( int i = 0; i &lt; list.length; i++ ) {
+    if ( lines[i].equals(lines[i+1]) ) {  // <newcode>THERE IS AN ERROR HERE!</newcode>
+        dupp = true;   // we have found a duplicate!
+        break;
+    }
+}</pre>
+
+<np>This <code>for</code> loop looks like many others that we have written,
+so what's the problem?  The error occurs when <code>i</code> takes on
+its final value in the loop, <code>i</code> equal to <code>lines.length-1</code>.
+In that case, <code>i+1</code> is equal to <code>lines.length</code>.  But
+the last element in the array has index <code>lines.length-1</code>,
+so <code>lines.length</code> is not a legal index.  This means that the
+reference to <code>lines[i+1]</code> causes an ArrayIndexOutOfBoundsException.
+This is easy to fix; we just need to stop the loop before <code>i+1</code>
+goes out of range:</np>
+
+<pre>boolean dupp = false;  // Assume there are no duplicates
+for ( int i = 0; i &lt; <newcode>list.length - 1 </newcode>; i++ ) {
+    if ( lines[i].equals(lines[i+1]) ) { 
+        dupp = true;   // we have found a duplicate!
+        break;
+    }
+}</pre>
+
+<p>This type of error can be even more insidious when working with partially full
+arrays (see <localref href="control.7a.4"/>), where usually only part of the array is in
+use, and a counter is used to keep track of how many spaces in the array are used.
+With a partially full array, the problem
+is not looking beyond the end of the array, but looking beyond <i>the part of the array
+that is in use</i>.  When your program tries to look beyond the end of an array, at
+least the program will crash to let you know that there is a problem.  With a 
+partially full array, the problem can go undetected.</p>
+
+<break/>
+
+
+<p>For the next  example, let's continue with partially full arrays.  We have seen how to add
+an item to a partially full array, but suppose that we also want to be able to
+remove items?  Suppose that you write a game
+program, and that players can join the game and leave the game as it
+progresses. As a good object-oriented programmer, you probably have a class
+named <classname>Player</classname> to represent the individual players in the game. A list
+of all players who are currently in the game could be stored in an array,
+<code>playerList</code>, of type <atype>Player[]</atype>. Since the number of players can
+change, you will follow the partially full array pattern, and
+you will need a variable, <code>playerCt</code>, to record the number
+of players currently in the game. Assuming that there will never be more than
+10 players in the game, you could declare the variables as:</p>
+
+<pre>Player[] playerList = new Player[10];  // Up to 10 players.
+int      playerCt = 0;  // At the start, there are no players.</pre>
+
+<p>After some players have joined the game, <code>playerCt</code> will be greater
+than 0, and the player objects representing the players will be stored in the
+array elements <code>playerList[0]</code>, <code>playerList[1]</code>, &dots;,
+<code>playerList[playerCt-1]</code>. Note that the array element
+<code>playerList[playerCt]</code> is <b>not</b> in use. The procedure for
+adding a new player, <code>newPlayer</code>, to the game is simple:</p>
+
+<pre>playerList[playerCt] = newPlayer; // Put new player in next
+                                  //     available spot.
+playerCt++;  // And increment playerCt to count the new player.</pre>
+
+<p>But deleting a player from the game is a little harder, since you don't want to
+leave a "hole" in the array where the deleted player used to be. 
+Suppose you want to delete the player at index
+<code>k</code> in <code>playerList</code>.  The number of players goes down
+by one, so one fewer space is used in the array.  
+If you are not worried about keeping the
+players in any particular order, then one way to do this is to move the player
+from the last occupied position in the array
+into position <code>k</code> and then
+to decrement the value of <code>playerCt</code>:</p>
+
+<pre>playerList[k] = playerList[playerCt - 1];
+playerCt--;</pre>
+
+<np>The player previously in position <code>k</code> is no longer in the array, so
+we have deleted that player from the list.  The
+player previously in position <code>playerCt&nbsp;-&nbsp;1</code> is now in the array twice.
+But it's only in the occupied or valid part of the array once, since
+<code>playerCt</code> has decreased by one. Remember that every element of the
+array has to hold some value, but only the values in positions 0 through
+<code>playerCt&nbsp;-&nbsp;1</code> will be looked at or processed in any way.
+(By the way, you should think about what happens if the player that is being deleted
+is in the last position in the list.  The code does still work in this case.  What
+exactly happens?)</np>
+
+<p>Suppose that when deleting the player in position <code>k</code>, you'd like to
+keep the remaining players in the same order. (Maybe because they take turns in
+the order in which they are stored in the array.) To do this, all the players
+in positions <code>k+1</code> and above must move down one position in the array.
+Player <code>k+1</code> replaces player <code>k</code>, who is out of the game. Player
+<code>k+2</code> fills the spot left open when player <code>k+1</code> is moved. And so
+on. The code for this is</p>
+
+<pre>for (int i = k+1; i &lt; playerCt; i++) {
+    playerList[i-1] = playerList[i];
+}
+playerCt--;</pre>
+
+<p>Here is an illustration of the two ways of deleting an item from a partially full
+array.  Here, player "C" is being deleted:</p>
+
+<img src="delete-from-array.png" width="536" height="251" alt="how a partially full array changes when an item is deleted"
+    bordered="true" tex="delete-from-array.eps" texscale="0.6"/>
+    
+<break/>
+
+<p>This leaves open the question of what happens when a partially full array
+becomes full, but you still want to add more items to it?  We can't change
+the size of the array&mdash;but we can make a new, bigger array and copy the data
+from the old array into the new array.  But what does it mean to copy an
+array in the first place?</p>
+
+<p>Suppose that <code>A</code> and <code>B</code> are array variables, with the same base type,
+and that <code>A</code> already refers to an array.  Suppose that we want <code>B</code> to
+refer to a copy of <code>A</code>.  The first thing to note is that
+the assignment statement</p>
+
+<pre>B = A;</pre>
+
+<np>does <b>not</b> make a copy of <code>A</code>.  Arrays are objects, and an array variable can only
+hold a pointer to an array. The assignment statement copies the pointer from <code>A</code>
+into <code>B</code>, and the result is that <code>A</code> and <code>B</code> now point
+to the same array.  For example, <code>A[0]</code> and <code>B[0]</code> are just
+different names for exactly the same array element.  To make <code>B</code> refer to
+a copy of <code>A</code>, we need to make an entirely new array and copy all the items from
+<code>A</code> into <code>B</code>.  Let's say that <code>A</code> and <code>B</code>
+are of type <atype>double[]</atype>.  Then to make a copy of <code>A</code>, we can say</np>
+
+<pre>double B;
+B = new double[A.length];  // Make a new array with the same length as A.
+for ( int i = 0; i &lt; A.length; i++ ) {
+    B[i] = A[i];
+}</pre>
+
+<p>To solve the problem of adding to a partially full array that has become full,
+we just need to make a new array that is bigger than the existing array.  The usual
+choice is to make a new array twice as big as the old.  We need to meet one
+more requirement:  At the end, the variable that referred to the old array
+must now point to the new array.  That variable is what gives us access to the
+data, and at the end that data is in the new array.  Fortunately, a simple
+assignment statement will make the variable point to the correct array.
+Let's suppose that we are using <code>playerList</code> and <code>playerCt</code>
+to store the players in a game, as in the example above, and we want to add
+<code>newPlayer</code> to the game.  Here is how we can do that even if the
+<code>playerList</code> array is full:</p>
+
+<pre>if ( playerCt == playerList.length ) {
+        // The number of players is already equal to the size of the array.
+        // The array is full.  Make a new array that has more space.
+    Player[] temp;   // A variable to point to the new array.
+    temp = new Player[ 2*playerList.length ];  // Twice as big as the old array.
+    for ( int i = 0; i &lt; playerList.length; i++ ) {
+        temp[i] = playerList[i];  // Copy item from old array into new array.
+    }
+    playerList = temp;  // playerList now points to the new, bigger array.    
+}
+// At this point, we know that there is room in the array for newPlayer.
+playerList[playerCt] = newPlayer;
+playerCt++;
+</pre>
+
+<np>After the new array has been created, there is no longer any variable that
+points to the old array, so it will be garbage collected.</np>
+</subsection>
+   
+
+<subsection  id="arrays.2.2" title="Some Standard Array Methods">
+
+<p>Copying an array seems like such a common method that you might expect
+Java to have a built-in method already defined to do it.  In fact,
+Java comes with several standard array-processing methods.  The
+methods are defined as <code>static</code> methods in a class
+named <classname>Arrays</classname>, which is in the package <code>java.util</code>.
+For example, for any array, <code>list</code>,</p>
+   
+<pre>Arrays.copyOf( list, lengthOfCopy )</pre>
+
+<np>is a function that returns a new array whose length is given by <code>lengthOfCopy</code>,
+containing items copied from <code>list</code>.  If <code>lengthOfCopy</code> is greater
+than <code>list.length</code>, then extra spaces in the new array will have their default
+value (zero for numeric arrays, <code>null</code> for object arrays, and so on).
+If <code>lengthOfCopy</code> is less than or equal to <code>list.length</code>, then
+only as many items are copied from <code>list</code> as will fit in the new array.
+So if <code>A</code> is any array, then</np>
+
+<pre>B = Arrays.copyOf( A, A.length );</pre>
+
+<np>sets <code>B</code> to refer to an exact copy of <code>A</code>, and</np>
+
+<pre>playerList = Arrays.copyOf( playerList, 2*playerList.length );</pre>
+
+<np>could be used to double the amount of space available in a partially full array with
+just one line of code.
+We can also use <code>Arrays.copyOf</code> to decrease the size of a partially full array.
+We might want to do that to avoid having a lot of excess, unused spaces.  To implement
+this idea, the code for deleting player number <code>k</code> from the list of players
+might become</np>
+
+<pre>playerList[k] = playerList[playerCt-1];
+playerCt--;
+if ( playerCt &lt; playerList.length/2 ) {
+        // More than half the spaces are empty. Cut the array size in half.
+    playerList = Arrays.copyOf( playerList, playerList.length/2 );
+}</pre>
+
+<p>I should mention that class <classname>Arrays</classname> actually contains a bunch
+of <code>copyOf</code> methods, one for each of the primitive types and one for
+objects.  I should also note that when an array of objects is copied, it is only
+pointers to objects that are copied into the new array.  The contents of the
+objects are not copied.  This is the usual rule for assignment of pointers.</p>
+
+<break/>
+
+<p>The <classname>Arrays</classname> class contains other useful methods.  I'll mention
+a few of them.  As with <code>Arrays.copyOf</code>, there are actually multiple versions
+of all of these methods, for different array types.</p>
+
+<ul>
+<li><codedef>Arrays.fill( array, value )</codedef> &mdash; Fill an entire array with
+a specified value.  The type of <code>value</code> must be compatible with  the base type of
+the <code>array</code>.  For example, assuming that <code>numlist</code> is an array
+of type <atype>double[]</atype>, then <code>Arrays.fill(numlist,17)</code> will set
+every element of <code>numlist</code> to have the value 17.</li>
+<li><codedef>Arrays.fill( array, fromIndex, toIndex, value )</codedef> &mdash; Fills part
+of the <code>array</code> with <code>value</code>, starting at index number <code>fromIndex</code>
+and ending with index number <code>toIndex-1</code>.  Note that <code>toIndex</code> itself 
+is not included.</li>
+<li><codedef>Arrays.toString( array )</codedef> &mdash; A function that returns a <classname>String</classname>
+containing all the values from <code>array</code>, separated by commas and enclosed between
+square brackets. The values in the array are converted into strings in the same way
+they would be if they were printed out.</li>
+<li><codedef>Arrays.sort( array )</codedef> &mdash; Sorts the entire array.  To sort an 
+array means to rearrange the values in the array so that they are in increasing order.
+This method works for arrays of <classname>String</classname> and arrays of primitive type values
+(except for <ptype>boolean</ptype>, which would be kind of silly).  But it does not work
+for all arrays, since it must be meaningful to compare any two values in the array, to
+see which is "smaller."  We will discuss array-sorting algorithms in <localref href="arrays.4"/>.</li>
+<li><codedef>Arrays.sort( array, fromIndex, toIndex )</codedef> &mdash; Sorts just
+the elements from <code>array[fromIndex]</code> up to <code>array[toIndex-1]</code></li>
+<li><codedef>Arrays.binarySearch( array, value )</codedef> &mdash; Searches for <code>value</code>
+in the <code>array</code>.  The array must already be sorted into increasing order.
+This is a function that returns an <ptype>int</ptype>.  If the value is found in the array,
+the return value is the index of an element that contains that value.  If the value does not
+occur in the array, the return value is&nbsp;-1.  We will discuss the binary search algorithm
+in <localref href="arrays.4"/>.</li>
+</ul>
+
+
+
+</subsection>
+
+
+<subsection  id="arrays.2.3" title="RandomStrings Revisited">
+   
+<p>One of the examples in <localref href="GUI1.4.2"/> was a GUI program
+that shows multiple copies of a message in random positions, colors, and fonts.
+When the user clicks the program window, the positions, colors, and fonts are
+changed to new random values. Like several other examples from that chapter,
+the program had a flaw: It didn't have any way of storing the data that it would
+need to redraw itself.  Arrays provide us with one possible solution to this
+problem.  We can write a new version of RandomStrings that uses
+an array to store the position, font, and color of each string. When the panel
+is painted, this information is used to draw the strings,
+so that the panel will paint itself correctly whenever it has to be redrawn.
+When the user clicks, the array is filled with new
+random values and the panel is repainted using the new data.  So, the
+only time that the picture will change is in response to a mouse click.
+The new version of the program is <sourceref href="RandomStringsWithArray.java"/>.
+</p>
+
+<p>In the program, the number of copies of the message is given by a named
+constant, <code>MESSAGE_COUNT</code>. One way to store the position, color, and
+font of <code>MESSAGE_COUNT</code> strings would be to use four arrays:</p>
+
+<pre>int[] x = new int[MESSAGE_COUNT];  
+int[] y = new int[MESSAGE_COUNT];
+Color[] color = new Color[MESSAGE_COUNT];
+Font[] font = new Font[MESSAGE_COUNT];</pre>
+
+<np>These arrays would be filled with random values. In the
+<code>paintComponent()</code> method, the <code>i</code>-th copy of the string would be
+drawn at the point <code>(x[i],y[i])</code>. Its color would be given by
+<code>color[i]</code>. And it would be drawn in the font <code>font[i]</code>. This
+would be accomplished by the <code>paintComponent()</code> method</np>
+
+<pre>public void paintComponent(Graphics g) {
+   super.paintComponent(); // (Fill with background color.)
+   for (int i = 0; i &lt; MESSAGE_COUNT; i++) {
+      g.setColor( color[i] );
+      g.setFont( font[i] );
+      g.drawString( message, x[i], y[i] );
+   }
+}</pre>
+
+<np>This approach is said to use <newword>parallel arrays</newword>.
+The data for a given copy of the message is spread out across several arrays.
+If you think of the arrays as laid out in parallel columns&mdash;array <code>x</code>
+in the first column, array <code>y</code> in the second, array <code>color</code> in
+the third, and array <code>font</code> in the fourth&mdash;then the data for the
+<code>i</code>-th string can be found along the <code>i</code>-th row. There is
+nothing wrong with using parallel arrays in this simple example, but it does go
+against the object-oriented philosophy of keeping related data in one object.
+If we follow this rule, then we don't have to <b>imagine</b> the relationship
+among the data, because all the data for one copy of the message is physically
+in one place. So, when I wrote the program, I made a simple class to represent
+all the data that is needed for one copy of the message:</np>
+
+<pre>/**
+ * An object of this type holds the position, color, and font
+ * of one copy of the string.
+ */
+private static class StringData {
+   int x, y;     // The coordinates of the left end of baseline of string.
+   Color color;  // The color in which the string is drawn.
+   Font font;    // The font that is used to draw the string.
+}</pre>
+
+<np>To store the data for multiple copies of the message, I use an array of
+type <atype>StringData[]</atype>. The array is declared as an instance variable, with
+the name <code>stringData</code>:</np>
+
+<pre>StringData[] stringData;</pre>
+
+<np>Of course, the value of <code>stringData</code> is <code>null</code> until an actual array
+is created and assigned to it. The array has to be created and filled with data.
+Furthermore, each element of the array is an object of type <classname>StringData</classname>
+which has to be created before it can be used.  The following subroutine is used to
+create the array and fill it with random data:</np>
+
+<pre>private void createStringData() {
+    int width = getWidth();
+    int height = getHeight();
+    stringData = new StringData[MESSAGE_COUNT];
+    for (int i = 0; i &lt; MESSAGE_COUNT; i++) {
+            // Create an object to represent the data for string number i,
+            // and fill it with random values.
+        stringData[i] = new StringData();
+        int fontIndex = (int)(Math.random() * 5);
+        stringData[i].font = fonts[fontIndex]; // one of 5 fonts, selected at random
+        float hue = (float)Math.random();
+        stringData[i].color = Color.getHSBColor(hue, 1.0F, 1.0F);  // random color
+        stringData[i].x = -50 + (int)(Math.random()*(width+40));  // random x-coord
+        stringData[i].y = (int)(Math.random()*(height+20));  // random y-coord
+    }
+}</pre>
+
+
+<p>This method is called before the panel is painted for the first time.  It is also called
+when the user clicks the panel with the mouse, so that a mouse click will cause new random
+data to be created.  Those are the only times when the picture can change.  For example,
+resizing the window will cause <code>paintComponent()</code> to be called, but since the
+data hasn't changed, <code>paintComponent()</code> will just redraw the same picture.
+Here is the code from <code>paintComponent()</code> that draws all the strings, using the
+data from the array:</p>
+
+<pre>for (int i = 0; i &lt; MESSAGE_COUNT; i++) {
+    g.setColor( <newcode>stringData[i].</newcode>color );
+    g.setFont( <newcode>stringData[i].</newcode>font );
+    g.drawString( message, <newcode>stringData[i].</newcode>x, <newword>stringData[i].</newword>y );
+}</pre>
+   
+<np>Note that I could also have used a for-each loop here, which might be easier
+to understand:</np>
+   
+<pre>for ( StringData data : stringData ) {
+    g.setColor( data.color );
+    g.setFont( data.font );
+    g.drawString( message, data.x, data.y );
+}</pre>
+   
+<np>In this loop, the loop control variable, <code>data</code>, holds a copy of one
+of the values from the array.  That value is a reference to an object of type
+<classname>StringData</classname>, which has instance variables named
+<code>color</code>, <code>font</code>, <code>x</code>, and <code>y</code>.
+Once again, the use of a for-each loop has eliminated the need to work with
+array indices.</np>
+
+
+<break/>
+
+<p>RandomStringsWithArray uses one other array of objects. The font for a given copy of the
+message is chosen at random from a set of five possible fonts. In the original
+version, there were five variables of type <classname>Font</classname> to
+represent the fonts. The variables were named <code>font1</code>, <code>font2</code>,
+<code>font3</code>, <code>font4</code>, and <code>font5</code>. To select one of these
+fonts at random, a <code>switch</code> statement can be used:</p>
+
+<pre>Font randomFont;  // One of the 5 fonts, chosen at random.
+int rand;         // A random integer in the range 0 to 4.
+
+fontNum = (int)(Math.random() * 5);
+switch (fontNum) {
+   case 0:
+      randomFont = font1;
+      break;
+   case 1:
+      randomFont = font2;
+      break;
+   case 2:
+      randomFont = font3;
+      break;
+   case 3:
+      randomFont = font4;
+      break;
+   case 4:
+      randomFont = font5;
+      break;
+}</pre>
+
+<np>In the new version of the program, the five fonts are stored in an array,
+which is named <code>fonts</code>. This array is declared as an instance
+variable of type <atype>Font[]</atype></np>
+
+<pre>Font[] fonts;</pre>
+
+<np>The array is created in the constructor, and each element of the array is set
+to refer to a new <classname>Font</classname> object:</np>
+
+<pre>fonts = new Font[5];  // Create the array to hold the five fonts.
+ 
+fonts[0] = new Font("Serif", Font.BOLD, 14);
+fonts[1] = new Font("SansSerif", Font.BOLD + Font.ITALIC, 24);
+fonts[2] = new Font("Monospaced", Font.PLAIN, 20);
+fonts[3] = new Font("Dialog", Font.PLAIN, 30);
+fonts[4] = new Font("Serif", Font.ITALIC, 36);</pre>
+
+<np>This makes it much easier to select one of the fonts at random. It can be
+done with the statements</np>
+
+<pre>Font randomFont;  // One of the 5 fonts, chosen at random.
+int fontIndex;    // A random number in the range 0 to 4.
+fontIndex = (int)(Math.random() * 5);
+randomFont = fonts[ fontIndex ];</pre>
+
+<np>The <code>switch</code> statement has been replaced by a single line of code.
+In fact, the preceding four lines can be replaced by the single line:</np>
+   
+<pre>Font randomFont = fonts[ (int)(Math.random() * 5) ];</pre>
+   
+<p>This is a very typical application of arrays. Note that this example uses
+the random access property of arrays:  We can pick an array index at random
+and go directly to the array element at that index.</p>
+
+<p>Here is another example of the
+same sort of thing. Months are often stored as numbers 1, 2, 3, &dots;, 12.
+Sometimes, however, these numbers have to be translated into the names January,
+February, &dots;, December. The translation can be done very easily with an array. The array
+can be declared and initialized as</p>
+
+<pre>static String[] monthName = { "January", "February", "March",
+                              "April",   "May",      "June",
+                              "July",    "August",   "September",
+                              "October", "November", "December" };</pre>
+
+<np>If <code>mnth</code> is a variable that holds one of the integers 1 through 12,
+then <code>monthName[mnth-1]</code> is the name of the corresponding month. We need
+the "<code>-1</code>" because months are numbered starting from 1, while array
+elements are numbered starting from 0. Simple array indexing does the
+translation for us!</np>
+
+  
+</subsection>
+
+
+
+<subsection  id="arrays.2.4" title="Dynamic Arrays">
+   
+<p>Earlier, we discussed how a partially full array can be used to store a list of
+players in a game, allowing the list to grow and shrink over the course of the game.
+The list is "dynamic" in the sense that its size changes while the program is running.
+Dynamic lists are very common, and we might think about trying to write a class to
+represent the concept.  By writing a class, we can avoid having to repeat the same
+code every time we want to use a similar data structure.
+We want something that is like an array, except that its
+size can change.  Think about operations that we might want to perform
+on a dynamic array.  Some essential and useful operations would include</p>
+
+<ul>
+<li>add an item to the end of the array</li>
+<li>remove the item at a specified position in the array</li>
+<li>get the value of one of the elements in the array</li>
+<li>set the value of one of the elements in the array</li>
+<li>get the number of items currently in the array</li>
+</ul>
+
+<p>When we design our class, these operations will become instance methods in that
+class.  The items in the dynamic array will actually be stored in a normal array,
+using the partially full array pattern.  Using what we know, the class is not
+difficult to write.  We do have to decide what to do when an attempt is made to access an
+array element that doesn't exist.  It seems natural to throw an
+index-out-of-bounds exception in that case.
+Let's suppose that the items in the array will be of type
+<ptype>int</ptype>.</p>
+
+<pre>import java.util.Arrays;
+
+/**
+ * Represents a list of int values that can grow and shrink.
+ */
+public class DynamicArrayOfInt {
+    
+    private int[] items = new int[8];  // partially full array holding the ints
+    private int itemCt;
+    
+    /**
+     * Return the item at a given index in the array.  
+     * Throws ArrayIndexOutOfBoundsException if the index is not valid.
+     */
+    public int get( int index ) {
+        if ( index &lt; 0 || index &gt;= itemCt )
+            throw new ArrayIndexOutOfBoundsException("Illegal index, " + index);
+        return items[index];
+    }
+    
+    /**
+     * Set the value of the array element at a given index. 
+     * Throws ArrayIndexOutOfBoundsException if the index is not valid.
+     */
+    public void set( int index, int item ) {
+        if ( index &lt; 0 || index &gt;= itemCt )
+            throw new ArrayIndexOutOfBoundsException("Illegal index, " + index);
+        items[index] = item;
+    }
+    
+    /**
+     * Returns the number of items currently in the array.
+     */
+    public int size() {
+        return itemCt;
+    }
+    
+    /**
+     * Adds a new item to the end of the array.  The size increases by one.
+     */
+    public void add(int item) {
+        if (itemCt == items.length)
+            items = Arrays.copyOf( items, 2*items.length );
+        items[itemCt] = item;
+        itemCt++;
+    }
+    
+    /**
+     * Removes the item at a given index in the array.  The size of the array
+     * decreases by one.  Items following the removed item are moved up one
+     * space in the array.
+     * Throws ArrayIndexOutOfBoundsException if the index is not valid.
+     */
+    public void remove(int index) {
+        if ( index &lt; 0 || index &gt;= itemCt )
+            throw new ArrayIndexOutOfBoundsException("Illegal index, " + index);
+        for (int j = index+1; j &lt; itemCt; j++)
+            items[j-1] = items[j];
+        itemCt--;
+    }
+    
+} // end class DynamicArrayOfInt</pre>
+
+<np>Everything here should be clear, except possibly why the original size of the
+<code>items</code> array is&nbsp;8.  In fact, the number 8 is arbitrary and has no
+effect on the functionality of the class.  Any positive integer would work, but it
+doesn't make sense for the array to start off very big.  The array will grow
+as needed if the number of items turns out to be large.</np>
+
+<p>The example <sourceref chapter="3" href="ReverseInputNumbers.java"/> used a partially full array
+of <ptype>int</ptype> to print a list of input numbers in the reverse of the order in
+which they are input.  In that case, an ordinary array of length 100 was used to 
+hold the numbers.  In any given run of the program, the size of the array could
+be much too large, or it could be too small, resulting in an exception.  The program
+can now be written using a DynamicArrayOfInt, which will adapt itself to any number
+of inputs.  For the program, see <sourceref href="ReverseWithDynamicArray.java"/>.
+It's a silly program, but the principle holds in any application where the amount of
+data cannot be predicted in advance: The size of a dynamic data structure can
+adapt itself to any amount of data.</p>
+
+<p>This is a nice example, but there is a real problem with it.  Suppose that
+we want to have a dynamic array of <classname>String</classname>.  We can't use
+a <classname>DynamicArrayOfInt</classname> object to hold strings, so it looks
+like we need to write a whole new class, <classname>DynamicArrayOfString</classname>.
+If we want a dynamic array to store players in a game, we would need a class
+<classname>DynamicArrayOfPlayer</classname>.  And so on.  It looks like we have
+to write a dynamic array class for every possible type of data!  That can't be
+right!  In fact, Java has a solution to this problem, a standard class that
+implements dynamic arrays and can work with any type of data.  The class
+is called <classname>ArrayList</classname>, and we'll see how it works
+in the <localref href="arrays.3">next&nbsp;section</localref>.</p>
+  
+</subsection>
+
+</section>

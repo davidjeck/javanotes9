@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src-test"/>
+	<classpathentry kind="src" path="src-c1"/>
+	<classpathentry kind="src" path="src-c2"/>
+	<classpathentry kind="src" path="src-textio"/>
+	<classpathentry kind="src" path="src-c3"/>
+	<classpathentry kind="src" path="src-new-exercises"/>
+	<classpathentry kind="src" path="src-c4"/>
+	<classpathentry kind="src" path="src-c5"/>
+	<classpathentry kind="src" path="src-c6"/>
+	<classpathentry kind="src" path="src-c7"/>
+	<classpathentry kind="src" path="src-c8"/>
+	<classpathentry kind="src" path="src-c9"/>
+	<classpathentry kind="src" path="src-c12"/>
+	<classpathentry kind="src" path="src-c10"/>
+	<classpathentry kind="src" path="src-c11"/>
+	<classpathentry kind="src" path="src-c13"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

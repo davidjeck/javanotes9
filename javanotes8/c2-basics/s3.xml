@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="basics.3" title="Strings, Classes, Objects, and Subroutines" shorttitle="Objects and Subroutines">
+
+<p><start><big>T</big>he previous section</start> introduced the eight primitive
+data types and the type <classname>String</classname>. There is a fundamental difference
+between the primitive types and <classname>String</classname>: Values of type
+<classname>String</classname> are objects. While we will not study objects in detail until
+<localref href="OOP"/>, it will be useful for you to know a
+little about them and about a closely related topic: classes. This is not just
+because strings are useful but because objects and classes are essential to
+understanding another important programming concept, subroutines.</p>
+
+   
+<subsection id="basics.3.1" title="Built-in Subroutines and Functions">
+
+<p>Recall that a subroutine is a set of program instructions that have been
+chunked together and given a name.  A subroutine is designed to perform some
+task.  To get that task performed in a program, you can "call" the subroutine
+using a subroutine call statement.  In <localref href="subroutines"/>,
+you'll learn how to write your own subroutines, but you can get a lot done in a
+program just by calling subroutines that have already been written for you. In
+Java, every subroutine is contained either in a class or in an object. Some classes
+that are standard parts of the Java language contain predefined subroutines
+that you can use. A value of type <classname>String</classname>, which is an object, contains
+subroutines that can be used to manipulate that string.  These subroutines are
+"built into" the Java language.  You can call all these
+subroutines without understanding how they were written or how they work.
+Indeed, that's the whole point of subroutines: A subroutine is a "black box"
+which can be used without knowing what goes on inside.</p>
+
+<p>Let's first consider subroutines that are part of a class.  One of the 
+purposes of a class is to group together some variables and subroutines,
+which are contained in that class.
+These variables and subroutines are called <newword>static members</newword> 
+of the class. You've seen one example: In a class that defines a
+program, the <code>main()</code> routine is a static member of the class. The parts
+of a class definition that define static members are marked with the reserved
+word "<code>static</code>", such as the word "static" in <code>public static void main&dots;</code>
+</p>
+
+<p>When a class contains a static variable or subroutine, the name of the class is part
+of the full name of the variable or subroutine.  For example,
+the standard class named <classname>System</classname> contains a subroutine named
+<code>exit</code>.  To use that subroutine in your program, you must refer to it as
+<code>System.exit</code>.  This full name consists of the name of the class that contains
+the subroutine, followed by a period, followed by the name of the subroutine.
+This subroutine requires an integer as parameter, so you would actually use it with
+a subroutine call statement such as</p>
+
+<pre>System.exit(0);</pre>
+
+<np>Calling <code>System.exit</code> will terminate the program and shut down the
+Java Virtual Machine. You
+could use it if you had some reason to terminate the program before the end of
+the <code>main</code> routine. (The parameter 
+tells the computer why the program was terminated.  A parameter value of 0
+indicates that the program ended normally. Any other value indicates that
+the program was terminated because an error was detected, so you could
+call <code>System.exit(1)</code> to indicate that the program is ending because of
+an error.  The parameter is sent back to the operating system; in practice,
+the value is usually ignored by the operating system.)</np>
+
+<p><classname>System</classname> is just one of many standard classes that come
+with Java.  Another useful class is called <classname>Math</classname>.
+This class gives us an example of a class that contains
+static variables: It includes the variables <code>Math.PI</code> and <code>Math.E</code>
+whose values are the mathematical constants &pi; and&nbsp;e.
+<classname>Math</classname> also contains a large number of mathematical "functions."
+Every subroutine performs some specific task. For some subroutines, that
+task is to compute or retrieve some data value. Subroutines of this type are
+called <newword>functions</newword>. We say that a function
+<newword>returns</newword> a value. Generally, the returned value is meant to be
+used somehow in the program that calls the function.
+</p>
+
+<p>You are familiar with the mathematical function that computes the square
+root of a number. The corresponding function in Java is called <code>Math.sqrt</code>.
+This function is a static member subroutine of the class named <classname>Math</classname>.
+If <code>x</code> is any numerical value, then <code>Math.sqrt(x)</code> computes and
+returns the square root of that value. Since <code>Math.sqrt(x)</code> represents a
+value, it doesn't make sense to put it on a line by itself in a subroutine call
+statement such as</p>
+
+<pre>Math.sqrt(x);   // <b>This doesn't make sense!</b></pre>
+
+<np>What, after all, would the computer do with the value computed by the
+function in this case? You have to tell the computer to do something with the
+value. You might tell the computer to display it:</np>
+
+<pre>System.out.print( Math.sqrt(x) );  // Display the square root of x.</pre>
+
+<np>or you might use an assignment statement to tell the computer to store that
+value in a variable:</np>
+
+<pre>lengthOfSide = Math.sqrt(x);</pre>
+
+<np>The function call <code>Math.sqrt(x)</code> represents a value of type
+<ptype>double</ptype>, and it can be used anyplace where a numeric literal of type
+double could be used.</np>
+
+<p>The <classname>Math</classname> class contains many static member functions. Here is a
+list of some of the more important of them:</p>
+
+<ul>
+<li><code>Math.abs(x)</code>, which computes the absolute value of <code>x</code>.</li>
+
+<li>The usual trigonometric functions, <code>Math.sin(x)</code>,
+<code>Math.cos(x)</code>, and <code>Math.tan(x)</code>. (For all the trigonometric
+functions, angles are measured in radians, not degrees.)</li>
+
+<li>The inverse trigonometric functions arcsin, arccos, and arctan, which are
+written as: <code>Math.asin(x)</code>, <code>Math.acos(x)</code>, and
+<code>Math.atan(x)</code>.  The return value is expressed in radians, not degrees.</li>
+
+<li>The exponential function <code>Math.exp(x)</code> for computing the number e
+raised to the power <code>x</code>, and the natural logarithm function
+<code>Math.log(x)</code> for computing the logarithm of <code>x</code> in the base
+e.</li>
+
+<li><code>Math.pow(x,y)</code> for computing <code>x</code> raised to the power
+<code>y</code>.</li>
+
+<li><code>Math.floor(x)</code>, which rounds <code>x</code> down to the nearest integer
+value that is less than or equal to <code>x</code>.   Even though the return value is
+mathematically an integer, it is returned as a value of type <ptype>double</ptype>, rather than
+of type <ptype>int</ptype> as you might expect.   For example,
+<code>Math.floor(3.76)</code> is 3.0.  The function <code>Math.round(x)</code> returns
+the integer that is closest to <code>x</code>, and <code>Math.ceil(x)</code> rounds <code>x</code>
+up to an integer.  ("Ceil" is short for "ceiling", the opposite of "floor.")</li>
+
+<li><code>Math.random()</code>, which returns a randomly chosen <ptype>double</ptype> in
+the range <code>0.0 &lt;= Math.random() &lt; 1.0</code>. (The computer actually
+calculates so-called "pseudorandom" numbers, which are not truly random but are effectively
+random enough for most purposes.)  We will find a lot of uses for <code>Math.random</code>
+in future examples.</li>
+</ul>
+
+<p>For these functions, the type of the parameter&mdash;the <code>x</code> or <code>y</code> inside
+the parentheses&mdash;can be any value of any numeric type. For most of the functions, the value
+returned by the function is of type <ptype>double</ptype> no matter what the type of
+the parameter. However, for <code>Math.abs(x)</code>, the value returned will be
+the same type as <code>x</code>; if <code>x</code> is of type <ptype>int</ptype>, then so is
+<code>Math.abs(x)</code>. So, for example, while <code>Math.sqrt(9)</code> is the
+<ptype>double</ptype> value 3.0, <code>Math.abs(9)</code> is the <ptype>int</ptype> value
+9.</p>
+
+<p>Note that <code>Math.random()</code> does not have any parameter. You still need
+the parentheses, even though there's nothing between them. The parentheses let
+the computer know that this is a subroutine rather than a variable. Another
+example of a subroutine that has no parameters is the function
+<code>System.currentTimeMillis()</code>, from the <classname>System</classname> class. When this
+function is executed, it retrieves the current time, expressed as the number of
+milliseconds that have passed since a standardized base time (the start of the
+year 1970, if you care). One millisecond is one-thousandth 
+of a second. The return value of <code>System.currentTimeMillis()</code> is of type
+<ptype>long</ptype> (a 64-bit integer). This function can be used to measure the time that it takes the
+computer to perform a task. Just record the time at which the task is begun and
+the time at which it is finished and take the difference.</p>
+
+<p>Here is a sample program that performs a few mathematical tasks and reports
+the time that it takes for the program to run. On some computers, the time
+reported might be zero, because it is too small to measure in milliseconds.
+Even if it's not zero, you can be sure that most of the time reported by the
+computer was spent doing output or working on tasks other than the program,
+since the calculations performed in this program occupy only a tiny fraction of
+a millisecond of a computer's time.</p>
+
+<pre>/**
+ * This program performs some mathematical computations and displays the
+ * results.  It also displays the value of the constant Math.PI.  It then 
+ * reports the number of seconds that the computer spent on this task.
+ */
+
+public class TimedComputation {
+   
+   public static void main(String[] args) {
+   
+      long startTime; // Starting time of program, in milliseconds.
+      long endTime;   // Time when computations are done, in milliseconds.
+      double time;    // Time difference, in seconds.
+      
+      startTime = System.currentTimeMillis();
+      
+      double width, height, hypotenuse;  // sides of a triangle
+      width = 42.0;
+      height = 17.0;
+      hypotenuse = Math.sqrt( width*width + height*height );
+      System.out.print("A triangle with sides 42 and 17 has hypotenuse ");
+      System.out.println(hypotenuse);
+      
+      System.out.println("\nMathematically, sin(x)*sin(x) + "
+                                       + "cos(x)*cos(x) - 1 should be 0.");
+      System.out.println("Let's check this for x = 1:");
+      System.out.print("      sin(1)*sin(1) + cos(1)*cos(1) - 1 is ");
+      System.out.println( Math.sin(1)*Math.sin(1) 
+                                        + Math.cos(1)*Math.cos(1) - 1 );
+      System.out.println("(There can be round-off errors when" 
+                                      + " computing with real numbers!)");
+      
+      System.out.print("\nHere is a random number:  ");
+      System.out.println( Math.random() );
+      
+      System.out.print("The value of Math.PI is ");
+      System.out.println( Math.PI );
+      
+      endTime = System.currentTimeMillis();
+      time = (endTime - startTime) / 1000.0;
+      
+      System.out.print("\nRun time in seconds was:  ");
+      System.out.println(time);
+   
+   } // end main()
+   
+} // end class TimedComputation</pre>
+      
+</subsection>
+
+<subsection id="basics.3.2" title="Classes and Objects">
+
+<p>Classes can be containers for static variables and subroutines.  However classes also have
+another purpose.  They are used to describe objects.  In
+this role, the class is a <b>type</b>, in the same way that <ptype>int</ptype>
+and <ptype>double</ptype> are types.  That is, the class name can be used to declare
+variables. Such variables can only hold one type of value. The values in this case are
+<newword>objects</newword>.  An object is a collection of variables and subroutines.
+Every object has an associated class that tells what "type" of object it is.
+The class of an object specifies what subroutines and variables that object contains.
+All objects defined by the same class are similar in that they contain similar collections
+of variables and subroutines.  For example, an object might represent a point in the plane,
+and it might contain variables named <code>x</code> and <code>y</code> to represent the
+coordinates of that point.  Every point object would have an <code>x</code> and a <code>y</code>,
+but different points would have different values for these variables.  A class, named
+<classname>Point</classname>, for example, could exist to define the common structure of
+all point objects, and all such objects would then be values of type <classname>Point</classname>.</p>
+
+<p>As another example, let's look again at <code>System.out.println</code>.  <classname>System</classname>
+is a class, and <code>out</code> is a static variable within that class.  However, the value of 
+<code>System.out</code> is an <b>object</b>, and <code>System.out.println</code> is actually
+the full name of a subroutine that is contained in the object <code>System.out</code>.  You don't need to
+understand it at this point, but  the object referred to by <code>System.out</code>
+is an object of the class <classname>PrintStream</classname>. <classname>PrintStream</classname> is another
+class that is a standard part of Java. <b>Any</b> object of type
+<classname>PrintStream</classname> is a destination to which information can be printed;
+<b>any</b> object of type <classname>PrintStream</classname> has a <code>println</code>
+subroutine that can be used to send information to that destination. The object
+<code>System.out</code> is just one possible destination, and
+<code>System.out.println</code> is a subroutine that sends information to that particular
+destination. Other objects of type <classname>PrintStream</classname> might send information
+to other destinations such as files or across a network to other computers.
+This is object-oriented programming: Many different things which have something
+in common&mdash;they can all be used as destinations for information&mdash;can all be
+used in the same way&mdash;through a <code>println</code> subroutine. The
+<classname>PrintStream</classname> class expresses the commonalities among all these
+objects.</p>
+
+<p>The dual role of classes can be confusing, and in practice most classes are designed to
+perform primarily or exclusively in only one of the two possible roles.  Fortunately,
+you will not need to worry too much about it until we start working with objects in a
+more serious way, in <localref href="OOP"/>.</p>
+
+<p>By the way, since class names and variable names are used in similar ways, it might be
+hard to tell which is which. Remember that all the built-in, predefined names in Java follow
+the rule that class names begin with an upper case letter while variable names
+begin with a lower case letter. While this is not a formal syntax rule, I strongly
+recommend that you follow it in your own programming. Subroutine names should
+also begin with lower case letters. There is no possibility of confusing a
+variable with a subroutine, since a subroutine name in a program is always
+followed by a left parenthesis.</p>
+   
+<p>As one final general note, you should be aware that subroutines in Java
+are often referred to as <newword>methods</newword>.  Generally, the
+term "method" means a subroutine that is contained in a class or in an object.
+Since this is true of every subroutine in Java, every subroutine in Java is
+a method. The same is not true for other programming languages, and
+for the time being, I will prefer to use the more general term, "subroutine."
+However, I should note that some people prefer to use the term "method" 
+from the beginning.</p>
+
+
+</subsection>
+
+<subsection id="basics.3.3" title="Operations on Strings">
+
+<p><classname>String</classname> is a class, and a value of type <classname>String</classname> is an object. 
+That object contains data, namely the sequence of characters that make up the string. It also contains
+subroutines. All of these subroutines are in fact functions. For example, every string object contains
+a function named <code>length</code>  that computes the number of characters in that string. Suppose
+that <code>advice</code> is a variable that refers to a <classname>String</classname>. For example,
+<code>advice</code> might have been declared and assigned a value as follows:</p>
+
+<pre>String advice;
+advice = "Seize the day!";</pre>
+
+<np>Then <code>advice.length()</code> is a function call that returns the number of
+characters in the string "Seize the day!".  In this case, the return value would be 14.
+In general, for any variable <code>str</code> of type  <classname>String</classname>, 
+the value of <code>str.length()</code> is an
+<ptype>int</ptype> equal to the number of characters in the string.
+Note that this function has no parameter; the particular string whose length
+is being computed is the value of <code>str</code>.  The <code>length</code> subroutine is defined by
+the class <classname>String</classname>, and it can be used with any value of type
+<classname>String</classname>. It can even be used with <classname>String</classname> literals, which are,
+after all, just constant values of type <classname>String</classname>. For example, you could
+have a program count the characters in "Hello World" for you by saying</np>
+
+<pre>System.out.print("The number of characters in ");
+System.out.print("the string \"Hello World\" is ");
+System.out.println( "Hello World".length() );</pre>
+
+<np>The <classname>String</classname> class defines a lot of functions. Here are some that you
+might find useful. Assume that <code>s1</code> and <code>s2</code> are variables of
+type <classname>String</classname>:</np>
+
+<ul>
+<li><code>s1.equals(s2)</code> is a function that returns a <ptype>boolean</ptype> value.
+It returns <code>true</code> if <code>s1</code> consists of exactly the same sequence
+of characters as <code>s2</code>, and returns <code>false</code> otherwise.</li>
+
+<li><code>s1.equalsIgnoreCase(s2)</code> is another boolean-valued function that
+checks whether <code>s1</code> is the same string as <code>s2</code>, but this function
+considers upper and lower case letters to be equivalent. Thus, if <code>s1</code>
+is "cat", then <code>s1.equals("Cat")</code> is <code>false</code>, while
+<code>s1.equalsIgnoreCase("Cat")</code> is <code>true</code>.</li>
+
+<li><code>s1.length()</code>, as mentioned above, is an integer-valued function
+that gives the number of characters in <code>s1</code>.</li>
+
+<li><code>s1.charAt(N)</code>, where <code>N</code> is an integer, returns a value of
+type <ptype>char</ptype>. It returns the Nth character in the string.
+Positions are numbered starting with 0, so <code>s1.charAt(0)</code> is actually
+the first character, <code>s1.charAt(1)</code> is the second, and so on. The final
+position is <code>s1.length()&nbsp;-&nbsp;1</code>. For example, the value of
+<code>"cat".charAt(1)</code> is 'a'. An error occurs if the value of the parameter
+is less than zero or is greater than or equal to <code>s1.length()</code>.</li>
+
+<li><code>s1.substring(N,M)</code>, where <code>N</code> and <code>M</code> are integers,
+returns a value of type <classname>String</classname>. The returned value consists of the
+characters of <code>s1</code> in positions <code>N</code>, <code>N+1</code>,&dots;,
+<code>M-1</code>. Note that the character in position <code>M</code> is not included.
+The returned value is called a substring of <code>s1</code>.
+The subroutine <code>s1.substring(N)</code> returns the substring of <code>s1</code>
+consisting of characters starting at position <code>N</code> up until the end of
+the string.</li>
+
+<li><code>s1.indexOf(s2)</code> returns an integer. If <code>s2</code> occurs as a
+substring of <code>s1</code>, then the returned value is the starting position of
+that substring. Otherwise, the returned value is -1. You can also use
+<code>s1.indexOf(ch)</code> to search for a <ptype>char</ptype>, <code>ch</code>, in
+<code>s1</code>. To find the first occurrence of <code>x</code> at or after position
+<code>N</code>, you can use <code>s1.indexOf(x,N)</code>.  To find the last occurance of
+<code>x</code> in <code>s1</code>, use <code>s1.lastIndexOf(x)</code>.</li>
+
+<li><code>s1.compareTo(s2)</code> is an integer-valued function that compares the
+two strings. If the strings are equal, the value returned is zero. If
+<code>s1</code> is less than <code>s2</code>, the value returned is a number less than
+zero, and if <code>s1</code> is greater than <code>s2</code>, the value returned is
+some number greater than zero. (If both of the strings consist entirely of
+lower case letters, or if they consist entirely of upper case letters, 
+then "less than" and "greater than" refer to alphabetical
+order. Otherwise, the ordering is more complicated.)</li>
+
+<li><code>s1.toUpperCase()</code> is a <classname>String</classname>-valued function that returns
+a new string that is equal to <code>s1</code>, except that any lower case letters
+in <code>s1</code> have been converted to upper case. For example,
+<code>"Cat".toUpperCase()</code> is the string <code>"CAT"</code>. There is also a function
+<code>s1.toLowerCase()</code>.</li>
+
+<li><code>s1.trim()</code> is a <classname>String</classname>-valued function that returns a new
+string that is equal to <code>s1</code> except that any non-printing characters
+such as spaces and tabs have been trimmed from the beginning and from the end
+of the string. Thus, if <code>s1</code> has the value <code>"fred&nbsp;&nbsp;"</code>, then
+<code>s1.trim()</code> is the string <code>"fred"</code>, with the spaces at the end removed.</li>
+</ul>
+
+<p>For the functions <code>s1.toUpperCase()</code>, <code>s1.toLowerCase()</code>, and
+<code>s1.trim()</code>, note that the value of <code>s1</code> is <b>not</b> changed. Instead
+a new string is created and returned as the value of the function. The returned
+value could be used, for example, in an assignment statement such as "<code>smallLetters =
+s1.toLowerCase();</code>".  To change the value of <code>s1</code>, you could
+use an assignment "<code>s1 = s1.toLowerCase();</code>".</p>
+
+<break/>
+
+<p>Here is another extremely useful fact about strings: You can use the plus
+operator, <code>+</code>, to <newword>concatenate</newword> two strings. The
+concatenation of two strings is a new string consisting of all the characters
+of the first string followed by all the characters of the second string. For
+example, <code>"Hello" + "World"</code> evaluates to <code>"HelloWorld"</code>. (Gotta watch those
+spaces, of course&mdash;if you want a space in the concatenated string, it has to be
+somewhere in the input data, as in <code>"Hello&nbsp;" + "World"</code>.)</p>
+   
+<p>Let's suppose that <code>name</code> is a variable of type
+<classname>String</classname> and that it already refers to the name of the person using the
+program. Then, the program could greet the user by executing the statement:</p>
+
+<pre>System.out.println("Hello, "  +  name  +  ".  Pleased to meet you!");</pre>
+
+<np>Even more surprising is that you can actually concatenate values of <b>any</b>
+type onto a <classname>String</classname> using the <code>+</code> operator. The value
+is converted to a string, just as it would be if you printed it
+to the standard output, and then that string is concatenated with the other string. For
+example, the expression <code>"Number"&nbsp;+&nbsp;42</code> evaluates to the string <code>"Number42"</code>. And
+the statements</np>
+
+<pre>System.out.print("After ");
+System.out.print(years);
+System.out.print(" years, the value is ");
+System.out.print(principal);</pre>
+
+<np>can be replaced by the single statement:</np>
+
+<pre>System.out.print("After " + years + 
+                    " years, the value is " + principal);</pre>
+
+<np>Obviously, this is very convenient. It would have shortened some of the
+examples presented earlier in this chapter.</np>
+
+</subsection>
+   
+<subsection id="basics.3.4" title="Introduction to Enums">
+   
+<p>Java comes with eight built-in primitive types and a large set of types that
+are defined by classes, such as <classname>String</classname>.  But even
+this large collection of types is not sufficient to cover all the possible situations
+that a programmer might have to deal with.  So, an essential part of Java, just like
+almost any other programming language, is the ability to create <b>new</b> types.  For the
+most part, this is done by defining new classes; you will learn how to do that
+in <localref href="OOP"/>.  But we will look here at one particular case:
+the ability to define <newword>enums</newword> (short for
+<newword>enumerated types</newword>).</p>
+   
+<p>Technically, an enum is considered to be a special kind of class, but that 
+is not important for now.  In this section, we will look at enums in a simplified
+form.  In practice, most uses of enums will only need the simplified form
+that is presented here.</p>
+   
+<p>An enum is a type that has a fixed list of possible values, which is specified
+when the enum is created.  In some ways, an enum is similar to the <ptype>boolean</ptype>
+data type, which has <code>true</code> and <code>false</code> as its only possible
+values.  However, <ptype>boolean</ptype> is a primitive type, while an enum is not.</p>
+   
+<p>The definition of an enum type has the (simplified) form:</p>
+
+<pre>enum <bnf>enum-type-name</bnf> { <bnf>list-of-enum-values</bnf> }</pre>
+
+<np>This definition cannot be inside a subroutine.  You can place it <b>outside</b> the <code>main()</code> routine
+of the program.  The <bnf>enum-type-name</bnf> can be any simple identifier.
+This identifier becomes the name of the enum type, in the same way that "boolean" is the name of
+the <ptype>boolean</ptype> type and "String" is the name of the <classname>String</classname> type.
+Each value in the <bnf>list-of-enum-values</bnf> must be a simple identifier,
+and the identifiers in the list are separated by commas.  For example, here is the definition
+of an enum type named <classname>Season</classname> whose values are the names of the four seasons of the year:</np>
+   
+<pre>enum Season { SPRING, SUMMER, FALL, WINTER }</pre>
+   
+<p>By convention, enum values are given names that are made up of upper case letters, but that is
+a style guideline and not a syntax rule.  An enum value is a <newword>constant</newword>; that is,
+it represents a fixed value that cannot be changed.  The possible values of an enum type are usually referred
+to as <newword>enum constants</newword>.</p>
+   
+<p>Note that the enum constants of type <classname>Season</classname> are considered to be "contained in"
+<classname>Season</classname>, which means&mdash;following the convention that compound identifiers
+are used for things that are contained in other things&mdash;the names that you actually
+use in your program to refer to them are <code>Season.SPRING</code>, <code>Season.SUMMER</code>, 
+<code>Season.FALL</code>, and <code>Season.WINTER</code>.</p>
+   
+<p>Once an enum type has been created, it can be used to declare variables in exactly
+the same ways that other types are used.  For example, you can declare a variable
+named <code>vacation</code> of type <code>Season</code> with the statement:</p>
+   
+<pre>Season vacation;</pre>
+   
+<np>After declaring the variable, you can assign a value to it using an assignment statement.
+The value on the right-hand side of the assignment can be one of the enum constants of
+type <code>Season</code>.  Remember to use the full name of the constant, including
+"Season"!  For example:</np>
+   
+<pre>vacation = Season.SUMMER;</pre>
+   
+<np>You can print out an enum value with an output statement such as <code>System.out.print(vacation)</code>.
+The output value will be the name of the enum constant (without the "Season.").  In this case,
+the output would be "SUMMER".</np>
+   
+<p>Because an enum is technically a class, the enum values are technically objects.  As objects,
+they can contain subroutines.  One of the subroutines in every enum value is named <code>ordinal()</code>.  When
+used with an enum value, it returns the <newword>ordinal number</newword> of the value in the
+list of values of the enum.  The ordinal number simply tells the position of the value in the list.
+That is, <code>Season.SPRING.ordinal()</code> is the <ptype>int</ptype> value 0, <code>Season.SUMMER.ordinal()</code> is 1,
+<code>Season.FALL.ordinal()</code> is 2, and <code>Season.WINTER.ordinal()</code> is 3.  (You will see over
+and over again that computer scientists like to start counting at zero!)  You can, of course, use
+the <code>ordinal()</code> method with a variable of type <classname>Season</classname>, such 
+as <code>vacation.ordinal()</code>.</p>
+   
+<p>Using enums can make a program more readable, since you can use meaningful names for the values.
+And it can prevent certain types of errors, since a compiler can check that the values assigned
+to an enum variable are in fact legal values for that variable.
+However, we will in fact use them only occasionally in this book.  For now, you should just appreciate
+them as the first example of an important concept: creating new types.
+Here is a little example that shows enums being used in a complete program:</p>
+   
+<pre>public class EnumDemo {
+ 
+       // Define two enum types -- remember that the definitions
+       // go OUTSIDE The main() routine!
+  
+    enum Day { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
+      
+    enum Month { JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC }
+     
+    public static void main(String[] args) {
+       
+         Day tgif;     // Declare a variable of type Day.
+         Month libra;  // Declare a variable of type Month.
+       
+         tgif = Day.FRIDAY;    // Assign a value of type Day to tgif.
+         libra = Month.OCT;    // Assign a value of type Month to libra.
+           
+         System.out.print("My sign is libra, since I was born in ");
+         System.out.println(libra);   // Output value will be:  OCT
+         System.out.print("That's the ");
+         System.out.print( libra.ordinal() );
+         System.out.println("-th month of the year.");
+         System.out.println("   (Counting from 0, of course!)");
+         
+         System.out.print("Isn't it nice to get to ");
+         System.out.println(tgif);   // Output value will be:  FRIDAY
+          
+         System.out.println( tgif + " is the " + tgif.ordinal() 
+                                            + "-th day of the week.");
+    }
+   
+}</pre>
+   
+</subsection>
+
+</section>

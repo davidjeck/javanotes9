@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="subroutines.6" title="More on Program Design">
+
+<p><start><big>U</big>nderstanding how programs work</start> is one thing.
+Designing a program to perform some particular task is another thing
+altogether. In <localref href="control.2"/>, I discussed how pseudocode and
+stepwise refinement can be used to methodically develop an algorithm. We can
+now see how subroutines can fit into the process.</p>
+      
+<p>Stepwise refinement is inherently a top-down process, but the process does
+have a "bottom," that is, a point at which you stop refining the pseudocode
+algorithm and translate what you have directly into proper program code.
+In the absence of subroutines, the process would not bottom out until
+you get down to the level of assignment statements and very primitive
+input/output operations. But if you have subroutines lying around to perform
+certain useful tasks, you can stop refining as soon as you've managed to
+express your algorithm in terms of those tasks.</p>
+
+<p>This allows you to add a bottom-up element to the top-down approach of
+stepwise refinement. Given a problem, you might start by writing some
+subroutines that perform tasks relevant to the problem domain. The subroutines
+become a toolbox of ready-made tools that you can integrate into your algorithm
+as you develop it. (Alternatively, you might be able to buy or find a software
+toolbox written by someone else, containing subroutines that you can use in
+your project as black boxes.)</p>
+
+<p>Subroutines can also be helpful even in a strict top-down approach. As you
+refine your algorithm, you are free at any point to take any sub-task in the
+algorithm and make it into a subroutine. Developing that subroutine then
+becomes a separate problem, which you can work on separately. Your main
+algorithm will merely call the subroutine. This, of course, is just a way of
+breaking your problem down into separate, smaller problems. It is still a
+top-down approach because the top-down analysis of the problem tells you what
+subroutines to write. In the bottom-up approach, you start by writing or
+obtaining subroutines that are relevant to the problem domain, and you build
+your solution to the problem on top of that foundation of subroutines.</p>
+
+<subsection id="subroutines.6.1" title="Preconditions and Postconditions">
+
+<p>When working with subroutines as building blocks, it is important to be
+clear about how a subroutine interacts with the rest of the program. This
+interaction is specified by the <newword>contract</newword> of the
+subroutine, as discussed in <localref href="subroutines.1"/>. A convenient
+way to express the contract of a subroutine is in terms of 
+<newword>preconditions</newword> and <newword>postconditions</newword>.</p>
+
+<p>A precondition of a subroutine is something that must be true when the
+subroutine is called, if the subroutine is to work correctly. For example, for
+the built-in function <code>Math.sqrt(x)</code>, a precondition is that the
+parameter, <code>x</code>, is greater than or equal to zero, since it is not
+possible to take the square root of a negative number. In terms of a contract,
+a precondition represents an obligation of the <i>caller</i> of the subroutine.
+If you call a subroutine without meeting its precondition, then there is no
+reason to expect it to work properly. The program might crash or give incorrect
+results, but you can only blame yourself, not the subroutine.</p>
+
+<p>A postcondition of a subroutine represents the other side of the contract.
+It is something that will be true after the subroutine has run (assuming that
+its preconditions were met&mdash;and that there are no bugs in the subroutine).
+The postcondition of the function <code>Math.sqrt()</code> is that the square of
+the value that is returned by this function is equal to the parameter that is
+provided when the subroutine is called. Of course, this will only be true if
+the precondition&mdash;that the parameter is greater than or equal to zero&mdash;is
+met. A postcondition of the built-in subroutine <code>System.out.print(x)</code> is
+that the value of the parameter has been displayed on the screen.</p>
+
+<p>Preconditions most often give restrictions on the acceptable values of
+parameters, as in the example of <code>Math.sqrt(x)</code>. However, they can also
+refer to global variables that are used in the subroutine.  Or if it only makes
+sense to call the subroutine at certain times, the precondition might refer to 
+the state that the program must be in when the subroutine is called.</p>
+
+<p>The postcondition of a subroutine, on the other hand, 
+specifies the task that it performs. For a function, the
+postcondition should specify the value that the function returns.</p>
+
+<p>Subroutines are sometimes described by comments that explicitly specify their
+preconditions and postconditions. When you are given a pre-written subroutine,
+a statement of its preconditions and postconditions tells you how to use it and
+what it does. When you are assigned to write a subroutine, the preconditions
+and postconditions give you an exact specification of what the subroutine is
+expected to do. I will use this approach in the example that constitutes the
+rest of this section. The comments are given in the form of
+<localref href="subroutines.5.4">Javadoc comments</localref>, but I will explicitly
+label the preconditions and postconditions.  (Many computer scientists think that new doc
+tags <code>@precondition</code> and <code>@postcondition</code> should
+be added to the Javadoc system for explicit labeling of preconditions
+and postconditions, but that has not yet been done.)</p>
+
+</subsection>
+
+<subsection id="subroutines.6.2" title="A Design Example">
+
+<p>Let's work through an example of program design using subroutines. In this
+example, we will use pre-written subroutines as building blocks and we will also design
+new subroutines that we need to complete the project.  The API that I will use here
+is defined in <sourceref href="Mosaic.java"/>, which in turns depends on
+<sourceref href="MosaicPanel.java"/>.  To compile and run a program that uses the
+API, the classes <classname>Mosaic</classname> and <classname>MosaicPanel</classname>
+must be available.  That is, the files <code>Mosaic.java</code> and
+<code>MosaicPanel.java</code>, or the the corresponding compiled class files,
+must be in the same folder as the class that defines the program.</p>
+
+<p>So, suppose that I have found an already-written class called <code>Mosaic</code>.
+This class allows a program to work with a window that displays little colored
+rectangles arranged in rows and columns. The window can be opened, closed, and
+otherwise manipulated with static member subroutines defined in the
+<code>Mosaic</code> class.  In fact, the class defines a toolbox or API
+that can be used for working with such windows.  Here are some of the
+available routines in the API, with Javadoc-style comments. (Remeber that
+a Javadoc comment comes before the thing that it is commenting on.)</p>
+   
+<pre>/**
+ * Opens a "mosaic" window on the screen.
+ *
+ * Precondition:   The parameters rows, cols, w, and h are positive integers.
+ * Postcondition:  A window is open on the screen that can display rows and
+ *                   columns of colored rectangles.  Each rectangle is w pixels
+ *                   wide and h pixels high.  The number of rows is given by
+ *                   the first parameter and the number of columns by the
+ *                   second.  Initially, all rectangles are black.
+ *
+ * Note:  The rows are numbered from 0 to rows - 1, and the columns are 
+ * numbered from 0 to cols - 1.
+ */
+<newcode>public static void open(int rows, int cols, int w, int h)</newcode>
+   
+   
+/**
+ * Sets the color of one of the rectangles in the window.
+ *
+ * Precondition:   row and col are in the valid range of row and column numbers,
+ *                   and r, g, and b are in the range 0 to 255, inclusive.
+ * Postcondition:  The color of the rectangle in row number row and column
+ *                   number col has been set to the color specified by r, g,
+ *                   and b.  r gives the amount of red in the color with 0 
+ *                   representing no red and 255 representing the maximum 
+ *                   possible amount of red.  The larger the value of r, the 
+ *                   more red in the color.  g and b work similarly for the 
+ *                   green and blue color components.
+ */
+<newcode>public static void setColor(int row, int col, int r, int g, int b)</newcode>
+
+   
+/**
+ * Gets the red component of the color of one of the rectangles.
+ *
+ * Precondition:   row and col are in the valid range of row and column numbers.
+ * Postcondition:  The red component of the color of the specified rectangle is
+ *                   returned as an integer in the range 0 to 255 inclusive.
+ */
+<newcode>public static int getRed(int row, int col)</newcode>
+
+   
+/**
+ * Like getRed, but returns the green component of the color.
+ */
+<newcode>public static int getGreen(int row, int col)</newcode>
+
+   
+/**
+ * Like getRed, but returns the blue component of the color.
+ */
+<newcode>public static int getBlue(int row, int col)</newcode>
+
+   
+/**
+ * Tests whether the mosaic window is currently open.
+ *
+ * Precondition:   None.
+ * Postcondition:  The return value is true if the window is open when this
+ *                   function is called, and it is false if the window is
+ *                   closed.
+ */
+<newcode>public static boolean isOpen()</newcode>
+
+   
+/**
+ * Inserts a delay in the program (to regulate the speed at which the colors
+ * are changed, for example).
+ *
+ * Precondition:   milliseconds is a positive integer.
+ * Postcondition:  The program has paused for at least the specified number
+ *                   of milliseconds, where one second is equal to 1000
+ *                   milliseconds.
+ */
+<newcode>public static void delay(int milliseconds)</newcode></pre>
+   
+<p>Remember that these subroutines are members of the <code>Mosaic</code>
+class, so when they are called from outside <code>Mosaic</code>, the name of the class
+must be included as part of the name of the routine.  For example,
+we'll have to use the name <code>Mosaic.isOpen()</code> rather than simply
+<code>isOpen()</code>.</p>
+
+<p>You'll notice that the comments on the subroutine don't specify what
+happens when the preconditions are <b>not</b> met.  Although a subroutine
+is not really obligated by its contract to do anything particular in that
+case, it would be good to know what happens.  For example, if the
+precondition, "row and col are in the valid range of row and column numbers,"
+on the <code>setColor()</code> or <code>getRed()</code> routine is violated,
+an <classname>IllegalArgumentException</classname> will be thrown.
+Knowing that fact would allow you to write programs that catch and handle
+the exception, and it would be good to document it with a <code>@throws</code>
+doc tag in the Javadoc comment.
+Other questions remain about the behavior of the subroutines.
+For example, what happens if you call <code>Mosaic.open()</code> and there
+is already a mosaic window open on the screen?  (In fact, the old one will
+be closed, and a new one will be created.)  It's difficult to fully document
+the behavior of a piece of software&mdash;sometimes, you just have to 
+experiment or look at the full source code.</p>
+
+<break/>
+
+<p>My idea for a program is to use the <code>Mosaic</code> class as the basis for a neat
+animation. I want to fill the window with randomly colored squares, and then
+randomly change the colors in a loop that continues as long as the window is
+open. "Randomly change the colors" could mean a lot of different things, but
+after thinking for a while, I decide it would be interesting to have a
+"disturbance" that wanders randomly around the window, changing the color of
+each square that it encounters. Here's a picture showing what the contents of the window
+might look like at one point in time:</p>
+
+<img src="mosaic.png" width="400" height="320" alt="a 20-by-16 grid of randomly colored squares"
+      tex="mosaic.eps" texscale="0.5"/>
+
+
+<p>With basic routines for manipulating the window as a foundation, I can turn
+to the specific problem at hand. A basic outline for my program is</p>
+
+<pre>Open a Mosaic window
+Fill window with random colors
+Move around, changing squares at random</pre>
+
+<np>Filling the window with random colors seems like a nice coherent task that I
+can work on separately, so let's decide to write a separate subroutine to do
+it. The third step can be expanded a bit more, into the steps: Start in the
+middle of the window, then keep moving to new squares and changing the color
+of those squares. This should continue as long as the mosaic window is still
+open. Thus we can refine the algorithm to:</np>
+
+<pre>Open a Mosaic window
+Fill window with random colors
+Set the current position to the middle square in the window
+As long as the mosaic window is open:
+   Randomly change color of the square at the current position
+   Move current position up, down, left, or right, at random</pre>
+
+<np>I need to represent the current position in some way. That can be done with
+two <ptype>int</ptype> variables named <code>currentRow</code> and
+<code>currentColumn</code> that hold the row number and the column number of 
+the square where the disturbance is currently located.  I'll use 16 rows and 20 columns of squares in my
+mosaic, so setting the current position to be in the center means setting
+<code>currentRow</code> to 8 and <code>currentColumn</code> to 10. I already have a
+subroutine, <code>Mosaic.open()</code>, to open the window, and I have a function,
+<code>Mosaic.isOpen()</code>, to test whether the window is open. To keep the main
+routine simple, I decide that I will write two more subroutines of my own to
+carry out the two tasks in the while loop. The algorithm can then be written in
+Java as:</np>
+
+<pre>Mosaic.open(16,20,25,25)
+fillWithRandomColors();
+currentRow = 8;       // Middle row, halfway down the window.
+currentColumn = 10;   // Middle column.
+while ( Mosaic.isOpen() ) {
+    changeToRandomColor(currentRow, currentColumn);
+    randomMove();      
+}</pre>
+
+<np>With the proper wrapper, this is essentially the <code>main()</code> routine of
+my program. It turns out I have to make one small modification: To prevent the
+animation from running much, much too fast, the line "<code>Mosaic.delay(1);</code>" is added
+to the <code>while</code> loop.</np>
+
+<p>The <code>main()</code> routine is taken care of, but to complete the program, I
+still have to write the subroutines <code>fillWithRandomColors()</code>,
+<code>changeToRandomColor(int,int)</code>, and <code>randomMove()</code>. Writing each
+of these subroutines is a separate, small task. The
+<code>fillWithRandomColors()</code> routine is defined by the postcondition that
+"each of the rectangles in the mosaic has been changed to a random color."
+Pseudocode for an algorithm to accomplish this task can be given as:</p>
+
+<pre>For each row:
+   For each column:
+      set the square in that row and column to a random color</pre>
+
+<np>&leftquote;For each row" and "for each column" can be implemented as for loops. We've
+already planned to write a subroutine <code>changeToRandomColor</code> that can be
+used to set the color. (The possibility of reusing subroutines in several
+places is one of the big payoffs of using them!) So,
+<code>fillWithRandomColors()</code> can be written in proper Java as:</np>
+
+<pre>static void fillWithRandomColors() {
+   int row, column;
+   for ( row = 0; row &lt; 16; row++ )
+      for ( column = 0; column &lt; 20; column++ )
+         changeToRandomColor(row,column);
+}</pre>
+
+<p>Turning to the <code>changeToRandomColor</code> subroutine, we already have a
+method in the <code>Mosaic</code> class, <code>Mosaic.setColor()</code>, 
+that can be used to change the
+color of a square. If we want a random color, we just have to choose random
+values for <code>r</code>, <code>g</code>, and <code>b</code>. According to the
+precondition of the <code>Mosaic.setColor()</code> subroutine, these random values
+must be integers in the range from 0 to 255. A formula for randomly selecting
+such an integer is "<code>(int)(256*Math.random())</code>". So the random color
+subroutine becomes:</p>
+
+<pre>static void changeToRandomColor(int rowNum, int colNum) {
+     int red = (int)(256*Math.random());
+     int green = (int)(256*Math.random());  
+     int blue = (int)(256*Math.random());
+     Mosaic.setColor(rowNum,colNum,red,green,blue);  
+}</pre>
+
+<p>Finally, consider the <code>randomMove</code> subroutine, which is supposed to
+randomly move the disturbance up, down, left, or right. To make a random choice
+among four directions, we can choose a random integer in the range 0 to 3. If
+the integer is 0, move in one direction; if it is 1, move in another direction;
+and so on. The position of the disturbance is given by the variables
+<code>currentRow</code> and <code>currentColumn</code>. To "move up" means to subtract
+1 from <code>currentRow</code>. This leaves open the question of what to do if
+<code>currentRow</code> becomes -1, which would put the disturbance above the
+window (which would violate a precondition of several of the <classname>Mosaic</classname>
+subroutines).
+Rather than let this happen, I decide to move the disturbance to the
+opposite edge of the grid by setting <code>currentRow</code> to 15. (Remember that
+the 16 rows are numbered from 0 to 15.)  An alternative to jumping to the opposite
+edge would be to simply do nothing in this case.  Moving the disturbance down, left, or
+right is handled similarly. If we use a <code>switch</code> statement to decide
+which direction to move, the code for <code>randomMove</code> becomes:</p>
+
+<pre>int directionNum;
+directionNum = (int)(4*Math.random());
+switch (directionNum) {
+   case 0:  // move up 
+      currentRow--;
+      if (currentRow &lt; 0)   // CurrentRow is outside the mosaic;
+         currentRow = 15;   // move it to the opposite edge.
+      break;
+   case 1:  // move right
+      currentColumn++;
+      if (currentColumn &gt;= 20)
+         currentColumn = 0;
+      break; 
+   case 2:  // move down
+      currentRow++;
+      if (currentRow &gt;= 16)
+         currentRow = 0;
+      break;
+   case 3:  // move left
+      currentColumn--;
+      if (currentColumn &lt; 0)
+         currentColumn = 19;
+      break; 
+}</pre>
+   
+</subsection>
+   
+<subsection id="subroutines.6.3" title="The Program">
+
+<p>Putting this all together, we get the following complete program.  Note that I've added Javadoc-style
+comments for the class itself and for each of the subroutines. The
+variables <code>currentRow</code> and <code>currentColumn</code> are defined as static
+members of the class, rather than local variables, because each of them is used
+in several different subroutines.  You can find a copy of the source code in
+<sourceref href="RandomMosaicWalk.java"/>.  Remember that this program actually 
+depends on two other files, <sourceref href="Mosaic.java"/> and <sourceref href="MosaicPanel.java"/>.</p>
+
+<pre>/**
+ * This program opens a window full of randomly colored squares.  A "disturbance"
+ * moves randomly around in the window, randomly changing the color of each
+ * square that it visits.  The program runs until the user closes the window.
+ */
+public class RandomMosaicWalk {
+
+    static int currentRow;    // Row currently containing the disturbance.
+    static int currentColumn; // Column currently containing disturbance.
+
+    /**
+     * The main program creates the window, fills it with random colors,
+     * and then moves the disturbance in a random walk around the window
+     * as long as the window is open.
+     */
+    public static void main(String[] args) {
+        Mosaic.open(16,20,25,25);
+        fillWithRandomColors();
+        currentRow = 8;   // start at center of window
+        currentColumn = 10;
+        while (Mosaic.isOpen()) {
+            changeToRandomColor(currentRow, currentColumn);
+            randomMove();
+            Mosaic.delay(1);
+        }
+    }  // end main
+
+    /**
+     * Fills the window with randomly colored squares.
+     * Precondition:   The mosaic window is open.
+     * Postcondition:  Each square has been set to a random color. 
+     */
+    static void fillWithRandomColors() {
+        int row, column;
+        for ( row=0; row &lt; 16; row++ ) {
+            for ( column=0; column &lt; 20; column++ ) {
+                changeToRandomColor(row, column);  
+            }
+        }
+    }  // end fillWithRandomColors
+
+    /**
+     * Changes one square to a new randomly selected color.
+     * Precondition:   The specified rowNum and colNum are in the valid range
+     *                 of row and column numbers.
+     * Postcondition:  The square in the specified row and column has
+     *                 been set to a random color.
+     * @param rowNum the row number of the square, counting rows down
+     *      from 0 at the top
+     * @param colNum the column number of the square, counting columns over
+     *      from 0 at the left
+     */
+    static void changeToRandomColor(int rowNum, int colNum) {
+        int red = (int)(256*Math.random());    // Choose random levels in range
+        int green = (int)(256*Math.random());  //     0 to 255 for red, green, 
+        int blue = (int)(256*Math.random());   //     and blue color components.
+        Mosaic.setColor(rowNum,colNum,red,green,blue);  
+    }  // end changeToRandomColor
+
+    /**
+     * Move the disturbance.
+     * Precondition:   The global variables currentRow and currentColumn
+     *                 are within the legal range of row and column numbers.
+     * Postcondition:  currentRow or currentColumn is changed to one of the
+     *                 neighboring positions in the grid -- up, down, left, or
+     *                 right from the current position.  If this moves the
+     *                 position outside of the grid, then it is moved to the
+     *                 opposite edge of the grid.
+     */
+    static void randomMove() {
+        int directionNum; // Randomly set to 0, 1, 2, or 3 to choose direction.
+        directionNum = (int)(4*Math.random());
+        switch (directionNum) {
+        case 0:  // move up 
+            currentRow--;
+            if (currentRow &lt; 0)
+                currentRow = 15;
+            break;
+        case 1:  // move right
+            currentColumn++;
+            if (currentColumn &gt;= 20)
+                currentColumn = 0;
+            break; 
+        case 2:  // move down
+            currentRow ++;
+            if (currentRow &gt;= 16)
+                currentRow = 0;
+            break;
+        case 3:  // move left  
+            currentColumn--;
+            if (currentColumn &lt; 0)
+                currentColumn = 19;
+            break; 
+        }
+    }  // end randomMove
+
+} // end class RandomMosaicWalk</pre>
+
+</subsection>
+
+</section>

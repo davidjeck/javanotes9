@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="OOP.8" title="Nested Classes">
+
+<p><start><big>A</big> class seems like it should be</start> a pretty important thing. A class is a
+high-level building block of a program, representing a potentially complex idea
+and its associated data and behaviors. I've always felt a bit silly writing
+tiny little classes that exist only to group a few scraps of data together.
+However, such trivial classes are often useful and even essential. Fortunately,
+in Java, I can ease the embarrassment, because one class can be nested inside
+another class. My trivial little class doesn't have to stand on its own. It
+becomes part of a larger more respectable class. This is particularly useful
+when you want to create a little class specifically to support the work of a
+larger class. And, more seriously, there are other good reasons for nesting the
+definition of one class inside another class.</p>
+
+<p>In Java, a <newword>nested class</newword> is any class whose definition is inside the
+definition of another class.  (In fact, a class can even be nested inside a subroutine,
+which must, of course, itself be inside a class).
+Nested classes can be either <newword>named</newword> 
+or <newword>anonymous</newword>. I will come
+back to the topic of anonymous classes later in this section.  A named nested
+class, like most other things that occur in classes, can be either static or
+non-static.</p>
+ 
+   
+<subsection id="OOP.8.1" title="Static Nested Classes">
+
+ 
+<p>The definition of a static nested class looks just like the definition of any other class,
+except that it is nested inside another class and it has the modifier <code>static</code>
+as part of its declaration. A static nested class is part of the static structure of the
+containing class. It can be used inside that class to create objects in the
+usual way. If it is used
+outside the containing class, its name
+must indicate its membership in the containing class.  That is, the full name of
+the static nested class consists of the name of the class in which it is nested, followed
+by a period, followed by the name of the nested class.  This is similar to other
+static components of a class: A static nested class is part of the class itself
+in the same way that static member variables are parts of the class itself.</p>
+
+<p>For example, suppose a class named <classname>WireFrameModel</classname> represents a set
+of lines in three-dimensional space. (Such models are used to represent
+three-dimensional objects in graphics programs.) Suppose that the
+<classname>WireFrameModel</classname> class contains a static nested class, <classname>Line</classname>,
+that represents a single line. Then, outside of the class
+<classname>WireFrameModel</classname>, the <classname>Line</classname> class would be referred to as
+<code>WireFrameModel.Line</code>. Of course, this just follows the normal naming
+convention for static members of a class. The definition of the
+<classname>WireFrameModel</classname> class with its nested <classname>Line</classname> class would look,
+in outline, like this:</p>
+
+<pre>public class WireFrameModel {
+
+   . . . // other members of the WireFrameModel class
+   
+   static public class Line {
+         // Represents a line from the point (x1,y1,z1)
+         // to the point (x2,y2,z2) in 3-dimensional space.
+      double x1, y1, z1;
+      double x2, y2, z2;
+   } // end class Line
+   
+   . . . // other members of the WireFrameModel class
+   
+} // end WireFrameModel</pre>
+
+<np>The full name of the nested class is <classname>WireFrameModel.Line</classname>.
+That name can be used, for example, to declare variables.
+Inside the <classname>WireFrameModel</classname> class, a <classname>Line</classname> object would be
+created with the constructor "<code>new&nbsp;Line()</code>". Outside the class, 
+"<code>new&nbsp;WireFrameModel.Line()</code>" would be used.</np>
+
+<p>A static nested class has full access to the static members of the containing
+class, even to the <code>private</code> members. Similarly, the containing class has full
+access to the members of the nested class, even if they are marked <code>private</code>.  
+This can be another motivation for
+declaring a nested class, since it lets you give one class access to the
+private members of another class without making those members generally
+available to other classes.  Note also that a nested class can itself be private,
+meaning that it can only be used inside the class in which it is nested.</p>
+
+<p>When you compile the above class definition, two class files will be
+created. Even though the definition of <classname>Line</classname> is nested inside
+<classname>WireFrameModel</classname>, the compiled <classname>Line</classname> class is stored in a
+separate file. The name of the class file for <classname>Line</classname> will be
+<code>WireFrameModel$Line.class</code>.</p>
+
+</subsection>
+
+<subsection id="OOP.8.2" title="Inner Classes">
+
+<p>Non-static nested classes are referred to as <newword>inner classes</newword>.
+Inner classes are not, in practice, very different from static
+nested classes, but a non-static nested class is actually associated with an
+object rather than with the class in which its definition is nested. This can take some
+getting used to.</p>
+
+<p>Any non-static member of a class is not really part of the class itself
+(although its source code is contained in the class definition). This is true
+for inner classes, just as it is for any other non-static part of a
+class. The non-static members of a class specify what will be contained in
+objects that are created from that class. The same is true&mdash;at least
+logically&mdash;for inner classes. It's as if each object that belongs
+to the containing class has its <b>own copy</b> of the nested class (although it does not
+literally contain a copy of the compiled code for the nested class).  This copy
+has access to all the instance methods and instance variables of the object,
+even to those that are declared <code>private</code>.
+The two copies of the inner class in two different objects differ because the instance
+variables and methods they refer to are in different objects. In fact, the rule
+for deciding whether a nested class should be static or non-static is simple:
+If the nested class needs to use any instance variable or instance method
+from the containing class, make the nested class
+non-static. Otherwise, it might as well be static.</p>
+
+<p>In most cases, an inner class is used only within the class where it is
+defined.  When that is true, using the inner class is really not much different from
+using any other class.  You can create variables and declare objects using the
+simple name of the inner class in the usual way.</p>
+
+<p>From outside the containing class, however, an inner class has to be
+referred to using a name of the form <bnf>variableName</bnf>.<bnf>NestedClassName</bnf>,
+where <bnf>variableName</bnf> is a variable that refers to the object that
+contains the inner class.  In order to create an object that belongs to an inner class, you
+must first have an object that belongs to the containing class. (When working
+inside the class, the object "<code>this</code>" is used implicitly.)</p>
+
+<p>Looking at
+an example will help, and will hopefully convince you that inner
+classes are really very natural. Consider a class that represents poker games.
+This class might include a nested class to represent the players of the game.
+The structure of the <classname>PokerGame</classname> class could be:</p>
+
+<pre>public class PokerGame {  // Represents a game of poker.
+    
+    class Player {  // Represents one of the players in <u>this</u> game.
+       .
+       .
+       .
+    } // end class Player
+    
+    private Deck deck;      // A deck of cards for playing the game.
+    private int pot;        // The amount of money that has been bet.
+    
+    .
+    .
+    .
+
+} // end class PokerGame</pre>
+
+<p>If <code>game</code> is a variable of type <classname>PokerGame</classname>, then,
+conceptually, <code>game</code> contains its own copy of the <classname>Player</classname> class.
+In an instance method of a <classname>PokerGame</classname> object, a new <classname>Player</classname>
+object would be created by saying "<code>new&nbsp;Player()</code>", just as for any
+other class. (A <classname>Player</classname> object could be created outside the
+<classname>PokerGame</classname> class with an expression such as 
+"<code>game.new&nbsp;Player()</code>".  Again, however, this is rare.)
+The <classname>Player</classname>
+object will have access to the <code>deck</code> and <code>pot</code> instance
+variables in the <classname>PokerGame</classname> object. Each <code>PokerGame</code> object has
+its own <code>deck</code> and <code>pot</code> and <code>Players</code>. Players of that
+poker game use the deck and pot for that game; players of another poker game use
+the other game's deck and pot. That's the effect of making the <classname>Player</classname>
+class non-static. This is the most natural way for players to behave. A
+<classname>Player</classname> object represents a player of one particular poker game. If
+<classname>Player</classname> were an independent class or a <b>static</b> nested class, 
+on the other hand, it would represent the general idea of a poker player, independent of a
+particular poker game.</p>
+
+</subsection>
+   
+<subsection id="OOP.8.3" title="Anonymous Inner Classes">
+
+<p>In some cases, you might find yourself writing an inner class and then using
+that class in just a single line of your program. Is it worth creating such a
+class? Indeed, it can be, but for cases like this you have the option of using
+an <newword>anonymous inner class</newword>. An anonymous class is
+created with a variation of the <code>new</code> operator that has the form</p>
+
+<pre>
+          new  <bnf>superclass-or-interface</bnf> ( <bnf>parameter-list</bnf> ) {
+                   <bnf>methods-and-variables</bnf>
+              }
+</pre>
+
+<p>This constructor defines a new class, without giving it a name, and it
+simultaneously creates an object that belongs to that class. This form of the
+<code>new</code> operator can be used in any statement where a regular
+"<code>new</code>" could be used. The intention of this expression is to create: "a
+new object belonging to a class that is the same as <bnf>superclass-or-interface</bnf> 
+but with these <bnf>methods-and-variables</bnf> added." 
+The effect is to create a uniquely customized object, just at the point in the program where you need it.
+Note that it is possible to base an anonymous class on an interface, rather
+than a class. In this case, the anonymous class must implement the interface by
+defining all the methods that are declared in the interface.  If an interface
+is used as a base, the <bnf>parameter-list</bnf> must be empty.  Otherwise, it can contain
+parameters for a constructor in the <bnf>superclass</bnf>.</p>
+
+<p>Anonymous classes are  often used for handling events in graphical user
+interfaces, and we will encounter them several times in the chapters on GUI programming.
+For now, we will look at one not-very-plausible example. Consider the
+<classname>Drawable</classname> interface, which is defined earlier in this section. Suppose
+that we want a <classname>Drawable</classname> object that draws a filled, red, 100-pixel
+square. Rather than defining a new, separate class and then using that class to
+create the object, we can use an anonymous class to create the object in one
+statement:</p>
+
+<pre>Drawable redSquare = <newcode>new Drawable() {
+       void draw(Graphics g) {
+          g.setColor(Color.RED);
+          g.fillRect(10,10,100,100);
+       }
+   }</newcode>;</pre>
+
+<np>Then <code>redSquare</code> refers to an object that implements <classname>Drawable</classname>
+and that draws a red square when its <code>draw()</code> method is called.
+By the way, the semicolon at the end of the statement is not part of the class
+definition; it's the semicolon that is required at the end of every declaration
+statement.</np>
+
+<p>Anonymous classes are often used for actual parameters.  For example, consider the
+following simple method, which draws a <classname>Drawable</classname> in two different graphics contexts:</p>
+
+<pre>void drawTwice( Graphics g1, Graphics g2, Drawable figure ) {
+    figure.draw(g1);
+    figure.draw(g2);
+}</pre>
+
+<np>When calling this method, the third parameter can be created using an anonymous inner class.
+For example:</np>
+
+<pre>drawTwice( firstG, secondG, <newcode>new Drawable() {
+          void draw(Graphics g) {
+             g.drawOval(10,10,100,100);
+          }
+     }</newcode> );</pre>
+
+<p>When a Java class is compiled, each anonymous nested class will produce a
+separate class file. If the name of the main class is <code>MainClass</code>, for
+example, then the names of the class files for the anonymous nested classes
+will be <code>MainClass$1.class</code>, <code>MainClass$2.class</code>,
+<code>MainClass$3.class</code>, and so on.</p>
+
+</subsection>
+   
+<subsection id="OOP.8.4" title="Java 8 Lambda Expressions">
+
+<p>The syntax for anonymous classes is cumbersome.  In many cases, an anonymous class
+implements an interface that defines just one method.  Java&nbsp;8 introduces a new
+syntax that can be used in place of the anonymous class in that circumstance:
+the lambda expression.  Here is what the previous subroutine call looks like using a
+lambda expression:</p>
+
+<pre>drawTwice( firstG, secondG, <newcode>g -&gt; g.drawOval(10,10,100,100)</newcode> )</pre>
+
+<np>The lambda expression is <code>g -&gt; g.drawOval(10,10,100,100)</code>.  Its meaning
+is, "the method that has a parameter <code>g</code> and executes the code
+<code>g.drawOval(10,10,100,100)</code>."  
+The computer knows that <code>g</code>
+is of type <classname>Graphics</classname> because it is expecting a
+<classname>Drawable</classname> as the actual parameter, and the only method in
+the <classname>Drawable</classname> interface has a parameter of type 
+<classname>Graphics</classname>.  Lambda expressions can only be used in places where
+this kind of type inference can be made.  The general syntax of a lambda expression is</np>
+
+<pre><bnf>formal-parameter-list</bnf>  -&gt;  <bnf>method-body</bnf></pre>
+
+<np>where the <bnf>method body</bnf> can be a single expression, a single subroutine call,
+or a block of statements enclosed between 
+<code>{</code>&nbsp;and&nbsp;<code>}</code>.  When the body is a single expression or
+function call, the
+value of the expression is automatically used as the return value of the method that
+is being defined.
+The parameter list in the lambda expression does not have to specify the types of the
+parameters, although it can.  Parentheses around the parameter list are optional if there is exactly one
+parameter and no type is specified for the parameter; this is the form seen in the example above.
+For a method with no parameters, the parameter list is just an empty set of parentheses.  Here
+are a few more examples of lambda expressions:</np>
+
+<pre>() -&gt; System.out.println("Hello World")
+
+g -&gt; { g.setColor(Color.RED); g.drawRect(10,10,100,100); }
+
+(a, b) -&gt; a + b
+
+(int n) -> { 
+         while (n &gt; 0) { 
+             System.out.println(n); 
+             n = n/2; 
+          } 
+      } // lambda expressions ends here
+</pre>
+
+<np>As you can see, the syntax can still get pretty complicated.  There is quite a lot
+more to say about lambda expressions, but my intention here is only to briefly introduce
+one of the most interesting new features in Java&nbsp;8.</np>
+
+</subsection>
+
+<endchapter/>
+
+</section>

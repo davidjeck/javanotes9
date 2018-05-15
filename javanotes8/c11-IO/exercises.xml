@@ -1,0 +1,2209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+
+<exercises>
+   
+<exercise>
+<exercise-question><p>The sample program <sourceref href="DirectoryList.java"/>,
+given as an example in <localref href="IO.2.2"/>, will print a list of files in a directory
+specified by the user. But some of the files in that directory might themselves
+be directories. And the subdirectories can themselves contain directories. And
+so on. Write a modified version of <code>DirectoryList</code> that will list all
+the files in a directory and all its subdirectories, to any level of nesting.
+You will need a <b>recursive</b> subroutine to do the listing. The subroutine should
+have a parameter of type <classname>File</classname>. You will need the constructor from the
+<classname>File</classname> class that has the form</p>
+<pre>public File( File dir, String fileName )
+   // Constructs the File object representing a file
+   // named fileName in the directory specified by dir.</pre>
+</exercise-question>
+<exercise-discuss><p>One possible recursive algorithm for printing all the files in a directory
+and its subdirectories is:</p>
+
+<pre>Print the name of the directory
+for each file in the directory:
+   if the file is a directory:
+      Print its contents recursively
+   else
+      Print the name of the file.</pre>
+
+<np>If the directory is given as an object of type <classname>File</classname>, then this can
+be coded easily. We need some instance methods from the <classname>File</classname> class.
+(This subroutine is not quite what I ended up using in my solution.)</np>
+
+<pre>static void listDirectoryContents( File dir ) {
+    System.out.println("Directory \"" + dir.getName() + "\"");  
+    String[] files;  // The names of the files in the directory.
+    files = dir.list();
+    for (int i = 0; i &lt; files.length; i++) {
+        File f;  // One of the files in the directory.
+        f = new File(dir, files[i]);
+        if ( f.isDirectory() ) {
+               // Call listDirectoryContents() recursively to
+               // list the contents of the directory, f.
+            listDirectoryContents(f);
+        }
+        else {
+              // For a regular file, just print the name, files[i].
+            System.out.println(files[i]);
+        }
+    }
+} // end listDirectoryContents()</pre>
+
+<p>Every time this routine finds a directory, it lists not just the name of the
+directory but also, recursively, the names of everything that it contains. The
+only problem with this is that it doesn't indicate which items are in which
+directory. For example, consider the output:</p>
+
+<pre>Directory "games"
+blackbox
+Directory "CardGames"
+cribbage
+euchre
+tetris</pre>
+
+<np>There is no way to tell where the list of items in "CardGames" ends.
+Possibly, for example, "euchre" is in the "CardGames" directory. But possibly,
+"cribbage" is the only file in "CardGames" and "euchre" is actually part of the
+listing for "games". It would be nice to use indentation to show the nesting,
+like this:</np>
+
+<pre>Directory "games"
+   blackbox
+   Directory "CardGames"
+      cribbage
+      euchre
+   tetris</pre>
+
+<np>In this listing, you can tell that "euchre" is in fact in "CardGames"
+while "tetris" is in "games". To implement this, we just have to recognize that
+the indentation can be different in each call to the <code>listDirectoryContents()</code>
+method. Since it can be different, it should be a parameter. When we call
+<code>listDirectoryContents()</code> recursively, we should increase the indentation. You
+can see how this is done in the actual solution, given below.</np>
+
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="RecursiveDirectoryList">import java.io.File;
+import java.util.Scanner;
+
+/**
+ * This program lists the files in a directory specified by
+ * the user.  If one of those files is itself a directory, the
+ * program recursively lists the contents of that subdirectory.
+ * The user is asked to type in the name of the directory that is
+ * to be listed.  If the name entered by the user is not a directory,
+ * a message is printed and the program ends.
+ */
+public class RecursiveDirectoryList {
+
+
+   public static void main(String[] args) {
+
+      String directoryName;  // Directory name entered by the user.
+      File directory;        // File object referring to the directory.
+      Scanner scanner;       // For reading a line of input from the user.
+
+      scanner = new Scanner(System.in);  // scanner reads from standard input.
+
+      System.out.print("Enter a directory name: ");
+      directoryName = scanner.nextLine().trim();
+      directory = new File(directoryName);
+
+      if (directory.isDirectory() == false) {
+         if (directory.exists() == false)
+            System.out.println("There is no such directory!");
+         else // the file exists but is not a directory
+            System.out.println("That file is not a directory.");
+      }
+      else {
+            // List the contents of the directory recursively, with
+            // no indentation at the top level.
+         listDirectoryContents(directory,"");
+      }
+
+   } // end main()
+
+
+   /**
+    * A recursive subroutine that lists the contents of a directory, 
+    * including the contents of its subdirectories to any level of nesting.
+    * @param dir the directory whose contents are to be listed.  It is assumed
+    *   that dir is in fact a directory. 
+    * @param indent a string of blanks that is prepended to each item in
+    *    the directory listing.  This string grows in length with each increase
+    *    in the level of directory nesting.
+    */
+   private static void listDirectoryContents(File dir, String indent) {
+      String[] files;  // List of names of files in the directory.
+      System.out.println(indent + "Directory \"" + dir.getName() + "\":");
+      indent += "   ";  // Increase the indentation for listing the contents.
+      files = dir.list();
+      for (int i = 0; i &lt; files.length; i++) {
+            // If the file is a  directory, list its contents
+            // recursively.  Otherwise, just print its name.
+         File f = new File(dir, files[i]);
+         if (f.isDirectory())
+            listDirectoryContents(f, indent);
+         else
+            System.out.println(indent + files[i]);
+      }
+   } // end listContents()
+
+
+} // end class RecursiveDirectoryList
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+
+<exercise>
+<exercise-question><p>Write a program that will
+count the number of lines in each file that is specified on the command line.
+Assume that the files are text files. Note that multiple files can be
+specified, as in:</p>
+<pre>java  LineCounts  file1.txt  file2.txt  file3.txt</pre>
+<np>Write each file name, along with the number of lines in that file, to standard
+output. If an error occurs while trying to read from one of the files, you
+should print an error message for that file, but you should still process all
+the remaining files. Do not use
+<classname>TextIO</classname> to process the files; use a <classname>Scanner</classname>, a
+<classname>BufferedReader</classname>, or a <classname>TextReader</classname>
+to process each file.</np>
+</exercise-question>
+<exercise-discuss><p>The <code>main()</code> routine for this program is a simple for loop that
+processes the command-line arguments. Each argument is supposed to be the name
+of a file. The loop just prints the file name and calls a subroutine that
+counts the number of lines in the file and outputs the result:</p>
+
+<pre>for (int i = 0; i &lt; args.length; i++) {
+   System.out.print(args[i] + ": ");
+   countLines(args[i]);
+}</pre>
+
+<p>The <code>countLines()</code> subroutine will catch any errors that occur when
+it tries to access the file. If an error occurs, it will output an error
+message instead of the number of lines. Since the error is handled in the
+subroutine, it won't crash the program or stop the <code>main()</code> routine from
+going on to process any remaining files.</p>
+
+<p>The <code>countLines()</code> subroutine can be written using either a
+<classname>TextReader</classname>, a <classname>BufferedReader</classname>,
+or a <classname>Scanner</classname> to read lines from the file; each of these
+classes has a simple method for reading a complete line of text from the file.
+(An alternative approach would read individual characters from the file and
+count the number of end-of-line markers.  Unfortunately, ends-of-line can be
+marked by any of the strings "\n", "\r", or "\r\n" and that would add to the
+difficulty of the task.  The line reading methods in <classname>TextReader</classname>, 
+<classname>BufferedReader</classname>, and <classname>Scanner</classname> will
+work no matter which end-of-line marker is used.)</p>
+<p>In my solution, I use a <classname>BufferedReader</classname>.
+The <code>countLines()</code> method creates a <classname>BufferedReader</classname> stream to
+read from the file. It then calls the <code>readLine()</code> routine from the
+<classname>BufferedReader</classname> class to read lines of text from the file, until the end of
+the file is encountered.  For a <classname>BufferedReader</classname>, the
+end-of-file can be recognized when <code>readLine()</code> returns <code>null</code>.  
+The method counts each line as it reads it. In the end, the
+value of the counter is the number of lines in the file. The subroutine writes
+this value to standard output. All this is done in a <code>try..catch</code>
+statement, treating the <classname>BufferedReader</classname> as a resource,
+so that an error can be handled if it occurs. It's pretty
+straightforward. The complete solution is given below.</p>
+   
+<p>One note about the command line for calling this program. If you are
+using UNIX, including Mac OS or Linux, you can take advantage of something called "wildcards" in
+the command-line arguments. For example, if you say, "<code>java LineCounts *.txt</code>",
+the "*" is a wildcard. The operating system will expand "*.txt" into a list of
+all the files in the current directory that end in ".txt". Similarly, "*xx*"
+expands into a list of all file names that contain "xx", and "fil*dat" expands
+into the list of file names that begin with "fil" and end with "dat". The "*"
+matches any number of characters in the file name, including zero characters.
+This expansion is done before your program sees the command-line arguments, so
+you don't have to worry about it in your program.
+Typing the command "<code>java LineCounts *.txt</code>" would be exactly equivalent
+to typing something like "<code>java LineCounts file1.txt file2.txt
+file3.txt</code>". This type of expansion happens for any command in UNIX, not
+just for the "java" command.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="LineCounts">import java.io.*;
+
+/**
+ * This program reports the number of lines in each of the files
+ * that are specified as command line arguments.  The files are
+ * assumed to be text files.  If a file does not exist, or if
+ * some error occurs when the attempt is made to read the file,
+ * then an error message is printed (but the other files are
+ * still processed). 
+*/
+public class LineCounts {
+
+
+   /**
+    * The main() routine simply gets the file names from the
+    * command line and calls the countLines() routine to process
+    * each name.  Since any errors are handled in the countLines()
+    * routine, the main program will continue after an error occurs
+    * while trying to process one of the files.
+    */       
+   public static void main(String[] args) {
+      
+      if (args.length == 0) {
+             // This program must have at least one command-line 
+             // argument to work with.
+          System.out.println("Usage:   java LineCounts &lt;file-names&gt;");
+          return;
+      }
+      
+      for (int i = 0; i &lt; args.length; i++) {
+         System.out.print(args[i] + ":  ");
+         countLines(args[i]);
+      }
+      
+   }  // end main()
+   
+   
+   /**
+    * Count the number of lines in the specified file, and
+    * print the number to standard output.  If an error occurs
+    * while processing the file, print an error message instead.
+    * Two try..catch statements are used so I can give a
+    * different error message in each case.
+    */
+   private static void countLines(String fileName) {
+      
+      try(BufferedReader in = new BufferedReader( new FileReader(fileName) )) {
+         
+         int lineCount = 0;  // number of lines read from the file
+         
+         String line = in.readLine();   // Read the first line.
+         while (line != null) {
+             lineCount++;               // Count this line.
+             line = in.readLine();      // Read the next line.
+         }
+         System.out.println(lineCount + " lines");
+
+      }
+      catch (FileNotFoundException e) {
+          System.out.println("Error.  Can't open file.");
+      }
+      catch (Exception e) {
+         System.out.println("Error.   Problem with reading from file.");
+      }
+   
+   }  // end countLines()
+   
+
+} // end class LineCounts
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+
+<exercise id="IO.ex.3">
+<exercise-question><p>For this exercise, you
+will write a network server program. The program is a simple file server that
+makes a collection of files available for transmission to clients. When the
+server starts up, it needs to know the name of the directory that contains the
+collection of files. This information can be provided as a command-line
+argument. You can assume that the directory contains only regular files (that
+is, it does not contain any sub-directories). You can also assume that all the
+files are text files.</p>
+<p>When a client connects to the server, the server first reads a one-line
+command from the client. The command can be the string "<code>INDEX</code>". In this case,
+the server responds by sending a list of names of all the files that are
+available on the server. Or the command can be of the form "<code>GET&nbsp;&lt;filename&gt;</code>",
+where <code>&lt;filename&gt;</code> is a file name. The server checks whether the requested file
+actually exists. If so, it first sends the word "OK" as a message to the
+client. Then it sends the contents of the file and closes the connection.
+Otherwise, it sends a line beginning with the word "ERROR" to the client and closes the
+connection.  (The error response can include an error message on the rest of the line.)</p>
+<p>Write a subroutine to handle each request. See the <sourceref href="DirectoryList.java">DirectoryList</sourceref>
+example in <localref href="IO.2.2"/> for help with the problem of
+getting the list of files in the directory.</p>
+</exercise-question>
+<exercise-discuss><p>The sample program <sourceref href="DateServer.java"/>,
+from <localref href="IO.4.4"/>,
+shows the typical outline of a server program. For this exercise, the
+processing of each connection request is more complicated, but the basic
+outline of the program is the same.</p>
+
+<p>My program begins by getting the directory name from the command line. An
+object of type <classname>File</classname> is created which can be used to check whether the
+specified directory exists and is in fact a directory rather than a regular
+file. This allows for some basic error checking before the server starts
+running:</p>
+
+<pre>if (args.length == 0) {
+   System.out.println("Usage:  java FileServer &lt;directory&gt;");
+   return;
+}
+directory = new File(args[0]);
+if ( ! directory.exists() ) {
+   System.out.println("Specified directory does not exist.");
+   return;
+}
+if (! directory.isDirectory() ) {
+   System.out.println("The specified file is not a directory.");
+   return;
+}</pre>
+
+<np>The <classname>File</classname> object is needed later, in any case, for reading the list
+of files in the directory.</np>
+
+<p>The rest of the <code>main()</code> routine takes the typical form for a server
+program. A listening socket is established. Then the server accepts and
+processes connection requests in an infinite loop. In this case, the processing
+is done by calling a <code>handleConnection()</code> method that is defined later in the program. The actual
+communication with the client is done in this method.
+(Since it can potentially take a long time to transmit a file, it would
+be desirable to use threads to handle the connections in this program, instead
+of running them in the same thread that listens for connection requests.  That
+would allow several requests to be handled simultaneously.  Using threads for
+network communication will be covered in the <localref href="threads">next chapter</localref>.
+</p>
+
+<p>The <code>handleConnection()</code> method implements the communication
+protocol of the server in a straightforward way: It reads a line from the
+client. If the line is "index", it sends a list of available files. If the line
+starts with the string "get", it sends the requested file. Finally, it closes
+the connection. (In fact, the connection is closed in the <code>finally</code>
+clause of a <code>try</code> statement to make sure that the connection is closed
+before the method returns.) You should be able to follow all this in the
+solution that follows.</p>
+   
+<p>(One minor point:  Suppose that the last line in a file is not terminated
+by an end-of-line marker.  That is, there is no end-of-line directly preceding
+the end-of-file.  When my program transmits the file, it will nevertheless send
+an end-of-line marker after the last line of the file.  So, the file that is
+transmitted is not identical to the file on the computer's hard disk.  Actually,
+things are even worse than that because the end-of-line markers used when the
+file is transmitted are not necessarily the same as the ones that are used in
+the file as stored on the disk. It would probably be better to consider the file
+to be binary data and to send an exact, byte-by-byte copy.)</p>
+</exercise-discuss>
+<exercise-code>
+<pre>
+<prog name="FileServer">import java.net.*;
+import java.io.*;
+import java.util.Scanner;
+
+/**
+ * This program is a very simple network file server.  The 
+ * server has a list of available text files that can be
+ * downloaded by the client.  The client can also download
+ * the list of files.  When the connection is opened, the
+ * client sends one of two possible commands to the server:
+ * "INDEX" or "GET &lt;file-name&gt;".  The server replies to
+ * the first command by sending the list of available files.
+ * It responds to the second with a one-line message,
+ * either "OK" or "ERROR".  If the message is "OK", it is
+ * followed by the contents of the file with the specified
+ * name.  The "ERROR" message indicates that the specified
+ * file does not exist on the server. (The server can also
+ * respond with the message "unknown command" if the command
+ * it reads is not one of the two possible legal commands.)
+ * (The commands INDEX and GET are not case-sensitive.)
+ * 
+ * The server program requires a command-line parameter
+ * that specifies the directory that contains the files
+ * that the server can serve.  The files should all be
+ * text files, but this is not checked.  Also, the server
+ * must have permission to read all the files.
+ */
+public class FileServer {
+
+   static final int LISTENING_PORT = 3210;
+
+
+   public static void main(String[] args) {
+
+      File directory;        // The directory from which the server
+                             //    gets the files that it serves.
+
+      ServerSocket listener; // Listens for connection requests.
+
+      Socket connection;     // A socket for communicating with a client.
+
+
+      /* Check that there is a command-line argument.
+         If not, print a usage message and end. */
+
+      if (args.length == 0) {
+         System.out.println("Usage:  java FileServer &lt;directory&gt;");
+         return;
+      }
+
+      /* Get the directory name from the command line, and make
+         it into a file object.  Check that the file exists and
+         is in fact a directory. */
+
+      directory = new File(args[0]);
+      if ( ! directory.exists() ) {
+         System.out.println("Specified directory does not exist.");
+         return;
+      }
+      if (! directory.isDirectory() ) {
+         System.out.println("The specified file is not a directory.");
+         return;
+      }
+
+      /* Listen for connection requests from clients.  For
+         each connection, call the handleConnection() method
+         to process it.  The server runs until the program
+         is terminated, for example by a CONTROL-C. */
+
+      try {
+         listener = new ServerSocket(LISTENING_PORT);
+         System.out.println("Listening on port " + LISTENING_PORT);
+         while (true) {
+            connection = listener.accept();
+            handleConnection(directory,connection);
+         }
+      }
+      catch (Exception e) {
+         System.out.println("Server shut down unexpectedly.");
+         System.out.println("Error:  " + e);
+         return;
+      }
+
+   } // end main()
+
+
+   /**
+    * This method processes the connection with one client.
+    * It creates streams for communicating with the client,
+    * reads a command from the client, and carries out that
+    * command.  The connection is also logged to standard output.
+    * An output beginning with ERROR indicates that a network
+    * error occurred.  A line beginning with OK means that
+    * there was no network error, but does not imply that the
+    * command from the client was a legal command.
+    */
+   private static void handleConnection(File directory, Socket connection) {
+      Scanner incoming;       // For reading data from the client.
+      PrintWriter outgoing;   // For transmitting data to the client.
+      String command = "Command not read";
+      try {
+         incoming = new Scanner( connection.getInputStream() );
+         outgoing = new PrintWriter( connection.getOutputStream() );
+         command = incoming.nextLine();
+         if (command.equalsIgnoreCase("index")) {
+            sendIndex(directory, outgoing);
+         }
+         else if (command.toLowerCase().startsWith("get")){
+            String fileName = command.substring(3).trim();
+            sendFile(fileName, directory, outgoing);
+         }
+         else {
+            outgoing.println("ERROR unsupported command");
+            outgoing.flush();
+         }
+         System.out.println("OK    " + connection.getInetAddress()
+               + " " + command);
+      }
+      catch (Exception e) {
+         System.out.println("ERROR " + connection.getInetAddress()
+               + " " + command + " " + e);
+      }
+      finally {
+         try {
+            connection.close();
+         }
+         catch (IOException e) {
+         }
+      }
+   }
+
+   /**
+    * This is called by the handleConnection() method in response to an "INDEX" command
+    * from the client.  Send the list of files in the server's directory.
+    */
+   private static void sendIndex(File directory, PrintWriter outgoing) throws Exception {
+      String[] fileList = directory.list();
+      for (int i = 0; i &lt; fileList.length; i++)
+         outgoing.println(fileList[i]);
+      outgoing.flush();
+      outgoing.close();
+      if (outgoing.checkError())
+         throw new Exception("Error while transmitting data.");
+   }
+
+   /**
+    * This is called by the handleConnection() command in response to "GET &lt;fileName&gt;" 
+    * command from the client.  If the file doesn't exist, send the message "error".
+    * Otherwise, send the message "ok" followed by the contents of the file.
+    */
+   private static void sendFile(String fileName, File directory, PrintWriter outgoing) throws Exception {
+      File file = new File(directory,fileName);
+      if ( (! file.exists()) || file.isDirectory() ) {
+         // (Note:  Don't try to send a directory, which
+         // shouldn't be there anyway.)
+         outgoing.println("ERROR");
+      }
+      else {
+         outgoing.println("OK");
+         BufferedReader fileIn = new BufferedReader( new FileReader(file) );
+         while (true) {
+            // Read and send lines from the file until
+            // an end-of-file is encountered.
+            String line = fileIn.readLine();
+            if (line == null)
+               break;
+            outgoing.println(line);
+         }
+      }
+      outgoing.flush(); 
+      outgoing.close();
+      if (outgoing.checkError())
+         throw new Exception("Error while transmitting data.");
+   }
+
+
+} //end class FileServer
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+
+<exercise id="IO.ex.4">
+<exercise-question><p>Write a client program
+for the server from <localref href="IO.ex.3"/>. Design a
+user interface that will let the user do at least two things: (1)&nbsp;Get a list of
+files that are available on the server and display the list on standard output; and
+(2)&nbsp;Get a copy of a specified file from the server and save it to a local file (on
+the computer where the client is running).</p>
+</exercise-question>
+<exercise-discuss><p>One possible user interface would be to present the
+user with a menu of actions that the program can perform. For variety,
+however, I decided on an interface based entirely on the command line. The
+first command line argument must be the name or IP address of the computer
+where a copy of the <classname>FileServer</classname> program from 
+<localref href="IO.ex.3"/> is running. If that is the only
+command-line argument, then the client will contact the server and send an
+"index" command to the server. The server responds with a list of file names.
+The client reads these names and displays them on the screen. The program then
+ends. (If you want to give another command, you have to run the client program
+again with a new command line.)</p>
+
+<p>If there are two command-line arguments, then the second argument must be
+the name of a file on the server. The client contacts the server and sends a
+"GET" command. The server responds with a one-line message, either an "ERROR" or
+"OK". The client reads this message. If the message starts with "ERROR", indicating that
+the requested file can't be sent, then the client just displays an error
+message to the user. If the message is "OK", then the server also sends the
+contents of the file. The client tries to create a local file of the same name.
+It reads the data from the server and saves it to that file. However, for
+safety, the client will not create a new file if a local file of the same name
+already exists. This is considered to be an error. (An alternative would be
+to ask the user whether to replace the existing file.)</p>
+
+<p>Finally, I wanted to make it possible to save a downloaded file in a local
+file with a different name. For this, three command line arguments are used.
+The first is the server, the second is the name of the file on the server, and
+the third is the name of the local file where the downloaded file is to be
+saved. In this case, the program is willing to overwrite an existing file of
+the same name, so the command must be used with some care.</p>
+
+<p>If the server program is running on the same computer as the client (for
+demonstration purposes), the following command lines can be used to run the
+client:</p>
+
+<pre>java FileClient  localhost
+java FileClient  localhost  datafile.txt
+java FileClient  localhost  datafile.txt  mycopy.dat
+java FileClient  localhost  datafile.txt  datafile.txt</pre>
+
+<np>The first command shows a list of files that are available on the server.
+The other three all try to get a file named "datafile.txt" from the server.
+The second command would refuse the save the file, if a file named datafile.txt
+already exists.  The last command would replace an existing datafile.txt with the file
+retrieved from the server.</np>
+
+<p>The actual programming of the client is fairly straightforward. The example
+program <sourceref href="DateClient.java"/>, from <localref href="IO.4.4"/> provides a
+model for opening a connection to the server. You should be able to follow the solution, given
+below.</p>
+   
+<p>Note that the client program must know the protocol that is used to communicate
+with the server.  The <b>user</b> of the program, however, doesn't need to know
+anything about the protocol.  The user only has to know how to use the program,
+and the user interface does not reflect or depend on the details of the protocol.</p>
+
+<p>By the way, once you understand how the <classname>FileClient</classname> and
+<classname>FileServer</classname> examples work, it's not a big conceptual leap to
+understanding how the World Wide Web works. A Web server program is just a
+greatly souped-up version of the <classname>FileServer</classname> program. It has access to
+a collection of files. It receives and responds to requests for those files
+from client programs. To get a file, the client program&mdash;a Web browser&mdash;needs
+to know the computer on which the server is running and the name of the
+file. This information is encoded in the url address of a Web page&mdash;just like
+it's given on the command line of the <classname>FileClient</classname> program. A Web page,
+of course, can contain links to other Web pages. The link includes a url with
+the necessary information for finding the page. To get the page, the Web
+browser just goes through the same process of contacting the specified server
+and requesting the specified file. (One big complication is that not all the
+files on a Web server are text files, so the client needs some way of knowing
+what type of data is stored in the file, and it needs to know how to handle
+data of that type. Another complication is that Web servers support "server side
+programming."  That is, in response to certain URLs, instead of just sending a
+file, the Web server will run a program and send the output to the client.)</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="FileClient">import java.net.*;
+import java.io.*;
+   
+/**
+ * This program is a client for the FileServer server.  The 
+ * server has a list of available text files that can be
+ * downloaded by the client.  The client can also download
+ * the list of files.  When the connection is opened, the
+ * client sends one of two possible commands to the server:
+ * "index" or "get &lt;file-name&gt;".  The server replies to
+ * the first command by sending the list of available files.
+ * It responds to the second with a one-line message,
+ * either "ok" or "error".  If the message is "ok", it is
+ * followed by the contents of the file with the specified
+ * name.  The "error" message indicates that the specified
+ * file does not exist on the server.  (The server can also
+ * respond with the message "unsupported command" if the command
+ * it reads is not one of the two possible legal commands.)
+ * 
+ * The client program works with command-line arguments.
+ * The first argument must be the name or IP address of the
+ * computer where the server is running.  If that is the
+ * only argument on the command line, then the client
+ * gets the list of files from the server and displays
+ * it on standard output.  If there are two parameters,
+ * the second parameter is interpreted as the name of a
+ * file to be downloaded.  A copy of the file is saved
+ * as a local file of the same name, unless a file of
+ * the same name already exists.  If there are three
+ * arguments, the second is the name of the file to be
+ * downloaded and the third is the name under which the
+ * local copy of the file is to be saved.  This will
+ * work even if a file of the same name already exists.
+ */
+public class FileClient {
+
+   static final int LISTENING_PORT = 3210;
+
+
+   public static void main(String[] args) {
+   
+      String computer;          // Name or IP address of server.
+      Socket connection;        // Socket for communicating with that computer.
+      PrintWriter outgoing;     // Stream for sending a command to the server.
+      BufferedReader incoming;  // Stream for reading data from the connection.
+      String command;           // Command to send to the server.
+      
+
+      /* Check that the number of command-line arguments is legal.
+         If not, print a usage message and end. */
+      
+      if (args.length == 0 || args.length &gt; 3) {
+         System.out.println("Usage:  java FileClient &lt;server&gt;");
+         System.out.println("    or  java FileClient &lt;server&gt; &lt;file&gt;");
+         System.out.println(
+               "    or  java FileClient &lt;server&gt; &lt;file&gt; &lt;local-file&gt;");
+         return;
+      }
+      
+      /* Get the server name and the message to send to the server. */
+      
+      computer = args[0];
+      
+      if (args.length == 1)
+         command = "INDEX";
+      else
+         command = "GET " + args[1];
+      
+      /* Make the connection and open streams for communication.
+         Send the command to the server.  If something fails
+         during this process, print an error message and end. */
+      
+      try {
+         connection = new Socket( computer, LISTENING_PORT );
+         incoming = new BufferedReader( 
+                           new InputStreamReader(connection.getInputStream()) );
+         outgoing = new PrintWriter( connection.getOutputStream() );
+         outgoing.println(command);
+         outgoing.flush(); // ESSENTIAL: Make sure command is dispatched to server!
+      }
+      catch (Exception e) {
+         System.out.println(
+              "Can't make connection to server at \"" + args[0] + "\".");
+         System.out.println("Error:  " + e);
+         return;
+      }
+      
+      /* Read and process the server's response to the command. */
+      
+      try {
+         if (args.length == 1) {
+               // The command was "index".  Read and display lines
+               // from the server until the end-of-stream is reached.
+            System.out.println("File list from server:");
+            while (true) {
+               String line = incoming.readLine();
+               if (line == null)
+                   break;
+               System.out.println("   " + line);
+            }
+         }
+         else {
+               // The command was "get &lt;file-name&gt;".  Read the server's
+               // response message.  If the message is "OK", get the file.
+            String message = incoming.readLine();
+            if (! message.equalsIgnoreCase("OK")) {
+               System.out.println("File not found on server.");
+               System.out.println("Message from server: " + message);
+               return;
+            }
+            PrintWriter fileOut;  // For writing the received data to a file.
+            if (args.length == 3) {
+                  // Use the third parameter as a file name.
+                  // This will overwrite a file with the same name!
+                fileOut = new PrintWriter( new FileWriter(args[2]) );
+            }
+            else {
+                  // Use the second parameter as a file name,
+                  // but don't replace an existing file.
+                File file = new File(args[1]);
+                if (file.exists()) {
+                   System.out.println("A file with that name already exists.");
+                   System.out.println("To replace it, use the three-argument");
+                   System.out.println("version of the command.");
+                   return;
+                }
+                fileOut = new PrintWriter( new FileWriter(args[1]) );
+            }
+            while (true) {
+                   // Copy lines from incoming to the file until
+                   // the end of the incoming stream is encountered.
+                String line = incoming.readLine();
+                if (line == null)
+                    break;
+                fileOut.println(line);
+            }
+            if (fileOut.checkError()) {
+               System.out.println("Some error occurred while writing the file.");
+               System.out.println("Output file might be empty or incomplete.");
+            }
+         }
+      }
+      catch (Exception e) {
+         System.out.println(
+                 "Sorry, an error occurred while reading data from the server.");
+         System.out.println("Error: " + e);
+      }
+      finally {
+         try {
+            connection.close();
+         }
+         catch (IOException e) {
+         }
+      }
+      
+   }  // end main()
+   
+
+} //end class FileClient
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+<exercise id="IO.ex.5">
+<exercise-question><p>The sample program <sourceref href="PhoneDirectoryFileDemo.java"/>,
+from <localref href="IO.3.2"/>,
+stores name/number pairs for a simple phone book in a text file in the user's home
+directory.  Modify that program so that it uses an XML format for the data.
+The only significant changes that you will have to make are to the parts of
+the program that read and write the data file.  Use the DOM to read the
+data, as discussed in <localref href="IO.5.2"/>.  You can use the XML format
+illustrated in the following sample phone directory file:</p>
+<pre>&lt;?xml version="1.0"?&gt;
+&lt;phone_directory&gt;
+  &lt;entry name='barney' number='890-1203'/&gt;
+  &lt;entry name='fred' number='555-9923'/&gt;
+&lt;/phone_directory&gt;</pre>
+<np>(This is just a short exercise in basic XML processing; as before, the
+program in this exercise is not meant to be a useful phone directory program.)</np>
+</exercise-question>
+<exercise-discuss><p>The data for the phone book is stored in a
+<classname>TreeMap</classname> in which the entries are name/number
+pairs.  The original program uses a two-line for-each loop to output
+the data to a <classname>PrintWriter</classname> named <code>out</code>:</p>
+   
+<pre>for ( Map.Entry&lt;String,String&gt; entry : phoneBook.entrySet() )
+   out.println(entry.getKey() + "%" + entry.getValue() );</pre>
+   
+<np>The data file is written at the end of the program.
+Writing out the data in the XML format shown in the exercise is only
+a little harder.  The same values are output, but we have to add in
+a lot of extra text:</np>
+   
+<pre>out.println("&lt;?xml version=\"1.0\"?&gt;");
+out.println("&lt;phone_directory&gt;");
+for ( Map.Entry&lt;String,String&gt; entry : phoneBook.entrySet() ) {
+   out.print("  &lt;entry name='");
+   out.print(entry.getKey());
+   out.print("' number='");
+   out.print(entry.getValue());
+   out.println("'/&gt;");
+}
+out.println("&lt;/phone_directory&gt;");</pre>
+   
+<p>The data file is read at the beginning of the program.  To use the
+Document Object Model for this, we have to create a <classname>DocumentBuilder</classname> and
+use it to parse the data file.  The code comes directory from
+<localref href="IO.5.2"/>:</p>
+   
+<pre>DocumentBuilder docReader = 
+        DocumentBuilderFactory.newInstance().newDocumentBuilder();
+Document xmldoc = docReader.parse(dataFile);</pre>
+   
+<np>If this succeeds, we know that the file contained a well-formed XML document.
+We can then call <code> xmldoc.getDocumentElement()</code> to get the
+root element of the document.  This element should have tag name
+"phone_directory." The phone directory entries are stored in
+elements that are directly nested inside the root element.
+We can get a list of the children of the root element by calling
+<code>root.getChildNodes()</code> and we can traverse that list
+to get the individual directory entries.  The name and number
+for an entry are stored as values of attributes named "name" and
+"number", and we can retrieve them using the <code>getAttribute()</code>
+method.  Once we have a name and number, we can add it to the <classname>TreeMap</classname>
+in the usual way.  Here is the code that gets the data from
+the DOM representation of the XML data file:</np>
+   
+<pre>Element root = xmldoc.getDocumentElement();
+if (! root.getTagName().equals("phone_directory"))
+   throw new Exception();
+NodeList nodes = root.getChildNodes();
+for (int i = 0; i &lt; nodes.getLength(); i++) {
+   if ( nodes.item(i) instanceof Element ) {
+      Element entry = (Element)nodes.item(i);
+      if (! entry.getTagName().equals("entry"))
+         throw new Exception();
+      String entryName = entry.getAttribute("name");
+      String entryNumber = entry.getAttribute("number");
+      if (entryName.length() == 0 || entryNumber.length() == 0)
+         throw new Exception();
+      phoneBook.put(entryName,entryNumber);
+   }
+}</pre>
+   
+<np>A complete solution is given below, with changes from
+<sourceref href="PhoneDirectoryFileDemo.java"/> shown
+in &newcodestyle;.</np>
+
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="PhoneDirectoryXMLDemo">import java.io.*;
+
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Scanner;
+
+<newcode>import javax.xml.parsers.*;
+import org.w3c.dom.*;</newcode>
+
+/**
+ * This program lets the user keep a persistent "phone book" that
+ * contains names and phone numbers.  The data for the phone book
+ * is stored in a file in the user's home directory.  
+ * 
+ * The program is meant only as a demonstration of files and XML.
+ * <newcode>The data file uses XML to represent the phone book data.</newcode>
+ */
+public class <newcode>PhoneDirectoryXMLDemo</newcode> {
+   
+   /**
+    * The name of the file in which the phone book data is kept.  The
+    * file is stored in the user's home directory.  The "." at the
+    * beginning of the file name means that the file will be a
+    * "hidden" file on Unix-based computers, including Linux and
+    * Mac OS X.
+    */
+   private static String DATA_FILE_NAME = ".<newcode>phone_book_xml_demo</newcode>";
+   
+   
+   public static void main(String[] args) {
+      
+      String name, number;  // Name and number of an entry in the directory
+                            // (used at various places in the program).
+
+      TreeMap&lt;String,String&gt;  phoneBook;   // Phone directory data structure.
+                                           // Entries are name/number pairs.
+      
+      phoneBook = new TreeMap&lt;String,String&gt;();
+      
+      
+      /* Create a dataFile variable of type File to represent the
+       * data file that is stored in the user's home directory.
+       */
+      
+      File userHomeDirectory = new File( System.getProperty("user.home") );
+      File dataFile = new File( userHomeDirectory, DATA_FILE_NAME );
+      
+      
+      /* If the data file already exists, then the data in the file is
+       * read and is used to initialize the phone directory.
+       */
+      
+      if ( ! dataFile.exists() ) {
+         System.out.println("No phone book data file found.  A new one");
+         System.out.println("will be created, if you add any entries.");
+         System.out.println("File name:  " + dataFile.getAbsolutePath());
+      }
+      else {
+         System.out.println("Reading phone book data...");
+         try {
+            <newcode>DocumentBuilder docReader = 
+               DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document xmldoc = docReader.parse(dataFile);
+            Element root = xmldoc.getDocumentElement();
+            if (! root.getTagName().equals("phone_directory"))
+               throw new Exception();
+            NodeList nodes = root.getChildNodes();
+            for (int i = 0; i &lt; nodes.getLength(); i++) {
+               if ( nodes.item(i) instanceof Element ) {
+                  Element entry = (Element)nodes.item(i);
+                  if (! entry.getTagName().equals("entry"))
+                     throw new Exception();
+                  String entryName = entry.getAttribute("name");
+                  String entryNumber = entry.getAttribute("number");
+                  if (entryName.length() == 0 || entryNumber.length() == 0)
+                     throw new Exception();
+                  phoneBook.put(entryName,entryNumber);
+               }
+            }</newcode>
+         }
+         catch (Exception e) {
+            System.out.println("Error in read phone book data file.");
+            System.out.println("File name:  " + dataFile.getAbsolutePath());
+            System.out.println("This program cannot continue.");
+            System.exit(1);
+         }
+      }
+      
+      
+      /* Read commands from the user and carry them out, until the
+       * user gives the "Exit from program" command.
+       */
+      
+      Scanner in = new Scanner( System.in );
+      boolean changed = false;  // Have any changes been made to the directory?
+      
+      mainLoop: while (true) {
+         System.out.println("\nSelect the action that you want to perform:");
+         System.out.println("   1.  Look up a phone number.");
+         System.out.println("   2.  Add or change a phone number.");
+         System.out.println("   3.  Remove an entry from your phone directory.");
+         System.out.println("   4.  List the entire phone directory.");
+         System.out.println("   5.  Exit from the program.");
+         System.out.println("Enter action number (1-5):  ");
+         int command;
+         if ( in.hasNextInt() ) {
+            command = in.nextInt();
+            in.nextLine();
+         }
+         else {
+            System.out.println("\nILLEGAL RESPONSE.  YOU MUST ENTER A NUMBER.");
+            in.nextLine();
+            continue;
+         }
+         switch(command) {
+         case 1:
+            System.out.print("\nEnter the name whose number you want to look up: ");
+            name = in.nextLine().trim().toLowerCase();
+            number = phoneBook.get(name);
+            if (number == null)
+               System.out.println("\nSORRY, NO NUMBER FOUND FOR " + name);
+            else
+               System.out.println("\nNUMBER FOR " + name + ":  " + number);
+            break;
+         case 2:
+            System.out.print("\nEnter the name: ");
+            name = in.nextLine().trim().toLowerCase();
+            if (name.length() == 0)
+               System.out.println("\nNAME CANNOT BE BLANK.");
+            else if (name.indexOf('%') &gt;= 0)
+               System.out.println("\nNAME CANNOT CONTAIN THE CHARACTER \"%\".");
+            else { 
+               System.out.print("Enter phone number: ");
+               number = in.nextLine().trim();
+               if (number.length() == 0)
+                  System.out.println("\nPHONE NUMBER CANNOT BE BLANK.");
+               else {
+                  phoneBook.put(name,number);
+                  changed = true;
+               }
+            }
+            break;
+         case 3:
+            System.out.print("\nEnter the name whose entry you want to remove: ");
+            name = in.nextLine().trim().toLowerCase();
+            number = phoneBook.get(name);
+            if (number == null)
+               System.out.println("\nSORRY, THERE IS NO ENTRY FOR " + name);
+            else {
+               phoneBook.remove(name);
+               changed = true;
+               System.out.println("\nDIRECTORY ENTRY REMOVED FOR " + name);
+            }
+            break;
+         case 4:
+            System.out.println("\nLIST OF ENTRIES IN YOUR PHONE BOOK:\n");
+            for ( Map.Entry&lt;String,String&gt; entry : phoneBook.entrySet() )
+               System.out.println("   " + entry.getKey() + ": " + entry.getValue() );
+            break;
+         case 5:
+            System.out.println("\nExiting program.");
+            break mainLoop;
+         default:
+            System.out.println("\nILLEGAL ACTION NUMBER.");
+         }
+      }
+      
+      
+      /* Before ending the program, write the current contents of the
+       * phone directory, but only if some changes have been made to
+       * the directory.
+       */
+      
+      if (changed) {
+         System.out.println("Saving phone directory changes to file " + 
+               dataFile.getAbsolutePath() + " ...");
+         PrintWriter out;
+         try {
+            out = new PrintWriter( new FileWriter(dataFile) );
+         }
+         catch (IOException e) {
+            System.out.println("ERROR: Can't open data file for output.");
+            return;
+         }
+         <newcode>out.println("&lt;?xml version=\"1.0\"?&gt;");
+         out.println("&lt;phone_directory&gt;");
+         for ( Map.Entry&lt;String,String&gt; entry : phoneBook.entrySet() ) {
+            out.print("  &lt;entry name='");
+            out.print(entry.getKey());
+            out.print("' number='");
+            out.print(entry.getValue());
+            out.println("'/&gt;");
+         }
+         out.println("&lt;/phone_directory&gt;");</newcode>
+         out.close();
+         if (out.checkError())
+            System.out.println("ERROR: Some error occurred while writing data file.");
+         else
+            System.out.println("Done.");
+      }
+   
+   }
+
+}
+</prog></pre>
+</exercise-code>
+</exercise>
+
+   
+
+<exercise>
+<exercise-question><p>The sample program <sourceref chapter="7" href="Checkers.java"/> from
+<localref href="arrays.5.3"/> lets two players play checkers.  It would be nice if, in the
+middle of a game, the state of the game could be saved to a file.  Later, the file
+could be read back into the file to restore the game and allow the players to
+continue.  Add the ability to save and load files to the checkers program.
+Design a simple text-based format for the files.  Here is a picture of my
+solution to this exercise, just after a file has been loaded into the program:</p>
+<img src="CheckersWithFiles.png" width="350" height="251" alt="Checkers program window."
+   tex="CheckersWithFiles.eps" texscale="0.6"/>
+<p>It's a little tricky to completely restore the state of a game.  The program
+has a variable <code>board</code> of type <classname>CheckersData</classname> that
+stores the current contents of the board, and it has a variable <code>currentPlayer</code>
+of type <ptype>int</ptype> that indicates whether Red or Black is currently moving.
+This data must be stored in the file when a file is saved.  When a file is read
+into the program, you should read the data into two local variables
+<code>newBoard</code> of type <classname>CheckersData</classname> and
+<code>newCurrentPlayer</code> of type <ptype>int</ptype>.  Once you have
+successfully read all the data from the file, you can use the following
+code to set up the program state correctly.  This code assumes that you
+have introduced two new variables <code>saveButton</code> and <code>loadButton</code>
+of type <classname>JButton</classname> to represent the "Save Game" and "Load Game" buttons:</p>
+<pre>board = newBoard;  // Set up game with data read from file.
+currentPlayer = newCurrentPlayer;
+legalMoves = board.getLegalMoves(currentPlayer);
+selectedRow = -1;
+gameInProgress = true;
+newGameButton.setEnabled(false);
+loadButton.setEnabled(false);
+saveButton.setEnabled(true);
+resignButton.setEnabled(true);
+if (currentPlayer == CheckersData.RED)
+   message.setText("Game loaded -- it's RED's move.");
+else
+   message.setText("Game loaded -- it's BLACK's move.");
+repaint();</pre>
+<p>(Note, by the way, that in my solution, I use a <classname>TextReader</classname> to read
+the data from the file.  <classname>TextReader</classname> is
+a non-standard class introduced in <localref href="IO.1.4"/> and
+defined in the file <sourceref href="TextReader.java"/>.  How to read the
+data in a file depends, of course, on the format that you have chosen
+for the data.)</p>
+</exercise-question>
+<exercise-discuss><p>Many different formats could be used to represent the data
+for a checkers game in text form.  In the program, the board data is an 8-by-8
+two-dimensional array of integers.  One way to represent the board would be
+to simply output 64 integers.  However, the possible values in the array are
+given by constants <code>CheckersData.RED</code>, <code>CheckersData.BLACK</code>, 
+<code>CheckersData.RED_KING</code>, <code>CheckersData.BLACK_KING</code>, and
+<code>CheckersData.EMPTY</code>, and it would be nice to use a representation
+that uses the <b>meaning</b> of these constants.  I decided to represent the
+possible values with individual characters.  An empty square is represented
+by&nbsp;'.'; a regular red piece by 'r'; a regular black piece by 'b';
+a red king by 'R'; and a black king by 'B'.  The contents of the 8-by-8 board
+are then represented by 8 lines with 8 characters on each line.  I added
+a line at the beginning containing the name of the program "CheckersWithFiles";
+this will make it easy to check that a file that the user selects for input is
+of the correct type. The last line of the file contains the string "Red" if it
+is Red's turn to move or "Black" if it is Black's turn.  Here is a sample
+file created by my program:</p>
+<pre>CheckersWithFiles
+b.......
+.b.b.R..
+b.......
+........
+........
+.....r..
+r.......
+.r.r.B.r
+Black</pre>
+   
+<p>I wrote methods <code>doSave()</code> and <code>doLoad()</code> to
+save and load files.  They are modeled directly on the sample
+<code>writeFile()</code> and <code>readFile()</code> methods that
+were presented in <localref href="IO.2.3"/>.  The <code>doSave()</code>
+method uses a <classname>PrintWriter</classname> to write the
+file.  The data is taken from the variables <code>board</code>
+and <code>currentPlayer</code>, as described in the exercise.  This
+is very straightforward:</p>
+<pre>out.println("CheckersWithFiles"); // Identifies file as a Checkers game.
+for (int row = 0; row &lt; 8; row++) {
+   for (int col = 0; col &lt; 8; col++) {
+      int piece = board.pieceAt(row, col);  // Contents of one square of board.
+      switch (piece) {
+         case CheckersData.EMPTY:      out.print('.');  break;
+         case CheckersData.RED:        out.print('r');  break;
+         case CheckersData.BLACK:      out.print('b');  break;
+         case CheckersData.RED_KING:   out.print('R');  break;
+         case CheckersData.BLACK_KING: out.print('B');  break;
+      }
+   }
+   out.println();
+}
+out.println(currentPlayer == CheckersData.RED ? "Red" : "Black");
+out.flush();
+out.close();
+if (out.checkError())
+   throw new IOException("Some error occurred while saving the file.");</pre>
+
+<p>Reading the data back in is not much harder.  As indicated in the
+exercises, I used a <classname>TextReader</classname> named <code>in</code>
+to read the data from the file.  The method <code>in.getln()</code> can
+be used to read a line of text; <code>in.getChar()</code> reads a single
+non-blank character; and <code>in.getWord()</code> reads a word (that is,
+a string of non-blank characters).  Both <code>in.getChar()</code> and
+<code>in.getWord()</code> will skip over any spaces and end-of-lines
+to get to a non-blank character; this makes it very easy to read the
+data format that I chose for the file.  Here is the section of
+my <code>doLoad()</code> method that reads the data. It has
+a little more error-checking than you might have used in your
+own solution:</p>
+
+<pre>CheckersData newBoard = new CheckersData();
+int newCurrentPlayer;
+String programNameFromFile = in.getln();
+if (! programNameFromFile.equals("CheckersWithFiles"))
+   throw new Exception("Selected file does not contain a checkers game.");
+for (int row = 0; row &lt; 8; row++) {
+   for (int col = 0; col &lt; 8; col++) {
+      char pieceCode = in.getChar();
+      switch (pieceCode) {
+        case '.': newBoard.setPieceAt(row, col, CheckersData.EMPTY); break;
+        case 'r': newBoard.setPieceAt(row, col, CheckersData.RED); break;
+        case 'b': newBoard.setPieceAt(row, col, CheckersData.BLACK); break;
+        case 'R': newBoard.setPieceAt(row, col, CheckersData.RED_KING); break;
+        case 'B': newBoard.setPieceAt(row, col, CheckersData.BLACK_KING); break;
+        default: throw new Exception("Illegal board data found in file.");
+      }
+      if (row % 2 != col % 2 &amp;&amp;
+            newBoard.pieceAt(row, col) != CheckersData.EMPTY) {
+               // The logic here is that half the squares on a legal board must
+               // be empty.  A tricky way to recognize the squares that are
+               // always empty is that either the row number is odd and the
+               // column number is even, or the row number is even and the
+               // column number is odd.  The test "row % 2 != col % 2" is
+               // a quick way to test for this.
+         throw new Exception("Illegal board data found in file.");
+      }
+   }
+}
+String currentPlayerString = in.getWord();
+if (currentPlayerString.equals("Red"))
+   newCurrentPlayer = CheckersData.RED;
+else if (currentPlayerString.equals("Black"))
+   newCurrentPlayer = CheckersData.BLACK;
+else
+   throw new Exception("Illegal current player found in file.");
+board = newBoard;  // Set up game with data read from file.
+currentPlayer = newCurrentPlayer;
+legalMoves = board.getLegalMoves(currentPlayer);
+selectedRow = -1;
+gameInProgress = true;
+newGameButton.setEnabled(false);
+loadButton.setEnabled(false);
+saveButton.setEnabled(true);
+resignButton.setEnabled(true);
+if (currentPlayer == CheckersData.RED)
+   message.setText("Game loaded -- it's RED's move.");
+else
+   message.setText("Game loaded -- it's BLACK's move.");
+repaint();</pre>
+   
+<p>Aside from writing the <code>doSave()</code> and <code>doLoad</code> methods,
+you must also add "Save Game" and "Load Game" buttons to the program, and
+you have to decide when they should be enabled and disabled.  I decided that
+it would be legal to save a game only when a game is in progress, not when
+it is over; the "Resign" button is enabled at exactly the same times, so I
+just searched for <code>resignButton.setEnabled</code> to find the places where
+I would have to call <code>saveButton.setEnabled</code>.  Similarly, I
+made it legal to load a game from a file only when a game is <b>not</b> in
+progress, and the "New Game" button is enabled at exactly the same times.
+For creating the new buttons and adding them to the panel, I also imitated
+the existing code for the "New Game" and "Resign" buttons.  You can see
+the changes that I made in the solution below.</p>
+</exercise-discuss>
+<exercise-code><p>The checkers program is very long.  All the changes from the
+original version are in the first 325 lines and are shown in &newcodestyle;.</p>
+<pre><prog name="CheckersWithFiles">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+/**
+ * This panel lets two users play checkers against each other.
+ * Red always starts the game.  If a player can jump an opponent's
+ * piece, then the player must jump.  When a player can make no more
+ * moves, the game ends.
+ * 
+ <newcode>* The state of the game can be saved into a file, which can be
+ * reloaded later to continue the game.</newcode>
+ * 
+ * The class has a main() routine that lets it be run as a stand-alone
+ * application.  The application just opens a window that uses an object
+ * of type Checkers as its content pane.
+ * 
+ */
+public class CheckersWithFiles extends JPanel {
+   
+   /**
+    * Main routine makes it possible to run Checkers as a stand-alone
+    * application.  Opens a window showing a Checkers panel; the program
+    * ends when the user closes the window.
+    */
+   public static void main(String[] args) {
+      JFrame window = new JFrame("Checkers");
+      CheckersWithFiles content = new CheckersWithFiles();
+      window.setContentPane(content);
+      window.pack();
+      Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+      window.setLocation( (screensize.width - window.getWidth())/2,
+            (screensize.height - window.getHeight())/2 );
+      window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+      window.setResizable(false);  
+      window.setVisible(true);
+   }
+   
+   
+   private JButton newGameButton;  // Button for starting a new game.
+   private JButton resignButton;   // Button that a player can use to end 
+                                   //    the game by resigning.
+   <newcode>private JButton saveButton;     // Button for saving the state of a game.
+   private JButton loadButton;     // Button for loading a saved game back
+                                   //   into the program.</newcode>
+   
+   private JLabel message;  // Label for displaying messages to the user.
+   
+   /**
+    * The constructor creates the Board (which in turn creates and manages
+    * the buttons and message label), adds all the components, and sets
+    * the bounds of the components.  A null layout is used.  (This is
+    * the only thing that is done in the main Checkers class.)
+    */
+   public CheckersWithFiles() {
+      
+      setLayout(null);  // I will do the layout myself.
+      setPreferredSize( new Dimension(350,250) );
+      
+      setBackground(new Color(0,150,0));  // Dark green background.
+      
+      /* Create the components and add them to the panel. */
+      
+      Board board = new Board();  // Note: The constructor for the
+                                  //   board also creates the buttons
+                                  //   and label.
+      add(board);
+      add(newGameButton);
+      add(resignButton);
+      <newcode>add(saveButton);
+      add(loadButton);</newcode>
+      add(message);
+      
+      /* Set the position and size of each component by calling
+       its setBounds() method. */
+      
+      board.setBounds(20,20,164,164); // Note:  size MUST be 164-by-164 !
+      newGameButton.setBounds(210, <newcode>20</newcode>, 120, 30);
+      <newcode>loadButton.setBounds(210, 65, 120, 30);
+      saveButton.setBounds(210, 110, 120, 30);</newcode>
+      resignButton.setBounds(210, <newcode>155</newcode>, 120, 30);
+      message.setBounds(0, 200, 350, 30);
+      
+   } // end constructor
+
+   
+   
+   // --------------------  Nested Classes -------------------------------
+   
+   /**
+    * A CheckersMove object represents a move in the game of Checkers.
+    * It holds the row and column of the piece that is to be moved
+    * and the row and column of the square to which it is to be moved.
+    * (This class makes no guarantee that the move is legal.)   
+    */
+   private static class CheckersMove {
+      int fromRow, fromCol;  // Position of piece to be moved.
+      int toRow, toCol;      // Square it is to move to.
+      CheckersMove(int r1, int c1, int r2, int c2) {
+              // Constructor.  Just set the values of the instance variables.
+         fromRow = r1;
+         fromCol = c1;
+         toRow = r2;
+         toCol = c2;
+      }
+      boolean isJump() {
+             // Test whether this move is a jump.  It is assumed that
+             // the move is legal.  In a jump, the piece moves two
+             // rows.  (In a regular move, it only moves one row.)
+         return (fromRow - toRow == 2 || fromRow - toRow == -2);
+      }
+   }  // end class CheckersMove.
+   
+   
+   
+   /**
+    * This panel displays a 160-by-160 checkerboard pattern with
+    * a 2-pixel black border.  It is assumed that the size of the
+    * canvas is set to exactly 164-by-164 pixels.  This class does
+    * the work of letting the users play checkers, and it displays
+    * the checkerboard.
+    */
+   private class Board extends JPanel implements ActionListener, MouseListener {
+      
+      
+      CheckersData board;  // The data for the checkers board is kept here.
+                           //    This board is also responsible for generating
+                           //    lists of legal moves.
+      
+      boolean gameInProgress; // Is a game currently in progress?
+      
+      /* The next three variables are valid only when the game is in progress. */
+      
+      int currentPlayer;      // Whose turn is it now?  The possible values
+                              //    are CheckersData.RED and CheckersData.BLACK.
+      
+      int selectedRow, selectedCol;  // If the current player has selected a piece to
+                                     //     move, these give the row and column
+                                     //     containing that piece.  If no piece is
+                                     //     yet selected, then selectedRow is -1.
+      
+      CheckersMove[] legalMoves;  // An array containing the legal moves for the
+                                  //   current player.
+      
+      <newcode>JFileChooser fileDialog;   // For use in save and load commands.</newcode>
+
+      /**
+       * Constructor.  Create the buttons and label.  Listens for mouse
+        * clicks and for clicks on the buttons.  Create the board and
+        * start the first game.
+       */
+      Board() {
+         setBackground(Color.BLACK);
+         addMouseListener(this);
+         resignButton = new JButton("Resign");
+         resignButton.addActionListener(this);
+         newGameButton = new JButton("New Game");
+         newGameButton.addActionListener(this);
+         <newcode>saveButton = new JButton("Save Game");
+         saveButton.addActionListener(this);
+         loadButton = new JButton("Load Game");
+         loadButton.addActionListener(this);</newcode>
+         message = new JLabel("",JLabel.CENTER);
+         message.setFont(new  Font("Serif", Font.BOLD, 14));
+         message.setForeground(Color.green);
+         board = new CheckersData();
+         doNewGame();
+      }
+      
+      
+      /**
+       * Respond to user's click on one of the two buttons.
+       */
+      public void actionPerformed(ActionEvent evt) {
+         Object src = evt.getSource();
+         if (src == newGameButton)
+            doNewGame();
+         else if (src == resignButton)
+            doResign();
+         <newcode>else if (src == saveButton)
+            doSave();
+         else if (src == loadButton)
+            doLoad();</newcode>
+      }
+      
+      
+<newcode>      /**
+       * Save the current game state to a file.
+       */
+      void doSave() {
+         if (fileDialog == null)      
+            fileDialog = new JFileChooser(); 
+         File selectedFile;  // Initially selected file name in the dialog.
+         selectedFile = new File("CheckersGame.text");
+         fileDialog.setSelectedFile(selectedFile); 
+         fileDialog.setDialogTitle("Select File for Saving the Game");
+         int option = fileDialog.showSaveDialog(this);
+         if (option != JFileChooser.APPROVE_OPTION)
+            return;  // User canceled or clicked the dialog's close box.
+         selectedFile = fileDialog.getSelectedFile();
+         if (selectedFile.exists()) {  // Ask the user whether to replace the file.
+            int response = JOptionPane.showConfirmDialog( this,
+                  "The file \"" + selectedFile.getName()
+                  + "\" already exists.\nDo you want to replace it?", 
+                  "Confirm Save",
+                  JOptionPane.YES_NO_OPTION, 
+                  JOptionPane.WARNING_MESSAGE );
+            if (response != JOptionPane.YES_OPTION)
+               return;  // User does not want to replace the file.
+         }
+         PrintWriter out; 
+         try {
+            FileWriter stream = new FileWriter(selectedFile); 
+            out = new PrintWriter( stream );
+         }
+         catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+               "Sorry, but an error occurred while trying to open the file:\n" + e);
+            return;
+         }
+         try {
+            out.println("CheckersWithFiles"); // Identifies file as a Checkers game.
+            for (int row = 0; row &lt; 8; row++) {
+               for (int col = 0; col &lt; 8; col++) {
+                  int piece = board.pieceAt(row, col);
+                  switch (piece) {
+                  case CheckersData.EMPTY:      out.print('.');  break;
+                  case CheckersData.RED:        out.print('r');  break;
+                  case CheckersData.BLACK:      out.print('b');  break;
+                  case CheckersData.RED_KING:   out.print('R');  break;
+                  case CheckersData.BLACK_KING: out.print('B');  break;
+                  }
+               }
+               out.println();
+            }
+            out.println(currentPlayer == CheckersData.RED ? "Red" : "Black");
+            out.flush();
+            out.close();
+            if (out.checkError())
+               throw new IOException("Some error occurred while saving the file.");
+         }
+         catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+               "Sorry, but an error occurred while trying to write the text:\n" + e);
+         }   
+      }
+      
+      
+      /**
+       * Load a game that was previous saved to a file back into
+       * the program.
+       */
+      void doLoad() {
+         if (fileDialog == null)
+            fileDialog = new JFileChooser();
+         fileDialog.setDialogTitle("Select Checkers Game File");
+         fileDialog.setSelectedFile(null);  // No file is initially selected.
+         int option = fileDialog.showOpenDialog(this);
+         if (option != JFileChooser.APPROVE_OPTION)
+            return;  // User canceled or clicked the dialog's close box.
+         File selectedFile = fileDialog.getSelectedFile();
+         TextReader in;
+         try {
+            Reader stream = new BufferedReader(new FileReader(selectedFile));
+            in = new TextReader( stream );
+         }
+         catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                  "Sorry, but an error occurred while trying to open the file:\n" + e);
+            return;
+         }
+         try {
+            CheckersData newBoard = new CheckersData();
+            int newCurrentPlayer;
+            String programNameFromFile = in.getln();
+            if (! programNameFromFile.equals("CheckersWithFiles"))
+               throw new Exception("Selected file does not contain a checkers game.");
+            for (int row = 0; row &lt; 8; row++) {
+               for (int col = 0; col &lt; 8; col++) {
+                  char pieceCode = in.getChar();
+                  switch (pieceCode) {
+                  case '.': newBoard.setPieceAt(row, col, CheckersData.EMPTY); break;
+                  case 'r': newBoard.setPieceAt(row, col, CheckersData.RED); break;
+                  case 'b': newBoard.setPieceAt(row, col, CheckersData.BLACK); break;
+                  case 'R': newBoard.setPieceAt(row, col, CheckersData.RED_KING); break;
+                  case 'B': newBoard.setPieceAt(row, col, CheckersData.BLACK_KING); break;
+                  default: throw new Exception("Illegal board data found in file.");
+                  }
+                  if (row % 2 != col % 2 &amp;&amp;
+                        newBoard.pieceAt(row, col) != CheckersData.EMPTY)
+                     throw new Exception("Illegal board data found in file.");
+               }
+            }
+            String currentPlayerString = in.getWord();
+            if (currentPlayerString.equals("Red"))
+               newCurrentPlayer = CheckersData.RED;
+            else if (currentPlayerString.equals("Black"))
+               newCurrentPlayer = CheckersData.BLACK;
+            else
+               throw new Exception("Illegal current player found in file.");
+            board = newBoard;  // Set up game with data read from file.
+            currentPlayer = newCurrentPlayer;
+            legalMoves = board.getLegalMoves(currentPlayer);
+            selectedRow = -1;
+            gameInProgress = true;
+            newGameButton.setEnabled(false);
+            loadButton.setEnabled(false);
+            saveButton.setEnabled(true);
+            resignButton.setEnabled(true);
+            if (currentPlayer == CheckersData.RED)
+               message.setText("Game loaded -- it's RED's move.");
+            else
+               message.setText("Game loaded -- it's BLACK's move.");
+            repaint();
+         }
+         catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                  "Sorry, but an error occurred while trying to read the data:\n" + e);
+         }   
+      }</newcode>
+      
+      
+      /**
+       * Start a new game
+       */
+      void doNewGame() {
+         if (gameInProgress == true) {
+               // This should not be possible, but it doesn't hurt to check.
+            message.setText("Finish the current game first!");
+            return;
+         }
+         board.setUpGame();   // Set up the pieces.
+         currentPlayer = CheckersData.RED;   // RED moves first.
+         legalMoves = board.getLegalMoves(CheckersData.RED);  // Get RED's legal moves.
+         selectedRow = -1;   // RED has not yet selected a piece to move.
+         message.setText("Red:  Make your move.");
+         gameInProgress = true;
+         newGameButton.setEnabled(false);
+         <newcode>loadButton.setEnabled(false);
+         saveButton.setEnabled(true);</newcode>
+         resignButton.setEnabled(true);
+         repaint();
+      }
+      
+      
+      /**
+       * Current player resigns.  Game ends.  Opponent wins.
+       */
+      void doResign() {
+         if (gameInProgress == false) {
+            message.setText("There is no game in progress!");
+            return;
+         }
+         if (currentPlayer == CheckersData.RED)
+            gameOver("RED resigns.  BLACK wins.");
+         else
+            gameOver("BLACK resigns.  RED wins.");
+      }
+      
+      
+      /**
+       * The game ends.  The parameter, str, is displayed as a message
+       * to the user.  The states of the buttons are adjusted so the players
+       * can start a new game.  This method is called when the game
+       * ends at any point in this class.
+       */
+      void gameOver(String str) {
+         message.setText(str);
+         newGameButton.setEnabled(true);
+         <newcode>loadButton.setEnabled(true);
+         saveButton.setEnabled(false);</newcode>
+         resignButton.setEnabled(false);
+         gameInProgress = false;
+      }
+      
+      
+      /**
+       * This is called by mousePressed() when a player clicks on the
+       * square in the specified row and col.  It has already been checked
+       * that a game is, in fact, in progress.
+       */
+      void doClickSquare(int row, int col) {
+         
+         /* If the player clicked on one of the pieces that the player
+          can move, mark this row and col as selected and return.  (This
+          might change a previous selection.)  Reset the message, in
+          case it was previously displaying an error message. */
+         
+         for (int i = 0; i &lt; legalMoves.length; i++)
+            if (legalMoves[i].fromRow == row &amp;&amp; legalMoves[i].fromCol == col) {
+               selectedRow = row;
+               selectedCol = col;
+               if (currentPlayer == CheckersData.RED)
+                  message.setText("RED:  Make your move.");
+               else
+                  message.setText("BLACK:  Make your move.");
+               repaint();
+               return;
+            }
+         
+         /* If no piece has been selected to be moved, the user must first
+          select a piece.  Show an error message and return. */
+         
+         if (selectedRow &lt; 0) {
+            message.setText("Click the piece you want to move.");
+            return;
+         }
+         
+         /* If the user clicked on a square where the selected piece can be
+          legally moved, then make the move and return. */
+         
+         for (int i = 0; i &lt; legalMoves.length; i++)
+            if (legalMoves[i].fromRow == selectedRow &amp;&amp; legalMoves[i].fromCol == selectedCol
+                  &amp;&amp; legalMoves[i].toRow == row &amp;&amp; legalMoves[i].toCol == col) {
+               doMakeMove(legalMoves[i]);
+               return;
+            }
+         
+         /* If we get to this point, there is a piece selected, and the square where
+          the user just clicked is not one where that piece can be legally moved.
+          Show an error message. */
+         
+         message.setText("Click the square you want to move to.");
+         
+      }  // end doClickSquare()
+      
+      
+      /**
+       * This is called when the current player has chosen the specified
+       * move.  Make the move, and then either end or continue the game
+       * appropriately.
+       */
+      void doMakeMove(CheckersMove move) {
+         
+         board.makeMove(move);
+         
+         /* If the move was a jump, it's possible that the player has another
+          jump.  Check for legal jumps starting from the square that the player
+          just moved to.  If there are any, the player must jump.  The same
+          player continues moving.
+          */
+         
+         if (move.isJump()) {
+            legalMoves = board.getLegalJumpsFrom(currentPlayer,move.toRow,move.toCol);
+            if (legalMoves != null) {
+               if (currentPlayer == CheckersData.RED)
+                  message.setText("RED:  You must continue jumping.");
+               else
+                  message.setText("BLACK:  You must continue jumping.");
+               selectedRow = move.toRow;  // Since only one piece can be moved, select it.
+               selectedCol = move.toCol;
+               repaint();
+               return;
+            }
+         }
+         
+         /* The current player's turn is ended, so change to the other player.
+          Get that player's legal moves.  If the player has no legal moves,
+          then the game ends. */
+         
+         if (currentPlayer == CheckersData.RED) {
+            currentPlayer = CheckersData.BLACK;
+            legalMoves = board.getLegalMoves(currentPlayer);
+            if (legalMoves == null)
+               gameOver("BLACK has no moves.  RED wins.");
+            else if (legalMoves[0].isJump())
+               message.setText("BLACK:  Make your move.  You must jump.");
+            else
+               message.setText("BLACK:  Make your move.");
+         }
+         else {
+            currentPlayer = CheckersData.RED;
+            legalMoves = board.getLegalMoves(currentPlayer);
+            if (legalMoves == null)
+               gameOver("RED has no moves.  BLACK wins.");
+            else if (legalMoves[0].isJump())
+               message.setText("RED:  Make your move.  You must jump.");
+            else
+               message.setText("RED:  Make your move.");
+         }
+         
+         /* Set selectedRow = -1 to record that the player has not yet selected
+          a piece to move. */
+         
+         selectedRow = -1;
+         
+         /* As a courtesy to the user, if all legal moves use the same piece, then
+          select that piece automatically so the user won't have to click on it
+          to select it. */
+         
+         if (legalMoves != null) {
+            boolean sameStartSquare = true;
+            for (int i = 1; i &lt; legalMoves.length; i++)
+               if (legalMoves[i].fromRow != legalMoves[0].fromRow
+                     || legalMoves[i].fromCol != legalMoves[0].fromCol) {
+                  sameStartSquare = false;
+                  break;
+               }
+            if (sameStartSquare) {
+               selectedRow = legalMoves[0].fromRow;
+               selectedCol = legalMoves[0].fromCol;
+            }
+         }
+         
+         /* Make sure the board is redrawn in its new state. */
+         
+         repaint();
+         
+      }  // end doMakeMove();
+      
+      
+      /**
+       * Draw checkerboard pattern in gray and lightGray.  Draw the
+       * checkers.  If a game is in progress, highlight the legal moves.
+       */
+      public void paintComponent(Graphics g) {
+         
+         /* Draw a two-pixel black border around the edges of the canvas. */
+         
+         g.setColor(Color.black);
+         g.drawRect(0,0,getSize().width-1,getSize().height-1);
+         g.drawRect(1,1,getSize().width-3,getSize().height-3);
+         
+         /* Draw the squares of the checkerboard and the checkers. */
+         
+         for (int row = 0; row &lt; 8; row++) {
+            for (int col = 0; col &lt; 8; col++) {
+               if ( row % 2 == col % 2 )
+                  g.setColor(Color.LIGHT_GRAY);
+               else
+                  g.setColor(Color.GRAY);
+               g.fillRect(2 + col*20, 2 + row*20, 20, 20);
+               switch (board.pieceAt(row,col)) {
+               case CheckersData.RED:
+                  g.setColor(Color.RED);
+                  g.fillOval(4 + col*20, 4 + row*20, 15, 15);
+                  break;
+               case CheckersData.BLACK:
+                  g.setColor(Color.BLACK);
+                  g.fillOval(4 + col*20, 4 + row*20, 15, 15);
+                  break;
+               case CheckersData.RED_KING:
+                  g.setColor(Color.RED);
+                  g.fillOval(4 + col*20, 4 + row*20, 15, 15);
+                  g.setColor(Color.WHITE);
+                  g.drawString("K", 7 + col*20, 16 + row*20);
+                  break;
+               case CheckersData.BLACK_KING:
+                  g.setColor(Color.BLACK);
+                  g.fillOval(4 + col*20, 4 + row*20, 15, 15);
+                  g.setColor(Color.WHITE);
+                  g.drawString("K", 7 + col*20, 16 + row*20);
+                  break;
+               }
+            }
+         }
+         
+         /* If a game is in progress, highlight the legal moves.   Note that legalMoves
+          is never null while a game is in progress. */      
+         
+         if (gameInProgress) {
+               /* First, draw a 2-pixel cyan border around the pieces that can be moved. */
+            g.setColor(Color.cyan);
+            for (int i = 0; i &lt; legalMoves.length; i++) {
+               g.drawRect(2 + legalMoves[i].fromCol*20, 2 + legalMoves[i].fromRow*20, 19, 19);
+               g.drawRect(3 + legalMoves[i].fromCol*20, 3 + legalMoves[i].fromRow*20, 17, 17);
+            }
+               /* If a piece is selected for moving (i.e. if selectedRow &gt;= 0), then
+                draw a 2-pixel white border around that piece and draw green borders 
+                around each square that that piece can be moved to. */
+            if (selectedRow &gt;= 0) {
+               g.setColor(Color.white);
+               g.drawRect(2 + selectedCol*20, 2 + selectedRow*20, 19, 19);
+               g.drawRect(3 + selectedCol*20, 3 + selectedRow*20, 17, 17);
+               g.setColor(Color.green);
+               for (int i = 0; i &lt; legalMoves.length; i++) {
+                  if (legalMoves[i].fromCol == selectedCol &amp;&amp; legalMoves[i].fromRow == selectedRow) {
+                     g.drawRect(2 + legalMoves[i].toCol*20, 2 + legalMoves[i].toRow*20, 19, 19);
+                     g.drawRect(3 + legalMoves[i].toCol*20, 3 + legalMoves[i].toRow*20, 17, 17);
+                  }
+               }
+            }
+         }
+
+      }  // end paintComponent()
+      
+      
+      /**
+       * Respond to a user click on the board.  If no game is in progress, show 
+       * an error message.  Otherwise, find the row and column that the user 
+       * clicked and call doClickSquare() to handle it.
+       */
+      public void mousePressed(MouseEvent evt) {
+         if (gameInProgress == false)
+            message.setText("Click \"New Game\" to start a new game.");
+         else {
+            int col = (evt.getX() - 2) / 20;
+            int row = (evt.getY() - 2) / 20;
+            if (col &gt;= 0 &amp;&amp; col &lt; 8 &amp;&amp; row &gt;= 0 &amp;&amp; row &lt; 8)
+               doClickSquare(row,col);
+         }
+      }
+      
+      
+      public void mouseReleased(MouseEvent evt) { }
+      public void mouseClicked(MouseEvent evt) { }
+      public void mouseEntered(MouseEvent evt) { }
+      public void mouseExited(MouseEvent evt) { }
+      
+      
+   }  // end class Board
+   
+   
+   
+   /**
+    * An object of this class holds data about a game of checkers.
+    * It knows what kind of piece is on each square of the checkerboard.
+    * Note that RED moves "up" the board (i.e. row number decreases)
+    * while BLACK moves "down" the board (i.e. row number increases).
+    * Methods are provided to return lists of available legal moves.
+    */
+   private static class CheckersData {
+      
+      /*  The following constants represent the possible contents of a square
+          on the board.  The constants RED and BLACK also represent players
+          in the game. */
+
+      static final int
+                EMPTY = 0,
+                RED = 1,
+                RED_KING = 2,
+                BLACK = 3,
+                BLACK_KING = 4;
+      
+      
+      int[][] board;  // board[r][c] is the contents of row r, column c.  
+      
+      
+      /**
+       * Constructor.  Create the board and set it up for a new game.
+       */
+      CheckersData() {
+         board = new int[8][8];
+         setUpGame();
+      }
+      
+      
+      /**
+       * Set up the board with checkers in position for the beginning
+       * of a game.  Note that checkers can only be found in squares
+       * that satisfy  row % 2 == col % 2.  At the start of the game,
+       * all such squares in the first three rows contain black squares
+       * and all such squares in the last three rows contain red squares.
+       */
+      void setUpGame() {
+         for (int row = 0; row &lt; 8; row++) {
+            for (int col = 0; col &lt; 8; col++) {
+               if ( row % 2 == col % 2 ) {
+                  if (row &lt; 3)
+                     board[row][col] = BLACK;
+                  else if (row &gt; 4)
+                     board[row][col] = RED;
+                  else
+                     board[row][col] = EMPTY;
+               }
+               else {
+                  board[row][col] = EMPTY;
+               }
+            }
+         }
+      }  // end setUpGame()
+      
+      
+      /**
+       * Return the contents of the square in the specified row and column.
+       */
+      int pieceAt(int row, int col) {
+         return board[row][col];
+      }
+      
+      /**
+       * Set the contents of the square in the specified row and column.
+       * piece must be one of the constants EMPTY, RED, BLACK, RED_KING,
+       * BLACK_KING.
+       */
+      void setPieceAt(int row, int col, int piece) {
+         board[row][col] = piece;
+      }
+      
+      
+      /**
+       * Make the specified move.  It is assumed that move
+       * is non-null and that the move it represents is legal.
+       */
+      void makeMove(CheckersMove move) {
+         makeMove(move.fromRow, move.fromCol, move.toRow, move.toCol);
+      }
+      
+      
+      /**
+       * Make the move from (fromRow,fromCol) to (toRow,toCol).  It is
+       * assumed that this move is legal.  If the move is a jump, the
+       * jumped piece is removed from the board.  If a piece moves
+       * the last row on the opponent's side of the board, the 
+       * piece becomes a king.
+       */
+      void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
+         board[toRow][toCol] = board[fromRow][fromCol];
+         board[fromRow][fromCol] = EMPTY;
+         if (fromRow - toRow == 2 || fromRow - toRow == -2) {
+            // The move is a jump.  Remove the jumped piece from the board.
+            int jumpRow = (fromRow + toRow) / 2;  // Row of the jumped piece.
+            int jumpCol = (fromCol + toCol) / 2;  // Column of the jumped piece.
+            board[jumpRow][jumpCol] = EMPTY;
+         }
+         if (toRow == 0 &amp;&amp; board[toRow][toCol] == RED)
+            board[toRow][toCol] = RED_KING;
+         if (toRow == 7 &amp;&amp; board[toRow][toCol] == BLACK)
+            board[toRow][toCol] = BLACK_KING;
+      }
+      
+      /**
+       * Return an array containing all the legal CheckersMoves
+       * for the specified player on the current board.  If the player
+       * has no legal moves, null is returned.  The value of player
+       * should be one of the constants RED or BLACK; if not, null
+       * is returned.  If the returned value is non-null, it consists
+       * entirely of jump moves or entirely of regular moves, since
+       * if the player can jump, only jumps are legal moves.
+       */
+      CheckersMove[] getLegalMoves(int player) {
+         
+         if (player != RED &amp;&amp; player != BLACK)
+            return null;
+         
+         int playerKing;  // The constant representing a King belonging to player.
+         if (player == RED)
+            playerKing = RED_KING;
+         else
+            playerKing = BLACK_KING;
+         
+         ArrayList&lt;CheckersMove&gt; moves = new ArrayList&lt;CheckersMove&gt;();  // Moves will be stored in this list.
+         
+         /*  First, check for any possible jumps.  Look at each square on the board.
+          If that square contains one of the player's pieces, look at a possible
+          jump in each of the four directions from that square.  If there is 
+          a legal jump in that direction, put it in the moves ArrayList.
+          */
+         
+         for (int row = 0; row &lt; 8; row++) {
+            for (int col = 0; col &lt; 8; col++) {
+               if (board[row][col] == player || board[row][col] == playerKing) {
+                  if (canJump(player, row, col, row+1, col+1, row+2, col+2))
+                     moves.add(new CheckersMove(row, col, row+2, col+2));
+                  if (canJump(player, row, col, row-1, col+1, row-2, col+2))
+                     moves.add(new CheckersMove(row, col, row-2, col+2));
+                  if (canJump(player, row, col, row+1, col-1, row+2, col-2))
+                     moves.add(new CheckersMove(row, col, row+2, col-2));
+                  if (canJump(player, row, col, row-1, col-1, row-2, col-2))
+                     moves.add(new CheckersMove(row, col, row-2, col-2));
+               }
+            }
+         }
+         
+         /*  If any jump moves were found, then the user must jump, so we don't 
+          add any regular moves.  However, if no jumps were found, check for
+          any legal regular moves.  Look at each square on the board.
+          If that square contains one of the player's pieces, look at a possible
+          move in each of the four directions from that square.  If there is 
+          a legal move in that direction, put it in the moves ArrayList.
+          */
+         
+         if (moves.size() == 0) {
+            for (int row = 0; row &lt; 8; row++) {
+               for (int col = 0; col &lt; 8; col++) {
+                  if (board[row][col] == player || board[row][col] == playerKing) {
+                     if (canMove(player,row,col,row+1,col+1))
+                        moves.add(new CheckersMove(row,col,row+1,col+1));
+                     if (canMove(player,row,col,row-1,col+1))
+                        moves.add(new CheckersMove(row,col,row-1,col+1));
+                     if (canMove(player,row,col,row+1,col-1))
+                        moves.add(new CheckersMove(row,col,row+1,col-1));
+                     if (canMove(player,row,col,row-1,col-1))
+                        moves.add(new CheckersMove(row,col,row-1,col-1));
+                  }
+               }
+            }
+         }
+         
+         /* If no legal moves have been found, return null.  Otherwise, create
+          an array just big enough to hold all the legal moves, copy the
+          legal moves from the ArrayList into the array, and return the array. */
+         
+         if (moves.size() == 0)
+            return null;
+         else {
+            CheckersMove[] moveArray = new CheckersMove[moves.size()];
+            for (int i = 0; i &lt; moves.size(); i++)
+               moveArray[i] = moves.get(i);
+            return moveArray;
+         }
+         
+      }  // end getLegalMoves
+      
+      
+      /**
+       * Return a list of the legal jumps that the specified player can
+       * make starting from the specified row and column.  If no such
+       * jumps are possible, null is returned.  The logic is similar
+       * to the logic of the getLegalMoves() method.
+       */
+      CheckersMove[] getLegalJumpsFrom(int player, int row, int col) {
+         if (player != RED &amp;&amp; player != BLACK)
+            return null;
+         int playerKing;  // The constant representing a King belonging to player.
+         if (player == RED)
+            playerKing = RED_KING;
+         else
+            playerKing = BLACK_KING;
+         ArrayList&lt;CheckersMove&gt; moves = new ArrayList&lt;CheckersMove&gt;();  // The legal jumps will be stored in this list.
+         if (board[row][col] == player || board[row][col] == playerKing) {
+            if (canJump(player, row, col, row+1, col+1, row+2, col+2))
+               moves.add(new CheckersMove(row, col, row+2, col+2));
+            if (canJump(player, row, col, row-1, col+1, row-2, col+2))
+               moves.add(new CheckersMove(row, col, row-2, col+2));
+            if (canJump(player, row, col, row+1, col-1, row+2, col-2))
+               moves.add(new CheckersMove(row, col, row+2, col-2));
+            if (canJump(player, row, col, row-1, col-1, row-2, col-2))
+               moves.add(new CheckersMove(row, col, row-2, col-2));
+         }
+         if (moves.size() == 0)
+            return null;
+         else {
+            CheckersMove[] moveArray = new CheckersMove[moves.size()];
+            for (int i = 0; i &lt; moves.size(); i++)
+               moveArray[i] = moves.get(i);
+            return moveArray;
+         }
+      }  // end getLegalMovesFrom()
+      
+      
+      /**
+       * This is called by the two previous methods to check whether the
+       * player can legally jump from (r1,c1) to (r3,c3).  It is assumed
+       * that the player has a piece at (r1,c1), that (r3,c3) is a position
+       * that is 2 rows and 2 columns distant from (r1,c1) and that 
+       * (r2,c2) is the square between (r1,c1) and (r3,c3).
+       */
+      private boolean canJump(int player, int r1, int c1, int r2, int c2, int r3, int c3) {
+         
+         if (r3 &lt; 0 || r3 &gt;= 8 || c3 &lt; 0 || c3 &gt;= 8)
+            return false;  // (r3,c3) is off the board.
+         
+         if (board[r3][c3] != EMPTY)
+            return false;  // (r3,c3) already contains a piece.
+         
+         if (player == RED) {
+            if (board[r1][c1] == RED &amp;&amp; r3 &gt; r1)
+               return false;  // Regular red piece can only move  up.
+            if (board[r2][c2] != BLACK &amp;&amp; board[r2][c2] != BLACK_KING)
+               return false;  // There is no black piece to jump.
+            return true;  // The jump is legal.
+         }
+         else {
+            if (board[r1][c1] == BLACK &amp;&amp; r3 &lt; r1)
+               return false;  // Regular black piece can only move down.
+            if (board[r2][c2] != RED &amp;&amp; board[r2][c2] != RED_KING)
+               return false;  // There is no red piece to jump.
+            return true;  // The jump is legal.
+         }
+         
+      }  // end canJump()
+      
+      
+      /**
+       * This is called by the getLegalMoves() method to determine whether
+       * the player can legally move from (r1,c1) to (r2,c2).  It is
+       * assumed that (r1,r2) contains one of the player's pieces and
+       * that (r2,c2) is a neighboring square.
+       */
+      private boolean canMove(int player, int r1, int c1, int r2, int c2) {
+         
+         if (r2 &lt; 0 || r2 &gt;= 8 || c2 &lt; 0 || c2 &gt;= 8)
+            return false;  // (r2,c2) is off the board.
+         
+         if (board[r2][c2] != EMPTY)
+            return false;  // (r2,c2) already contains a piece.
+         
+         if (player == RED) {
+            if (board[r1][c1] == RED &amp;&amp; r2 &gt; r1)
+               return false;  // Regular red piece can only move down.
+            return true;  // The move is legal.
+         }
+         else {
+            if (board[r1][c1] == BLACK &amp;&amp; r2 &lt; r1)
+               return false;  // Regular black piece can only move up.
+            return true;  // The move is legal.
+         }
+         
+      }  // end canMove()
+      
+      
+   } // end class CheckersData
+   
+   
+} // end class CheckersWithFiles
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+</exercises>

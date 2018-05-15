@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="threads.1" title="Introduction to Threads">
+
+<p><start><big>L</big>ike people, computers</start> can <newword>multitask</newword>.  That
+is, they can be working on several different tasks at the same time.  A computer that
+has just a single central processing unit can't literally do two things at the same time,
+any more than a person can,
+but it can still switch its attention back and forth among several tasks.  Furthermore,
+it is increasingly common for computers to have more than one processing unit, and
+such computers can literally work on several tasks simultaneously.  It is likely that
+from now on, most of the increase in computing power will come from adding additional
+processors to computers rather than from increasing the speed of individual processors.
+To use the full
+power of these multiprocessing computers, a programmer must do <newword>parallel
+programming</newword>, which means writing a program as a set of several tasks that
+can be executed simultaneously.  Even on a single-processor computer, parallel programming
+techniques can be useful, since some problems can be tackled most naturally by breaking
+the solution into a set of simultaneous tasks that cooperate to solve the problem.</p>
+
+<p>In Java, a single task is called a <newword>thread</newword>.  The term "thread"
+refers to a "thread of control" or "thread of execution," meaning a sequence of instructions that are executed
+one after another&mdash;the thread extends through time, connecting each instruction to
+the next.  In a multithreaded program, there can be many threads of control, weaving
+through time in parallel and forming the complete fabric of the program. (Ok, enough
+with the metaphor, already!)  Every Java program has at least one thread; when the Java 
+virtual machine runs your program, it creates a thread
+that is responsible for executing the <code>main</code> routine of the program.
+This main thread can in turn create other threads that can continue even after
+the main thread has terminated.  In a GUI program, there is at least one additional
+thread, which is responsible for handling events and drawing components on the screen.
+This GUI thread is created when the first window is opened.  So in fact, you have
+already done parallel programming!  When a <code>main</code> routine opens a window,
+both the main thread and the GUI thread can continue to run in parallel.  Of
+course, parallel programming can be used in much more interesting ways.</p>
+   
+<p>Unfortunately, parallel programming is even more difficult than ordinary,
+single-threaded programming.  When several threads are working together on a
+problem, a whole new category of errors is possible.  This just means that
+techniques for writing correct and robust programs are even more important for
+parallel programming than they are for normal programming.  On the other
+hand, fortunately, Java has a nice thread API that makes basic uses of
+threads reasonably easy.  It also has a variety of standard classes to help with
+some of the more tricky parts or to hide them entirely.
+It won't be until midway through <localref href="threads.3"/>
+that you'll learn about the low-level techniques that are necessary to handle the
+trickiest parts of parallel programming.  In fact, a programmer can do a lot with threads
+without ever learning about the low-level stuff.</p>
+
+<subsection id="threads.1.1" title="Creating and Running Threads">
+
+<p>In Java, a thread is represented by an object belonging to the class
+<code>java.lang.Thread</code> (or to a subclass of this class).  The purpose
+of a <classname>Thread</classname> object is to execute a single method and to
+execute it just once.  This method represents the task to be carried out by the thread.
+The method is executed in its own thread of control, which can run in parallel with
+other threads.  When the execution of the thread's method is finished, either because the
+method terminates normally or because of an uncaught exception, the thread
+stops running.  Once this happens, there is no way to restart the thread or
+to use the same <classname>Thread</classname> object to start another thread.</p>
+
+<p>There are two ways to program a thread.  One is to create a subclass of
+<classname>Thread</classname> and to define the method <code>public void run()</code>
+in the subclass.  This <code>run()</code> method defines the task that will be
+performed by the thread; that is, when the thread is started, it is the <code>run()</code>
+method that will be executed in the thread.  For example, here is a simple, and 
+rather useless, class that defines a thread that does nothing but print a message
+on standard output:</p>   
+
+<pre>public class NamedThread extends Thread {
+   private String name;  // The name of this thread.
+   public NamedThread(String name) {  // Constructor gives name to thread.
+      this.name = name;
+   }
+   public void run() {  // The run method prints a message to standard output.
+      System.out.println("Greetings from thread '" + name + "'!");
+   }
+}</pre>
+   
+<p>To use a <classname>NamedThread</classname>, you must of course create an object
+belonging to this class.  For example,</p>
+   
+<pre>NamedThread greetings = new NamedThread("Fred");</pre>
+   
+<np>However, creating the object does not automatically start
+the thread running or cause its <code>run()</code> method to be executed.
+To do that, you must call the <code>start()</code> method in
+the thread object.  For the example, this would be done with the statement</np>
+
+<pre>greetings.start();</pre>
+   
+<np>The purpose of the <code>start()</code> method is to create the new thread of
+control that will execute the <classname>Thread</classname> object's <code>run()</code>
+method.  The new thread runs in parallel with the thread in which the <code>start()</code>
+method was called, along with any other threads that already existed.  The <code>start()</code>
+method returns immediately after starting the new thread of control, 
+<b>without waiting for the thread to terminate</b>.  This means that
+the code in the thread's <code>run()</code> method executes at the same time as the
+statements that follow the call to the <code>start()</code> method.  Consider this
+code segment:</np>
+
+<pre>NamedThread greetings = new NamedThread("Fred");
+greetings.start();
+System.out.println("Thread has been started");</pre>
+
+<np>After <code>greetings.start()</code> is executed, there are two threads.
+One of them will print "Thread has been started" while the other one wants
+to print "Greetings from thread 'Fred'!".  It is important to note that
+<i>these messages can be printed in either order</i>.  The two threads run simultaneously
+and will compete for access to standard output, so that they can print their messages.
+Whichever thread happens to be the first to get access will be the first to
+print its message.  In a normal, single-threaded program, things happen in a
+definite, predictable order from beginning to end.  In a multi-threaded program,
+there is a fundamental indeterminacy.  You can't be sure what order things will
+happen in.  This indeterminacy is what makes parallel programming so difficult!</np>   
+   
+<p>Note that calling <code>greetings.start()</code> is <b>very</b> different from calling
+<code>greetings.run()</code>.  Calling <code>greetings.run()</code> would execute
+the <code>run()</code> method in the same thread, rather than creating a new thread.
+This means that all the work of the <code>run()</code> method will be done before the
+computer moves on to the statements that follow the call to <code>greetings.run()</code>.
+There is no parallelism and no indeterminacy.</p>
+
+<img src="threads-vs-subroutines.png" width="600" height="357" tex="threads-vs-subroutines.eps" texscale="0.6"/>
+
+<p>This discussion has assumed that the computer on which the program is running
+has more than one processing unit, so that it is possible for the original thread
+and the newly created thread to literally be executed at the same time.  However, it's
+possible to create multiple threads even on a computer that has only one processor
+(and, more generally, it is possible to create many more threads than there are
+processors, on any computer).  In that case, the two threads will compete for
+time on the processor.  However, there is still indeterminacy because the processor can 
+switch from one thread to another at unpredictable times.  In fact, from the point
+of view of the programmer, there is no difference between programming for a single-processor
+computer and programming for a multi-processor computer, and we will mostly
+ignore the distinction from now on.</p>
+
+<break/>
+   
+<p>I mentioned that there are two ways to program a thread.  The first way was to
+define a subclass of <classname>Thread</classname>.  The second is to define a
+class that implements the interface <code>java.lang.Runnable</code>.  The
+<classname>Runnable</classname> interface defines a single method,
+<code>public void run()</code>.  Given a <classname>Runnable</classname>,
+it is possible to create a <classname>Thread</classname> whose task is to
+execute the <classname>Runnable's</classname> <code>run()</code> method.</p>
+
+
+<p>The <classname>Thread</classname> class has a constructor that
+takes a <classname>Runnable</classname> as its parameter.
+When an object that implements the <classname>Runnable</classname> interface
+is passed to that constructor, the <code>run()</code> method of the thread
+will simply call the <code>run()</code> method from the <classname>Runnable</classname>,
+and calling the thread's <code>start()</code> method will create a new thread of
+control in which the <classname>Runnable's</classname> <code>run()</code> method 
+is executed.  For example,
+as an alternative to the <classname>NamedThread</classname> class, we could define
+the class:</p>
+   
+<pre>public class NamedRunnable implements Runnable {
+   private String name;  // The name of this Runnable.
+   public NamedRunnable(String name) {  // Constructor gives name to object.
+      this.name = name;
+   }
+   public void run() {  // The run method prints a message to standard output.
+      System.out.println("Greetings from runnable '" + name +"'!");
+   }
+}</pre>
+   
+<np>To use this version of the class, we would create a <classname>NamedRunnable</classname>
+object and use that object to create an object of type <classname>Thread</classname>:</np>
+
+<pre>NamedRunnable greetings = new NamedRunnable("Fred");
+Thread greetingsThread = new Thread(greetings);
+greetingsThread.start();</pre>
+
+<np>The advantage of doing things this way is that <b>any</b> object can
+implement the <classname>Runnable</classname> interface and can contain a
+<code>run()</code> method, which can then be executed in a separate thread.
+That <code>run()</code> method has access to everything in the class, including
+<code>private</code> variables and methods.  The disadvantage is that this
+way of doing things is not very object-oriented: It violates the principle that
+each object should have a single, clearly-defined responsibility.  Instead of
+making some random object <classname>Runnable</classname> just so that you
+can use it to make a thread, you can consider defining the thread using 
+a nested class that is a subclass of the <classname>Thread</classname> class.  (See <localref href="OOP.8"/>.)
+</np>
+   
+<p>Finally, I'll note that it is sometimes convenient to define a thread using an
+<b>anonymous</b> inner class (<localref href="OOP.8.3"/>).  For example:</p>
+
+<pre>Thread greetingsFromFred = new Thread() {
+   public void run() {
+      System.out.println("Greetings from Fred!");
+   }
+};
+greetingsFromFred.start();</pre>
+   
+<break/>
+   
+<p>To help you understand how multiple threads are executed in parallel, we consider
+the sample program <sourceref href="ThreadTest1.java"/>.  This program creates
+several threads.  Each thread performs exactly the same task.  The task is to count
+the number of integers less than 5000000 that are prime. (The particular task
+that is done is not important for our purposes
+here.  This is a demo program; it would be silly in a real program to have multiple threads that
+do the same thing.)  This computation should take no more than a few seconds on a modern computer.  
+The threads that perform this task are defined by the
+following static nested class:</p>
+   
+<pre>/**
+ * When a thread belonging to this class is run it will count the
+ * number of primes between 2 and 5000000.  It will print the result
+ * to standard output, along with its ID number and the elapsed
+ * time between the start and the end of the computation.
+ */
+private static class CountPrimesThread extends Thread {
+   int id;  // An id number for this thread; specified in the constructor.
+   public CountPrimesThread(int id) {
+      this.id = id;
+   }
+   public void run() {
+      long startTime = System.currentTimeMillis();
+      int count = countPrimes(2,5000000); // Counts the primes.
+      long elapsedTime = System.currentTimeMillis() - startTime;
+      System.out.println("Thread " + id + " counted " + 
+            count + " primes in " + (elapsedTime/1000.0) + " seconds.");
+   }
+}</pre>
+
+<np>The main program asks the user how many threads to run, and then creates and starts
+the specified number of threads:</np>
+   
+<pre>public static void main(String[] args) {
+   int numberOfThreads = 0;
+   while (numberOfThreads &lt; 1 || numberOfThreads &gt; 25) {
+      System.out.print("How many threads do you want to use  (1 to 25) ?  ");
+      numberOfThreads = TextIO.getlnInt();
+      if (numberOfThreads &lt; 1 || numberOfThreads &gt; 25)
+         System.out.println("Please enter a number between 1 and 25 !");
+   }
+   System.out.println("\nCreating " + numberOfThreads 
+                                           + " prime-counting threads...");
+   CountPrimesThread[] worker = new CountPrimesThread[numberOfThreads];
+   for (int i = 0; i &lt; numberOfThreads; i++)
+      worker[i] = new CountPrimesThread( i );
+   for (int i = 0; i &lt; numberOfThreads; i++)
+      worker[i].start();
+   System.out.println("Threads have been created and started.");
+}</pre>
+
+  
+<np>It would be a good idea for you to compile and run the program.</np>
+
+   
+<p>When I ran the program with one thread on my computer, it took 6.251 seconds for 
+the computer to do the computation.  When I ran it using eight threads, the output was:</p>
+   
+<pre>Creating 8 prime-counting threads...
+Threads have been created and started.
+Thread 4 counted 348513 primes in 12.264 seconds.
+Thread 2 counted 348513 primes in 12.569 seconds.
+Thread 3 counted 348513 primes in 12.567 seconds.
+Thread 0 counted 348513 primes in 12.569 seconds.
+Thread 7 counted 348513 primes in 12.562 seconds.
+Thread 5 counted 348513 primes in 12.565 seconds.
+Thread 1 counted 348513 primes in 12.569 seconds.
+Thread 6 counted 348513 primes in 12.563 seconds.
+</pre>
+   
+<p>The second line was printed immediately after the first. At this point, the main
+program has ended but the eight threads continue to run.  After a pause of about 12.5
+seconds, all eight threads completed at about the same time.  The order in which the
+threads complete is not the same as the order in which they were started, and
+the order is indeterminate.  That is, if the program is run again, the order
+in which the threads complete will probably be different.</p>
+   
+<p>On this computer, eight threads took about twice as long as one thread.
+This is because the computer has four processors.  With eight threads
+running on four processors&mdash;one-half processor per thread&mdash;each thread
+was only actively being executed for about half of the time, so it took
+twice as long to finish its task.  On a single-processor computer, eight
+threads would take about eight times as long as one thread.  
+On a computer with eight or more processors, eight threads might take no more time
+than a single thread.  Because of overhead and other reasons, the actual speedup
+will probably be a little smaller than this analysis indicates, but on a multiprocessor
+machine, you should see a definite speedup.  What happens when you run the program
+on your own computer?  How many processors do you have?</p>
+
+<p>Whenever there are more threads to be run than there are processors
+to run them, the computer divides its attention among all the runnable
+threads by switching rapidly from one thread to another.  That is, each 
+processor runs one thread for a while then switches to another thread and 
+runs that one for a while, and so on.  Typically, these "context switches"
+occur about 100 times or more per second.  The result is that the
+computer makes progress on all the tasks, and it looks to the user as if
+all the tasks are being executed simultaneously.  This is why in the sample
+program, in which each thread has the same amount of work to do, all the
+threads complete at about the same time:  Over any time period longer than
+a fraction of a second, the computer's time is divided approximately equally
+among all the threads.</p>
+   
+
+
+</subsection>
+
+
+
+<subsection id="threads.1.2" title="Operations on Threads">
+
+
+<p>Much of Java's thread API can be found in the <classname>Thread</classname>
+class.  However, we'll start with a thread-related method in
+<classname>Runtime</classname>, a class that allows a Java program to
+get information about the environment in which it is running.
+When you do parallel programming in order to spread the work among
+several processors, you might want to take into account the number of
+available processors.  You might, for example, want to create one
+thread for each processor.  In Java, you can find out
+the number of processors by calling the function</p>
+
+<pre>Runtime.getRuntime().availableProcessors()</pre>
+   
+<np>which returns an <ptype>int</ptype> giving the number of processors that
+are available to the Java Virtual Machine.  In some cases, this might be
+less than the actual number of processors in the computer.</np>
+
+<break/>
+
+<p>A <classname>Thread</classname> object contains several useful methods
+for working with threads.  Most important is the <code>start()</code> method,
+which was discussed above.</p>
+
+<p>Once a thread has been started, it will continue to run until its
+<code>run()</code> method ends for some reason.  Sometimes, it's useful
+for one thread to be able to tell whether another thread has terminated.
+If <code>thrd</code> is an object of type <classname>Thread</classname>,
+then the <ptype>boolean</ptype>-valued function <codedef>thrd.isAlive()</codedef>
+can be used to test whether or not <code>thrd</code> has terminated.  A thread is "alive"
+between the time it is started and the time when it terminates.  After the
+thread has terminated it is said to be "dead."  (The rather gruesome metaphor
+is also used when we refer to "killing" or "aborting" a thread.)  Remember that
+a thread that has terminated cannot be restarted.</p>
+
+<p>The static method <codedef>Thread.sleep(milliseconds)</codedef> causes the
+thread that executes this method to "sleep" for the specified number of milliseconds.
+A sleeping thread is still alive, but it is not running.  While a thread is sleeping,
+the computer can  work on any other runnable threads (or on other programs).
+<code>Thread.sleep()</code> can be used to insert a pause in the execution of a
+thread.  The <code>sleep()</code> method can throw an exception of type
+<classname>InterruptedException</classname>, which is a checked exception that
+requires mandatory exception handling.
+In practice, this means that the <code>sleep()</code> method is usually called inside a <code>try..catch</code>
+statement that catches the potential <classname>InterruptedException</classname>:</p>
+   
+<pre>try {
+   Thread.sleep(lengthOfPause);
+}
+catch (InterruptedException e) {
+}</pre>
+   
+<np>One thread can <newword>interrupt</newword> another thread to wake it up when it is sleeping or
+paused for certain other reasons.  A <classname>Thread</classname>, <code>thrd</code>,
+can be interrupted by calling the method <codedef>thrd.interrupt()</codedef>. 
+Doing so can be a convenient way to send a signal from one thread to another.
+A thread knows it has been interrupted when it catches an <classname>InterruptedException</classname>.
+Outside any <code>catch</code> handler for the exception, the
+thread can check whether it has been interrupted by calling the static method
+<codedef>Thread.interrupted()</codedef>.  This method tells whether the current thread&mdash;the
+thread that executes the method&mdash;has been interrupted.  It also has the unusual property
+of clearing the interrupted status of the thread, so you only get one chance to check for an
+interruption.  In your own
+programs, your threads are not going to be interrupted unless <b>you</b> interrupt them. So most
+often, you are not likely to need to do anything in response to an <classname>InterruptedException</classname>
+(except to <code>catch</code> it).
+</np>
+
+<p>Sometimes, it's necessary for one thread to wait for another thread to die.
+This is done with the <code>join()</code> method from the <classname>Thread</classname> class.
+Suppose that <code>thrd</code> is a <classname>Thread</classname>.  Then, if another
+thread calls <codedef>thrd.join()</codedef>, that other thread will go to sleep until
+<code>thrd</code> terminates.  If <code>thrd</code> is already dead when <code>thrd.join()</code>
+is called, then it simply has no effect.  The <code>join()</code> method can throw an 
+<classname>InterruptedException</classname>, which must be handled as usual.
+As an example, the following code starts several threads, waits for them all to terminate,
+and then outputs the elapsed time:</p>
+
+<pre>CountPrimesThread[] worker = new CountPrimesThread[numberOfThreads];
+long startTime = System.currentTimeMillis();
+for (int i = 0; i &lt; numberOfThreads; i++) {
+   worker[i] = new CountPrimesThread();
+   worker[i].start();
+}
+for (int i = 0; i &lt; numberOfThreads; i++) {
+   try {
+      worker[i].join();  // Wait until worker[i] finishes, if it hasn't already.
+   }
+   catch (InterruptedException e) {
+   }
+}
+// At this point, all the worker threads have terminated.
+long elapsedTime = System.currentTimeMillis() - startTime;
+System.out.println("Total elapsed time: " + (elapsedTime/1000.0) + " seconds");</pre>
+   
+<np>An observant reader will note that this code assumes that no <classname>InterruptedException</classname>
+will occur.  To be absolutely sure that the thread <code>worker[i]</code> has terminated in an environment
+where <classname>InterruptedExceptions</classname> are possible, you would have to do something like:</np>
+   
+<pre>while (worker[i].isAlive()) {
+   try {
+      worker[i].join();
+   }
+   catch (InterruptedException e) { 
+   }
+}</pre>
+
+<p>Another version of the <code>join()</code> method takes an integer parameter that
+specifies the maximum number of milliseconds to wait.  A call to <codedef>thrd.join(m)</codedef>
+will wait until either <code>thrd</code> has terminated or until <code>m</code> milliseconds
+have elapsed.  This can be used to allow a thread to wake up occasionally to perform some task
+while it is waiting.  Here, for example, is a code segment that will
+start a thread, <code>thrd</code>, and then will
+output a period every two seconds as long as <code>thrd</code> continues to run:</p>
+
+<pre>System.out.print("Running the thread ");
+thrd.start();
+while (thrd.isAlive()) {
+   try {
+      thrd.join(2000);
+      System.out.print(".");
+   }
+   catch (InterruptedException e) {
+   }
+}
+System.out.println(" Done!");</pre>
+
+
+
+<break/>
+
+<p>Threads have two properties that are occasionally useful: a daemon status and a
+priority.  A <classname>Thread</classname> <code>thrd</code> can be designated as
+a <newword>daemon thread</newword> by calling <codedef>thrd.setDaemon(true)</codedef>.
+This must be done before the thread is started, and it can throw an exception of
+type <classname>SecurityException</classname> if the calling thread is not allowed
+to modify <code>thrd's</code> properties.  This has only one effect:  The Java Virtual
+Machine will exit as soon as there are no <b>non-daemon</b> threads that are still
+alive.  That is, the fact that a daemon thread is still alive is not enough to keep
+the Java Virtual Machine running.  A daemon thread might exist, for example, only to provide
+some service to other, non-daemon threads.  When there are no more non-daemon threads,
+there will be no further call for the daemon thread's services, so the program might
+as well shut down.
+</p>
+
+<p>The priority of a thread is a more important property.
+Every thread has a <newword>priority</newword>, specified as an integer.  A thread
+with a greater priority value will be run in preference to a thread with a smaller priority.
+For example, computations that can be done in the background, when no more important
+thread has work to do, can be run with a low priority.  In the next section, we will see how 
+this can be useful in GUI programs.  If <code>thrd</code> is of type <classname>Thread</classname>,
+then <codedef>thrd.getPriority()</codedef> returns the integer that specifies <code>thrd</code>'s
+priority, and <codedef>thrd.setPriority(p)</codedef> can be used to set its priority to a given
+integer,&nbsp;<code>p</code>.
+</p>
+
+<p>Priorities cannot be arbitrary integers, and <code>thrd.setPriority()</code> will
+throw an <classname>IllegalArgumentException</classname> if the specified priority
+is not in the legal range for the thread. The range of legal priority values can
+differ from one computer to another.  The range of legal values is specified by
+the constants <code>Thread.MIN_PRIORITY</code> and <code>Thread.MAX_PRIORITY</code>,
+but a given thread might be further restricted to values less than <code>Thread.MAX_PRIORITY</code>.
+The default priority is given by <code>Thread.NORM_PRIORITY.</code>  To set <code>thrd</code>
+to run with a priority value just below the normal priority, you can call</p>
+
+<pre>thrd.setPriority( Thread.NORM_PRIORITY - 1 );</pre>
+
+<p>Note that <code>thrd.setPriority()</code> can also throw an exception of type 
+<classname>SecurityException</classname>, if the thread that calls the method is not
+allowed to set the priority of <code>thrd</code>.</p>   
+
+<p>Finally, I'll note that the static method <codedef>Thread.currentThread()</codedef> returns the current
+thread.  That is, the return value of this method is the thread that executed the method.  This allows a
+thread to get a reference to itself, so that it can modify its own properties.  For
+example,  you can determine the priority of the currently running
+thread by calling <code>Thread.currentThread().getPriority()</code>.
+</p>
+
+
+   
+</subsection>
+   
+<subsection id="threads.1.3" title='Mutual Exclusion with &leftquote;synchronized"'>
+   
+<p>It's pretty easy to program several threads to carry out completely independent tasks.
+The real difficulty arises when threads have to interact in some way.
+One way that threads interact is by sharing resources.
+When two threads need access to the same resource, such as a variable
+or a window on the screen, some care must be taken that they don't try to
+use the same resource at the same time.  Otherwise, the situation could
+be something like this:  Imagine several cooks sharing the use of just one measuring cup,
+and imagine that Cook&nbsp;A fills the measuring cup with milk, only to
+have Cook&nbsp;B grab the cup before Cook&nbsp;A has a chance to empty the
+milk into his bowl.  There has to be some way for Cook&nbsp;A to claim
+exclusive rights to the cup while he performs the two operations:
+Add-Milk-To-Cup and Empty-Cup-Into-Bowl.</p>
+   
+<p>Something similar happens with threads, even with something as simple
+as adding one to a counter.  The statement</p>
+
+<pre>count = count + 1;</pre>
+   
+<np>is actually a sequence of three operations:</np>
+   
+<pre>Step 1.  Get the value of count
+Step 2.  Add 1 to the value.
+Step 3.  Store the new value in count</pre>
+   
+<np>Suppose that each of several threads performs these three steps.  Remember that it's possible for
+two threads to run at the same time, and even if there is only one processor, it's
+possible for that processor to switch from one thread to another at any point.
+Suppose that while one thread is between Step&nbsp;2 and Step&nbsp;3, another thread
+starts executing the same sequence of steps.  Since the first thread has not
+yet stored the new value in <code>count</code>, the second thread reads the
+<b>old</b> value of <code>count</code> and adds one to that old value.  Both threads
+have computed the same new value for <code>count</code>, and both threads then go
+on to store that value back into <code>count</code> by executing Step&nbsp;3. After
+both threads have done so, the value of <code>count</code> has gone up 
+only by 1 instead of by&nbsp;2!  This type of problem is called a
+<newword>race condition</newword>.  This occurs when one thread is in the middle
+of a multi-step operation, and another thread can change some value or condition
+that the first thread is depending upon.  (The first thread is "in a race" to
+complete all the steps before it is interrupted by another thread.)</np>
+
+<p>Another
+example of a race condition can occur in an <code>if</code> statement. 
+Consider the following statement, which is meant to avoid a division-by-zero error:
+</p>
+   
+<pre>if ( A != 0 ) {
+   B = C / A;
+}</pre>
+
+<np>Suppose that this statement is executed by some thread.
+If the variable <code>A</code> is shared by one or more other threads, and if nothing is
+done to guard against the race condition, then it is possible that one of those other threads
+will change the value of <code>A</code> to zero between the time that the first
+thread checks the condition <code>A&nbsp;!=&nbsp;0</code> and the time that 
+it does the division.  This means that the thread can end up dividing by zero,
+even though it just checked that <code>A</code> was not zero!</np>
+   
+<p>To fix the problem of race conditions, there has to be some way for a thread
+to get <newword>exclusive access</newword> to a shared resource.  This is not a trivial
+thing to implement, but Java provides a high-level and relatively easy-to-use approach
+to exclusive access.  It's done with <newword>synchronized methods</newword> and with the
+<newword>synchronized statement</newword>.  These are used to protect shared
+resources by making sure that only one thread at a time will try to access the resource.
+Synchronization in Java actually provides only <newword>mutual exclusion</newword>,
+which means that exclusive access to a resource is only guaranteed if <b>every</b> thread
+that needs access to that resource uses synchronization.  Synchronization is like a cook
+leaving a note that says, "I'm using the measuring cup."  This will get the cook exclusive
+access to the cup&mdash;but only if all the cooks agree to check the note before
+trying to grab the cup.</p>
+   
+<p>Because this is a difficult topic, I will start with a simple example.  Suppose that
+we want to avoid the race condition that occurs when several threads all want to
+add 1 to a counter.  We can do this by defining a class to represent the counter
+and by using synchronized methods in that class.  A method is declared to be
+synchronized by adding the reserved word <code>synchronized</code> as a modifier
+to the definition of the method:</p>
+   
+<pre>public class ThreadSafeCounter {
+   
+   private int count = 0;  // The value of the counter.
+   
+   synchronized public void increment() {
+      count = count + 1;
+   }
+   
+   synchronized public int getValue() {
+      return count;
+   }
+   
+}</pre>
+   
+<np>If <code>tsc</code> is of type <classname>ThreadSafeCounter</classname>, then
+any thread can call <code>tsc.increment()</code> to add 1 to the counter in a completely
+safe way.  The fact that <code>tsc.increment()</code> is <code>synchronized</code> means
+that only one thread can be in this method at a time; once a thread starts executing
+this method, it is guaranteed that it will finish executing it without having
+another thread change the value of <code>tsc.count</code> in the meantime.  There is
+no possibility of a race condition.
+Note that the guarantee depends on the fact that <code>count</code> is a <code>private</code>
+variable.  This forces all access to <code>tsc.count</code> to occur in the
+<code>synchronized</code> methods that are provided by the class. 
+If <code>count</code> were <code>public</code>, it would be possible
+for a thread to bypass the synchronization by, for example, saying <code>tsc.count++</code>.
+This could change the value of <code>count</code> while another thread is in the
+middle of <code>tsc.increment()</code>.  Remember that synchronization by itself does <b>not</b> guarantee
+exclusive access; it only guarantees <b>mutual exclusion</b> among all the threads that are
+synchronized.</np>
+  
+<p>However, the <classname>ThreadSafeCounter</classname> class does not prevent all possible
+race conditions that might arise when using a counter.  Consider the <code>if</code>
+statement:</p>
+
+<pre>if ( tsc.getValue() == 0 ) {
+   doSomething();
+}</pre>
+   
+<np>where <code>doSomething()</code> is some method that requires the value of the counter
+to be zero.  There is still a race condition here, which occurs if a second thread
+increments the counter between the time the first thread tests <code>tsc.getValue()&nbsp;==&nbsp;0</code>
+and the time it executes <code>doSomething()</code>.  The first thread needs exclusive
+access to the counter during the execution of the whole <code>if</code> statement.
+(The synchronization in the <classname>ThreadSafeCounter</classname> class only gives it
+exclusive access during the time it is evaluating <code>tsc.getValue()</code>.)
+We can solve the race condition by putting the <code>if</code> statement in a <code>synchronized</code>
+statement:</np>
+   
+<pre>synchronized(tsc) {
+   if ( tsc.getValue() == 0 )
+      doSomething();
+}</pre>
+
+<np>Note that the <code>synchronized</code> statement takes an object&mdash;<code>tsc</code> in
+this case&mdash;as a kind of parameter.  The syntax of the <code>synchronized</code> statement
+is:</np>
+   
+<pre>synchronized( <bnf>object</bnf> ) {
+   <bnf>statements</bnf>
+}</pre>
+   
+<np>In Java, mutual exclusion is always associated with an object; we say that the
+synchronization is "on" that object.  For example, the <code>if</code> statement above
+is "synchronized on <code>tsc</code>."  A synchronized instance method, such as those in the
+class <classname>ThreadSafeCounter</classname>, is synchronized on the object that
+contains the instance method.  In fact, adding the <code>synchronized</code> modifier
+to the definition of an instance method is pretty much equivalent to putting the body
+of the method in a <code>synchronized</code> statement of the form
+<code>synchronized(this)&nbsp;{&dots;}</code>.  It is also possible to have
+synchronized static methods; a synchronized static method is synchronized on
+the special class object that represents the class containing the static method.</np>
+   
+<p>The real rule of synchronization in Java is this:  <b>Two threads cannot be
+synchronized on the same object at the same time</b>; that is, they cannot simultaneously
+be executing code segments that are synchronized on that object.  If one thread is synchronized
+on an object, and a second thread tries to synchronize on the <b>same</b> object,
+the second thread is forced to wait until the first thread has finished with the
+object.  This is implemented using something called a <newword>synchronization lock</newword>.
+Every object has a synchronization lock, and that lock can be "held" by only one
+thread at a time.  To enter a synchronized statement or synchronized method,
+a thread must obtain the associated object's lock.  If the lock is available,
+then the thread obtains the lock and immediately begins executing the synchronized
+code.  It releases the lock after it finishes executing the synchronized code.
+If Thread&nbsp;A tries to obtain a lock that is already held by Thread&nbsp;B,
+then Thread&nbsp;A has to wait until Thread&nbsp;B releases the lock.  In fact,
+Thread&nbsp;A will go to sleep, and will not be awoken until the lock becomes
+available.</p>
+
+<break/>
+
+<p>As a simple example of shared resources, we return to the prime-counting
+problem.  In this case, instead of having every thread perform exactly the
+same task, we'll do some real parallel processing.  The program will
+count the prime numbers in a given range of
+integers, and it will do so by dividing the work up among several
+threads.  Each thread will be assigned a part of the full range of integers,
+and it will count the primes in its assigned part.  At the end of its 
+computation, the thread has to add its count to the overall total of primes
+in the entire range.  The variable that represents the total is shared by
+all the threads, since each thread has to add a number to the total.
+If each thread just says
+</p>
+   
+<pre>total = total + count;</pre>
+   
+<np>then there is a (small) chance that two threads will try to do this
+at the same time and that the final total will be wrong.  To prevent this
+race condition, access to <code>total</code> has to be synchronized. My
+program uses a synchronized method to add the counts to the total.  This
+method is called once by each thread:</np>
+   
+<pre>synchronized private static void addToTotal(int x) {
+   total = total + x;
+   System.out.println(total + " primes found so far.");
+}</pre>
+   
+<p>The source code for the program can be found in <sourceref href="ThreadTest2.java"/>.
+This program counts the primes in the range 3000001 to 6000000.  (The numbers are
+rather arbitrary.)  The <code>main()</code> routine in this program creates between
+1 and 5 threads and assigns part of the job to each thread.  It waits for
+all the threads to finish, using the <code>join()</code> method as described above.
+It then reports the total number of primes found, along with the elapsed time.  
+Note that <code>join()</code> is required here, since it doesn't make sense to report the 
+number of primes until all of the threads have finished.
+If you run the program on a multiprocessor
+computer, it should take less time for the program to run when you use more than
+one thread.</p>
+
+   
+<break/>
+   
+<p>Synchronization can help to prevent race conditions, but it introduces the
+possibility of another type of error, <newword>deadlock</newword>.
+A deadlock occurs when a thread waits forever for a resource that it
+will never get.  In the kitchen, a deadlock might occur if two very
+simple-minded cooks both want to measure a cup of milk at the same
+time.  The first cook grabs the measuring cup, while the second cook grabs
+the milk.  The first cook needs the milk, but can't find it because the
+second cook has it.  The second cook needs the measuring cup, but can't
+find it because the first cook has it.  Neither cook can continue and
+nothing more gets done.  This is deadlock.  Exactly the same thing
+can happen in a program, for example if there are two threads (like the two cooks)
+both of which need to obtain locks on the same two objects (like the milk and
+the measuring cup) before they can proceed.  Deadlocks can easily occur,
+unless great care is taken to avoid them.</p>
+
+
+     
+</subsection>
+ 
+
+<subsection id="threads.1.4" title="Volatile Variables">
+
+<p>Synchronization is only one way of controlling communication among threads.  
+We will cover several other techniques later in the chapter.  For now, 
+we finish this section with one more communication technique: volatile variables.</p>
+
+<p>In general, threads communicate
+by sharing variables and accessing those variables in synchronized methods or
+synchronized statements.  However, synchronization is fairly expensive computationally,
+and excessive use of it should be avoided.  So in some cases, it can make sense for
+threads to refer to shared variables without synchronizing their access to those
+variables.</p>
+   
+<p>However, a subtle problem arises when the value of a shared variable is set in one
+thread and used in another.  Because of the way that threads are implemented in Java,
+the second thread might not see the changed value of the variable immediately.  That is,
+it is possible that a thread will continue to see the <b>old</b> value of
+the shared variable for some time after the value of the variable has been changed
+by another thread. This is because threads are allowed to <newword>cache</newword> shared data.
+That is, each thread can keep its own local copy of the shared data.  When one thread
+changes the value of a shared variable, the local copies in the caches of other threads
+are not immediately changed, so the other threads can continue to see the old value,
+at least briefly.</p>
+
+<p>When a <code>synchronized</code> method or statement is entered, threads are forced to update
+their caches to the most current values of the variables in the cache.  So, using shared
+variables in synchronized code is always safe.</p>
+   
+<p>It is possible to use a shared variable safely <b>outside</b> of synchronized code,
+but in that case, the variable must be declared to be <newword>volatile</newword>.
+The <code>volatile</code> keyword is a modifier that can be added to a variable
+declaration, as in</p>
+   
+<pre>private volatile int count;</pre>
+
+<np>If a variable is declared to be <code>volatile</code>, no thread will keep
+a local copy of that variable in its cache.  Instead, the thread will always use
+the official, main copy of the variable.  This means that any change that is made to
+the variable will immediately be visible to all threads.  This makes it safe
+for threads to refer to <code>volatile</code> shared variables even outside of synchronized code.
+Access to volatile variables is less efficient than access to 
+non-volatile variables, but more efficient than using synchronization.
+(Remember, though, that synchronization is still the only way to prevent
+race conditions.)</np>
+   
+<p>When the <code>volatile</code> modifier is applied to an object variable,
+only the variable itself is declared to be volatile, not the contents of the
+object that the variable points to.  For this reason, <code>volatile</code> is
+used mostly for variables of simple types such as primitive types
+or immutable types like <classname>String</classname>.</p>
+   
+<p>A typical example of using volatile variables is to send a signal from
+one thread to another that tells the second thread to terminate.  The two threads
+would share a variable</p>
+   
+<pre>volatile boolean terminate = false;</pre>
+   
+<np>The run method of the second thread would check the value of <code>terminate</code>
+frequently, and it would end when the value of <code>terminate</code> becomes true:</np>
+   
+<pre>public void run() {
+   while ( terminate == false ) {
+      .
+      .  // Do some work.
+      .
+   }
+}</pre>
+   
+<np>This thread will run until some other thread sets the value of <code>terminate</code>
+to true.  Something like this is really the only clean way for one thread to cause
+another thread to die.</np>
+   
+<p>(By the way, you might be wondering why threads should use local data caches in the
+first place, since it seems to complicate things unnecessarily.  Caching is allowed because
+of the structure of multiprocessing computers.   In many multiprocessing computers,
+each processor has some local memory that is directly connected to the processor.
+A thread's cache can be stored in the local memory of the processor on which the thread is running.
+Access to this local memory is much faster than access to other memory, so it
+is more efficient for a thread to use a local copy of a shared variable rather
+than some "master copy" that is stored in non-local memory.)</p>
+
+</subsection>
+   
+
+</section>

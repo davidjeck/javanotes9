@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE intro SYSTEM "../javanotes7.dtd" >
+
+<intro>
+<p><start><big>H</big>ow to avoid reinventing</start> the wheel? Many data
+structures and algorithms, such as those from <localref href="recursion"/>, have been
+studied, programmed, and re-programmed by generations of computer science
+students. This is a valuable learning experience. Unfortunately, they have also
+been programmed and re-programmed by generations of working computer
+professionals, taking up time that could be devoted to new, more creative work.
+A programmer who needs a list or a binary tree shouldn't have to re-code these
+data structures from scratch. They are well-understood and have been programmed
+thousands of times before. The problem is how to make pre-written, robust data
+structures available to programmers. In this chapter, we'll look at Java's
+attempt to address this problem.</p>
+<p>You have already seen part of the solution in <localref href="arrays.3"/>.
+That section introduced parameterized types and the <classname>ArrayList</classname>
+class.  Parameterized types make it possible for the same class to work with
+many different kinds of data.  This idea&mdash;that the same code can be used
+for a variety of data types&mdash;is called <newword>generic programming</newword>.</p>
+</intro>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="OOP.7" title="Interfaces">
+
+
+<p>Some object-oriented programming languages, such as C++, allow a class to
+extend two or more superclasses. This is called <newword>multiple inheritance</newword>. 
+In the illustration below, for example, class&nbsp;E is shown as
+having both class&nbsp;A and class&nbsp;B as direct superclasses, while class&nbsp;F has three
+direct superclasses.</p>
+
+<img width="422" height="301" src="multiple-inheritance.png" alt="class hierarchy diagram with multiple inheritance"
+    tex="multiple-inheritance.eps" texscale="0.6"/>
+   
+<p>Such multiple inheritance is <b>not</b> allowed in Java. The
+designers of Java wanted to keep the language reasonably simple, and felt that
+the benefits of multiple inheritance were not worth the cost in increased
+complexity. However, Java does have a feature that can be used to accomplish
+many of the same goals as multiple inheritance: <newword>interfaces</newword>.</p>
+
+
+<subsection id="OOP.7.1" title="Defining and Implementing Interfaces">
+
+
+<p>We've encountered the term "interface" before, in connection with black
+boxes in general and subroutines in particular. The interface of a subroutine
+consists of the name of the subroutine, its return type, and the number and
+types of its parameters. This is the information you need to know if you want
+to call the subroutine. A subroutine also has an implementation: the block of
+code which defines it and which is executed when the subroutine is called.</p>
+
+<p>In Java, <code>interface</code> is a reserved word with an additional, technical
+meaning. An "<code>interface</code>" in this sense consists of a set of instance method
+interfaces, without any associated implementations.  (Actually, a Java interface
+can contain other things as well, as we'll see later.)
+A class can <newword>implement</newword> 
+an <code>interface</code> by providing an implementation
+for each of the methods specified by the interface. Here is an example of a
+very simple Java <code>interface</code>:</p>
+
+<pre>public interface Drawable {
+   public void draw(Graphics g);
+}</pre>
+
+<np>This looks much like a class definition, except that the implementation of
+the <code>draw()</code> method is omitted. A class that implements the
+<code>interface</code> <classname>Drawable</classname> must provide an implementation for this
+method. Of course, the class can also include other methods and variables. For
+example,</np>
+
+<pre>public class Line implements Drawable {
+    public void draw(Graphics g) {
+        . . . // do something&mdash;presumably, draw a line
+    }
+    . . . // other methods and variables
+}</pre>
+
+<np>Note that to implement an interface, a class must do more than simply provide
+an implementation for each method in the interface; it must also <b>state</b> that
+it implements the interface, using the reserved word <code>implements</code> as
+in this example: "<code>public class Line <b>implements</b> Drawable</code>".
+Any concrete class that implements the <classname>Drawable</classname> interface must define a
+<code>draw()</code> instance method. Any object created from such a class includes
+a <code>draw()</code> method. We say that an <b>object</b> implements an
+<code>interface</code> if it belongs to a class that implements the interface. For
+example, any object of type <classname>Line</classname> implements the <classname>Drawable</classname>
+interface.</np>
+
+<p>While a class can <b>extend</b> only one other class, it can
+<b>implement</b> any number of interfaces. In fact, a class can both extend
+one other class and implement one or more interfaces.  So, we can have things
+like</p>
+
+<pre>class FilledCircle extends Circle 
+                        implements Drawable, Fillable {
+   . . .
+}</pre>
+
+<p>The point of all this is that, although interfaces are not classes, they are
+something very similar. An interface is very much like an abstract class, that
+is, a class that can never be used for constructing objects, but can be used as
+a basis for making subclasses. The subroutines in an interface are abstract
+methods, which must be implemented in any concrete class that implements the
+interface.  You can compare the <classname>Drawable</classname>
+interface with the abstract class</p>
+
+<pre>public abstract class AbstractDrawable {
+   public abstract void draw(Graphics g);
+}</pre>
+
+<np>The main difference is that a class that extends <classname>AbstractDrawable</classname>
+cannot extend any other class, while a class that implements <classname>Drawable</classname>
+can also extend some class, as well as implement other interfaces.  Of course, an
+abstract class can contain non-abstract methods as well as abstract methods.
+An interface is like a "pure" abstract class, which contains only abstract methods.</np>
+
+<p>Note that the methods declared in an interface must be <code>public</code>.  In fact,
+since that is the only option, it is not necessary to specify the access modifier in
+the declaration.</p>
+
+<p>In addition to method declarations, an interface can also include variable
+declarations.  The variables must be <code>"public static final"</code>
+and effectively become public static final variables in every class that implements
+the interface.  In fact, since the variables can only be public and static and final,
+specifying the modifiers is optional.  For example,</p>
+
+<pre>public interface ConversionFactors {
+    int INCHES_PER_FOOT = 12;
+    int FEET_PER_YARD = 3;
+    int YARDS_PER_MILE = 1760;
+}</pre>
+
+<np>This is a convenient way to define named constants that can be
+used in several classes.  A class that implements <classname>ConversionFactors</classname>
+can use the constants defined in the interface as if they were defined in the
+class.</np>
+
+<p>You are not likely to need to write your own interfaces until you get to the
+point of writing fairly complex programs. However, there are several interfaces
+that are used in important ways in Java's standard packages. You'll learn about
+some of these standard interfaces in the next few chapters, and you will
+write classes that implement them.</p>
+
+
+</subsection>
+
+<subsection id="OOP.7.2" title="Interfaces as Types">
+
+<p>As with abstract classes, even though you can't construct an
+object from an interface, you can declare a variable whose type is given by the
+interface. For example, if <classname>Drawable</classname> is the interface given above, and if
+<classname>Line</classname> and <classname>FilledCircle</classname> are classes that implement
+<classname>Drawable</classname>, as above, then you could say:</p>
+
+<pre>Drawable figure;  // Declare a variable of type Drawable.  It can
+                  //    refer to any object that implements the
+                  //    Drawable interface.
+                  
+figure = new Line();  // figure now refers to an object of class Line
+figure.draw(g);   // calls draw() method from class Line
+
+figure = new FilledCircle();   // Now, figure refers to an object
+                               //   of class FilledCircle.
+figure.draw(g);   // calls draw() method from class FilledCircle</pre>
+
+<np>A variable of type <classname>Drawable</classname> can refer to any object of any class
+that implements the <classname>Drawable</classname> interface. A statement like
+<code>figure.draw(g)</code>, above, is legal because <code>figure</code> is of type
+<classname>Drawable</classname>, and <b>any</b> 
+<classname>Drawable</classname> object has a <code>draw()</code>
+method.  So, whatever object <code>figure</code> refers to, that object must
+have a <code>draw()</code> method.</np>
+
+<p>Note that a <newword>type</newword> is something that can be used
+to declare variables. A type can also be used to specify the type of a
+parameter in a subroutine, or the return type of a function. In Java, a type
+can be either a class, an interface, or one of the eight built-in primitive
+types. These are the only possibilities. Of these, however, only classes can be
+used to construct new objects.</p>
+
+<p>An interface can also be the base type of an array.  For example, we can
+use an array type <atype>Drawable[]</atype> to declare
+variables and create arrays.  The elements
+of the array can refer to any objects that implement the <classname>Drawable</classname>
+interface:</p>
+
+<pre>Drawable[] listOfFigures;
+listOfFigures = new Drawable[10];
+listOfFigures[0] = new Line();
+listOfFigures[1] = new FilledCircle();
+listOfFigures[2] = new Line();
+  .
+  .
+  .</pre>
+  
+  <np>Every element of the array will then have a <code>draw()</code> method, so that
+  we can say things like <code>listOfFigures[i].draw(g)</code>.</np>
+
+
+</subsection>
+   
+<subsection title="Interfaces in Java 8" id="OOP.7.3">
+
+<p>The newest version of Java, Java&nbsp;8, makes a few useful additions to interfaces.
+The one that I will discuss here is <newword>default methods</newword>.  Unlike the usual
+abstract methods in interfaces, a default method has an implementation.  When a class
+implements the interface, it does not have to provide an implementation for the
+default method&mdash;although it can do so if it wants to provide a different implementation.
+Essentially, default methods are inherited from interfaces in much the same way that
+ordinary methods are inherited from classes.  This moves Java partway towards supporting
+multiple inheritance.  It's not true multiple inheritance, however, since interfaces
+still cannot define instance variables.</p>
+
+<p>A default method in an interface must be marked with the modifier <code>default</code>.
+It can optionally be marked <code>public</code> but, as for everything else in interfaces,
+default methods are automatically public and the <code>public</code> modifier can be omitted.
+Here is an example.:</p>
+
+<pre>public interface Readable { // represents a source of input
+
+    public char readChar();  // read the next character from the input
+
+    default public String readLine() { // read up to the next line feed
+        StringBuilder line = new StringBuilder();
+        char ch = readChar();
+        while (ch != '\n') {
+            line.append(ch);
+            ch = readChar();
+        }
+        return line.toString();
+    }
+
+}</pre>
+
+<np>A concrete class that implements this interface must provide an implementation for
+<code>readChar()</code>.  It will inherit a definition for <code>readLine()</code> from the interface,
+but can provide a new definition if necessary.    Note that the default
+<code>readLine()</code> calls the abstract method <code>readChar()</code>,
+whose definition will only be provided in the implementing class.  The reference
+to <code>readChar()</code> in the definition is polymorphic.
+The default implementation of <code>readLine()</code> is one that would make 
+sense in almost any class that implements <classname>Readable</classname>.  Here's
+a rather silly example of a class that implements <classname>Readable</classname>,
+including a <code>main()</code> routine that tests the class. Can you figure out
+what it does?</np>
+
+
+<pre>public class Stars implements Readable {
+
+    public char readChar() {
+        if (Math.random() > 0.02)
+           return '*';
+        else
+           return '\n';
+    }
+    
+    public static void main(String[] args) {
+        Stars stars = new Stars();
+        for (int i = 0 ; i &lt; 10; i++ ) {
+            String line = stars.readLine();
+            System.out.println( line );
+        }
+    }
+      
+}</pre>
+
+<p>Default methods provide Java with a capability similar to something called
+a "mixin" in other programming languages, namely the ability to mix functionality from
+another source into a class. Since a class can implement several interfaces,
+it is possible to mix in functionality from several different sources.</p>
+
+</subsection>
+
+</section>

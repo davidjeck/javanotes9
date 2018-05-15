@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+
+<section id="OOP.6" title="this and super">
+   
+<p><start><big>A</big>lthough the basic ideas</start> of object-oriented
+programming are reasonably simple and clear, they are subtle, and they take
+time to get used to. And unfortunately, beyond the basic ideas there are a lot
+of details. The rest of this chapter covers more of those
+annoying details. Remember that you don't need to master everything in
+this chapter the first time through.  In this
+section, we'll look at two variables, <code>this</code> and <code>super</code>, that are
+automatically defined in any instance method.</p>
+
+<subsection id="OOP.6.1" title="The Special Variable this">
+
+<p>What does it mean when you use a simple identifier such as <code>amount</code>
+or <code>process()</code> to refer to a variable or method?  The answer depends
+on scope rules that tell where and how each declared variable and method can
+be accessed in a program.  Inside the definition of a method, a simple variable name might
+refer to a local variable or parameter, if there is one "in scope," that is, one
+whose declaration is in effect at the point in the source code where the reference
+occurs.  If not, it must refer to a member variable of the class in which the
+reference occurs.  Similarly, a simple method name must refer to a method in 
+the same class.</p>
+
+<p>A <b>static</b> member of a class has a simple name that can only be used inside
+the class definition; for use outside the class, it has a full name of the form
+<bnf>class-name</bnf>.<bnf>simple-name</bnf>. For example, "<code>Math.PI</code>" is a static
+member variable with simple name "<code>PI</code>" in the class "<classname>Math</classname>".
+It's always legal to use the full name of a static member, even within the
+class where it's defined. Sometimes it's even necessary, as when the simple
+name of a static member variable is hidden by a local variable or parameter of the same
+name.</p>
+
+<p>Instance variables and instance methods also have simple names. The simple
+name of such an instance member can be used in instance methods in the class
+where the instance member is defined (but not in static methods).
+Instance members also have full names&mdash;but remember that an instance variable
+or instance method is actually contained in an object rather than in a class, and each object has its
+own version.  A full name of an instance member starts with a
+reference to the object that contains the instance member.  For example,
+if <code>std</code> is a variable that refers to an object of type <classname>Student</classname>,
+then <code>std.test1</code> could be a full name for an instance variable named
+<code>test1</code> that is contained in that object.</p>
+
+<p>But when we are working inside a class and use a simple name to refer to an instance variable
+like <code>test1</code>, where is the object that contains the variable?
+The solution to this riddle is simple: Suppose that a reference to "<code>test1</code>"
+occurs in the definition of some instance method.  The actual method that
+gets executed is part of some particular object of
+type <classname>Student</classname>.   When that method gets executed, the
+occurrence of the name "<code>test1</code>" refers to the <code>test1</code> variable
+<b>in that same object</b>.  (This is why simple names of instance members cannot
+be used in static methods&mdash;when a static method is executed, it is not part
+of an object, and hence there are no instance members in sight!)</p>
+
+<p>This leaves open the question of full names for instance members inside the
+same class where they are defined.  We need a way to refer to "the object that
+contains this method."  Java defines a special variable named <newword>this</newword>
+for just this purpose.  The variable <code>this</code> can be used in the source
+code of an instance method to refer to the object that contains the method.
+This intent of the name, "<code>this</code>," is to refer to "this object," the one
+right here that this very method is in.  If <code>var</code> is an instance variable
+in the same object as the method, then "<code>this.var</code>" is a full name for that
+variable. If <code>otherMethod()</code> is an instance method in the same object,
+then <code>this.otherMethod()</code> could be used to call that method. Whenever
+the computer executes an instance method, it automatically sets the variable
+<code>this</code> to refer to the object that contains the method.</p>
+
+<p>(Some object oriented languages use the name "self" instead of "this."  Here, an
+object is seen as an entity that receives messages and responds by performing some
+action.  From the point of view of that entity, an instance variable such as
+<code>self.name</code> refers to the entity's own <code>name</code>, something
+that is part of the entity itself.  Calling an instance method such as 
+<code>self.redraw()</code> is like saying "message to self: redraw!")</p>
+
+<p>One common use of <code>this</code> is in constructors. For example:</p>
+
+<pre>public class Student {
+
+    private String name;  // Name of the student.
+    
+    public Student(String name) {
+         // Constructor.  Create a student with specified name.
+       this.name = name;
+    }
+      .
+      .   // More variables and methods.
+      .
+}</pre>
+
+<np>In the constructor, the instance variable called <code>name</code> is hidden by
+a formal parameter that is also called "name." 
+However, the instance variable can still be referred to by
+its full name, which is <code>this.name</code>. In the assignment statement 
+"<code>this.name&nbsp;=&nbsp;name</code>", the value of
+the formal parameter, <code>name</code>, is assigned to the instance variable,
+<code>this.name</code>. This is considered to be acceptable style: There is no need
+to dream up cute new names for formal parameters that are just used to
+initialize instance variables. You can use the same name for the parameter as
+for the instance variable.</np>
+
+<p>There are other uses for <code>this</code>.  Sometimes, when you are writing an
+instance method, you need to pass the object that contains the method to a
+subroutine, as an actual parameter. In that case, you can use <code>this</code> as
+the actual parameter. For example, if you wanted to print out a string
+representation of the object, you could say
+"<code>System.out.println(this);</code>".  Or you could assign the value of
+<code>this</code> to another variable in an assignment statement.  You can store
+it in an array.  In fact, you can
+do anything with <code>this</code> that you could do with any other variable,
+except change its value. (Consider it to be a <code>final</code> variable.)</p>
+
+</subsection>
+   
+<subsection id="OOP.6.2" title="The Special Variable super">
+
+<p>Java also defines another special variable, named "<code>super</code>", for use
+in the definitions of instance methods. The variable <code>super</code> is for use
+in a subclass. Like <code>this</code>, <code>super</code> refers to the object that
+contains the method. But it's forgetful. It forgets that the object belongs to
+the class you are writing, and it remembers only that it belongs to the
+superclass of that class. The point is that the class can contain additions and
+modifications to the superclass. <code>super</code> doesn't know about any of those
+additions and modifications; it can only be used to refer to methods and
+variables in the superclass.</p>
+
+<p>Let's say that the class that you are writing contains an instance method
+named <code>doSomething()</code>. Consider the subroutine call statement
+<code>super.doSomething()</code>. Now, <code>super</code> doesn't know anything about
+the <code>doSomething()</code> method in the subclass. It only knows about things
+in the superclass, so it tries to execute a method named <code>doSomething()</code>
+from the superclass. If there is none&mdash;if the <code>doSomething()</code> method
+was an addition rather than a modification&mdash;you'll get a syntax error.</p>
+
+<p>The reason <code>super</code> exists is so you can get access to things in the
+superclass that are <b>hidden</b> by things in the subclass. For example,
+<code>super.var</code> always refers to an instance variable named <code>var</code> in the
+superclass. This can be useful for the following reason: If a class contains an
+instance variable with the same name as an instance variable in its superclass,
+then an object of that class will actually contain two variables with the same
+name: one defined as part of the class itself and one defined as part of the
+superclass. The variable in the subclass does not <b>replace</b> the
+variable of the same name in the superclass; it merely <b>hides</b>
+it. The variable from the superclass can still be accessed, using
+<code>super</code>.</p>
+
+<p>When a subclass contains an instance method that has the same signature as a
+method in its superclass, the method from the superclass is hidden in the same
+way. We say that the method in the subclass <newword>overrides</newword> 
+the method from the superclass. Again, however,
+<code>super</code> can be used to access the method from the superclass.</p>
+
+<p>The major use of <code>super</code> is to override a method with a new method
+that <b>extends</b> the behavior of the inherited method, instead of
+<b>replacing</b> that behavior entirely. The new method can use
+<code>super</code> to call the method from the superclass, and then it can add
+additional code to provide additional behavior. As an example, suppose you have
+a <classname>PairOfDice</classname> class that includes a <code>roll()</code> method. Suppose
+that you want a subclass, <classname>GraphicalDice</classname>, to represent a pair of dice
+drawn on the computer screen. The <code>roll()</code> method in the
+<classname>GraphicalDice</classname> class should do everything that the <code>roll()</code>
+method in the <classname>PairOfDice</classname> class does. We can express this with a call
+to <code>super.roll()</code>, which calls the method in the superclass. 
+But in addition to that, the <code>roll()</code> method
+for a <classname>GraphicalDice</classname> object has to redraw the dice to show the new
+values. The <classname>GraphicalDice</classname> class might look something like this:</p>
+
+<pre>public class GraphicalDice extends PairOfDice {
+
+    public void roll() {
+            // Roll the dice, and redraw them.
+         super.roll();  // Call the roll method from PairOfDice.
+         redraw();      // Call a method to draw the dice.
+    }
+       .
+       .  // More stuff, including definition of redraw().
+       .
+}</pre>
+
+<np>Note that this allows you to extend the behavior of the <code>roll()</code>
+method even if you don't know how the method is implemented in the
+superclass!</np>
+   
+</subsection>
+
+<subsection id="OOP.6.3" title="super and this As Constructors">
+
+<p>Constructors are not inherited. That is, if you extend an existing class to
+make a subclass, the constructors in the superclass do <code>not</code> become part
+of the subclass. If you want constructors in the subclass, you have to define
+new ones from scratch. If you don't define any constructors in the subclass,
+then the computer will make up a default constructor, with no parameters, for
+you.</p>
+
+<p>This could be a problem, if there is a constructor in the superclass that
+does a lot of necessary work. It looks like you might have to repeat all that
+work in the subclass! This could be a <b>real</b> problem if you
+don't have the source code to the superclass, and don't even know how it is implemented.  
+It might look like an impossible problem, if 
+the constructor in the superclass uses <code>private</code> member
+variables that you don't even have access to in the subclass!</p>
+
+<p>Obviously, there has to be some fix for this, and there is. It involves the
+special variable, <code>super</code>. As the very first statement in a constructor,
+you can use <code>super</code> to call a constructor from the superclass. The
+notation for this is a bit ugly and misleading, and it can only be used in this
+one particular circumstance: It looks like you are calling <code>super</code> as a
+subroutine (even though <code>super</code> is not a subroutine and you can't call
+constructors the same way you call other subroutines anyway). As an example,
+assume that the <classname>PairOfDice</classname> class has a constructor that takes two
+integers as parameters. Consider a subclass:</p>
+
+<pre>public class GraphicalDice extends PairOfDice {
+
+     public GraphicalDice() {  // Constructor for this class.
+     
+         super(3,4);  // Call the constructor from the
+                      //   PairOfDice class, with parameters 3, 4.
+                      
+         initializeGraphics();  // Do some initialization specific
+                                //   to the GraphicalDice class.
+     }
+        .
+        .  // More constructors, methods, variables...
+        .
+}</pre>
+
+<p>The statement "<code>super(3,4);</code>" calls the constructor from
+the superclass.  This call must be the first line of the constructor in the
+subclass.  Note that if you don't explicitly call a constructor from the
+superclass in this way, then the default constructor from the superclass, the one with
+no parameters, will be called automatically.  (And if no such constructor exists
+in the superclass, the compiler will consider it to be a syntax error.)</p>
+   
+<p>You can use the special variable <code>this</code> in
+exactly the same way to call another constructor in the same class.
+That is, the very first line of a constructor can look like a subroutine
+call with "this" as the name of the subroutine.  The result is that the
+body of another constructor in the same class is executed.
+This can be very useful since it can save you from repeating the 
+same code in several different constructors.  As an example, consider
+<sourceref chapter="4" href="MosaicPanel.java"/>, which was used indirectly
+in <localref href="subroutines.6"/>.  A <classname>MosaicPanel</classname>
+represents a grid of colored rectangles.  It has a constructor with many 
+parameters:</p>
+
+<pre>public MosaicPanel(int rows, int columns, 
+                 int preferredBlockWidth, int preferredBlockHeight, 
+                 Color borderColor, int borderWidth)</pre>   
+
+<np>This constructor provides a lot of options and does a lot of initialization.
+I wanted to provide easier-to-use
+constructors with fewer options, but all the initialization still has
+to be done.  The class also contains these constructors:</np>
+
+<pre>public MosaicPanel() {
+    this(42,42,16,16);
+}
+
+public MosaicPanel(int rows, int columns) {
+    this(rows,columns,16,16);
+}
+
+public MosaicPanel(int rows, int columns, 
+                   int preferredBlockWidth, int preferredBlockHeight) {
+    this(rows, columns, preferredBlockWidth, preferredBlockHeight, null, 0);
+}</pre>
+
+<np>Each of these constructors exists just to call another constructor, while providing
+constant values for some of the parameters.  For example,
+<code>this(42,42,16,16)</code> calls the last constructor listed here,
+while that constructor in turn calls the main, six-parameter constructor.  That main constructor
+is eventually called in all cases, so that all the essential initialization gets done
+in every case.</np>
+
+</subsection>
+
+</section>

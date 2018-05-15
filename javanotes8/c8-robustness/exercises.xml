@@ -1,0 +1,1425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+
+<exercises>
+   
+<exercise>
+<exercise-question><p>Write a program that uses
+the following subroutine, from <localref href="robustness.3.3"/>, to solve
+equations specified by the user.</p>
+<pre>/**
+ * Returns the larger of the two roots of the quadratic equation
+ * A*x*x + B*x + C = 0, provided it has any roots.  If A == 0 or
+ * if the discriminant, B*B - 4*A*C, is negative, then an exception
+ * of type IllegalArgumentException is thrown.
+ */
+static public double root( double A, double B, double C ) 
+                              throws IllegalArgumentException {
+    if (A == 0) {
+      throw new IllegalArgumentException("A can't be zero.");
+    }
+    else {
+       double disc = B*B - 4*A*C;
+       if (disc &lt; 0)
+          throw new IllegalArgumentException("Discriminant &lt; zero.");
+       return  (-B + Math.sqrt(disc)) / (2*A);
+    }
+}</pre>
+<p>Your program should allow the user to specify values for <code>A</code>,
+<code>B</code>, and <code>C</code>. It should call the subroutine to compute a solution
+of the equation. If no error occurs, it should print the root. However, if an
+error occurs, your program should catch that error and print an error message.
+After processing one equation, the program should ask whether the user wants to
+enter another equation. The program should continue until the user answers
+no.</p>
+</exercise-question>
+<exercise-discuss>
+<p>This is really just a fairly easy exercise in using exceptions. The
+<code>root()</code> subroutine must be called in a <code>try..catch</code> statement. There
+must be a <code>catch</code> clause to handle the <classname>IllegalArgumentException</classname>
+that might be thrown by the routine. The catch clause can simply print an error
+message:</p>
+
+<pre>try {
+   solution = root(A,B,C);
+   System.out.println("A solution of the equation is " + solution);
+}
+catch (IllegalArgumentException e) {
+   System.out.println("Sorry, I can't find a solution.");
+   System.out.println(e.getMessage());
+}</pre>
+
+<p>Note that I've put the output statement that prints the solution inside the
+<code>try</code> statement. If an <code>IllegalArgumentException</code> is thrown by
+the subroutine, then this output statement will not be executed since the
+computer will jump immediately to the <code>catch</code> clause. You have to be
+careful about things like this. It wouldn't do to have the output statement
+after the <code>try..catch</code> statement, since then the computer would still
+try to execute the output statement after handling an
+<classname>IllegalArgumentException</classname>. There are other ways to deal with this
+problem. For example, since the <code>try..catch</code> statement occurs in a
+<code>while</code> loop, we could put a <code>continue</code> statement in the
+<code>catch</code> clause to abort further processing when an exception occurs:</p>
+<pre>try {
+   solution = root(A,B,C);
+}
+catch (IllegalArgumentException e) {
+   System.out.println("Sorry, I can't find a solution.");
+   System.out.println(e.getMessage());
+   continue;  // jump back to start of the while loop.
+}
+
+/* We only get to this point if NO exception was thrown.
+   So we know that the solution was computed successfully. */
+
+System.out.println("A solution of the equation is " + solution);</pre>
+<p>The rest of the main program is pretty standard. A complete solution is
+shown below.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="Quadratic">/**   
+ * This program will compute and print one of the solutions
+ * to an equation of the form A*X*X + B*X + C = 0, where
+ * A, B, and C are numbers entered by the user.  It depends
+ * on the non-standard class TextIO for doing input.
+ */
+public class Quadratic {
+
+   public static void main(String[] args) {
+      
+      double A, B, C;   // Coefficients in the equation.
+      double solution;  // The solution computed for the equation.
+      boolean goAgain;  // Set to true if the user wants to
+                        //   solve another equation.
+                        
+      System.out.println("This program will print a solution of an equation");
+      System.out.println("of the form A*X*X + B*X + C = 0, where A, B, and");
+      System.out.println("C are values that you enter.");
+      
+      do {
+         
+         /* Get the coefficients from the user. */
+
+         System.out.println();
+         System.out.println("Enter values for A, B, and C:");
+         System.out.print("A = ");
+         A = TextIO.getlnDouble();
+         System.out.print("B = ");
+         B = TextIO.getlnDouble();
+         System.out.print("C = ");
+         C = TextIO.getlnDouble();
+         System.out.println();
+         
+         /* Print the solution, or an error message, if
+            there is no solution. */
+
+         try {
+            solution = root(A,B,C);
+            System.out.println("A solution of the equation is " + solution);  
+         }
+         catch (IllegalArgumentException e) {
+            System.out.println("Sorry, I can't find a solution.");
+            System.out.println(e.getMessage());
+         }
+          
+         /* Find out whether the user wants to go again. */
+
+         System.out.println();
+         System.out.print("Do you want to solve another equation? ");
+         goAgain = TextIO.getlnBoolean();
+
+      } while (goAgain);
+   
+   } // end main
+   
+ 
+   /**
+    * Returns the larger of the two roots of the quadratic equation
+    * A*x*x + B*x + C = 0, provided it has any roots.  If A == 0 or
+    * if the discriminant, B*B - 4*A*C, is negative, then an exception
+    * of type IllegalArgumentException is thrown.
+    */
+   static public double root( double A, double B, double C ) 
+                                 throws IllegalArgumentException {
+       if (A == 0) {
+         throw new IllegalArgumentException("A can't be zero.");
+       }
+       else {
+          double disc = B*B - 4*A*C;
+          if (disc &lt; 0)
+             throw new IllegalArgumentException("Discriminant &lt; zero.");
+          return  (-B + Math.sqrt(disc)) / (2*A);
+       }
+   }   
+
+}  // end class Quadratic
+</prog></pre>
+</exercise-code>
+</exercise>
+
+
+   
+<exercise id="robustness.ex.2">
+<exercise-question><p>As discussed in <localref href="robustness.1"/>,
+values of type <ptype>int</ptype> are limited to 32 bits.
+Integers that are too large to be represented in 32 bits cannot be stored in an
+<ptype>int</ptype> variable. Java has a standard class,
+<code>java.math.BigInteger</code>, that addresses this problem. An object of type
+<classname>BigInteger</classname> is an integer that can be arbitrarily large. (The maximum
+size is limited only by the amount of memory available to the Java Virtual Machine.) Since
+<classname>BigIntegers</classname> are objects, they must be manipulated using instance
+methods from the <classname>BigInteger</classname> class. For example, you can't add two
+<classname>BigIntegers</classname> with the <code>+</code> operator. Instead, if <code>N</code> and
+<code>M</code> are variables that refer to <classname>BigIntegers</classname>, you can compute
+the sum of <code>N</code> and <code>M</code> with the function call <code>N.add(M)</code>.
+The value returned by this function is a new <classname>BigInteger</classname> object that is
+equal to the sum of <code>N</code> and <code>M</code>.</p>
+
+<p>The <classname>BigInteger</classname> class has a constructor 
+<code>new BigInteger(str)</code>, where <code>str</code> is a string.
+The string must represent an integer, such as "3" or "39849823783783283733". If
+the string does not represent a legal integer, then the constructor throws a
+<classname>NumberFormatException</classname>.</p>
+
+<p>There are many instance methods in the <classname>BigInteger</classname> class. Here are a
+few that you will find useful for this exercise. Assume that <code>N</code> and
+<code>M</code> are variables of type <code>BigInteger</code>.</p>
+
+<ul>
+<li><codedef>N.add(M)</codedef> &mdash; a function that returns a
+<classname>BigInteger</classname> representing the sum of <code>N</code> and <code>M</code>.</li>
+<li><codedef>N.multiply(M)</codedef> &mdash; a function that
+returns a <classname>BigInteger</classname> representing the result of multiplying <code>N</code>
+times <code>M</code>.</li>
+<li><codedef>N.divide(M)</codedef> &mdash; a function that returns
+a <classname>BigInteger</classname> representing the result of dividing <code>N</code> by
+<code>M</code>, discarding the remainder.</li>
+<li><codedef>N.signum()</codedef> &mdash; a function that returns
+an ordinary <ptype>int</ptype>. The returned value represents the sign of the integer
+<code>N</code>. The returned value is 1 if <code>N</code> is greater than zero. It is
+-1 if <code>N</code> is less than zero. And it is 0 if <code>N</code> is zero.</li>
+<li><codedef>N.equals(M)</codedef> &mdash; a function that returns
+a <ptype>boolean</ptype> value that is <code>true</code> if <code>N</code> and <code>M</code>
+have the same integer value.</li>
+<li><codedef>N.toString()</codedef> &mdash; a function that
+returns a <classname>String</classname> representing the value of <code>N</code>.</li>
+<li><codedef>N.testBit(k)</codedef> &mdash; a function that
+returns a <ptype>boolean</ptype> value. The parameter <code>k</code> is an integer. The
+return value is <code>true</code> if the <code>k</code>-th bit in <code>N</code> is 1, and
+it is <code>false</code> if the <code>k</code>-th bit is 0. Bits are numbered from
+right to left, starting with 0. Testing "<code>if&nbsp;(N.testBit(0))</code>" is an easy
+way to check whether <code>N</code> is even or odd. <code>N.testBit(0)</code> is
+<code>true</code> if and only if <code>N</code> is an odd number.</li>
+</ul>
+
+<p>For this exercise, you should write a program that prints <code>3N+1</code>
+sequences with starting values specified by the user. In this version of the
+program, you should use <classname>BigIntegers</classname> to represent the terms in the
+sequence. You can read the user's input into a <classname>String</classname> with the
+<code>TextIO.getln()</code> function. Use the input value to create the
+<classname>BigInteger</classname> object that represents the starting point of the
+<code>3N+1</code> sequence. Don't forget to catch and handle the
+<classname>NumberFormatException</classname> that will occur if the user's input is not a
+legal integer! You should also check that the input number is greater than
+zero.</p>
+
+<p>If the user's input is legal, print out the <code>3N+1</code> sequence. Count
+the number of terms in the sequence, and print the count at the end of the
+sequence. Exit the program when the user inputs an empty line.</p>
+</exercise-question>
+<exercise-discuss>
+<p>My solution uses a subroutine, <code>printThreeNSequence(N)</code>, to print out
+the <code>3N+1</code> sequence starting from the <classname>BigInteger</classname>, <code>N</code>.
+The subroutine assumes that <code>N</code> is not <code>null</code> and that it
+represents a value that is greater than one.  Given these assumptions, the
+subroutine cannot generate any errors. (These conditions are ensured by
+the main program which calls the subroutine, but I use <code>assert</code>
+statements to test the assumptions during debugging.)  The only interesting aspect of the
+subroutine is that all operations on <code>N</code> must be performed using
+instance methods from the <classname>BigInteger</classname> class. For example, to multiply
+<code>N</code> by 2, I use a statement "<code>N = N.multiply(TWO);</code>", where
+<code>TWO</code> is a <classname>BigInteger</classname> that represents the integer 2. My program
+defines <code>TWO</code> as a constant, along with several other
+<classname>BigIntegers</classname> that represent values that I need:</p>
+
+<pre>static final BigInteger THREE = new BigInteger("3");
+static final BigInteger ONE = new BigInteger("1");
+static final BigInteger TWO = new BigInteger("2");</pre>
+
+<np>With these constants, the code for computing the next term in a
+<code>3N+1</code> sequence becomes:</np>
+
+<pre>if (N.testBit(0) == false) {
+        // N is even.  Divide N by 2.
+    N = N.divide(TWO);
+}
+else {
+        // N is odd.  Multiply N by 3, then add 1.
+    N = N.multiply(THREE);
+    N = N.add(ONE);
+}</pre>
+
+<np>You can find the complete subroutine in the solution that is given below.</np>
+
+<p>In the <code>main()</code> routine, the user's input is read into a variable,
+<code>line</code>, of type <classname>String</classname>. The input is used to construct a
+<classname>BigInteger</classname> with the statement "<code>N = new BigInteger(line);</code>".
+Since this statement can produce a <classname>NumberFormatException</classname>, it is placed
+in a <code>try</code> statement that can catch and handle the error. The test
+"<code>if (N.signum() == 1)</code>" is used to make sure that <code>N&nbsp;&gt;=&nbsp;1</code>.
+The value of <code>N.signum()</code> is 1 if and only if <code>N</code> is a positive
+integer. Here is the loop form the <code>main()</code> routine that processes the
+user's input:</p>
+
+<pre>while (true) {
+   System.out.println();
+   System.out.println("Enter the starting value, or press return to end.");
+   System.out.print("? ");
+   line = TextIO.getln().trim();
+   if (line.length() == 0)
+       break;
+   try {
+       N = new BigInteger(line);
+       if (N.signum() == 1)
+          printThreeNSequence(N);
+       else
+          System.out.println("Error:  The starting value cannot be less than or equal to zero.");
+   }
+   catch (NumberFormatException e) {
+       System.out.println("Error:  \"" + line + "\" is not a legal integer.");
+   }
+}</pre>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="BigThreeN">import java.math.BigInteger;
+
+/** 
+ * This program prints out 3N+1 sequences for starting values of N that
+ * are entered by the user.  Since integers are represented as objects of
+ * type BigInteger, it will work for arbitrarily large integers.  The
+ * starting value specified by the user must be greater than zero.  The
+ * program continues to read input from the user and print 3N+1 sequences
+ * until the user inputs an empty line.  If the user's input is illegal,
+ * the program will print an error message and continue.
+ */
+public class BigThreeN {
+ 
+ 
+    private static final BigInteger THREE = new BigInteger("3");
+    private static final BigInteger ONE = new BigInteger("1");
+    private static final BigInteger TWO = new BigInteger("2");
+    
+    
+    public static void main(String[] args) {
+    
+       String line;   // A line of input from the user.
+  
+       BigInteger N;  // The starting point for the 3N+1 sequence,
+                      //   as specified by the user.
+       
+       System.out.println("This program will print 3N+1 sequences for positive starting values");
+       System.out.println("that you enter.  There is no pre-set limit on the number of");
+       System.out.println("digits in the numbers that you enter.  The program will end when");
+       System.out.println("you enter an empty line.");
+       
+       while (true) {
+          System.out.println();
+          System.out.println("Enter the starting value, or press return to end.");
+          System.out.print("? ");
+          line = TextIO.getln().trim();
+          if (line.length() == 0)
+              break;
+          try {
+              N = new BigInteger(line);
+              if (N.signum() == 1)
+                 printThreeNSequence(N);
+              else
+                 System.out.println("Error:  The starting value cannot be less than or equal to zero.");
+          }
+          catch (NumberFormatException e) {
+              System.out.println("Error:  \"" + line + "\" is not a legal integer.");
+          }
+       }
+       
+       System.out.println();
+       System.out.println("OK.  Bye for now!");
+    
+    }  // end main()
+    
+    
+    /**
+     * Print the 3N+1 sequence starting from N, and count the number
+     * of terms in the sequence.  It is assumed that N is not null and
+     * that it is greater than zero.
+     */
+    private static void printThreeNSequence(BigInteger N) {
+ 
+       assert N != null &amp;&amp; N.signum() == 1 : "Illegal parameter value.";
+ 
+       int count;  // The number of terms in the sequence.
+       
+       System.out.println();
+       System.out.println("The 3N+1 sequence starting with " + N + " is:");
+       System.out.println();
+       
+       System.out.println(N.toString());   // Print N as the first term of the sequence
+       count = 1;
+       
+       while ( ! N.equals(ONE) ){   // Compute and print the next term
+          if (N.testBit(0) == false) {
+                  // N is even.  Divide N by 2.
+              N = N.divide(TWO);
+          }
+          else {
+                  // N is odd.  Multiply N by 3, then add 1.
+              N = N.multiply(THREE);
+              N = N.add(ONE);
+          }
+          System.out.println(N.toString());
+          count++;
+       }
+ 
+       System.out.println();
+       System.out.println("There were " + count + " terms in the sequence.");
+ 
+    }  // end printThreeNSequence
+    
+    
+} // end BigThreeN
+</prog></pre>
+</exercise-code>
+</exercise>
+
+
+   
+<exercise>
+<exercise-question><p>A Roman numeral represents
+an integer using letters. Examples are XVII to represent 17, MCMLIII for 1953,
+and MMMCCCIII for 3303. By contrast, ordinary numbers such as 17 or 1953 are
+called Arabic numerals. The following table shows the Arabic equivalent of all
+the single-letter Roman numerals:</p>
+
+<pre>M    1000            X   10
+D     500            V    5
+C     100            I    1
+L      50</pre>
+
+<p>When letters are strung together, the values of the letters are just added
+up, with the following exception. When a letter of smaller value is followed by
+a letter of larger value, the smaller value is subtracted from the larger
+value. For example, IV represents 5&nbsp;-&nbsp;1, or 4. And MCMXCV is interpreted as 
+M&nbsp;+&nbsp;CM&nbsp;+&nbsp;XC&nbsp;+&nbsp;V, 
+or 1000&nbsp;+ (1000&nbsp;-&nbsp;100) + (100&nbsp;-&nbsp;10)&nbsp;+&nbsp;5, which is 1995. In
+standard Roman numerals, no more than three consecutive copies of the same
+letter are used. Following these rules, every number between 1 and 3999 can be
+represented as a Roman numeral made up of the following one- and two-letter
+combinations:</p>
+
+<pre>M    1000            X   10
+CM    900            IX   9
+D     500            V    5
+CD    400            IV   4
+C     100            I    1
+XC     90
+L      50
+XL     40</pre>
+
+<p>Write a class to represent Roman numerals. The class should have two
+constructors. One constructs a Roman numeral from a string such as "XVII" or
+"MCMXCV". It should throw a <classname>NumberFormatException</classname> if the string is not
+a legal Roman numeral. The other constructor constructs a Roman numeral from an
+<ptype>int</ptype>. It should throw a <classname>NumberFormatException</classname> if the
+<ptype>int</ptype> is outside the range 1 to 3999.</p>
+
+<p>In addition, the class should have two instance methods. The method
+<code>toString()</code> returns the string that represents the Roman numeral. The
+method <code>toInt()</code> returns the value of the Roman numeral as an
+<ptype>int</ptype>.</p>
+
+<p>At some point in your class, you will have to convert an <ptype>int</ptype> into
+the string that represents the corresponding Roman numeral. One way to approach
+this is to gradually "move" value from the Arabic numeral to the Roman numeral.
+Here is the beginning of a routine that will do this, where <code>number</code> is
+the <ptype>int</ptype> that is to be converted:</p>
+
+<pre>String roman = "";
+int N = number;
+while (N &gt;= 1000) {
+      // Move 1000 from N to roman.
+   roman += "M";
+   N -= 1000;
+}
+while (N &gt;= 900) {
+      // Move 900 from N to roman.
+   roman += "CM";
+   N -= 900;
+}
+.
+.  // Continue with other values from the above table.
+.</pre>
+
+<np>(You can save yourself a lot of typing in this routine if you use arrays in
+a clever way to represent the data in the above table.)</np>
+
+<p>Once you've written your class, use it in a main program that will read both
+Arabic numerals and Roman numerals entered by the user. If the user enters an
+Arabic numeral, print the corresponding Roman numeral. If the user enters a
+Roman numeral, print the corresponding Arabic numeral. (You can tell the
+difference by using <code>TextIO.peek()</code> to peek at the first character in
+the user's input (see <localref href="robustness.2.2"/>). 
+If the first character is a digit, then the user's input is an
+Arabic numeral. Otherwise, it's a Roman numeral.) The program should end when
+the user inputs an empty line.</p>
+</exercise-question>
+<exercise-discuss>
+<p>My class is called <classname>RomanNumeral</classname>. An object of type
+<classname>RomanNumeral</classname> has a <code>private</code> instance variable of type
+<ptype>int</ptype> that stores the integer value of the Roman numeral. When the
+<code>toString()</code> method is called, it computes the string that represents
+the Roman number based on the value of this <ptype>int</ptype>. By contrast, the
+<code>toInt()</code> method simply returns the value of the instance variable. This
+is not the only way that things could be done. I might have stored the string
+representation of the Roman numeral in an instance variable. In that case, the
+<code>toString()</code> method would simply return the stored value, while the
+<code>toInt()</code> method would have to compute the <ptype>int</ptype> value from the
+stored <classname>String</classname>. It would even be possible, and more efficient, to store both the
+<ptype>int</ptype> and <classname>String</classname> representations in the object. (The point,
+though, is that it's not necessary to do so. The two representations hold
+exactly the same information.)</p>
+
+<p>In my version of the class, the constructor which takes a parameter of type
+<ptype>int</ptype> simply has to store the parameter value in the instance variable,
+after checking that it is in the legal range of values.</p>
+
+<p>The constructor that takes a parameter of type <classname>String</classname> must
+interpret the string as a Roman numeral and convert it to the corresponding
+<ptype>int</ptype> value. This is done by adding up the integer value associated with
+each character or pair of characters in the string. The fact that characters
+sometimes need to be considered in pairs complicates things a bit. An algorithm
+for converting a <classname>String</classname>, <code>roman</code>, to an <ptype>int</ptype>,
+<code>arabic</code>, is:</p>
+
+<pre>Let arabic = 0
+Let i = 0  // representing a position in the string
+
+while i is a legal position in the string:
+    Let ch be the character in position i
+    Let N be the numeric equivalent of ch
+    i++   // to account for the character, ch
+    if there are no additional characters in the string:
+          // (We need to make this test first, to avoid an error
+          // when we try to look at the next character.)
+       Add N to arabic
+    else:   // Try pairing the ch with the next character
+       Let N2 be the numeric equivalent of the NEXT character
+       If N &lt; N2:  // Evaluate the characters as a pair
+           Add (N2 - N) to arabic
+           i++    // to account for the extra character
+       else:
+           Add N to arabic</pre>
+
+<p>This algorithm does not take into account that the string might not be a
+legal Roman numeral. If a character in the string is not one of the characters
+M, D, C, L, X, V, or I, then a <classname>NumberFormatException</classname> must be
+thrown.  And the algorithm allows some unusual two-letter combinations such as
+IM to represent 999; it is not clear whether these should be considered to be errors.</p>
+
+<p>The job of converting an <ptype>int</ptype> into an equivalent Roman numeral is
+handled in my <code>toString()</code> method. The exercise includes code that shows how to write this
+method as a long sequence of <code>while</code> loops. Consider the loop</p>
+
+<pre>while (N &gt;= 1000) {
+   roman += "M";
+   N -= 1000;
+}</pre>
+
+<np>After this loop, all the 1000's in <code>N</code> have been converted to M's in
+<code>roman</code>, and we can be sure that <code>N</code> is 999 or less. So what's
+left of <code>N</code> can be expressed in terms of the smaller numbers in the
+table: 900, 500, 400, and so on. Each of these numbers can be processed by a
+<code>while</code> loop (although an if statement would also work in some cases, where
+the number that is being tested can only occur once.). 
+Note that the numbers in these loops must be in decreasing
+order for this to work.</np>
+
+<p>However, all the loops in this algorithm have the same form. They just use
+different numbers and letters. In my program, I use two arrays to store the
+numbers and letters from the table:</p>
+
+<pre>private static int[]    numbers = { 1000,  900,  500,  400,  100,   90,  
+                                      50,   40,   10,    9,    5,    4,    1 };
+                                   
+private static String[] letters = { "M",  "CM",  "D",  "CD", "C",  "XC",
+                                    "L",  "XL",  "X",  "IX", "V",  "IV", "I" };</pre>
+
+<np>For each index <code>i</code>, <code>numbers[i]</code> is the <ptype>int</ptype>
+equivalent of the Roman numeral <code>letters[i]</code>. All the processing can
+then be done with a <code>for</code> loop that does all the required <code>while</code>
+loops one after the other:</np>
+
+<pre>public String toString() {
+      // Return the standard representation of this Roman numeral.
+   String roman = "";  // The Roman numeral.
+   int N = num;        // N represents the part of num that still has
+                       //   to be converted to Roman numeral representation.
+   for (int i = 0; i &lt; numbers.length; i++) {
+      while (N &gt;= numbers[i]) {
+         roman += letters[i];
+         N -= numbers[i];
+      }
+   }
+   return roman;
+}</pre>
+
+<break/>
+
+<p>An algorithm for the main program is given by:</p>
+
+<pre>while (true):
+    Prompt the user for input
+    If the first thing on the line is the end-of-line:
+       break
+    else if the first character on the line is a digit:
+       Let arabic = TextIO.getlnInt()
+       Let roman = new RomanNumeral(arabic)
+       Print out roman.toString()
+    else:
+       Let str = TextIO.getln();
+       Let roman = new RomanNumeral(str);
+       Print out roman.toInt();</pre>
+
+<p>This algorithm ignores the possibility that the user's input might be
+illegal. If it is, then the <classname>RomanNumeral</classname> constructor will throw a
+<classname>NumberFormatException</classname>. This exception must be caught and handled. With
+this in mind, the algorithm becomes:</p>
+
+<pre>while (true):
+    Prompt the user for input
+    If the first thing on the line is the end-of-line:
+       break
+    else if the first character on the line is a digit:
+       Let arabic = TextIO.getlnInt()
+       try {
+          Let roman = new RomanNumeral(arabic)
+          Print out roman.toString()
+       }
+       catch (NumberFormatException e) {
+          Print an error message
+       }
+    else:
+       Let str = TextIO.getln();
+       try {
+          Let roman = new RomanNumeral(str);
+          Print out roman.toInt();
+       }
+       catch (NumberFormatException e) {
+          Print an error message
+       }</pre>
+
+<p>This can be easily coded into Java. By the way, the test as to whether the
+first character on the input line is a digit can be performed using the
+standard <ptype>boolean</ptype>-valued function <code>Character.isDigit(ch)</code>, which
+returns <code>true</code> if the character <code>ch</code> is a digit.</p>
+</exercise-discuss>
+<exercise-code>
+<p><b>The Roman numerals class:</b></p>
+
+<pre><prog name="RomanNumeral">
+    /**
+     * An object of type RomanNumeral is an integer between 1 and 3999.  It can
+     * be constructed either from an integer or from a string that represents
+     * a Roman numeral in this range.  The function toString() will return a
+     * standardized Roman numeral representation of the number.  The function
+     * toInt() will return the number as a value of type int.
+     */
+    public class RomanNumeral {
+    
+       private final int num;   // The number represented by this Roman numeral.
+       
+       /* The following arrays are used by the toString() function to construct
+        * the standard Roman numeral representation of the number.  For each i,
+        * the number numbers[i] is represented by the corresponding string, letters[i].
+        */
+       
+       private static int[]    numbers = { 1000,  900,  500,  400,  100,   90,  
+                                             50,   40,   10,    9,    5,    4,    1 };
+                                          
+       private static String[] letters = { "M",  "CM",  "D",  "CD", "C",  "XC",
+                                           "L",  "XL",  "X",  "IX", "V",  "IV", "I" };
+          
+       /**
+        * Constructor.  Creates the Roman number with the int value specified
+        * by the parameter.  
+        * @throws NumberFormatException if the parameter is not in the range 1 to 3999 inclusive.
+        */
+       public RomanNumeral(int arabic) {
+          if (arabic &lt; 1)
+             throw new NumberFormatException("Value of RomanNumeral must be positive.");
+          if (arabic &gt; 3999)
+             throw new NumberFormatException("Value of RomanNumeral must be 3999 or less.");
+          num = arabic;
+       }
+       
+    
+       /*
+        * Constructor.  Creates the Roman number with the given representation.
+        * For example, RomanNumeral("xvii") is 17.  If the parameter is not a
+        * legal Roman numeral, a NumberFormatException is thrown.  Both upper and
+        * lower case letters are allowed.
+        * @throws NumberFormatException if the parameter is not a legal Roman numeral
+        */
+       public RomanNumeral(String roman) {
+             
+          if (roman.length() == 0)
+             throw new NumberFormatException("An empty string does not define a Roman numeral.");
+             
+          roman = roman.toUpperCase();  // Convert to upper case letters.
+          
+          int i = 0;       // A position in the string, roman;
+          int arabic = 0;  // Arabic numeral equivalent of the part of the string that has
+                           //    been converted so far.
+          
+          while (i &lt; roman.length()) {
+          
+             char letter = roman.charAt(i);        // Letter at current position in string.
+             int number = letterToNumber(letter);  // Numerical equivalent of letter.
+                             
+             i++;  // Move on to next position in the string
+             
+             if (i == roman.length()) {
+                   // There is no letter in the string following the one we have just processed.
+                   // So just add the number corresponding to the single letter to arabic.
+                arabic += number;
+             }
+             else {
+                   // Look at the next letter in the string.  If it has a larger Roman numeral
+                   // equivalent than number, then the two letters are counted together as
+                   // a Roman numeral with value (nextNumber - number).
+                int nextNumber = letterToNumber(roman.charAt(i));
+                if (nextNumber &gt; number) {
+                     // Combine the two letters to get one value, and move on to next position in string.
+                   arabic += (nextNumber - number);
+                   i++;
+                }
+                else {
+                     // Don't combine the letters.  Just add the value of the one letter onto the number.
+                   arabic += number;
+                }
+             }
+             
+          }  // end while
+          
+          if (arabic &gt; 3999)
+             throw new NumberFormatException("Roman numeral must have value 3999 or less.");
+             
+          num = arabic;
+          
+       } // end constructor
+       
+    
+       /**
+        * Find the integer value of letter considered as a Roman numeral.  Throws
+        * NumberFormatException if letter is not a legal Roman numeral.  The letter 
+        * must be upper case.
+        */
+       private int letterToNumber(char letter) {
+          switch (letter) {
+             case 'I':  return 1;
+             case 'V':  return 5;
+             case 'X':  return 10;
+             case 'L':  return 50;
+             case 'C':  return 100;
+             case 'D':  return 500;
+             case 'M':  return 1000;
+             default:   throw new NumberFormatException(
+                          "Illegal character \"" + letter + "\" in Roman numeral");
+          }
+       }
+       
+    
+       /**
+        * Return the standard representation of this Roman numeral.
+        */
+       public String toString() {
+          String roman = "";  // The roman numeral.
+          int N = num;        // N represents the part of num that still has
+                              //   to be converted to Roman numeral representation.
+          for (int i = 0; i &lt; numbers.length; i++) {
+             while (N &gt;= numbers[i]) {
+                roman += letters[i];
+                N -= numbers[i];
+             }
+          }
+          return roman;
+       }
+       
+     
+       /**
+        * Return the value of this Roman numeral as an int.
+        */
+       public int toInt() {
+          return num;
+       }
+     
+       
+    } // end class RomanNumeral
+
+</prog></pre>
+
+<p><b>The main program class:</b></p>
+
+<pre><prog name="RomanConverter">
+    /** 
+     * This program will convert Roman numerals to ordinary arabic numerals
+     * and vice versa.  The user can enter a numerals of either type.  Arabic
+     * numerals must be in the range from 1 to 3999 inclusive.  The user ends
+     * the program by entering an empty line.
+     */
+    public class RomanConverter {
+    
+       public static void main(String[] args) {
+          
+          System.out.println("Enter a Roman numeral and I will convert it to an ordinary");
+          System.out.println("arabic integer.  Enter an integer in the range 1 to 3999");
+          System.out.println("and I will convert it to a Roman numeral.  Press return when");
+          System.out.println("you want to quit.");
+          
+          while (true) {
+    
+             System.out.println();
+             System.out.print("? ");
+             
+             /* Skip past any blanks at the beginning of the input line.
+                Break out of the loop if there is nothing else on the line. */
+             
+             while (TextIO.peek() == ' ' || TextIO.peek() == '\t')
+                TextIO.getAnyChar();
+             if ( TextIO.peek() == '\n' )
+                break;
+                
+             /* If the first non-blank character is a digit, read an arabic
+                numeral and convert it to a Roman numeral.  Otherwise, read
+                a Roman numeral and convert it to an arabic numeral. */
+                
+             if ( Character.isDigit(TextIO.peek()) ) {
+                int arabic = TextIO.getlnInt();
+                try {
+                    RomanNumeral N = new RomanNumeral(arabic);
+                    System.out.println(N.toInt() + " = " + N.toString());
+                }
+                catch (NumberFormatException e) {
+                    System.out.println("Invalid input.");
+                    System.out.println(e.getMessage());
+                }
+             }
+             else {
+                String roman = TextIO.getln();
+                try {
+                    RomanNumeral N = new RomanNumeral(roman);
+                    System.out.println(N.toString() + " = " + N.toInt());
+                }
+                catch (NumberFormatException e) {
+                    System.out.println("Invalid input.");
+                    System.out.println(e.getMessage());
+                }
+             }
+    
+          }  // end while
+          
+          System.out.println("OK.  Bye for now.");
+    
+       }  // end main()
+       
+    } // end class RomanConverter
+</prog></pre>
+</exercise-code>
+</exercise>
+
+
+   
+<exercise id="robustness.ex.4">
+<exercise-question><p>The source code file <sourceref href="Expr.java"/>
+defines a class, <classname>Expr</classname>, that can be
+used to represent mathematical expressions involving the variable <code>x</code>.
+The expression can use the operators <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, 
+and <code>^</code> (where <code>^</code> represents the
+operation of raising a number to a power). It can use mathematical functions
+such as <code>sin</code>, <code>cos</code>, <code>abs</code>, and <code>ln</code>. See the
+source code file for full details. The <classname>Expr</classname> class uses some advanced
+techniques which have not yet been covered in this textbook. However, the
+interface is easy to understand. It contains only a constructor and two public
+methods.</p>
+
+<p>The constructor <code>new Expr(def)</code> creates
+an <classname>Expr</classname> object defined by a given expression. The parameter,
+<code>def</code>, is a string that contains the definition. For example, 
+<code>new&nbsp;Expr("x^2")</code> or <code>new&nbsp;Expr("sin(x)+3*x")</code>. 
+If the parameter in the
+constructor call does not represent a legal expression, then the constructor
+throws an <classname>IllegalArgumentException</classname>. The message in the exception
+describes the error.</p>
+
+<p>If <code>func</code> is a variable of type <code>Expr</code> and <code>num</code> is of
+type <ptype>double</ptype>, then <code>func.value(num)</code>
+is a function that returns the value
+of the expression when the number <code>num</code> is substituted for the variable
+<code>x</code> in the expression. For example, if <code>Expr</code> represents the
+expression <code>3*x+1</code>, then <code>func.value(5)</code> is <code>3*5+1</code>, or
+16. If the expression is undefined for the specified value of <code>x</code>, then
+the special value <code>Double.NaN</code> is returned; no exception is thrown.</p>
+
+<p>Finally, <code>func.toString()</code> returns
+the definition of the expression. This is just the string that was used in the
+constructor that created the expression object.</p>
+
+<p>For this exercise, you should write a program that lets the user enter an
+expression. If the expression contains an error, print an error message.
+Otherwise, let the user enter some numerical values for the variable
+<code>x</code>. Print the value of the expression for each number that the user
+enters. However, if the expression is undefined for the specified value of
+<code>x</code>, print a message to that effect. You can use the
+<ptype>boolean</ptype>-valued function <code>Double.isNaN(val)</code> to check whether a
+number, <code>val</code>, is <code>Double.NaN</code>.</p>
+
+<p>The user should be able to enter as many values of <code>x</code> as desired.
+After that, the user should be able to enter a new expression.</p>
+</exercise-question>
+<exercise-discuss>
+<p>A pseudocode algorithm for the program is given by:</p>
+
+<pre>while (true):
+    Get a line of input from the user
+    if the line is empty:
+       break
+    Convert the input line to an Expr
+    Read and process the user's numbers</pre>
+
+<p>Converting the input line into an object of type <classname>Expr</classname> involves
+calling the constructor from the <classname>Expr</classname> class. This call might generate
+an <classname>IllegalArgumentException</classname>. The algorithm must be expanded to handle
+this exception and print an error message if it occurs. When an error occurs, I
+use a <code>continue</code> statement to jump back to the start of the loop without
+reading any numbers from the user:</p>
+
+<pre>while (true):
+    Get a line of input from the user
+    if the line is empty:
+       break
+    try {
+       Let expression = new Expr(line)
+    }
+    catch (IllegalArgumentException e) {
+       Print an error message
+       continue   // jumps back to start of loop
+    }
+    Read and process the user's numbers</pre>
+
+<p>The last step, reading and processing the user's numbers, expands into a
+loop, which is nested inside the main <code>while</code> loop. In this loop, I
+could use <code>TextIO.getDouble()</code> to read one of the user's numbers, but
+instead I chose to read the user's input into a string and convert that string
+into a value of type <ptype>double</ptype>. This has two advantages: I can end the
+loop when the user presses return. And I can do nicer error handling than the
+default error-handling that is provided by <classname>TextIO</classname>. The conversion from
+a string, <code>line</code>, to a <ptype>double</ptype> is done using a method
+<code>Double.parseDouble(string)</code>. The conversion will
+generate a <classname>NumberFormatException</classname> if the user's input is not a legal
+number. The algorithm for reading and processing the user's numbers
+becomes:</p>
+
+<pre>while (true):
+    Get a line of input from the user
+    if the line is empty:
+       break
+    try {
+       Let x = Double.parseDouble(line)
+    }
+    catch (NumberFormatException e) {
+       Print an error message
+       continue
+    }
+    Let val = expression.value(x)
+    if val is Double.NaN:
+       Print an error message
+    else:
+       Output val</pre>
+
+<np>All this can be easily translated into the complete solution, which
+follows.</np>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="FunctionEvaluator">public class FunctionEvaluator {
+
+   public static void main(String[] args) {
+   
+      String line;      // A line of input read from the user.
+      Expr expression;  // The definition of the function f(x).
+      double x;         // A value of x for which f(x) is to be calculated.
+      double val;       // The value of f(x) for the specified value of x.
+      
+      System.out.println("This program will evaluate a specified function, f(x), at");
+      System.out.println("specified values of the variable x.  The definition of f(x)");
+      System.out.println("can use the operators +, -, *, /, and ^ as well as mathematical");
+      System.out.println("functions such as sin, abs, and ln.");
+      
+      while (true) {
+      
+         /* Get the function from the user.  A line of input is read and
+            used to construct an object of type Expr.  If the input line is
+            empty, then the loop will end, and the program will terminate. */
+ 
+         System.out.println("\n\n\nEnter definition of f(x), or press return to quit.");
+         System.out.print("\nf(x) = ");
+         line = TextIO.getln().trim();
+         if (line.length() == 0)
+            break;
+            
+         try {
+            expression = new Expr(line);
+         }
+         catch (IllegalArgumentException e) {
+                // An error was found in the input.  Print an error
+                //    message and go back to the beginning of the loop.
+            System.out.println("Error!  The definition of f(x) is not valid.");
+            System.out.println(e.getMessage());
+            continue;
+         }
+         
+         /* Read values of x from the user, until the user presses return.
+            If the user's input is not a legal number, print an error message.
+            Otherwise, compute f(x) and print the result. */
+         
+         System.out.println("\nEnter values of x where f(x) is to be evaluated.");
+         System.out.println("Press return to end.");
+         
+         while (true) {
+            System.out.print("\nx = ");
+            line = TextIO.getln().trim();
+            if (line.length() == 0)
+               break;
+            try {
+               x = Double.parseDouble(line);
+            }
+            catch (NumberFormatException e) {
+               System.out.println("\"" + line + "\" is not a legal number.");
+               continue;
+            }
+            val = expression.value(x);
+            if (Double.isNaN(val))
+               System.out.println("f(" + x + ") is undefined.");
+            else
+               System.out.println("f(" + x + ") = " + val);
+         }  // end while
+         
+      } // end while
+      
+      System.out.println("\n\n\nOK.  Bye for now.");
+   
+   }  // end main();
+   
+} // end class FunctionEvaluator
+</prog></pre>
+</exercise-code>
+</exercise>
+
+
+   
+<exercise>
+<exercise-question><p>This exercise uses the
+class <classname>Expr</classname>, which was described in
+<localref href="robustness.ex.4"/> and which is defined in the source code
+file <sourceref href="Expr.java"/>.  For this exercise, you
+should write a GUI program that can graph a function, <code>f(x)</code>, whose
+definition is entered by the user. The program should have a text-input box
+where the user can enter an expression involving the variable <code>x</code>, such
+as <code>x^2</code> or <code>sin(x-3)/x</code>. This expression is the definition of
+the function. When the user presses return in the text input box, the program
+should use the contents of the text input box to construct an object of type
+<classname>Expr</classname>. If an error is found in the definition, then the program should
+display an error message. Otherwise, it should display a graph of the function.
+(Recall: A <code>JTextField</code> generates an <code>ActionEvent</code> when the user
+presses return.)</p>
+
+<p>The program will need a <classname>JPanel</classname> for displaying the graph. To keep
+things simple, this panel should represent a fixed region in the xy-plane,
+defined by <code>-5&nbsp;&lt;=&nbsp;x&nbsp;&lt;=&nbsp;5</code> and
+<code>-5&nbsp;&lt;=&nbsp;y&nbsp;&lt;=&nbsp;5</code>. To draw the graph, compute a
+large number of points and connect them with line segments. (This method does
+not handle discontinuous functions properly; doing so is very hard, so you
+shouldn't try to do it for this exercise.) My program divides the interval
+<code>-5&nbsp;&lt;=&nbsp;x&nbsp;&lt;=&nbsp;5</code> into 300 subintervals and uses
+the 301 endpoints of these subintervals for drawing the graph. Note that the
+function might be undefined at one of these <code>x</code>-values. In that case,
+you have to skip that point.</p>
+
+<p>A point on the graph has the form <code>(x,y)</code> where <code>y</code> is
+obtained by evaluating the user's expression at the given value of <code>x</code>.
+You will have to convert these real numbers to the integer coordinates of the
+corresponding pixel on the canvas. The formulas for the conversion are:</p>
+
+<pre>a  =  (int)( (x + 5)/10 * width );
+b  =  (int)( (5 - y)/10 * height );</pre>
+
+<np>where <code>a</code> and <code>b</code> are the horizontal and vertical coordinates
+of the pixel, and <code>width</code> and <code>height</code> are the width and height
+of the panel.</np>
+
+</exercise-question>
+<exercise-discuss>
+<p>I wrote my solution as a subclass, <classname>SimpleGrapher</classname>,
+of <classname>JPanel</classname> that represents
+the main panel of the program.  The class includes a <code>main()</code> routine
+that makes it possible to run the class as a stand-alone application; <code>main()</code>
+just opens a window and sets its content pane to be a <classname>SimpleGrapher</classname>.
+</p>
+
+<p>My solution uses a nested class, <classname>GraphPanel</classname>, for displaying the graph.
+This class is defined as a subclass of <classname>JPanel</classname>. It has an instance
+variable, <code>func</code>, of type <classname>Expr</classname> that represents the function to
+be drawn. If there is no function, then <code>func</code> is null. This is true
+when the program is first started and when the user's input has been found to be
+illegal. The <code>paintComponent()</code> method checks the value of <code>func</code>
+to decide what to draw. If <code>func</code> is <code>null</code>, then the paint
+method simply draws a message on the panel stating that no function is
+available. Otherwise, it draws a pair of axes and the graph of the
+function.</p>
+
+<p>The interesting work in class <classname>GraphPanel</classname> is done in the
+<code>drawFunction()</code> method, which is called by the
+<code>paintComponent()</code> method. This function draws the graph of the function
+for <code>-5 &lt;= x &lt;= 5</code>. This interval on the <code>x</code> axis is
+divided into 300 subintervals. Since the length of the interval is 10, the
+length of each subinterval is given by <code>dx</code>, where <code>dx</code> is
+<code>10.0/300</code>. The <code>x</code> values for the points that I want to plot are
+given by <code>-5</code>, <code>-5+dx</code>, <code>-5+2*dx</code>, and so on. Each
+<code>x</code>-value is obtained by adding <code>dx</code> to the previous value. For
+each <code>x</code> value, the <code>y</code>-value of the point on the graph is
+computed as <code>func.value(x)</code>. As the points on the graph are computed,
+line segments are drawn to connect pairs of points (unless the <code>y</code>-value
+of either point is undefined). An algorithm for the <code>drawFunction()</code>
+method is:</p>
+
+<pre>Let dx = 10.0 / 300;
+Let x = -5                // Get the first point
+Let y = func.value(x)
+for i = 1 to 300:
+    Let prevx = x         // Save the previous point
+    Let prevy = y
+    Let x = x + dx        // Get the next point
+    Let y = func.value(x)
+    if neither y nor prevy is Double.NaN:
+       draw a line segment from (prevx,prevy) to (x,y)</pre>
+
+<p>The method for drawing the line segment uses the conversion from real
+coordinates to integer pixel coordinates that is given in the exercise. By the
+way, more general conversion formulas can be given in the case where <code>x</code>
+extends from <code>xmin</code> to <code>xmax</code> and <code>y</code> extends from
+<code>ymin</code> to <code>ymax</code>. The general formulas are:</p>
+
+<pre>a  =  (int)( (x - xmin) / (xmax - xmin) * width );
+b  =  (int)( (ymax - y) / (ymax - ymin) * height );</pre>
+
+<np>The formulas for <code>a</code> and <code>b</code> are of slightly different form to
+reflect the fact that <code>a</code> increases from 0 to <code>width</code> as
+<code>x</code> increases from <code>xmin</code> to <code>xmax</code>, while <code>b</code>
+<b>decreases</b> from <code>height</code> to 0 as <code>y</code> increases
+from <code>ymin</code> to <code>ymax</code>. You could improve the program by adding
+text input boxes where the user can enter values for <code>xmin</code>,
+<code>xmax</code>, <code>ymin</code>, and <code>ymax</code>.</np>
+
+<p>In my main panel class, the constructor lays out the components
+in the panel with a <classname>BorderLayout</classname> that has a
+vertical gap, to allow some space between the graph and the components that are
+above it and below it. The "North" component is a <classname>JLabel</classname> that is used
+to display messages to the user. The "South" component holds
+a <classname>JTextField</classname>
+where the user enters the definition of the function. Since I wanted to add a
+label, "<code>f(x)&nbsp;=&nbsp;</code>", next to the text field, I created a
+sub-panel to hold both the label and the text field, and I put the sub-panel
+in the "South" position of the main panel.  Finally, the "Center"
+component of the main panel is the <classname>GraphPanel</classname>
+where the graph is drawn. A listener for <classname>ActionEvents</classname> 
+is registered with the <classname>JTextField</classname>. 
+When the user presses return in the <classname>JTextField</classname>, the listener's
+<code>actionPerformed()</code> method will be called.</p>
+
+<p>The <code>actionPerformed()</code> method gets the user's input
+string from the <code>JTextField</code>. It tries to use this string to construct
+an object of type <code>Expr</code>. The constructor throws an
+<code>IllegalArgumentException</code> if the string contains an error, so the
+constructor is called in a <code>try</code> statement that can catch and handle the
+error. If an error occurs, then the error message in the exception object is
+displayed in the <code>JLabel</code> at the top of the window, and the graph is
+cleared. If no error occurs, the graph is set to display the user's function,
+and the <code>JLabel</code> is set to display the generic message, "Enter a
+function and press return." The code for all this is:</p>
+
+<pre>Expr function;  // The user's function.
+  
+try {
+    String def = functionInput.getText();
+    function = new Expr(def);
+    graph.setFunction(function);
+    message.setText(" Enter a function and press return.");
+}
+catch (IllegalArgumentException e) {
+    graph.clearFunction();
+    message.setText(e.getMessage());
+}</pre>
+   
+<p>(After viewing my program for the first time, I was dissatisfied with the
+appearance of the label at the top. 
+There was no space between the text of the label and
+the gray background of the component. I decided to fix this by adding an
+<classname>EmptyBorder</classname> to the label to allow more space around the text where the
+white background of the label shows through. I also added borders around the main
+panel and around the subpanel that contains the text field.  Borders were covered in
+<localref href="GUI1.7.2"/>)</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="SimpleGrapher">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**
+   The SimpleGrapher program can draw graphs of functions input by the
+   user.  The user enters the definition of the function in a text
+   input box.  When the user presses return, the function is graphed.
+   (Unless the definition contains an error.  In that case, an error
+   message is displayed.)
+   
+   The graph is drawn on a canvas which represents the region of the
+   (x,y)-plane given by  -5 &lt;= x &lt;= 5  and  -5 &lt;= y &lt;= 5.  Any part of
+   the graph that lies outside this region is not shown.  The graph
+   is drawn by plotting 301 points and joining them with lines.  This
+   does not handle discontinuous functions properly.
+   
+   This program requires the class Expr,
+   which is defined in by a separate file, Expr.java.
+   That file contains a full description of the syntax
+   of legal function definitions.
+   
+   This class has a main() routine so that it can be run as an application.
+ */
+
+public class SimpleGrapher extends JPanel {
+   
+   //-- Support for running this class as a stand-alone application --
+   
+   public static void main(String[] args) {
+          // Open a window that shows a SimpleGrapher panel.
+      JFrame window = new JFrame("SimpleGrapher");
+      window.setContentPane( new SimpleGrapher() );
+      window.setLocation(50,50);
+      window.setSize(500,540);
+      window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      window.setVisible(true);
+   }
+      
+   //---------------------------------------------------------------------------------
+
+   private GraphPanel graph;  // The JPanel that will display the graph.
+                              // The nested class GraphPanel is defined below.
+
+   private JTextField functionInput;  // A text input box where the user enters
+                                      // the definition of the function.
+
+   private JLabel message;  // A label for displaying messages to the user,
+                            // including error messages when the function
+                            // definition is illegal.
+
+   public SimpleGrapher() {
+         // Initialize the panel by creating and laying out the components
+         // and setting up an action listener for the text field.
+
+      setBackground(Color.GRAY);
+      setLayout(new BorderLayout(3,3));
+      setBorder(BorderFactory.createLineBorder(Color.GRAY,3));
+
+      graph = new GraphPanel();
+      add(graph, BorderLayout.CENTER);
+
+      message = new JLabel(" Enter a function and press return");
+      message.setBackground(Color.WHITE);
+      message.setForeground(Color.RED);
+      message.setOpaque(true);
+      message.setBorder( BorderFactory.createEmptyBorder(5,0,5,0) );
+      add(message, BorderLayout.NORTH);
+
+      functionInput = new JTextField();
+      JPanel subpanel = new JPanel();
+      subpanel.setLayout(new BorderLayout());
+      subpanel.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
+      subpanel.add(new JLabel("f(x) = "), BorderLayout.WEST);
+      subpanel.add(functionInput, BorderLayout.CENTER);
+      add(subpanel, BorderLayout.SOUTH);
+      
+      functionInput.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent evt) {
+                  // Get the user's function definition from the box and use it
+                  // to create a new object of type Expr.  Tell the GraphPanel to 
+                  // graph this function.  If the  definition is illegal, an 
+                  // IllegalArgumentException is  thrown by the Expr constructor.
+                  // If this happens, the graph is cleared and an error message 
+                  // is displayed in the message label.
+            Expr function;  // The user's function.
+            try {
+               String def = functionInput.getText();
+               function = new Expr(def);
+               graph.setFunction(function);
+               message.setText(" Enter a function and press return.");
+            }
+            catch (IllegalArgumentException e) {
+               graph.clearFunction();
+               message.setText(e.getMessage());
+            }
+            functionInput.selectAll();
+            functionInput.requestFocus();  // Let's user start typing in input box.
+         }
+      });
+
+   }  // end constructor
+
+
+    //   -------------------------- Nested class ----------------------------
+
+   private static class GraphPanel extends JPanel {
+
+      // A object of this class can display the graph of a function
+      // on the region of the (x,y)-plane given by -5 &amp;lt;= x &amp;lt;= 5 and
+      // -5 &amp;lt;= y &amp;lt;= 5.  The graph is drawn very simply, by plotting
+      // 301 points and connecting them with line segments.
+
+
+      Expr func;  // The definition of the function that is to be graphed.
+                  // If the value is null, no graph is drawn.
+
+
+      GraphPanel() {
+             // Constructor.
+         setBackground(Color.WHITE);
+         func = null;
+      }
+
+
+      public void setFunction(Expr exp) {
+             // Set the canvas to graph the function whose definition is
+             // given by the function exp.
+         func = exp;
+         repaint();
+      }
+
+
+      public void clearFunction() {
+             // Set the canvas to draw no graph at all.
+         func = null;
+         repaint();
+      }
+
+
+      public void paintComponent(Graphics g) {
+             // Draw the graph of the function or, if func is null, 
+             // display a message that there is no function to be graphed.
+         super.paintComponent(g); // Fill with background color, white.
+         if (func == null) {
+            g.drawString("No function is available.", 20, 30);
+         }
+         else {
+            g.drawString("y = " + func, 5, 15);
+            drawAxes(g);
+            drawFunction(g);
+         }
+      }
+
+
+      void drawAxes(Graphics g) {
+             // Draw horizontal and vertical axes in the middle of the
+             // canvas.  A 5-pixel border is left at the ends of the axes.
+         int width = getWidth();
+         int height = getHeight();
+         g.setColor(Color.BLUE);
+         g.drawLine(5, height/2, width-5, height/2);
+         g.drawLine(width/2, 5, width/2, height-5);
+      }
+
+
+      void drawFunction(Graphics g) {
+             // Draw the graph of the function defined by the instance 
+             // variable func.  Just plot 301 points with lines 
+             // between them. 
+         
+         double x, y;          // A point on the graph.  y is f(x).
+         double prevx, prevy;  // The previous point on the graph.
+
+         double dx;  // Difference between the x-values of consecutive 
+                     // points on the graph.
+
+         dx  = 10.0 / 300;
+
+         g.setColor(Color.RED);
+
+         /* Compute the first point. */
+
+         x = -5;
+         y = func.value(x);
+
+         /* Compute each of the other 300 points, and draw a line segment
+               between each consecutive pair of points.  Note that if the
+               function is undefined at one of the points in a pair, then 
+               the line segment is not drawn.  */
+
+         for (int i = 1; i &lt;= 300; i++) {
+
+            prevx = x;           // Save the coords of the previous point.
+            prevy = y;
+
+            x += dx;            // Get the coords of the next point.
+
+            y = func.value(x);
+
+            if ( (! Double.isNaN(y)) &amp;&amp; (! Double.isNaN(prevy)) ) {
+                   // Draw a line segment between the two points.
+               putLine(g, prevx, prevy, x, y);
+            }
+
+         }  // end for
+
+      }  // end drawFunction()
+
+
+      void putLine(Graphics g, double x1, double y1, 
+                                   double x2, double y2) {
+                // Draw a line segment from the point (x1,y1) to (x2,y2).
+                // These real values must be scaled to get the integer 
+                // coordinates of the corresponding pixels.
+
+         int a1, b1;   // Pixel coordinates corresponding to (x1,y1).
+         int a2, b2;   // Pixel coordinates corresponding to (x2,y2).
+
+         int width = getWidth();     // Width of the canvas.
+         int height = getHeight();   // Height of the canvas. 
+
+         a1 = (int)( (x1 + 5) / 10 * width );
+         b1 = (int)( (5 - y1) / 10 * height );
+         a2 = (int)( (x2 + 5) / 10 * width );
+         b2 = (int)( (5 - y2) / 10 * height );
+
+         if (Math.abs(y1) &lt; 30000 &amp;&amp; Math.abs(y2) &lt; 30000) {
+                // Only draw lines for reasonable y-values.
+                // This should not be necessary, I think,
+                // but I got a problem when y was very large.)
+            g.drawLine(a1,b1,a2,b2);
+         }
+
+      }  // end putLine()
+
+   }  // end nested class GraphPanel
+
+
+} // end class SimpleGrapher
+</prog></pre>
+</exercise-code>
+</exercise>
+
+   
+</exercises>

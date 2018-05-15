@@ -1,0 +1,2098 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE exercises SYSTEM "../javanotes7.dtd" >
+
+<exercises>
+
+<exercise>
+<exercise-question><p>Rewrite the <classname>PhoneDirectory</classname> class
+from <localref href="arrays.4.2"/> so that it uses a <classname>TreeMap</classname>
+to store directory entries, instead of an array.  (Doing this was suggested
+in <localref href="generics.3.1"/>.)</p>
+</exercise-question>
+<exercise-discuss><p>The class that you are asked to write for this exercise
+really is very trivial.  Everything that the class needs to do is already done
+by the <classname>TreeMap</classname> class, and <classname>TreeMap</classname>
+does much more besides.  In fact the only reason to write the <classname>PhoneDirectory</classname>
+class is to <b>hide</b> a lot of the capabilities of <classname>TreeMaps</classname>.
+A <classname>PhoneDirectory</classname> object is a "thin wrapper" around a <classname>TreeMap</classname>
+object.  It allows only the operations <code>getNumber(name)</code> and
+<code>putNumber(name,number)</code>.  Each of these can be implemented in a single line,
+as a call to one of the methods in the <classname>TreeMap</classname>.  The
+<classname>PhoneDirectory</classname> does provide nice, meaningful names
+for the methods, and it adds a check to the implementation of <code>putNumber(name,number)</code>
+to ensure that <code>name</code> and <code>number</code> are not <code>null</code>.</p>
+<p>It would be nice for phone directories to have a few more capabilities.  A method for
+listing the contents of the directory would be especially nice, so I have added one
+to my class even though there was no such method in the original <classname>PhoneDirectory</classname>
+class.  The print method uses a for-each loop to iterate through the entry set of
+the phone directory. It is very similar to examples in <localref href="generics.3.2"/>
+Even with this addition, though, the <classname>PhoneDirectory</classname> class is
+still very far from being useful in real applications.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="PhoneDirectoryWithTreeMap">import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * A phone directory holds a list of names with a phone number for
+ * each name.  It is possible to find the number associated with
+ * a given name, and to specify the phone number for a given name.
+ * (This version of the class uses a TreeMap to store the data.)
+ */
+public class PhoneDirectoryWithTreeMap {
+
+
+/**
+ * The TreeMap that will store the data.  Both key and value are
+ * of type String.  The key represents a name and the value represents
+ * the associated phone number.
+ */
+private TreeMap&lt;String,String&gt; data;
+   
+   
+   /**
+    * Constructor creates an initially empty directory.
+    */
+   public PhoneDirectoryWithTreeMap() {
+      data = new TreeMap&lt;String,String&gt;();
+   }
+   
+   
+   /**
+    * Finds the phone number, if any, for a given name.
+    * @return The phone number associated with the name; if the name does
+    *    not occur in the phone directory, then the return value is null.
+    */
+   public String getNumber( String name ) {
+         return data.get(name);
+   }
+
+   
+   /**
+    * Associates a given name with a given phone number.  If the name
+    * already exists in the phone directory, then the new number replaces
+    * the old one.  Otherwise, a new name/number pair is added.  The
+    * name and number should both be non-null.  An IllegalArgumentException
+    * is thrown if this is not the case.
+    */
+   public void putNumber( String name, String number ) {
+      if (name == null || number == null)
+          throw new IllegalArgumentException("name and number cannot be null");
+      data.put(name,number);
+   }
+   
+   
+   /**
+    *  Write the contents of the phone directory to System.out.
+    */
+   public void print() {
+      for ( Map.Entry&lt;String,String&gt; entry : data.entrySet() )
+         System.out.println( entry.getKey() + ":  " + entry.getValue() );
+   }
+
+} // end class PhoneDirectoryWithTreeMap
+
+</prog></pre>
+
+<p>Here is a very small program to test the class:</p>
+
+<pre><prog name="TestPhoneDirectoryWithTreeMap">
+public class TestPhoneDirectoryWithTreeMap {
+
+   public static void main(String[] args) {
+       PhoneDirectoryWithTreeMap directory = new PhoneDirectoryWithTreeMap();
+       System.out.println("This program creates a PhoneDirectoryWithTreeMap and");
+       System.out.println("adds several entries.  It then prints the contents of");
+       System.out.println("directory and does a few lookups.");
+       System.out.println();
+       directory.putNumber("Fred","555-1234");
+       directory.putNumber("Barney","555-2345");
+       directory.putNumber("Wilma","555-3456");
+       System.out.println("Contents are:");
+       System.out.println();
+       directory.print();
+       System.out.println();
+       System.out.println("Number for Fred is " + directory.getNumber("Fred"));
+       System.out.println("Number for Wilma is " + directory.getNumber("Wilma"));
+       System.out.println("Number for Tom is " + directory.getNumber("Tom"));
+          // The output from the last line should be null.
+   }
+
+}
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+   
+<exercise id="generics.ex.2">
+<exercise-question><p>In mathematics, several
+operations are defined on sets. The <newword>union</newword> of two
+sets A and B is a set that contains all the elements that are in A together
+with all the elements that are in B. The <newword>intersection</newword> 
+of A and B is the set that contains elements that
+are in both A and B. The <newword>difference</newword> of A and B is
+the set that contains all the elements of A <b>except</b> for those elements
+that are also in&nbsp;B.</p>
+
+<p>Suppose that <code>A</code> and <code>B</code> are variables of type <code>set</code> in
+Java. The mathematical operations on <code>A</code> and <code>B</code> can be computed
+using methods from the <classname>Set</classname> interface. In particular: 
+<code>A.addAll(B)</code> computes the <i>union</i> of <code>A</code> and <code>B</code>;
+<code>A.retainAll(B)</code> computes the <i>intersection</i> of <code>A</code> and
+<code>B</code>; and <code>A.removeAll(B)</code> computes the <i>difference</i> of <code>A</code>
+and <code>B</code>. (These operations change the contents of the set <code>A</code>,
+while the mathematical operations create a new set without changing <code>A</code>,
+but that difference is not relevant to this exercise.)</p>
+
+<p>For this exercise, you should write a program that can be used as a "set
+calculator" for simple operations on sets of non-negative integers. (Negative
+integers are not allowed.) A set of such integers will be represented as a list
+of integers, separated by commas and, optionally, spaces and enclosed in square
+brackets. For example: <code>[1,2,3]</code> or
+<code>[17,&nbsp;42,&nbsp;9,&nbsp;53,&nbsp;108]</code>. The characters <code>+</code>,
+<code>*</code>, and <code>-</code> will be used for the union, intersection, and
+difference operations. The user of the program will type in lines of input
+containing two sets, separated by an operator. The program should perform the
+operation and print the resulting set. Here are some examples:</p>
+
+<pre>          Input                                 Output
+         -------------------------           -------------------
+          [1, 2, 3] + [3,  5,  7]             [1, 2, 3, 5, 7]
+          [10,9,8,7] * [2,4,6,8]              [8]
+          [ 5, 10, 15, 20 ] - [ 0, 10, 20 ]   [5, 15]</pre>
+
+<p>To represent sets of non-negative integers, use 
+sets of type <classname>TreeSet&lt;Integer&gt;</classname>. Read the user's input,
+create two <classname>TreeSets</classname>, and use the appropriate <classname>TreeSet</classname> method
+to perform the requested operation on the two sets. Your program should be able
+to read and process any number of lines of input. If a line contains a syntax
+error, your program should not crash. It should report the error and move on to
+the next line of input. (Note: To print out a <classname>Set</classname>, <code>A</code>, of
+<classname>Integers</classname>, you can just say <code>System.out.println(A)</code>. I've chosen
+the syntax for sets to be the same as that used by the system for outputting a
+set.)</p>
+</exercise-question>
+<exercise-discuss><p>This program would be <b>much</b> easier to write if we could assume that
+the user's input was in the correct format. Unfortunately, the exercise says
+that we have to detect errors in the user's input and handle them by printing
+error messages. To do this we have to constantly look ahead while reading the
+user's input, to see whether the input agrees with what we are expecting. The
+techniques for doing this were covered for the example 
+<sourceref chapter="8" href="LengthConverter2.java"/> from <localref href="robustness.2.2"/>.
+We can use the function <code>TextIO.peek()</code>
+to look ahead at the next character in the user's input. We need to be able
+to skip past any blanks in the input.  Instead of writing my own method to do
+that, I use the method <code>TextIO.skipBlanks()</code> in my program.</p>
+
+
+<p>My program uses exceptions to handle
+the errors. Exceptions make it possible to organize the error-handling code in
+a straightforward way. When an error is discovered, an exception is thrown. The
+main program uses a <code>try..catch</code> statement to try to process one line
+of input. If an error occurs, the program does not crash. The error is caught,
+an error message is printed, and the program continues. I throw an error of
+type <classname>IllegalArgumentException</classname> when an error is found. This exception
+is a standard part of Java, but it might be better style to define a new error
+class to represent the specific type of error that occurs in this program.</p>
+
+<p>My program uses a method named <code>calc()</code> to read and process one line
+of input. This method in turn uses another method, <code>readSet()</code> to read
+each of the two sets of integers from the input line. Without error handling,
+an algorithm for <code>readSet()</code> would be:</p>
+
+<pre>Start with an empty set.
+Read the '[' that begins the set.
+Repeat:
+   Read the next number and add it to the set.
+   If the next character is ']':
+      break.
+   Read the comma that separates one number from the next.
+Read the ']'.
+Return the set.</pre>
+
+<np>To turn this into a robust routine, we just have to check, before reading
+anything, that the next character is legal. If not, throw an exception. This
+adds a lot of code, but the nice thing about throwing exceptions is that it
+doesn't disturb the logical flow of the routine.</np>
+
+<p>There is one possible bug in the algorithm. It assumes that there is at
+least one number in the set. But in mathematics, a set can be empty. I decided
+to allow for the possibility of empty sets in my program. See the solution,
+below.</p>
+
+<p>An algorithm for the <code>calc()</code> method is even more straightforward.
+Again, the basic algorithm ignores the possibility of errors:</p>
+
+<pre>Read the first set, A.
+Read the operator.
+Read the second set, B.
+if the operator is '+'
+   A.addAll(B)  // Sets A equal to the union of A and B.
+else if the operator is '*'
+   A.retainAll(B)  // Sets A to the intersection.
+else
+   A.removeAll(B)  // Sets A to the difference.
+Print A.</pre>
+
+<np>In the program, an error check has to be added to make sure that there is a legal operator
+in the correct position. I also add an error check to make sure that there is
+no extra data on the line.</np>
+</exercise-discuss>
+<exercise-code>
+<pre>
+<prog name="SetCalc">import java.util.TreeSet;
+
+
+/**
+ * This program is a very simple "set calculator" that can compute
+ * the intersection, union, and set difference of two sets of 
+ * non-negative integers.  Each line of the user's input contains two 
+ * such sets, separated by one of the operators +, *, or -, standing
+ * for union, intersection, and set difference respectively.  A set
+ * must be given in the form of a list of non-negative integers, separated
+ * by commas, and enclosed in square brackets.  For example:
+ * [1, 2, 3] + [4, 3, 10, 0].  Spaces can occur anywhere in the input.
+ * If an error is found in the input, the program will report it.
+ * The program ends when the user inputs an empty line.
+ *
+ * This program is mainly a demonstration of Sets.
+ */
+
+
+public class SetCalc {
+
+   public static void main(String[] args) {
+
+      System.out.println("This program will compute union, intersection,");
+      System.out.println("and set difference of sets of integers.");
+      System.out.println("");
+      System.out.println("");
+      System.out.println("Enter set computations (press return to end):");
+
+      while (true) {
+         char ch;
+         System.out.print("\n? ");
+         TextIO.skipBlanks();
+         if (TextIO.peek() == '\n') {
+               // The input line is empty.  
+               // Exit the loop and end the program.
+            break;
+         }
+         try {
+            calc(); // Reads and processes one line of input.
+         }
+         catch (IllegalArgumentException e) {
+               // An error was found in the input line.
+            System.out.println("Error in input: " + e.getMessage());
+            System.out.print("Discarding input: ");
+         }
+         do {  // Copy extra characters on line to output.  If there 
+               // was no error, then the only character that is copied
+               // is the end-of-line character.
+            ch = TextIO.getAnyChar();
+            System.out.print(ch);
+         } while (ch != '\n');
+      }
+
+   } // end main()
+
+
+   /**
+    * Read a line of input, consisting of two sets separated by
+    * an operator.  Perform the operation and output the value.
+    * If any syntax error is found in the input, an
+    * IllegalArgumentException is thrown
+    */
+   private static void calc() {
+
+      TreeSet&lt;Integer&gt; A, B;  // The two sets of integers.
+      char op;                // The operator, +, *, or -.
+
+      A = readSet(); // Read the first set.
+
+      TextIO.skipBlanks();
+      if (TextIO.peek() != '*' &amp;&amp; TextIO.peek() != '+' 
+                                         &amp;&amp; TextIO.peek() != '-')
+         throw new IllegalArgumentException(
+         "Expected *, +, or  - after first set.");
+      op = TextIO.getAnyChar(); // Read the operator.
+
+      B = readSet(); // Read the second set.
+
+      TextIO.skipBlanks();
+      if (TextIO.peek() != '\n')
+         throw new IllegalArgumentException("Extra unexpected input.");
+
+      // Perform the operation.  This modifies set A to represent
+      // the answer.  Display the answer by printing out A. The
+      // output format for a set of integers is the same as the
+      // input format used by this program.
+
+      if (op == '+')
+         A.addAll(B);     // Union.
+      else if (op == '*')
+         A.retainAll(B);  // Intersection.
+      else
+         A.removeAll(B);  // Set difference.
+      
+      System.out.print("Value:  " + A);
+
+   } // end calc()
+
+
+   /**
+    * Reads a set of non-negative integers from standard input,
+    * and stores them in a TreeSet that contains objects belonging
+    * to the wrapper class Integer.  The set must be enclosed
+    * between square brackets and must contain a list of zero or
+    * more non-negative integers, separated by commas.  Spaces 
+    * are allowed anywhere.  If the input is not of the correct
+    * form, an IllegalArgumentException is thrown.
+    */
+   private static TreeSet&lt;Integer&gt; readSet() {
+
+      TreeSet&lt;Integer&gt; set = new TreeSet&lt;Integer&gt;();  // The set that will be read.
+
+      TextIO.skipBlanks();
+      if (TextIO.peek() != '[')
+         throw new IllegalArgumentException("Expected '[' at start of set.");
+      TextIO.getAnyChar(); // Read the '['.
+
+      TextIO.skipBlanks();
+      if (TextIO.peek() == ']') {
+            // The set has no integers.  This is the empty set, which
+            // is legal.  Return the value.
+         TextIO.getAnyChar(); // Read the ']'.
+         return set;
+      }
+
+      while (true) {
+            // Read the next integer and add it to the set.
+         TextIO.skipBlanks();
+         if (! Character.isDigit(TextIO.peek()))
+            throw new IllegalArgumentException("Expected an integer.");
+         int n = TextIO.getInt(); // Read the integer.
+         set.add( new Integer(n) );
+         TextIO.skipBlanks();
+         if (TextIO.peek() == ']')
+            break;  // ']' marks the end of the set.
+         else if (TextIO.peek() == ',')
+            TextIO.getAnyChar(); // Read a comma and continue.
+         else
+            throw new IllegalArgumentException("Expected ',' or ']'.");
+      }
+
+      TextIO.getAnyChar(); // Read the ']' that ended the set.
+
+      return set;
+
+   } // end readSet()
+
+
+} // end class SetCalc
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+<exercise>
+<exercise-question><p>The fact that Java has a
+<classname>HashMap</classname> class means that no Java programmer has to write an
+implementation of hash tables from scratch&mdash;unless, of course, that programmer is a
+computer science student.</p>
+<p>For this exercise, you should write a hash table in which both the keys and the values are of
+type <classname>String</classname>.  (This is not an exercise in generic programming;
+do not try to write a generic class.)
+Write an implementation of hash tables from scratch. Define the following
+methods: <code>get(key)</code>, <code>put(key,value)</code>, <code>remove(key)</code>,
+<code>containsKey(key)</code>, and <code>size()</code>. 
+Remember that every object, <code>obj</code>, has a method <code>obj.hashCode()</code>
+that can be used for computing a hash code for the object,
+so at least you don't have to define your own hash function. 
+Do not use <b>any</b> of Java's built-in generic types; create your own linked
+lists using nodes as covered in <localref href="recursion.2.2"/>.  However,
+you do <b>not</b> have to worry about increasing the size of the table when
+it becomes too full.</p>
+<p>You should also write a short program to test your solution.</p>
+</exercise-question>
+<exercise-discuss><p>Hash tables are discussed in <localref href="generics.3.3"/>.
+A hash table is just an array of linked lists. Each linked list holds all
+the items in the table that share the same hash code. Initially, all the lists
+are empty (represented as <code>null</code> in the array). We need to be able to
+add and delete items in the list. Methods for inserting and deleting
+items can be found in <localref href="recursion.2.2"/>.
+In a hash table, the order of items in a particular
+list doesn't matter, so I simply insert each new item at the beginning of the
+list. This makes the insert operation fairly simple. Deletion, however, is more
+complicated, since we need to be able to delete an item no matter where it
+occurs in a list.</p>
+
+<p>A hash table really contains pairs of items, where each pair consists of a
+key and an associated value.  To implement this, I use linked lists in which
+each node contains both a key 
+and a value, as well as the pointer to the next node in the list. The
+end of a list is marked, as usual, by a <code>null</code> pointer. The nodes are
+defined by a static nested class:</p>
+
+<pre>private static class ListNode {
+   String key;
+   String value;
+   ListNode next;
+}</pre>
+
+<np>The array of linked lists that stores all the data is of type
+<atype>ListNode[]</atype>. Each item in the array is either <code>null</code> to indicate
+an empty list, or it is a pointer to the first node in a linked list.</np>
+
+<p>Given any key, we can find the linked list that should contain that key by
+looking at the hash code of the key. The code computed by calling
+<code>key.hashCode()</code> is of type <ptype>int</ptype>. We need a value that is in the
+range of legal indices for the array. As noted in <localref href="generics.3.3"/>,
+the value can be computed as <code>Math.abs(key.hashCode())&nbsp;%&nbsp;table.length</code>, 
+where <code>table</code> is the array.</p>
+
+<p>The hash code is used in all the methods that deal with keys, to decide which
+linked list to look at. Once a list has been selected, the operations on the
+list are pretty straightforward (given all the information and code in <localref href="recursion.2.2"/>), 
+so I will not discuss them further here. You can look at the solution, below.</p>
+
+<p>Although it is not required by the exercise, I defined a <code>resize()</code>
+method that is used to increase the size of the table when the table becomes
+too full. I call this method in the <code>put()</code> method when the table
+becomes more than 3/4 full.</p>
+
+<p>A major part of developing a class for general use is testing. It's
+important to design a testing procedure that will test all aspects of the
+class. For this problem, I wrote a testing program that would allow me to test
+each of the methods in the class. I also added a method <code>dump()</code> to the
+class; this method displays the entire hash table. This method does not really belong
+in the class, since users of a hash table shouldn't care how the data is
+stored. But I needed it to make sure that my <code>resize()</code> method is
+working properly and that I could delete items correctly from all positions in
+the lists (beginning, middle, and end).</p>
+   
+<p>By the way, you might be tempted to try to write a generic version of
+<classname>HashTable</classname> in which the types of the keys and values are
+given as type parameters in the definition of the class.  Unfortunately, you
+would run into problems as soon as you tried to use an array in your class.
+Generic classes don't work well with arrays, because arrays of generic type
+can't be created at run time, as noted in <localref href="generics.1.3"/>.</p>
+</exercise-discuss>
+<exercise-code><p><b><u>The HashTable Class</u></b></p>
+<pre><prog name="HashTable">/**
+ * This file defines a HashTable class.  Keys and values in the table are of 
+ * type String.  Keys cannot be null.  The default constructor creates a table 
+ * that initially has 64 locations, but a different initial size can be specified 
+ * as a parameter to the constructor.  The table increases in size if it 
+ * becomes more than 3/4 full; to help implement this, a count of the number
+ * of items in the hash table is kept in an instance variable.
+ */
+public class HashTable {
+
+   /**
+    * Keys that have the same hash code are placed together in a linked list.  
+    * This private nested class is used internally to implement linked lists.  
+    * A ListNode holds a (key,value) pair.  
+    */
+   private static class ListNode {
+      String key;
+      String value;
+      ListNode next;  // Pointer to next node in the list;
+                      // A null marks the end of the list.
+   }
+
+   private ListNode[] table;  // The hash table, represented as
+                              // an array of linked lists.
+
+   private int count;  // The number of (key,value) pairs in the
+                       // hash table.
+
+   
+   /**
+    * Create a hash table with an initial size of 64.
+    */
+   public HashTable() {
+      table = new ListNode[64];
+   }
+
+   
+   /**
+    * Create a hash table with a specified initial size.
+    * Precondition: initalSize &gt; 0.
+    */
+   public HashTable(int initialSize) {
+      if (initialSize &lt;= 0)
+         throw new IllegalArgumentException("Illegal table size");
+      table = new ListNode[initialSize];
+   }
+
+   
+   /**
+    * This method is NOT part of the usual interface for a hash table.  
+    * It is here only to be used for testing purposes, and should be 
+    * removed before the class is released for general use.  This 
+    * lists the (key,value) pairs in each location of the table.
+    */
+   void dump() {
+      System.out.println();
+      for (int i = 0; i &lt; table.length; i++) {
+             // Print out the location number and the list of
+             // key/value pairs in this location.
+         System.out.print(i + ":");
+         ListNode list = table[i]; // For traversing linked list number i.
+         while (list != null) {
+            System.out.print("  (" + list.key + "," + list.value + ")");
+            list = list.next;
+         }
+         System.out.println();
+      }
+   } // end dump()
+
+   
+   /**
+    * Associate the specified value with the specified key.
+    * Precondition:  The key is not null.
+    */
+   public void put(String key, String value) {
+      
+      assert key != null : "The key must be non-null";
+      
+      int bucket = hash(key); // Which location should this key be in?
+      
+      ListNode list = table[bucket]; // For traversing the linked list
+                                     // at the appropriate location.
+      while (list != null) {
+            // Search the nodes in the list, to see if the key already exists.
+         if (list.key.equals(key))
+            break;
+         list = list.next;
+      }
+      
+      // At this point, either list is null, or list.key.equals(key).
+      
+      if (list != null) {
+            // Since list is not null, we have found the key.
+            // Just change the associated value.
+         list.value = value;
+      }
+      else {
+             // Since list == null, the key is not already in the list.
+             // Add a new node at the head of the list to contain the
+             // new key and its associated value.
+         if (count &gt;= 0.75*table.length) {
+               // The table is becoming too full.  Increase its size
+               // before adding the new node.
+            resize();
+            bucket = hash(key);  // Recompute hash code, since it
+                                 // depends on the table size.
+         }
+         ListNode newNode = new ListNode();
+         newNode.key = key;
+         newNode.value = value;
+         newNode.next = table[bucket];
+         table[bucket] = newNode;
+         count++;  // Count the newly added key.
+      }
+   }
+
+   
+   /**
+    * Retrieve the value associated with the specified key in the table, 
+    * if there is any.  If not, the value null will be returned.
+    * @param key The key whose associated value we want to find
+    * @return the associated value, or null if there is no associated value
+    */
+   public String get(String key) {
+      
+      int bucket = hash(key);  // At what location should the key be?
+      
+      ListNode list = table[bucket];  // For traversing the list.
+      while (list != null) {
+            // Check if the specified key is in the node that
+            // list points to.  If so, return the associated value.
+         if (list.key.equals(key))
+            return list.value;
+         list = list.next;  // Move on to next node in the list.
+      }
+      
+      // If we get to this point, then we have looked at every
+      // node in the list without finding the key.  Return
+      // the value null to indicate that the key is not in the table.
+      
+      return null;  
+   }
+
+   
+   /**
+    * Remove the key and its associated value from the table,
+    * if the key occurs in the table.  If it does not occur,
+    * then nothing is done.
+    */
+   public void remove(String key) {  
+      
+      int bucket = hash(key);  // At what location should the key be?
+      
+      if (table[bucket] == null) {
+            // There are no keys in that location, so key does not
+            // occur in the table.  There is nothing to do, so return.
+         return; 
+      }
+      
+      if (table[bucket].key.equals(key)) {
+            // If the key is the first node on the list, then
+            // table[bucket] must be changed to eliminate the
+            // first node from the list.
+         table[bucket] = table[bucket].next;
+         count--; // Remove new number of items in the table.
+         return;
+      }
+      
+      // We have to remove a node from somewhere in the middle
+      // of the list, or at the end.  Use a pointer to traverse
+      // the list, looking for a node that contains the
+      // specified key, and remove it if it is found.
+      
+      ListNode prev = table[bucket];  // The node that precedes
+                                      // curr in the list.  Prev.next
+                                      // is always equal to curr.
+      ListNode curr = prev.next;  // For traversing the list,
+                                  // starting from the second node.
+      while (curr != null &amp;&amp; ! curr.key.equals(key)) {
+         curr = curr.next;
+         prev = curr;
+      }
+      
+      // If we get to this point, then either curr is null,
+      // or curr.key is equal to key.  In the latter case,
+      // we have to remove curr from the list.  Do this
+      // by making prev.next point to the node after curr,
+      // instead of to curr.  If curr is null, it means that
+      // the key was not found in the table, so there is nothing
+      // to do.
+      
+      if (curr != null) {
+         prev.next = curr.next;
+         count--;  // Record new number of items in the table.
+      }
+   }
+
+   
+   /**
+    * Test whether the specified key has an associated value in the table.
+    * @param key The key that we want to search for.
+    * @return true if the key exists in the table, false if not
+    */
+   public boolean containsKey(String key) {
+      
+      int bucket = hash(key);  // In what location should key be?
+      
+      ListNode list = table[bucket];  // For traversing the list.
+      while (list != null) {
+            // If we find the key in this node, return true.
+         if (list.key.equals(key))
+            return true;
+         list = list.next;
+      }
+      
+      // If we get to this point, we know that the key does
+      // not exist in the table.
+      
+      return false;
+   }
+
+   
+   /**
+    * Return the number of key/value pairs in the table.
+    */
+   public int size() {
+      return count;
+   }
+
+
+   /**
+    * Compute a hash code for the key; key cannot be null.
+    * The hash code depends on the size of the table as
+    * well as on the value returned by key.hashCode().
+    */
+   private int hash(Object key) {
+      return (Math.abs(key.hashCode())) % table.length;
+   }
+
+   
+   /**
+    * Double the size of the table, and redistribute the
+    * key/value pairs to their proper locations in the
+    * new table.
+    */
+   private void resize() {
+      ListNode[] newtable = new ListNode[table.length*2];
+      for (int i = 0; i &lt; table.length; i++) {
+             // Move all the nodes in linked list number i into the new table.  
+             // No new ListNodes are created.  The existing ListNode for each
+             // key/value pair is moved to the newtable.  This is done by 
+             // changing the "next" pointer in the node and by making a pointer 
+             // in the new table point to the node.
+         ListNode list = table[i]; // For traversing linked list number i.
+         while (list != null) {
+               // Move the node pointed to by list to the new table.
+            ListNode next = list.next;  // The is the next node in the list.
+               // Remember it, before changing the value of list!
+            int hash = (Math.abs(list.key.hashCode())) % newtable.length;
+               // hash is the hash code of list.key that is 
+               // appropriate for the new table size.  The
+               // next two lines add the node pointed to by list
+               // onto the head of the linked list in the new table
+               // at position number hash.
+            list.next = newtable[hash];
+            newtable[hash] = list;
+            list = next;  // Move on to the next node in the OLD table.
+         }
+      }
+      table = newtable;  // Replace the table with the new table.
+   } // end resize()
+   
+
+} // end class HashTable
+
+</prog></pre>
+<p><b><u>A Class for Testing:</u></b></p>
+<pre>
+<prog name="TestHashTable">/**
+ * A little program to test the HashTable class.  Note that I
+ * start with a really small table so that I can easily test
+ * the resize() method.
+ */
+
+public class TestHashTable {
+
+   public static void main(String[] args){
+      HashTable table = new HashTable(2);  // Initial size of table is 2.
+      String key,value;
+      while (true) {
+         System.out.println("\nMenu:");
+         System.out.println("   1. test put(key,value)");
+         System.out.println("   2. test get(key)");
+         System.out.println("   3. test containsKey(key)");
+         System.out.println("   4. test remove(key)");
+         System.out.println("   5. show complete contents of hash table.");
+         System.out.println("   6. EXIT");
+         System.out.print("Enter your command:  ");
+         switch ( TextIO.getlnInt()) {
+         case 1:
+            System.out.print("\n   Key = ");
+            key = TextIO.getln();
+            System.out.print("   Value = ");
+            value = TextIO.getln();
+            table.put(key,value);
+            break;         
+         case 2:
+            System.out.print("\n   Key = ");
+            key = TextIO.getln();
+            System.out.println("   Value is " + table.get(key));
+            break;         
+         case 3:
+            System.out.print("\n   Key = ");
+            key = TextIO.getln();
+            System.out.println("   containsKey(" + key + ") is " 
+                  + table.containsKey(key));
+            break;         
+         case 4:
+            System.out.print("\n   Key = ");
+            key = TextIO.getln();
+            table.remove(key);
+            break;         
+         case 5:
+            table.dump();
+            break;
+         case 6:
+            return;  // End program by returning from main()         
+         default:
+            System.out.println("   Illegal command.");
+         break;
+         }
+         System.out.println("\nHash table size is " + table.size());
+      }
+   }
+
+} // end class TestHashTable
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+
+<exercise>
+<exercise-question><p>A <newword>predicate</newword> is a boolean-valued function with one parameter.
+Some languages use predicates in generic programming. Java&nbsp;7 doesn't, but this
+exercise looks at how predicates might work. </p>
+
+<p>In Java, we could implement "predicate objects" by defining a generic interface:</p>
+
+<pre>public interface Predicate&lt;T&gt; {
+    public boolean test( T obj );
+}</pre>
+
+<p>The idea is that an object that implements this interface knows how to
+"test" objects of type <classname>T</classname>
+in some way.   Define a class that contains 
+the following generic static methods for working with predicate objects.
+The name of the class should be <classname>Predicates</classname>, in analogy
+with the standard class <classname>Collections</classname> that provides various
+<code>static</code> methods for working with collections.</p>
+
+<pre>public static &lt;T&gt; void remove(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred)
+   // Remove every object, obj, from coll for which
+   // pred.test(obj) is true.
+   
+public static &lt;T&gt; void retain(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred)
+   // Remove every object, obj, from coll for which
+   // pred.test(obj) is false.  (That is, retain the
+   // objects for which the predicate is true.)
+   
+public static &lt;T&gt; List&lt;T&gt; collect(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred)
+   // Return a List that contains all the objects, obj,
+   // from the collection, coll, such that pred.test(obj)
+   // is true.
+   
+public static &lt;T&gt; int find(ArrayList&lt;T&gt; list, Predicate&lt;T&gt; pred)
+   // Return the index of the first item in list
+   // for which the predicate is true, if any.
+   // If there is no such item, return -1.</pre>
+   
+<np>(In C++, methods similar to these are included as a standard part of the
+generic programming framework.  And Java&nbsp;8 has a similar predicate interface,
+and the <classname>Collections</classname> class has a <code>removeIf()</code> method
+that uses a predicate.)</np>
+</exercise-question>
+<exercise-discuss><p>The code for this exercise is pretty short, but it
+involves some advanced ideas, including methods with bounded type parameters
+(from <localref href="generics.5.4"/>).  Aside from that,
+the main point of the exercise is to introduce predicates and show how they might
+be useful in generic programming. The operation of finding all the items in a
+collection that satisfy some condition is very common. The code to do it is not
+hard to write, but even so, it is nice to have it done once and for all. In this
+exercise, the condition that the items have to satisfy is represented as a
+<classname>Predicate</classname>. The <code>collect()</code> method provides a general way to
+find all the items that satisfy the condition. The items are dumped into a
+collection, which can then be processed further if necessary. If I wanted to
+carry this generic programming thing even further, I would define another
+interface:</p>
+
+<pre>public interface Processor&lt;T&gt; {
+   public void process( T obj );
+}</pre>
+
+<np>and define a generic method for applying a <classname>Processor</classname> object to each
+item in a collection. With <classname>Predicates</classname> and <classname>Processors</classname> in hand,
+it would hardly ever be necessary to write a loop for iterating through all the
+items in a collection.</np>
+
+<break/>
+
+<p>The implementation of the <code>collect()</code> method simply uses a
+for-each loop to go through the collection, <code>coll</code>, and puts every
+item that satisfies the predicate into a list. The method returns an object of
+type <classname>List</classname>, but <classname>List</classname> is only an interface. Any real list must
+belong to one of the classes that implement this interface, such as
+<classname>LinkedList</classname> or <classname>ArrayList</classname>. I create the list as an
+<classname>ArrayList</classname>, but a <classname>LinkedList</classname> would also be reasonable.
+(Perhaps the return type of the method should have been specified as
+<classname>ArrayList</classname> rather than <classname>List</classname> so that users of the method would
+know exactly what they are getting.)</p>
+
+<pre>/**
+ * Return a List that contains all the objects, obj, from the collection, 
+ * coll, for which pred.test(obj) is true.
+ */
+public static &lt;T&gt; List&lt;T&gt; collect(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred) {
+   List&lt;T&gt; list = new ArrayList&lt;T&gt;();
+   for ( T item : coll ) {
+      if (pred.test(item))
+         list.add(item);
+   }
+   return list;
+} // end collect()</pre>
+
+<p>The <code>remove()</code> and <code>retain()</code> methods are similar to
+<code>collect()</code>, except that instead of making a new collection, they modify
+the collection, <code>coll</code>.  A for-each loop cannot modify the collection
+over which it is iterating, so the <code>remove()</code> and <code>retain()</code> methods
+will have to use <classname>Iterators</classname>.  Recall that if <code>iter</code>
+is an <classname>Iterator</classname> for a collection, then the method
+<code>iter.remove()</code> will remove from the collection the item that was seen
+most recently by the iterator.  The <code>remove()</code> method can be written
+as:</p>
+   
+<pre>/**
+ * Remove every object, obj, from coll for which pred.test(obj) is true.
+ */
+public static &lt;T&gt; void remove(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred) {
+   Iterator&lt;T&gt; iter = coll.iterator();
+   while (iter.hasNext()) {
+      T item = iter.next();
+      if (pred.test(item))
+         iter.remove();
+   }
+} // end remove()</pre>
+   
+<np>The <code>retain()</code> method is almost identical to this, and the
+<code>find()</code> method is easy to write using an ordinary <code>for</code>
+loop.  See my solution, below.</np>
+
+<p>My test program simply creates some collections and applies the methods from
+the <classname>Predicates</classname> class to them. My collections contain objects of type
+<classname>Integer</classname> and I made two <classname>Predicates</classname> that work on objects of
+this type. To define such a predicate, we need a class that implements the interface
+<classname>Predicate&lt;Integer&gt;</classname>, and then we have to make an object belonging to
+that class. For example, I define the class:</p>
+
+<pre>/**
+ * An object of type Even tests an Object of type Integer to see whether the 
+ * integer that it represents is an even number. Note that the test() method 
+ * should only be applied to non-null values of type Integer.
+ */
+static class Even implements Predicate&lt;Integer&gt; {
+   public boolean test(Integer i) {
+      if ( i % 2 == 0 )
+         return true;
+      else
+         return false;
+   }
+} // end class Even</pre>
+
+<np>The predicate object is then created with a command:</np>
+
+<pre>Predicate&lt;Integer&gt; pred = new Even():</pre>
+
+<np>A predicate object belonging to class <classname>Even</classname> will throw an exception
+if its <code>test()</code> method is applied to a <code>null</code> value. If this class were 
+meant for more
+general use, it might be better to define <code>test()</code> so that it simply
+returns the answer "false" in this case:</np>
+
+<pre>/**
+ * An object of type Even tests an Object of type Integer to see whether the 
+ * integer that it represents is an even number.  <newcode>When applied to a null</newcode>
+ * <newcode>object, the test returns the value false.</newcode>
+ */
+static class Even implements Predicate&lt;Integer&gt; {
+   public boolean test(Integer i) {
+      <newcode>if (i == null)
+         return false;</newcode>
+      else if ( i % 2 == 0 )
+         return true;
+      else
+         return false;
+   }
+} // end class Even</pre>
+
+<break/>
+
+<p>Note that a <classname>Predicate</classname> is an object, but we are really only
+interested in the <code>test()</code> method of the object. In some languages,
+including C++, it is possible to pass a function as a parameter to another
+function. In those languages, predicates are simply functions that return
+boolean values, and working with predicates does not require the overhead of
+making classes and objects. Of course, things are not so bad in Java if you
+make use of an anonymous nested class to define the predicate. In fact, you can
+define the predicate right in the function call where you need it. For
+example:</p>
+
+<pre>result = Predicates.collect( coll, 
+                    new Predicate&lt;Integer&gt;() {
+                       public boolean test(Integer i) {
+                          return (i != null &amp;&amp; i &gt; 100);
+                       }
+                    } );</pre>
+                    
+<p>Furthermore, in Java 8, the predicate can be defined as a lamda
+expression (see <localref href="OOP.8.4"/>), which simplifies the code
+quite a bit:</p>
+
+<pre>result = Predicates.collect(coll, i -&gt; i != null &amp;&amp; i &gt; 0))</pre>
+
+</exercise-discuss>
+<exercise-code>
+<p><b><u>The Predicate interface must be defined:</u></b></p>
+   
+<pre><prog name="Predicate">interface Predicate&lt;T&gt; {
+   public boolean test( T obj );
+}
+</prog></pre>
+   
+<p><b><u>The Predicates class:</u></b></p>
+   
+<pre><prog name="Predicates">import java.util.*;
+
+
+/**
+ * This class defines some static methods for working
+ * with Collections and Predicates.  (The Predicate
+ * interface is NOT a standard part of Java.)
+ */
+public class Predicates {
+
+   
+   /**
+    * Remove every object, obj, from coll for which pred.test(obj) is true.
+    */
+   public static &lt;T&gt; void remove(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred) {
+      Iterator&lt;T&gt; iter = coll.iterator();
+      while (iter.hasNext()) {
+         T item = iter.next();
+         if (pred.test(item))
+            iter.remove();
+      }
+   } // end remove()
+
+   
+   /**
+    * Remove every object, obj, from coll for which pred.test(obj) is false.  
+    * (That is, retain the objects for which the predicate is true.)
+    */
+   public static &lt;T&gt; void retain(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred){
+      Iterator&lt;T&gt; iter = coll.iterator();
+      while (iter.hasNext()) {
+         T item = iter.next();
+         if ( ! pred.test(item) )
+            iter.remove();
+      }
+   } // end retain()
+   
+   
+   /**
+    * Return a List that contains all the objects, obj, from the collection, 
+    * coll, for which pred.test(obj) is true.
+    */
+   public static &lt;T&gt; List&lt;T&gt; collect(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred) {
+      List&lt;T&gt; list = new ArrayList&lt;T&gt;();
+      for ( T item : coll ) {
+         if (pred.test(item))
+            list.add(item);
+      }
+      return list;
+   } // end collect()
+
+   
+   /**
+    * Return the index of the first item in list for which the predicate is true, if any.
+    * If there is no such item, return -1.
+    */
+   public static &lt;T&gt; int find(ArrayList&lt;T&gt; list, Predicate&lt;T&gt; pred) {
+      // 
+      for (int i = 0; i &lt; list.size(); i++) {
+         T item = list.get(i);
+         if (pred.test(item))
+            return i;
+      }
+      return -1;
+   } // end find()
+
+   
+} // end class Predicates
+</prog></pre>
+   
+<p><b><u>The Test program:</u></b></p>
+   
+<pre>
+<prog name="TestPredicates">import java.util.*;
+
+/**
+ * Perform some simple tests on the Predicates class.
+ */
+public class TestPredicates {
+
+   /**
+    * An object of type Even tests an Object of type Integer to see whether the 
+    * integer that it represents is an even number. Note that the test() method 
+    * should only be applied to non-null values of type Integer.
+    */
+   static class Even implements Predicate&lt;Integer&gt; {
+      public boolean test(Integer i) {
+         if ( i % 2 == 0 )
+            return true;
+         else
+            return false;
+      }
+   } // end class Even
+
+   
+   /**
+    * An object of type Big tests an Object of type Integer to see whether the 
+    * integer that it represents is bigger than 100.  Note that the test() method 
+    * should only be applied to non-null values of type Integer.
+    */
+   static class Big implements Predicate&lt;Integer&gt; {
+      public boolean test(Integer i) {
+         if ( i &gt; 100 )
+            return true;
+         else
+            return false;
+      }
+   } // end class Big
+
+   
+   /**
+    * For convenience make a Collection containing some integers.  The Collection 
+    * is actually a TreeSet, but that is not relevant to the main program.
+    */
+   static Collection&lt;Integer&gt; makeSet() {
+      Collection&lt;Integer&gt; set = new TreeSet&lt;Integer&gt;();
+      set.add(new Integer(32));
+      set.add(new Integer(17));
+      set.add(new Integer(142));
+      set.add(new Integer(56));
+      set.add(new Integer(1899));
+      set.add(new Integer(57));
+      set.add(new Integer(999));
+      set.add(new Integer(86));
+      set.add(new Integer(83));
+      set.add(new Integer(100));
+      return set;
+   } // end makeSet()
+
+
+
+   /**
+    * Main routine tests the Predicates class by making Collections of Integers 
+    * and applying the methods from the Predicates class to them.
+    */
+   public static void main(String[] args) {
+
+      Collection&lt;Integer&gt; coll;    // A collection (from makeSet() method).
+
+      List&lt;Integer&gt; result;        // The result of applying collect() to coll.
+
+      Predicate&lt;Integer&gt; pred = new Even();  // Tests if an Integer is even.
+
+      coll = makeSet();
+      System.out.println("Original collection: " + coll);
+
+      Predicates.remove(coll,pred);
+      System.out.println("Remove evens: " + coll);
+
+      coll = makeSet();
+      Predicates.retain(coll,pred);
+      System.out.println("Retain evens: " + coll);
+
+      coll = makeSet();
+      result = Predicates.collect(coll,pred);
+      System.out.println("Collect evens: " + result);
+
+      ArrayList&lt;Integer&gt; list = new ArrayList&lt;Integer&gt;();
+      int i = Predicates.find(list,pred);
+      System.out.println("Find first even: at index " + i);
+
+
+      pred = new Big();        // Tests if an Integer is bigger than 100.
+
+      coll = makeSet();
+      System.out.println("Original collection: " + coll);
+
+      Predicates.remove(coll,pred);
+      System.out.println("Remove big: " + coll);
+
+      coll = makeSet();
+      Predicates.retain(coll,pred);
+      System.out.println("Retain big: " + coll);
+
+      coll = makeSet();
+      result = Predicates.collect(coll,pred);
+      System.out.println("Collect big: " + result);
+
+      list = new ArrayList&lt;Integer&gt;(coll);
+      i = Predicates.find(list,pred);
+      System.out.println("Find first big: at index " + i);
+
+   } // end main()
+
+} // end class TestPredicates
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+<exercise id="generics.ex.5">
+<exercise-question><p>An example in
+<localref href="generics.4.2"/> concerns the problem of making an index for
+a book. A related problem is making a <newword>concordance</newword>
+for a document. A concordance lists every word that occurs in the document, and
+for each word it gives the line number of every line in the document where the
+word occurs. All the subroutines for creating an index that were presented in
+<localref href="generics.4.2"/> can also be used to create a concordance. The only real
+difference is that the integers in a concordance are line numbers rather than
+page numbers.</p>
+
+<p>Write a program that can create a concordance. The document should be read
+from an input file, and the concordance data should be written to an output
+file. You can use the indexing
+subroutines from <localref href="generics.4.2"/>, modified to write the data to <code>TextIO</code>
+instead of to <code>System.out</code>. (You will need to make these subroutines
+<code>static</code>.) The input and output files should be selected by the user when
+the program is run.  The sample program <sourceref href="WordCount.java"/>,
+from <localref href="generics.4.4"/>, can be used as a model of how to use files.
+That program also has a useful subroutine that reads one word from input.</p>
+
+<p>As you read the file, you want to take each word that you encounter and add
+it to the concordance along with the current line number.  Keeping track of
+the line numbers is one of the trickiest parts of the problem. In an input file,
+the end of each line in the file is
+marked by the newline character,&nbsp;'\n'. Every time you encounter this
+character, you have to add one to the line number.  WordCount.java
+ignores ends of lines.  Because you need to
+find and count the end-of-line characters, your program cannot
+process the input file in exactly the same way as does WordCount.java.
+Also, you will need to detect the end of the file.  The function
+<code>TextIO.peek()</code>, which is used to look ahead at the next character
+in the input, returns the value <code>TextIO.EOF</code> at end-of-file,
+after all the characters in the file have been read.</p>
+
+<p>Because it is so common, don't include the word "the" in your concordance.
+Also, do not include words that have length less than&nbsp;3.</p>
+</exercise-question>
+<exercise-discuss><p>Solving this exercise, for the most part, means collecting subroutines that
+were presented in <localref href="generics.4.2"/> into a complete program. 
+I copied the method <code>addReference()</code> directly, just making it <code>static</code>
+and changing the names of the parameters to names that are more appropriate for
+a concordance. I copied <code>printIntegers()</code>, changed its name
+to <code>printConcordance</code>, made it static, and changed
+"System.out.print" to "TextIO.put" so that it would send its output to the file
+selected by the user.</p>
+   
+<p>In <localref href="generics.4.3"/>, I discussed the problem that arises when
+comparing strings that differ only in their use of upper and lower case.  In that
+subsection, I used a <classname>Comparator</classname> to solve the problem.
+In my solution to this exercise, however, I used the simpler solution of
+converting all words to lower case immediately after reading them from the
+file.  For lower case words, the default ordering is alphabetical order,
+so I don't need a <classname>Comparator</classname>.</p>
+
+<p>It remains to write the <code>main()</code> routine, which is similar in outline
+to the <code>main()</code> routine in <code>WordCount.java</code>. One difference is
+that we have to keep track of line numbers. We can do this by looking for
+new-line characters as we skip over the characters between words. 
+While we do this, we have to be on the alert for the special character
+<code>TextIO.EOF</code> that is returned by <code>TextIO.peek()</code>
+when the end of the file is reached.  A pseudocode
+algorithm can be given as:</p>
+
+<pre>Open the input files.
+
+Let lineNum = 1.
+
+Repeat:
+   
+      // Skip over any non-letters in the input, stopping when a
+      // letter (marking the beginning of a word) or EOF is found.
+      
+      while the next character is not end-of-file or a letter:
+         Read the next character.
+         If it is a new line character:
+            Count the line by adding 1 to lineNum
+      
+      // After the while loop, we are looking at either the end of file
+      //    or at a letter that is the beginning of the next word.
+      
+      If at end-of-file:
+         Exit from the loop.
+      
+      Get the next word from the input file.
+      Convert the word to lower case.
+      if the word is not "the" and has length &gt; 2:
+         Add the word and lineNum to the concordance.
+
+Open the output file.
+
+Print the concordance.</pre>
+
+
+<p>This can be translated directly (using some code from <sourceref href="WordCount.java"/>)
+to give the <code>main()</code> routine.   For reading individual words from
+input, the method <code>readNextWord()</code> can be copied directly from
+WordCount.java.  (In my program, I used a slightly simpler method named
+<code>readWord()</code> which uses the fact that when <code>readWord()</code>
+is called by the <code>main()</code> routine, the next character in input
+is already known to be a letter.)</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="Concordance">import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+/**
+ * This program makes a concordance for a file.  A concordance
+ * lists all the words that occur in the file, along with all
+ * the line numbers on which each word occurs.  (Words of
+ * length less than 3 are omitted, and "the" is omitted.)  The
+ * concordance is written to an output file.  The user selects
+ * the input and output files using file dialog boxes.  This
+ * program uses the non-standard class, TextIO.
+ */
+public class Concordance {
+
+
+
+/**
+ * This TreeMap holds the concordance.  Words from the file
+ * are used as keys in the map.  The value associated with
+ * each word is a set that contains the line numbers on which
+ * the word occurs in the file.  The set contains values
+ * belonging to the wrapper class, Integer.
+ */
+private static TreeMap&lt;String, TreeSet&lt;Integer&gt;&gt;  concordance;
+
+
+
+public static void main(String[] args) {
+
+   System.out.println("\n\n   This program will ask you to select an input file.");
+   System.out.println("It makes a list of all the words that occur in the file");
+   System.out.println("along with the line number of each line that contained");
+   System.out.println("that word.  This is called a \"concordance\" for the file.");
+   System.out.println("   After reading the input file, the program asks you to");
+   System.out.println("select an output file.  If you select a file, the list of");
+   System.out.println("words will be written to that file; if you cancel, the list");
+   System.out.println("be written to standard output.  All words are converted to");
+   System.out.println("lower case.\n\n");
+   System.out.print("Press return to begin.");
+   
+   TextIO.getln();  // Wait for user to press return.
+   
+   try {
+      
+      // Let user select the input file.  If the user cancels,
+      // the program ends immediately.
+  
+      if (TextIO.readUserSelectedFile() == false) {
+         System.out.println("No input file selected.  Exiting.");
+         System.exit(0);
+      }
+         
+      // Create the data structure that will hold the concordance.
+ 
+      concordance = new TreeMap&lt;String, TreeSet&lt;Integer&gt;&gt;();
+  
+      int lineNum = 1;  // The number of the line in the input
+                        // file that is currently being processed.
+      
+      // Read words from the file until end of file is reached,
+      // and add each word to the data.
+
+      while (true) {
+         char ch = TextIO.peek(); // Look ahead at next character
+         while ( ch != TextIO.EOF &amp;&amp; ! Character.isLetter(ch) ) {
+                   // Skip over non-letter characters, stopping when 
+                   // end-of-file (TextIO.EOF) or a letter is seen.  If the
+                   // character is an end-of-line character, add 1
+                   // to lineNum to reflect the fact that we are moving
+                   // on to the next line in the file.
+            TextIO.getAnyChar();  // Reads the next character, which is junk.
+            if (ch == '\n') {
+               lineNum++;  // Start of a new line.
+            }
+            ch = TextIO.peek();  // Look at the next character.
+         }
+         if (ch == TextIO.EOF) {
+                 // The end-of-file has been reached, so exit from the loop.
+            break;
+         }
+         String word = readWord();  // The next word from the file.
+         word = word.toLowerCase();
+         if (word.length() > 2  &amp;&amp; !word.equalsIgnoreCase("the")) {
+                 // Add the reference to word to the concordance, unless
+                 // the word is "the" or the word has length &lt;= 2.
+            addReference(word,lineNum);
+         }
+      }
+      
+      // Write the data to a user-selected file, or to standard
+      // output if the user does not select an output file.
+
+      System.out.println(concordance.size() + " distinct words were found in the file.\n");
+      System.out.println();
+      if (concordance.size() == 0) {
+         System.out.println("No words found in file.");
+         System.out.println("Exiting without saving data.");
+         System.exit(0);
+      }
+
+      TextIO.writeUserSelectedFile(); // If user cancels, output automatically
+                                      // goes to standard output.
+  
+      printConcordance();  // Print the data to the output file.
+ 
+   }
+   catch (IllegalArgumentException e) {
+      System.out.println( "Sorry, some error occurred:  " + e.getMessage() );
+   }
+
+} // end main()
+
+
+/**
+ * Writes the data in the concordance to TextIO.  (The output will go
+ * to the output file, if one has been selected; otherwise, it will go
+ * to standard output.)  Each line of output contains one word from the
+ * file and a list of lines on which that word occurred.  The words
+ * are in alphabetical order.
+ */
+private static void printConcordance() {
+   
+   for ( Map.Entry&lt;String, TreeSet&lt;Integer&gt;&gt;  entry :  concordance.entrySet() ) {
+    
+      String term = entry.getKey();
+      TreeSet&lt;Integer&gt; pageSet = entry.getValue();
+
+      TextIO.put( term + " " );
+      for ( int page : pageSet ) {
+         TextIO.put( page + " " );
+      }
+      TextIO.putln();
+   
+    }
+}
+
+
+/**
+ * Add a word reference to the concordance.
+ */
+private static void addReference(String word, int lineNum) {
+   TreeSet&lt;Integer&gt; references; // The set of lines where we have
+                                //    previously found the word.
+   references = concordance.get(word);
+   if (references == null){
+          // This is the first reference that we have
+          // found for the word.  Make a new set containing
+          // the line number and add it to the concordance, with
+          // the word as the key.
+       TreeSet&lt;Integer&gt; firstRef = new TreeSet&lt;Integer&gt;();
+       firstRef.add( lineNum );  // lineNum is "autoboxed" to give an Integer!
+       concordance.put(word,firstRef);
+   }
+   else {
+         // The variable references is the set of line references
+         // that we have found previously for the word.
+         // Add the new line number to that set.  This
+         // set is already associated to word in the concordance.
+      references.add( lineNum ); // pageNum is "autoboxed" to give an Integer!
+   }
+}
+
+
+/**
+ * Read the next word from TextIO.  It is assumed that the next character
+ * in input is a letter.
+ *    A word is defined as a sequence of letters.  Also, a word can include
+ * an apostrophe if the apostrophe is surrounded by letters on each side.
+ * @return the next word from TextIO, or null if an end-of-file is encountered
+ */
+private static String readWord() {
+   char ch = TextIO.peek(); // Look at next character in input.
+   assert Character.isLetter(ch);
+   String word = "";  // This will be the word that is read.
+   while (true) {
+      word += TextIO.getAnyChar();  // Append the letter onto word.
+      ch = TextIO.peek();  // Look at next character.
+      if ( ch == '\'' ) {
+             // The next character is an apostrophe.  Read it, and
+             // if the following character is a letter, add both the
+             // apostrophe and the letter onto the word and continue
+             // reading the word.  If the character after the apostrophe
+             // is not a letter, the word is done, so break out of the loop.
+         TextIO.getAnyChar();   // Read the apostrophe.
+         ch = TextIO.peek();    // Look at char that follows apostrophe.
+         if (Character.isLetter(ch)) {
+            word += "\'" + TextIO.getAnyChar();
+            ch = TextIO.peek();  // Look at next char.
+         }
+         else
+            break;
+      }
+      if ( ! Character.isLetter(ch) ) {
+             // If the next character is not a letter, the word is
+             // finished, so break out of the loop.
+         break;
+      }
+      // If we haven't broken out of the loop, next char is a letter.
+   }
+   return word;  // Return the word that has been read.
+}
+
+
+} // end class Concordance
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+<exercise>
+<exercise-question><p>The sample program
+<sourceref href="SimpleInterpreter.java"/> from <localref href="generics.4.1"/>
+can carry out  commands of the form "let variable = expression" or "print expression".
+That program can handle expressions that contain variables,
+numbers, operators, and parentheses. Extend the program so that it can also
+handle the standard mathematical functions <code>sin</code>, <code>cos</code>,
+<code>tan</code>, <code>abs</code>, <code>sqrt</code>, and <code>log</code>. For example, the
+program should be able to evaluate an expression such as
+<code>sin(3*x-7)+log(sqrt(y))</code>, assuming that the variables <code>x</code> and
+<code>y</code> have been given values.  Note that the name of a function
+must be followed by an expression that is enclosed in parentheses.</p>
+
+<p>In the original program, a symbol table holds a value for each variable that
+has been defined. In your program, you should add another type of symbol to the
+table to represent standard functions.   You can use the following nested
+enumerated type and class for this purpose:</p>
+
+<pre>private enum Functions { SIN, COS, TAN, ABS, SQRT, LOG }
+
+/**
+ * An object of this class represents one of the standard functions.
+ */
+private static class StandardFunction {
+
+   /**
+    * Tells which function this is.
+    */
+   Functions functionCode; 
+
+   /**
+    * Constructor creates an object to represent one of 
+    * the standard functions
+    * @param code which function is represented.
+    */
+   StandardFunction(Functions code) {
+      functionCode = code;
+   }
+
+   /**
+    * Finds the value of this function for the specified 
+    * parameter value, x.
+    */
+   double evaluate(double x) {
+      switch(functionCode) {
+      case SIN:
+         return Math.sin(x);
+      case COS:
+         return Math.cos(x);
+      case TAN:
+         return Math.tan(x);
+      case ABS:
+         return Math.abs(x);
+      case SQRT:
+         return Math.sqrt(x);
+      default:
+         return Math.log(x);
+      }
+   }
+
+} // end class StandardFunction</pre>
+   
+<p>Add a symbol to the symbol table to represent each function. The key is the
+name of the function and the value is an object of type
+<classname>StandardFunction</classname> that represents the function. For example:</p>
+
+<pre>symbolTable.put("sin", new StandardFunction(Function.SIN));</pre>
+
+<np>In SimpleInterpreter.java, the symbol table is a map of type
+<classname>HashMap&lt;String,Double&gt;</classname>.  It's not legal to
+use a <classname>StandardFunction</classname> as the value in such a map,
+so you will have to change the type of the map.  The map has to hold two
+different types of objects.  The easy way to make this possible is to create
+a map of type <classname>HashMap&lt;String,Object&gt;</classname>.
+(A better way is to create a general type to represent objects that
+can be values in the symbol table, and to define two subclasses of that
+class, one to represent variables and one to represent standard functions,
+but for this exercise, you should do it the easy way.)</np>
+
+<p>In your parser, when you encounter a word, you have to be able to tell
+whether it's a variable or a standard function. Look up the word in the symbol
+table. If the associated object is non-null and is of type <classname>Double</classname>, then
+the word is a variable. If it is of type <classname>StandardFunction</classname>, then the
+word is a function. Remember that you can test the type of an object using the
+<code>instanceof</code> operator. For example: <code>if (obj instanceof
+Double)</code></p>
+</exercise-question>
+<exercise-discuss><p>The changes that must be made to <sourceref href="SimpleInterpreter.java"/> 
+are remarkably small,
+aside from defining the <classname>StandardFunction</classname> class. In my solution, I
+included this class as a static nested class in my main program class. It would
+also make sense to define it as a separate class.</p>
+
+<p>I changed the type of the map to <classname>HashMap&lt;String,Object&gt;</classname>,
+as suggested in the exercise.
+I added a few lines of code at the beginning of the <code>main()</code> routine to
+add the six standard functions to the symbol table, using statements similar to
+the example given in the exercise:</p>
+   
+<pre>symbolTable.put("sin", new StandardFunction(Functions.SIN));
+symbolTable.put("cos", new StandardFunction(Functions.COS));
+symbolTable.put("tan", new StandardFunction(Functions.TAN));
+symbolTable.put("abs", new StandardFunction(Functions.ABS));
+symbolTable.put("sqrt", new StandardFunction(Functions.SQRT));
+symbolTable.put("log", new StandardFunction(Functions.LOG));</pre>
+      
+<p>The only other change is in the parsing routines. 
+The change is in the <code>primaryValue()</code> method. When a word
+is encountered, the computer must check whether the word is a variable or a
+standard function. This is done, as suggested in the exercise, by looking up
+the word in the symbol table and checking the type of the associated value. If
+the word is a standard function, then we have to read and evaluate the argument
+of the function and then find the value of the function at that argument value:</p>
+
+<pre>else if ( Character.isLetter(ch) ) {
+      // The factor is a variable <newcode>or a standard function</newcode>.  Read its name and
+      // look up its value in the symbol table.  If the name is not in the symbol table,
+      // an error occurs.  (Note that the values in the symbol table are objects of type 
+      // Double <newcode>or StandardFunction</newcode>.)
+   String name = readWord();
+   <newcode>Object obj = symbolTable.get(name);</newcode>
+   if (obj == null)
+      throw new ParseError("Unknown word \"" + name + "\"");
+   <newcode>assert (obj instanceof Double || obj instanceof StandardFunction);</newcode>
+   <newcode>if (obj instanceof Double)</newcode> {
+         // The name is a variable; return value of that variable.
+      Double val = (Double)obj;
+      return val.doubleValue();
+   }
+   <newcode>else {
+         // The name is a standard function.  Read the argument
+         // of the function and return the value of the function
+         // at that argument.  The argument must be an expression
+         // in parentheses.
+      StandardFunction func = (StandardFunction)obj;
+      TextIO.skipBlanks();
+      if ( TextIO.peek() != '(' )
+         throw new ParseError("Parenthesis missing after standard function");
+      TextIO.getChar(); // discard the '('
+      double argument = expressionValue();  // read and evaluate expression
+      TextIO.skipBlanks();
+      if ( TextIO.peek() != ')' )
+         throw new ParseError("Missing right parenthesis.");
+      TextIO.getChar(); // discard the ')'
+      return func.evaluate(argument);
+   }</newcode>
+}</pre>
+
+<p>There is one additional change that I might have made. As the program
+stands, it allows the user to use a "let" command to assign a value to one of
+the standard function names. For example: "let sin = 42". This effectively
+changes the name so that it is a variable, and the standard function is no
+longer available for use in expressions. It would probably be better to give an error
+message when the user tries to assign a value to a standard function name. This
+could be done in the <code>doLetCommand()</code> method.  After reading the
+variable name in the "let" command, we have to check whether the name is already
+in the symbol table as the name of a standard function:</p>
+
+<pre>private static void doLetCommand() throws ParseError {
+   TextIO.skipBlanks();
+   if ( ! Character.isLetter(TextIO.peek()) )
+      throw new ParseError("Expected variable name after 'let'.");
+   String varName = readWord();  // The name of the variable.
+   <newcode>Object symbol = symbolTable.get(name);            
+   if (symbol != null &amp;&amp; symbol instanceof StandardFunction)
+       throw new ParseError("Can't assign a value to a standard function name.");</newcode>
+   TextIO.skipBlanks();
+   if ( TextIO.peek() != '=' )
+      throw new ParseError("Expected '=' operator for 'let' command.");
+   TextIO.getChar();
+   double val = expressionValue();  // The value of the variable.
+   TextIO.skipBlanks();
+   if ( TextIO.peek() != '\n' )
+      throw new ParseError("Extra data after end of expression.");
+   symbolTable.put( varName, val );  // Add to symbol table.
+   System.out.println("ok");
+}</pre>
+   
+
+</exercise-discuss>
+<exercise-code>
+   
+<p><b>Changes from the program <sourceref href="SimpleInterpreter.java"/>
+are shown in &newcodestyle;.</b></p>
+   
+<pre><prog name="SimpleInterpreter2">/*
+    This program can evaluate expressions that can include
+    numbers, variables, parentheses, and the operators +,
+    -, *, /, and ^ (where ^ indicates raising to a power),
+    <newcode>and standard functions sin, cos, tan, abs, sqrt, and log.</newcode>
+    A variable name must consist of letters and digits,
+    beginning with a letter.  Names are case-sensitive.
+    This program accepts commands of two types from the user.
+    For a command of the form  print &lt;expression&gt; , the expression
+    is evaluated and the value is output.  For a command of
+    the form  let &lt;variable&gt; = &lt;expression&gt; , the expression is
+    evaluated and the value is assigned to the variable.
+    If a variable is used in an expression before it has been
+    assigned a value, an error occurs.  A number must begin with 
+    a digit (i.e., not a decimal point).
+
+    Commands are formally defined by the BNF rules:
+
+            &lt;command&gt;  ::=  "print" &lt;expression&gt;
+                               |  "let" &lt;variable&gt; "=" &lt;expression&gt;
+
+            &lt;expression&gt;  ::=  [ "-" ] &lt;term&gt; [ [ "+" | "-" ] &lt;term&gt; ]...
+
+            &lt;term&gt;  ::=  &lt;factor&gt; [ [ "*" | "/" ] &lt;factor&gt; ]...
+
+            &lt;factor&gt;  ::=  &lt;primary&gt; [ "^" &lt;primary&gt; ]...
+
+            &lt;primary&gt;  ::=  &lt;number&gt; | &lt;variable&gt; | "(" &lt;expression&gt; ")"
+                                 <newcode>| &lt;standard-function-name&gt; "(" &lt;expression&gt; ")"</newcode>
+
+    A line of input must contain exactly one such command.  If extra
+    data is found on a line after an expression has been read, it is
+    considered an error.  The variables "pi" and "e" are defined
+    when the program starts to represent the usual mathematical
+    constants.
+
+    This program demonstrates the use of a HashMap as a symbol
+    table.
+
+    SimpleInterpreter2.java is based on the program SimpleInterpreter.java,
+    which did not handle standard functions in expressions.
+    
+    This program depends on the non-standard class, TextIO.
+ */
+
+import java.util.HashMap;
+
+public class SimpleInterpreter2 {
+
+   /**
+    * Represents a syntax error found in the user's input.
+    */
+   private static class ParseError extends Exception {
+      ParseError(String message) {
+         super(message);
+      }
+   } // end nested class ParseError
+   
+   
+   <newcode>/**
+    * An enumerated type whose values represent the possible
+    * standard functions.
+    */
+   private enum Functions { SIN, COS, TAN, ABS, SQRT, LOG }
+   
+   
+   /**
+    * An object of this class represents one of the standard functions.
+    * Objects of this type are stored in the symbol table, associated
+    * with the name of the standard functions.  Note that an object
+    * of this type also knows how to evaluate the corresponding function.
+    */
+   private static class StandardFunction {
+
+      /**
+       * Tells which function this is.
+       */
+      Functions functionCode; 
+
+      /**
+       * Constructor creates an object to represent one of 
+       * the standard functions
+       * @param code which function is represented.
+       */
+      StandardFunction(Functions code) {
+         functionCode = code;
+      }
+
+      /**
+       * Finds the value of this function for the specified 
+       * parameter value, x.
+       */
+      double evaluate(double x) {
+         switch(functionCode) {
+         case SIN:
+            return Math.sin(x);
+         case COS:
+            return Math.cos(x);
+         case TAN:
+            return Math.tan(x);
+         case ABS:
+            return Math.abs(x);
+         case SQRT:
+            return Math.sqrt(x);
+         default:
+            return Math.log(x);
+         }
+      }
+
+   } // end class StandardFunction</newcode>
+
+
+
+   /**
+    * The symbolTable contains information about the values of variables.  When a variable 
+    * is assigned a value, it is recorded in the symbol table. The key is the name of the 
+    * variable, and the  value is an object of type Double that contains the value of the 
+    * variable.  
+    *    <newcode>The symbol table can also contain standard functions.  The key is the name of</newcode>
+    * <newcode>of the function, and the value is the corresponding StandardFunction object.</newcode>
+    */
+   private static HashMap&lt;String,<newcode>Object</newcode>&gt; symbolTable;
+
+
+   public static void main(String[] args) {
+      
+      // Create the map that represents symbol table.
+      
+      symbolTable = new HashMap&lt;String,<newcode>Object</newcode>&gt;();
+
+      // To start, add variables named "pi" and "e" to the symbol
+      // table.  Their values are the usual mathematical constants.
+
+      symbolTable.put("pi", Math.PI);
+      symbolTable.put("e", Math.E);
+      
+      <newcode>// Add the standard functions to the hash table.
+      
+      symbolTable.put("sin", new StandardFunction(Functions.SIN));
+      symbolTable.put("cos", new StandardFunction(Functions.COS));
+      symbolTable.put("tan", new StandardFunction(Functions.TAN));
+      symbolTable.put("abs", new StandardFunction(Functions.ABS));
+      symbolTable.put("sqrt", new StandardFunction(Functions.SQRT));
+      symbolTable.put("log", new StandardFunction(Functions.LOG));</newcode>
+
+      System.out.println("\n\nEnter commands; press return to end.");
+      System.out.println("Commands must have the form:\n");
+      System.out.println("      print &lt;expression&gt;");
+      System.out.println("  or");
+      System.out.println("      let &lt;variable&gt; = &lt;expression&gt;");
+
+      while (true) {
+         System.out.print("\n?  ");
+         TextIO.skipBlanks();
+         if ( TextIO.peek() == '\n' ) {
+            break;  // A blank input line ends the while loop and the program.
+         }
+         try {
+            String command = TextIO.getWord();
+            if (command.equalsIgnoreCase("print"))
+               doPrintCommand();
+            else if (command.equalsIgnoreCase("let"))
+               doLetCommand();
+            else
+               throw new ParseError("Command must begin with 'print' or 'let'.");
+            TextIO.getln();
+         }
+         catch (ParseError e) {
+            System.out.println("\n*** Error in input:    " + e.getMessage());
+            System.out.println("*** Discarding input:  " + TextIO.getln());
+         }
+      }
+
+      System.out.println("\n\nDone.");
+
+   } // end main()
+
+
+   /**
+    * Process a command of the form  let &lt;variable&gt; = &lt;expression&gt;.
+    * When this method is called, the word "let" has already
+    * been read.  Read the variable name and the expression, and
+    * store the value of the variable in the symbol table.
+    */
+   private static void doLetCommand() throws ParseError {
+      TextIO.skipBlanks();
+      if ( ! Character.isLetter(TextIO.peek()) )
+         throw new ParseError("Expected variable name after 'let'.");
+      String varName = readWord();  // The name of the variable.
+      TextIO.skipBlanks();
+      if ( TextIO.peek() != '=' )
+         throw new ParseError("Expected '=' operator for 'let' command.");
+      TextIO.getChar();
+      double val = expressionValue();  // The value of the variable.
+      TextIO.skipBlanks();
+      if ( TextIO.peek() != '\n' )
+         throw new ParseError("Extra data after end of expression.");
+      symbolTable.put( varName, val );  // Add to symbol table.
+      System.out.println("ok");
+   }
+
+
+   /**
+    * Process a command of the form  print &lt;expression&gt;.
+    * When this method is called, the word "print" has already
+    * been read.  Evaluate the expression and print the value.
+    */
+   private static void doPrintCommand() throws ParseError {
+      double val = expressionValue();
+      TextIO.skipBlanks();
+      if ( TextIO.peek() != '\n' )
+         throw new ParseError("Extra data after end of expression.");
+      System.out.println("Value is " + val);
+   }
+
+
+   /**
+    * Read an expression from the current line of input and return its value.
+    */
+   private static double expressionValue() throws ParseError {
+      TextIO.skipBlanks();
+      boolean negative;  // True if there is a leading minus sign.
+      negative = false;
+      if (TextIO.peek() == '-') {
+         TextIO.getAnyChar();
+         negative = true;
+      }
+      double val;  // Value of the expression.
+      val = termValue();  // An expression must start with a term.
+      if (negative)
+         val = -val; // Apply the leading minus sign
+      TextIO.skipBlanks();
+      while ( TextIO.peek() == '+' || TextIO.peek() == '-' ) {
+            // Read the next term and add it to or subtract it from
+            // the value of previous terms in the expression.
+         char op = TextIO.getAnyChar();
+         double nextVal = termValue();
+         if (op == '+')
+            val += nextVal;
+         else
+            val -= nextVal;
+         TextIO.skipBlanks();
+      }
+      return val;
+   } // end expressionValue()
+
+
+   /**
+    * Read a term from the current line of input and return its value.
+    */
+   private static double termValue() throws ParseError {
+      TextIO.skipBlanks();
+      double val;  // The value of the term.
+      val = factorValue();  // A term must start with a factor.
+      TextIO.skipBlanks();
+      while ( TextIO.peek() == '*' || TextIO.peek() == '/' ) {
+            // Read the next factor, and multiply or divide
+            // the value-so-far by the value of this factor.
+         char op = TextIO.getAnyChar();
+         double nextVal = factorValue();
+         if (op == '*')
+            val *= nextVal;
+         else
+            val /= nextVal;
+         TextIO.skipBlanks();
+      }
+      return val;
+   } // end termValue()
+
+
+   /**
+    * Read a factor from the current line of input and return its value.
+    */
+   private static double factorValue() throws ParseError {
+      TextIO.skipBlanks();
+      double val;  // Value of the factor.
+      val = primaryValue();  // A factor must start with a primary.
+      TextIO.skipBlanks();
+      while ( TextIO.peek() == '^' ) {
+            // Read the next primary, and exponentiate
+            // the value-so-far by the value of this primary.
+         TextIO.getChar();
+         double nextVal = primaryValue();
+         val = Math.pow(val,nextVal);
+         if (Double.isNaN(val))
+            throw new ParseError("Illegal values for ^ operator.");
+         TextIO.skipBlanks();
+      }
+      return val;
+   } // end termValue()
+
+
+   /**
+    *  Read a primary from the current line of input and
+    *  return its value.  A primary must be a number,
+    *  a variable, or an expression enclosed in parentheses.
+    */
+   private static double primaryValue() throws ParseError {
+      TextIO.skipBlanks();
+      char ch = TextIO.peek();
+      if ( Character.isDigit(ch) ) {
+            // The factor is a number.  Read it and
+            // return its value.
+         return TextIO.getDouble();
+      }
+      else if ( Character.isLetter(ch) ) {
+            // The factor is a variable <newcode>or a standard function</newcode>.  Read its name and
+            // look up its value in the symbol table.  If the name is not in the symbol table,
+            // an error occurs.  (Note that the values in the symbol table are objects of type 
+            // Double <newcode>or StandardFunction</newcode>.)
+         String name = readWord();
+         <newcode>Object obj = symbolTable.get(name);</newcode>
+         if (obj == null)
+            throw new ParseError("Unknown word \"" + name + "\"");
+         <newcode>assert (obj instanceof Double || obj instanceof StandardFunction);
+         if (obj instanceof Double)</newcode> {
+               // The name is a variable; return value of that variable.
+            Double val = (Double)obj;
+            return val.doubleValue();
+         }
+         <newcode>else {
+               // The name is a standard function.  Read the argument
+               // of the function and return the value of the function
+               // at that argument.  The argument must be an expression
+               // in parentheses.
+            StandardFunction func = (StandardFunction)obj;
+            TextIO.skipBlanks();
+            if ( TextIO.peek() != '(' )
+               throw new ParseError("Parenthesis missing after standard function");
+            TextIO.getChar(); // discard the '('
+            double argument = expressionValue();  // read and evaluate expression
+            TextIO.skipBlanks();
+            if ( TextIO.peek() != ')' )
+               throw new ParseError("Missing right parenthesis.");
+            TextIO.getChar(); // discard the ')'
+            return func.evaluate(argument);
+         }</newcode>
+      }
+      else if ( ch == '(' ) {
+            // The factor is an expression in parentheses.
+            // Return the value of the expression.
+         TextIO.getAnyChar();  // Read the "("
+         double val = expressionValue();
+         TextIO.skipBlanks();
+         if ( TextIO.peek() != ')' )
+            throw new ParseError("Missing right parenthesis.");
+         TextIO.getAnyChar();  // Read the ")"
+         return val;
+      }
+      else if ( ch == '\n' )
+         throw new ParseError("End-of-line encountered in the middle of an expression.");
+      else if ( ch == ')' )
+         throw new ParseError("Extra right parenthesis.");
+      else if ( ch == '+' || ch == '-' || ch == '*' || ch == '/')
+         throw new ParseError("Misplaced operator.");
+      else
+         throw new ParseError("Unexpected character \"" + ch + "\" encountered.");
+   }
+
+
+   /**
+    *  Reads a word from input.  A word is any sequence of
+    *  letters and digits, starting with a letter.  When 
+    *  this subroutine is called, it should already be
+    *  known that the next character in the input is
+    *  a letter.
+    */
+   private static String readWord() {
+      String word = "";  // The word.
+      char ch = TextIO.peek();
+      while (Character.isLetter(ch) || Character.isDigit(ch)) {
+         word += TextIO.getChar(); // Add the character to the word.
+         ch = TextIO.peek();
+      }
+      return word;
+   }
+
+} // end class SimpleInterpreter2
+</prog></pre>
+</exercise-code>
+</exercise>
+   
+   
+
+      
+</exercises>
