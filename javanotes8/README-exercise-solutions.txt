@@ -5,7 +5,7 @@ which is freely available on the web at http://math.hws.edu/javanotes
 
 Each end-of-chapter exercise has a web page that contains a discussion
 of the solution and the source code for a sample solution.  The
-archive javanotes7-exercise-solutions.zip, which can be downloaded
+archive javanotes8-exercise-solutions.zip, which can be downloaded
 using a link on the web site, contains all of the source code for
 the solutions, extracted from the solution web pages.  It also contains
 all extra files that are required by the solutions.  The solutions

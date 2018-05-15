@@ -11,7 +11,7 @@
 <!ENTITY textitlebreak "">
 <!ENTITY newcodestyle "red">
 
-<!ENTITY includes SYSTEM "javanotes7-xml-includes.txt">
+<!ENTITY includes SYSTEM "javanotes8-xml-includes.txt">
 
 <!ENTITY % textitem "b|i|u|big|sub|sup|code|br|a|localref|web|tex|sourceref|jarref|ptype|newword|codedef|bnf|newcode|start|classname|atype|prog">
 <!ENTITY % simpletext "(#PCDATA|%textitem;)*">

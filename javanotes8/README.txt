@@ -2,7 +2,7 @@
 
 This is the README file for the javanotes source download...
                                                     
-Directory javanotes7-source contains the source files that are used 
+Directory javanotes8-source contains the source files that are used 
 to produce the web site and PDF versions of "Introduction to Programming 
 using Java", Seventh Edition.  This free textbook (or a later edition) can 
 be found on the web at:  http://math.hws.edu/javanotes
@@ -111,7 +111,7 @@ code files for the examples in the textbook are in the directory
 named src-c1, src-c2, src-3, and so on.
 
 The syntax of the XML files is defined by the DTD file,
-javanotes7.dtd.  This is a fairly simple, home-brewed DTD.
+javanotes8.dtd.  This is a fairly simple, home-brewed DTD.
 Note that the elements <web>...</web>  and <webdiv>...</webdiv>
 defines content that is sent only to the web site version of 
 the book, while <tex>...</tex> and <texdiv>...</texdiv> 
@@ -119,11 +119,11 @@ define content that goes only to the LaTeX (that is, PDF)
 versions.   Also note that entity names are defined to refer 
 to the XML files that define the individual sections of the book.
 
-The file javanotes7.xml is the main xml file that is processed
+The file javanotes8.xml is the main xml file that is processed
 to create the web site version of the book.  It simply reads in
-javanotes7-xml-includes.txt, which in turn reads in all the
+javanotes8-xml-includes.txt, which in turn reads in all the
 individual xml files for the individual sections.  For the
-LaTeX/PDF versions, the main xml file is javanotes7-tex.xml.
+LaTeX/PDF versions, the main xml file is javanotes8-tex.xml.
 
 Xalan is used with the XSLT files convert-web.xsl, convert-tex.xsl,
 and convert-tex-linked.xsl to process the XML files.  Note that

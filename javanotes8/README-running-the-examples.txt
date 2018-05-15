@@ -9,7 +9,7 @@ web site, you can find the files in a folder named "sources."  The example
 programs are also available as a separate download.  The files are
 arranged by chapter, with a folder inside "sources" for each chapter.
 There are also links to individual files in the index.html file inside
-"sources," or on the web at http://math.hws.edu/javanotes7/sources/index.html
+"sources," or on the web at http://math.hws.edu/javanotes8/sources/index.html
 
 You have several options for running the examples...
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE section SYSTEM "../javanotes7.dtd" >
+<!DOCTYPE section SYSTEM "../javanotes8.dtd" >
 
 <section id="basics.6" title="Programming Environments">
 
@@ -125,7 +125,7 @@ into your working directory.  (If you downloaded the Web site of this book,
 you can find it in the directory named <code>source</code>; you can use
 your computer's GUI to copy-and-paste this file into your working directory.
 Alternatively, you can navigate to <sourceref href="TextIO.java"/> on the
-book's <tex><a href="http://math.hws.edu/javanotes7/source/index.html">Web&nbsp;site</a></tex><web><a href="../source/index.html">Web&nbsp;site</a></web> and use the 
+book's <tex><a href="http://math.hws.edu/javanotes8/source/index.html">Web&nbsp;site</a></tex><web><a href="../source/index.html">Web&nbsp;site</a></web> and use the 
 "Save&nbsp;As" command in your Web browser to save a copy of the file into your working directory.)
 Type the command:</p>
    

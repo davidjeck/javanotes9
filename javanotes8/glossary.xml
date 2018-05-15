@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE glossary SYSTEM "javanotes7.dtd" >
+<!DOCTYPE glossary SYSTEM "javanotes8.dtd" >
 <glossary>
 <gitem term="abstract class">A class that cannot be used to create objects, and that
 exists only for the purpose of creating subclasses.  Abstract classes in Java are

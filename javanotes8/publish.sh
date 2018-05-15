@@ -1,7 +1,7 @@
 #!/bin/bash
 
-VERSION='javanotes7.0.3'
-PROJECT='javanotes7'
+VERSION='javanotes8.0.3'
+PROJECT='javanotes8'
 
 if [ ! -d build_output ] ; then
    echo Cannot find build_output directory
@@ -13,7 +13,7 @@ cd build_output
 
 UPLOADS=""
 
-if [ -e javanotes7.pdf -o -e javanotes7-linked.pdf -o -e web-site ] ; then
+if [ -e javanotes8.pdf -o -e javanotes8-linked.pdf -o -e web-site ] ; then
    echo Creating downloads directory
    mkdir downloads
 else
@@ -21,24 +21,24 @@ else
    exit
 fi
 
-if [ -e "javanotes7.pdf" ] ; then
-   echo Move javanotes7.pdf to downloads directory
-   mv javanotes7.pdf downloads/$VERSION.pdf
+if [ -e "javanotes8.pdf" ] ; then
+   echo Move javanotes8.pdf to downloads directory
+   mv javanotes8.pdf downloads/$VERSION.pdf
 fi
 
-if [ -e "javanotes7-linked.pdf" ] ; then
-   echo Move javanotes7-linked.pdf to downloads directory
-   mv javanotes7-linked.pdf downloads/$VERSION-linked.pdf
+if [ -e "javanotes8-linked.pdf" ] ; then
+   echo Move javanotes8-linked.pdf to downloads directory
+   mv javanotes8-linked.pdf downloads/$VERSION-linked.pdf
 fi
 
-if [ -e "javanotes7.epub" ] ; then
-   echo Move javanotes7.epub to downloads directory
-   mv javanotes7.epub downloads/$VERSION.epub
+if [ -e "javanotes8.epub" ] ; then
+   echo Move javanotes8.epub to downloads directory
+   mv javanotes8.epub downloads/$VERSION.epub
 fi
 
-if [ -e "javanotes7.mobi" ] ; then
-   echo Move javanotes7.mobi to downloads directory
-   mv javanotes7.mobi downloads/$VERSION.mobi
+if [ -e "javanotes8.mobi" ] ; then
+   echo Move javanotes8.mobi to downloads directory
+   mv javanotes8.mobi downloads/$VERSION.mobi
 fi
 
 if [ -e "web-site" ] ; then

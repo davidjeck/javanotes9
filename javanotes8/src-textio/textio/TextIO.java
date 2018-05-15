@@ -1,7 +1,7 @@
 package textio;
 
 // This is an exact copy of the regular TextIO.java, except that it has been placed
-// into a package named textio.
+// into a package named textio.  This is the default version of TextIO for Javanotes 8.
 
 import java.io.*;
 import java.util.IllegalFormatException;

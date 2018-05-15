@@ -29,7 +29,7 @@ echo Extracting programs from exercises...
 echo
 echo Running Xalan to extract program files...
 
-if  $XALAN_COMMAND -xsl convert-exercise-progs.xsl -in javanotes7.xml ; then
+if  $XALAN_COMMAND -xsl convert-exercise-progs.xsl -in javanotes8.xml ; then
 
    for dir in `ls -1 exercise-programs` ; do
        cp src-textio/TextIO.java exercise-programs/$dir/TextIO.java

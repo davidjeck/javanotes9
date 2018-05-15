@@ -16,7 +16,7 @@ TOP_DIR=`pwd`
 # files from which the web site and PDF files will be built.
 
 if [ -z "$JAVANOTES_SOURCE_DIR" ] ; then
-   JAVANOTES_SOURCE_DIR="$TOP_DIR/javanotes7"
+   JAVANOTES_SOURCE_DIR="$TOP_DIR/javanotes8"
 fi
 
 

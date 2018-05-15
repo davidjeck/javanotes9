@@ -1,7 +1,7 @@
 #!/bin/bash
 
-VERSION='javanotes-7.0.3'
-PROJECT='javanotes7'
+VERSION='javanotes-8.0'
+PROJECT='javanotes8'
 
 SOURCE_DIR='/home/eck/eclipse-workspace-oxygen'
 EXPORT_DIR="/home/eck/Desktop/$VERSION-source"
@@ -18,7 +18,7 @@ cp -r $SOURCE_DIR/$PROJECT $EXPORT_DIR
 cd $EXPORT_DIR
 
 perl -i -p -e 's/\t/    /g' `find . -name "*.java"`
-perl -i -p -e 's/<!DOCTYPE.*javanotes7.dtd" *>//' `find . -name "*.xml" -and ! -name "javanotes7*"`
+perl -i -p -e 's/<!DOCTYPE.*javanotes8.dtd" *>//' `find . -name "*.xml" -and ! -name "javanotes8*"`
 rm -r `find . -name "CVS"`
 
 rm $PROJECT/export-source.sh
