@@ -140,11 +140,12 @@ and it can extend over more than one line.  The first three lines of the
 program are an example of this second type of comment. (A&nbsp;comment that actually
 begins with <code>/**</code>, like this one does,
 has special meaning; it is a "Javadoc" comment that can be used
-to produce documentation for the program.)</p>
+to produce documentation for the program.  See <localref href="subroutines.5.4"/>.)</p>
 
 <p>Everything else in the program is required by the rules of Java syntax. All
 programming in Java is done inside "classes." The first line in the above
-program (not counting the comment) says that this is a class named <classname>HelloWorld</classname>. "HelloWorld," the
+program (not counting the comment) says that this is a class named 
+<classname>HelloWorld</classname>. "HelloWorld," the
 name of the class, also serves as the name of the program. Not every class is a
 program. In order to define a program, a class must include a subroutine named
 <code>main</code>, with a definition that takes the form:</p>
@@ -179,7 +180,10 @@ type when you write an actual program.</p>
 <p>As noted above, a subroutine can't exist by itself. It has to be part of a
 "class". A program is defined by a public class that takes the form:</p>
 
-<pre>public class <bnf>program-name</bnf> {
+<pre><bnf>optional-package-declaration</bnf>
+<bnf>optional-imports</bnf>
+
+public class <bnf>program-name</bnf> {
 
     <bnf>optional-variable-declarations-and-subroutines</bnf>
     
@@ -191,11 +195,13 @@ type when you write an actual program.</p>
 
 }</pre>
 
-<np>The name on the first line is the name of the program, as well as the name
-of the class. (Remember, again, that <bnf>program-name</bnf> is a placeholder for the
-actual name!)</np>
+<np>The first two lines have to do with using <newword>packages</newword>.  A package is
+a group of classes.  You will start learning about packages in <localref href="basics.4"/>, 
+but our first few example programs will not use them.</np>
 
-<p>If the name of the class is HelloWorld, then the class <b>must</b> be
+<p>The <bnf>program-name</bnf> in the line that begins "public class" is the name of the program, as well as the name
+of the class. (Remember, again, that <bnf>program-name</bnf> is a placeholder for the
+actual name!) If the name of the class is HelloWorld, then the class <b>must</b> be
 saved in a file called <code>HelloWorld.java</code>. When this file is compiled,
 another file named <code>HelloWorld.class</code> will be produced. This class file,
 <code>HelloWorld.class</code>, contains the translation of the program into Java bytecode, 

@@ -6,7 +6,6 @@
  * the value of the investment after one year are
  * printed to standard output.
  */
- 
 public class Interest {
    
    public static void main(String[] args) {

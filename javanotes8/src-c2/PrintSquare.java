@@ -1,8 +1,9 @@
+import textio.TextIO;
+
 /**
  * A program that reads an integer that is typed in by the
  * user and computes and prints the square of that integer.
  */
-
 public class PrintSquare {
 
 	public static void main(String[] args) {

@@ -21,6 +21,10 @@ public class System {
 		return java.lang.System.currentTimeMillis();
 	}
 	
+	public static long nanoTime() {
+		return java.lang.System.nanoTime();
+	}
+	
 	public static void exit(int code) {
 		java.lang.System.exit(code);
 	}

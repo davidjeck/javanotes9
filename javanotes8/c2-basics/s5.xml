@@ -6,8 +6,8 @@
 <p><start><big>T</big>his section takes a closer look</start> at expressions.
 Recall that an expression is a piece of program code that represents or
 computes a value. An expression can be a literal, a variable, a function call,
-or several of these things combined with operators such as <code>+</code> and
-<code>&gt;</code>. The value of an expression can be assigned to a variable, used
+or several of these things combined with operators such as <code>+</code>
+and&nbsp;<code>&gt;</code>. The value of an expression can be assigned to a variable, used
 as a parameter in a  subroutine call, or combined with other values into a
 more complicated expression. (The value can even, in some cases, be ignored, if
 that's what you want to do; this is more common than you might think.)
@@ -39,7 +39,7 @@ is the largest value of type <ptype>double</ptype>, and <code>Double.MIN_VALUE</
 is the smallest <b>positive</b> value.  It also has constants to represent infinite
 values, <code>Double.POSITIVE_INFINITY</code> and <code>Double.NEGATIVE_INFINITY</code>,
 and the special value <code>Double.NaN</code> to represent an undefined value.  For
-example, the value of <code>Math.sqrt(-1)</code> is Double.NaN.
+example, the value of <code>Math.sqrt(-1)</code> is <code>Double.NaN</code>.
 </p>
 
 <p>Literals, variables, and function calls are simple expressions. More complex
@@ -156,7 +156,8 @@ called <newword>decrementing</newword>. The operators <code>++</code> and
 <code>--</code> are called the increment operator and the decrement operator,
 respectively. These operators can be used on variables belonging to any of the
 numerical types and also on variables of type <ptype>char</ptype>. 
-(<code>'A'++</code>&nbsp;is&nbsp;<code>'B'</code>.)</np>
+(If <code>ch</code> is <code>'A'</code> then <code>ch++</code> changes the value
+of <code>ch</code> to&nbsp;<code>'B'</code>.)</np>
 
 <p>Usually, the operators <code>++</code> or <code>--</code> are used in statements
 like "<code>x++</code>;" or "<code>x--</code>;". These statements are commands to
@@ -171,11 +172,11 @@ z = (++x) * (y--);</pre>
 
 <np>The statement "<code>y = x++</code>;" has the effects of adding <code>1</code> to
 the value of <code>x</code> and, in addition, assigning some value to <code>y</code>.
-The value assigned to <code>y</code> is the value of the expression <code>x++</code>,
-which is defined to be the <b>old</b> value of <code>x</code>, before the
+The value assigned to <code>y</code> is 
+defined to be the <b>old</b> value of <code>x</code>, before the
 <code>1</code> is added. Thus, if the value of <code>x</code> is <code>6</code>, the
 statement "<code>y = x++</code>;" will change the value of <code>x</code> to
-<code>7</code>, but it will change the value of <code>y</code> to <code>6</code> since the
+<code>7</code>, but it will change the value of <code>y</code> to <code>6</code>, because the
 value assigned to <code>y</code> is the <b>old</b> value of <code>x</code>. On the
 other hand, the value of <code>++x</code> is defined to be the <b>new</b>
 value of <code>x</code>, after the <code>1</code> is added. So if <code>x</code> is
@@ -244,10 +245,9 @@ way objects behave, they might not give the results you want. (The <code>==</cod
 operator checks whether two objects are stored in the same memory location,
 rather than whether they contain the same value. Occasionally, for some
 objects, you do want to make such a check&mdash;but rarely for strings. I'll get
-back to this in a later chapter.) Instead, you should use the subroutines
-<code>equals()</code>, <code>equalsIgnoreCase()</code>, and <code>compareTo()</code>, which
-were described in <localref href="basics.3.3"/>, to compare two
-<code>Strings</code>.</p>
+back to this in a later chapter.) Instead, you should compare strings using subroutines such as
+<code>equals()</code>  and <code>compareTo()</code>, which
+were described in <localref href="basics.3.3"/>.</p>
 
 <p>Another place where <code>==</code> and <code>!=</code> don't work as you would expect
 is with <code>Double.NaN</code>, the constant that represents an undefined value of
@@ -271,7 +271,8 @@ The <code>&amp;&amp;</code> operator is used to combine two boolean values. The
 result is also a boolean value. The result is <code>true</code> if <b>both</b> of
 the combined values are <code>true</code>, and the result is <code>false</code> if
 <b>either</b> of the combined values is <code>false</code>. For example, 
-"<code>(x&nbsp;==&nbsp;0) &amp;&amp; (y&nbsp;==&nbsp;0)</code>" is <code>true</code> if and only if both <code>x</code> is
+"<code>(x&nbsp;==&nbsp;0) &amp;&amp; (y&nbsp;==&nbsp;0)</code>"
+is <code>true</code> if and only if both <code>x</code> is
 equal to 0 and <code>y</code> is equal to&nbsp;0.</p>
 
 <p>The boolean operator "or" is represented by <code>||</code>. (That's supposed to
@@ -316,11 +317,11 @@ conditional operator. It's a ternary operator&mdash;that is, it has three operan
 it comes in two pieces, ? and :, that have to be used together. It takes
 the form</p>
 
-<pre><bnf><b>boolean-expression</b></bnf> ? <bnf><b>expression1</b></bnf> : <bnf><b>expression2</b></bnf></pre>
+<pre><bnf>boolean-expression</bnf> ? <bnf>expression1</bnf> : <bnf>expression2</bnf></pre>
 
-<np>The computer tests the value of <bnf><b>boolean-expression</b></bnf>. If the value is <code>true</code>, it
-evaluates <bnf><b>expression1</b></bnf>; otherwise, it evaluates
-<bnf><b>expression2</b></bnf>. For example:</np>
+<np>The computer tests the value of <bnf>boolean-expression</bnf>. If the value is <code>true</code>, it
+evaluates <bnf>expression1</bnf>; otherwise, it evaluates
+<bnf>expression2</bnf>. For example:</np>
 
 <pre>next = (N % 2 == 0) ? (N/2) : (3*N+1);</pre>
 
@@ -400,7 +401,7 @@ get a number between 1 and 6, we can add 1: "<code>(int)(6*Math.random())&nbsp;+
 rules; without the parentheses, the type cast operator would apply only to the <code>6</code>.)</p>
 
 <p>The type <ptype>char</ptype> is almost an integer type.  You can assign <ptype>char</ptype>
-values to <ptype>int</ptype> variables, and you can assign numerical constants in the
+values to <ptype>int</ptype> variables, and you can assign integer constants in the
 range 0 to 65535 to <ptype>char</ptype> variables.  You can also use explicit type-casts between 
 <ptype>char</ptype> and the numeric types.  For example, <code>(char)97</code> is <code>'a'</code>, 
 <code>(int)'+'</code> is <code>43</code>, and (char)('A'&nbsp;+&nbsp;2) is&nbsp;'C'.</p>

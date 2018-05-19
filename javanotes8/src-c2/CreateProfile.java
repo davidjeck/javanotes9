@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  * Creates a file named "profile.txt" containing four lines of information
  * about the user.  The user is prompted to enter the required information.

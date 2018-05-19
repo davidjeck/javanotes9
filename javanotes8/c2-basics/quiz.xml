@@ -193,4 +193,60 @@ next carriage return. These extra characters are discarded.</p></ans></question>
    </ans>
 </question>
 
+<question>
+<ques><p>What is the purpose of an import directive, such as <code>import textio.TextIO</code>
+or <code>import java.util.Scanner</code>?</p>
+</ques>
+<ans><p>The classes <classname>TextIO</classname> and <classname>Scanner</classname>
+are defined inside "packages" named <classname>textio</classname> and <classname>java.util</classname>.
+This means that you can't simply use the names "TextIO" or "Scanner" in a program and expect
+the computer to know what those names mean.  To use those names in a program, they must be
+imported from the relevant packages.
+</p>
+</ans>
+</question>
+
+<question>
+<ques><p>Write a complete program that asks the user to enter the number of "widgets" they
+want to buy and the cost per widget.  The program should then output the total cost for all the
+widgets.  Use <code>System.out.printf</code> to print the cost, with two digits after the decimal
+point.  You do not need to include any comments in the program.
+</p>
+</ques>
+<ans><p>The number of widgets can be a variable of type <ptype>int</ptype>, and the 
+cost per widget and total coast can be variables of type <ptype>double</ptype>.
+Using <classname>TextIO</classname>, the program can be written:</p>
+<pre>import textio.TextIO;
+public class CostOfWidgets {
+    public static void main(String[] args) {
+        int numberOfWidgets;
+        double costPerWidget;
+        double totalCost;
+        System.out.print("How many widgets do you want? ");
+        numberOfWidgets = TextIO.getlnInt();
+        System.out.print("How much does each widget cost? ");
+        costPerWidget = TextIO.getlnDouble();
+        totalCost = numberOfWidgets * costPerWidget;
+        System.out.printf("The total cost is $%1.2f%n", totalCost);
+    }
+}</pre>
+<np>Using <classname>Scanner</classname>, this would be:</np>
+<pre>import java.util.Scanner;
+public class CostOfWidgets {
+    public static void main(String[] args) {
+        int numberOfWidgets;
+        double costPerWidget;
+        double totalCost;
+        Scanner in = new Scanner(System.in);
+        System.out.print("How many widgets do you want? ");
+        numberOfWidgets = in.nextInt();
+        System.out.print("How much does each widget cost? ");
+        costPerWidget = in.nextDouble();
+        totalCost = numberOfWidgets * costPerWidget;
+        System.out.printf("The total cost is $%1.2f%n", totalCost);
+    }
+}</pre>
+</ans>
+</question>
+
 </quiz>

@@ -1,8 +1,5 @@
 package textio;
 
-// This is an exact copy of the regular TextIO.java, except that it has been placed
-// into a package named textio.  This is the default version of TextIO for Javanotes 8.
-
 import java.io.*;
 import java.util.IllegalFormatException;
 import java.util.regex.Matcher;
@@ -33,14 +30,21 @@ import javax.swing.JOptionPane;
  * this version should work with any source code that used the previous version, but it has some new
  * features, including the type of formatted output that was introduced in Java 5 and the ability to
  * use files and streams.)
+ * <p>TextIO must be imported from package textio to be used.  (Previous versions were in the
+ * default package.  Alternatively, this class can be moved into the default package by deleting
+ * the "package" declaration on the first line of this file.
  */
 public class TextIO {
+
+	/* Modified May 2018 to move TextIO.java into package textio.  This class is otherwise
+	 * identical to the version in the default package.
+	 */
 
 	/* Modified November 2007 to empty the TextIO input buffer when switching from one
 	 * input source to another. This fixes a bug that allows input from the previous input
 	 * source to be read after the new source has been selected.
 	 */
-
+	
 	/**
 	 * The value returned by the peek() method when the input is at end-of-file.
 	 * (The value of this constant is (char)0xFFFF.)

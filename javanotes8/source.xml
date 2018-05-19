@@ -17,7 +17,7 @@ a link for downloading just the source code.
 <a href="../README-running-the-examples.txt">The&nbsp;README&nbsp;file</a> from the download includes some 
 instructions for compiling and running the programs.
 Note however that some of these
-examples depend on other source files, such as <sourceref href="chapter2/TextIO.java">TextIO.java</sourceref>,
+examples depend on other source files, such as <sourceref href="chapter2/textio/TextIO.java">TextIO.java</sourceref>,
 that are not built into Java. These are classes that I have written.   All necessary files
 are included in the downloads, and links to the individual files are provided below.</p>
 
@@ -42,9 +42,10 @@ input/output, where the computer and the user type lines of text back and forth
 to each other. Some of these programs use the standard output object,
 <code>System.out</code>, for output. Many of them use my non-standard class,
 <classname>TextIO</classname>, for input. For the programs that use <classname>TextIO</classname>,
-one of the files <sourceref href="chapter2/TextIO.java">TextIO.java</sourceref> or TextIO.class must
+one of the files <sourceref href="chapter2/textio/TextIO.java">TextIO.java</sourceref> or TextIO.class must
 be available when you compile the program, and TextIO.class must be available
-when you run the program.  There is also a GUI version of TextIO;
+when you run the program.  TextIO.java and/or TextIO.class must be in a directory named textio.
+There is also a GUI version of TextIO;
 you can find information about it at the end of <web>this web page</web><tex>Part&nbsp;3, below</tex>.</p>
 
 <ul>
@@ -56,10 +57,14 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    <li><sourceref href="chapter2/TimedComputation.java">TimedComputation.java</sourceref>, from <localref href="basics.3"/>, 
    demonstrates a few basic built-in subroutines and functions.</li>
    <li><sourceref href="chapter2/EnumDemo.java">EnumDemo.java</sourceref>, from <localref href="basics.3"/>, a <b>very</b> simple
-   first demonstration of enum types.</li>
+   first demonstration of enum types.  The enum types used in this program are defined in the same
+   file as the program.  An alternative version, 
+   <sourceref href="chapter2/SeparateEnumDemo.java">SeparateEnumDemo.java</sourceref>, uses the same
+   enums, but the enums are defined in separate files,
+   <sourceref href="chapter2/Day.java">Day.java</sourceref> and <sourceref href="chapter2/Month.java">Month.java</sourceref></li>
    <li><sourceref href="chapter2/PrintSquare.java">PrintSquare.java</sourceref>, from <localref href="basics.4"/>, reads an integer 
    typed in by the user and prints the square of that integer. <b>This program depends on 
-   <sourceref href="chapter2/TextIO.java">TextIO.java</sourceref>.  The same is true for almost all of the programs in the
+   <sourceref href="chapter2/texto/TextIO.java">TextIO.java</sourceref>.  The same is true for almost all of the programs in the
    rest of this list.</b></li>
    <li><sourceref href="chapter2/Interest2.java">Interest2.java</sourceref>, from <localref href="basics.4"/>, calculates
    interest on an investment for one year, based on user input.  Uses <classname>TextIO</classname> for user input.</li>
@@ -466,12 +471,12 @@ other programming projects. Links to these files are also given above,
 along with the programs that use them.</p>
 
 <ul>
-   <li><sourceref href="chapter2/TextIO.java">TextIO.java</sourceref> defines a class containing some
+   <li><sourceref href="chapter2/textio/TextIO.java">TextIO.java</sourceref> defines a class containing some
    static methods for doing input/output. These methods make it easier to use the
    standard input and output streams, <code>System.in</code> and <code>System.out</code>.
    <classname>TextIO</classname> also supports other input sources and output destinations,
-   such as files.  The
-   <classname>TextIO</classname> class defined by this file is only useful in a command-line
+   such as files.  <classname>TextIO</classname> is in a package named <classname>textio</classname>.
+   The <classname>TextIO</classname> class is only useful in a command-line
    environment, and it might be inconvenient to use in integrated development environments such
    as Eclipse in which standard input does not work particularly well. In that case, you might want to use
    the following file instead.</li>

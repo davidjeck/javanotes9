@@ -86,6 +86,9 @@ function buildTextIOjar {
    echo "import textiogui.TextIO;" > temp/$2.java
    echo "import textiogui.System;" >> temp/$2.java
    cat $1/$2.java >> temp/$2.java
+   if grep "import textio.TextIO;" $1/$2.java > /dev/null ; then
+      perl -i -p -e 's/import textio.TextIO;//' temp/$2.java
+   fi
    CHPT="$1"
    NAME="$2"
    shift 2
@@ -275,6 +278,7 @@ echo "Note: No jar files were created for the following sample programs:"
 echo
 echo Examples for which no jar files are made:
 echo chapter2 CreateProfile -- can overwrite a file in the current directory without warning
+echo chapter2 SeparateEnumDemo -- duplicates functionality of EnumDemo
 echo chapter4 CopyTextFile -- requires command-line arguments
 echo chapter4 RandomMosaicWalk2 -- duplicates functionality of RandomMosaicWalk
 echo chapter8 LengthConverter3 -- duplicates functionality of LenghtConverter2
@@ -287,7 +291,7 @@ echo chapter12 BackgroundCompWithInvoke -- duplicates functionality of Backgroun
 echo chapter12 CLDateServerWithThreads -- duplicates functionality of DateServer
 echo chapter12 CLDateServerWithThreadPool -- duplicates functionality of DateServer
 echo chapter12 CLMandelbrotMaster -- needs command line arguments
-echo chapter12 CLMandelbrotWorked -- needs to run on several machines, or needs command-line arguments
+echo chapter12 CLMandelbrotWorker -- needs to run on several machines, or needs command-line arguments
 echo
 echo JAR FILES CAN BE FOUND IN THE DIRECTORY compiled-jar-files
 echo

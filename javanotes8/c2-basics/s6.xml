@@ -26,32 +26,38 @@ that you need can be downloaded for free on the Internet.
 <subsection id="basics.6.1" title="Java Development Kit">
    
 <p>The basic development system for Java programming is usually referred
-to as the <newword>JDK</newword> (Java Development Kit).  It is a part of Java&nbsp;SE,
-the Java "Standard Edition" (as opposed to Java EE for servers or Java ME for mobile devices).  
-Note that Java&nbsp;SE comes in 
+to as a <newword>JDK</newword> (Java Development Kit).  It is a part of Java&nbsp;SE,
+the Java "Standard Edition."  Note that Java&nbsp;SE comes in 
 two versions, a Development Kit version (the JDK) and a Runtime Environment version
-(the JRE).  The
-Runtime can be used to run Java programs,
+(the JRE).  The Runtime can be used to run Java programs,
 but it does not allow you to compile your own Java programs.
 The Development Kit includes the Runtime but also
 lets you compile programs.  You need a JDK for use with this textbook.
 </p>
-   
-<p>Java was developed by Sun Microsystems, Inc., which is now a part of the Oracle corporation. 
-Oracle makes the JDK for Windows, Mac&nbsp;OS, and Linux
-available for free download at its Java Web site.  Many Windows computers come with
-a Java Runtime already installed, but you might need to install the JDK.
-Some versions of Linux come with the JDK either installed by default or 
-on the installation media.  Mac&nbsp;OS does not currently come with Java pre-installed.
-If you need to download and install the JDK, be sure to get the JDK for Java 7, Java 8, or later.
-As of summer, 2014, it can be downloaded from</p>
 
-<pre><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a></pre>
-
-   
 <p>If a JDK is properly installed on your computer, you can use the command line environment
 to compile and run Java programs. An IDE will also require a JDK, but it might be included with
 the IDE download.</p>
+   
+<p>Java was developed by Sun Microsystems, Inc., which was acquired by the Oracle corporation. 
+Oracle makes the JDK for Windows, Mac&nbsp;OS, and Linux
+available for free download at its Java Web site.  Some computers might come with
+a Java Runtime already installed, but you will probably need to install the JDK in any case.
+For most Linux distributions, a version known as OpenJDK is available for installation 
+as a package. As of summer 2018, the official Oracle versions are available at</p>
+
+<pre><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a></pre>
+
+<np>You will need a JDK for Java 8 or later for use with this textbook.  The sample programs
+for this textbook have been compiled with Java 8 and with Java 10.</np>
+   
+<p><b>About JavaFX:</b>  The Graphical User Interface programs in this book use the
+JavaFX GUI toolkit.  JavaFX is included in the JDK for Java 8, 9, or 10 from Oracle Corporation, 
+but Oracle has announced that it will not be included in Java 11 and later; instead,
+it will be available as a separate download. For the alternative OpenJDK, JavaFX has never
+been included as a standard component, but is available separately as OpenJFX.
+For example, on my Ubuntu Linux desktop computer, I had to install an "openjfx"
+package in addition to the "openjdk" package.</p>
    
 </subsection>
    
@@ -65,15 +71,12 @@ environment and to become productive using it.</p>
    
 <p>To use a command line programming environment, you will have to open a window
 where you can type in commands.  In Windows, you can open such a command window
-by running the program named <newword>cmd</newword>.  (In Windows 7,
-click "Start / Program Files / Accessories / Command Prompt."  In Windows 8,
-press the Windows and X keys together to bring up the "Power User Menu,"
-and select "Command Prompt.")
+by running a program named <newword>cmd</newword> or <newword>PowerShell</newword>. 
 In Mac&nbsp;OS, you want to run the
 <newword>Terminal</newword> program, which can be found in
 the Utilities folder inside the Applications folder.  In Linux, there
 are several possibilities, including an old program called <newword>xterm</newword>;
-try looking for "Terminal" in your applications menu.</p>
+try looking for "Terminal" in your Applications menu.</p>
    
 <p>No matter what type of computer you are using, when you open a command window,
 it will display a prompt of some sort.  Type in a command at the prompt and
@@ -109,7 +112,7 @@ you can organize your files any way you like.</p>
 <p>The most basic commands for using Java on the command line are
 <newword>javac</newword> and <newword>java</newword>;
 <code>javac</code> is used to compile Java source code, and <code>java</code>
-is used to run Java stand-alone applications.  If
+is used to run Java programs.  If
 a JDK is correctly installed on your computer, it should recognize these
 commands when you type them in on the command line.  Try typing the commands
 <code>java&nbsp;-version</code> and <code>javac&nbsp;-version</code> which
@@ -120,48 +123,62 @@ is installed rather than a Development Kit.  (On Windows, after installing
 the JDK, you need to modify the Windows PATH environment variable to make this work.
 See the JDK installation instructions on Oracle's download site for information about how to do this.)</p>
 
-<p>To test the <code>javac</code> command, place a copy of <sourceref href="TextIO.java"/>
+<p>To test the <code>javac</code> command, place a copy of <sourceref href="HelloWorld.java"/>
 into your working directory.  (If you downloaded the Web site of this book,
 you can find it in the directory named <code>source</code>; you can use
 your computer's GUI to copy-and-paste this file into your working directory.
-Alternatively, you can navigate to <sourceref href="TextIO.java"/> on the
+Alternatively, you can navigate to <sourceref href="HelloWorld.java"/> on the
 book's <tex><a href="http://math.hws.edu/javanotes8/source/index.html">Web&nbsp;site</a></tex><web><a href="../source/index.html">Web&nbsp;site</a></web> and use the 
 "Save&nbsp;As" command in your Web browser to save a copy of the file into your working directory.)
 Type the command:</p>
    
-<pre>javac  TextIO.java</pre>
+<pre>javac  HelloWorld.java</pre>
    
-<np>This will compile <code>TextIO.java</code> and will create a bytecode file
-named <code>TextIO.class</code> in the same directory.  Note that if the command
+<np>This will compile <code>HelloWorld.java</code> and will create a bytecode file
+named <code>HelloWorld.class</code> in the same directory.  Note that if the command
 succeeds, you will not get any response from the computer; it will just redisplay
-the command prompt to tell you it's ready for another command.</np>
+the command prompt to tell you it's ready for another command.  You will then
+be able to run the program using the <code>java</code> command:</np>
 
-<p>To test the <code>java</code> command, copy a sample program such as <code>Interest2.java</code> from
-this book's source directory into your working directory, or download it from the web site.  First, compile the program
+<pre>java  HelloWorld</pre>
+
+<np>The computer should respond by outputting the message "Hello World!".  Note that although
+the program is stored in a file named <code>HelloWorld.class</code>, the <code>java</code>
+command uses the name of the class, <classname>HelloWorld</classname>, not the name of the
+file.</np>
+
+<p>Many of the sample programs for this book use <classname>TextIO</classname>
+to read input from the user (see <localref href="basics.4.3"/>).  Since <classname>TextIO</classname>
+is not a standard part of Java, you must make it available to any program that uses it.
+This means that your working directory should contain a folder named <code>textio</code>,
+and inside that program should be the file <sourceref href="textio/TextIO.java">TextIO.java</sourceref>.
+You can copy <code>TextIO.java</code> from this book's source directory, or your can download it from the web site,
+but you should be sure to place it inside a folder named <code>textio</code>.
+</p>
+
+<p>Once you have <code>TextIO.java</code> you can run a sample program such as
+<sourceref href="Interest2.java"/> to test user input.  First, compile the program
 with the command</p>
    
 <pre>javac  Interest2.java</pre>
    
-<np>Remember that for this to succeed, <classname>TextIO</classname> must already be in
-the same directory.  Then you can execute the program using the command</np>
+<np>If successful, this will create the compiled file named <code>Interest2.class</code>.  But you will
+also notice that it creates the file <code>TextIO.class</code> inside the <code>textio</code> folder,
+if that file does not already exist.  More generally, the <code>javac</code> command will compile
+not just the file that you specify but also any additional Java files that are needed.
+Once you have <code>Interest2.class</code>, you can run it using the command</np>
    
 <pre>java  Interest2</pre>
    
-<np>Be careful to use <b>just the name</b> of the program, <classname>Interest2</classname>,
-with the <code>java</code> command,  not the name of the Java source code file
-or the name of the compiled class file.
-When you give this command, the program will run.  You will be asked to enter some
+<np>You will be asked to enter some
 information, and you will respond by typing your answers into the command window,
-pressing return at the end of the line.  When the program ends, you will see the
-command prompt, and you can enter another command. (Note that "<code>java&nbsp;TextIO</code>"
+pressing return at the end of each line.  When the program ends, you will see the
+command prompt, and you can enter another command. (Note, by the way, that "<code>java&nbsp;TextIO</code>"
 would not make sense, since <code>TextIO</code> does not have a <code>main()</code> routine,
 and so it doesn't make sense to try to execute it as a program.)</np>
 
-<p>You can follow a similar procedure to run all of the examples in this book.  Some examples
-require additional classes, such as <classname>TextIO</classname>, in addition to the main program.  Remember to
-place any required classes in the same folder as the program that uses them.  (You can use either
-the .java or the .class files for the required classes.)
-</p>
+<p>You can follow a similar procedure to run any of the examples in this book.  Some examples require
+additional files, such as <code>TextIO.java</code>, which also need to be in your working directory.</p>
    
 <break/>
    
@@ -173,9 +190,10 @@ documents are not appropriate, unless you can get your word processor to save
 as plain text.  A good text editor can make programming a lot more pleasant.
 Linux comes with several text editors.  On Windows, you can use notepad in a pinch, 
 but you will probably want something better.  For Mac&nbsp;OS, you might download 
-the free <newword>TextWrangler</newword> application.  One
-possibility that will work on any platform is to use <newword>jedit</newword>, 
-a good programmer's text editor that is itself written in Java and that can be downloaded 
+the <a href="http://www.barebones.com/products/bbedit/index.html">BBEdit</a> application, which
+can be used for free.  
+One possibility that will work on any platform is to use <newword>jedit</newword>, 
+a programmer's text editor that is itself written in Java and that can be downloaded 
 for free from <a href="http://www.jedit.org">www.jedit.org</a>.</p>
    
 <p>To work on your programs, you can open a command line window and <code>cd</code>
@@ -193,7 +211,8 @@ errors, <b>save your changes</b>, and then try the <code>javac</code> command ag
 (It's usually a good idea to just work on the first few errors; sometimes fixing 
 those will make other errors go away.)
 Remember that when the <code>javac</code> command finally succeeds, you will get
-no message at all.  Then you can use the <code>java</code> command to run your
+no message at all, or possibly just some "warnings" that do not stop the program
+from running.  Then you can use the <code>java</code> command to run your
 program, as described above.  Once you've compiled the program, you can run it as
 many times as you like without recompiling it.</p>
 
@@ -225,7 +244,7 @@ advanced features.</p>
 <p>You can download an Eclipse IDE from <a href="http://eclipse.org">eclipse.org</a>.  It is a
 free program.  Eclipse is itself written in Java.  It requires a Java Runtime Environment, 
 but not necessarily a JDK, since it includes its own compiler.
-You should make sure that the JRE or JDK, Version 7 or higher is installed on your computer, as
+You should make sure that the JRE or JDK, Version 8 or higher, is installed on your computer, as
 described <localref href="basics.6.1">above</localref>, <b>before</b> you install Eclipse.
 There are several versions of the Eclipse IDE; you can use the "Eclipse IDE for Java Developers."
 </p>
@@ -253,7 +272,7 @@ the "Debug Perspective," which has features designed to help you find semantic e
 that contains text editor views.  This is where you will create and edit your programs.
 To the left of this is the
 Package Explorer view, which will contain a list of your Java projects and source code
-files.  To the right are some other views that I don't find very useful, 
+files.  To then right are some other views that I don't find very useful, 
 and I suggest that you close them by clicking the small "X" next to the name of each one.
 Several other views that <b>will</b>
 be useful appear in a section of the window
@@ -276,35 +295,35 @@ a directory named "src," which is where your Java source code files will go.  It
 contains the "JRE System Library"; this is the collection of standard built-in classes 
 that come with Java.</p>
    
+<p>To run any of the sample Java programs from this textbook, you need to copy the source code file into
+your Eclipse Java project.  Assuming that you have downloaded the source code file onto your
+computer, you can copy-and-paste it into the Eclipse window.  (Right-click the file icon, 
+or control-click on Mac&nbsp;OS, select "Copy" 
+from the pop-up menu, the right-click the project's src folder in the Eclipse window, and select
+"Paste". Be sure to paste it into the src folder, not into the project itself; files outside
+the source folder are not treated as Java source code files.) Alternatively, you can try dragging
+the file icon onto the src folder in the Eclipse project.</p>
 
-<p>To run the <classname>TextIO</classname> based examples from this textbook, you must add the
-source code file <sourceref href="TextIO.java"/> to your project.  If you have downloaded
-the Web site of this book, you can find a copy of <sourceref href="TextIO.java"/> in the source directory.
-Alternatively, you can navigate to the file on-line and use the "Save As" command 
-of your Web browser to save a copy of the file onto your computer.  The easiest way to
-get <classname>TextIO</classname> into your project is to locate the source code file 
-on your computer and drag the file icon
-onto the project name in the Eclipse window.  If that doesn't work, you can try using
-copy-and-paste:   Right-click the file icon (or control-click on Mac&nbsp;OS), select "Copy" 
-from the pop-up menu, right-click the project's <i>src</i> folder in the Eclipse window, and select
-"Paste". (Be sure to paste it into the src folder, not into the project itself; files outside
-the source folder are not treated as Java source code files.)
-Another option is to add the file directly to the <i>src</i> folder inside
-your workspace directory. However, Eclipse will not automatically recognize a file added
-in this way; to make Eclipse find the file, right-click the project name in the Eclipse
-window and select "Refresh" from the pop-up menu.  In any case, <classname>TextIO</classname> should
-appear under "src" in your project, inside a <newword>package</newword> named
-"default package".   Once a file is in this list, you can open it by double-clicking it;
-it will appear in the editing area of the Eclipse window.</p> 
 
-<p>To run any of the Java programs from this textbook, copy the source code file into
-your Eclipse Java project in the same way that you copied TextIO.java.  
-To run the program, right-click in the editor window, or on the file name in
+<p>To use the <classname>TextIO</classname> based examples from this textbook, you must add the
+source code file <sourceref href="TextIO.java"/> to your project.  This file has to be in
+a "package" named <code>textio</code>.  If you have downloaded <code>TextIO.java</code>
+and placed it into a folder named "textio," as described above, then you can simply copy-and-paste that folder
+into the "src" folder of your project.  
+Alternatively, you can create the <code>textio</code>
+package using the "New/Package" command from the "File" menu.  This will make a
+folder named "textio" in your project, and you can then then copy-and-paste <code>TextIO.java</code>
+into that folder. In any case, package <classname>textio</classname> should
+appear under "src" in your project, with <code>TextIO.java</code> inside it.</p> 
+
+<p>Once a Java program is in the project, you can open it in an editor by right-clicking the
+file name in the "Package Explorer" view.  To run the program,
+right-click in the editor window, or on the file name in
 the Package Explorer view (or control-click in Mac&nbsp;OS).  In the menu that pops
 up, go to the "Run As" submenu, and select "Java Application".  The program
 will be executed.  If the program writes to standard output, the output will
 appear in the "Console" view, in the area of the Eclipse window below the editing area.  If the program uses
-<classname>TextIO</classname> for input, you will have to type the required input into
+<classname>TextIO</classname> or <classname>Scanner</classname> for input, you will have to type the required input into
 the "Console" view&mdash;<b>click the "Console" view before you start typing</b>, so that
 the characters that you type will be sent to the correct part of the window.
 (For an easier way to run a program, find and click the small "Run" button in Eclipse's tool bar.)
@@ -327,12 +346,13 @@ window that opens, type in the name of the class that you want to create.
 The class name must be a legal Java identifier.
 Note that you want the name of the class, not the name of the
 source code file, so don't add ".java" at the end of the name.  
-Examples in this book use the "default package," so you will also want
-to erase the contents of the box labeled "Package."  (See the last section of
-this section for more information about packages.)
-Finally, click the "Finish" button to create the class.  The class
-should appear inside the "src" folder, in the "default package," and it should automatically
-open in the editing area so that you can start typing in your program.</p>
+The window also includes an input box labeled "Package" where you can 
+specify the name of a package to contain the class.
+Most examples in this book use the "default package," but you can create your
+own programs in any package.  To use the default package, the "Package"
+input box should be empty.  Finally, click the "Finish" button to create the class.  The class
+should appear inside the "src" folder, in a folder corresponding to its package.  The new file
+should automatically open in the editing area so that you can start typing in your program.</p>
    
 <p>Eclipse has several features that aid you as you type your code.
 It will underline any syntax error with a jagged red line, and in some
@@ -379,10 +399,15 @@ still call up Code Assist manually with Control-Space.</p>
    
 <p>Once you have an error-free program, you can run it as described above.
 If you find a problem when you run it, it's very
-easy to go back to the editor, make changes, and run it again.  Note that
-using Eclipse, there is no explicit "compile" command.  The source
-code files in your project are automatically compiled, and are re-compiled
-whenever you modify them.</p>
+easy to go back to the editor, make changes, and run it again.</p>
+
+<break/>
+
+<p>Unfortunately, Eclipse does not currently come with built-in support for JavaFX,
+the GUI toolkit that is used in this textbook.  However, support can be installed
+using the "Install New Software" command in the "Help" menu.  See
+<a href="http://www.eclipse.org/efxclipse/index.html">www.eclipse.org/efxclipse/</a>
+for information.</p>
 
 </subsection>
 
@@ -391,22 +416,23 @@ whenever you modify them.</p>
    
 <p>Another IDE for professional programming is NetBeans. It can be downloaded from
 <a href="http://netbeans.org">netbeans.org</a>.  Alternatively, a bundle containing
-both NetBeans and the JDK is available on Oracle's Java download page.</p>
+both NetBeans and the JDK is available on Oracle's Java download page.  Netbeans
+currently supports Oracle's Java 8, including JavaFX.</p>
 
 <p>Using NetBeans is very similar to using Eclipse.  Even the layout of its window is
 very similar to the Eclipse window.  Create a project in NetBeans with the "New Project"
 command.  You will have to select the type of project in a pop-up window.  You want
 to create a "Java Application."  The project creation dialog will have a suggested name
 for the project, which you will want to change.  It also has an option to create
-a main class for the project, which is selected by default.  If you use that option,
-you should change the class name. For use with this book, the name should not be in
-a "package"; that is, it should not include a period.</p>
+a main class for the project, which is selected by default.  If you just want a
+project for working with the sample programs from this book, then you can
+disable that option.</p>
 
 <p>A project will have a "Source Folder" where the source code files for the project
-are stored.  You can drag TextIO.java and other files onto that folder, or you can copy-and-paste
+are stored.  You can drag files onto that folder, or you can copy-and-paste
 them from the file system.  For running a file, you can right-click the file and select
 "Run File" from the pop-up menu.  There is also a "Run" button in the NetBeans toolbar.
-There is no explicit compilation step.   Input and ouput are done in an area below the
+There is no explicit compilation step.   Input and output are done in an area below the
 edit window, just as in Eclipse.</p>
 
 <p>When you are editing a file, NetBeans will mark errors as you type.  (Remember, again,
@@ -424,7 +450,8 @@ Just press Control-Space as you are typing to get a list of possible completions
 <p>Finally, I will mention BlueJ, an IDE that is designed specifically for people who
 are learning to program.  It is much less complex than Eclipse or NetBeans, but it
 does have some features that make it useful for education.
-BlueJ can be downloaded from <a href="http://bluej.org">bluej.org</a>.</p>
+BlueJ can be downloaded from <a href="http://bluej.org">bluej.org</a>.  It currently
+supports Java 8, and requires that you have a JDK, not just a JRE.</p>
 
 <p>In BlueJ, you can begin a project with the "New Project" command in the "Project" menu.
 A BlueJ project is simply a folder.  When you create a project, you will have to select
@@ -434,7 +461,6 @@ You can drag .java files from the file system
 onto that window to add files to the project; they will be copied into the project folder
 as well as shown in the window.  You can also copy files directly into
 the project folder, but BlueJ won't see them until the next time you open the project.
-For example, you can do this with TextIO.java and the sample programs from this book.
 When you restart BlueJ, it should show the last project you were working on, but
 you can open any project with a command from the "Project" menu.</p>
 
@@ -474,14 +500,21 @@ you until we get to object-oriented programming in <localref href="OOP"/>.</p>
    
 <p>Every class in Java is contained in something called a <newword>package</newword>.
 Classes that are not explicitly  put into a  package are in the "default" package.
-Almost all the examples in this textbook are in the default package, and I will not
-even discuss packages in any depth until <localref href="subroutines.5"/>.  However,
-some IDEs force you to pay attention to packages.</p>
+All of Java's standard classes are in named packages.  This includes even classes
+like <classname>String</classname> and <classname>System</classname>, which are
+in package named <classname>java.lang</classname>.  Classes in <classname>java.lang</classname>
+are automatically imported into any Java file, but classes in other packages must
+be imported using an <code>import</code> directive.  My <classname>TextIO</classname>
+class is in a package named <classname>textio</classname>, and it must be
+imported into a program that wants to use it.  I will discuss packages in
+much greater detail in <localref href="subroutines.5"/>.   For now, you 
+just need to know some basic facts.</p>
 
-<p>In fact, the use of the default package is discouraged, according to official Java
+<p>Although most of my examples are in the default package,
+in fact, the use of the default package is discouraged, according to official Java
 style guidelines. Nevertheless, I have
 chosen to use it, since it seems easier for beginning programmers to
-avoid the whole issue of packages, at least at first.   If Eclipse or NetBeans
+avoid packages as much as possible, at least at first.   If Eclipse or NetBeans
 tries to put a class into a package, you can delete the package name from the
 class-creation dialog to get it to use the default package instead.
 But if you do create a class in a package, the source code starts with a line that specifies
@@ -490,40 +523,28 @@ named <code>test.pkg</code>, then the first line of the source code will be
 </p>
 
 <pre>package test.pkg;</pre>
-
    
-<np>In an IDE, this will not cause any problem unless the program you are writing
-depends on <classname>TextIO</classname>.  A class that is in a non-default package
-cannot use a class from the default package.  To make TextIO available to such a class,
-you can move TextIO to a named, non-default package.  
-This means that the source code file <sourceref href="TextIO.java"/>
-has to be modified
-to specify the package: A <code>package</code>
-statement like the one shown above must be added to the very beginning of the file, with the appropriate
-package name.
-(The IDE might do this for you, if you drag TextIO.java from the default package into a non-default package.)
-If you add TextIO to the same package as the class that uses it, then <classname>TextIO</classname> will be automatically
-available to that class.  If <classname>TextIO</classname> is in a different named package, you have to add an
-"import" statement to the other class to make <classname>TextIO</classname> available to it.  For example, if
-<classname>TextIO</classname> is in the package <code>textio</code>, add the statement</np>
+<np>For example, the source code for <classname>TextIO</classname> begins with
+"package textio;".  I put <classname>TextIO</classname> in a package because
+a class that is in a non-default package cannot use a class from the default package.
+That is, if <classname>TextIO</classname> were in the default package, then
+it could <b>only</b> be used by programs that are also in the default package.
+(In fact, in earlier versions of this textbook, <classname>TextIO</classname> was
+in the default package.  I have moved it to package <classname>textio</classname>
+for this version of the book.)</np>
 
-<pre>import textio.TextIO;</pre>
-  
-<np>to the top of the other source code file, just after its own <code>package</code> declaration.</np> 
-
-<p>By the way, if you use packages in a command-line environment, other complications
-arise.  For example, if a class is in a package named <code>test.pkg</code>, then
+<p>When packages are used in a command-line environment, some complications
+arise.  For example, if a program is in a package named <classname>text.pkg</classname>, then
 the source code file must be in a subdirectory named "pkg" inside a 
-directory named "test" that
-is in turn inside your main Java working directory.  Nevertheless, when you compile or
-execute the program, you should be in the main directory, not in a subdirectory.
+directory named "test" that is in turn inside your main Java working directory.  Nevertheless, when you compile or
+execute the program, you should be working in the main directory, not in the subdirectory.
 When you compile the source code file, you have to include the name of the
-directory in the command:  Use "<code>javac&nbsp;test/pkg/ClassName.java</code>"
+directory in the command:  For example, for a program in package <classname>test.pkg</classname> 
+use "<code>javac&nbsp;test/pkg/ClassName.java</code>"
 on Linux or Mac&nbsp;OS, or "<code>javac&nbsp;test\pkg\ClassName.java</code>" on
 Windows.  The command for executing the program is then
 "<code>java&nbsp;test.pkg.ClassName</code>", with a period separating the package
-name from the class name.  However, you will not need to worry about
-any of that when working with almost all of the examples in this book.</p>
+name from the class name.</p>
    
 </subsection>   
 

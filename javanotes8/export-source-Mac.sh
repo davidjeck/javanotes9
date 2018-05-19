@@ -19,7 +19,6 @@ cd $EXPORT_DIR
 
 perl -i -p -e 's/\t/    /g' `find . -name "*.java"`
 perl -i -p -e 's/<!DOCTYPE.*javanotes8.dtd" *>//' `find . -name "*.xml" -and ! -name "javanotes8*"`
-rm -r `find . -name "CVS"`
 
 rm $PROJECT/export-source.sh
 rm $PROJECT/export-source-Mac.sh

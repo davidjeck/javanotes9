@@ -58,17 +58,17 @@ if  $XALAN_COMMAND -xsl convert-web.xsl -in javanotes8.xml ; then
    cp README-exercise-solutions.txt web
 
    copyfiles 1 overview
-   copyfiles 2 basics src-textio/TextIO.java
-   copyfiles 3 control src-textio/TextIO.java
-   copyfiles 4 subroutines src-textio/TextIO.java
-   copyfiles 5 OOP src-textio/TextIO.java
+   copyfiles 2 basics src-textio/textio
+   copyfiles 3 control src-textio/textio
+   copyfiles 4 subroutines src-textio/textio
+   copyfiles 5 OOP src-textio/textio
    copyfiles 6 GUI1 src-c5/Hand.java src-c5/Deck.java src-c5/Card.java src-c5/BlackjackHand.java src-c4/MosaicPanel.java
-   copyfiles 7 arrays src-textio/TextIO.java src-c4/MosaicPanel.java
-   copyfiles 8 robustness src-textio/TextIO.java
-   copyfiles 9 recursion src-textio/TextIO.java src-c4/MosaicPanel.java
-   copyfiles 10 generics src-textio/TextIO.java
-   copyfiles 11 IO src-textio/TextIO.java
-   copyfiles 12 threads src-textio/TextIO.java
+   copyfiles 7 arrays src-textio/textio src-c4/MosaicPanel.java
+   copyfiles 8 robustness src-textio/textio
+   copyfiles 9 recursion src-textio/textio src-c4/MosaicPanel.java
+   copyfiles 10 generics src-textio/textio
+   copyfiles 11 IO src-textio/textio
+   copyfiles 12 threads src-textio/textio
    copyfiles 13 GUI2 src-c5/Hand.java src-c5/Deck.java src-c5/Card.java 
    
    if [ ! -e "$BUILD_OUTPUT_DIR" ] ; then

@@ -1,15 +1,11 @@
 /**
  * This program demonstrates the use of enum types.
- * The enum types Day and Month are defined in this file.
+ * 
+ * For this version of the program, the enum types are defined in
+ * separate files, Day.java and Month.java.  The version named
+ * EnumDemo.java defines the enums in the same file.
  */
-public class EnumDemo {
-
-	// Define two enum types -- remember that the definitions
-	// go OUTSIDE The main() routine!
-
-	enum Day { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
-
-	enum Month { JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC }
+public class SeparateEnumDemo {
 
 	public static void main(String[] args) {
 

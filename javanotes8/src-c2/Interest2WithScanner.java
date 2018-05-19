@@ -9,7 +9,7 @@ import java.util.Scanner;  // Make the Scanner class available.
  * rate must be input as a decimal, not a percentage (for
  * example, 0.05 rather than 5).
  * 
- * This program uses the standard Scaner class for input.
+ * This program uses the standard Scanner class for input.
  */
 public class Interest2WithScanner {
 

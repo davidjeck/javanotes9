@@ -178,7 +178,9 @@ Fred, then the program should respond "Hello, FRED, nice to meet you!".</p>
    <exercise-discuss>
 <p>In order to read the name typed in by the user, this program uses one of the
 input routines from the non-standard <classname>TextIO</classname> class. So, this program
-can only be run if that class is available to the program.  I will use <code>System.out</code>
+can only be run if that class is available to the program, and the program should
+start with the import directive <code>import textio.TextIO</code>.
+I will use <code>System.out</code>
 for output.  (Although it is possible to use <code>TextIO</code> for output as
 well as for input, I will generally avoid that option in my examples.)</p>
 
@@ -217,7 +219,8 @@ to read a second value from input.)</p>
 
    </exercise-discuss>
    <exercise-code>
-<pre><prog name="Greeting">
+<pre><prog name="Greeting">import textio.TextIO;
+
 public class Greeting {
    
     /*  This program asks the user's name and then
@@ -348,7 +351,9 @@ worried about the user typing extra stuff on a line, you can leave out the calls
 
    </exercise-discuss>
    <exercise-code>
-<pre><prog name="CountChange">public class CountChange {
+<pre><prog name="CountChange">import textio.TextIO;
+
+public class CountChange {
   
    /*  This program will add up the value of a number of quarters,
        dimes, nickels, and pennies.  The number of each type of 
@@ -508,7 +513,9 @@ unusual.)</p>
    </exercise-discuss>
    <exercise-code>
 <pre>
-<prog name="Dozens">public class Dozens {
+<prog name="Dozens">import textio.TextIO;
+
+public class Dozens {
   
    /*  This program will convert a given number of eggs into
        the number of dozens plus the number of left over eggs.
@@ -546,7 +553,8 @@ unusual.)</p>
 <np><b><u>Improved version:</u></b>
 </np>
 
-<pre><prog name="GrossAndDozens">
+<pre><prog name="GrossAndDozens">import textio.TextIO;
+
 public class GrossAndDozens {
   
    /*  This program will convert a given number of eggs into
@@ -681,7 +689,9 @@ of text and then breaking that line into two words, you could simply use
 <code>TextIO.getWord()</code> twice to read the two words from the same line of
 input&mdash;except that the exercise says to use <code>getln()</code>.</p>
 </exercise-discuss>
-<exercise-code><pre><prog name="FirstNameLastName">/**
+<exercise-code><pre><prog name="FirstNameLastName">import textio.TextIO;
+
+/**
  * This program reads the user's first name and last name,
  * separated by a space.  It then prints the user's first and
  * last names separately, along with the number of characters
@@ -771,7 +781,8 @@ public class FirstNameLastName {
       (The program will crash and print an error message.)</p>
    </exercise-discuss>
    <exercise-code>
-<pre><prog name="FindAverage">
+<pre><prog name="FindAverage">import textio.TextIO;
+
 public class FindAverage {
 
    public static void main(String[] args) {

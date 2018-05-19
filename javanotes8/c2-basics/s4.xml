@@ -145,9 +145,9 @@ such as tabs and double quote characters.</p>
 <subsection id="basics.4.2" title="A First Text Input Example">
 
 <p>For some unfathomable reason, Java 
-has never made it very easy to read data typed in by the user of a program.
+has traditionally made it difficult to read data typed in by the user of a program.
 You've already seen that output can be displayed to the user using the
-subroutine <code>System.out.print</code>. This subroutine is part of a pre-defined
+subroutine <code>System.out.print</code>. This subroutine is part of a predefined
 object called <code>System.out</code>. The purpose of this object is precisely to
 display output to the user.  There is a corresponding object called
 <code>System.in</code> that exists to read data input by the user, but it provides
@@ -175,16 +175,26 @@ subroutines for reading values typed by the user. The subroutines in this class
 make it possible to get input from the standard input object,
 <code>System.in</code>, without knowing about the advanced aspects of Java that are
 needed to use <classname>Scanner</classname>
-or to use <code>System.in</code> directly.  <classname>TextIO</classname> also has a few
-other capabilities that I will discuss later in this section.</p>
+or to use <code>System.in</code> directly.</p>
+
+<p><classname>TextIO</classname> is defined in a "package" named <classname>textio</classname>.
+This means that when you look for the file <code>TextIO.java</code>, you will find it inside
+a folder named <classname>textio</classname>.  Furthermore, it means that a program that uses
+<classname>TextIO</classname> must "import" it from the <classname>textio</classname> package.
+This is done with the import directive 
+</p>
+
+<pre>import textio.TextIO;</pre>
+
+<np>This directive must come before the "public class" that begins your program.  Most of
+Java's standard classes are defined in packages and are imported into programs in the same way.</np>
 
 <p>To use the <classname>TextIO</classname> class, you must make sure that the class is
 available to your program. What this means depends on the Java programming
 environment that you are using.  In general, you just have to
-add the source code file, <sourceref href="TextIO.java"/>, to the same directory that contains
-your main program.   See <localref href="basics.6"/>
-for information about how to use <classname>TextIO</classname>.</p>
-
+add the folder <sourceref href="textio"/> to the same folder that contains
+your main program.  This folder contains the file <sourceref href="TextIO.java"/>.
+See <localref href="basics.6"/> for information about how to use <classname>TextIO</classname>.</p>
 
 <p>The input routines in the <classname>TextIO</classname> class are static member functions.
 (Static member functions were introduced in the <localref href="basics.3">previous section</localref>.) 
@@ -207,13 +217,15 @@ in an integer value. The user must type a number and press return before the pro
 continue.  The value that the user typed will then be returned by the function, and it
 will be stored in the variable, <code>userInput</code>. Here is a complete program
 that uses <code>TextIO.getlnInt</code> to read a number typed by the user and then
-prints out the square of that number:</np>
+prints out the square of that number.  Note the <code>import</code> directive on the
+first line:</np>
 
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  * A program that reads an integer that is typed in by the
  * user and computes and prints the square of that integer.
- */
- 
+ */ 
 public class PrintSquare {
     
      public static void main(String[] args) {
@@ -323,7 +335,9 @@ interest rate. The result is a much more useful program&mdash;for one thing, it
 makes sense to run it more than once!  Note that this program uses formatted
 output to print out monetary values in their correct format.</p>
 
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  * This class implements a simple program that will compute
  * the amount of interest that is earned on an investment over
  * a period of one year.  The initial amount of the investment
@@ -332,7 +346,6 @@ output to print out monetary values in their correct format.</p>
  * rate must be input as a decimal, not a percentage (for
  * example, 0.05 rather than 5).
  */
-
 public class Interest2 {
 
    public static void main(String[] args) {
@@ -415,7 +428,9 @@ questions and outputs the user's responses to a file named
 output to standard output as well as to the file, but <code>System.out</code>
 could also have been used for the output to standard output.</np>
    
-<pre>public class CreateProfile {
+<pre>import textio.TextIO;
+
+public class CreateProfile {
     
     public static void main(String[] args) {
     
@@ -598,8 +613,9 @@ syntax that will not be introduced until <localref href="subroutines"/> and
 it works.  You won't understand all the syntax at this point.
 (<classname>Scanners</classname> will be covered in more detail in <localref href="IO.1.5"/>.)</p>
 
-<p>First, you should add the following
-line to your program at the beginning of the source code file, <b>before</b> the "public class&dots;":</p>
+<p>First, since <classname>Scanner</classname> is defined in the package <classname>java.util</classname>,
+you should add the following
+import directive to your program at the beginning of the source code file, before the "public class&dots;":</p>
 
 <pre>import java.util.Scanner;</pre>
 
@@ -632,7 +648,7 @@ that uses <classname>Scanner</classname> instead of <classname>TextIO</classname
 input:
 </p>
 
-<pre><newcode>import java.util.Scanner;</newcode>  // Make the Scanner class available.
+<pre><newcode>import java.util.Scanner;</newcode>
 
 public class Interest2WithScanner {
    
