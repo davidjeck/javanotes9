@@ -311,7 +311,9 @@ can be absolutely sure that <code>N</code> is a positive number.)</p>
 not equal to." To test whether N is even, it uses "<code>N&nbsp;%&nbsp;2&nbsp;==&nbsp;0</code>". All
 the operators used here were discussed in <localref href="basics.5"/>.</p>
 
-<pre>/**  
+<pre>import textio.TextIO;
+
+/**  
  * This program prints out a 3N+1 sequence starting from a positive 
  * integer specified by the user.  It also counts the number of 
  * terms in the sequence, and prints out that number.

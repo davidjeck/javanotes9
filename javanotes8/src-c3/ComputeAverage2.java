@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  *  Computes the average of a sequence of real numbers entered by the
  *  user.  The numbers must be entered one per line.  A blank input

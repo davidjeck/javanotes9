@@ -1,3 +1,4 @@
+import textio.TextIO;
 
 /**
  * Reads up to 100 integers from the user, then prints them

@@ -20,7 +20,7 @@ about control structures in another context.
 chunked together so that they can be treated as a unit.  An <newword>array</newword> is
 a data structure in which the items are arranged as a numbered sequence,
 so that each individual item can be referred to by its position number.
-In Java&mdash;but not in other programming languages&mdash;all the items must 
+In Java&mdash;but not in some other programming languages&mdash;all the items must 
 be of the same type, and the numbering always starts at zero.
 You will need to learn several new terms to talk about arrays:
 The number of items in an array is called the
@@ -297,8 +297,7 @@ public class BirthdayProblem {
           birthday = (int)(Math.random()*365);
           count++;
 
-          System.out.printf("Person %d has birthday number %d", count, birthday);
-          System.out.println();
+          System.out.printf("Person %d has birthday number %d%n", count, birthday);
 
           if ( used[birthday] ) {  
                 // This day was found before; it's a duplicate.  We are done.
@@ -359,7 +358,9 @@ in an array. Note that many types of processing, such as finding the sum or
 average or maximum of the numbers, can be done without saving the individual
 numbers.)</p>
 
-<pre>public class ReverseInputNumbers {
+<pre>import textio.TextIO;
+
+public class ReverseInputNumbers {
 
    public static void main(String[] args) {
    
@@ -474,8 +475,8 @@ to hold the colors of a grid of colored squares.  But sometimes
 two-dimensional arrays are used in problems in which the grid is
 not so visually obvious. Consider a company that owns 25 stores. Suppose that
 the company has data about the profit earned at each store for each month in
-the year 2014. If the stores are numbered from 0 to 24, and if the twelve
-months from January 2014 through December 2014 are numbered from 0 to 11, then
+the year 2018. If the stores are numbered from 0 to 24, and if the twelve
+months from January 2018 through December 2018 are numbered from 0 to 11, then
 the profit data could be stored in an array, <code>profit</code>, created as
 follows:</p>
 

@@ -9,7 +9,8 @@ the <code>for</code> statement. Any <code>for</code> loop is equivalent to some
 <code>for</code> statements. But for a certain type of problem, a <code>for</code> loop
 can be easier to construct and easier to read than the corresponding
 <code>while</code> loop. It's quite possible that in real programs, <code>for</code>
-loops actually outnumber <code>while</code> loops.</p>
+loops actually outnumber <code>while</code> loops (and I know of at least one person
+who <b>only</b> uses <code>for</code> loops).</p>
 
 <subsection id="control.4.1" title="For Loops">
 
@@ -49,7 +50,7 @@ involved in the "control" of the loop in one place, which helps make the loop
 easier to read and understand. The <code>for</code> loop is executed in exactly the
 same way as the original code: The initialization part is executed once, before
 the loop begins. The continuation condition is executed before each execution
-of the loop, and the loop ends when this condition is <code>false</code>. The
+of the loop (including the first execution), and the loop ends when this condition is <code>false</code>. The
 update part is executed at the end of each execution of the loop, just before
 jumping back to check the condition.</np>
 
@@ -135,7 +136,7 @@ count down from 10 to 1 at the same time!</p>
 
 <pre>for ( i=1, j=10;  i &lt;= 10;  i++, j-- ) {
    System.out.printf("%5d", i); // Output i in a 5-character wide column.
-   System.out.printf("%5d", j); // Output j in a 5-character column 
+   System.out.printf("%5d", j); // Output j in a 5-character column.
    System.out.println();       //     and end the line.
 }</pre>
 
@@ -222,7 +223,8 @@ zero.</p>
 user and computes how many different divisors <code>N</code> has. The numbers that
 could possibly be divisors of <code>N</code> are 1, 2,&nbsp;&dots;,&nbsp;<code>N</code>. To compute
 the number of divisors of <code>N</code>, we can just test each possible divisor of
-<code>N</code> and count the ones that actually do divide <code>N</code> evenly. In
+<code>N</code> and count the ones that actually do divide <code>N</code> evenly. (This is
+a correct solution, but is certainly not the most efficient way to perform this task.)  In
 pseudocode, the algorithm takes the form</p>
 
 <pre>Get a positive integer, N, from the user
@@ -253,11 +255,11 @@ impossible to run it even for the largest legal <ptype>int</ptype> value, 214748
 (If you wanted to run it for even larger values, you could use variables of
 type <ptype>long</ptype> rather than <ptype>int</ptype>.) However, it does take a
 significant amount of time for very large numbers. So when I implemented this
-algorithm, I decided to output a dot every time the computer has tested one
+algorithm, I decided to output a dot every time the computer has tested ten
 million possible divisors. In the improved version of the program, there are
 two types of counting going on. We have to count the number of divisors and we
 also have to count the number of possible divisors that have been tested. So
-the program needs two counters. When the second counter reaches 1000000, the program
+the program needs two counters. When the second counter reaches 10000000, the program
 outputs a '.' and resets the counter to zero so that we can start counting the
 next group of one million. Reverting to pseudocode, the algorithm now looks
 like</p>
@@ -270,19 +272,20 @@ for each number, testDivisor, in the range from 1 to N:
     if testDivisor is a divisor of N:
         Count it by adding 1 to divisorCount
     Add 1 to numberTested
-    if numberTested is 1000000:
+    if numberTested is 10000000:
         print out a '.'
         Reset numberTested to 0
 Output the count</pre>
 
 <np>Finally, we can translate the algorithm into a complete Java program:</np>
 
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  * This program reads a positive integer from the user.
  * It counts how many divisors that number has, and
  * then it prints the result.
- */
-   
+ */   
 public class CountDivisors {
    
    public static void main(String[] args) {
@@ -297,7 +300,7 @@ public class CountDivisors {
       
       int numberTested;  // Used to count how many possible divisors
                          // of N have been tested.  When the number
-                         // reaches 1000000, a period is output and
+                         // reaches 10000000, a period is output and
                          // the value of numberTested is reset to zero.
                          
       /* Get a positive integer from the user. */
@@ -310,7 +313,7 @@ public class CountDivisors {
          System.out.println("That number is not positive.  Please try again.");
       }
       
-      /* Count the divisors, printing a "." after every 1000000 tests. */
+      /* Count the divisors, printing a "." after every 10000000 tests. */
     
       divisorCount = 0;
       numberTested = 0;
@@ -319,7 +322,7 @@ public class CountDivisors {
          if ( N % testDivisor == 0 )
             divisorCount++;
          numberTested++;
-         if (numberTested == 1000000) {
+         if (numberTested == 10000000) {
             System.out.print('.');
             numberTested = 0;
          }
@@ -463,12 +466,13 @@ would be at the end of this program, if the <code>break</code> statement were om
 Here is the complete program:</np>
 
 
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  * This program reads a line of text entered by the user.
  * It prints a list of the letters that occur in the text,
  * and it reports how many different letters were found.
  */
-
 public class ListLetters {
    
    public static void main(String[] args) {

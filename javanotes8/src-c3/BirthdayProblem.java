@@ -28,8 +28,7 @@ public class BirthdayProblem {
 			birthday = (int)(Math.random()*365);
 			count++;
 
-			System.out.printf("Person %d has birthday number %d", count, birthday);
-			System.out.println();
+			System.out.printf("Person %d has birthday number %d%n", count, birthday);
 
 			if ( used[birthday] ) {  
 				    // This day was found before; It's a duplicate.  We are done.

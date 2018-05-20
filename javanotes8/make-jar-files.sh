@@ -112,7 +112,7 @@ function buildTextIOjar {
 }
 
 
-# for building a program defines in one or more packages;
+# for building a program defined in one or more packages;
 # the main class file is not copied, it's just used in the manifest.
 # $1 is chapter: c1, c2, ...
 # $2 is main class (with periods and without .java)
@@ -175,6 +175,7 @@ buildTextIOjar chapter3 ComputeAverage2
 buildTextIOjar chapter3 AverageNumbersFromFile
 buildTextIOjar chapter3 BirthdayProblem
 buildTextIOjar chapter3 ReverseInputNumbers
+buildjar chapter3 SimpleGraphicsStarter
 buildjar chapter3 MovingRects
 buildjar chapter3 RandomCircles
 buildTextIOjar chapter4 GuessingGame

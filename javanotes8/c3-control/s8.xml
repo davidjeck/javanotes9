@@ -9,7 +9,11 @@ In the rest of this
 book, we'll be more concerned with the larger scale structure of programs, but
 the material that you've already learned will be an important foundation for
 everything to come.  In this section, we see how techniques that you have  
-learned so far can be applied in the context of graphical programming.</p>
+learned so far can be applied in the context of graphical user interface programming.  GUI programs
+here, and in the rest of this book, are written using JavaFX, a collection of classes
+that form a "toolkit" for writing GUI programs.  All of the classes mentioned in this
+section are part of JavaFX, and they must be imported into any program that uses them.
+</p>
 
 <p>When you run a GUI program, it opens one or more windows on your computer
 screen.  As a programmer, you can have complete control over what appears in the
@@ -26,12 +30,17 @@ any subroutine, not just <code>main()</code>.</p>
 <p>To understand computer graphics, you need to know a little about pixels and 
 coordinate systems.  The computer screen is made up of small squares called 
 <newword>pixels</newword>, arranged in rows and columns, usually about 100 pixels
-per inch.  The computer controls the color of the pixels, and drawing is done by
+per inch.  (Many screen now have many more physical pixels per inch.  On these
+"high-resolution" screens, a JavaFX "pixel" might refer to a physical pixel, but
+it is more likely to refer to a "logical pixel," which is a unit of measure
+somewhere close to 1/100 inch.)</p> 
+
+<p>The computer controls the color of the pixels, and drawing is done by
 changing the colors of individual pixels.  Each pixel has a pair of integer coordinates,
 often called <i>x</i> and <i>y</i>, that specify the pixel's horizontal and vertical
-position.  For a graphics context drawing to a rectangular area on the screen,
+position.  When drawing to a rectangular area on the screen,
 the coordinates of the pixel in the upper left corner of the rectangle are (0,0).
-The <i>x</i> coordinate increases from the left to right, and the <i>y</i>
+The <i>x</i> coordinate increases from left to right, and the <i>y</i>
 coordinate increases from top to bottom.  Shapes are specified using pixels.
 For example, a rectangle is specified by the <i>x</i> and <i>y</i> coordinates of
 its upper left corner and by its width and height measured in pixels.
@@ -57,49 +66,67 @@ to be drawn there by the computer, just like the computer draws any other shapes
 Among the data in a graphics context are the color and font that are currently selected
 for drawing.  (A font determines the style and size of characters.)  One other piece of
 data in a graphics context is the "drawing surface" on which the drawing is done.
-Generally, the drawing surface is a rectangle on the computer screen, although it can
-be other surfaces such as a page to be printed.  Different graphics context objects
+Different graphics context objects
 can draw to different drawing surfaces.  For us, the drawing surface will be the
 content area of a window, not including its border or title bar.</p>
 
+<p>There are two ways to draw a shape in JavaFX:  You can <newword>fill</newword> the
+shape, meaning you can set the color of each of the pixels inside the shape.
+Or you can <newword>stroke</newword> the shape, meaning that you set the color of
+the pixels that lie along the border of the shape.  Some shapes, such as a line,
+can only be stroked.  A graphics context actually keeps track of two separate
+colors, one used for filling shapes and one used for stroking shapes.
+Stroking a shape is like dragging a pen along the border of the
+shape.  The properties of that pen (such as its size and whether it produces
+a solid line or a dashed line) are properties of the graphics context.
+</p>
+
 <p>A graphics context is represented by a variable.  The type for the variable is
-<classname>Graphics</classname>  (just like the type for a string variable is 
+<classname>GraphicsContext</classname>  (just like the type for a string variable is 
 <classname>String</classname>).   The variable is often named <i>g</i>, but 
 the name of the variable is of course up to the programmer.  Here are a few of the
-subroutines that are available in a graphics context&nbsp;<i>g</i>:</p>
+subroutines that are available in a graphics context&nbsp;<i>g</i>.  Note that
+all numerical parameter values can be of type <ptype>double</ptype>.</p>
 
 <ul>
-<li><codedef>g.setColor(c)</codedef>, is called to set the
-color to be used for drawing. The parameter, <code>c</code> is an object
-belonging to a class named <classname>Color</classname>.  There are about
-a dozen constants representing standard colors that can be used as the parameter
-in this subroutine. The standard colors include
-<code>Color.BLACK</code>, <code>Color.WHITE</code>, <code>Color.LIGHT_GRAY</code>, <code>Color.RED</code>,
-<code>Color.GREEN</code>, and <code>Color.BLUE</code>.  (Later, we will see that it is also possible
-to create new colors.)  For example, if you want to draw
-in red, you would say "<code>g.setColor(Color.RED);</code>". The specified color is
-used for all subsequent drawing operations up until the next time <code>g.setColor()</code> is
-called.</li>
-<li><codedef>g.drawLine(x1,y1,x2,y2)</codedef> draws a line from the point with
-coordinates <code>(x1,y1)</code> to the point with coordinates <code>(x2,y2)</code>.</li>
-<li><codedef>g.drawRect(x,y,w,h)</codedef> draws the outline
+<li><codedef>g.setFill(c)</codedef> is called to set the
+color to be used for filling shapes. The parameter, <code>c</code> is an object
+belonging to a class named <classname>Color</classname>.  There are many constants 
+representing standard colors that can be used as the parameter
+in this subroutine. The standard colors range from common colors such as
+<code>Color.BLACK</code>, <code>Color.WHITE</code>, <code>Color.RED</code>, 
+<code>Color.GREEN</code>, <code>Color.BLUE</code>, and <code>Color.YELLOW</code>, to
+more exotic color names such as <code>Color.CORNFLOWERBLUE</code>.
+(Later, we will see that it is also possible
+to create new colors.)  For example, if you want to fill shapes with red,
+you would say "<code>g.setFill(Color.RED);</code>". The specified color is
+used for all subsequent fill operations up until the next time <code>g.setColor()</code> is
+called.  Note that previously drawn shapes are <b>not</b> affected!</li>
+<li><codedef>g.setStroke(c)</codedef> is called to set the color to be used
+for stroking shapes. It works similarly to <code>g.setFill</code>.</li>
+<li><codedef>g.setLineWidth(w)</codedef> sets the size of the pen that will be used
+for subsequent stroke operations, where <code>w</code> is measured in pixels.</li>
+<li><codedef>g.strokeLine(x1,y1,x2,y2)</codedef> draws a line from the point with
+coordinates <code>(x1,y1)</code> to the point with coordinates <code>(x2,y2)</code>.
+The width of the line is 1, unless a different line width has been set by calling
+<code>g.setLineWidth()</code>, and the color is black unless a different color has
+been set by calling <code>g.setStroke()</code>.</li>
+<li><codedef>g.strokeRect(x,y,w,h)</codedef> draws the outline
 of a rectangle with vertical and horizontal sides.
-The parameters <code>x</code>, <code>y</code>, <code>w</code>, and
-<code>h</code> must be integers or integer-valued expressions. 
 This subroutine draws the outline of the rectangle whose
 top-left corner is <code>x</code> pixels from the left edge of the drawing area and
-<code>y</code> pixels down from the top. The width of the rectangle
-is <code>w</code> pixels, and the height is <code>h</code> pixels.  The color that
-is used is black, unless a different color has been set by calling <code>g.setColor()</code>.</li>
+<code>y</code> pixels down from the top. The horizontal width of the rectangle
+is <code>w</code> pixels, and the vertical height is <code>h</code> pixels.  Color
+and line width are set by calling <code>g.setStroke()</code> and <code>g.setLineWidth()</code>.</li>
 <li><codedef>g.fillRect(x,y,w,h)</codedef> is similar to
-<code>g.drawRect()</code> except that it fills in the inside of the rectangle instead
-of drawing an outline.</li>
-<li><codedef>g.drawOval(x,y,w,h)</codedef> draws the outline
+<code>g.strokeRect()</code> except that it fills in the inside of the rectangle instead
+of drawing an outline, and it uses the color set by <code>g.setFill()</code>.</li>
+<li><codedef>g.strokeOval(x,y,w,h)</codedef> draws the outline
 of an oval.  The oval just fits inside the rectangle that would be drawn by
-<code>g.drawRect(x,y,w,h)</code>.  To get a circle, use the same values for <code>w</code>
+<code>g.strokeRect(x,y,w,h)</code>.  To get a circle, use the same values for <code>w</code>
 and for <code>h</code>.</li>
 <li><codedef>g.fillOval(x,y,w,h)</codedef> is similar to
-<code>g.drawOval()</code> except that it fills in the inside of the oval instead
+<code>g.strokeOval()</code> except that it fills in the inside of the oval instead
 of drawing an outline.</li>
 </ul>
 
@@ -121,7 +148,7 @@ for <code>x2</code>.  The <i>y</i>-coordinates of the lines are different, but w
 both endpoints of a line have the <b>same</b> <i>y</i>-coordinates, so we can use a single
 variable as the value for <code>y1</code> and for <code>y2</code>.  Using <code>y</code> as the
 name of that variable, the command for drawing one of the lines becomes
-<code>g.drawLine(100,y,300,y)</code>.  The value of <code>y</code> is 50 for the top line
+<code>g.strokeLine(100,y,300,y)</code>.  The value of <code>y</code> is 50 for the top line
 and increases by 10 each time we move down from one line to the next.  We just need to make
 sure that <code>y</code> takes on the correct sequence of values.  We can use a for loop
 that counts from 1 to 10:</np>
@@ -141,24 +168,28 @@ that the value of <code>y</code> for the last line is 140:</np>
 for ( y = 50; y &lt;= 140; y = y + 10 )
     g.drawLine( 100, y, 300, y );</pre>
 
-<np>If we wanted to set the color of the lines, we could do
-that by calling <code>g.setColor()</code> <b>before</b> drawing them.  If we just draw
-the lines without setting the color, they will be black.</np>
+<np>If we wanted the lines to be blue, we could do
+that by calling <code>g.setStroke(Color.BLUE)</code> <b>before</b> drawing them.  If we just draw
+the lines without setting the color, they will be black.  If we wanted the lines to be 3 pixels wide,
+we could call <code>g.setLineWidth(3)</code> <b>before</b> drawing the lines.</np>
 
 <p>For something a little more complicated, let's draw a large number of randomly colored,
 randomly positioned, filled circles.  Since we only know a few colors, I will randomly select
-the color to be red, green, or blue.  That can be done with a simple switch statement, similar
+the color to be red, green, blue, or yellow.  That can be done with a simple switch statement, similar
 to the ones in <localref href="control.6.4"/>:</p>
 
-<pre>switch ( (int)(3*Math.random()) ) {
+<pre>switch ( (int)(4*Math.random()) ) {
     case 0:
-        g.setColor( Color.RED );
+        g.setFill( Color.RED );
         break;
     case 1:
-        g.setColor( Color.GREEN );
+        g.setFill( Color.GREEN );
         break;
     case 2:
-        g.setColor( Color.BLUE );
+        g.setFill( Color.BLUE );
+        break;
+    case 3:
+        g.setFill( Color.YELLOW );
         break;
 }</pre>
 
@@ -167,7 +198,7 @@ to the ones in <localref href="control.6.4"/>:</p>
 <p>I will choose the center points of the circles at random.
 Let's say that the width of the drawing area is given by a variable, <code>width</code>.  Then
 we want a random value in the range <code>0</code> to <code>width-1</code> for the horizontal
-position of the center.  Similarly, the vertical position of the center will a random value
+position of the center.  Similarly, the vertical position of the center will be a random value
 in the range <code>0</code> to <code>height-1</code>.  That leaves the size of the circle to
 be determined; I will make the radius of each circle equal to 50 pixels.  We can draw the
 circle with a statement of the form <code>g.fillOval(x,y,w,h)</code>.  However, in this
@@ -175,7 +206,7 @@ command, <code>x</code> and <code>y</code> are not the coordinates of the center
 the circle; they are the upper left corner of a rectangle drawn around the circle.  To get
 values for <code>x</code> and <code>y</code>, we have to move back from the center of the
 circle by 50 pixels, an amount equal to the radius of the circle.  The parameters <code>w</code>
-and <code>h</code> give the width and height of the rectangle, which has to be twice the 
+and <code>h</code> give the width and height of the rectangle, which have to be twice the 
 radius, or 100 pixels in this case.  Taking all this into account, here is a code
 segment for drawing a random circle:</p>
 
@@ -187,8 +218,8 @@ g.fillOval( centerX - 50, centerY - 50, 100, 100 );</pre>
 In the end, I found that the picture looks better if I also draw a black outline
 around each filled circle, so I added this code at the end:</np>
 
-<pre>g.setColor( Color.BLACK );
-g.drawOval( centerX - 50, centerY - 50, 100, 100 );</pre>
+<pre>g.setStroke( Color.BLACK );
+g.strokeOval( centerX - 50, centerY - 50, 100, 100 );</pre>
 
 <np>Finally, to get a large number of circles, I put all of the above code into
 a <code>for</code> loop that runs for 500 executions.  Here's a typical drawing from
@@ -196,6 +227,7 @@ the program, shown at reduced size:</np>
 
 <img src="random-circles.png" width="200" height="200" alt="picture with 500 random filled circles"
     tex="random-circles.eps" texscale="0.6"/>
+    
 
 </subsection>
 
@@ -206,63 +238,71 @@ The code has to be inside a subroutine definition that is itself inside a class
 definition.  In fact, for my circle-drawing program, the complete subroutine for
 drawing the picture looks like this:</p>
 
-<pre>public void drawFrame(Graphics g, int frameNumber, int width, int height) {
+<pre>public void drawPicture(GraphicsContext g, int width, int height) {
+
+    g.setFill(Color.WHITE);
+    g.fillRect(0, 0, width, height); // First, fill  with a background color.
+
+    // As an example, draw a large number of colored disks.
+    // To get a different picture, erase this code, and substitute your own. 
     
     int centerX;     // The x-coord of the center of a disk.
     int centerY;     // The y-coord of the center of a disk.
     int colorChoice; // Used to select a random color.
-    int count;       // Loop control variable for counting disks.
+    int count;       // Loop control variable for counting disks
     
     for (count = 0; count &lt; 500; count++) {
-        
-        colorChoice = (int)(3*Math.random());
-        switch (colorChoice) {
-        case 0:
-            g.setColor(Color.RED);
-            break;
-        case 1:
-            g.setColor(Color.GREEN);
-            break;
-        case 2:
-            g.setColor(Color.BLUE);
-            break;
-        }
-        
+
         centerX = (int)(width*Math.random());
         centerY = (int)(height*Math.random());
-        
+
+        colorChoice = (int)(4*Math.random());
+        switch (colorChoice) {
+        case 0:
+            g.setFill(Color.RED);
+            break;
+        case 1:
+            g.setFill(Color.GREEN);
+            break;
+        case 2:
+            g.setFill(Color.BLUE);
+            break;
+        case 3:
+            g.setFill(Color.YELLOW);
+            break;
+        }
+
         g.fillOval( centerX - 50, centerY - 50, 100, 100 );
-        g.setColor(Color.BLACK);
-        g.drawOval( centerX - 50, centerY - 50, 100, 100 );
-        
+        g.setStroke(Color.BLACK);
+        g.strokeOval( centerX - 50, centerY - 50, 100, 100 );
     }
-}</pre>
+
+} // end drawPicture()
+</pre>
 
 <np>This is the first subroutine definition that you have seen, other than <code>main()</code>,
 but you will learn all about defining subroutines in the <localref href="subroutines">next&nbsp;chapter</localref>.
 The first line of the definition makes available certain values that are used in the
 subroutine:  the graphics context <code>g</code> and the <code>width</code> and
-<code>height</code> of the drawing area. (Ignore <code>frameNumber</code> for now.)  These
+<code>height</code> of the drawing area.  These
 values come from outside the subroutine, but the subroutine can use them.  The point here is
 that to draw something, you just have to fill in the inside of the subroutine, just
 as you write a program by filling in the inside of <code>main()</code>.</np>
 
 <p>The subroutine definition still has to go inside a class that defines the program.  
-In this case, the class is named <classname>RandomCircles</classname>, and the complete
-program is available in the sample source code file <sourceref href="RandomCircles.java"/>.
-You can run that program to see the drawing.</p>
+In this case, the class is named <classname>SimpleGraphicsStarter</classname>, and the complete
+program is available in the sample source code file <sourceref href="SimpleGraphicsStarter.java"/>.
+You can run that program to see the drawing.  You can use this sample program as a starting
+point for drawing your own pictures.</p>
 
 <p>There's a lot in the program that you won't understand.  To make your own drawing,
-all you have to do is erase the inside of the <code>drawFrame()</code> routine in
+all you have to do is erase the inside of the <code>drawPicture()</code> routine in
 the source code and substitute your own drawing code.  You don't need to understand the
-rest.  The source code file <sourceref href="SimpleAnimationStarter.java"/> can be
-used as a basis for your own first graphics explorations.  It's essentially the same
-as <code>RandomCircles.java</code> but with the drawing code omitted.  You'll need it to do
-some of the exercises for this chapter.</p>
+rest.</p>
 
 <p>(By the way, you might notice that the <code>main()</code> subroutine uses the word
-<code>static</code> in its definition, but <code>drawFrame()</code> does not.  This has to
-do with the fact that the drawing area in this program is an object, and <code>drawFrame</code>
+<code>static</code> in its definition, but <code>drawPicture()</code> does not.  This has to
+do with the fact that the drawing area in this program is an object, and <code>drawPicture</code>
 is a subroutine in that object.  The difference between static and non-static subroutines
 is important but not something that we need to worry about for the time being.  It will become
 important for us in <localref href="OOP"/>.)</p>
@@ -271,26 +311,29 @@ important for us in <localref href="OOP"/>.)</p>
 
 <subsection id="control.8.3" title="Animation">
 
-<p>The name "SimpleAnimationStarter" should give you a clue that we are looking
-at the possibility of more than just individual drawings here.  A computer
+<p>We can extend the idea of drawing pictures to making <newword>animations</newword>. A computer
 animation is simply a sequence of individual pictures, displayed quickly one after
 the other.  If the change from each picture to the next is small, the user will perceive the
 sequence of images as a continuous animation.  Each picture in the animation is
-called a <newword>frame</newword>.  <code>SimpleAnimationStarter.java</code>
-is configured to draw fifty frames every second, although that can be changed.
-(In <code>RandomCircles.java</code>, it has been changed to one frame every three
-seconds, so that the program actually draws a new set of random circles every
-three seconds.)  The frames in the animation are numbered 0, 1, 2, 3,&nbsp;&dots;,
-and the value of <code>frameNumber</code> in the <code>drawFrame()</code>
-subroutine tells you which frame you are drawing.  The key to programming the
-animation is to base what you draw on the <code>frameNumber</code>.</p>
+called a <newword>frame</newword>. The sample program <sourceref href="SimpleAnimationStarter.java"/>
+can be used as a starting point for writing animations.  It contains a subroutine named
+<code>drawFrame()</code> that draws one frame in an animation.  You can create an animation by
+filling in the definition of this subroutine.  In addition to the graphics context and the
+width and height of the drawing area, you can use the value of two other variables in your
+code: <code>frameNumber</code> and <code>elapsedSeconds</code>.
+The <code>drawFrame</code> subroutine will automatically
+be called about 60 times per second.
+The variable <code>frameNumber</code> takes on the values 0, 1, 2, 3, &dots; in successive calls to the subroutine,
+and the value of <code>elapsedSeconds</code> is the number of seconds that the animation has been
+running.  By using either of these variables in your code, you can draw a different picture each time
+<code>drawFrame()</code> is called, and the user will see the series of pictures as an animation.</p>
 
 <p>As an example of animation, we look at drawing a set of nested rectangles.
 The rectangles will shrink towards the center of the drawing, giving an illusion of
-infinite motion.  Here's one frame from the animation:</p>
+infinite motion.  Here's the middle of one frame from the animation:</p>
 
-<img src="moving-rects.png" width="" height="" alt="a set of rectangles nested one inside the next"
-   tex="moving-rects.eps" texscale="0.6"/>
+<img src="moving-rects.png" width="501" height="304" alt="a set of rectangles nested one inside the next"
+   tex="moving-rects.eps" texscale="0.5"/>
 
 <p>Consider how to draw a picture like this one.
 The rectangles can be drawn with a <code>while</code> loop, which draws the rectangles 
@@ -298,21 +341,22 @@ starting from the one on the outside and moving in.  Think about what variables 
 be needed and how they change from one iteration of the while loop to the next.
 Each time through the loop, the rectangle that is drawn is smaller
 than the previous one and is moved down and over a bit.  The difference between two rectangles
-is in their size and in the coordinates of the upper left corner.  We need a variable to
-represent the <code>size</code>.  The x and y-coordinates are the same, and they can be represented by
+is in their sizes and in the coordinates of their upper left corners.  We need variables to
+represent the width and height of the rectangle, which I call <code>rectWidth</code>
+and <code>rectHeight</code>. 
+The x and y-coordinates of the upper left corner are the same, and they can be represented by
 the same variable.  I call that variable <code>inset</code>, since it is the amount by
 which the edges of the rectangle are inset from the edges of the drawing area.   The
-<code>size</code> decreases from one rectangle to the next, while the <code>inset</code>
-increases.  The while loop ends when <code>size</code> becomes less than or equal to zero. 
+width and height decrease from one rectangle to the next, while the <code>inset</code>
+increases.  The while loop ends when either the width or the height becomes less than or equal to zero. 
 In general outline, the algorithm for drawing one frame is</p>
 
-<pre>Set the drawing color to light gray  (using the g.setColor subroutine)
-Fill in the entire picture (using the g.fillRect subroutine)
-Set the drawing color to black
+<pre>Fill the drawing area with white
 Set the amount of inset for the first rectangle
-Set the rectangle width and height for the first rectangle
+Set the width and height for the first rectangle
+Set the stroke color to black
 while the width and height are both greater than zero:
-    draw a rectangle (using the g.drawRect subroutine)
+    draw a rectangle (using the g.strokeRect subroutine)
     increase the inset (to move the next rectangle over and down)
     decrease width the height (the make the next rectangle smaller)</pre>
 
@@ -342,37 +386,44 @@ the animation proceeds, the inset should go through the sequence of values
 <pre>inset = frameNumber % 15;</pre>
 
 <np>Finally, note that the first rectangle fills the drawing area except for a border
-of size <code>inset</code> around the outside of the rectangle.  This means that the
+of size <code>inset</code> around the outside of the rectangle.  This means that
 the width of the rectangle is the width of the drawing area minus two times the inset,
 and similarly for the height.  Here, then is the <code>drawFrame()</code> subroutine for
 the moving rectangle example:</np>
 
-<pre>public void drawFrame(Graphics g, int frameNumber, int width, int height) {
+<pre>public void drawFrame(GraphicsContext g, int frameNumber, 
+                            double elapsedSeconds, int width, int height) {
 
-    int inset; // Gap between edges of drawing area and the outer rectangle.
+    g.setFill(Color.WHITE);
+    g.fillRect(0,0,width,height);  // Fill drawing area with white.
 
-    int rectWidth, rectHeight;   // The size of one of the rectangles.
+    double inset; // Gap between edges of drawing area and outer rectangle.
 
-    g.setColor(Color.LIGHT_GRAY);
-    g.fillRect(0,0,width,height);  // Fill drawing area with light gray.
+    double rectWidth, rectHeight;   // The size of one of the rectangles.
 
-    g.setColor(Color.BLACK);  // Draw the rectangles in black.
+    g.setStroke(Color.BLACK);  // Draw the rectangle outlines in black.
 
-    inset = frameNumber % 15;  // inset for the outer rectangle
+    inset = frameNumber % 15;
 
-    rectWidth = width - 2*inset;   // drawing area width minus two insets
-    rectHeight = height - 2*inset; // drawing area height minus two insets
+    rectWidth = width - 2*inset;
+    rectHeight = height - 2*inset;
 
-    while (rectWidth &gt;= 0 &amp;&amp; rectHeight &gt;= 0) {
-        g.drawRect(inset, inset, rectWidth, rectHeight);
+    while (rectWidth >= 0 &amp;&amp; rectHeight >= 0) {
+        g.strokeRect(inset, inset, rectWidth, rectHeight);
         inset += 15;       // rectangles are 15 pixels apart
         rectWidth -= 30;
         rectHeight -= 30;
     }
+
 }</pre>
-   
+
 <np>You can find the full source code for the program is in the sample program
-<sourceref href="MovingRects.java"/>.</np>
+<sourceref href="MovingRects.java"/>.  Take a look!  It's a neat effect.
+For another example of animation, see the
+sample program <sourceref href="RandomCircles.java"/>.  That program adds one
+random colored disk to the picture in each frame; it illustrates the fact
+that the image from one frame is not automatically erased before the next frame
+is drawn.</np>
 
 </subsection>
 

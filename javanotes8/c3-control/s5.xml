@@ -114,7 +114,7 @@ temperature is 173, both of the tests evaluate to <code>false</code>, so the
 computer says "It's hot" (unless its circuits have been fried by the heat, that
 is).</np>
 
-<p>You can go on stringing together "else-if's" to make multi-way branches with
+<p>You can go on stringing together "else-if's" to make multiway branches with
 any number of cases:</p>
 
 <pre>if (<bnf>test-1</bnf>)
@@ -135,7 +135,7 @@ else
 comes to one that is <code>true</code>. It executes the associated statement and
 skips the rest. If none of the boolean expressions evaluate to <code>true</code>,
 then the statement in the <code>else</code> part is executed. This statement is
-called a multi-way branch because one and only one of the statements will be executed.
+called a multiway branch because one and only one of the statements will be executed.
 The final <code>else</code> part can be omitted. In that case, if all the boolean
 expressions are false, none of the statements are executed. Of course, each of
 the statements can be a block, consisting of a number of statements enclosed
@@ -294,7 +294,9 @@ when the user inputs 0. To program that, I just had to wrap the above algorithm
 inside a <code>while</code> loop, and make sure that the loop ends when the user
 inputs a&nbsp;0. Here's the complete program:</p>
 
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  * This program will convert measurements expressed in inches,
  * feet, yards, or miles into each of the possible units of
  * measure.  The measurement is input by the user, followed by
@@ -303,7 +305,6 @@ inputs a&nbsp;0. Here's the complete program:</p>
  * The program will continue to read and convert measurements
  * until the user enters an input of 0.
  */
- 
  public class LengthConverter {
  
     public static void main(String[] args) {
@@ -366,17 +367,13 @@ inputs a&nbsp;0. Here's the complete program:</p>
           
           /* Output measurement in terms of each unit of measure. */
           
-          System.out.println();
-          System.out.println("That's equivalent to:");
-          System.out.printf("%12.5g", inches);
-          System.out.println(" inches");
-          System.out.printf("%12.5g", feet);
-          System.out.println(" feet");
-          System.out.printf("%12.5g", yards);
-          System.out.println(" yards");
-          System.out.printf("%12.5g", miles);
-          System.out.println(" miles");
-          System.out.println();
+            System.out.println();
+            System.out.println("That's equivalent to:");
+            System.out.printf("%14.5g inches%n", inches);
+            System.out.printf("%14.5g feet%n", feet);
+            System.out.printf("%14.5g yards%n", yards);
+            System.out.printf("%14.5g miles%n", miles);
+            System.out.println();
        
        } // end while
        
@@ -393,10 +390,10 @@ inputs a&nbsp;0. Here's the complete program:</p>
 we have no control over how large or how small the numbers might be.  It could easily make
 sense for the user to enter very large or very small measurements.  The "g" format will
 print a real number in exponential form if it is very large or very small, and in the usual decimal form
-otherwise.  Remember that in the format specification <code>%12.5g</code>, the 5 is the total
+otherwise.  Remember that in the format specification <code>%14.5g</code>, the 5 is the total
 number of significant digits that are to be printed, so we will always get the same number of
 significant digits in the output, no matter what the size of the number.  If we had used an
-"f" format specifier such as <code>%12.5f</code>, the output would be in decimal form with
+"f" format specifier such as <code>%14.5f</code>, the output would be in decimal form with
 5 digits after the decimal point.  This would print the number 0.000000000745482 as <code>0.00000</code>,
 with no <b>significant</b> digits at all!
 With the "g" format specifier, the output would be <code>7.4549e-10</code>.)</p>

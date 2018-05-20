@@ -76,12 +76,13 @@ public class GUIDemo extends Application {
 		combobox.setOnAction( e -> transcript.appendText("Selected " + 
 		                               combobox.getValue() + " from menu\n\n") );
 		root.add(combobox, 1, 3);
+		root.setStyle("-fx-border-width: 3px; -fx-border-color: darkblue");
 		
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.setTitle("GUIDemo");
 		stage.show();
-
+		stage.setResizable(false);
 	}
 
 

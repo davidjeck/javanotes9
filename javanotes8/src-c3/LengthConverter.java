@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  * This program will convert measurements expressed in inches,
  * feet, yards, or miles into each of the possible units of
@@ -72,14 +74,10 @@ public class LengthConverter {
 
 			System.out.println();
 			System.out.println("That's equivalent to:");
-			System.out.printf("%12.5g", inches);
-			System.out.println(" inches");
-			System.out.printf("%12.5g", feet);
-			System.out.println(" feet");
-			System.out.printf("%12.5g", yards);
-			System.out.println(" yards");
-			System.out.printf("%12.5g", miles);
-			System.out.println(" miles");
+			System.out.printf("%14.5g inches%n", inches);
+			System.out.printf("%14.5g feet%n", feet);
+			System.out.printf("%14.5g yards%n", yards);
+			System.out.printf("%14.5g miles%n", miles);
 			System.out.println();
 
 		} // end while

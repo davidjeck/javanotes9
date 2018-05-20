@@ -47,7 +47,7 @@ alongside the text area when the number of lines of text becomes larger
 than will fit in the text area.  And in fact, in Java terminology, the
 whole window is itself considered to be a "component."</p>
 
-<img src="overview-GUIDemo.png" tex="overview-GUIDemo.eps" height="171" width="555" 
+<img src="overview-GUIDemo.png" tex="overview-GUIDemo.eps" height="177" width="561" 
     alt="Screenshot from GUIDemo demonstrates some basic GUI components"
     texscale="0.6" bordered="true"/>
     

@@ -14,13 +14,13 @@ from simply letting the program crash.  This is done with the
 take a preliminary and incomplete look the <code>try..catch</code> statement,
 leaving out a lot of the rather complex syntax of this statement.
 Error handling is a complex topic, which we will return to in
-<localref href="robustness"/>, and we will cover the full syntax
+<localref href="robustness.3"/>, and we will cover the full syntax
 of <code>try..catch</code> at that time.</p>
    
 <subsection id="control.7.1" title="Exceptions">
 
 <p>The term <newword>exception</newword> is used to refer to the type of
-error that one might want to handle with a <code>try..catch</code>.  An
+event that one might want to handle with a <code>try..catch</code>.  An
 exception is an exception to the normal flow of control in the program.
 The term is used in preference to "error" because in some cases,
 an exception might not be considered to be an error at all.  You can
@@ -140,7 +140,9 @@ convert non-blank inputs to numbers using <code>Double.parseDouble</code>.  And 
 can use <code>try..catch</code> to avoid crashing the program when the user's input
 is not a legal number.  Here's the program:</p>
 
-<pre>public class ComputeAverage2 {
+<pre>import textio.TextIO;
+
+public class ComputeAverage2 {
 
    public static void main(String[] args) {
        String str;     // The user's input.
@@ -219,7 +221,9 @@ to open a file that does not exist, an exception of type
 this exception and ask the user to enter a different file name.  Here is
 a complete program that uses all these ideas:</p>
 
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  * This program reads numbers from a file.  It computes the sum and 
  * the average of the numbers that it reads.  The file should contain 
  * nothing but numbers of type double; if this is not the case, the 

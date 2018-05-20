@@ -28,8 +28,7 @@ can jump are marked with <newword>case labels</newword> that take the form:
 the same type as the expression in the <code>switch</code>.
 A case label marks the position the
 computer jumps to when the expression evaluates to the given <bnf>constant</bnf> value. 
-As the final case in a switch statement you can,
-optionally, use the label "default:", which provides a default jump point that
+You can also use the label "default:" in a <code>switch</code> statement; this provides a default jump point that
 is used when the value of the expression is not listed in any case label.</p>
 
 <p>A <code>switch</code> statement, as it is most often used, has the form:</p>

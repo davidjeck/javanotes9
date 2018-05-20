@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  * This program reads a line of text entered by the user.
  * It prints a list of the letters that occur in the text,

@@ -44,8 +44,8 @@ to each other. Some of these programs use the standard output object,
 <classname>TextIO</classname>, for input. For the programs that use <classname>TextIO</classname>,
 one of the files <sourceref href="chapter2/textio/TextIO.java">TextIO.java</sourceref> or TextIO.class must
 be available when you compile the program, and TextIO.class must be available
-when you run the program.  TextIO.java and/or TextIO.class must be in a directory named textio.
-There is also a GUI version of TextIO;
+when you run the program.  TextIO.java and/or TextIO.class must be in a directory named textio,
+which must be in the same directory as the program.  There is also a GUI version of TextIO;
 you can find information about it at the end of <web>this web page</web><tex>Part&nbsp;3, below</tex>.</p>
 
 <ul>
@@ -235,19 +235,20 @@ you can find information about it at the end of <web>this web page</web><tex>Par
 
 <ul>
    <li><sourceref href="chapter1/GUIDemo.java">GUIDemo.java</sourceref> is a simple demonstration of some basic
-   GUI components from the Swing graphical user interface library.  It appears in
+   GUI components from the JavaFX graphical user interface library.  It appears in
    the text in <localref href="overview.6"/>, but you won't be able to understand
    it until you learn about GUI programming.</li>
-   <li><sourceref href="chapter3/RandomCircles.java">RandomCircles.java</sourceref>, from <localref href="control.8"/>, 
-   draws a large number of randomly colored, randomly positioned disks.  his simple graphics program is our first
-   example of a GUI program.It is meant both as an introduction to graphics and as an example of using
+   <li><sourceref href="chapter3/SimpleGraphicsStarter.java">RSimpleGraphicsStarter.java</sourceref>, from <localref href="control.8"/>, 
+   draws a large number of randomly colored, randomly positioned disks.  This simple graphics program is our first
+   example of a GUI program. It is meant both as an introduction to graphics and as an example of using
    control structures.</li>
    <li><sourceref href="chapter3/MovingRects.java">MovingRects.java</sourceref>, from <localref href="control.8"/>, 
-   draws a set of nested rectangles that seem to move infinitely towards the center.  
-   Both this program and the previous one are based on
+   draws a set of nested rectangles that seem to move infinitely towards the center.  This program is based on
    <sourceref href="chapter3/SimpleAnimationStarter.java">SimpleAnimationStarter.java</sourceref>, which can
-   be used as a starting point for writing similar programs.</li>
-   <li><sourceref href="chapter4/RandomMosaicWalk.java">RandomMosaicWalk.java</sourceref>, a standalone
+   be used as a starting point for writing similar animation programs. 
+   <sourceref href="chapter3/RandomCircles.java">RandomCircles.java</sourceref>
+   is another animation in which the computer continuously adds random colored disks to an image.</li>
+   <li><sourceref href="chapter4/RandomMosaicWalk.java">RandomMosaicWalk.java</sourceref>, a
    program that displays a window full of colored squares with a moving
    disturbance, from <localref href="subroutines.6"/>.  This program depends on
    <sourceref href="chapter4/MosaicPanel.java">MosaicPanel.java</sourceref> and 
@@ -488,9 +489,10 @@ along with the programs that use them.</p>
    of <classname>System</classname> in the same window.  I use these classes to build
    executable jar files for my text-oriented examples that run in a window instead of
    on the command line.  See the comments in the source code files for more information.</li>
-   <li><sourceref href="chapter3/SimpleAnimationStarter.java">SimpleAnimationStarter.java</sourceref> is 
-   a small class that you can edit to make very simple animations, in which every frame
-   is drawn using basic drawing commands.  This was used in <localref href="control"/>.</li>
+   <li><sourceref href="chapter4/SimpleGraphicsStarter.java">SimpleGraphicsStarter.java</sourceref> and
+   <sourceref href="chapter3/SimpleAnimationStarter.java">SimpleAnimationStarter.java</sourceref> are
+   small programs that you can edit to make very simple pictures and animations
+   These programs were used in <localref href="control.8"/> and in some of the exercises for <localref href="control"/>.</li>
    <li><sourceref href="chapter4/Mosaic.java">Mosaic.java</sourceref> contains 
    subroutines for opening and controlling a
    window that contains a grid of colored rectangles.  

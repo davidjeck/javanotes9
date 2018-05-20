@@ -118,9 +118,11 @@ loop. This might seem like a minor point, but a careful programmer should cover
 all the bases.</p>
 
 
-<p>Here is the full source code for the program:</p>
+<p>Here is the full source code for the program (with comments added, of course!):</p>
 
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  * This program reads a sequence of positive integers input
  * by the user, and it will print out the average of those
  * integers.  The user is prompted to enter one integer at a
@@ -130,7 +132,6 @@ all the bases.</p>
  * user's input is positive, so it will actually add up
  * both positive and negative input values.
  */
-
 public class ComputeAverage {
         
    public static void main(String[] args) {
@@ -359,8 +360,8 @@ i = 0;
 bigloop: while (i &lt; s1.length()) {
    j = 0;
    while (j &lt; s2.length()) {
-      if (s1.charAt(i) == s2.charAt(j)) { // s1 and s2 have a common char.
-          nothingInCommon = false;
+      if (s1.charAt(i) == s2.charAt(j)) { // s1 and s2 have a common char...
+          nothingInCommon = false;  // so nothingInCommon is actually false.
           break bigloop;  // break out of BOTH loops
       }
       j++;  // Go on to the next char in s2.

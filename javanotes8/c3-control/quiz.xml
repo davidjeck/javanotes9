@@ -114,7 +114,9 @@ integer <code>n</code> is even if <code>n&nbsp;%&nbsp;2&nbsp;==&nbsp;0</code>.)<
 outline of the program. The last step, telling the user whether the number is
 even or odd, requires an <code>if</code> statement to decide between the two
 possibilities.</p>
-<pre>public static void main (String[] args) {
+<pre>import textio.TextIO;
+
+public static void main (String[] args) {
 
    int n;  // the number read from the user
 

@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  *  This class implements a simple program that will compute the amount of 
  *  interest that is earned on an investment over a period of 5 years.  The 

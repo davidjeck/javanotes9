@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  * This program reads a sequence of positive integers input
  * by the user, and it will print out the average of those

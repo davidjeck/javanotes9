@@ -190,6 +190,8 @@ of type <classname>Throwable</classname> that can be caught and handled in a
 programs.  It fetches (that is, reads) an instruction from memory and carries out
 (that is, executes) the instruction, and it repeats this over and over in a continuous
 cycle.</gitem>
+<gitem term="fill">A drawing operation that applies a color (or other type of fill) to each
+of the pixels inside a shape.</gitem>
 <gitem term="flag">A boolean value that is set to true to indicate that some condition
 or event is true.  A single bit in a binary number can also be used as a flag.</gitem>
 <gitem term="formal parameter">Another term for "dummy parameter."</gitem>
@@ -511,6 +513,8 @@ gradually filling in the details.</gitem>
 for output data.  Java has four basic stream classes representing input and output
 of character and binary data.  These classes form the foundation for Java's
 input/output API.</gitem>
+<gitem term="stroke">A drawing operation that applies a color (or other type of paint) to pixels along
+the boundary of a shape.</gitem>
 <gitem term="source code">Text written in a high-level programming language, which must
 be translated into a machine language such as Java bytecode before it can be executed by
 a computer.</gitem>

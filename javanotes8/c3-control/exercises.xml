@@ -341,7 +341,9 @@ character in that string.)</p>
 
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="SimpleCalculator">/**
+<pre><prog name="SimpleCalculator">import textio.TextIO;
+
+/**
  *  This program evaluates simple expressions such as 2 + 2
  *  and 34.2 * 7.81, consisting of a number, an operator,
  *  and another number.  The operators +, -, *, / are allowed.
@@ -496,7 +498,9 @@ program.</p>
 This turns out to be even harder to implement than the above.</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="ListWordsInString">/**  
+<pre><prog name="ListWordsInString">import textio.TextIO;
+
+/**  
  *  This program will read one line of input typed by the user.
  *  It will print the words from the input, one word to a line.
  *  A word is defined to be a sequence of letters.  All non-letters
@@ -648,7 +652,9 @@ format that is specified in the problem.  The problem would be more difficult if
 to check the format of the file, to see whether it conforms to the specification.)</p>
 </exercise-discuss>
 <exercise-code>
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  * This program reads from a file named "sales.dat".  Each line of the
  * file contains the name of a city, followed by a colon, followed by
  * either a number giving the amount of sales in that city or by a
@@ -771,7 +777,9 @@ integer that has that many divisors.</np>
 </exercise-discuss>
 <exercise-code>
 <p>New code that involves the array is shown in &newcodestyle;.</p>
-<pre><prog name="MostDivisorsWithArray">/**
+<pre><prog name="MostDivisorsWithArray">import textio.TextIO;
+
+/**
  * This program counts the number of divisors for integers in the range
  * 1 to 10000.  It finds the maximum divisor count.  It outputs the
  * maximum divisor count and a list of all integers in the range that 
@@ -1216,15 +1224,16 @@ public class BirthdayProblem4 {
 <exercise id="control.ex.6">
 <exercise-question><p>Write a GUI program that draws
 a checkerboard.  Base your solution on the sample program
-<sourceref href="SimpleAnimationStarter.java"/>, even though you are
-creating only a static picture rather than an animation.  You will draw
-the checkerboard in the <code>drawFrame()</code> subroutine.  You should
-read the comments in the file to discover other changes that you might
-need to make.</p>
+<sourceref href="SimpleGraphicsStarter.java"/>  You will draw
+the checkerboard in the <code>drawPicture()</code> subroutine, after
+erasing the code that it already contains.</p>
 
-<p>Assume that the size of the drawing area is 400-by-400  pixels.  A checkerboard
+<p>The checkerboard should be 400-by-400  pixels.  You can change the size of
+the drawing area in <code>SimpleGraphicsStarter.java</code> by modifying the
+first two lines of the <code>main()</code> routine to set <code>width</code>
+and <code>height</code> to 400.  A checkerboard
 contains 8 rows and 8 columns of squares.  If the size of the drawing area is 400,
-that means that each square can be 50-by-50 pixels.  
+that means that each square should be 50-by-50 pixels.  
 The squares are red and black (or whatever other colors you choose). Here is a tricky way
 to determine whether a given square should be red or black: The rows and columns can be
 thought of as numbered from 0 to 7.  If the row number of the square and the
@@ -1261,10 +1270,10 @@ becomes</p>
     for each of the eight columns:
         Compute x,y for the top-left corner of the square
         if it's a red square:
-           g.setColor(Color.RED)
+           g.setFill(Color.RED)
         else
-           g.setColor(Color.BLACK)
-        g.fillRect(x,y,20,20)</pre>
+           g.setFill(Color.BLACK)
+        g.fillRect(x,y,50,50)</pre>
 
 <p>The top of the first row of squares is at <code>y=0</code>. Since each square is
 50 pixels high, the top of the second row is at <code>y=50</code>, followed by 100
@@ -1298,98 +1307,92 @@ code, the algorithm becomes</np>
        x = 50*col;
        y = 50*row;
        if ( (row % 2) == (col % 2) )
-          g.setColor(Color.RED);
+          g.setFill(Color.RED);
        else
-          g.setColor(Color.BLACK);
+          g.setFill(Color.BLACK);
        g.fillRect(x,y,50,50);
    }
 }</pre>
 
 <p>Of course, the variables <code>row</code>, <code>col</code>, <code>x</code>, and
 <code>y</code> have to be declared to be of type <ptype>int</ptype>. Then, the code goes
-into the body of the <code>drawFrame()</code>subroutine.</p>
+into the body of the <code>drawPicture()</code>subroutine.</p>
 
 <p>The complete program is shown below.  In the original program, the size of the
-drawing area was 600-by-450.  As noted in a comment, to change the size to
-400-by-400, I had to change one of the lines in the main routine, replacing 600 and
-450 by 400 to get:</p>
+drawing area was 800-by-600.  As noted in a comment, to change the size to
+400-by-400, I had to change the first two lines in the main routine, replacing 800 and
+600 by 400.  And I changed the title of the window to "Checkerboard" in another
+line in <code>main()</code>.</p>
 
-<pre>drawingArea.setPreferredSize(new Dimension(400,400));</pre>
-
-<np>You don't need to understand what this means or how it works to make the
-change.  I also wanted to stop the user from changing the size of the window,
-to change the text in the title bar of the window, and to change the name of the class from
-<classname>SimpleAnimationStarter</classname> to <classname>Checkerboard</classname>.
-All these things were easy to do following instructions in the program.  (That leaves
-the program drawing the same checkerboard 50 times every second.  Although the comments
-in the original program don't tell you how to prevent that, I did it by commenting out
-the very last line of <code>main()</code>.  Without that line, the animation is never
-started, and the checkerboard doesn't get redrawn over and over unnecessarily.)
-</np>
+<p>I also changed the name of the class from
+<classname>SimpleGraphicsStarter</classname> to <classname>Checkerboard</classname>.
+Remember that this also requires changing the name of the file from
+<code>SimpleGraphicsStarter.java</code> to <code>Checkerboard.java</code>.
+</p>
 </exercise-discuss>
 <exercise-code>
 <pre><prog name="Checkerboard">
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
-public class Checkerboard extends JPanel implements ActionListener {
+/**
+ *  This program draws a checkerboard
+ */
+public class Checkerboard extends Application {
 
-   public void drawFrame(Graphics g, int frameNumber, int width, int height) {
+    /**
+     * Draws a picture.  The parameters width and height give the size 
+     * of the drawing area, in pixels.  
+     */
+    public void drawPicture(GraphicsContext g, int width, int height) {
 
-      int row;   // Row number, from 0 to 7
-      int col;   // Column number, from 0 to 7
-      int x,y;   // Top-left corner of square
+          int row;   // Row number, from 0 to 7
+          int col;   // Column number, from 0 to 7
+          int x,y;   // Top-left corner of square
 
-      for ( row = 0;  row &lt; 8;  row++ ) {
+          for ( row = 0;  row &lt; 8;  row++ ) {
 
-         for ( col = 0;  col &lt; 8;  col++) {
-            x = col * 50;
-            y = row * 50;
-            if ( (row % 2) == (col % 2) )
-               g.setColor(Color.RED);
-            else
-               g.setColor(Color.BLACK);
-            g.fillRect(x, y, 50, 50);
-         } 
+             for ( col = 0;  col &lt; 8;  col++) {
+                x = col * 50;
+                y = row * 50;
+                if ( (row % 2) == (col % 2) )
+                   g.setFill(Color.RED);
+                else
+                   g.setFill(Color.BLACK);
+                g.fillRect(x, y, 50, 50);
+             } 
 
-      }
-      
-   }
-   
-   //------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS ------
-   
-   
-   public static void main(String[] args) {
-      
-      JFrame window = new JFrame("Checkerboard");
-      Checkerboard drawingArea = new Checkerboard();
-      drawingArea.setBackground(Color.WHITE);
-      window.setContentPane(drawingArea);
-      drawingArea.setPreferredSize(new Dimension(400,400));
-      window.pack();
-      window.setLocation(100,50);
-      window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      window.setResizable(false); // The user can't change the size.
-      Timer frameTimer = new Timer(20,drawingArea);
-      window.setVisible(true);
-      //frameTimer.start(); // commented out so we don't get an animation
+          }
 
-   } // end main
+    } // end drawPicture()
 
-   private int frameNum;
-   
-   public void actionPerformed(ActionEvent evt) {
-      frameNum++;
-      repaint();
-   }
-   
-   protected void paintComponent(Graphics g) {
-      super.paintComponent(g);
-      drawFrame(g, frameNum, getWidth(), getHeight());
-   }
+    //------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS ------
 
-}
+
+    public void start(Stage stage) {
+        int width = 400;   // The width of the image.  You can modify this value!
+        int height = 400;  // The height of the image. You can modify this value!
+        Canvas canvas = new Canvas(width,height);
+        drawPicture(canvas.getGraphicsContext2D(), width, height);
+        BorderPane root = new BorderPane(canvas);
+        root.setStyle("-fx-border-width: 4px; -fx-border-color: #444");
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Checkerboard"); // STRING APPEARS IN WINDOW TITLEBAR!
+        stage.show();
+        stage.setResizable(false);
+    } 
+
+    public static void main(String[] args) {
+        launch();
+    }
+
+} // end Checkerboard
 </prog></pre>
 </exercise-code>
 </exercise>
@@ -1435,14 +1438,14 @@ and working with coordinates.</p>
 <p>Some decisions have to be made before you can start writing code.  I decided to use
 rather small squares.  (Actually, I tried it with big squares and didn't like the appearance
 as much.)  The size of my squares is 20-by-20 pixels.  For my first cyclic motion, I decided 
-to make the length of the frame 300 frames, or about 6 seconds.  This means that 
+to make the length of the frame 300 frames, or about 5 seconds.  This means that 
 <code>cyclicFrameNumber</code> can be computed as <code>frameNumber&nbsp;%&nbsp;300</code>.
 And I decided to move the
 square at one pixel per frame; that lets me use <code>cyclicFrameNumber</code> as
 the x-coordinate for the square.  The top square moves along the top edge of the
 window, so its y-coordinate is 0.  The code for the first square is:</p>
 <pre>cyclicFrameNum = frameNumber % 300;  // Repeats every 300 frames
-g.setColor(Color.RED);
+g.setFill(Color.RED);
 g.fillRect( cyclicFrameNum, 0, 20, 20 );</pre>
 <p>The exercise asks for cyclic motion at different speeds.  If the second square
 is to be faster than the first, it should cross the drawing area in a smaller
@@ -1464,7 +1467,7 @@ The third square moves three times as fast as the first, and its code is similar
 300 frames to move across the window from left to right.  But then it takes another
 300 frames to move back from right to left.  The total length of the motion is 600.
 (In the formula given in the exercise, N is 300 and 2*N is 600.)  The formula for the
-oscilation frame number is</p>
+oscillation frame number is</p>
 <pre>oscilationFrameNum = frameNumber % 600;
 if (oscilationFrameNum > 300)
     oscilationFrameNum = 600 - oscilationFrameNum;</pre>
@@ -1480,23 +1483,53 @@ You might think at first that the width should be 300, since the x-coordinate of
 the square goes up to 300.  But that x-coordinate is actually where the left edge
 of the square is.  When the left edge is at 300, the right edge is at 320.  So for the
 entire square to be visible, we have to make the width 320.</p>
+<p>For drawing the horizontal black lines, the program uses the statement</p>
+<pre>g.strokeLine(0,y+0.5,320,y+0.5);</pre>
+<np>(I should explain the "+ 0.5".  The coordinates in <code>g.strokeLine()</code> give
+the position of the <b>centers</b> of the endpoints of the line.  Without the "+&nbsp;"0.5", 
+the top half of the line drawn here would lie in one row of pixels, and the bottom half
+would lie in the next row.  The pixels in each row are only half covered by the line!
+The computer might, depending on the environment, color a partially covered pixel by blending the drawing color with the
+color of the background, so in this case, we would actually get a two pixel wide gray 
+line instead of a one pixel wide black line.  This is an example of something called
+"antialiasing," which you will encounter again later in the text.  By moving the line down 0.5 pixels, it
+will exactly cover one row of pixels, which will be filled with solid black.)
+</np>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="CyclicAndOscillatingMotionDemo">import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+<pre><prog name="CyclicAndOscillatingMotionDemo">
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
- * This program demonstrates cyclic and oscillating animations.  For cyclic animation,
- * it repeats itself every N frames, for some value of N.  An oscillating animation also
- * repeats, but the repetition is "back-and-forth."  That is, the second half
- * of the repeated animation is the same as the first half played backwards.
+ *  This file can be used to create very simple animations.  Just fill in
+ *  the definition of drawFrame with the code to draw one frame of the 
+ *  animation, and possibly change a few of the values in the rest of
+ *  the program as noted below.
  */
-public class CyclicAndOscillatingMotionDemo extends JPanel implements ActionListener {
+public class CyclicAndOscillatingMotionDemo extends Application {
 
-    public void drawFrame(Graphics g, int frameNumber, int width, int height) {
+    /**
+     * Draws one frame of an animation. This subroutine should be called
+     * about 60 times per second.  It is responsible for redrawing the
+     * entire drawing area. The parameter g is used for drawing. The frameNumber 
+     * starts at zero and increases by 1 each time this subroutine is called.  
+     * The parameter elapsedSeconds gives the number of seconds since the animation
+     * was started.  By using frameNumber and/or elapsedSeconds in the drawing
+     * code, you can make a picture that changes over time.  That's an animation.
+     * The parameters width and height give the size of the drawing area, in pixels.  
+     */
+    public void drawFrame(GraphicsContext g, int frameNumber, double elapsedSeconds, int width, int height) {
 
-        
+        g.setFill(Color.WHITE);
+        g.fillRect(0, 0, width, height); // First, fill the entire image with a background color!
+
         /* Show cyclic motion at three speeds.  In each case, a square 
          * moves across the drawing area from left to right, then jumps
          * back to the start.
@@ -1505,15 +1538,15 @@ public class CyclicAndOscillatingMotionDemo extends JPanel implements ActionList
         int cyclicFrameNum;
         
         cyclicFrameNum = frameNumber % 300;  // Repeats every 300 frames
-        g.setColor(Color.RED);
+        g.setFill(Color.RED);
         g.fillRect( cyclicFrameNum, 0, 20, 20 );
         
         cyclicFrameNum = frameNumber % 150;  // Repeats every 150 frames
-        g.setColor(Color.GREEN);
+        g.setFill(Color.GREEN);
         g.fillRect( 2*cyclicFrameNum, 20, 20, 20 );
         
         cyclicFrameNum = frameNumber % 100;  // Repeats every 100 frames
-        g.setColor(Color.BLUE);
+        g.setFill(Color.BLUE);
         g.fillRect( 3*cyclicFrameNum, 40, 20, 20 );
         
 
@@ -1525,21 +1558,21 @@ public class CyclicAndOscillatingMotionDemo extends JPanel implements ActionList
         int oscillationFrameNum;
         
         oscillationFrameNum = frameNumber % 600;  // repeats every 600 frames
-        if (oscillationFrameNum &gt; 300)
+        if (oscillationFrameNum > 300)
             oscillationFrameNum = 600 - oscillationFrameNum; // after 300, the values go backwards back to 0
-        g.setColor(Color.CYAN);
+        g.setFill(Color.CYAN);
         g.fillRect( oscillationFrameNum, 60, 20, 20 );
         
         oscillationFrameNum = frameNumber % 300; // repeats every 300 frames
-        if (oscillationFrameNum &gt; 150)
+        if (oscillationFrameNum > 150)
             oscillationFrameNum = 300 - oscillationFrameNum; // after 150, the values go backwards back to 0
-        g.setColor(Color.MAGENTA);
+        g.setFill(Color.MAGENTA);
         g.fillRect( 2*oscillationFrameNum, 80, 20, 20 );
         
         oscillationFrameNum = frameNumber % 200; // repeats every 200 frames
-        if (oscillationFrameNum &gt; 100)
+        if (oscillationFrameNum > 100)
             oscillationFrameNum = 200 - oscillationFrameNum; // after 100, the values go backwards back to 0
-        g.setColor(Color.YELLOW);
+        g.setFill(Color.YELLOW);
         g.fillRect( 3*oscillationFrameNum, 100, 20, 20 );
         
         
@@ -1549,47 +1582,46 @@ public class CyclicAndOscillatingMotionDemo extends JPanel implements ActionList
          */
         
         int y;
-        g.setColor(Color.BLACK);
+        g.setStroke(Color.BLACK);
         for ( y = 20; y &lt; 120; y = y + 20 )
-            g.drawLine(0,y,320,y);
-        g.drawRect(0,0,319,119);  // Why not (0,0,320,120)? This is a technicality.
-                                  // If you use 320 and 120, the right and bottom edges
-                                  // of the rect will actually be outside the drawing area.        
-    }
-    
-    //------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS ------
-    
-    
-    public static void main(String[] args) {
-        
-        JFrame window = new JFrame("Cyclic and Oscillating Motion");
-        CyclicAndOscillatingMotionDemo drawingArea = new CyclicAndOscillatingMotionDemo();
-        drawingArea.setBackground(Color.WHITE);
-        window.setContentPane(drawingArea);
-        drawingArea.setPreferredSize(new Dimension(320,120));  // size is 320 by 120
-        window.pack();
-        window.setLocation(100,50);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false); // The user can't change the size.
-        Timer frameTimer = new Timer(20,drawingArea);
-        window.setVisible(true);
-        frameTimer.start();
+            g.strokeLine(0,y+0.5,320,y+0.5);
+     }
 
-    } // end main
+    //------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS ------
+
 
     private int frameNum;
-    
-    public void actionPerformed(ActionEvent evt) {
-        frameNum++;
-        repaint();
-    }
-    
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        drawFrame(g, frameNum, getWidth(), getHeight());
+    private long startTime;
+
+    public void start(Stage stage) {
+        int width = 320;   // The width of the image.  You can modify this value!
+        int height = 120;  // The height of the image. You can modify this value!
+        Canvas canvas = new Canvas(width,height);
+        drawFrame(canvas.getGraphicsContext2D(), 0, 0, width, height);
+        BorderPane root = new BorderPane(canvas);
+        root.setStyle("-fx-border-width: 4px; -fx-border-color: #444");
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Motion demo"); // STRING APPEARS IN WINDOW TITLEBAR!
+        stage.show();
+        stage.setResizable(false);
+        AnimationTimer anim = new AnimationTimer() {
+            public void handle(long now) {
+                if (startTime &lt; 0)
+                    startTime = now;
+                frameNum++;
+                drawFrame(canvas.getGraphicsContext2D(), frameNum, (now-startTime)/1e9, width, height);
+            }
+        };
+        startTime = -1;
+        anim.start();
+    } 
+
+    public static void main(String[] args) {
+        launch();
     }
 
-}
+} // end CyclicAndOscillatingMotionDemo
 </prog></pre>
 </exercise-code>
 </exercise>

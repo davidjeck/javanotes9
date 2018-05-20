@@ -66,7 +66,7 @@ block. This is perfectly legal, and it is good style to declare a variable
 inside a block if that variable is used nowhere else but inside the block. A
 variable declared inside a block is completely inaccessible and invisible from
 outside that block. When the computer executes the variable declaration
-statement, it allocates memory to hold the value of the variable. When the
+statement, it allocates memory to hold the value of the variable (at least conceptually). When the
 block ends, that memory is discarded (that is, made available for reuse). The
 variable is said to be <newword>local</newword> to the block. There
 is a general concept called the "scope" of an identifier. The <newword>scope</newword> 
@@ -94,7 +94,7 @@ generally a bad thing. (There is an old story about
 computer pioneer Grace Murray Hopper, who read instructions on a bottle of
 shampoo telling her to "lather, rinse, repeat." As the story goes, she claims
 that she tried to follow the directions, but she ran out of shampoo. (In case
-you don't get it, this is a joke about the way that computers mindlessly follow
+you don't get it, she was making a joke about the way that computers mindlessly follow
 instructions.))</p>
 
 <p>To be more specific, a <code>while</code> loop will repeat a statement over and
@@ -166,13 +166,14 @@ interest on an investment over several years. This is an improvement over
 examples from the previous chapter that just reported the results for one
 year:</p>
 
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  *  This class implements a simple program that will compute the amount of 
  *  interest that is earned on an investment over a period of 5 years.  The 
  *  initial amount of the investment and the interest rate are input by the 
  *  user.  The value of the investment at the end of each year is output.
- */
- 
+ */ 
 public class Interest3 {
      
  
@@ -343,7 +344,7 @@ else {                          if (x &gt;= 0) {
 System.out.println(y);          System.out.println(y);</pre>
 
 <np>In the version on the left, <code>y</code> is assigned the value 1 if <code>x&nbsp;&lt;&nbsp;0</code>
-and is assigned the value 2 otherwise, that is, if <code>x&nbsp;&gt;=&nbsp;0</code>.  Exactly the same is true of the
+and it is assigned the value 2 otherwise, that is, if <code>x&nbsp;&gt;=&nbsp;0</code>.  Exactly the same is true of the
 version on the right.  However, there is a subtle difference.  In fact, the Java compiler will report
 an error for the <code>System.out.println</code> statement in the code on the right, while the
 code on the left is perfectly fine!  

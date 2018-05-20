@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  * This program reads a positive integer from the user.
  * It counts how many divisors that number has, and
@@ -28,7 +30,7 @@ public class CountDivisors {
 
 		int numberTested;  // Used to count how many possible divisors
 		                   // of N have been tested.  When the number
-		                   // reaches 1000000, a period is output and
+		                   // reaches 10000000, a period is output and
 		                   // the value of numberTested is reset to zero.
 
 		/* Get a positive integer from the user. */
@@ -41,7 +43,7 @@ public class CountDivisors {
 			System.out.println("That number is not positive.  Please try again.");
 		}
 
-		/* Count the divisors, printing a "." after every 1000000 tests. */
+		/* Count the divisors, printing a "." after every 10000000 tests. */
 
 		divisorCount = 0;
 		numberTested = 0;
@@ -50,7 +52,7 @@ public class CountDivisors {
 			if ( N % testDivisor == 0 )
 				divisorCount++;
 			numberTested++;
-			if (numberTested == 1000000) {
+			if (numberTested == 10000000) {
 				System.out.print('.');
 				numberTested = 0;
 			}

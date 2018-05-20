@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**  
  * This program prints out a 3N+1 sequence starting from a positive 
  * integer specified by the user.  It also counts the number of 

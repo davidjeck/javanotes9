@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  * This program reads numbers from a file.  It computes the sum and 
  * the average of the numbers that it reads.  The file should contain 
