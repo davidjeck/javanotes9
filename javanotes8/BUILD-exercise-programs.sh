@@ -34,7 +34,7 @@ if  $XALAN_COMMAND -xsl convert-exercise-progs.xsl -in javanotes8.xml ; then
    for dir in `ls -1 exercise-programs` ; do
        cp -r src-textio/textio exercise-programs/$dir/textio
    done
-   cp src-c4/Mosaic.java src-c4/MosaicPanel.java exercise-programs/chapter4
+   cp src-c4/Mosaic.java src-c4/MosaicCanvas.java exercise-programs/chapter4
    cp src-c5/Deck.java src-c5/Hand.java src-c5/BlackjackHand.java src-c5/Card.java exercise-programs/chapter5
    cp src-c5/Deck.java src-c5/Hand.java src-c5/BlackjackHand.java src-c5/Card.java exercise-programs/chapter6
    cp exercise-programs/chapter5/StatCalc.java exercise-programs/chapter6/StatCalc.java

@@ -18,12 +18,12 @@ other purposes.</p>
 
 <p>Someone who wanted to program for Macintosh computers&mdash;and to produce
 programs that look and behave the way users expect them to&mdash;had to deal with
-the Macintosh Toolbox, a collection of well over a thousand different
-subroutines. There are routines for opening and closing windows, for drawing
+the "Macintosh Toolbox,"" a collection of well over a thousand different
+subroutines. There were routines for opening and closing windows, for drawing
 geometric figures and text to windows, for adding buttons to windows, and for
-responding to mouse clicks on the window. There are other routines for creating
+responding to mouse clicks on the window. There were other routines for creating
 menus and for reacting to user selections from menus. Aside from the user
-interface, there are routines for opening files and reading data from them, for
+interface, there were routines for opening files and reading data from them, for
 communicating over a network, for sending output to a printer, for handling
 communication between programs, and in general for doing all the standard
 things that a computer has to do.  Microsoft Windows provides its own
@@ -67,14 +67,14 @@ such as <code>Math.sqrt()</code>, the <classname>String</classname> data type an
 routines, and the <code>System.out.print()</code> routines. The standard Java API
 includes routines for working with graphical user interfaces, for network
 communication, for reading and writing files, and more. It's tempting to think
-of these routines as being built into the Java language, but they are
+of these routines as being part of the Java language, but they are
 technically subroutines that have been written and made available for use in
 Java programs.</p>
 
 <p>Java is platform-independent. That is, the same program can run on platforms
 as diverse as Mac&nbsp;OS, Windows, Linux, and others. The same Java API must work
 on all these platforms. But notice that it is the <b>interface</b>
-that is platform-independent; the <b>implementation</b> varies from
+that is platform-independent; the <b>implementation</b> of some parts of the API varies from
 one platform to another. A Java system on a particular computer includes
 implementations of all the standard API routines. A Java program includes only
 <b>calls</b> to those routines. When the Java interpreter executes a
@@ -96,37 +96,25 @@ levels of grouping, since packages can also contain other packages. In fact,
 the entire standard Java API is implemented in several packages. One of these,
 which is named "<code>java</code>", contains several non-GUI packages as well as the
 original AWT graphics user interface classes. Another package,
-"<code>javax</code>", was added in Java version 1.2 and contains the classes used
-by the Swing graphical user interface and other additions to the API.</p>
+"<code>javax</code>", contains the classes used by the Swing graphical user interface
+as well as many other classes (but we will not be using any part of <code>javax</code>).
+And "<code>javafx</code>" contains the JavaFX API that is used for GUI programming
+in this textbook.</p>
 
 <p>A package can contain both classes and other packages. A package that is
 contained in another package is sometimes called a "sub-package." Both the
-<code>java</code> package and the <code>javax</code> package contain sub-packages. One
-of the sub-packages of <code>java</code>, for example, is called "<code>awt</code>".
-Since <code>awt</code> is contained within <code>java</code>, its full name is actually
-<code>java.awt</code>.  This package contains classes that represent GUI components
-such as buttons and menus in the AWT.  AWT is the older of the two Java GUI toolboxes and
-is no longer widely used.  However, <code>java.awt</code> also contains a number
-of classes that form the foundation for all GUI programming, such as the <code>Graphics</code>
-class which provides routines for drawing on the screen, the <code>Color</code> class
-which represents colors, and the <code>Font</code> class which represents the fonts that
-are used to display characters on the screen.
-Since these classes are contained in the package <code>java.awt</code>, their full names are actually
-<code>java.awt.Graphics</code>, <code>java.awt.Color</code>, and <code>java.awt.Font</code>.
-(I hope that by now you've gotten the hang of how this naming thing works in Java.) Similarly,
-<code>javax</code> contains a sub-package named <code>javax.swing,</code> which
-includes such GUI classes as <code>javax.swing.JButton</code>, <code>javax.swing.JMenu</code>, and
-<code>javax.swing.JFrame</code>.  The GUI classes in <code>javax.swing</code>, together with the
-foundational classes in <code>java.awt</code>, are all part of the API that makes it possible
-to program graphical user interfaces in Java.</p>
-
-<p>The <code>java</code> package includes several other sub-packages, such as
-<code>java.io</code>, which provides facilities for input/output,
-<code>java.net</code>, which deals with network communication, and
-<code>java.util</code>, which provides a variety of "utility" classes. The
+<code>java</code> package and the <code>javafx</code> package contain sub-packages. 
+One of the sub-packages of <code>java</code>, for example, is named "<code>util</code>"
+Since <code>util</code> is contained within <code>java</code>, its full name is actually
+<code>java.util</code>.  This package contains a variety of utility classes, including
+the <classname>Scanner</classname> class that was discussed in <localref href="basics.4.6"/>. 
+The <code>java</code> package includes several other sub-packages, such as
+<code>java.io</code>, which provides facilities for input/output, and
+<code>java.net</code>, which deals with network communication. The
 most basic package is called <code>java.lang</code>. This package contains
 fundamental classes such as <classname>String</classname>, <classname>Math</classname>,
 <classname>Integer</classname>, and <classname>Double</classname>.</p>
+
 
 <p>It might be helpful to look at a graphical representation of the levels of
 nesting in the <code>java</code> package, its sub-packages, the classes in those
@@ -134,16 +122,27 @@ sub-packages, and the subroutines in those classes. This is not a complete
 picture, since it shows only a very few of the many items in each element:</p>
 
 
-<img width="520" height="346" alt="(Diagram of subroutine/class/package nesting)" 
+<img width="524" height="350" alt="(Diagram of subroutine/class/package nesting)" 
    src="package-class-subroutine.png" tex="package-class-subroutine.eps" texscale="0.6"/>
    
-<p>The official documentation for the standard Java&nbsp;7 API
-lists 209 different packages, including sub-packages, and
-it lists 4024 classes in these packages.  Many of these are rather obscure or
+<p>Similarly, the package <code>javafx</code> contains a package <code>javafx.scene</code>,
+which in turn contains <code>javafx.scene.control</code>.
+This package contains classes that represent GUI components
+such as buttons and input boxes.  Another subpackage, <code>javafx.scene.paint</code>,
+contains class <classname>Color</classname> and other classes that define ways to
+fill and stroke a shape.</p>
+
+
+<p>The official documentation for the standard Java&nbsp;8 API
+lists 218 different packages, including sub-packages, and
+it lists 4242 classes in these packages.  This does not include JavaFX
+which adds another 37 packages and 693 classes.  Many of the standard classes are rather obscure or
 very specialized, but you might want to browse through the documentation to see
 what is available.  As I write this, the
-documentation for the complete API can be found at</p>
-<pre><a href="http://download.oracle.com/javase/7/docs/api/">http://download.oracle.com/javase/7/docs/api/</a></pre>
+documentation for the complete basic API can be found at</p>
+<pre><a href="http://download.oracle.com/javase/8/docs/api/">http://download.oracle.com/javase/8/docs/api/</a></pre>
+<np>and for JavaFX at</np>
+<pre><a href="https://docs.oracle.com/javase/8/javafx/api/toc.htm">https://docs.oracle.com/javase/8/javafx/api/toc.htm</a></pre>
 <np>Even an expert programmer won't be familiar with the entire API,
 or even a majority of it.  In this book, you'll only encounter
 several dozen classes, and those will be sufficient for writing a 
@@ -153,33 +152,35 @@ wide variety of programs.</np>
    
 <subsection id="subroutines.5.3" title="Using Classes from Packages">
 
-<p>Let's say that you want to use the class <code>java.awt.Color</code> in a
-program that you are writing.  Like any class, <code>java.awt.Color</code> is
+<p>Let's say that you want to use the class <code>javafx.scene.paint.Color</code> in a
+program that you are writing.  This is the full name of class <classname>Color</classname>
+in package <code>javafx.scene.paint</code>.
+Like any class, <code>javafx.scene.paint.Color</code> is
 a type, which means that you can use it to declare variables and parameters and
 to specify the return type of a function. One way to do this is to use the
 full name of the class as the name of the type. For example, suppose that you
-want to declare a variable named <code>rectColor</code> of type <code>java.awt.Color</code>.
+want to declare a variable named <code>rectColor</code> of type <classname>Color</classname>.
 You could say:</p>
 
-<pre>java.awt.Color  rectColor;</pre>
+<pre>javafx.scene.paint.Color  rectColor;</pre>
 
 <np>This is just an ordinary variable declaration of the form
 "<bnf>type-name</bnf>&nbsp;<bnf>variable-name</bnf>;".
 Of course, using the full name of every class can get tiresome, and you will hardly
-ever see full names like <code>java.awt.Color</code> used in a program.
+ever see full names like this used in a program.
 Java makes it possible to avoid using the full name of a class by <newword>importing</newword>
 the class. If you put</np>
 
-<pre>import java.awt.Color;</pre>
+<pre>import javafx.scene.paint.Color;</pre>
 
 <np>at the beginning of a Java source code file, then, in the rest of the file,
-you can abbreviate the full name <code>java.awt.Color</code> to just the simple name of
+you can abbreviate the full name <code>javafx.scene.paint.Color</code> to just the simple name of
 the class, which is <code>Color</code>.  Note that the <code>import</code> line comes at the start of 
 a file (after the <code>package</code> statement, if there is one) 
 and is not inside any class.  Although it is sometimes referred to
 as a statement, it is more properly called an <newword>import&nbsp;directive</newword>
 since it is not a statement in the usual sense.  The <code>import</code>
-directive "<code>import&nbsp;java.awt.Color</code>" would allow you to say</np>
+directive "<code>import&nbsp;javafx.scene.paint.Color</code>" would allow you to say</np>
 
 <pre>Color  rectColor;</pre>
 
@@ -188,15 +189,15 @@ directive "<code>import&nbsp;java.awt.Color</code>" would allow you to say</np>
 full "package.class" names. You aren't really importing anything substantial;
 if you leave out the <code>import</code> directive, you can still access the class&mdash;you 
 just have to use its full name.  There is a shortcut for importing all
-the classes from a given package. You can import all the classes from
-<code>java.awt</code> by saying</np>
+the classes from a given package. For example, you can import all the classes from
+<code>java.util</code> by saying</np>
 
-<pre>import java.awt.*;</pre>
+<pre>import java.util.*;</pre>
 
 <np>The "<code>*</code>" is a <newword>wildcard</newword> that matches every class in the package.
 (However, it does not match sub-packages; for example, you <b>cannot</b> import the entire
-contents of all the sub-packages of the <code>java</code> package by saying
-<code>import&nbsp;java.*</code>.)</np>
+contents of all the sub-packages of the <code>javafx</code> package by saying
+<code>import&nbsp;javafx.*</code>.)</np>
    
 <p>Some programmers think that using a wildcard in an <code>import</code> statement
 is bad style, since it can make a large number of class names available that you are
@@ -205,14 +206,6 @@ import each individual class that you want to use.  In my own programming, I oft
 use wildcards to import all the classes from the most relevant packages, and use
 individual imports when I am using just one or two classes from a given package.</p>
 
-<p>In fact, any Java program that uses a graphical user interface is likely to
-use many classes from the <code>java.awt</code> and <code>javax.swing</code> packages
-as well as from another package named <code>java.awt.event</code>, 
-and I often begin such programs with</p>
-   
-<pre>import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;</pre>
    
 <np>A program that works with networking might include the line
 "<code>import java.net.*;</code>", while one that reads or writes files might
@@ -258,18 +251,22 @@ dealing with areas not covered in the standard Java API. (And in fact such
 "toolmaking" programmers often have more prestige than the applications
 programmers who use their tools.)</p>
 
-<p>However, with just a couple of exceptions, 
-I will not be creating packages in this textbook. For the purposes of this
-book, you need to know about packages mainly so that you will be able to import the standard
+<p>However, with just a couple of exceptions such as class <classname>TextIO</classname>
+in package <code>textio</code>, the classes written for this book are not in packages. For the purposes of this
+book, you need to know about packages mainly so that you will be able to import <classname>TextIO</classname>
+and classes from the standard
 packages. These packages are always available to the programs that you write.
 You might wonder where the standard classes are actually located.  Again, that can
-depend to some extent on the version of Java that you are using, but in recent standard
-versions, they are stored in <newword>jar files</newword> in a subdirectory named <code>lib</code>
+depend to some extent on the version of Java that you are using.  In Java&nbsp;8
+they are stored in <newword>jar files</newword> in a subdirectory named <i>lib</i>
 inside the Java Runtime Environment installation
-directory.  A jar (or "Java archive") file is a single file that can contain many classes.
-Most of the standard classes can be found in a jar file named <code>rt.jar</code>.
-In fact, Java programs are generally distributed in the form of jar files, instead of as
-individual class files.</p>
+directory.  A&nbsp;.jar (or "Java archive") file is a single file that can contain many classes.
+Most of the standard classes in Java&nbsp;8 can be found in a jar file named <code>rt.jar</code>.
+In Java&nbsp;9 and later, the standard classes are stored in <newword>jmod files</newword>
+in a subdirectory named <i>jmods</i>.  A&nbsp;.jmod file contains one "module," which is a
+collection of packages.  Modules were introduced in Java&nbsp;9 as yet another level of containment;
+they are not discussed in this textbook.
+</p>
 
 <p>Although we won't be creating packages explicitly, <b>every</b>
 class is actually part of a package. If a class is not specifically placed in a
@@ -296,7 +293,7 @@ You have already seen comments of this form in many of the examples in this book
 <p>Note that a Javadoc comment must be placed just <b>before</b> the subroutine that
 it is commenting on.  This rule is always followed.  You can have Javadoc
 comments for subroutines, for member variables, and for classes.  The Javadoc
-comment always immediately <b>precedes</b> the thing it is commenting on.</p>
+comment always <b>immediately precedes</b> the thing it is commenting on.</p>
 
 <p>Like any comment, a Javadoc comment is ignored by the computer when the file is compiled.
 But there is a tool called <code>javadoc</code> that reads Java source code files, extracts
@@ -337,8 +334,7 @@ tags:  <code>@author</code>, <code>@param</code>, <code>@return</code>, and <cod
 The <code>@author</code> tag can be used only for a class, and should be followed by the
 name of the author.  The other three
 tags are used in Javadoc comments for a subroutine to provide information about its
-parameters, its return value, and the <localref href="subroutines.3.5">exceptions</localref>
-that it might throw. These tags
+parameters, its return value, and the exceptions that it might throw. These tags
 <b>must</b> be placed at the end of the comment, after any description of the subroutine
 itself.  The syntax for using them is:
 </p>
@@ -396,7 +392,7 @@ documentation for your programming environment.</p>
 
 <p>Before ending this section, I will mention an extension of the <code>import</code> directive.
 We have seen that <code>import</code> makes it possible to refer to a class
-such as <code>java.awt.Color</code> using its simple name, <classname>Color</classname>.
+such as <code>java.utl.Scanner</code> using its simple name, <classname>Scanner</classname>.
 But you still have to use compound names to refer to static member variables such
 as <code>System.out</code> and to static methods such as <code>Math.sqrt</code>.</p>
    
@@ -419,19 +415,20 @@ a class definition with</np>
    
 <np>then you can use the simple name <code>out</code> instead of the compound name <code>System.out</code>.
 This means you can say <code>out.println</code> instead of <code>System.out.println</code>.  If you
-are going to work extensively with the <classname>Math</classname> class, you can preface
+are going to work extensively with the <classname>Math</classname> class, you might preface
 your class definition with</np>
    
 <pre>import static java.lang.Math.*;</pre>
    
 <np>This would allow you to say <code>sqrt</code> instead of <code>Math.sqrt</code>, <code>log</code>
-instead of <code>Math.log</code>, <code>PI</code> instead of <code>Math.PI</code>, and so on.</np>
+instead of <code>Math.log</code>, <code>PI</code> instead of <code>Math.PI</code>, and so on.  And you
+could import the <i>getlnInt</i> function from <classname>TextIO</classname> using</np>
+
+<pre>import static textio.TextIO.getlnInt;</pre>
 
 <p>Note that the static import directive requires a <bnf>package-name</bnf>, even for classes in
 the standard package <code>java.lang</code>.  One consequence of this is that you can't do a 
-static import from a class in the default package.  In particular, it is not possible to do
-a static import from my <classname>TextIO</classname> class&mdash;if you want to do that,
-you have to move <classname>TextIO</classname> into a package.</p>
+static import from a class in the default package.</p>
 
 
 </subsection>

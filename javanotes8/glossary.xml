@@ -198,6 +198,8 @@ or event is true.  A single bit in a binary number can also be used as a flag.</
 <gitem term="frame">One of the images that make up an animation.  Also used as
 another name for activation record.</gitem>
 <gitem term="function">A subroutine that returns a value.</gitem>
+<gitem term="functional interface">A Java <code>interface</code> that defines only a single subroutine
+(where the term "interface" here means an interface that defines a Java type.)</gitem>
 <gitem term="garbage collection">The automatic process of reclaiming memory that is
 occupied by objects that can no longer be accessed.</gitem>
 <gitem term="generic programming">Writing code that will work with various types
@@ -281,6 +283,9 @@ a just-in-time compiler.</gitem>
 <gitem term="JVM">Java Virtual Machine.  The imaginary computer whose machine language
 is Java bytecode.  Also used to refer to computer programs that act as interpreters for
 programs written in bytecode; to run Java programs on your computer, you need a JVM.</gitem>
+<gitem term="lambda expression">A notation that defines an anonymous method.  More precisely,
+a lambda expression is a kind of literal that represents a value whose type is given
+by a functional interface.</gitem>
 <gitem term="layout manager">An object whose function is to lay out the components
 in a container, that is, to set their sizes and locations.  Different types of layout
 managers implement different policies for laying out components.</gitem>
@@ -324,6 +329,9 @@ represented by the generic interface <classname>Map&lt;T,S&gt;</classname></gite
 <gitem term="memory">Memory in a computer is used to hold programs and data.</gitem>
 <gitem term="method">Another term for <i>subroutine</i>, used in the context of
 object-oriented programming.  A method is a subroutine that is contained in a class or in an object.</gitem>
+<gitem term="method reference">A notation for a lambda expression that represents a method that
+already exists in some class or object.  A method reference uses the <code>::</code> operator,
+such as <code>Math::sqrt</code>.</gitem>
 <gitem term="module">A component of a larger system that interacts with
 the rest of the system in a simple, well-defined, straightforward manner.</gitem>
 <gitem term="multitasking">Performing multiple tasks at once, either by switching rapidly

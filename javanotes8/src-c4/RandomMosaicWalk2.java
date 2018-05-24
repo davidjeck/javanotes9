@@ -22,10 +22,10 @@ public class RandomMosaicWalk2 {
 		fillWithRandomColors();
 		currentRow = ROWS / 2;   // start at center of window
 		currentColumn = COLUMNS / 2;
-		while (Mosaic.isOpen()) {
+		while (true) {
 			changeToRandomColor(currentRow, currentColumn);
 			randomMove();
-			Mosaic.delay(1);
+			Mosaic.delay(5);  // Remove this line to speed things up!
 		}
 	}  // end main
 

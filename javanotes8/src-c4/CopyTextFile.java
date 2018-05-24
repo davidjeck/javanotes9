@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  *  Requires two command line arguments, which must be file names.  The
  *  the first must be the name of an existing file.  The second is the name

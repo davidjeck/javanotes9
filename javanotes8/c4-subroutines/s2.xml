@@ -35,7 +35,11 @@ subroutines in Java. I will start using the term "method" occasionally;
 however, I will continue to prefer the more general term "subroutine" 
 in this chapter, at least for static subroutines.  However, you should start
 thinking of the terms "method" and "subroutine" as being essentially
-synonymous as far as Java is concerned.</p>
+synonymous as far as Java is concerned.  Other terms that you might see used to 
+refer to subroutines are "procedures" and "functions."  (I generally use the term
+"function" only for subroutines that compute and return a value, but in some programming
+languages, it is used to refer to subroutines in general.)</p>
+
 
 <subsection id="subroutines.2.1" title="Subroutine Definitions">
 
@@ -84,7 +88,7 @@ represent information that is passed into the subroutine from outside, to be
 used by the subroutine's internal computations. For a concrete example, imagine
 a class named <classname>Television</classname> that includes a method named
 <code>changeChannel()</code>. The immediate question is: What channel should it
-change to? A parameter can be used to answer this question. Since the channel
+change to? A parameter can be used to answer this question. If a channel
 number is an integer, the type of the parameter would be <ptype>int</ptype>, and the
 declaration of the <code>changeChannel()</code> method might look like</p>
 
@@ -101,10 +105,9 @@ more parameter declarations of the form <bnf>type</bnf>&nbsp;<bnf>parameter-name
 declarations, they are separated by commas. Note that each declaration can name
 only one parameter. For example, if you want two parameters of type
 <ptype>double</ptype>, you have to say "<code>double&nbsp;x,&nbsp;double&nbsp;y</code>", rather than
-"<code>double x, y</code>".</p>
+"<code>double&nbsp;x,&nbsp;y</code>".</p>
 
-<p>Parameters are covered in more detail in the <localref href="subroutines.3">next
-section</localref>.</p>
+<p>Parameters are covered in more detail in the <localref href="subroutines.3">next section</localref>.</p>
 
 <p>Here are a few examples of subroutine definitions, leaving out the
 statements that define what the subroutines do:</p>
@@ -143,9 +146,8 @@ class where the method is defined. There is another modifier,
 <b>only</b> from inside the same class. The modifiers <code>public</code>
 and <code>private</code> are called <newword>access specifiers</newword>.
 If no access specifier is given for a method, then by default, that method can
-be called from anywhere in the "package" that contains the class, but not from
-outside that package. (Packages were mentioned in <localref href="basics.6.6"/>,
-and you'll learn more about them later in this
+be called from anywhere in the package that contains the class, but not from
+outside that package. (You will learn more about packages later in this
 chapter, in <localref href="subroutines.5"/>.)  There is one other access
 modifier, <code>protected</code>, which will only become relevant when we turn to
 object-oriented programming in <localref href="OOP"/>.</p>
@@ -210,7 +212,7 @@ called using objects instead of class names. More on that later.) Note
 that the parameter list can be empty, as in the <code>playGame()</code> example,
 but the parentheses must be there even if there is nothing between them.
 The number of parameters that you provide when you call a subroutine must
-match the number listed in the parameter list in the subroutine definition,
+match the number specified in the parameter list in the subroutine definition,
 and the types of the parameters in the call statement must match the types
 in the subroutine definition.</np>
 
@@ -308,13 +310,15 @@ legal to have one subroutine physically nested inside another. The
 <code>main()</code> routine will <b>call</b> <code>playGame()</code>, but not contain
 its definition, only a call statement. You can put the definition of <code>playGame()</code> either before
 or after the <code>main()</code> routine. Java is not very picky about having the
-members of a class in any particular order.</p>
+subroutine definitions in a class in any particular order.</p>
 
 <p>It's pretty easy to write the main routine. You've done things like this
 before. Here's what the complete program looks like (except that a serious
 program needs more comments than I've included here).</p>
 
-<pre>public class GuessingGame {
+<pre>import textio.TextIO;
+
+public class GuessingGame {
 
    public static void main(String[] args) {
       System.out.println("Let's play a game.  I'll pick a number between");
@@ -419,7 +423,7 @@ variable in your own classes by referring to <code>System.out</code>.   Similarl
 simply as <code>numberOfPlayers</code>, while code in another class would refer to
 it as <code>Poker.numberOfPlayers</code>.</p>
 
-<p>As an example, let's add a couple static member variable to the
+<p>As an example, let's add a couple of static member variables to the
 <code>GuessingGame</code> class that we wrote earlier in this section.
 We add a variable named <code>gamesPlayed</code> to keep track of how
 many games the user has played and another variable named <code>gamesWon</code>
@@ -434,7 +438,9 @@ and we add 1 to  <code>gamesWon</code> if the user wins the game.
 At the end of the <code>main()</code> routine, we print out the values of both variables.
 It would be impossible to 
 do the same thing with local variables, since both subroutines need to access the variables,
-and local variables exist in only one subroutine.</np>
+and local variables exist in only one subroutine.  Furthermore, global variables keep
+their values between one subroutine call and the next. Local variables do not; a local
+variable gets a new value each time that the subroutine that contains it is called.</np>
 
 <p>When you declare a local variable in a subroutine, you have to assign a
 value to that variable before you can do anything with it. Member variables, on
@@ -457,7 +463,9 @@ the default.</p>
 <p>Here's the revised version of <code>GuessingGame.java</code>. 
 The changes from the above version are shown in &newcodestyle;:</p>
 
-<pre>public class GuessingGame2 {
+<pre>import textio.TextIO;
+
+public class GuessingGame2 {
  
     <newcode>static int gamesPlayed;   // The number of games played.
     static int gamesWon;      // The number of games won.</newcode>
@@ -527,10 +535,11 @@ can be used anywhere in the same package as the class where they are defined, bu
 other packages. Classes that
 don't declare a package are in the default package.  So, any class in the default package
 would have access to <code>gamesPlayed</code>, <code>gamesWon</code>, and
-<code>playGame()</code>&mdash;and that includes pretty much every class in this book.  In fact,
+<code>playGame()</code>&mdash;and that includes most of the classes in this book.  In fact,
 it is considered to be good practice 
 to make member variables and subroutines <code>private</code>, unless
-there is a reason for doing otherwise.)</p>
+there is a reason for doing otherwise.  (But then again, it's also considered good practice
+to avoid using the default package.))</p>
  
  </subsection>
 </section>

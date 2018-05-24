@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes8.dtd" >
+
+<section id="subroutines.4a" title="Lambda Expressions">
+
+<p><start><big>I</big>n a running program, a subroutine is just</start> a bunch of
+binary numbers (representing instructions) stored somewhere in the computer's memory.
+Considered as a long string of zeros and ones,
+a subroutine doesn't seem all that different from a data value such as, for example, 
+as an integer, a string, or an array, which is also represented as a string of
+zeros and ones in memory.  We are used to thinking of subroutines and data as
+very different things, but inside the computer, a subroutine is just another
+kind of data.  Some programming languages make it possible to work with a
+subroutine as a kind of data value.  In Java&nbsp;8, that ability was added to
+Java in the form of something called <newword>lambda expressions.</newword></p>
+
+<p>Lambda expressions are becoming more and more common in Java programs.
+They are especially useful for working with  the JavaFX GUI toolkit,
+and it will be useful to know about them before we cover GUI programming
+in <localref href="GUI1"/>.  However, we won't encounter them again until near the end
+of the <localref href="OOP"/>, so you can skip this section for now if you want.</p>
+
+<subsection title="First-class Functions" id="subroutines.4a.1">
+
+<p>Lambda is a letter in the Greek alphabet that was used by the mathematician
+Alonzo Church in his study of computable functions.  His lambda notation makes
+it possible to define a function without giving it a name.  For example, you
+might think that the notation <i>x</i><sup>2</sup> is a perfectly good way of
+representing a function that squares a number, but in fact, it's an
+expression that represents the result of squaring <i>x</i>, which leaves
+open the question of what <i>x</i> represents.  We can define a function
+with <i>x</i> as a dummy parameter:</p>
+
+<pre>static double square( double x ) {
+    return x*x;
+}</pre>
+
+<np>but to do that, we had to name the function <i>square</i>, and that function becomes
+a permanent part of the program&mdash;which is overkill if we just want to use the
+function once.  Alonzo Church introduced the notation <i>lambda</i>(<i>x</i>).<i>x</i><sup>2</sup>
+to represent "the function of <i>x</i> that is given by <i>x</i><sup>2</sup>" (except using
+the Greek letter instead of the the word "lambda").  This notation is a kind of function literal
+that represents a value of type "function" in the same way that 42 is an integer literal 
+that represents a value of type <ptype>int</ptype>.</np>
+
+<np>Having function literals is the starting point for thinking of a function as just
+another kind of data value. Once we do that, we should be able to so the same things
+with function that we do with other values, such as assign a function to a variable,
+pass a function as a parameter to a subroutine, return a function as the value of
+subroutine, or even make an array of functions.  A programming language that allows
+you to do all those things with function is said to have "first-class functions" or
+"functions as first-class objects."</np>
+
+<p>In fact, you can do all of those things with Java lambda expressions.  Java's notation
+is different from the one used by Alonzo Church, and in spite of the name "lambda expression"
+it does not even use the word lambda.  In Java, the lambda expression for a squaring function 
+like the one above can be written</p>
+
+<pre>x  -&gt;  x*x</pre>
+
+<np>The operator <code>-&gt;</code> is what makes this a lambda expression.  The dummy parameter
+for the function is on the left of the operator, and the expression that computes the value of
+the function is on the right. You might see an expression like this one being passed as an
+actual parameter to a subroutine, assigned to a variable, or returned by a function.</np>
+
+<p>So are functions now first-class in Java?  I'm not quite sure.  There are some cool things that can be done in
+other languages but can't be done in Java.  For example, in Java we can assign the above expression
+to a variable named, say, <i>sqr</i>, but we can't then use <i>sqr</i> as if it actually
+is a function.  For example, we can't say <i>sqr</i>(42).  The problem, really, is that
+Java is a strongly typed language; to have a variable named <i>sqr</i>, we must declare that
+variable and give it a type.  But what sort of type would be appropriate for a value that
+is a function?  The answer in Java is something called a <newword>functional interface</newword>,
+which we turn to next.</p>
+
+<p>But first one more note:  Lambda expressions in Java can actually represent arbitrary
+subroutines, not just functions.  Nevertheless, it is the term "function" that is usually
+associated with them, rather than "subroutine" or "method."</p>
+
+</subsection>
+
+
+<subsection title="Functional Interfaces" id="subroutines.4a.2">
+
+<p>To know how a subroutine can be legally used, you need to know its
+name, how many parameters it requires, their types, and the return type of the subroutine.
+A functional interface specifies this information about one subroutine.  A functional
+interface is similar to a class, and it can be defined in a .java file, just like a
+class.  However, its content is just a specification for a single subroutine.
+Here is an example:</p>
+
+<pre>public interface FunctionR2R {
+    double valueAt( double x );
+}</pre>
+
+<np>This code would be in a file named <classname>FunctionR2R.java</classname>.  It specifies a
+function named <i>valueAt</i> with one parameter of type <ptype>double</ptype>
+and a return type of <ptype>double</ptype>.  (The <b>name</b> of the parameter, <i>x</i>, is
+not really part of the specification, and it's a little annoying that it has to be there.)
+Here is another example:</np>
+
+<pre>public interface ArrayProcessor {
+    void process( String[] array, int count );
+}</pre>
+
+<np>Java comes with many standard functional interfaces.  One of the most important is
+a very simple one named <classname>Runnable</classname>, which is already defined in
+Java as</np>
+
+<pre>public interface Runnable {
+    public void run();
+}</pre>
+
+<np>I will use these three functional interfaces for examples in this section.</np>
+
+<p>"Interfaces" in Java can be much more complicated than functional interfaces.  You will
+learn more about them in <localref href="OOP.7"/>.  But it is only functional interfaces that
+are relevant to lambda expressions: a functional interface provides a template for a subroutine
+that might be represented by a lambda expression.  The name of a functional interface is
+a <b>type</b>, just as <classname>String</classname> and <ptype>double</ptype> are types.
+That is, it can be used to declare variables and parameters and to specify the return type
+of a function.  When a type is a functional interface, a value for that type can be given
+as a lambda expression.</p>
+
+</subsection>
+
+<subsection title="Lambda Expressions" id="subroutines.4a.3">
+
+<p>A lambda expression represents an anonymous subroutine, that is, one without a name.
+But it does have a formal parameter list and a definition.  The full syntax is:
+</p>
+
+<pre>( <bnf>parameter-list</bnf> )  -&gt;  { <bnf>statements</bnf> }</pre>
+
+<np>As with a regular subroutine, the <bnf>parameter-list</bnf> can be
+empty, or it can be a list of parameter declarations, separated by commas,
+where each declaration consists of a type followed by a parameter name.
+However, the syntax can often be simplified.  First of all, the parameter
+types can be omitted, as long as they can be deduced from the context.
+For example, if the lambda expression is of type <classname>FunctionR2R</classname>,
+then the parameter type is <ptype>double</ptype>.  Then, if there is exactly
+one parameter and if its type is not specified, then the parentheses around
+the parameter list can be omitted.  On the right-hand side of the <code>-&gt;</code>,
+if the only thing between the braces, <code>{</code>&nbsp;and <code>}</code>, is a 
+single subroutine call statement, then the braces can be omitted.  And if
+the right-hand side has the form <code>{</code>&nbsp;<code>return</code>&nbsp;<bnf>expression</bnf>;&nbsp;<code>}</code>,
+then you can omit everything except the <bnf>expression</bnf>.</np>
+
+<p>For example, suppose that we want a lambda expression to represent a function that
+computes the square of a <ptype>double</ptype> value.  The type of such a function
+can be the <classname>FunctionR2R</classname> interface given above.  If <i>sqr</i>
+is a variable of type <classname>FunctionR2R</classname>, then the value of
+the function can be a lambda expression, which can be written in any of the following
+forms:</p>
+
+<pre>sqr = (double x) -> { return x*x; };
+sqr = (x) -> { return x*x; };
+sqr = x -> { return x*x; };
+sqr = x -> x*x;
+sqr = (double fred) -> fred*fred;
+sqr = (z) -> z*z;</pre>
+
+<np>The last two statements are there to emphasize that the parameter names in a lambda expression
+are dummy parameters; their names are irrelevant.  The six lambda expressions in these statements
+all define exactly the same function.  Note that the parameter type <ptype>double</ptype> can be
+omitted because the compiler knows that <code>sqr</code> is of type <classname>FunctionR2R</classname>
+and a <classname>FunctionR2R</classname> requires a parameter of type <ptype>double</ptype>.
+Lambda expressions can only be used in context where such deductions are possible.
+</np>
+
+<p>Now, in Java, the variable <i>sqr</i> as defined here is not quite a function.
+It is a value of type <classname>FunctionR2R</classname>, which means that it <b>contains</b>
+a function named <i>valueAt</i>, as specified in the definition of interface
+<classname>FunctionR2R</classname>.  The full name of that function is <i>sqr.valueAt</i>,
+and we must use that name to call the function.  For example:  <i>sqr.valueAt</i>(42)
+or <code>sqr.valueAt(x)&nbsp;+ sqr.valueAt(y)</code>.</p>
+
+<p>When a lambda expression has two parameters, the parentheses are not optional.
+Here is an example of using the <classname>ArrayProcessor</classname> interface,
+which also demonstrates a lambda expression with a multiline definition:</p>
+
+<pre>ArrayProcessor concat;
+concat = (A,n) -&gt; { // parentheses around (A,n) are required!
+    String str;
+    str = "";
+    for (int i = 0; i &lt; n; i++)
+        str += A[i];
+    System.out.println(str);
+};  // The semicolon marks the end of the assignment statement.
+
+String[] nums;
+nums = new String[4];
+nums[0] = "One";
+nums[1] = "Two";
+nums[2] = "Three";
+nums[3] = "Four";
+for (int i = 1; i &lt; nums.length; i++) {
+   concat.process( nums, i );
+}</pre>
+
+<np>This will print out</np>
+
+<pre>One
+OneTwo
+OneTwoThree
+OneTwoThreeFour</pre>
+
+<p>Things get more interesting when a lambda expression is used as an actual parameter, which
+is the most common use in practice.  For example,
+suppose that the following function is defined:</p>
+
+<pre>/** For a function f, compute f(start) + f(start+1) + ... + f(end).
+ *  The value of end should be &gt;= the value of start.
+ */
+static double sum( FunctionR2R f, int start, int end ) {
+    double total = 0;
+    for (int n = start; n &lt;= end; n++) {
+        total = total + f.valueAt( n );
+    }
+    return total;
+}</pre>
+
+<np>Note that since <i>f</i> is a value of type <classname>Functionr2R</classname>,
+the value of <i>f</i> at <i>n</i> is actually written as <i>f.valueAt</i>(<i>n</i>).
+When the function <i>sum</i> is called, the first parameter can be given as
+a lambda expression.  For example:</np>
+
+<pre>System.out.print("The sum of n squared for n from 1 to 100 is ");
+System.out.println( sum( <newcode>x -> x*x</newcode>, 1, 100 ) );
+System.out.print("The sum of  2 to the n power for n from 1 to 10 is ");
+System.out.println( sum( <newcode>num -> Math.pow(2,num)</newcode>, 1, 10 ) );</pre>
+
+<p>As another example, suppose that we have a subroutine that performs a
+given task several times.  The task can be specified as a value of type
+<classname>Runnable</classname>:</p>
+
+<pre>static void doSeveralTimes( Runnable task, int repCount ) {
+    for (int i = 0; i &lt; repCount; i++) {
+        task.run();  // Perform the task!
+    }
+}</pre>
+
+<np>We could then say "Hello World" ten times by calling</np>
+
+<pre>doSeveralTimes( <newcode>() -&gt; System.out.println("Hello World")</newcode>, 10 );</pre>
+
+<np>Note that for a lambda expression of type <classname>Runnable</classname>,
+the parameter list is given as an empty pair of parentheses.  Here is an
+example in which the syntax is getting rather complicated:</np>
+
+<pre>doSeveralTimes( () -&gt; { 
+        // count from 1 up to some random number between 5 and 25
+    int count = 5 + (int)(21*Math.random()); 
+    for (int i = 1; i &lt;= count; i++) { 
+        System.out.print(i + " ");
+    }
+    System.out.println();
+}, 100);</pre>
+
+<np>This is a single subroutine call statement in which the first parameter
+is a lambda expression that extends over multiple lines.  The second
+parameter is 100, and the semicolon on the last line ends the subroutine
+call statement.</np>
+
+<p>We have seen examples of assigning a lambda expression to a variable and
+of using one as an actual parameter.  Here is an example in which a lambda expression
+is the return value of a function:</p>
+
+<pre>static FunctionR2R makePowerFunction( int n ) {
+   return x -&gt; Math.pow(x,n);
+}</pre>
+
+<np>Then <i>makePowerFunction</i>(2) returns a <classname>FunctionR2R</classname> that
+computes the square of its parameter, while <i>makePowerFunction</i>(10)
+returns a <classname>FunctionR2R</classname> that computes the 10-th power of its parameter.
+This example also illustrates the fact that a lambda expression can use other variables
+in addition to its parameter, such as <i>n</i> in this case (although there are some
+restrictions on when that can be done).</np>
+
+</subsection>
+
+<subsection title="Method References" id="subroutines.4a.4">
+
+<p>Suppose that we want a lambda expression to represent the square root function as
+a value of type <classname>FunctionR2R</classname>.  We could write it as
+<code>x&nbsp;-&gt;&nbsp;Math.sqrt(x)</code>.  However, this lambda expression is a
+simple wrapper for a <i>Math.sqrt</i> function that already exists.  Instead of
+writing out the lambda expression expression, that function can be written as a
+<newword>method reference</newword>, which takes the form <code>Math::sqrt</code>.
+(Recall that in Java, "method" is another word for "subroutine.")
+This method reference is just a shorthand for the lambda expression, and it
+can be used wherever that lambda expression could be used, such as in the
+<i>sum</i> function defined above:</p>
+
+<pre>System.out.print("The sum of the square root of n for n from 1 to 100 is ");
+System.out.println( sum( <newcode>Math::sqrt</newcode>, 1, 100 ) );</pre>
+
+<np>It would be nice if we could simply use the name <i>Math.sqr</i> here
+instead of introducing a new notation with&nbsp;<code>::</code>, 
+but the notation <i>Math.sqr</i> was already defined to mean a <b>variable</b>
+named <i>sqr</i> in the <classname>Math</classname> class.</np>
+
+<p>More generally, a lambda expression that simply calls an existing
+static method can be written as a method reference of the form</p>
+
+<pre><bnf>classname</bnf> :: <bnf>method-name</bnf></pre>
+
+<np>Furthermore, this notation extends to methods that are in
+objects rather than classes.  For example, if <i>str</i> is a
+<classname>String</classname>, then <i>str</i> contains the
+method <i>str.length</i>().  The method reference <code>str::length</code>
+could be used as a lambda expression of type <classname>SupplyInt</classname>,
+where <classname>SupplyInt</classname> is the functional interface
+</np>
+
+<pre>public interface SupplyInt {
+    int get( );
+}</pre>
+
+
+</subsection>
+
+</section>

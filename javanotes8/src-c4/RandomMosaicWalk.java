@@ -18,10 +18,10 @@ public class RandomMosaicWalk {
 		fillWithRandomColors();
 		currentRow = 8;   // start at center of window
 		currentColumn = 10;
-		while (Mosaic.isOpen()) {
+		while (true) {
 			changeToRandomColor(currentRow, currentColumn);
 			randomMove();
-			Mosaic.delay(1);
+			Mosaic.delay(10);  // Remove this line to speed things up!
 		}
 	}  // end main
 

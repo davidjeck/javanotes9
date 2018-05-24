@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  *  Implements a simple guessing game.  The computer selects a random
  *  number in the range 1 to 100, inclusive, and the user tries to guess

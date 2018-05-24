@@ -1,13 +1,21 @@
 
-import java.awt.*;
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.paint.Color;
+import java.util.List;
 
 
 /**
  *  The class Mosaic makes available a window made up of a grid
  *  of colored rectangles.  Routines are provided for opening and
  *  closing the window and for setting and testing the color of rectangles
- *  in the grid.
+ *  in the grid.  The program will end when the window is closed, either
+ *  because the user click's the window's close box or because the
+ *  program calls Mosaic.close().
  *
  *  Each rectangle in the grid has a color.  The color can be
  *  specified by red, green, and blue amounts in the range from
@@ -15,18 +23,23 @@ import javax.swing.*;
  *  to the class Color.
  */
 
-public class Mosaic {
+public class Mosaic extends Application {
+	
+	// Note: This class does things with static methods that should really
+	// not be done in a JavaFX application!  It is NOT a good example of
+	// writing a JavaFX application.  It was written to provide an API
+	// to be used as an example in a textbook before objects have been covered.
 
-	private static JFrame window;       // A mosaic window, null if no window is open.
-	private static MosaicPanel canvas;  // A component that actually manages and displays the rectangles.
+	private static Stage window;    // The application running the mosaic window (if one is open).
+	private static MosaicCanvas canvas;  // A component that actually manages and displays the rectangles.
 	private static boolean use3DEffect = true; // When true, 3D Rects and "grouting" are used on the mosaic.
 	private static int mosaicRows;      // The number of rows in the mosaic, if the window is open.
 	private static int mosaicCols;      // The number of cols in the mosaic, if the window is open.
 
 
 	/** 
-	 * Open a mosaic window with a 20-by-20 grid of squares, where each
-	 * square is 15 pixel on a side.
+	 * Open the mosaic window with a 20-by-20 grid of squares, where each
+	 * square is 15 pixel on a side.  Has no effect if the window is already open.
 	 */
 	public static void open() {
 		open(20,20,15,15);
@@ -34,9 +47,9 @@ public class Mosaic {
 
 
 	/**
-	 * Opens a mosaic window containing a specified number of rows and
+	 * Opens the  mosaic window containing a specified number of rows and
 	 * a specified number of columns of square.  Each square is 15 pixels
-	 * on a side.
+	 * on a side.  Has no effect if the window is already open.
 	 */
 	public static void open(int rows, int columns) {
 		open(rows,columns,15,15);
@@ -44,10 +57,11 @@ public class Mosaic {
 
 
 	/**
-	 * Opens a "mosaic" window on the screen.  If another mosaic window was
-	 * already open, that one is closed and a new one is created.
+	 * Opens the "mosaic" window on the screen.  If the mosaic window was
+	 * already open, has no effect.
 	 *
-	 * Precondition:   The parameters rows, cols, w, and h are positive integers.
+	 * Precondition:   The parameters rows, cols, w, and h are positive integers, and
+	 *                    the mosaic window is not already open.
 	 * Postcondition:  A window is open on the screen that can display rows and
 	 *                   columns of colored rectangles.  Each rectangle is w pixels
 	 *                   wide and h pixels high.  The number of rows is given by
@@ -56,44 +70,25 @@ public class Mosaic {
 	 * Note:  The rows are numbered from 0 to rows - 1, and the columns are 
 	 * numbered from 0 to cols - 1.
 	 */
-	public static void open(int rows, int columns, int blockWidth, int blockHeight) {
-		if (window != null)
-			window.dispose();
-		canvas = new MosaicPanel(rows,columns,blockWidth,blockHeight);
+	public static void open(int rows, int columns, int blockHeight, int blockWidth) {
+		if ( window != null )
+			return;
 		mosaicRows = rows;
 		mosaicCols = columns;
-		if ( ! use3DEffect ) {
-			canvas.setGroutingColor(null);
-			canvas.setUse3D(false);
-		}
-		window = new JFrame("Mosaic Window");
-		window.setContentPane(canvas);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.pack();
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		if (window.getWidth() > screen.width - 20 || window.getHeight() > screen.height - 100) {
-			// change size to fit on screen
-			int w = window.getWidth();
-			int h = window.getHeight();
-			if (window.getWidth() > screen.width - 20)
-				w = screen.width - 20;
-			if (window.getHeight() > screen.height - 100)
-				h = screen.height - 100;
-			window.setSize(w,h);
-		}
-		window.setLocation( (screen.width - window.getWidth())/2, (screen.height - window.getHeight())/2 );
-		window.setVisible(true);
+		new Thread( () -> launch(Mosaic.class, new String[] {""+rows,""+columns,""+blockWidth,""+blockHeight}) ).start();
+		do {
+			delay(100);
+		} while (window == null || canvas == null);
 	}
 
 
 	/**
-	 * Close the mosaic window, if one is open.
+	 * Close the mosaic window, if one is open, and ends the program.
+	 * The program will also end if the user closes the window.
 	 */
 	public static void close() {
 		if (window != null) {
-			window.dispose();
-			window = null;
-			canvas = null;
+			Platform.runLater( () -> window.close() );
 		}
 	}
 
@@ -113,7 +108,9 @@ public class Mosaic {
 
 	/**
 	 * Inserts a delay in the program (to regulate the speed at which the colors
-	 * are changed, for example).
+	 * are changed, for example).  Note that there is already a short delay
+	 * of about 1 millisecond between drawing operations.  Calling this method
+	 * will add to that delay.
 	 *
 	 * Precondition:   milliseconds is a positive integer.
 	 * Postcondition:  The program has paused for at least the specified number
@@ -137,7 +134,7 @@ public class Mosaic {
 	 */
 	public static Color getColor(int row, int col) {
 		if (canvas == null)
-			return Color.black;
+			return Color.BLACK;
 		return canvas.getColor(row, col);
 	}
 
@@ -156,7 +153,7 @@ public class Mosaic {
 			throw new IllegalArgumentException("(row,col) = (" + row + "," + col
 					+ ") is not in the mosaic.");
 		}
-		return canvas.getRed(row, col);
+		return (int)(255*canvas.getRed(row, col));
 	}
 
 
@@ -170,7 +167,7 @@ public class Mosaic {
 			throw new IllegalArgumentException("(row,col) = (" + row + "," + col
 					+ ") is not in the mosaic.");
 		}
-		return canvas.getGreen(row, col);
+		return (int)(255*canvas.getGreen(row, col));
 	}
 
 
@@ -184,7 +181,7 @@ public class Mosaic {
 			throw new IllegalArgumentException("(row,col) = (" + row + "," + col
 					+ ") is not in the mosaic.");
 		}
-		return canvas.getBlue(row, col);
+		return (int)(255*canvas.getBlue(row, col));
 	}
 
 
@@ -227,7 +224,7 @@ public class Mosaic {
 			throw new IllegalArgumentException("(row,col) = (" + row + "," + col
 					+ ") is not in the mosaic.");
 		}
-		canvas.setColor(row,col,red,green,blue);
+		canvas.setColor(row,col,red/255.0,green/255.0,blue/255.0);
 	}
 
 
@@ -249,7 +246,7 @@ public class Mosaic {
 	 * Precondition:  The mosaic window must be open.
 	 */
 	public static void fill(int red, int green, int blue) {
-		canvas.fill(red,green,blue);
+		canvas.fill(red/255.0,green/255.0,blue/255.0);
 	}
 
 
@@ -279,7 +276,6 @@ public class Mosaic {
 		if (canvas != null) {
 			canvas.setGroutingColor(use3DEffect? Color.GRAY : null);
 			canvas.setUse3D(use3DEffect);
-			canvas.repaint();
 		}
 	}
 	
@@ -292,5 +288,29 @@ public class Mosaic {
 		return use3DEffect;
 	}
 
+	
+	public void start(Stage stage) {
+		window = stage;
+		List<String> params = getParameters().getUnnamed();
+		if (params.size() != 4)
+			canvas = new MosaicCanvas();
+		else
+			canvas = new MosaicCanvas(Integer.parseInt(params.get(0)),Integer.parseInt(params.get(1)),
+					Integer.parseInt(params.get(2)),Integer.parseInt(params.get(3)));
+		if (!use3DEffect)
+			canvas.setGroutingColor(null);
+		canvas.setUse3D(use3DEffect);
+		canvas.forceRedraw();
+		Pane pane = new Pane(canvas);
+		StackPane root = new StackPane(pane);
+		root.setStyle("-fx-border-width: 2px; -fx-border-color: #333");
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setOnCloseRequest( e -> { System.exit(0); } );
+		stage.setTitle("Mosaic");
+		stage.setResizable(false);
+		stage.show();
+	}
+	
 
 }  // end of class Mosaic

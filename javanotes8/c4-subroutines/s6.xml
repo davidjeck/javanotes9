@@ -68,7 +68,7 @@ that the value of the parameter has been displayed on the screen.</p>
 
 <p>Preconditions most often give restrictions on the acceptable values of
 parameters, as in the example of <code>Math.sqrt(x)</code>. However, they can also
-refer to global variables that are used in the subroutine.  Or if it only makes
+refer to global variables that are used in the subroutine.  Or, if it only makes
 sense to call the subroutine at certain times, the precondition might refer to 
 the state that the program must be in when the subroutine is called.</p>
 
@@ -96,26 +96,29 @@ and postconditions, but that has not yet been done.)</p>
 <p>Let's work through an example of program design using subroutines. In this
 example, we will use pre-written subroutines as building blocks and we will also design
 new subroutines that we need to complete the project.  The API that I will use here
-is defined in <sourceref href="Mosaic.java"/>, which in turns depends on
-<sourceref href="MosaicPanel.java"/>.  To compile and run a program that uses the
-API, the classes <classname>Mosaic</classname> and <classname>MosaicPanel</classname>
+is defined in two classes that I have written, <sourceref href="Mosaic.java"/>, which in turns depends on
+<sourceref href="MosaicCanvas.java"/>.  To compile and run a program that uses the
+API, the classes <classname>Mosaic</classname> and <classname>MosaicCanvas</classname>
 must be available.  That is, the files <code>Mosaic.java</code> and
-<code>MosaicPanel.java</code>, or the the corresponding compiled class files,
-must be in the same folder as the class that defines the program.</p>
+<code>MosaicCanvas.java</code>, or the the corresponding compiled class files,
+must be in the same folder as the class that defines the program.<tex>  (You can download
+them from this textbooks's web site.)</tex></p>
 
-<p>So, suppose that I have found an already-written class called <code>Mosaic</code>.
+<p>So, suppose that I have access to an already-written class called <code>Mosaic</code>.
 This class allows a program to work with a window that displays little colored
 rectangles arranged in rows and columns. The window can be opened, closed, and
 otherwise manipulated with static member subroutines defined in the
 <code>Mosaic</code> class.  In fact, the class defines a toolbox or API
 that can be used for working with such windows.  Here are some of the
-available routines in the API, with Javadoc-style comments. (Remeber that
+available routines in the API, with Javadoc-style comments. (Remember that
 a Javadoc comment comes before the thing that it is commenting on.)</p>
    
 <pre>/**
- * Opens a "mosaic" window on the screen.
+ * Opens a "mosaic" window on the screen.  This subroutines should be called
+ * before any of the other Mosaic subroutines are used.  The program will end
+ * when the user closes the window.
  *
- * Precondition:   The parameters rows, cols, w, and h are positive integers.
+ * Precondition:   The parameters rows, cols, h, and w are positive integers.
  * Postcondition:  A window is open on the screen that can display rows and
  *                   columns of colored rectangles.  Each rectangle is w pixels
  *                   wide and h pixels high.  The number of rows is given by
@@ -125,7 +128,7 @@ a Javadoc comment comes before the thing that it is commenting on.)</p>
  * Note:  The rows are numbered from 0 to rows - 1, and the columns are 
  * numbered from 0 to cols - 1.
  */
-<newcode>public static void open(int rows, int cols, int w, int h)</newcode>
+<newcode>public static void open(int rows, int cols, int h, int w)</newcode>
    
    
 /**
@@ -167,17 +170,6 @@ a Javadoc comment comes before the thing that it is commenting on.)</p>
 
    
 /**
- * Tests whether the mosaic window is currently open.
- *
- * Precondition:   None.
- * Postcondition:  The return value is true if the window is open when this
- *                   function is called, and it is false if the window is
- *                   closed.
- */
-<newcode>public static boolean isOpen()</newcode>
-
-   
-/**
  * Inserts a delay in the program (to regulate the speed at which the colors
  * are changed, for example).
  *
@@ -206,8 +198,8 @@ the exception, and it would be good to document it with a <code>@throws</code>
 doc tag in the Javadoc comment.
 Other questions remain about the behavior of the subroutines.
 For example, what happens if you call <code>Mosaic.open()</code> and there
-is already a mosaic window open on the screen?  (In fact, the old one will
-be closed, and a new one will be created.)  It's difficult to fully document
+is already a mosaic window open on the screen?  (In fact, second call will
+simply be ignored.)  It's difficult to fully document
 the behavior of a piece of software&mdash;sometimes, you just have to 
 experiment or look at the full source code.</p>
 
@@ -222,7 +214,7 @@ after thinking for a while, I decide it would be interesting to have a
 each square that it encounters. Here's a picture showing what the contents of the window
 might look like at one point in time:</p>
 
-<img src="mosaic.png" width="400" height="320" alt="a 20-by-16 grid of randomly colored squares"
+<img src="mosaic.png" width="404" height="324" alt="a 20-by-16 grid of randomly colored squares"
       tex="mosaic.eps" texscale="0.5"/>
 
 
@@ -253,8 +245,7 @@ two <ptype>int</ptype> variables named <code>currentRow</code> and
 the square where the disturbance is currently located.  I'll use 16 rows and 20 columns of squares in my
 mosaic, so setting the current position to be in the center means setting
 <code>currentRow</code> to 8 and <code>currentColumn</code> to 10. I already have a
-subroutine, <code>Mosaic.open()</code>, to open the window, and I have a function,
-<code>Mosaic.isOpen()</code>, to test whether the window is open. To keep the main
+subroutine, <code>Mosaic.open()</code>, to open the window. To keep the main
 routine simple, I decide that I will write two more subroutines of my own to
 carry out the two tasks in the while loop. The algorithm can then be written in
 Java as:</np>
@@ -263,14 +254,15 @@ Java as:</np>
 fillWithRandomColors();
 currentRow = 8;       // Middle row, halfway down the window.
 currentColumn = 10;   // Middle column.
-while ( Mosaic.isOpen() ) {
+while ( true ) { // Program ends when user closes the window.
     changeToRandomColor(currentRow, currentColumn);
     randomMove();      
 }</pre>
 
 <np>With the proper wrapper, this is essentially the <code>main()</code> routine of
-my program. It turns out I have to make one small modification: To prevent the
-animation from running much, much too fast, the line "<code>Mosaic.delay(1);</code>" is added
+my program. It turns out I decided to make one small modification after running the
+completed program: To prevent the
+animation from running too fast, I added the line "<code>Mosaic.delay(10);</code>"
 to the <code>while</code> loop.</np>
 
 <p>The <code>main()</code> routine is taken care of, but to complete the program, I
@@ -367,7 +359,7 @@ variables <code>currentRow</code> and <code>currentColumn</code> are defined as 
 members of the class, rather than local variables, because each of them is used
 in several different subroutines.  You can find a copy of the source code in
 <sourceref href="RandomMosaicWalk.java"/>.  Remember that this program actually 
-depends on two other files, <sourceref href="Mosaic.java"/> and <sourceref href="MosaicPanel.java"/>.</p>
+depends on two other files, <sourceref href="Mosaic.java"/> and <sourceref href="MosaicCanvas.java"/>.</p>
 
 <pre>/**
  * This program opens a window full of randomly colored squares.  A "disturbance"
@@ -389,10 +381,10 @@ public class RandomMosaicWalk {
         fillWithRandomColors();
         currentRow = 8;   // start at center of window
         currentColumn = 10;
-        while (Mosaic.isOpen()) {
+        while (true) {
             changeToRandomColor(currentRow, currentColumn);
             randomMove();
-            Mosaic.delay(1);
+            Mosaic.delay(10);  // Remove this line to speed things up!
         }
     }  // end main
 

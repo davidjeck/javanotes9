@@ -165,13 +165,7 @@ define many named constants. For example, we have already seen that the
 is declared in the <classname>Math</classname> class as a "public final static" variable
 of type <ptype>double</ptype>.  Similarly, the <code>Color</code> class
 contains named constants such as <code>Color.RED</code> and <code>Color.YELLOW</code>
-which are public final static variables of type <code>Color</code>.
-Many named constants are created just to give meaningful names to be used as parameters
-in subroutine calls. For example, the
-standard class named <code>Font</code> contains named constants
-<code>Font.PLAIN</code>, <code>Font.BOLD</code>, and <code>Font.ITALIC</code>. These
-constants are used for specifying different styles of text when calling various
-subroutines in the <code>Font</code> class.</np>
+which are public final static variables of type <code>Color</code>.</np>
    
 <p>Enumerated type constants (see <localref href="basics.3.3"/>) are also examples of named
 constants.  The enumerated type definition</p>
@@ -188,9 +182,8 @@ enumerated type is similar to defining three constants of type, say, <ptype>int<
 public static final int ALIGNMENT_RIGHT = 1;
 public static final int ALIGNMENT_CENTER = 2;</pre>
    
-<np>In fact, this is how things were generally done before the introduction of enumerated
-types, and it is what is done with the constants <code>Font.PLAIN</code>, <code>Font.BOLD</code>, 
-and <code>Font.ITALIC</code> mentioned above.
+<np>In fact, this is how things had to be done before the introduction of enumerated
+types, and it is what is still done in many cases.
 Using the integer constants, you could define a variable  of type
 <ptype>int</ptype> and assign it the values <code>ALIGNMENT_LEFT</code>,
 <code>ALIGNMENT_RIGHT</code>, or <code>ALIGNMENT_CENTER</code> to represent different
@@ -224,7 +217,7 @@ declared and used consistently throughout the program, then only the single
 line where the constant is initialized needs to be changed.</p>
 
 <p>As an extended example, I will give a new version of the
-<code>RandomMosaicWalk</code> program from the <localref href="subroutines.6">previous
+<code>RandomMosaicWalk</code> program from the <localref href="subroutines.6.2">previous
 section</localref>. This version uses named constants to represent the number of rows
 in the mosaic, the number of columns, and the size of each little square. The
 three constants are declared as <code>final</code> <code>static</code> member variables
@@ -248,7 +241,9 @@ cases.</np>
 
 <p>Here is the complete new program, <code>RandomMosaicWalk2</code>, with all
 modifications from the previous version shown in &newcodestyle;.
-I've left out some of the comments to save space.
+Note in particular how the constants <code>ROWS</code> and <code>COLUMNS</code> are 
+used in <code>randomMove</code>() when moving the disturbance from one
+edge of the mosaic to the opposite edge.  I've left out some of the comments to save space.
 </p>
 
 <pre>public class RandomMosaicWalk2 {
@@ -265,10 +260,10 @@ I've left out some of the comments to save space.
         fillWithRandomColors();
         <newcode>currentRow = ROWS / 2</newcode>;   // start at center of window
         <newcode>currentColumn = COLUMNS / 2</newcode>;
-        while (Mosaic.isOpen()) {
+        while (true) {
             changeToRandomColor(currentRow, currentColumn);
             randomMove();
-            Mosaic.delay(1);
+            Mosaic.delay(5);
         }
     }  // end main
 
@@ -333,7 +328,7 @@ defined. That is, it is possible to call the subroutine from any point in the
 class, including at a point in the source code before the point where the definition
 of the subroutine appears. It is even possible to call a subroutine from within itself. This is an
 example of something called "recursion," a fairly advanced topic that we will
-return to in <localref href="recursion"/>.  If the subroutine is not <code>private</code>,
+return to in <localref href="recursion.1"/>.  If the subroutine is not <code>private</code>,
 it can also be accessed from outside the class where it is defined, using its full name.</p>
 
 <p>For a variable that is declared as a static member variable in a class, the

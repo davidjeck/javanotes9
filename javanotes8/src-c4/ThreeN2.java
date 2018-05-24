@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  * A program that computes and displays several 3N+1 sequences.  Starting
  * values for the sequences are input by the user.  Terms in the sequence 

@@ -36,7 +36,6 @@ this:</p>
  * of terms in the sequence. The value of the parameter, startingValue, 
  * must  be a positive integer.
  */
-
 static void print3NSequence(int startingValue) {
       
    int N;      // One of the terms in the sequence.
@@ -354,7 +353,7 @@ private static void printRowsFromString( String str ) {
     }
 }</pre>
 
-<np>We could use <code>printRowsFromString</code> in a <code>main()</code> routine such
+<np>We could then use <code>printRowsFromString</code> in a <code>main()</code> routine such
 as</np>
 
 <pre>public static void main(String[] args) {
@@ -469,7 +468,9 @@ the original file to the copy, using TextIO.  The function
 <code>TextIO.eof()</code> is a <ptype>boolean</ptype>-valued function that
 is <code>true</code> if the end of the file has been reached.</p>
   
-<pre>/**
+<pre>input textio.TextIO;
+
+/**
  *  Requires two command line arguments, which must be file names.  The
  *  the first must be the name of an existing file.  The second is the name
  *  of a file to be created by the program.  The contents of the first file
