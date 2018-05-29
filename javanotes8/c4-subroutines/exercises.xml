@@ -117,7 +117,9 @@ is easy.</p>
 </exercise-discuss>
 <exercise-code>
 <pre>
-<prog name="CapitalizeOneString">/**
+<prog name="CapitalizeOneString">import textio.TextIO;
+
+/**
  * This program will get a line of input from the user and will print a copy
  * of the line in which the first character of each word has been changed to 
  * upper case.  The program was written to test the printCapitalized
@@ -289,7 +291,9 @@ catch ( IllegalArgumentException e ) {
 <np>I think that this approach is much neater!</np>
 </exercise-discuss>
 <exercise-code><pre>
-<prog name="Hex2Dec">/**
+<prog name="Hex2Dec">import textio.TextIO;
+
+/**
  * This program reads a hexadecimal number input by the user and prints the 
  * base-10 equivalent.  If the input contains characters that are not 
  * hexadecimal numbers, then an error message is printed.
@@ -659,7 +663,7 @@ and the number of columns to 80. Set the square size to 5.</p>
 <p>By default, the rectangles in the mosaic have a "3D" appearance and a gray border that makes
 them look nicer in the random walk program.  But for this program, you want to turn off that
 effect.  To do so, call <code>Mosaic.setUse3DEffect(false)</code> in the main program.</p>
-<p>Don't forget that you will need <sourceref href="Mosaic.java"/> and <sourceref href="MosaicPanel.java"/>
+<p>Don't forget that you will need <sourceref href="Mosaic.java"/> and <sourceref href="MosaicCanvas.java"/>
 to compile and run your program, since they define non-standard classes that are required by the program.
 </p>
 </exercise-question>
@@ -669,9 +673,10 @@ complicated existing program.</p>
 <p>The only real problem is to write a new subroutine, which I will call
 <code>brightenSquare</code>. Much of the program comes directly from
 <sourceref href="RandomMosaicWalk2.java"/>. The
-<code>randomMove()</code> routine is unchanged. The only changes in the
+<code>randomMove()</code> routine is unchanged. The important changes in the
 <code>main()</code> routine are to substitute a call to <code>brightenSquare</code> for
 the call to <code>changeToRandomColor</code> and to add the line calling <code>Mosaic.setUse3DEffect</code>. 
+I also removed the call to <code>Mosaic.delay</code> to speed up the program.
 The subroutines
 <code>fillWithRandomColors</code> and <code>changeToRandomColor</code> in the
 <code>RandomMosaicWalk2</code> program are not needed in the new program and should be removed. In the
@@ -812,7 +817,7 @@ public class RandomBrighten {
 <exercise>
 <exercise-question><p>For this exercise, you will do something even more interesting
 with the <classname>Mosaic</classname> class that was discussed in <localref href="subroutines.6"/>.
-(Again, don't forget that you will need <sourceref href="Mosaic.java"/> and <sourceref href="MosaicPanel.java"/>
+(Again, don't forget that you will need <sourceref href="Mosaic.java"/> and <sourceref href="MosaicCanvsas.java"/>
 to compile and run your program.)
 </p>
 <p>The program that you write for this exercise should start by filling a mosaic with
@@ -863,8 +868,8 @@ fillWithRandomColors();
 while (Mosaic.isOpen()) {
    int randomRow = (int)(ROWS * Math.random());
    int randomColumn = (int)(COLUMNS * Math.random());
-   convertRandomNeighbor(randomRow, randomColumn);
-   Mosaic.delay(1);
+   convertRandomNeighbor(randomRow, randomColumn); 
+   // (I removed the call to Mosaic.delay(5) to speed up the program.)
 }</pre>
 
 <p>All that remains is to write the <code>convertRandomNeighbor()</code> subroutine.
@@ -951,14 +956,6 @@ and <code>col</code> are used for setting the color, they are referring to a dif
 rectangle.  You can see my version of <code>convertRandomNeighbor</code> in the full
 source code listing below.</np>
 
-<p>In the end, I made one change in the program.  I found that I wanted the process to
-go more quickly, but leaving out the delay altogether made it much too fast.  My solution 
-was to do several conversions each time through the while loop in the main routine, instead
-of just one.  I added a <code>BATCH_SIZE</code> constant to say how many conversions to
-do at a time, and I added a <code>for</code> loop in the main program to implement the
-multiple conversions.  A <code>BATCH_SIZE</code> of 10 or even 100 gives a much more
-satisfactory animation.</p>
-
 <webdiv><p>Here's a screenshot from my program after it was allowed to run for a
 while:</p>
 <img src="exercise-mosaic-convert.png" width="400" height="400" alt="screenshot from convert"/>
@@ -983,8 +980,6 @@ public class RandomConvert {
     final static int ROWS = 40;        // Number of rows in the mosaic. 
     final static int COLUMNS = 40;     // Number of columns in the mosaic.
     final static int SQUARE_SIZE = 10; // Size of each square in the mosaic.
-    final static int DELAY = 1;        // Millisecond delay after each convert.
-    final static int BATCH_SIZE = 10;  // The number of squares tested/converted at a time.
 
 
     /**
@@ -997,12 +992,9 @@ public class RandomConvert {
         Mosaic.open(ROWS, COLUMNS, SQUARE_SIZE, SQUARE_SIZE);
         fillWithRandomColors();
         while (Mosaic.isOpen()) {
-            for (int i = 0; i &lt; BATCH_SIZE; i++) {
-                int randomRow = (int)(ROWS * Math.random());
-                int randomColumn = (int)(COLUMNS * Math.random());
-                convertRandomNeighbor(randomRow, randomColumn);
-            }
-            Mosaic.delay(DELAY);
+            int randomRow = (int)(ROWS * Math.random());
+            int randomColumn = (int)(COLUMNS * Math.random());
+            convertRandomNeighbor(randomRow, randomColumn);
         }
     }
 
@@ -1207,7 +1199,9 @@ next chapter.</np>
 <b>Here is the original program, using global variables:</b>
 
 
-<prog name="AdditionQuiz">/**
+<prog name="AdditionQuiz">import textio.TextIO;
+
+/**
  * This program administers a ten-question addition quiz to the user.  The numbers
  * for the problem are chosen at random.  The numbers and the answers are one or
  * two digits.  After asking the user the ten questions, the computer grades the
@@ -1295,7 +1289,9 @@ public class AdditionQuiz {
 <b>Here is a version that uses parameters and no global variables:</b>
 
 
-<prog name="AdditionQuizNoGlobals">/**
+<prog name="AdditionQuizNoGlobals">import textio.TextIO;
+
+/**
  * This program administers a ten-question addition quiz to the user.  The numbers
  * for the problem are chosen at random.  The numbers and the answers are one or
  * two digits.  After asking the user the ten questions, the computer grades the

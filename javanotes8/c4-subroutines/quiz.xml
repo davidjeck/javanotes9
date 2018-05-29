@@ -93,6 +93,46 @@ implemented. An example is the standard Java API which describes the interfaces
 of all the subroutines in all the classes that are available in such packages
 as <code>java.lang</code> and <code>java.awt</code>.</p></ans>
 </question>
+
+<question>
+<ques><p>What might the following expression mean in a program?</p>
+<pre>(a,b) -&gt; a*a + b*b + 1</pre>
+</ques>
+<ans><p>The operator "<code>-&gt;</code>" means that this is a "lambda expression,"
+that is, an anonymous function.  There must be a functional interface that specifies
+the type of this lambda expression.  It might, for example, be a functional interface
+that defines a function <code>double&nbsp;f(double&nbsp;x,&nbsp;double&nbsp;y)</code>.
+In any case, the function must take two numeric parameters (since the expression <code>a*a+b*b+1</code>
+would only be defined when <i>a</i> and <i>b</i> are numeric), and it must return a
+numeric value.
+</p>
+</ans>
+</question>
+
+<question>
+<ques><p>Suppose that <classname>SupplyInt</classname> is a functional interface that
+defines the method <code>public&nbsp;int&nbsp;get()</code>.   Write a lambda expression of
+type <classname>SupplyInt</classname> that gets a random integer in the range
+1 to 6 inclusive.  Write another lambda expression of type
+<classname>SupplyInt</classname> that gets an <ptype>int</ptype> by asking the user
+to enter an integer and returning the user's response. </p>
+</ques>
+<ans><p>A lambda expression of type <classname>SupplyInt</classname> has no parameters
+and must compute and return a value of type <ptype>int</ptype>.  For the first
+expression, the <ptype>int</ptype> value can be given as <code>(int)(1+Math.random()*6)</code>, so the
+lambda expression takes the form</p>
+<pre>() -&gt;  (int)(1+Math.random()*6)</pre>
+<np>For the second lambda expression, two statements are needed, one to ask the
+user for an integer and one to read the response.  The two statements must
+be enclosed between braces, and a <code>return</code> statement is needed to
+return the integer:</np>
+<pre>() -&gt; {
+    System.out.print( "Please enter an integer: " );
+    return TextIO.getlnInt();  // Read an integer and return it.
+}</pre>
+<np>(This assumes that <classname>TextIO</classname> is available to the program.)</np>
+</ans>
+</question>
    
 
 <question>
