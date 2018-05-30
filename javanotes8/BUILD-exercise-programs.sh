@@ -35,6 +35,7 @@ if  $XALAN_COMMAND -xsl convert-exercise-progs.xsl -in javanotes8.xml ; then
        cp -r src-textio/textio exercise-programs/$dir/textio
    done
    cp src-c4/Mosaic.java src-c4/MosaicCanvas.java exercise-programs/chapter4
+   cp src-c4/ArrayProcessor.java exercise-programs/chapter4
    cp src-c5/Deck.java src-c5/Hand.java src-c5/BlackjackHand.java src-c5/Card.java exercise-programs/chapter5
    cp src-c5/Deck.java src-c5/Hand.java src-c5/BlackjackHand.java src-c5/Card.java exercise-programs/chapter6
    cp exercise-programs/chapter5/StatCalc.java exercise-programs/chapter6/StatCalc.java
@@ -44,8 +45,8 @@ if  $XALAN_COMMAND -xsl convert-exercise-progs.xsl -in javanotes8.xml ; then
    cp -r src-c12/netgame/common exercise-programs/chapter12/netgame
    mkdir exercise-programs/chapter12/netgame/newchat
    mv exercise-programs/chapter12/*Message*.java exercise-programs/chapter12/*Chat*.java exercise-programs/chapter12/netgame/newchat
-   rm exercise-programs/chapter6/TextIO.java
-   rm exercise-programs/chapter13/TextIO.java
+   rm -r exercise-programs/chapter6/textio
+   rm -r exercise-programs/chapter13/textio
    
    cp README-exercise-solutions.txt exercise-programs
    

@@ -104,7 +104,8 @@ the type of this lambda expression.  It might, for example, be a functional inte
 that defines a function <code>double&nbsp;f(double&nbsp;x,&nbsp;double&nbsp;y)</code>.
 In any case, the function must take two numeric parameters (since the expression <code>a*a+b*b+1</code>
 would only be defined when <i>a</i> and <i>b</i> are numeric), and it must return a
-numeric value.
+numeric value.  (Note that this expression can only be used in a context where the
+compiler can deduce which functional interface applies.)
 </p>
 </ans>
 </question>
@@ -115,16 +116,16 @@ defines the method <code>public&nbsp;int&nbsp;get()</code>.   Write a lambda exp
 type <classname>SupplyInt</classname> that gets a random integer in the range
 1 to 6 inclusive.  Write another lambda expression of type
 <classname>SupplyInt</classname> that gets an <ptype>int</ptype> by asking the user
-to enter an integer and returning the user's response. </p>
+to enter an integer and then returning the user's response. </p>
 </ques>
 <ans><p>A lambda expression of type <classname>SupplyInt</classname> has no parameters
 and must compute and return a value of type <ptype>int</ptype>.  For the first
 expression, the <ptype>int</ptype> value can be given as <code>(int)(1+Math.random()*6)</code>, so the
 lambda expression takes the form</p>
 <pre>() -&gt;  (int)(1+Math.random()*6)</pre>
-<np>For the second lambda expression, two statements are needed, one to ask the
+<np>For the second lambda expression, at least two statements are needed, one to ask the
 user for an integer and one to read the response.  The two statements must
-be enclosed between braces, and a <code>return</code> statement is needed to
+be enclosed between braces, and a <code>return</code> is needed to
 return the integer:</np>
 <pre>() -&gt; {
     System.out.print( "Please enter an integer: " );

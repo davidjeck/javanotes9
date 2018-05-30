@@ -164,7 +164,7 @@ are dummy parameters; their names are irrelevant.  The six lambda expressions in
 all define exactly the same function.  Note that the parameter type <ptype>double</ptype> can be
 omitted because the compiler knows that <code>sqr</code> is of type <classname>FunctionR2R</classname>
 and a <classname>FunctionR2R</classname> requires a parameter of type <ptype>double</ptype>.
-Lambda expressions can only be used in context where such deductions are possible.
+Lambda expressions can only be used in contexts where such deductions are possible.
 </np>
 
 <p>Now, in Java, the variable <i>sqr</i> as defined here is not quite a function.
@@ -226,7 +226,7 @@ a lambda expression.  For example:</np>
 
 <pre>System.out.print("The sum of n squared for n from 1 to 100 is ");
 System.out.println( sum( <newcode>x -> x*x</newcode>, 1, 100 ) );
-System.out.print("The sum of  2 to the n power for n from 1 to 10 is ");
+System.out.print("The sum of 2 raised to the power n, for n from 1 to 10 is ");
 System.out.println( sum( <newcode>num -> Math.pow(2,num)</newcode>, 1, 10 ) );</pre>
 
 <p>As another example, suppose that we have a subroutine that performs a

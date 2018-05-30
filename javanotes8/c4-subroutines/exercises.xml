@@ -636,6 +636,208 @@ public class DiceRollStats {
 </exercise-code>
 </exercise> 
 
+
+<exercise>
+<exercise-question><p>This exercise asks you to write a few lambda expressions
+and a function that returns a lambda expression as its value.  Suppose that
+a function interface <classname>ArrayProcessor</classname> is defined as</p>
+<pre>public interface ArrayProcessor {
+    double apply( double[] array );
+}</pre>
+<np>Write a class that defines four <code>public static final</code> variables
+of type <classname>ArrayProcessor</classname> that process an array in the
+following ways: find the maximum value in the array, find the minimum
+value in an array, find the sum of the values in the array, and find the
+average of the values in the array.  In each case, the value of the variable
+should be given by a lambda expression.  The class should also define a
+function</np>
+<pre>public static ArrayProcessor counter( double value ) { &dots;</pre>
+<np>This function should return an <classname>ArrayProcessor</classname> that
+counts the number of times that <i>value</i> occurs in an array.  The return
+value should be given as a lambda expression.</np>
+<p>The class should have a <i>main</i>() routine that tests your work.
+The program that you write for this exercise will need access to the
+file <sourceref href="ArrayProcessor.java"/>, which defines the functional
+interface.</p>
+</exercise-question>
+<exercise-discuss><p>The interface <classname>ArrayList</classname> defines a
+function <code>apply(array)</code> that takes an array of type <atype>double[]</atype> and
+that returns a <ptype>double</ptype>.   A lambda expression of type <classname>ArrayList</classname>
+will typically take the form</p>
+<pre>array -&gt; {
+    <bnf>statements-to-compute-value</bnf>
+    return <bnf>a-double-value</bnf>;
+}</pre>
+<np>(Of course, the name of the parameter, <i>array</i>, could be anything.)
+For example, a lambda expression for finding the sum of the numbers in the array
+could be written</np>
+<pre>array -&gt; {
+    double total = 0;
+    for (int i = 0; i &lt; array.length; i++) {
+        total = total + array[i];
+    }
+    return total;
+}</pre>
+<np>This lambda expression is a value of type <classname>ArrayList</classname>.
+For this exercise, we are supposed to assign this lambda expression to a
+<code>public static final</code> member variable of type <classname>ArrayList</classname>.
+Calling that variable <i>sumer</i>, this takes the form:</np>
+<pre>public static final ArrayProcessor sumer = array -> {
+    double total = 0;
+    for (int i = 0; i &lt; array.length; i++) {
+        total += array[i];
+    }
+    return total;
+};</pre>
+<np>Note the semicolon at the end.  The semicolon is not part of the lambda expression;
+it marks the end of the assignment statement.</np>
+<p>Lambda expressions for the minimum and maximum of an array can be handled in a
+similar way.  So could the average, but the average of an array is just the sum
+of the array divided by its length.  Since we already have the <classname>ArrayProcessor</classname>
+<i>sumer</i> for computing the sum of an array, we might as well use it for computing
+the average.  To apply <i>sumer</i> to an array, <i>A</i>, of type <atype>double[]</atype>,
+we have to call the <i>apply</i>() function that is defined by the <classname>ArrayProcessor</classname>
+interface:  <i>sumer.apply</i>(<i>A</i>).  So, we can define an <classname>ArrayProcessor</classname>
+for computing the average of an array by:</p>
+<pre>public static final ArrayProcessor averager = 
+            array -> sumer.apply(array) / array.length;</pre>
+<p>When counting the number of times that a value appears in array, the answer depends on
+<i>which</i> value is being counted.  That is, an <classname>ArrayProcessor</classname> that
+counts the number of times a value appears in an array is a function of the value that
+is being counted.  The <i>counter</i> function that we are asked to write can simply
+return an appropriate lambda expression:</p>
+<pre>public static ArrayProcessor counter( double value ) {
+    return array -> {
+        int count = 0;
+        for (int i = 0; i &lt; array.length; i++) {
+            if ( array[i] == value )
+                count++;
+        }
+        return count;
+    };
+}</pre>
+<np>Note that the parameter, <i>value</i>, is used in the definition of the array.
+So, for example, <i>counter</i>(17.0) will return an <classname>ArrayProcessor</classname>
+whose <i>apply</i>() method will count the number of times 17.0 occurs in an array.
+In my solution, I use that <i>apply</i> method in an expression of the form
+<code>counter(17.0).apply(secondList)</code>, where <i>secondList</i> is a variable
+of type <atype>double[]</atype>.  Take a look at the <i>main</i>() routine in the
+program below to see how the other <classname>ArrayProcessors</classname>
+are used.</np>
+</exercise-discuss>
+<exercise-code><pre><prog name="LambdaTest">
+/**
+ * This class defines several public static member variables of
+ * type ArrayProcessor that process arrays in various ways.  It
+ * also defines a function that can create ArrayProcessors for
+ * counting occurrences of values in an array.  (Note that this
+ * program depends on interface ArrayProcessor.)
+ */
+public class LambdaTest {
+    
+    /**
+     * This function returns an ArrayProcessor that counts
+     * the number of times a certain value occurs in an array
+     * of doubles.  The parameter specifies the value that is
+     * to be counted.
+     */
+    public static ArrayProcessor counter( double value ) {
+        return array -> {
+            int count = 0;
+            for (int i = 0; i &lt; array.length; i++) {
+                if ( array[i] == value )
+                    count++;
+            }
+            return count;
+        };
+    }
+    
+    
+    /**
+     * An ArrayProcessor that computes and returns the maximum
+     * value of an array.  (The array must have length at least 1.)
+     */
+    public static final ArrayProcessor maxer = array -> {
+        double max = array[0];
+        for (int i = 0; i &lt; array.length; i++) {
+            if ( array[i] > max)
+                max = array[i];
+        }
+        return max;
+    };
+    
+    
+    /**
+     * An ArrayProcessor that computes and returns the minimum
+     * value of an array.  (The array must have length at least 1.)
+     */
+    public static final ArrayProcessor miner = array -> {
+        double min = array[0];
+        for (int i = 0; i &lt; array.length; i++) {
+            if ( array[i] &lt; min)
+                min = array[i];
+        }
+        return min;
+    };
+    
+    
+    /**
+     * An ArrayProcessor that computes and returns the sum of the
+     * values in an array.  (The array must have length at least 1.)
+     */
+    public static final ArrayProcessor sumer = array -> {
+        double total = 0;
+        for (int i = 0; i &lt; array.length; i++) {
+            total += array[i];
+        }
+        return total;
+    };
+    
+    
+    /**
+     * An ArrayProcessor that computes and returns the average of the
+     * values in an array.  (The array must have length at least 1.)
+     */
+    public static final ArrayProcessor averager = 
+            array -> sumer.apply(array) / array.length;
+    
+            
+            
+    //---------------------------------------------------------------------------------------------------
+            
+    /**
+     * A main() routine to test the (other) public members of this class.
+     */
+    public static void main(String[] args) {
+        
+        double[] firstList = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        double[] secondList = { 17.0, 3.14, 17.0, -3.4, 17.0, 42.0, 29.2, 3.14 };
+        
+        System.out.println("Sum of first list (should be 55): " 
+                                                 + sumer.apply(firstList) );
+        System.out.println("Average of first list (should be 5.5): " 
+                                                 + averager.apply(firstList) );
+        System.out.println("Minimum of second list (should be -3.4): " 
+                                                 + miner.apply(secondList) );
+        System.out.println("Maximum of second list (should be 42.0): " 
+                                                 + maxer.apply(secondList) );
+        
+        System.out.println();
+        
+        System.out.println("Count of 17.0 in second list (should be 3): " 
+                                                 + counter(17.0).apply(secondList) );
+        System.out.println("Count of 20.0 in second list (should be 0): " 
+                                                 + counter(20.0).apply(secondList) );
+        System.out.println("Count of 5.0 in first list (should be 1): " 
+                                                 + counter(5.0).apply(firstList) );
+        
+    }
+    
+    
+} // end class LambdaTest
+</prog></pre>
+</exercise-code>
+</exercise>
  
     
 <exercise>
