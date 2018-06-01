@@ -316,7 +316,7 @@ the opportunity to make the instance variable, <code>name</code>, private.</p>
    private String name;                 // Student's name.
    public double test1, test2, test3;   // Grades on three tests.
    
-   Student(String theName) {
+   public Student(String theName) {
         // Constructor for Student objects;
         // provides a name for the Student.
         // The name can't be null.

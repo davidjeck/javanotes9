@@ -17,13 +17,23 @@ direct superclasses.</p>
 designers of Java wanted to keep the language reasonably simple, and felt that
 the benefits of multiple inheritance were not worth the cost in increased
 complexity. However, Java does have a feature that can be used to accomplish
-many of the same goals as multiple inheritance: <newword>interfaces</newword>.</p>
+many of the same goals as multiple inheritance: <newword>interfaces</newword>.
+We have already encountered "functional interfaces" in <localref href="subroutines.4a"/>
+in connection with lambda expressions.  A functional interface specifies
+a single method.  However, interfaces can be much more complicated than
+that, and they have many other uses.
+</p>
+
+<p>You are not likely to need to write your own interfaces until you get to the
+point of writing fairly complex programs. However, there are several interfaces
+that are used in important ways in Java's standard packages, and you will need
+to learn how to use them.</p>
 
 
 <subsection id="OOP.7.1" title="Defining and Implementing Interfaces">
 
 
-<p>We've encountered the term "interface" before, in connection with black
+<p>We've encountered the term "interface" in other contexts, in connection with black
 boxes in general and subroutines in particular. The interface of a subroutine
 consists of the name of the subroutine, its return type, and the number and
 types of its parameters. This is the information you need to know if you want
@@ -39,32 +49,32 @@ an <code>interface</code> by providing an implementation
 for each of the methods specified by the interface. Here is an example of a
 very simple Java <code>interface</code>:</p>
 
-<pre>public interface Drawable {
-   public void draw(Graphics g);
+<pre>public interface Strokeable {
+   public void stroke(Graphics g);
 }</pre>
 
 <np>This looks much like a class definition, except that the implementation of
-the <code>draw()</code> method is omitted. A class that implements the
-<code>interface</code> <classname>Drawable</classname> must provide an implementation for this
-method. Of course, the class can also include other methods and variables. For
+the <code>stroke()</code> method is omitted. A class that implements the
+<code>interface</code> <classname>Strokeable</classname> must provide an implementation for
+<code>stroke()</code>. Of course, the class can also include other methods and variables. For
 example,</np>
 
-<pre>public class Line implements Drawable {
-    public void draw(Graphics g) {
+<pre>public class Line implements Strokeable {
+    public void stroke(GraphicsContext g) {
         . . . // do something&mdash;presumably, draw a line
     }
-    . . . // other methods and variables
+    . . . // other methods, variables, and constructors
 }</pre>
 
 <np>Note that to implement an interface, a class must do more than simply provide
 an implementation for each method in the interface; it must also <b>state</b> that
 it implements the interface, using the reserved word <code>implements</code> as
-in this example: "<code>public class Line <b>implements</b> Drawable</code>".
-Any concrete class that implements the <classname>Drawable</classname> interface must define a
-<code>draw()</code> instance method. Any object created from such a class includes
-a <code>draw()</code> method. We say that an <b>object</b> implements an
+in this example: "<code>public class Line <b>implements</b> Strokeable</code>".
+Any concrete class that implements the <classname>Strokeable</classname> interface must define a
+<code>stroke()</code> instance method. Any object created from such a class includes
+a <code>stroke()</code> method. We say that an <b>object</b> implements an
 <code>interface</code> if it belongs to a class that implements the interface. For
-example, any object of type <classname>Line</classname> implements the <classname>Drawable</classname>
+example, any object of type <classname>Line</classname> implements the <classname>Strokeable</classname>
 interface.</np>
 
 <p>While a class can <b>extend</b> only one other class, it can
@@ -73,7 +83,7 @@ one other class and implement one or more interfaces.  So, we can have things
 like</p>
 
 <pre>class FilledCircle extends Circle 
-                        implements Drawable, Fillable {
+                        implements Strokeable, Fillable {
    . . .
 }</pre>
 
@@ -82,21 +92,21 @@ something very similar. An interface is very much like an abstract class, that
 is, a class that can never be used for constructing objects, but can be used as
 a basis for making subclasses. The subroutines in an interface are abstract
 methods, which must be implemented in any concrete class that implements the
-interface.  You can compare the <classname>Drawable</classname>
+interface.  You can compare the <classname>Strokeable</classname>
 interface with the abstract class</p>
 
-<pre>public abstract class AbstractDrawable {
-   public abstract void draw(Graphics g);
+<pre>public abstract class AbstractStrokeable {
+   public abstract void stroke(GraphicsContext g);
 }</pre>
 
-<np>The main difference is that a class that extends <classname>AbstractDrawable</classname>
-cannot extend any other class, while a class that implements <classname>Drawable</classname>
+<np>The main difference is that a class that extends <classname>AbstractStrokeable</classname>
+cannot extend any other class, while a class that implements <classname>Strokeable</classname>
 can also extend some class, as well as implement other interfaces.  Of course, an
 abstract class can contain non-abstract methods as well as abstract methods.
 An interface is like a "pure" abstract class, which contains only abstract methods.</np>
 
-<p>Note that the methods declared in an interface must be <code>public</code>.  In fact,
-since that is the only option, it is not necessary to specify the access modifier in
+<p>Note that the methods declared in an interface must be <code>public</code> and <code>abstract</code>.  In fact,
+since that is the only option, it is not necessary to specify either of these modifiers in
 the declaration.</p>
 
 <p>In addition to method declarations, an interface can also include variable
@@ -116,86 +126,49 @@ used in several classes.  A class that implements <classname>ConversionFactors</
 can use the constants defined in the interface as if they were defined in the
 class.</np>
 
-<p>You are not likely to need to write your own interfaces until you get to the
-point of writing fairly complex programs. However, there are several interfaces
-that are used in important ways in Java's standard packages. You'll learn about
-some of these standard interfaces in the next few chapters, and you will
-write classes that implement them.</p>
+<p>Note in particular that any variable that is defined in an interface is
+a constant.  It's not really a variable at all.  An interface <b>cannot</b> add
+instance variables to the classes that implement it.</p>
 
+<p>An interface can extend one or more other interfaces.  For example, if 
+<classname>Strokeable</classname> is the interface given above and <classname>Fillable</classname>
+is an interface that defines a method <code>fill(g)</code>, then we could define</p>
 
-</subsection>
+<pre>public interface Drawable extends Strokeable, Fillable {
+    // (more methods/constants could be defined here)
+}</pre>
 
-<subsection id="OOP.7.2" title="Interfaces as Types">
+<np>A concrete class that implements <classname>Drawable</classname> must then
+provide implementations for the <code>stroke()</code> method from 
+<classname>Strokeable</classname> and the <code>draw()</code> method from
+<classname>Fillable</classname>, as well as for any abstract methods specified
+directly in the <classname>Drawable</classname> interface.</np>
 
-<p>As with abstract classes, even though you can't construct an
-object from an interface, you can declare a variable whose type is given by the
-interface. For example, if <classname>Drawable</classname> is the interface given above, and if
-<classname>Line</classname> and <classname>FilledCircle</classname> are classes that implement
-<classname>Drawable</classname>, as above, then you could say:</p>
-
-<pre>Drawable figure;  // Declare a variable of type Drawable.  It can
-                  //    refer to any object that implements the
-                  //    Drawable interface.
-                  
-figure = new Line();  // figure now refers to an object of class Line
-figure.draw(g);   // calls draw() method from class Line
-
-figure = new FilledCircle();   // Now, figure refers to an object
-                               //   of class FilledCircle.
-figure.draw(g);   // calls draw() method from class FilledCircle</pre>
-
-<np>A variable of type <classname>Drawable</classname> can refer to any object of any class
-that implements the <classname>Drawable</classname> interface. A statement like
-<code>figure.draw(g)</code>, above, is legal because <code>figure</code> is of type
-<classname>Drawable</classname>, and <b>any</b> 
-<classname>Drawable</classname> object has a <code>draw()</code>
-method.  So, whatever object <code>figure</code> refers to, that object must
-have a <code>draw()</code> method.</np>
-
-<p>Note that a <newword>type</newword> is something that can be used
-to declare variables. A type can also be used to specify the type of a
-parameter in a subroutine, or the return type of a function. In Java, a type
-can be either a class, an interface, or one of the eight built-in primitive
-types. These are the only possibilities. Of these, however, only classes can be
-used to construct new objects.</p>
-
-<p>An interface can also be the base type of an array.  For example, we can
-use an array type <atype>Drawable[]</atype> to declare
-variables and create arrays.  The elements
-of the array can refer to any objects that implement the <classname>Drawable</classname>
-interface:</p>
-
-<pre>Drawable[] listOfFigures;
-listOfFigures = new Drawable[10];
-listOfFigures[0] = new Line();
-listOfFigures[1] = new FilledCircle();
-listOfFigures[2] = new Line();
-  .
-  .
-  .</pre>
-  
-  <np>Every element of the array will then have a <code>draw()</code> method, so that
-  we can say things like <code>listOfFigures[i].draw(g)</code>.</np>
-
+<p>An <code>interface</code> is usually defined in its own .java file, whose
+name must match the name of the <code>interface</code>.  For example, 
+<classname>Strokeable</classname> would be defined in a file named
+<code>Strokeable.java</code>.  Just like a <code>class</code>, an
+<code>interace</code> can be in a package and can <code>import</code>
+things from other packages.</p>
 
 </subsection>
-   
-<subsection title="Interfaces in Java 8" id="OOP.7.3">
 
-<p>The newest version of Java, Java&nbsp;8, makes a few useful additions to interfaces.
-The one that I will discuss here is <newword>default methods</newword>.  Unlike the usual
-abstract methods in interfaces, a default method has an implementation.  When a class
+<subsection id="OOP.7.1a" title="Default Methods">
+
+<p>Starting in Java 8, interfaces can contain <classname>default methods</classname>.
+Unlike the usual abstract methods in interfaces, a default method has an implementation.  When a class
 implements the interface, it does not have to provide an implementation for the
 default method&mdash;although it can do so if it wants to provide a different implementation.
 Essentially, default methods are inherited from interfaces in much the same way that
 ordinary methods are inherited from classes.  This moves Java partway towards supporting
 multiple inheritance.  It's not true multiple inheritance, however, since interfaces
-still cannot define instance variables.</p>
+still cannot define instance variables.  Default methods can call abstract methods that
+are defined in the same interface, but they cannot refer to any instance variables.</p>
 
 <p>A default method in an interface must be marked with the modifier <code>default</code>.
 It can optionally be marked <code>public</code> but, as for everything else in interfaces,
 default methods are automatically public and the <code>public</code> modifier can be omitted.
-Here is an example.:</p>
+Here is an example:</p>
 
 <pre>public interface Readable { // represents a source of input
 
@@ -215,15 +188,19 @@ Here is an example.:</p>
 
 <np>A concrete class that implements this interface must provide an implementation for
 <code>readChar()</code>.  It will inherit a definition for <code>readLine()</code> from the interface,
-but can provide a new definition if necessary.    Note that the default
+but can provide a new definition if necessary.  When a class includes a implementation
+for a <code>default</code> method, the implementation given in the class overrides the
+default method from the <code>interface</code>.</np>
+
+<p>Note that the default
 <code>readLine()</code> calls the abstract method <code>readChar()</code>,
-whose definition will only be provided in the implementing class.  The reference
+whose definition will only be provided in an implementing class.  The reference
 to <code>readChar()</code> in the definition is polymorphic.
 The default implementation of <code>readLine()</code> is one that would make 
 sense in almost any class that implements <classname>Readable</classname>.  Here's
 a rather silly example of a class that implements <classname>Readable</classname>,
 including a <code>main()</code> routine that tests the class. Can you figure out
-what it does?</np>
+what it does?</p>
 
 
 <pre>public class Stars implements Readable {
@@ -238,7 +215,7 @@ what it does?</np>
     public static void main(String[] args) {
         Stars stars = new Stars();
         for (int i = 0 ; i &lt; 10; i++ ) {
-            String line = stars.readLine();
+            String line = stars.readLine();  // Calls the default method!
             System.out.println( line );
         }
     }
@@ -250,6 +227,63 @@ a "mixin" in other programming languages, namely the ability to mix functionalit
 another source into a class. Since a class can implement several interfaces,
 it is possible to mix in functionality from several different sources.</p>
 
+
 </subsection>
+
+<subsection id="OOP.7.2" title="Interfaces as Types">
+
+<p>As with abstract classes, even though you can't construct an
+object from an interface, you can declare a variable whose type is given by the
+interface. For example, if <classname>Strokeable</classname> is the interface given above, and if
+<classname>Line</classname> and <classname>Circle</classname> are classes that implement
+<classname>Strokeable</classname>, as above, then you could say:</p>
+
+<pre>Strokeable figure;  // Declare a variable of type Strokeable.  It
+                    //    can refer to any object that implements the
+                    //    Strokeable interface.
+                  
+figure = new Line();  // figure now refers to an object of class Line
+figure.stroke(g);   // calls stroke() method from class Line
+
+figure = new Circle();   // Now, figure refers to an object
+                               //   of class Circle.
+figure.stroke(g);   // calls stroke() method from class Circle</pre>
+
+<np>A variable of type <classname>Strokeable</classname> can refer to any object of any class
+that implements the <classname>Strokeable</classname> interface. A statement like
+<code>figure.stroke(g)</code>, above, is legal because <code>figure</code> is of type
+<classname>Strokeable</classname>, and <b>any</b> 
+<classname>Strokeable</classname> object has a <code>stroke()</code>
+method.  So, whatever object <code>figure</code> refers to, that object must
+have a <code>stroke()</code> method.</np>
+
+<p>Note that a <newword>type</newword> is something that can be used
+to declare variables. A type can also be used to specify the type of a
+parameter in a subroutine, or the return type of a function. In Java, a type
+can be either a class, an interface, or one of the eight built-in primitive
+types. These are the only possibilities (given a few special cases, such
+as an <code>enum</code>, which is considered to be a special kind of class).
+Of these, however, only classes can be used to construct new objects.</p>
+
+<p>An interface can also be the base type of an array.  For example, we can
+use an array type <atype>Strokeable[]</atype> to declare
+variables and create arrays.  The elements
+of the array can refer to any objects that implement the <classname>Strokeable</classname>
+interface:</p>
+
+<pre>Strokeable[] listOfFigures;
+listOfFigures = new Strokeable[10];
+listOfFigures[0] = new Line();
+listOfFigures[1] = new Circle();
+listOfFigures[2] = new Line();
+  .
+  .
+  .</pre>
+  
+  <np>Every element of the array will then have a <code>stroke()</code> method, so that
+  we can say things like <code>listOfFigures[i].stroke(g)</code>.</np>
+
+</subsection>
+   
 
 </section>

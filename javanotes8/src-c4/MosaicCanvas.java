@@ -50,7 +50,7 @@ public class MosaicCanvas extends Canvas {
 	 *  and with preferred rectangle height and width both set to 16.
 	 */
 	public MosaicCanvas() {
-		this(42,42,16,16);
+		this(42,42);
 	}
 
 	/**

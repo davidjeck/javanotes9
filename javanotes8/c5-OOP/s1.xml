@@ -112,12 +112,12 @@ the situation in the computer's memory after several object have been created li
 <np>Note that the static variable <code>playerCount</code> is part of the class, and there
 is only one copy.  On the other hand, every object contains a <code>name</code> and an 
 <code>age</code>.  An object that is created from a class is called an <newword>instance</newword> of
-that class, and as the picture shows every object "knows" which class was used to create it.
+that class, and as the picture shows, every object "knows" which class was used to create it.
 I've shown class <classname>PlayerData</classname> as containing something called a
 "constructor;" the constructor is a subroutine that creates objects.</np>
 
 <p>Now there can
-be many "players" because we can make new objects to represent new players on
+be many "players," because we can make new objects to represent new players on
 demand.  A program might use the <classname>PlayerData</classname> class to store information about multiple
 players in a game. Each player has a name and an age. When a player joins the
 game, a new <code>PlayerData</code> object can be created to represent that player.
@@ -185,10 +185,10 @@ information about students taking a course:</p>
 
 <p>None of the members of this class are declared to be <code>static</code>, so the
 class exists only for creating objects. This class definition says that any
-object that is an instance of the <code>Student</code> class will include instance
+object that is an instance of the <classname>Student</classname> class will include instance
 variables named <code>name</code>, <code>test1</code>, <code>test2</code>, and
 <code>test3</code>, and it will include an instance method named
-<code>getAverage()</code>. The names and tests in different objects will generally
+<code>getAverage()</code>. The names and test grades in different objects will generally
 have different values. When called for a particular student, the method
 <code>getAverage()</code> will compute an average using <b>that
 student's</b> test grades. Different students can have different averages.

@@ -55,7 +55,7 @@ supposed to do that with dice. I want an absolute guarantee that my dice
 objects can only have the values that real dice could have. By making
 <code>die1</code> and <code>die2</code> <code>private</code>, I can have that guarantee,
 because the code that I write in the <classname>PairOfDice</classname> class is the only code
-that will ever affect the values of the variables.</p>
+that will ever directly affect the values of the variables.</p>
 
 <p>So, we will make <code>die1</code> and <code>die2</code> private, and add instance
 methods <code>getDie1()</code> and <code>getDie2()</code> to return the values of
@@ -72,7 +72,7 @@ As for other improvements, I can foresee that
 people who use my class will often be interested in the total on the dice, so
 they will tend to say things like "<code>dice.getDie1() + dice.getDie2()</code>" a
 lot. If this is going to be done over and over, why not provide a method in the
-class to do it? So, I will also add a method <code>getTotal()</code> that returns
+class to do it? So, I added a method <code>getTotal()</code> that returns
 the total value showing on the two dice. The complete, modified
 <classname>PairOfDice</classname> class is shown below.</p>
 
@@ -422,7 +422,7 @@ formatted output, since it seems appropriate to print the answers with
 as much accuracy as possible.  For formatted output, the statement
 used to print the mean could be something like:</p>
 
-<pre>System.out.printf("    Average:            %10.3f\n", calc.getMean());</pre>
+<pre>System.out.printf("    Average:            %10.3f%n", calc.getMean());</pre>
 
 <np>The complete main program is shown below.</np>
 
@@ -580,7 +580,7 @@ class we are writing. So, the subclass can be written:</p>
                 calc.enter(item);
           } while (item != 0);
    
-          System.out.println("\nStatistics about your calc:\n");
+          System.out.println("\nStatistics about your data:\n");
           System.out.println("   Count:              " + calc.getCount());
           System.out.println("   Sum:                " + calc.getSum());
           System.out.println("   Minimum:            " + calc.getMin());
@@ -922,7 +922,9 @@ separate <code>for</code> loops.</np>
 routine of the program, which is shown below.</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="TestBlackjackHand">/**
+<pre><prog name="TestBlackjackHand">import textio.TextIO;
+
+/**
  * Creates random blackjack hands, with 2 to 6 cards,
  * and prints out the blackjack value of each hand.
  * The user decides when to stop.
@@ -1169,7 +1171,7 @@ to display the cards in the user's hand:</np>
 
 <np>The function call
 <code>userHand.getCardCount()</code> gives the number of cards in the hand. The
-cards are numbered from 0 to <code>userHand.getCardCount() - 1</code>, and
+cards are numbered from 0 to <code>userHand.getCardCount()&nbsp;-&nbsp;1</code>, and
 <code>userHand.getCard(i)</code> is the card in the <code>i</code>-position. Of course,
 to produce code like this, you have to make sure that you are familiar with the
 methods in the classes that you are using.</np>
@@ -1179,7 +1181,9 @@ here on. I encourage you to read the entire program below and make sure that
 you understand it.</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="Blackjack">/**
+<pre><prog name="Blackjack">textio.TextIO;
+
+/**
  * This program lets the user play Blackjack.  The computer
  * acts as the dealer.  The user has a stake of $100, and
  * makes a bet on each game.  The user can leave at any time,
@@ -1421,7 +1425,7 @@ question.  This makes for a neater solution than using parallel arrays.</p>
 that we need to create, administer, and grade the quiz has been incorporated into
 the <classname>AdditionQuestion</classname> class.  For example, the constructor in that
 class already selects random numbers to be used in the problem, so creating a problem is
-just a matter of calling the constructor, so there is no need to use random numbers when
+just a matter of calling the constructor, and there is no need to use random numbers when
 making a problem in the <code>createQuiz()</code> method.  Also, to get the question
 and correct answer for a problem, we can just call <code>questions[i].getQuestion()</code>
 and <code>questions[i].getCorrectAnswer()</code>.  In fact, we can't get the question
@@ -1429,17 +1433,19 @@ any other way, since the two instance variables in
 an <classname>ArithmeticQuestion</classname> are <code>private</code>.
 One downside of this is that I couln't format the output from <code>gradeQuis()</code>
 as neatly as in the first version.</p>
-<p>All-in-all, t is fairly straightforward to translate the
+<p>All-in-all, it is fairly straightforward to translate the
 old version of the program into the new version. You can read my solution below.</p>
 <p>By the way, I considered adding the user's answer to the <classname>AdditionQuestion</classname>
 class, along with the correct answer, but the user's answer doesn't seem to me to be logically
 part of a question.  So I think it makes more sense to keep it out of the object that
 represents the question.</p>
-<p>Remember that this program depends on the <classname>AdditionQuiz</classname> class that is given in the
+<p>Remember that this program depends on the <classname>AdditionQuestion</classname> class that is given in the
 statement of the problem.</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="AdditionQuizWithObjects">/**
+<pre><prog name="AdditionQuizWithObjects">import textio.TextIO;
+
+/**
  * This program administers a ten-question addition quiz to the user.  The numbers
  * for the problem are chosen at random.  The numbers and the answers are one or
  * two digits.  After asking the user the ten questions, the computer grades the
@@ -1564,7 +1570,7 @@ for addition questions:</p>
     public SubtractionQuestion() { // constructor
        a = (int)(Math.random() * 50 + 1);
        b = (int)(Math.random() * 50);
-       <newcode>if (ba - b &lt; 0) { // swap a and b so answer won't be negative
+       <newcode>if (a - b &lt; 0) { // swap a and b so answer won't be negative
           int temp = a;
           a = b;
           b = temp;
@@ -1580,7 +1586,9 @@ for addition questions:</p>
 <np>The exercise asks for subtraction problems for which the answer is not negative.
 There are a number of ways to accomplish that.  For example, you could use a loop
 that would continue selecting random values for <code>a</code> and <code>b</code>
-as long as <code>a&nbsp;-&nbsp;b&nbsp;&lt;&nbsp;0</code>.  In my solution, I just swap
+as long as <code>a&nbsp;-&nbsp;b&nbsp;&lt;&nbsp;0</code>.  You could choose
+<i>b</i> and the <i>answer</i> randomly and then compute <i>a</i> as
+<code>a&nbsp;=&nbsp;answer&nbsp;+&nbsp;b</code>. In my solution, I just swap
 the values of <code>a</code> and <code>b</code> when <code>a&nbsp;-&nbsp;b&nbsp;&lt;&nbsp;0</code>.</np>
 <p>Creating the quiz becomes a more difficult problem in the new version, since
 we need to use several different kinds of questions.  In my solution, the first seven
@@ -1625,10 +1633,12 @@ and the routine for creating the quiz, everything else in the program can be exa
 it was in the previous exercise.  (However, I did change the format of the output in
 <code>gradeQuiz()</code> to make it look better for longer questions.)</p>
 <p>In my solution, just to keep everything in one file, I nested the interface 
-and the two classes that implement it inside the main program class.</p>
+and the two classes that implement it inside the main program class.  It would probably be
+better style to put them all in their own files.</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="GeneralQuiz">
+<pre><prog name="GeneralQuiz">import textio.TextIO;
+
 /**
  * This program creates, administers, and grades a quiz made up of ten questions,
  * where each question has an integer answer.  The quiz includes some simple addition

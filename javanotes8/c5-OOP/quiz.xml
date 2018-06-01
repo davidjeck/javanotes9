@@ -13,20 +13,7 @@ about the non-static part of the class.) An object is a collection of data and
 behaviors that represent some entity (real or abstract). A class defines the
 structure and behaviors of all entities of a given type. An object is one
 particular "instance" of that type of entity. For example, if <i>Dog</i> is a
-class, than <i>Lassie</i> would be an object of type <i>Dog</i>.</p></ans>
-</question>
-
-<question>
-<ques><p>What are <i>instance variables</i> and <i>instance methods</i>?</p>
-</ques>
-<ans><p>Instance variables and instance methods are what we have been calling 
-"non-static variables" and "non-static subroutines."  That is, they are
-variables and subroutines that are declared in a class but are not marked as
-"<code>static</code>."  When a class is loaded into the computer, instance variables
-and methods do not become part of the class in memory; instead, they become part of 
-each object that is constructed from that class, and each object gets its own
-copy of the instance variables and methods.</p>
-</ans>
+class, then a particular dog named <i>Lassie</i> would be an object of type <i>Dog</i>.</p></ans>
 </question>
 
 <question>
@@ -77,11 +64,14 @@ object.</p></ans>
 <ques><p>What is meant by the terms
 <i>instance variable</i> and <i>instance method</i>?</p></ques>
 <ans><p>Instance variables and instance
-methods are non-static variables and methods in a class. This means that they
+methods are non-static variables and methods in a class; that is, their
+definitions in the class are <b>not</b> marked with the "static" modifier.
+This means that they
 do not belong to the class itself. Instead, they specify what variables and
 methods are in an object that belongs to that class. That is, the class
 contains the source code that defines instance variables and instance methods,
-but actual instance variables and instance methods are contained in objects.
+but actual instance variables and instance methods are contained in objects,
+at least logically.
 (Such objects are called "instances" of the class.) Thus, instance variables
 and instance methods are the data and the behaviors of objects.</p></ans>
 </question>
@@ -147,7 +137,10 @@ Java.  So in this case, <classname>Player</classname> is a direct subclass of
 a <code>toString()</code> method, and the <classname>Player</classname> class inherits
 this <code>toString()</code> method from <classname>Object</classname>.  The methods and
 member variables in a class include not just those defined in the class but also those
-inherited from its superclass.</p>
+inherited from its superclass.  (However, the inherited <code>toString()</code> method
+will not produce a useful string representation of a <classname>Player</classname>;
+to get that, you would have to override <code>toString()</code> in the
+<classname>Player</classname> class.)</p>
 </ans>
 </question>
    
@@ -172,7 +165,7 @@ the method from class A or the method from class B? The answer is that there is
 no way to tell! The answer depends on what type of object <code>var</code> refers
 to, a class A object or a class B object. The method executed by
 <code>var.action()</code> depends on the actual type of the object that
-<code>var</code> refers to, not on the type of the variable <code>var</code>. This is
+<code>var</code> refers to <b>at run time</b>, not on the type of the variable <code>var</code>. This is
 the real meaning of polymorphism.)</p></ans>
 </question>
 
@@ -210,12 +203,14 @@ it abstract.  For example,</p>
 <ques><p>What is <code>this</code>?</p>
 </ques>
 <ans><p>"<code>this</code>" is a special variable in Java, which does not have to be declared.  
-Java makes it available automatically in instance methods. It can be used in instance methods,
-and it holds a reference to the object that contains the method (or, in terms of messages, the
+Java makes it available automatically in instance methods and constructors.
+It holds a reference to the object that is being constructed
+or that contains the instance method that is being executed (or, in terms of messages, the
 object that received the message that is being processed).  It provides a way to refer to
 "this object."  If <code>x</code> is an instance variable, it can also be referred to as
 <code>this.x</code> within the same class.  If <code>doSomething()</code> is an instance method, 
-it can also be called as <code>this.doSomething()</code> within the same class.</p>
+it can also be called as <code>this.doSomething()</code> within the same class.  (Personally,
+I would be happier with Java if it required the use of "this" instead of using it implicitly.)</p>
 </ans>
 </question>
 

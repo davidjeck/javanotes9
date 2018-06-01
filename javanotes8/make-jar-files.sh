@@ -182,7 +182,7 @@ buildTextIOjar chapter4 GuessingGame
 buildTextIOjar chapter4 GuessingGame2
 buildTextIOjar chapter4 RowsOfChars
 buildTextIOjar chapter4 ThreeN2
-buildjar chapter4 RandomMosaicWalk Mosaic.java MosaicPanel.java
+buildjar chapter4 RandomMosaicWalk Mosaic.java MosaicCanvas.java
 buildTextIOjar chapter5 RollTwoPairs PairOfDice.java
 buildjar chapter5 GrowingCircleAnimation CircleInfo.java
 buildTextIOjar chapter5 HighLow Deck.java Card.java

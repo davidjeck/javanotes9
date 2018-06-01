@@ -16,13 +16,16 @@ larger class. And, more seriously, there are other good reasons for nesting the
 definition of one class inside another class.</p>
 
 <p>In Java, a <newword>nested class</newword> is any class whose definition is inside the
-definition of another class.  (In fact, a class can even be nested inside a subroutine,
+definition of another class.  (In fact, a class can even be nested inside a method,
 which must, of course, itself be inside a class).
 Nested classes can be either <newword>named</newword> 
 or <newword>anonymous</newword>. I will come
 back to the topic of anonymous classes later in this section.  A named nested
 class, like most other things that occur in classes, can be either static or
-non-static.</p>
+non-static.  Interfaces, like classes, can be nested inside class definitions and
+can be either static or non-static.  (In fact, interface definitions can contain
+static nested classes and interfaces, but that is not something that you
+will see in this textbook.)</p>
  
    
 <subsection id="OOP.8.1" title="Static Nested Classes">
@@ -44,10 +47,7 @@ in the same way that static member variables are parts of the class itself.</p>
 of lines in three-dimensional space. (Such models are used to represent
 three-dimensional objects in graphics programs.) Suppose that the
 <classname>WireFrameModel</classname> class contains a static nested class, <classname>Line</classname>,
-that represents a single line. Then, outside of the class
-<classname>WireFrameModel</classname>, the <classname>Line</classname> class would be referred to as
-<code>WireFrameModel.Line</code>. Of course, this just follows the normal naming
-convention for static members of a class. The definition of the
+that represents a single line.  The definition of the
 <classname>WireFrameModel</classname> class with its nested <classname>Line</classname> class would look,
 in outline, like this:</p>
 
@@ -67,6 +67,8 @@ in outline, like this:</p>
 } // end WireFrameModel</pre>
 
 <np>The full name of the nested class is <classname>WireFrameModel.Line</classname>.
+Of course, this just follows the normal naming
+convention for static members of a class.
 That name can be used, for example, to declare variables.
 Inside the <classname>WireFrameModel</classname> class, a <classname>Line</classname> object would be
 created with the constructor "<code>new&nbsp;Line()</code>". Outside the class, 
@@ -117,7 +119,8 @@ non-static. Otherwise, it might as well be static.</p>
 <p>In most cases, an inner class is used only within the class where it is
 defined.  When that is true, using the inner class is really not much different from
 using any other class.  You can create variables and declare objects using the
-simple name of the inner class in the usual way.</p>
+simple name of the inner class in the usual way (although you can only do that
+in the non-static part of the class).</p>
 
 <p>From outside the containing class, however, an inner class has to be
 referred to using a name of the form <bnf>variableName</bnf>.<bnf>NestedClassName</bnf>,
@@ -197,17 +200,21 @@ defining all the methods that are declared in the interface.  If an interface
 is used as a base, the <bnf>parameter-list</bnf> must be empty.  Otherwise, it can contain
 parameters for a constructor in the <bnf>superclass</bnf>.</p>
 
-<p>Anonymous classes are  often used for handling events in graphical user
-interfaces, and we will encounter them several times in the chapters on GUI programming.
-For now, we will look at one not-very-plausible example. Consider the
-<classname>Drawable</classname> interface, which is defined earlier in this section. Suppose
+<p>For now, we will look at one not-very-plausible example. Suppose that <classname>Drawable</classname>
+is an interface defined as:</p>
+
+<pre>public interface Drawable {
+    public void draw(GraphicsContext g);
+}</pre>
+
+<np>Suppose
 that we want a <classname>Drawable</classname> object that draws a filled, red, 100-pixel
 square. Rather than defining a new, separate class and then using that class to
 create the object, we can use an anonymous class to create the object in one
-statement:</p>
+statement:</np>
 
 <pre>Drawable redSquare = <newcode>new Drawable() {
-       void draw(Graphics g) {
+       public void draw(GraphicsContext g) {
           g.setColor(Color.RED);
           g.fillRect(10,10,100,100);
        }
@@ -222,7 +229,7 @@ statement.</np>
 <p>Anonymous classes are often used for actual parameters.  For example, consider the
 following simple method, which draws a <classname>Drawable</classname> in two different graphics contexts:</p>
 
-<pre>void drawTwice( Graphics g1, Graphics g2, Drawable figure ) {
+<pre>void drawTwice( GraphicsContext g1, GraphicsContext g2, Drawable figure ) {
     figure.draw(g1);
     figure.draw(g2);
 }</pre>
@@ -231,8 +238,8 @@ following simple method, which draws a <classname>Drawable</classname> in two di
 For example:</np>
 
 <pre>drawTwice( firstG, secondG, <newcode>new Drawable() {
-          void draw(Graphics g) {
-             g.drawOval(10,10,100,100);
+          void draw(GraphicsContext g) {
+             g.fillOval(10,10,100,100);
           }
      }</newcode> );</pre>
 
@@ -242,62 +249,27 @@ example, then the names of the class files for the anonymous nested classes
 will be <code>MainClass$1.class</code>, <code>MainClass$2.class</code>,
 <code>MainClass$3.class</code>, and so on.</p>
 
+<p>Of course, in this example, <classname>Drawable</classname> is a functional interface,
+and we could use lambda expressions (<localref href="subroutines.4a"/>) instead of anonymous classes.
+The last example could then be written simply</p>
+
+<pre>drawTwice( firstG, secondG, g -&gt; g.fillOval(10,10,100,100) );</pre>
+
+<np>and <code>redSquare</code> could be defined as</np>
+
+<pre>Drawable redSquare = g -&gt; {
+          g.setColor(Color.RED);
+          g.fillRect(10,10,100,100);
+       };</pre>
+
+<np>This approach has the advantage that it does <b>not</b> create an extra .class file.
+However, lambda expressions can only be used with functional interfaces, while anonymous
+classes can be used with any interface or class.  Before Java&nbsp;8, anonymous classes
+were often used for handling events in GUI programs.  With Java&nbsp;8 and JavaFX, they
+can be mostly replaced in that context by lambda expressions.</np>
+
 </subsection>
    
-<subsection id="OOP.8.4" title="Java 8 Lambda Expressions">
-
-<p>The syntax for anonymous classes is cumbersome.  In many cases, an anonymous class
-implements an interface that defines just one method.  Java&nbsp;8 introduces a new
-syntax that can be used in place of the anonymous class in that circumstance:
-the lambda expression.  Here is what the previous subroutine call looks like using a
-lambda expression:</p>
-
-<pre>drawTwice( firstG, secondG, <newcode>g -&gt; g.drawOval(10,10,100,100)</newcode> )</pre>
-
-<np>The lambda expression is <code>g -&gt; g.drawOval(10,10,100,100)</code>.  Its meaning
-is, "the method that has a parameter <code>g</code> and executes the code
-<code>g.drawOval(10,10,100,100)</code>."  
-The computer knows that <code>g</code>
-is of type <classname>Graphics</classname> because it is expecting a
-<classname>Drawable</classname> as the actual parameter, and the only method in
-the <classname>Drawable</classname> interface has a parameter of type 
-<classname>Graphics</classname>.  Lambda expressions can only be used in places where
-this kind of type inference can be made.  The general syntax of a lambda expression is</np>
-
-<pre><bnf>formal-parameter-list</bnf>  -&gt;  <bnf>method-body</bnf></pre>
-
-<np>where the <bnf>method body</bnf> can be a single expression, a single subroutine call,
-or a block of statements enclosed between 
-<code>{</code>&nbsp;and&nbsp;<code>}</code>.  When the body is a single expression or
-function call, the
-value of the expression is automatically used as the return value of the method that
-is being defined.
-The parameter list in the lambda expression does not have to specify the types of the
-parameters, although it can.  Parentheses around the parameter list are optional if there is exactly one
-parameter and no type is specified for the parameter; this is the form seen in the example above.
-For a method with no parameters, the parameter list is just an empty set of parentheses.  Here
-are a few more examples of lambda expressions:</np>
-
-<pre>() -&gt; System.out.println("Hello World")
-
-g -&gt; { g.setColor(Color.RED); g.drawRect(10,10,100,100); }
-
-(a, b) -&gt; a + b
-
-(int n) -> { 
-         while (n &gt; 0) { 
-             System.out.println(n); 
-             n = n/2; 
-          } 
-      } // lambda expressions ends here
-</pre>
-
-<np>As you can see, the syntax can still get pretty complicated.  There is quite a lot
-more to say about lambda expressions, but my intention here is only to briefly introduce
-one of the most interesting new features in Java&nbsp;8.</np>
-
-</subsection>
-
 <endchapter/>
 
 </section>

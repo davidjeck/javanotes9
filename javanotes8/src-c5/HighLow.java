@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  * This program lets the user play HighLow, a simple card game 
  * that is described in the output statements at the beginning of 

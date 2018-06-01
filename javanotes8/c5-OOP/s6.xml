@@ -10,7 +10,7 @@ of details. The rest of this chapter covers more of those
 annoying details. Remember that you don't need to master everything in
 this chapter the first time through.  In this
 section, we'll look at two variables, <code>this</code> and <code>super</code>, that are
-automatically defined in any instance method.</p>
+automatically defined in any instance method or constructor.</p>
 
 <subsection id="OOP.6.1" title="The Special Variable this">
 
@@ -47,8 +47,7 @@ then <code>std.test1</code> could be a full name for an instance variable named
 <p>But when we are working inside a class and use a simple name to refer to an instance variable
 like <code>test1</code>, where is the object that contains the variable?
 The solution to this riddle is simple: Suppose that a reference to "<code>test1</code>"
-occurs in the definition of some instance method.  The actual method that
-gets executed is part of some particular object of
+occurs in the definition of some instance method.  The method is part of some particular object of
 type <classname>Student</classname>.   When that method gets executed, the
 occurrence of the name "<code>test1</code>" refers to the <code>test1</code> variable
 <b>in that same object</b>.  (This is why simple names of instance members cannot
@@ -94,8 +93,9 @@ that is part of the entity itself.  Calling an instance method such as
 a formal parameter that is also called "name." 
 However, the instance variable can still be referred to by
 its full name, which is <code>this.name</code>. In the assignment statement 
-"<code>this.name&nbsp;=&nbsp;name</code>", the value of
-the formal parameter, <code>name</code>, is assigned to the instance variable,
+"<code>this.name&nbsp;=&nbsp;name</code>", that "name" on the right is the
+formal parameter, and the value of
+that formal parameter is assigned to the instance variable,
 <code>this.name</code>. This is considered to be acceptable style: There is no need
 to dream up cute new names for formal parameters that are just used to
 initialize instance variables. You can use the same name for the parameter as
@@ -241,37 +241,31 @@ call with "this" as the name of the subroutine.  The result is that the
 body of another constructor in the same class is executed.
 This can be very useful since it can save you from repeating the 
 same code in several different constructors.  As an example, consider
-<sourceref chapter="4" href="MosaicPanel.java"/>, which was used indirectly
-in <localref href="subroutines.6"/>.  A <classname>MosaicPanel</classname>
-represents a grid of colored rectangles.  It has a constructor with many 
+<sourceref chapter="4" href="MosaicCanvas.java"/>, which was used indirectly
+in <localref href="subroutines.6"/>.  A <classname>MosaicCanvas</classname>
+represents a grid of colored rectangles.  It has a constructor with four 
 parameters:</p>
 
 <pre>public MosaicPanel(int rows, int columns, 
-                 int preferredBlockWidth, int preferredBlockHeight, 
-                 Color borderColor, int borderWidth)</pre>   
+                 int preferredBlockWidth, int preferredBlockHeight)</pre>   
 
-<np>This constructor provides a lot of options and does a lot of initialization.
+<np>This constructor provides several options and does a lot of initialization.
 I wanted to provide easier-to-use
 constructors with fewer options, but all the initialization still has
 to be done.  The class also contains these constructors:</np>
 
 <pre>public MosaicPanel() {
-    this(42,42,16,16);
+    this(42,42);
 }
 
 public MosaicPanel(int rows, int columns) {
     this(rows,columns,16,16);
-}
-
-public MosaicPanel(int rows, int columns, 
-                   int preferredBlockWidth, int preferredBlockHeight) {
-    this(rows, columns, preferredBlockWidth, preferredBlockHeight, null, 0);
 }</pre>
 
 <np>Each of these constructors exists just to call another constructor, while providing
 constant values for some of the parameters.  For example,
-<code>this(42,42,16,16)</code> calls the last constructor listed here,
-while that constructor in turn calls the main, six-parameter constructor.  That main constructor
+<code>this(42,42)</code> calls the second constructor listed here,
+while that constructor in turn calls the main, four-parameter constructor.  That main constructor
 is eventually called in all cases, so that all the essential initialization gets done
 in every case.</np>
 

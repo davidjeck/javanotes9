@@ -68,9 +68,10 @@ class is in the standard package <code>java.lang</code>, so you can use its simp
 importing it.</p>
 
 <p>A number of useful classes are collected in the package <code>java.util</code>.
-For example, this package contains classes for working with collections of
-objects.  We
+For example, this package contains classes for working with collections of objects.  We
 will study such collection classes extensively in <localref href="generics"/>.
+And we have already encountered <code>java.util.Scanner</code> in
+<localref href="basics.4.6"/>.
 Another class in this package, <code>java.util.Date</code>, is
 used to represent times. When a <code>Date</code> object is constructed without
 parameters, the result represents the current date and time, so an easy way to
@@ -106,25 +107,24 @@ type <code>Random</code> can also be used to generate so-called
 Gaussian distributed random real numbers.</np>
 
 <p>Many of Java's standard classes are used in GUI programming. You will encounter
-a number of them in the <localref href="GUI1"/>.  Here, I will mention only
+many of them in the <localref href="GUI1"/>.  Here, I will mention only
 the class <classname>Color</classname>,
-from the package <code>java.awt</code>, so that I can use it in the next example.
+from the package <code>javafx.scene.paint</code>, so that I can use it in the next example.
 A <classname>Color</classname> object represents a 
 color that can be used for drawing.  In <localref href="control.8"/>, you encountered
-color constants such as <code>Color.RED</code>.  These constants are final, static member
+color constants such as <code>Color.RED</code>.  These constants are final static member
 variables in the <classname>Color</classname> class, and their values are objects of type
 <classname>Color</classname>.  It is also possible to create new color objects.  Class
 <classname>Color</classname> has several constructors.  One of them, which is called
-as <code>new&nbsp;Color(r,g,b)</code>, takes three integer parameters to specify the
-red, green, and blue components of the color.  The parameters must be in the range 0
-to 255.  Another constructor, <code>new&nbsp;Color(r,g,b,t)</code>, adds a fourth
-integer parameter, which must also be in the range 0 to 255.  The fourth parameter
-determines how transparent or opaque the color is.  When you draw with a transparent
+as <code>new&nbsp;Color(r,g,b)</code>, takes three <ptype>double</ptype> parameters to specify the
+red, green, and blue components of the color.  The parameters must be in the range 0.0
+to 1.0.  For example, a value of 0.0 for <i>r</i> means that
+the color contains no red, while a value of 1.0 means that the color contains the maximum
+possible amount of red. Another constructor, <code>new&nbsp;Color(r,g,b,t)</code>, adds a fourth
+<ptype>double</ptype> parameter, which must also be in the range 0.0 to 1.0.  The fourth parameter
+determines how transparent or opaque the color is.  When you draw with a partially transparent
 color, the background shows through the color to some extent.  A larger value of
-the parameter <code>t</code> gives a color that is less transparent and more opaque.
-(If you know hexadecimal color codes, there is a constructor for you.  It takes one
-parameter of type <ptype>int</ptype> that encodes all the color components.
-For example, <code>new&nbsp;Color(0x8B5413)</code> creates a brown color.)</p>
+the parameter <code>t</code> gives a color that is less transparent and more opaque.</p>
 
 <p>A <classname>Color</classname> object has only a few instance methods that you
 are likely to use.  Mainly, there are functions like <code>getRed()</code> to
@@ -152,7 +152,7 @@ you'll learn how to create subclasses.   What you don't
 know yet is that <b>every</b> class in Java (with just one exception) is a subclass
 of some other class.  If you create a class and don't explicitly make it a subclass of
 some other class, then it automatically becomes a subclass of the special class
-named <classname>Object</classname>.  (<classname>Object</classname> is the one class
+named <classname>Object</classname>, in package <code>java.lang</code>.  (<classname>Object</classname> is the one class
 that is not a subclass of any other class.)</p>
 
 <p>Class <classname>Object</classname> defines several instance methods that are inherited by
@@ -202,12 +202,12 @@ method in the <localref href="OOP.4">next section</localref>.</np>
    
 <subsection id="OOP.3.2" title="Writing and Using a Class">
 
-<p>As an example, we will write an animation program, based on the same
+<p>As an example of designing and using a new class, we will write an animation program, based on the same
 animation framework that was used in <localref href="control.8.3"/>.  The animation
-shows a number of semi-transparent disk that grow in size as the
+shows a number of semi-transparent disks that grow in size as the
 animation plays.  The disks have random colors and locations.  When a disk gets too
 big, or sometimes just at random, the disk disappears and is replaced with a
-new disk at a random location.  Here is a screenshot from the program:
+new disk at a random location.  Here is a reduced-size screenshot from the program:
 </p>
 
 <img src="growing-circles.png" width="300" height="240" alt="100 translucent filled circles"
@@ -225,13 +225,13 @@ the constructor's parameters specify the location and size for
 the circle, but the constructor makes up a color using random values for the red, green,
 and blue components.  Here's the complete class:</np>
 
-<pre>import java.awt.Color;  // import some standard GUI classes
-import java.awt.Graphics;
+<pre>import javafx.scene.paint.Color;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * A simple class that holds the size, color, and location of a colored disk,
- * with a method for drawing the filled circle in a graphics context.  The 
- * circle is drawn as a filled oval, with a black outline.
+ * with a method for drawing the circle in a graphics context.  The circle
+ * is drawn as a filled oval, with a black outline.
  */
 public class CircleInfo {
     
@@ -250,20 +250,20 @@ public class CircleInfo {
         x = centerX;
         y = centerY;
         radius = rad;
-        int red = (int)(255*Math.random());
-        int green = (int)(255*Math.random());
-        int blue = (int)(255*Math.random());
-        color = new Color(red,green,blue, 100);
+        double red = Math.random();
+        double green = Math.random();
+        double blue = Math.random();
+        color = new Color( red,green,blue, 0.4 );
     }
     
     /**
      * Draw the disk in graphics context g, with a black outline.
      */
-    public void draw( Graphics g ) {
-        g.setColor( color );
+    public void draw( GraphicsContext g ) {
+        g.setFill( color );
         g.fillOval( x - radius, y - radius, 2*radius, 2*radius );
-        g.setColor( Color.BLACK );
-        g.drawOval( x - radius, y - radius, 2*radius, 2*radius );
+        g.setStroke( Color.BLACK );
+        g.strokeOval( x - radius, y - radius, 2*radius, 2*radius );
     }
 }</pre>
 
@@ -318,8 +318,8 @@ can use the <code>++</code> operator to increment its value.  So the effect
 of <code>circleData[i].radius++</code> is to increase the radius of the circle by one.
 The second line of code is similar, but in that statement, <code>circleData[i].draw</code>
 is an instance method in the <classname>CircleInfo</classname> object.  The statement
-<code>circleData[i].draw(g)</code> calls that instance method with parameter&nbsp;<code>g</code>.
-</np>
+<code>circleData[i].draw(g)</code> calls that instance method with a parameter&nbsp;<code>g</code>
+that represents the <classname>GraphicsContext</classname> that is being used for drawing.</np>
 
 <p>The source code example <sourceref href="GrowingCircleAnimation.java"/> contains the
 full source code for the program, if you are interested.  Since the program uses

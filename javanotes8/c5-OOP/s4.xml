@@ -16,7 +16,7 @@ deck, since it is used in the game of poker).</p>
 player gets a hand of cards. The deck is shuffled and cards are dealt one at a
 time from the deck and added to the players' hands. In some games, cards can be
 removed from a hand, and new cards can be added. The game is won or lost
-depending on the value (ace, 2, &dots;, king) and suit (spades, diamonds, clubs,
+depending on the value (ace, 2, 3, &dots;, king) and suit (spades, diamonds, clubs,
 hearts) of the cards that a player receives. If we look for nouns in this
 description, there are several candidates for objects: game, player, hand,
 card, deck, value, and suit. Of these, the value and the suit of a card are
@@ -190,7 +190,7 @@ the card that is being created. There are four suits, which can be represented
 by the integers 0, 1, 2, and 3. It would be tough to remember which number
 represents which suit, so I've defined named constants in the <classname>Card</classname>
 class to represent the four possibilities. For example, <code>Card.SPADES</code> is
-a constant that represents the suit, "spades". (These constants are declared to
+a constant that represents the suit, "spades." (These constants are declared to
 be <code>public</code> <code>final</code> <code>static</code> <code>ints</code>. 
 It might be better to use an enumerated type, but I will stick here to
 integer-valued constants.)  The possible
@@ -427,7 +427,9 @@ of HighLow returns the user's score in the game as its return value.
 This gets the score back to the main program, where it is needed.
 Here is the program:</p>
 
-<pre>/**
+<pre>import textio.TextIO;
+
+/**
  * This program lets the user play HighLow, a simple card game 
  * that is described in the output statements at the beginning of 
  * the main() routine.  After the user plays several games, 

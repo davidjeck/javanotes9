@@ -148,10 +148,10 @@ as a unit in a program.</gitem>
 <gitem term="deadlock">A situation in which several threads hang indefinitely, 
 for example because each of them is waiting for some resource that is locked by one of the
 other threads.</gitem>
-<gitem term="default method">A method in a Java 8 interface that has an implementation.
+<gitem term="default method">A method in a Java interface that has an implementation.
 The default implementation is used in any class that implements the interface but
 does not override the method.  Default methods are marked with the reserved word
-<code>default</code>.  Not supported in Java&nbsp;7.</gitem>
+<code>default</code>.  Not supported in Java&nbsp;7 and earlier.</gitem>
 <gitem term="default package">The unnamed package.  A class that does not declare itself
 to be in a named package is considered to be in the default package.</gitem>
 <gitem term="definite assignment">Occurs at a particular point in a program if
