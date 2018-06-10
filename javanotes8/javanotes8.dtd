@@ -202,13 +202,12 @@
 <!ENTITY OOP_quiz SYSTEM "c5-OOP/quiz.xml">
 
 <!ENTITY GUI1_intro SYSTEM "c6-GUI1/intro.xml">
-<!ENTITY GUI1_s1 SYSTEM "c6-GUI1/s1.xml"> <!-- There is no s2.xml; it used to cover applets -->
+<!ENTITY GUI1_s1 SYSTEM "c6-GUI1/s1.xml"> 
+<!ENTITY GUI1_s2 SYSTEM "c6-GUI1/s2.xml"> 
 <!ENTITY GUI1_s3 SYSTEM "c6-GUI1/s3.xml">
 <!ENTITY GUI1_s4 SYSTEM "c6-GUI1/s4.xml">
 <!ENTITY GUI1_s5 SYSTEM "c6-GUI1/s5.xml">
 <!ENTITY GUI1_s6 SYSTEM "c6-GUI1/s6.xml">
-<!ENTITY GUI1_s7 SYSTEM "c6-GUI1/s7.xml">
-<!ENTITY GUI1_s8 SYSTEM "c6-GUI1/s8.xml">
 <!ENTITY GUI1_exercises SYSTEM "c6-GUI1/exercises.xml">
 <!ENTITY GUI1_quiz SYSTEM "c6-GUI1/quiz.xml">
 

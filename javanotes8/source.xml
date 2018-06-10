@@ -231,7 +231,8 @@ you can find information about it at the end of <web>this web page</web><tex>Par
 
 <subsection id="source.2" title="Part 2: Graphical Examples from the Text">
 
-<p>The following sample programs use a graphical user interface.</p>
+<p>The following sample programs use a graphical user interface.  All of these programs use JavaFX
+as the GUI toolbox.</p>
 
 <ul>
    <li><sourceref href="chapter1/GUIDemo.java">GUIDemo.java</sourceref> is a simple demonstration of some basic
@@ -263,41 +264,34 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    <li><sourceref href="chapter5/ShapeDraw.java">ShapeDraw.java</sourceref>, from <localref href="OOP.5"/>, is a program
    that lets the user place various shapes on a drawing area; an example of
    abstract classes, subclasses, and polymorphism.</li>
-   <li><sourceref href="chapter6/HelloWorldGUI1.java">HelloWorldGUI1.java</sourceref> 
-   and <sourceref href="chapter6/HelloWorldGUI2.java">HelloWorldGUI2.java</sourceref>,
-   from <localref href="GUI1.1"/>, show the message "Hello World" in a window, the first
-   one by using the built-in <classname>JOptionPane</classname> class and the second
-   by building the interface "by hand."</li>
+   <li><sourceref href="chapter6/HelloWorldFX.java">HelloWorldFX.java</sourceref> 
+   from <localref href="GUI1.1"/>, displays a the message  in a window, with three buttons
+   for changing the message and quitting the program.  One of the messages is "Hello World", and
+   this program is used as the first example for learning about JavaFX programming.</li>
    <li><sourceref href="chapter6/SimpleColorChooser.java">SimpleColorChooser.jav</sourceref>, used in <localref href="GUI1.3"/>
    to demonstrate RGB and HSB colors. This program uses techniques that are not
    covered until later in the text, and it is not presented as a programming
    example.  You can run it to experiment with colors.</li>
-   <li><sourceref href="chapter6/RandomStringsPanel.java">RandomStringsPanel.java</sourceref>, 
-   from <localref href="GUI1.3"/>, shows 25 copies of the string "Java!" (or some other string 
-   specified in it constructor) in random colors and fonts.  The program
-   <sourceref href="chapter6/RandomStrings.java">RandomStrings.java</sourceref> uses
-   a <classname>RandomStringsPanel</classname> as its content pane.  And
-   <sourceref href="chapter6/RandomStringsPanelWithMain.java">RandomStringsPanelWithMain.java</sourceref>
-   is a program that combines the <code>main()</code> routine and the definition of the
-   panel into one file.  Finally, <sourceref href="chapter6/ClickableRandomStrings.java">ClickableRandomStrings.java</sourceref>
-   from <localref href="GUI1.4"/> is a modification of <code>RandomStrings.java</code> with a mouse listener
-   that redraws the panel when the user clicks on it.</li>
-   <li><sourceref href="chapter6/SimpleStamper.java">SimpleStamper.java</sourceref>, from <localref href="GUI1.4"/>,
-   lets the user place rectangles and ovals on a drawing area by clicking with the mouse.</li>
-   <li><sourceref href="chapter6/SimpleTrackMouse.java">SimpleTrackMouse.java</sourceref>, from <localref href="GUI1.4"/>,
+   <li><sourceref href="chapter6/RandomStrings.java">RandomStringl.java</sourceref>, 
+   from <localref href="GUI1.2"/>, shows 25 copies of the string "Hello JavaFX!"  in random colors and fonts.</li>
+   <li><sourceref href="chapter6/RandomCards.java">RandomCards.java</sourceref>, 
+   from <localref href="GUI1.2"/>, shows 5 cards selected at random from a deck.
+   Depends on the files <sourceref href="chapter6/Deck.java">Deck.java</sourceref>
+   <sourceref href="chapter6/Card.java">Card.java</sourceref>, 
+   and the image resource file <sourceref href="chapter6/cards.png">Cards.png</sourceref></li>
+   <li><sourceref href="chapter6/SimpleTrackMouse.java">SimpleTrackMouse.java</sourceref>, from <localref href="GUI1.3"/>,
    shows information about mouse events as the user moves and clicks with the mouse.</li>
-   <li><sourceref href="chapter6/SimplePaint.java">SimplePaint.java</sourceref>, from <localref href="GUI1.4"/>,
-   lets the user draw curves in a drawing area and select the drawing color from a
-   palette.</li>
-   <li><sourceref href="chapter6/RandomArt.java">RandomArt.java</sourceref>, from <localref href="GUI1.5"/>, shows
-   a new random "artwork" every four seconds.  This is an example of using a <classname>Timer</classname>.</li>
-   <li><sourceref href="chapter6/KeyboardAndFocusDemo.java">KeyboardAndFocusDemo.java</sourceref>, from <localref href="GUI1.5"/>, shows
-   how to use keyboard and focus events.</li>
-   <li><sourceref href="chapter6/SubKiller.java">SubKiller.java</sourceref>, from <localref href="GUI1.5"/>, lets the
-   user play a simple arcade-style game.  Uses a timer as well as keyboard and focus events.</li>
+   <li><sourceref href="chapter6/SimplePaint.java">SimplePaint.java</sourceref>, from <localref href="GUI1.3"/>,
+   lets the user draw curves in a drawing area and select the drawing color from a palette.</li>
+   <li><sourceref href="chapter6/KeyboardEventDemo.java">KeyboardEventsDemo.java</sourceref>, 
+   from <localref href="GUI1.5"/>, shows how to use keyboard events.</li>
+   <li><sourceref href="chapter6/SubKiller.java">SubKiller.java</sourceref>, from <localref href="GUI1.3"/>, lets the
+   user play a simple arcade-style game.  Uses an <classname>AnimationTimer</classname> 
+   as well as keyboard events.</li>
    <li> <sourceref href="chapter6/SliderDemo.java">SliderDemo.java</sourceref> and
-   <sourceref href="chapter6/TextAreaDemo.java">TextAreaDemo.java</sourceref>, 
-   small programs that demonstrate basic components, used as examples in <localref href="GUI1.6"/></li>
+   <sourceref href="chapter6/TextInputDemo.java">TextInputDemo.java</sourceref>, 
+   small programs that demonstrate basic components, used as examples in <localref href="GUI1.4"/></li>
+   
    <li><sourceref href="chapter6/BorderDemo.java">BorderDemo.java</sourceref> and</li>
    <li><sourceref href="chapter6/BorderDemo.java">BorderDemo.java</sourceref>, 
    from <localref href="GUI1.7"/>, a very simple program that demonstrates six types of border.</li>
@@ -488,7 +482,8 @@ along with the programs that use them.</p>
    class that makes it possible to use <code>System.out</code> and other features
    of <classname>System</classname> in the same window.  I use these classes to build
    executable jar files for my text-oriented examples that run in a window instead of
-   on the command line.  See the comments in the source code files for more information.</li>
+   on the command line.  See the comments in the source code files for more information.
+   (Note that this GUI version of TextIO uses the Swing GUI toolkit rather than JavaFX.)</li>
    <li><sourceref href="chapter4/SimpleGraphicsStarter.java">SimpleGraphicsStarter.java</sourceref> and
    <sourceref href="chapter3/SimpleAnimationStarter.java">SimpleAnimationStarter.java</sourceref> are
    small programs that you can edit to make very simple pictures and animations

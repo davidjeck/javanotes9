@@ -1,512 +1,571 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE section SYSTEM "../javanotes8.dtd" >
 
-<section id="GUI1.6" title="Basic Components">
+<section id="GUI1.6" title="Complete Programs">
+
+
+<p><start><big>W</big>e have already encountered</start> many of the basic
+aspects of GUI programming, but professional programs use many
+additional features.  We will cover some of the advanced features
+of Java GUI programming in <localref href="GUI2"/>, but in this
+section we look briefly at a few more features that are
+essential for writing GUI programs.  I will discuss these features
+in the context of a
+"MosaicDraw" program that is shown in this picture:</p>
    
-<p><start><big>I</big>n preceding sections</start>, you've seen how to use a
-graphics context to draw on the screen and how to handle mouse events and
-keyboard events. In one sense, that's all there is to GUI programming. If
-you're willing to program all the drawing and handle all the mouse and keyboard
-events, you have nothing more to learn. However, you would either be doing a
-lot more work than you need to do, or you would be limiting yourself to very
-simple user interfaces. A typical user interface uses standard GUI components
-such as buttons, scroll bars, text-input boxes, and menus. These components
-have already been written for you, so you don't have to duplicate the work
-involved in developing them. They know how to draw themselves, and they can
-handle the details of processing the mouse and keyboard events that concern
-them.</p>
+<img src="mosaic-draw.png" width="300" height="321" alt="a face drawn with MosaicDraw"
+      tex="mosaic-draw.eps" texscale="0.6"/>
+   
+<np>The source code for the program is in the file <sourceref href="MosaicDraw.java"/>.
+The program also requires <sourceref href="MosaicPanel.java"/> and 
+<sourceref href="MosaicDrawController.java"/>.  You will want to try it out!</np>
 
-<p>Consider one of the simplest user interface components, a push button. The
-button has a border, and it displays some text. This text can be changed.
-Sometimes the button is disabled, so that clicking on it doesn't have any
-effect. When it is disabled, its appearance changes. When the user clicks on
-the push button, the button changes appearance while the mouse button is
-pressed and changes back when the mouse button is released. In fact, it's more
-complicated than that. If the user moves the mouse outside the push button
-before releasing the mouse button, the button changes to its regular
-appearance. To implement this, it is necessary to respond to mouse exit or
-mouse drag events. Furthermore, on many platforms, a button can receive the
-input focus. The button changes appearance when it has the focus. If the button
-has the focus and the user presses the space bar, the button is triggered. This
-means that the button must respond to keyboard and focus events as well.</p>
+<p>As the user clicks-and-drags the
+mouse in the large drawing area of this program, it leaves a trail of little colored
+squares. There is some random variation in the color of the squares.  (This is meant
+to make the picture look a little more like a real mosaic, which is a picture made out of 
+small colored stones in which there would be some natural color variation.)
+There is a menu bar above the drawing area.  The "Control" menu contains
+commands for filling and clearing the drawing area, along with a few options that affect
+the appearance of the picture.  The "Color" menu lets the user select the color that will
+be used when the user draws.  The "Tools" menu affects the behavior of the mouse.
+Using the default "Draw" tool, the mouse leaves a trail of single squares.  Using the
+"Draw&nbsp;3x3" tool, the mouse leaves a swath of colored squares that is three squares wide.
+There are also "Erase" tools, which let the user set squares back to their default
+black color.</p>
+   
+<p>The drawing area of the program is a panel that belongs to the <classname>MosaicPanel</classname>
+class, a subclass of <classname>JPanel</classname> that is defined in <sourceref href="MosaicPanel.java"/>.
+<classname>MosaicPanel</classname> is a highly reusable class for representing mosaics of colored
+rectangles.  It was also used behind the scenes in the sample program in <localref href="subroutines.6.3"/>.
+The <classname>MosaicPanel</classname> class
+does not directly support drawing on the mosaic, but it does support setting
+the color of each individual square.  The MosaicDraw program installs a mouse listener on
+the panel; the mouse listener responds to mousePressed and mouseDragged events on the
+panel by setting the color of the square that contains the mouse.  This is a nice example of
+applying a listener to an object to do something that was not programmed into the object
+itself.</p>
 
-<p>Fortunately, you don't have to program <b>any</b> of this, provided you
-use an object belonging to the standard class <code>javax.swing.JButton</code>. A
-<classname>JButton</classname> object draws itself and processes mouse, keyboard, and focus
-events on its own. You only hear from the <classname>JButton</classname> when the user
-triggers it by clicking on it or pressing the space bar while the button has
-the input focus. When this happens, the <classname>JButton</classname> object creates an
-event object belonging to the class <code>java.awt.event.ActionEvent</code>. The
-event object is sent to any registered listeners to tell them that the button
-has been pushed. Your program gets only the information it needs&mdash;the fact
-that a button was pushed.</p>
+<p>The file  <sourceref href="MosaicDraw.java"/> is a simple class that contains only the <code>main()</code>
+routine for the program.
+Most of the programming for MosaicDraw can be found in <sourceref href="MosaicDrawController.java"/>.
+(It might have gone into the <classname>MosaicPanel</classname> class, if I had not decided to
+use that pre-existing class in unmodified form.)  It is the <classname>MosaicDrawController</classname>
+class that creates a <classname>MosaicPanel</classname> object and adds a mouse listener to
+it.  It also creates the menu bar that is shown at the top of the program, and it implements all
+the commands in the menu bar.  It has an instance method <code>getMosaicPanel()</code> that
+returns a reference to the mosaic panel that it has created, and it has another instance
+method <code>getMenuBar()</code> that returns a menu bar for the program.  These methods are
+used to obtain the panel and menu bar so that they can be added to the program's window.</p>
+   
+<p>I urge you to study MosaicDrawController.java and MosaicDraw.java.  I will not be discussing all aspects
+of the code here, but you should be able to understand it all after reading this section. As for
+MosaicPanel.java, it uses some techniques that you would not understand at this
+point, but I encourage you to at least read the comments in this file to learn about the API
+for mosaic panels.</p>
+   
+<subsection title="Menus and Menubars" id="GUI1.6.1">
+   
+<p>MosaicDraw is the first example that we have seen that uses a menu bar.  Fortunately,
+menus are very easy to use in Java.  The items in a menu are represented by the
+class <classname>JMenuItem</classname> (this class and other menu-related classes are
+in package <code>javax.swing</code>).  Menu items are used in almost exactly the
+same way as buttons.  In fact, <classname>JMenuItem</classname> and <classname>JButton</classname>
+are both subclasses of a class, <classname>AbstractButton</classname>, that defines their
+common behavior. In particular, a <classname>JMenuItem</classname> is created using
+a constructor that specifies the text of the menu item, such as:</p>
+   
+<pre>JMenuItem fillCommand = new JMenuItem("Fill");</pre>
+   
+<np>You can add an <classname>ActionListener</classname> to a <classname>JMenuItem</classname>
+by calling the menu item's <code>addActionListener()</code> method.  
+The <code>actionPerformed()</code> method of the
+action listener is called when the user selects the item from the menu.  
+You can change the text of the item by calling its <code>setText(String)</code> method,
+and you can enable it and disable it using the <code>setEnabled(boolean)</code> method.
+All this works in exactly the same way as for a <classname>JButton</classname>.</np>
+   
+<p>The main difference between a menu item and a button, of course, is that a menu
+item is meant to appear in a menu rather than in a panel.  A menu in Java is
+represented by the class <classname>JMenu</classname>.  A <classname>JMenu</classname> has a name,
+which is specified in the constructor, and it has an <code>add(JMenuItem)</code> method that
+can be used to add a <classname>JMenuItem</classname> to the menu. For example, the "Tools"
+menu in the MosaicDraw program could be created as follows, where <code>listener</code>
+is a variable of type <code>ActionListener</code>:</p>
+
+<pre>JMenu toolsMenu = new JMenu("Tools");  // Create a menu with name "Tools"
+
+JMenuItem drawCommand = new JMenuItem("Draw");   // Create a menu item.
+drawCommand.addActionListener(listener);         // Add listener to menu item.
+toolsMenu.add(drawCommand);                      // Add menu item to menu.
+
+JMenuItem eraseCommand = new JMenuItem("Erase"); // Create a menu item.
+eraseCommand.addActionListener(listener);        // Add listener to menu item.
+toolsMenu.add(eraseCommand);                     // Add menu item to menu.
+   .
+   .  // Create and add other menu items.
+   .</pre>
+   
+<np>Once a menu has been created, it must be added to a menu bar.  A menu bar is represented
+by the class <classname>JMenuBar</classname>.  A menu bar is just a container for menus.
+It does not have a name, and its constructor does not have any parameters. It has an
+<code>add(JMenu)</code> method that can be used to add menus to the menu bar.  The name of
+the menu then appears in the menu bar.  For example,
+the MosaicDraw program uses three menus, <code>controlMenu</code>, <code>colorMenu</code>,
+and <code>toolsMenu</code>.  We could create a menu bar and add the menus to it with
+the statements:</np>
+   
+<pre>JMenuBar menuBar = new JMenuBar();
+menuBar.add(controlMenu);
+menuBar.add(colorMenu);
+menuBar.add(toolsMenu);</pre>
+
+<p>The final step in using menus is to use the menu bar in a window such as a <classname>JFrame</classname>.  
+We have already seen that a frame has a
+"content pane."  The menu bar is another component of the frame, 
+not contained inside the content pane.  The <classname>JFrame</classname> class has
+an instance method <code>setMenuBar(JMenuBar)</code> that can be used to set the menu bar.
+(There can only be one, so this is a "set" method rather than an "add" method.)
+In the MosaicDraw program, the menu bar is created by a <classname>MosaicDrawController</classname>
+object and can be obtained by calling that object's <code>getMenuBar()</code> method.
+The <code>main()</code> routine in MosaicDraw.java gets the menu bar from the controller and
+adds it to the window.
+Here is the basic code that is used (in somewhat modified form) to set up the interface:</p>
+
+<pre>MosaicDrawController controller = new MosaicDrawController();
+
+MosaicPanel content = controller.getMosaicPanel();
+window.setContentPane( content );  // Use panel from controller as content pane.
+   
+JMenuBar menuBar = controller.getMenuBar();
+window.setJMenuBar( menuBar );    // Use the menu bar from the controller.</pre>
+     
+<p>Using menus always follows the same general pattern:  Create a menu bar.  Create menus
+and add them to the menu bar.  Create menu items and add them to the menus (and set up
+listening to handle action events from the menu items).  Use the menu bar in a
+window by calling the window's <code>setJMenuBar()</code> method.</p>
    
 <break/>
    
-<p>The standard components that are defined as part of the Swing graphical user interface
-API are defined by subclasses of the class <classname>JComponent</classname>, which is 
-itself a subclass of <classname>Component</classname>.  (Note that this includes the
-<classname>JPanel</classname> class that we have already been working with extensively.)
-Many useful methods are
-defined in the <classname>Component</classname> and <classname>JComponent</classname>
-classes and so can be used with any Swing component.  We begin by looking at a
-few of these methods.  Suppose that <code>comp</code> is a variable that refers
-to some <classname>JComponent</classname>.  Then the following methods can be
-used:</p>
-
-<ul>
-<li><codedef>comp.getWidth()</codedef> and <codedef>comp.getHeight()</codedef> are functions that
-give the current size of the component, in pixels.  One warning: When a component is first
-created, its size is zero. The size will be set later, probably by a layout
-manager. A common mistake is to check the size of a component before that size
-has been set, such as in a constructor.</li>
-
-<li><codedef>comp.setEnabled(true)</codedef> and
-<codedef>comp.setEnabled(false)</codedef> can be used to
-enable and disable the component. When a component is disabled, its appearance
-might change, and the user cannot do anything with it.  There is a boolean-valued
-function, <codedef>comp.isEnabled()</codedef> that you can
-call to discover whether the component is enabled.</li>
-
-<li><codedef>comp.setVisible(true)</codedef> and
-<codedef>comp.setVisible(false)</codedef> can be called to
-hide or show the component.</li>
-
-<li><codedef>comp.setFont(font)</codedef> sets the font that
-is used for text displayed on the component. See <localref href="GUI1.3.3"/>
-for a discussion of fonts.</li>
-
-<li><codedef>comp.setBackground(color)</codedef> and
-<codedef>comp.setForeground(color)</codedef> set the
-background and foreground colors for the component.  See <localref href="GUI1.3.2"/>.</li>
-
-<li><codedef>comp.setOpaque(true)</codedef> tells the
-component that the area occupied by the component should be filled with the
-component's background color before the content of the component is painted. By
-default, only <classname>JLabels</classname> are non-opaque. A non-opaque,
-or "transparent", component ignores its background color and simply paints its
-content over the content of its container. This usually means that it inherits
-the background color from its container.</li>
-
-<li><codedef>comp.setToolTipText(string)</codedef> sets the
-specified string as a "tool tip" for the component. The tool tip is displayed
-if the mouse cursor is in the component and the mouse is not moved for a few
-seconds. The tool tip should give some information about the meaning of the
-component or how to use it.</li>
-
-<li><codedef>comp.setPreferredSize(size)</codedef> sets the
-size at which the component should be displayed, if possible. The parameter is
-of type <code>java.awt.Dimension</code>, where an object of type <classname>Dimension</classname>
-has two public integer-valued instance variables, <code>width</code> and <code>height</code>.
-A call to this method usually looks something
-like "<code>setPreferredSize( new Dimension(100,50)&nbsp;)</code>". The preferred
-size is used as a hint by layout managers, but will not be respected in all
-cases.  Standard components generally compute a correct
-preferred size automatically, but it can be useful to set it in some cases. For
-example, if you use a <classname>JPanel</classname> as a drawing surface, it is usually a good
-idea to set a preferred size for it, since its default preferred size is zero.</li>
-
-</ul>
-
+<p>There are other kinds of menu items, defined by subclasses of <classname>JMenuItem</classname>,
+that can be added to menus.  One of these is <classname>JCheckBoxMenuItem</classname>,
+which represents menu items that can be in one of two states, selected or not selected.
+A <classname>JCheckBoxMenuItem</classname> has the same functionality and is used in
+the same way as a <classname>JCheckBox</classname> (see <localref href="GUI1.6.3"/>).
+Three <classname>JCheckBoxMenuItems</classname> are used in the "Control" menu
+of the MosaicDraw program.  One is used to turn the random color variation of
+the squares on and off.  Another turns a symmetry feature on and off; when symmetry is
+turned on, the user's drawing is reflected horizontally and vertically to produce
+a symmetric pattern.  And the third checkbox menu item shows and hides the
+"grouting" in the mosaic; the grouting is the gray lines that are drawn around each
+of the little squares in the mosaic.  The menu item that corresponds to the
+"Use Randomness" option in the "Control" menu could be set up with the statements:</p>
+       
+<pre>JMenuItem useRandomnessToggle = new JCheckBoxMenuItem("Use Randomness");
+useRandomnessToggle.addActionListener(listener);  // Set up a listener.
+useRandomnessToggle.setSelected(true);  // Randomness is initially turned on.
+controlMenu.add(useRandomnessToggle);   // Add the menu item to the menu.</pre>
    
-<p>Note that using
-any component is a multi-step process. The component object must be created
-with a constructor. It must be added to a container. In many cases, a listener
-must be registered to respond to events from the component. And in some cases,
-a reference to the component must be saved in an instance variable so that the
-component can be manipulated by the program after it has been created.
-In this section, we will look at a few of the basic standard components that are
-available in Swing. In the <localref href="GUI1.7">next section</localref>
-we will consider the problem of laying out components in containers.</p>
-
+<p>In my program, the "Use Randomness" <classname>JCheckBoxMenuItem</classname>
+corresponds to a boolean-valued instance variable named <code>useRandomness</code>
+in the <classname>MosaicDrawController</classname> class.
+This variable is part of the state of the controller object.
+Its value is tested whenever the user draws one
+of the squares, to decide whether or not to add a random variation to the color of
+the square.  When the user selects the "Use Randomness" command
+from the menu, the state of the <classname>JCheckBoxMenuItem</classname> is reversed,
+from selected to not-selected or from not-selected to selected.  The <classname>ActionListener</classname>
+for the menu item checks whether the menu item is selected or not, and it changes the
+value of <code>useRandomness</code> to match.  Note that selecting the menu command
+does not have any immediate effect on the picture that is shown in the window.  It just
+changes the state of the program so that future drawing operations on the part of
+the user will have a different effect.  The "Use Symmetry" option in the "Control"
+menu works in much the same way.  The "Show Grouting" option is a little different.
+Selecting the "Show Grouting" option does have an immediate effect: The picture is
+redrawn with or without the grouting, depending on the state of the menu item.</p>
    
-<subsection id="GUI1.6.1" title="JButton">
+<p>My program uses a single <classname>ActionListener</classname> to respond to
+all of the menu items in all the menus.  This is not a particularly good design, but it
+is easy to implement for a small program like this one.  The <code>actionPerformed()</code> method
+of the listener object uses the statement</p>
+
+<pre>String command = evt.getActionCommand();</pre>
    
-<p>An object of class <classname>JButton</classname> is a push button that the user
-can click to trigger some action. You've already seen
-buttons used in <localref href="GUI1.1"/>, but we consider
-them in much more detail here.  To use any component effectively, there are several
-aspects of the corresponding class that you should be familiar with.  For
-<classname>JButton</classname>, as an example, I list these aspects explicitly:</p>
-
-<ul>
-<li><b>Constructors</b>: The <classname>JButton</classname> class has a constructor that
-takes a string as a parameter. This string becomes the text displayed on the
-button. For example: <code>stopGoButton = new&nbsp;JButton("Go")</code>.  This creates
-a button object that will display the text, "Go" (but remember that the button must still
-be added to a container before it can appear on the screen).</li>
-
-<li><b>Events</b>: When the user clicks on a button, the button generates an
-event of type <classname>ActionEvent</classname>. This event is sent to any listener that has
-been registered with the button as an <classname>ActionListener</classname>.</li>
-
-<li><b>Listeners</b>: An object that wants to handle events generated by
-buttons must implement the <classname>ActionListener</classname> interface. This interface
-defines just one method, "<code>public void actionPerformed(ActionEvent
-evt)</code>", which is called to notify the object of an action event.</li>
-
-<li><b>Registration of Listeners</b>: In order to actually receive notification
-of an event from a button, an <classname>ActionListener</classname> must be registered with
-the button. This is done with the button's <code>addActionListener()</code> method.
-For example: <code>stopGoButton.addActionListener( buttonHandler&nbsp;);</code></li>
-
-<li><b>Event methods</b>: When <code>actionPerformed(evt)</code> is called by the
-button, the parameter, <code>evt</code>, contains information about the event. This
-information can be retrieved by calling methods in the <classname>ActionEvent</classname>
-class. In particular, <code>evt.getActionCommand()</code> returns a <classname>String</classname>
-giving the command associated with the button. By default, this command is the
-text that is displayed on the button, but it is possible to set it to some other string. 
-The method <code>evt.getSource()</code>
-returns a reference to the object that produced the event, that is, to
-the <classname>JButton</classname> that was pressed. The return value is of type
-<classname>Object</classname>, not <classname>JButton</classname>, because other types of components can
-also produce <classname>ActionEvents</classname>.</li>
-
-<li><b>Component methods</b>: Several useful methods are defined in the
-<classname>JButton</classname> class, in addition to the standard <classname>Component</classname> methods.
-For example, <code>stopGoButton.setText("Stop")</code>
-changes the text displayed on the button to "Stop". And
-<code>stopGoButton.setActionCommand("sgb")</code> changes the action command
-associated with this button for action events. 
-The <code>setEnabled()</code> and <code>setText()</code> methods are
-particularly useful for giving the user information about what is going on in
-the program. A disabled button is better than a button that gives an obnoxious
-error message such as "Sorry, you can't click on me now!"</li>
-</ul>
-
-
-</subsection>
-   
-   
-<subsection id="GUI1.6.2" title="JLabel">
-
-<p><classname>JLabel</classname> is certainly the simplest type of component. An object of
-type <classname>JLabel</classname> exists just to display a line of text. The text cannot be edited
-by the user, although it can be changed by your program. The constructor for a
-<classname>JLabel</classname> specifies the text to be displayed:</p>
-
-<pre>JLabel message = new JLabel("Hello World!");</pre>
-
-<np>There is another constructor that specifies where in the label the text is
-located, if there is extra space. The possible alignments are given by the
-constants <code>JLabel.LEFT</code>, <code>JLabel.CENTER</code>, and
-<code>JLabel.RIGHT</code>. For example,</np>
-
-<pre>JLabel message = new JLabel("Hello World!", JLabel.CENTER);</pre>
-
-<np>creates a label whose text is centered in the available space. You can
-change the text displayed in a label by calling the label's <code>setText()</code>
-method:</np>
-
-<pre>message.setText("Goodbye World!");</pre>
-
-<p>Since the <classname>JLabel</classname> class is a subclass of <classname>JComponent</classname>, 
-you can
-use methods such as <code>setForeground()</code> and <code>setFont()</code> with labels. If you want the
-background color to have any effect, you should call <code>setOpaque(true)</code>
-on the label, since otherwise the <classname>JLabel</classname> might not fill in its
-background. For example:</p>
-
-<pre>JLabel message = new JLabel("Hello World!", JLabel.CENTER);
-message.setForeground(Color.RED);   // Display red text...
-message.setBackground(Color.BLACK); //    on a black background...
-message.setFont(new Font("Serif",Font.BOLD,18));  // in a big bold font.
-message.setOpaque(true);  // Make sure background is filled in.</pre>
-   
-</subsection>
-   
-   
-   
-<subsection id="GUI1.6.3" title="JCheckBox">
-   
-<p>A <classname>JCheckBox</classname> is a component that has two states: selected or
-unselected. The user can change the state of a check box by clicking on it. The
-state of a checkbox is represented by a <ptype>boolean</ptype> value that is
-<code>true</code> if the box is selected and is <code>false</code> if the box is
-unselected. A checkbox has a label, which is specified when the box is
-constructed:</p>
-
-<pre>JCheckBox showTime = new JCheckBox("Show Current Time");</pre>
-
-<p>Usually, it's the user who sets the state of a <classname>JCheckBox</classname>, but you
-can also set the state programmatically. The current state of a checkbox is set
-using its <code>setSelected(boolean)</code> method. For example, if you want the
-checkbox <code>showTime</code> to be checked, you would say
-"<code>showTime.setSelected(true)"</code>. To uncheck the box, say
-"<code>showTime.setSelected(false)"</code>. You can determine the current state of
-a checkbox by calling its <code>isSelected()</code> method, which returns a boolean
-value.</p>
-
-<p>In many cases, you don't need to worry about events from checkboxes. Your
-program can just check the state whenever it needs to know it by calling the
-<code>isSelected()</code> method. However, a checkbox does generate an event when
-its state is changed by the user, and you can detect this event and respond to it if you want
-something to happen at the moment the state changes. When the state of a
-checkbox is changed by the user, it generates an event of type
-<classname>ActionEvent</classname>. If you want something to happen when the user changes the
-state, you must register an <classname>ActionListener</classname> with the
-checkbox by calling its <code>addActionListener()</code> method. (Note that if you change the state by calling the
-<code>setSelected()</code> method, no <classname>ActionEvent</classname> is generated. However,
-there is another method in the <classname>JCheckBox</classname> class, <code>doClick()</code>,
-which simulates a user click on the checkbox and does generate an
-<classname>ActionEvent</classname>.)</p>
-
-<p>When handling an <classname>ActionEvent</classname>, you can call <code>evt.getSource()</code>
-in the <code>actionPerformed()</code> method to find out which object generated the
-event. (Of course, if you are only listening for events from one component, you
-don't have to do this.) The returned value is of type <code>Object</code>, but
-you can type-cast it to another type if you want. Once you know the object that
-generated the event, you can ask the object to tell you its current state. For
-example, if you know that the event had to come from one of two checkboxes,
-<code>cb1</code> or <code>cb2</code>, then your <code>actionPerformed()</code> method might
-look like this:</p>
-
-<pre>
-          public void actionPerformed(ActionEvent evt) {
-             Object source = evt.getSource();
-             if (source == cb1) {
-                boolean newState = cb1.isSelected();
-                ... // respond to the change of state
-             }
-             else if (source == cb2) {
-                boolean newState = cb2.isSelected();
-                ... // respond to the change of state
-             }
-          }
-</pre>
-
-<p>Alternatively, you can use <code>evt.getActionCommand()</code> to retrieve the
-action command associated with the source. For a <classname>JCheckBox</classname>, the action
-command is, by default, the label of the checkbox.</p>
-
-</subsection>
-   
-<subsection id="GUI1.6.4" title="JTextField and JTextArea">
-   
-<p>The <classname>JTextField</classname> and <classname>JTextArea</classname> classes 
-represent components that contain text that can be edited by the user.  
-A <classname>JTextField</classname> holds a single line of text, while a
-<classname>JTextArea</classname> can hold multiple lines.   It is also possible to set a
-<classname>JTextField</classname> or <classname>JTextArea</classname> 
-to be read-only so that the user can read the text that it contains but
-cannot edit the text. Both classes are subclasses of an abstract class, 
-<classname>JTextComponent</classname>, which defines their common properties.</p>
-   
-<p><classname>JTextField</classname> and <classname>JTextArea</classname> have many
-methods in common.  The instance method <code>setText()</code>, which takes a parameter
-of type <classname>String</classname>, can be used to change the text that is
-displayed in an input component.  The contents of the component can be retrieved by calling its
-<code>getText()</code> instance method, which returns a value of type <classname>String</classname>.
-If you want to stop the user from modifying the text, you can
-call <code>setEditable(false)</code>.  Call the same method with a parameter
-of <code>true</code> to make the input component user-editable again.</p>
-   
-<p>The user can only type into a text component when it has
-the input focus.  The user can give the input focus to a text component by clicking
-it with the mouse, but sometimes it is useful to give the input focus to a
-text field programmatically.  You can do this by calling its
-<code>requestFocusInWindow()</code> method.  For example, when I discover an error
-in the user's input, I usually call <code>requestFocusInWindow()</code> on the text
-field that contains the error.  This helps the user see where the error occurred
-and lets the user start typing the correction immediately.</p>
-   
-<p>By default, there is no space between the text in a text component and the
-edge of the component, which usually doesn't look very good.  You can use
-the <code>setMargin()</code> method of the component to add some
-blank space between the edge of the component and the text.
-This method takes a parameter
-of type <code>java.awt.Insets</code> which contains four integer instance variables
-that specify the margins on the top, left, bottom, and right edge of the component.
-For example,</p>
-   
-<pre>textComponent.setMargin( new Insets(5,5,5,5) );</pre>
-   
-<np>adds a five-pixel margin between the text in <code>textComponent</code> and each edge of
-the component.</np>
+<np>to get the action command of the source of the event; this will be the text of
+the menu item.  The listener tests the value of <code>command</code> to determine
+which menu item was selected by the user.  If the menu item is a
+<classname>JCheckBoxMenuItem</classname>, the listener must check the state of
+the menu item.  The menu item is the source of the event that is being processed.
+The listener can get its hands on the menu item object by
+calling <code>evt.getSource()</code>.  Since the return value of <code>getSource()</code>
+is of type <classname>Object</classname>, the return value must be type-cast to
+the correct type.  Here, for example, is the code that handles the "Use Randomness"
+command:</np>
       
-<break/>
+<pre>if (command.equals("Use Randomness")) {
+        // Set the value of useRandomness depending on the menu item's state.
+   JCheckBoxMenuItem toggle = (JCheckBoxMenuItem)evt.getSource();
+   useRandomness = toggle.isSelected();
+}</pre>
 
-<p>The <classname>JTextField</classname> class has a constructor</p>
-
-<pre>public JTextField(int columns)</pre>
-
-<np>where <code>columns</code> is an integer that specifies the number of characters that should be
-visible in the text field. This is used to determine the preferred width of the
-text field. (Because characters can be of different sizes and because the preferred
-width is not always respected, the actual number of
-characters visible in the text field might not be equal to
-<code>columns</code>.) You don't have to specify the number of columns; for
-example, you might use the text field in a context where it will expand to fill whatever
-space is available. In that case, you can use the default constructor
-<code>JTextField()</code>, with no parameters. You can also use the following
-constructors, which specify the initial contents of the text field:</np>
-
-<pre>public JTextField(String contents);
-public JTextField(String contents, int columns);</pre>
-   
-<np>The constructors for a <classname>JTextArea</classname> are</np>
-
-<pre>public JTextArea()
-public JTextArea(int rows, int columns)
-public JTextArea(String contents)
-public JTextArea(String contents, int rows, int columns)</pre>
-   
-<np>The parameter <code>rows</code> specifies how many lines of text should be
-visible in the text area. This determines the preferred height of the text
-area, just as <code>columns</code> determines the preferred width.  However,
-the text area can actually contain any number of lines; the text area
-can be scrolled to reveal lines that are not currently visible.  It is common
-to use a <classname>JTextArea</classname> as the <code>CENTER</code>
-component of a BorderLayout. In that
-case, it is less useful to specify the number of lines and columns, since the
-TextArea will expand to fill all the space available in the center area of the
-container.</np>
-
-<p>The <classname>JTextArea</classname> class adds a few useful methods to those inherited
-from <classname>JTextComponent</classname>.  For example, the instance method <code>append(moreText)</code>,
-where <code>moreText</code> is of type <classname>String</classname>, adds the 
-specified text at the end of the current content of the text area.  (When using <code>append()</code>
-or <code>setText()</code> to add text to a <classname>JTextArea</classname>, line breaks
-can be inserted in the text by using the newline character,&nbsp;<code>'\n'</code>.)  And
-<code>setLineWrap(wrap)</code>, where <code>wrap</code> is of type <ptype>boolean</ptype>,
-tells what should happen when a line of text is too long to be displayed in the
-text area.  If <code>wrap</code> is true, then any line that is too long will be
-"wrapped" onto the next line; if <code>wrap</code> is false, the line will simply
-extend outside the text area, and the user will have to scroll the text area
-horizontally to see the entire line.  The default value of <code>wrap</code> is
-false.</p>
-   
-
-<p>Since it might be necessary to scroll a text area to see all the text that it
-contains, you might expect a text area to come with scroll bars.  Unfortunately,
-this does not happen automatically.  To get scroll bars for a text area, you
-have to put the <classname>JTextArea</classname> inside another component,
-called a <classname>JScrollPane</classname>.  This can be done as follows:</p>
-
-<pre>JTextArea inputArea = new JTextArea();
-JScrollPane scroller = new JScrollPane( inputArea );</pre>
-
-<np>The scroll pane provides scroll bars that can be used to scroll the text
-in the text area.  The scroll bars will appear only when needed, that is 
-when the size of the text exceeds the size of the text area.  Note that when
-you want to put the text area into a container, you should add the scroll pane,
-not the text area itself, to the container. See the program
-<sourceref href="TextAreaDemo.java"/> for a very short example of using a text area
-in a scroll pane.</np>
+<np>(The <code>actionPerformed()</code> method uses a rather long <code>if..then..else</code>
+statement to check all the possible action commands.  It might be more natural and efficient
+use a <code>switch</code> statement with <code>command</code> as the selector and
+all the possible action commands as cases.)</np>
    
 <break/>
-   
-<p>When the user is typing in a <classname>JTextField</classname> and presses
-return, an <classname>ActionEvent</classname> is generated.  If you want to respond
-to such events, you can register an <classname>ActionListener</classname> with
-the text field, using the text field's <code>addActionListener()</code> method.
-(Since a <classname>JTextArea</classname> can contain multiple lines of text,
-pressing return in a text area does not 
-generate an event; it simply begins a new line of text.)</p>
 
-<p><classname>JTextField</classname> has a subclass, <classname>JPasswordField</classname>, which is
-identical except that it does not reveal the text that it contains. The
-characters in a <classname>JPasswordField</classname> are all displayed as asterisks (or some
-other fixed character). A password field is, obviously, designed to let the
-user enter a password without showing that password on the screen.</p>
+<p>In addition to menu items, a menu can contain lines that separate the menu items
+into groups.  In the MosaicDraw program, the "Control" menu contains such a separator.
+A <classname>JMenu</classname> has an instance method <code>addSeparator()</code>
+that can be used to add a separator to the menu.  For example, the separator in the
+"Control" menu was created with the statement:</p>
    
-<p>Text components are actually quite complex, and I have covered only their
-most basic properties here.  I will return to the topic of text components
-in <localref href="GUI2"/>.</p>
+<pre>controlMenu.addSeparator();</pre>
    
+<p>A menu can also contain a submenu.  The name of the submenu appears as an item
+in the main menu.  When the user moves the mouse over the submenu name, the submenu
+pops up.  (There is no example of this in the MosaicDraw program.)  It is very easy
+to do this in Java:  You can add one <classname>JMenu</classname> to another
+<classname>JMenu</classname> using a statement such as
+<code>mainMenu.add(submenu)</code>, and it becomes a submenu.</p>
+
+</subsection>
+
+<subsection title="Dialogs" id="GUI1.6.2">
+ 
+<p>One of the commands in the "Color" menu of the MosaicDraw program is
+"Custom Color&dots;".  When the user selects this command, a new window
+appears where the user can select a color.  This window is an example
+of a <newword>dialog</newword> or <newword>dialog box</newword>.
+A dialog is a type of window that is generally
+used for short, single purpose interactions with the user. For example, a
+dialog box can be used to display a message to the user, to ask the user a
+question, to let the user select a file to be opened,
+or to let the user select a color. In Swing, a dialog box is
+represented by an object belonging to the class <classname>JDialog</classname>
+or to a subclass.</p>
+
+<p>The <classname>JDialog</classname> class is very similar to <classname>JFrame</classname>
+and is used in much the same way.
+Like a frame, a dialog box is a separate window. Unlike a frame, however, a
+dialog is not completely independent. Every dialog is associated with a
+frame (or another dialog), which is called its <newword>parent window</newword>. 
+The dialog box is dependent on its parent. For
+example, if the parent is closed, the dialog box will also be closed. It is
+possible to create a dialog box without specifying a parent, but in that case
+an invisible frame is created by the system to serve as the parent.</p>
+
+<p>Dialog boxes can be either <newword>modal</newword> or
+<newword>modeless</newword>. When a modal dialog is created, its
+parent frame is blocked. That is, the user will not be able to interact with
+the parent until the dialog box is closed. Modeless dialog boxes do not block
+their parents in the same way, so they seem a lot more like independent
+windows. In practice, modal dialog boxes are easier to use and are much more
+common than modeless dialogs. All the examples we will look at are modal.</p>
+
+<p>Aside from having a parent, a <classname>JDialog</classname> can be created and used in
+the same way as a <classname>JFrame</classname>. However, I will not give any examples here of using
+<classname>JDialog</classname> directly. Swing has many convenient methods for creating 
+common types of dialog boxes. For example, the color choice dialog that appears
+when the user selects the "Custom Color" command in the MosaicDraw program belongs
+to the class <classname>JColorChooser</classname>, which is a subclass of
+<classname>JDialog</classname>.  The <classname>JColorChooser</classname> class has
+a static method that makes color choice dialogs very easy to use:</p>
+
+<pre>Color JColorChooser.showDialog(Component parentComp, 
+                                        String title, Color initialColor)</pre>
+
+<np>When you call this method, a dialog box appears that allows the user to
+select a color. The first parameter specifies the parent of the dialog; the parent
+window of the dialog will be the window (if any) that contains <code>parentComp</code>;
+this parameter can be <code>null</code> and it can itself be a frame or dialog object.
+The second parameter is a string that appears in the title bar of the dialog box.
+And the third parameter, <code>initialColor</code>, specifies the color that is
+selected when the color choice dialog first appears.
+The dialog has a sophisticated interface that allows the user to
+select a color. When the user presses an "OK" button, the dialog box
+closes and the selected color is returned as the value of the method. The user
+can also click a "Cancel" button or close the dialog box in some other way; in
+that case, <code>null</code> is returned as the value of the method. This is a modal
+dialog, and <code>showDialog()</code> does not return until the user dismisses
+the dialog box in some way.  By using this
+predefined color chooser dialog, you can write one line of code that will let
+the user select an arbitrary color.  Swing also has a <classname>JFileChooser</classname>
+class that makes it almost as easy to show a dialog box that lets the user select
+a file to be opened or saved.</np>
+
+<break/>
+
+<p>The <classname>JOptionPane</classname> class includes a variety of methods for
+making simple dialog boxes that are variations on three basic types: a
+"message" dialog, a "confirm" dialog, and an "input" dialog. (The variations
+allow you to provide a title for the dialog box, to specify the icon that
+appears in the dialog, and to add other components to the dialog box. I will
+only cover the most basic forms here.)</p>
+
+
+<p>A message dialog simply displays a message string to the user. The user
+(hopefully) reads the message and dismisses the dialog by clicking the "OK"
+button. A message dialog can be shown by calling the static method:</p>
+
+<pre>void JOptionPane.showMessageDialog(Component parentComp, String message)</pre>
+
+<np>The message can be more than one
+line long. Lines in the message should be separated by newline characters, <code>\n</code>.
+New lines will not be inserted automatically, even if the message is very
+long.  For example, assuming that the special variable <code>this</code>
+refers to a <classname>Component</classname>:</np>
+
+<pre>JOptionPane.showMessageDialog( this, "This program is about to crash!\n"
+                                      + "Sorry about that.");</pre>
+
+<p>An input dialog displays a question or request and lets the user type in a
+string as a response. You can show an input dialog by calling:</p>
+
+<pre>String JOptionPane.showInputDialog(Component parentComp, String question)</pre>
+
+<np>Again, <code>parentComp</code> can be <code>null</code>, and
+the question can include newline
+characters. The dialog box will contain an input box, an "OK" button, and a
+"Cancel" button. If the user clicks "Cancel", or closes the dialog box in some
+other way, then the return value of the method is <code>null</code>. If the user
+clicks "OK", then the return value is the string that was entered by the user.
+Note that the return value can be an empty string (which is not the same as a
+<code>null</code> value), if the user clicks "OK" without typing anything in the
+input box. If you want to use an input dialog to get a numerical value from the
+user, you will have to convert the return value into a number (see <localref href="control.7.2"/>).
+As an example,</np>
+
+<pre>String name;
+name = JOptionPanel.showInputDialog(null, "Hi!  What's your name?");
+if (name == null)
+   JOptionPane.showMessageDialog(null, "Well, I'll call you Grumpy.");
+else
+   JOptionPane.showMessageDialog(null, "Pleased to meet you, " + name);</pre>
+
+<p>Finally, a confirm dialog presents a question and three response buttons:
+"Yes", "No", and "Cancel". A confirm dialog can be shown by calling:</p>
+
+<pre>int JOptionPane.showConfirmDialog(Component parentComp, String question)</pre>
+
+<np>The return value tells you the user's response. It is one of the following
+constants:</np>
+
+<ul>
+<li><code>JOptionPane.YES_OPTION</code> &mdash; the user clicked the "Yes" button</li>
+<li><code>JOptionPane.NO_OPTION</code> &mdash; the user clicked the "No" button</li>
+<li><code>JOptionPane.CANCEL_OPTION</code> &mdash; the user clicked the "Cancel" button</li>
+<li><code>JOptionPane.CLOSE_OPTION</code> &mdash; the dialog was closed in some other way.</li>
+</ul>
+
+<p>By the way, it is possible to omit the Cancel button from a confirm dialog
+by calling one of the other methods in the <code>JOptionPane</code> class. Just
+call:</p>
+
+<pre>JOptionPane.showConfirmDialog(
+                parent, question, title, JOptionPane.YES_NO_OPTION )</pre>
+
+<np>The final parameter is a constant which specifies that only a "Yes" button
+and a "No" button should be used. The third parameter is a string that will be
+displayed as the title of the dialog box window.</np>
+
+
+<p>A small demo program,
+<sourceref href="SimpleDialogDemo.java"/> is available to demonstrate
+JColorChooser and several JOptionPane dialogs.
+</p>
+ 
 </subsection>
    
-
+<subsection title="Fine Points of Frames" id="GUI1.6.3">
    
-<subsection id="GUI1.6.6" title="JSlider">
-<p>A <classname>JSlider</classname> provides a way for the user to select an integer value
-from a range of possible values. The user does this by dragging a "knob" along
-a bar. A slider can, optionally, be decorated with tick marks and with labels.
-This picture, from the sample program <sourceref href="SliderDemo.java"/>, shows 
-three sliders with different decorations and with different ranges of values:</p>
-
-<img src="slider-demo.png" width="348" height="175" alt="three sliders with and without labels and tick marks"
-       tex="slider-demo.eps" texscale="0.6"/>
-
-
-<np>Here, the second slider is decorated with tick marks, and the third one
-is decorated with labels. It's possible for a single slider to have both types
-of decorations.</np>
-
-<p>The most commonly used constructor for <classname>JSliders</classname> specifies the start
-and end of the range of values for the slider and its initial value when it
-first appears on the screen:</p>
-
-<pre>public JSlider(int minimum, int maximum, int value)</pre>
-
-<np>If the parameters are omitted, the values 0, 100, and 50 are used. By
-default, a slider is horizontal, but you can make it vertical by calling its
-method <code>setOrientation(JSlider.VERTICAL)</code>. The current value of a
-<classname>JSlider</classname> can be read at any time with its <code>getValue()</code> method,
-which returns a value of type <ptype>int</ptype>. If you want to change the
-value, you can do so with the method <code>setValue(n)</code>, which takes a
-parameter of type <ptype>int</ptype>.</np>
-
-<p>If you want to respond immediately when the user changes the value of a
-slider, you can register a listener with the slider. <code>JSliders</code>, unlike
-other components we have seen, do not generate <code>ActionEvents</code>. Instead,
-they generate events of type <classname>ChangeEvent</classname>. 
-<classname>ChangeEvent</classname> and
-related classes are defined in the package <code>javax.swing.event</code> rather
-than <code>java.awt.event</code>, so if you want to use <code>ChangeEvents</code>, you
-should <code>import javax.swing.event.*</code> at the beginning of your program.
-You must also define some object to implement the <classname>ChangeListener</classname>
-interface, and you must register the change listener with the slider by calling
-its <code>addChangeListener()</code> method. A <classname>ChangeListener</classname> must provide
-a definition for the method:</p>
-
-<pre>public void stateChanged(ChangeEvent evt)</pre>
-
-<np>This method will be called whenever the value of the slider changes. Note
-that it will be called when you change the value with the <code>setValue()</code>
-method, as well as when the user changes the value. In the
-<code>stateChanged()</code> method, you can call <code>evt.getSource()</code> to find
-out which object generated the event. If you want to know whether the user
-generated the change event, call the slider's <code>getValueIsAdjusting()</code>
-method, which returns true if the user is dragging the knob on the slider.</np>
-
-<p>Using tick marks on a slider is a two-step process: Specify the interval
-between the tick marks, and tell the slider that the tick marks should be
-displayed. There are actually two types of tick marks, "major" tick marks and
-"minor" tick marks. You can have one or the other or both. Major tick marks are
-a bit longer than minor tick marks. The method <code>setMinorTickSpacing(i)</code>
-indicates that there should be a minor tick mark every <code>i</code> units along
-the slider. The parameter is an integer. (The spacing is in terms of values on
-the slider, not pixels.) For the major tick marks, there is a similar command,
-<code>setMajorTickSpacing(i)</code>. Calling these methods is not enough to make
-the tick marks appear. You also have to call <code>setPaintTicks(true)</code>. For
-example, the second slider in the above illustration was created and configured using
-the commands:</p>
-
-<pre>slider2 = new JSlider();  // (Uses default min, max, and value.)
-slider2.addChangeListener(this);
-slider2.setMajorTickSpacing(25);
-slider2.setMinorTickSpacing(5);
-slider2.setPaintTicks(true);</pre>
-
-<p>Labels on a slider are handled similarly. You have to specify the labels and
-tell the slider to paint them. Specifying labels is a tricky business, but the
-<classname>JSlider</classname> class has a method to simplify it. You can create a set of labels and
-add them to a slider named <code>sldr</code> with the command:</p>
-
-<pre>sldr.setLabelTable( sldr.createStandardLabels(i) );</pre>
-
-<np>where <code>i</code> is an integer giving the spacing between the labels. To
-arrange for the labels to be displayed, call <code>setPaintLabels(true)</code>. For
-example, the third slider in the above illustration was created and configured with
-the commands:</np>
-
-<pre>slider3 = new JSlider(2000,2100,2014);
-slider3.addChangeListener(this);
-slider3.setLabelTable( slider3.createStandardLabels(50) );
-slider3.setPaintLabels(true);</pre>
+<p>In previous sections, whenever I used a frame, I created a <classname>JFrame</classname>
+object in a <code>main()</code> routine and installed a panel as the content pane of
+that frame.  This works fine, but a more object-oriented approach is to define a subclass
+of <classname>JFrame</classname> and to set up the contents of the frame in the constructor
+of that class.  This is what I did in the case of the
+MosaicDraw program.  <classname>MosaicDraw</classname> is defined as a subclass of
+<classname>JFrame</classname>.  The definition of this class is very short, but it illustrates
+several new features of frames that I want to discuss:</p>
    
+<pre>public class MosaicDraw extends JFrame {
+   
+   public static void main(String[] args) {
+      JFrame window = new MosaicDraw();
+      window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      window.setVisible(true);
+   }
+   
+   public MosaicDraw() {
+      super("Mosaic Draw");
+      MosaicDrawController controller = new MosaicDrawController();
+      setContentPane( controller.getMosaicPanel() );
+      setJMenuBar( controller.getMenuBar() );
+      pack();
+      Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+      setLocation( (screensize.width - getWidth())/2, 
+                                 (screensize.height - getHeight())/2 );
+   }
+   
+}</pre>
+   
+<p>The constructor in this class begins with the statement <code>super("Mosaic Draw")</code>,
+which calls the constructor in the superclass, <classname>JFrame</classname>.  The parameter
+specifies a title that will appear in the title bar of the window.  The next three lines
+of the constructor set up the contents of the window; a <classname>MosaicDrawController</classname>
+is created, and the content pane and menu bar of the window are obtained from the
+controller.  The next line is something new.  If <code>window</code> is a variable of
+type <classname>JFrame</classname> (or <classname>JDialog</classname>), then the
+statement <code>window.pack()</code> will resize the window so that its size matches
+the preferred size of its contents.  (In this case, of course, "<code>pack()</code>"
+is equivalent to "<code>this.pack()</code>"; that is, it refers to the window that is
+being created by the constructor.)  The <code>pack()</code> method is usually the best
+way to set the size of a window.  Note that it will only work correctly if every
+component in the window has a correct preferred size.  This is only a problem in
+two cases:  when a panel is used as a drawing surface and when a panel is used as
+a container with a <code>null</code> layout manager.  In both these cases there is no
+way for the system to determine the correct preferred size automatically, and you should
+set a preferred size by hand.  For example:</p>
+   
+<pre>panel.setPreferredSize( new Dimension(400, 250) );</pre>
+   
+<p>The last two lines in the constructor position the window so that it is exactly
+centered on the screen. The line</p>
+   
+<pre>Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();</pre>
+   
+<np>determines the size of the screen.  The size of the screen is <code>screensize.width</code>
+pixels in the horizontal direction and <code>screensize.height</code> pixels in the vertical
+direction. The <code>setLocation()</code> method of the frame sets the position of the
+upper left corner of the frame on the screen.  The expression "<code>screensize.width&nbsp;-&nbsp;getWidth()</code>"
+is the amount of horizontal space left on the screen after subtracting the width of the window.
+This is divided by 2 so that half of the empty space will be to the left of the window, leaving
+the other half of the space to the right of the window.
+Similarly, half of the extra vertical space is above the window, and half is below.</np>
+
+<p>Note that the constructor has created the window and set its size and position, but that
+at the end of the constructor, the window is not yet visible on the screen.  (More exactly,
+the constructor has created the window <i>object</i>, but the visual representation of
+that object on the screen has not yet been created.)  To show the window on the screen,
+it will be necessary to call its instance method, <code>window.setVisible(true)</code>.</p>
+   
+<p>In addition to the constructor, the <classname>MosaicDraw</classname> class includes
+a <code>main()</code> routine.  This makes it possible to run <classname>MosaicDraw</classname>
+as a stand-alone application.  (The <code>main()</code> routine, as a <code>static</code> method,
+has nothing to do with the function of a <classname>MosaicDraw</classname> object, and it
+could (and perhaps should) be in a separate class.)  The <code>main()</code> routine
+creates a <classname>MosaicDraw</classname> and makes it visible on the screen.  It
+also calls</p>
+   
+<pre>window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</pre>
+   
+<np>which means that the program will end when the user closes the window.  Note that this
+is not done in the constructor because doing it there would make <classname>MosaicDraw</classname>
+less flexible.  It is possible, for example, to write a program that lets the user
+open multiple MosaicDraw windows.  In that case, we don't want to shut down the whole program just
+because the user has closed <i>one</i> of the windows. 
+There are other possible values for the default close operation of a window:</np>
+   
+<ul>
+<li><code>JFrame.DO_NOTHING_ON_CLOSE</code> &mdash; the user's attempts to close the window by
+clicking its close box will be ignored, except that it will generate a <classname>WindowEvent</classname>.
+A program can listen for this event and take any action it wants when the user attempts to close
+the window.</li>
+<li><code>JFrame.HIDE_ON_CLOSE</code> &mdash;  when the user clicks its close box,
+the window will be hidden just as if <code>window.setVisible(false)</code> were called.
+The window can be made visible again by calling <code>window.setVisible(true)</code>.
+This is the value that is used if you do not
+specify another value by calling <code>setDefaultCloseOperation</code>.</li>
+<li><code>JFrame.DISPOSE_ON_CLOSE</code> &mdash; the window is closed and any operating
+system resources used by the window are released.  It is not possible to make the
+window visible again.  (This is the proper way to permanently get rid of a window without
+ending the program.
+You can accomplish the same thing programmatically by calling the instance method
+<code>window.dispose()</code>.)</li>
+</ul>
+
+
 </subsection>
    
+<subsection title="Creating Jar Files" id="GUI1.6.4">
    
+<p>As the final topic for this chapter, we look again at jar files.  Recall
+that a jar file is a "java archive" that can contain a number of class files. When creating
+a program that uses more than one class, it's usually a good idea to place all the classes that
+are required by the program into a jar file.  If that is done, then a user will only need that
+one file to run the program. In fact, it is possible to make a so-called <newword>executable
+jar file</newword>.  A user can run an executable jar file in much the same way
+as any other application, usually by double-clicking the icon of the jar file.
+(The user's computer must have a correct version of Java installed, and the computer
+must be configured correctly for this to work.  The configuration is usually done automatically when
+Java is installed, at least on Windows and Mac OS.)</p>
+   
+<p>The question, then, is how to create a jar file.  The answer depends on what
+programming environment you are using.  The two basic types of programming environment&mdash;command line
+and IDE&mdash;were discussed in <localref href="basics.6"/>.  Any IDE (Integrated Programming Environment)
+for Java should have a command for creating jar files.  In the Eclipse IDE, for example,
+it can be done as follows:  In the Package Explorer pane, select the programming project (or just
+all the individual source code files that you need).  Right-click on the selection, and
+choose "Export" from the menu that pops up.  In the window that appears, select "JAR file"
+and click "Next".  In the window that appears next, enter a name for the jar file in
+the box labeled "JAR file".  (Click the "Browse" button next to this box to select the
+file name using a file dialog box.)  The name of the file should end with ".jar".
+If you are creating a regular jar file, not an executable
+one, you can hit "Finish" at this point, and the jar file will be created.  To create an
+executable file, hit the "Next" button <i>twice</i> to get to the "Jar Manifest
+Specification" screen.  At the bottom of this screen is an input box labeled "Main class".
+You have to enter the name of the class that contains the <code>main()</code> routine
+that will be run when the jar file is executed.  If you hit the "Browse" button next to
+the "Main class" box, you can select the class from a list of classes that contain
+<code>main()</code> routines.  Once you've selected the main class, you can
+click the "Finish" button to create the executable jar file.  (Note that newer versions of Eclipse
+also have an option for exporting an executable Jar file in fewer steps.)</p>
+
+<p>It is also possible to create jar files on the command line.  The Java Development Kit
+includes a command-line program named <code>jar</code> that can be used to create jar files.
+If all your classes are in the default package (like most of the examples in this book), then
+the <code>jar</code> command is easy to use.  To create a non-executable jar file on the command line,
+change to the directory that contains the class files that you want to include in the jar.
+Then give the command</p>
+   
+<pre>jar  cf  JarFileName.jar  *.class</pre>
+   
+<np>where <code>JarFileName</code> can be any name that you want to use for the jar file.
+The "<code>*</code>" in "<code>*.class</code>" is a wildcard that makes <code>*.class</code> match every class
+file in the current directory.  This means that all the class files in the directory will be
+included in the jar file.  If you want to include only certain class files, you
+can name them individually, separated by spaces.  (Things get more complicated if your classes are not in the
+default package.  In that case, the class files must be in subdirectories of the
+directory in which you issue the <code>jar</code> command.  See <localref href="basics.6.6"/>.)</np>
+   
+<p>Making an executable jar file on the command line is  more complicated.
+There has to be some way of specifying which class contains the <code>main()</code>
+routine.  This is done by creating a <newword>manifest file</newword>.  The manifest
+file can be a plain text file containing a single line of the form</p>
+
+<pre>Main-Class: ClassName</pre>
+
+<np>where <code>ClassName</code> should be replaced by the name of the class that contains
+the <code>main()</code> routine.  For example, if the <code>main()</code> routine is in
+the class <classname>MosaicDraw</classname>, then the manifest file should read
+"<code>Main-Class: MosaicDraw</code>".  You can give the manifest file any name
+you like.  Put it in the same directory where you will issue the <code>jar</code> command,
+and use a command of the form</np>
+   
+<pre>jar  cmf  ManifestFileName  JarFileName.jar  *.class</pre>
+   
+<np>to create the jar file.  (The <code>jar</code> command is capable of performing a
+variety of different operations.  The first parameter to the command, such as "<code>cf</code>"
+or "<code>cmf</code>", tells it which operation to perform.)</np>
+   
+<p>By the way, if you have successfully created an executable jar file, you can run
+it on the command line using the command "<code>java&nbsp;-jar</code>".  For example:</p>
+   
+<pre>java  -jar  JarFileName.jar</pre>
+
+</subsection>
+
+<endchapter/>
+
 </section>

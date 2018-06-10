@@ -1,150 +1,160 @@
 
-import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
- * A SimpleTrackMousePanel is a panel that displays information about mouse
- * events on the panel, including the type of event, the position of the mouse,
- * a list of modifier keys that were down when the event occurred, and an indication
- * of which mouse button was involved, if any.
+ * This program displays information about mouse events on a canvas, including the 
+ * type of event, the position of the mouse, a list of modifier keys that were down 
+ * when the event occurred, and an indication of which mouse button was pressed
+ * or released, if any.  It also shows information about mouse events seen
+ * by an event filter on the screen object; the screen gets to see most events before 
+ * they are seen by the event target. 
  */
-public class SimpleTrackMouse extends JPanel {
+public class SimpleTrackMouse extends Application {
 
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Click Me to Redraw");
-		SimpleTrackMouse content = new SimpleTrackMouse();
-		window.setContentPane(content);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setLocation(120,70);
-		window.setSize(450,350);
-		window.setVisible(true);
+		launch(args);
 	}
 
 	// --------------------------------------------------------------------------------
+	
+	private Canvas canvas;  // The canvas that fills the window.
+	                        // The program reports about mouse events for which the
+	                        // canvas is the target.
 
-	private String eventType = null;     // If non-null, gives the type of the most recent mouse event.
-	private String modifierKeys = "";    // If non-empty, gives special keys that are held down.
-	private String button = "";          // Information about which mouse button was used.
-	private int mouseX, mouseY;          // Position of mouse (at most recent mouse event).
+	private StringBuilder eventInfo;  // Contains a string with information about the event.
+	                                  // This string is drawn on the canvas.
 
 
 	/**
-	 * Constructor creates a mouse listener object and sets it to listen for
-	 * mouse events and mouse motion events on the panel.
+	 * Set up a window containing just a canvas.  Install handlers for common
+	 * mouse events on the canvas.  Also install an event filter for mouse
+	 * events on the screen.  Information about mouse events will be displayed
+	 * on the canvas.
 	 */
-	public SimpleTrackMouse() { 
-			// Set background color and arrange for the panel to listen for mouse events.
-		setBackground(Color.WHITE);
-		MouseHandler listener = new MouseHandler();
-		addMouseListener(listener);        // Register mouse listener.
-		addMouseMotionListener(listener);  // Register mouse motion listener.
+	public void start(Stage stage) {
+		
+		eventInfo = new StringBuilder();
+		
+		/* Create the canvas, and set up the GUI */
+		
+		canvas = new Canvas(550,400);
+		Pane root = new Pane(canvas);
+		Scene scene = new Scene( root );
+		stage.setScene(scene);
+		stage.setTitle("Mouse Event Info");
+		stage.setResizable(false);
+		
+		/* Draw an initial message on the canvas */
+		
+		GraphicsContext g = canvas.getGraphicsContext2D();
+		g.setFont( Font.font(18) );
+		g.setFill(Color.WHITE);
+		g.fillRect(0,0,550,400);
+		g.setFill(Color.BLACK);
+		g.fillText("WAITING FOR FIRST MOUSE EVENT", 50, 50);
+		
+		/* Install an event filter for all mouse events on the scene.  The
+		 * filter just calls mouseEventOnScene(e) when an event occurs. */
+		
+		scene.addEventFilter(MouseEvent.ANY, e -> mouseEventOnScene(e) );
+		
+		/* Install event handlers for common mouse events on the canvas.
+		 * I could have used a single event handler on the canvas, but this
+		 * shows how to handle the individual types of event.  The response
+		 * in each case is simply to call mouseEventOnCanvas() */
+		
+		canvas.setOnMousePressed( e -> mouseEventOnCanvas(e, "Mouse Pressed") );
+		canvas.setOnMouseReleased( e -> mouseEventOnCanvas(e, "Mouse Released") );
+		canvas.setOnMouseClicked( e -> mouseEventOnCanvas(e, "Mouse Clicked") );
+		canvas.setOnMouseDragged( e -> mouseEventOnCanvas(e, "Mouse Dragged") );
+		canvas.setOnMousePressed( e -> mouseEventOnCanvas(e, "Mouse Pressed") );
+		canvas.setOnMouseMoved( e -> mouseEventOnCanvas(e, "Mouse Moved") );
+		canvas.setOnMouseEntered( e -> mouseEventOnCanvas(e, "Mouse Entered") );
+		canvas.setOnMouseExited( e -> mouseEventOnCanvas(e, "Mouse Exited") );
+		
+		stage.show();  // make the window visible
+		
+	} // end start()
+
+	
+	/**
+	 * The draw() method is called from mouseEventOnCanvas() to show the
+	 * information about the event on the canvas.  It simply draws the
+	 * eventInfo string.
+	 */
+	private void draw() {
+		GraphicsContext g = canvas.getGraphicsContext2D(); 
+		g.setFill(Color.WHITE);
+		g.fillRect( 0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight() );
+		g.setFill(Color.BLACK);
+		g.fillText( eventInfo.toString(), 40, 40 );
+	}
+	
+	
+	/**
+	 * This is called by the event filter for mouse events that was installed
+	 * on the screen.  It adds a note about the event to the eventInfo string
+	 * but does not redraw the canvas.  The note will be part of the event
+	 * info shown in the canvas after the next call to mouseEventOnCanvas().
+	 */
+	private void mouseEventOnScene(MouseEvent evt) {
+		if (evt.getTarget() == canvas) {
+		    eventInfo.append("MOUSE EVENT ON SCENE: " + evt.getEventType() + "\n\n");
+		}
 	}
 
-
+	
 	/**
-	 * Records information about a mouse event on the panel.  This method is called
-	 * by the mouse handler object whenever a mouse event occurs.
-	 * @param evt the MouseEvent object for the event.
-	 * @param eventType a description of the type of event, such as "mousePressed".
+	 * Adds information about a mouse event on the canvas to the eventInfo string,
+	 * and displays that string on the canvas.  The eventInfo string is then cleared,
+	 * except in the case of a Mouse Entered event (otherwise, the Mouse Entered
+	 * event would always be immediately replaced by a Mouse Moved event before
+	 * the user could have any chance of seeing it).
 	 */
-	private void setInfo(MouseEvent evt, String eventType) {
-		this.eventType = eventType;
-		mouseX = evt.getX();
-		mouseY = evt.getY();
-		modifierKeys = "";
+	private void mouseEventOnCanvas(MouseEvent evt, String eventType) {
+		eventInfo.append(eventType + " on canvas at (");
+		eventInfo.append( (int)evt.getX() + "," + (int)evt.getY() + ")\n");
+		if (eventType.equals("Mouse Pressed") || eventType.equals("Mouse Released") 
+				|| eventType.equals("Mouse Clicked")) {
+			eventInfo.append( "Mouse Button pressed or released: " + evt.getButton() + "\n");
+		}
+		if (eventType.equals("Mouse Clicked")) {
+			eventInfo.append( "Click Count: " + evt.getClickCount() + "\n" );
+		}
+		eventInfo.append("Modifier keys held down:  ");
 		if (evt.isShiftDown())
-			modifierKeys += "Shift  ";
+			eventInfo.append("Shift  ");
 		if (evt.isControlDown())
-			modifierKeys += "Control  ";
+			eventInfo.append("Control  ");
 		if (evt.isMetaDown())
-			modifierKeys += "Meta  ";
+			eventInfo.append("Meta  ");
 		if (evt.isAltDown())
-			modifierKeys += "Alt";
-		switch ( evt.getButton() ) {
-		case MouseEvent.BUTTON1:
-			button = "Left";
-			break;
-		case MouseEvent.BUTTON2:
-			button = "Middle";
-			break;
-		case MouseEvent.BUTTON3:
-			button = "Right";
-			break;
-		default:
-			button = "";
+			eventInfo.append("Alt");
+		eventInfo.append("\n");
+		eventInfo.append("Mouse Buttons held down:  ");
+		if (evt.isPrimaryButtonDown())
+			eventInfo.append("Primary  ");
+		if (evt.isMiddleButtonDown())
+			eventInfo.append("Middle  ");
+		if (evt.isSecondaryButtonDown())
+			eventInfo.append("Secondary  ");
+		draw();
+		if ( eventType.equals("Mouse Entered") ) {
+			eventInfo.append("\n\n(Info not erased after Mouse Entered)\n\n\n");
 		}
-		repaint();
+		else {
+			eventInfo.setLength(0);
+		}
 	}
 
 
-	/**
-	 * The paintComponent() method displays information about the most recent
-	 * mouse event on the panel (as set by the setInfo() method).
-	 */
-	public void paintComponent(Graphics g) {
-
-		super.paintComponent(g);  // Fills panel with background color.
-
-		if (eventType == null) {
-				// If eventType is null, no mouse event has yet occurred 
-				// on the panel, so don't display any information.
-			return;
-		}
-
-		g.setColor(Color.RED);  // Display information about the mouse event.
-		g.drawString("Mouse event type:  " + eventType, 6, 18);
-		if (modifierKeys.length() > 0)
-			g.drawString("Modifier keys:  " + modifierKeys, 6, 38);
-		else
-			g.drawString("Modifier keys:  None", 6, 38);
-		if (button.length() > 0)
-			g.drawString("Button used:  " + button, 6, 58);
-		g.setColor(Color.BLACK);
-		g.drawString("(" + mouseX + "," + mouseY + ")", mouseX, mouseY);
-
-	}  
-
-
-	/**
-	 * An object belonging to class MouseHandler listens for mouse events
-	 * on the panel.  (Listening is set up in the constructor for the
-	 * SimpleTrackMousePanel class.)  When a mouse event occurs, the listener
-	 * simply calls the setInfo() method in the SimpleMouseTrackPanel class
-	 * with information about the mouse event that has occurred.
-	 */
-	private class MouseHandler implements MouseListener, MouseMotionListener {
-
-		public void mousePressed(MouseEvent evt) {
-			setInfo(evt, "mousePressed");
-		}
-
-		public void mouseReleased(MouseEvent evt) {
-			setInfo(evt, "mouseReleased");
-		}
-
-		public void mouseClicked(MouseEvent evt) {
-			setInfo(evt, "mouseClicked");
-		}
-
-		public void mouseEntered(MouseEvent evt) {
-			setInfo(evt, "mouseEntered");
-		}
-
-		public void mouseExited(MouseEvent evt) {
-			setInfo(evt, "mouseExited");
-		}
-
-		public void mouseMoved(MouseEvent evt) {
-			setInfo(evt, "mouseMoved");
-		}
-
-		public void mouseDragged(MouseEvent evt) {
-			setInfo(evt, "mouseDragged");
-		}
-
-	}  // end nested class MouseHandler
-
-}  // end of class SimpleMouseTracker
+}  // end class SimpleMouseTracker
 

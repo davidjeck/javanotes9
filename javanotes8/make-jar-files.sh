@@ -187,18 +187,15 @@ buildTextIOjar chapter5 RollTwoPairs PairOfDice.java
 buildjar chapter5 GrowingCircleAnimation CircleInfo.java
 buildTextIOjar chapter5 HighLow Deck.java Card.java
 buildjar chapter5 ShapeDraw
-buildjar chapter6 HelloWorldGUI1
-buildjar chapter6 HelloWorldGUI2
+buildjar chapter6 HelloWorldFX
 buildjar chapter6 SimpleColorChooser
-buildjar chapter6 RandomStrings RandomStringsPanel.java
-buildjar chapter6 ClickableRandomStrings RandomStringsPanel.java
-buildjar chapter6 SimpleStamper
+buildjar chapter6 RandomStrings
+buildjar chapter6 RandomCards Card.java Deck.java cards.png
 buildjar chapter6 SimpleTrackMouse
 buildjar chapter6 SimplePaint
-buildjar chapter6 RandomArt
-buildjar chapter6 KeyboardAndFocusDemo
+buildjar chapter6 KeyboardEventDemo
 buildjar chapter6 SubKiller
-buildjar chapter6 TextAreaDemo
+buildjar chapter6 TextInputDemo
 buildjar chapter6 SliderDemo
 buildjar chapter6 BorderDemo
 buildjar chapter6 SliderAndButtonDemo

@@ -143,6 +143,8 @@ or a <i>while</i> loop that affects the flow of control in a program (that is, t
 order in which the instructions in the program are executed).</gitem>
 <gitem term="CPU">Central Processing Unit.  The CPU is the part of
 the computer that actually performs calculations and carries out programs.</gitem>
+<gitem term="CSS">Cascading Style Sheets, a language that can be used to control the
+visual appearance of components in JavaFX or of elements on a web page.</gitem>
 <gitem term="data structure">An organized collection of data, that can be treated
 as a unit in a program.</gitem>
 <gitem term="deadlock">A situation in which several threads hang indefinitely, 
@@ -186,6 +188,8 @@ it occurs.</gitem>
 flow of control of a program.  In Java, an exception can be represented by an object
 of type <classname>Throwable</classname> that can be caught and handled in a 
 <code>try..catch</code> statement.</gitem>
+<gitem term="factory method">A method, usually a static function, that returns an object. 
+Factory methods are an alternative to constructors.</gitem>
 <gitem term="fetch-and-execute cycle">The process by which the CPU executes machine language
 programs.  It fetches (that is, reads) an instruction from memory and carries out
 (that is, executes) the instruction, and it repeats this over and over in a continuous
@@ -286,9 +290,6 @@ programs written in bytecode; to run Java programs on your computer, you need a 
 <gitem term="lambda expression">A notation that defines an anonymous method.  More precisely,
 a lambda expression is a kind of literal that represents a value whose type is given
 by a functional interface.</gitem>
-<gitem term="layout manager">An object whose function is to lay out the components
-in a container, that is, to set their sizes and locations.  Different types of layout
-managers implement different policies for laying out components.</gitem>
 <gitem term="linked data structure">A collection of data consisting of a number of objects
 that are linked together by pointers which are stored in instance variables of the objects.
 Examples include linked lists and binary trees.</gitem>
@@ -362,6 +363,8 @@ behaviors (methods).  An object in Java must be created using some class as a te
 The class of an object determines what variables and methods it contains.</gitem>
 <gitem term="object type">A type whose values are objects, as opposed to primitive types.
 Classes and interfaces are object types.</gitem>
+<gitem term="observable value">A value that generates an event when it is modified,
+so that observers of the value can be notified of the change and can react to it.</gitem>
 <gitem term="OOP">Object-Oriented Programming. An approach to the design and implementation
 of computer programs in which classes and objects are created to represent concepts and
 entities and their interactions.</gitem>
@@ -478,6 +481,8 @@ files for the program are stored.</gitem>
 <gitem term="robust program">A program is robust if it is not only correct, but also is
 capable of handling errors such as a non-existent file or a failed network connection
 in a reasonable way.</gitem>
+<gitem term="scene graph">In JavaFX, the hierarchical data structure that contains 
+all the GUI components that are shown in a window.</gitem>
 <gitem term="set">A collection of objects which contains no duplicates.  In Java, sets are
 represented by the generic interface <classname>Set&lt;T&gt;</classname></gitem>
 <gitem term="scope">The region in a program where the declaration of an identifier is

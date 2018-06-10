@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="448.16315"
+   height="209.35358"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="scene-graph.svg"
+   inkscape:export-filename="/home/eck/git/javanotes8/javanotes8/c6-GUI1/scene-graph.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4">
+    <filter
+       id="filter3017"
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow">
+      <feFlood
+         id="feFlood3019"
+         flood-opacity="0.65"
+         flood-color="rgb(0,0,0)"
+         result="flood" />
+      <feComposite
+         id="feComposite3021"
+         in2="SourceGraphic"
+         in="flood"
+         operator="in"
+         result="composite1" />
+      <feGaussianBlur
+         id="feGaussianBlur3023"
+         stdDeviation="2"
+         result="blur" />
+      <feOffset
+         id="feOffset3025"
+         dx="4"
+         dy="4"
+         result="offset" />
+      <feComposite
+         id="feComposite3027"
+         in2="offset"
+         in="SourceGraphic"
+         operator="over"
+         result="composite2" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="267.79877"
+     inkscape:cy="59.926464"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1680"
+     inkscape:window-height="998"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     fit-margin-top="2"
+     fit-margin-left="2"
+     fit-margin-right="2"
+     fit-margin-bottom="2" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-38.247336,-7.6368303)">
+    <g
+       id="g4270">
+      <rect
+         style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;stroke:#000000;stroke-width:2.72502398;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;filter:url(#filter3017);enable-background:accumulate"
+         id="rect4251"
+         width="97"
+         height="58"
+         x="55"
+         y="49.362183"
+         transform="matrix(0.90659949,0,0,0.59416055,-0.82162073,70.2539)" />
+      <text
+         transform="scale(1.0004237,0.99957648)"
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.21608162px;line-height:120.00000477%;font-family:Serif;-inkscape-font-specification:Serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         x="92.972038"
+         y="113.49258"
+         id="text4253"
+         sodipodi:linespacing="120%"><tspan
+           sodipodi:role="line"
+           x="92.972038"
+           y="113.49258"
+           id="tspan4257">message</tspan><tspan
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.25px;font-family:Serif;-inkscape-font-specification:'Serif Italic'"
+           id="tspan4156"
+           sodipodi:role="line"
+           x="92.972038"
+           y="127.47057">(class Text)</tspan></text>
+    </g>
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path4285"
+       d="m 234.59825,48.763641 -142,51.057002"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 233.59825,47.263641 64.92716,52.557002"
+       id="path4291"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <g
+       id="g4263"
+       transform="translate(62.5,9.5)">
+      <g
+         transform="translate(48.5,-189.5)"
+         id="g4176">
+        <rect
+           transform="matrix(1.24609,0,0,0.59416055,-8.4588895,163.7539)"
+           y="49.362183"
+           x="55"
+           height="58"
+           width="97"
+           id="rect4178"
+           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;stroke:#000000;stroke-width:2.32435989;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;filter:url(#filter3017);enable-background:accumulate" />
+        <text
+           sodipodi:linespacing="120%"
+           id="text4180"
+           y="207.0322"
+           x="120.46039"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.21608162px;line-height:120.00000477%;font-family:Serif;-inkscape-font-specification:Serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+           xml:space="preserve"
+           transform="scale(1.0004237,0.99957648)"><tspan
+             id="tspan4182"
+             y="207.0322"
+             x="120.46039"
+             sodipodi:role="line">root</tspan><tspan
+             y="221.01019"
+             x="120.46039"
+             sodipodi:role="line"
+             id="tspan4184"
+             style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.25px;font-family:Serif;-inkscape-font-specification:'Serif Italic'">(class BorderPane)</tspan></text>
+      </g>
+    </g>
+    <g
+       id="g4276">
+      <rect
+         transform="matrix(0.92546007,0,0,0.59416055,202.22631,70.2539)"
+         y="49.362183"
+         x="55"
+         height="58"
+         width="97"
+         id="rect4168"
+         style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;stroke:#000000;stroke-width:2.69711351;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;filter:url(#filter3017);enable-background:accumulate" />
+      <text
+         sodipodi:linespacing="120%"
+         id="text4170"
+         y="113.49258"
+         x="297.88522"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.21608162px;line-height:120.00000477%;font-family:Serif;-inkscape-font-specification:Serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"
+         transform="scale(1.0004237,0.99957648)"><tspan
+           id="tspan4172"
+           y="113.49258"
+           x="297.88522"
+           sodipodi:role="line">buttonBar</tspan><tspan
+           y="127.47057"
+           x="297.88522"
+           sodipodi:role="line"
+           id="tspan4174"
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.25px;font-family:Serif;-inkscape-font-specification:'Serif Italic'">(class HBox)</tspan></text>
+      <g
+         id="g4213"
+         transform="translate(186,-16)">
+        <g
+           id="g4245">
+          <rect
+             transform="matrix(1.1053824,0,0,0.59416055,6.1043476,163.7539)"
+             y="49.362183"
+             x="55"
+             height="58"
+             width="97"
+             id="rect4215"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;stroke:#000000;stroke-width:2.46786714;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;filter:url(#filter3017);enable-background:accumulate" />
+          <text
+             sodipodi:linespacing="120%"
+             id="text4217"
+             y="207.0322"
+             x="120.46039"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.21608162px;line-height:120.00000477%;font-family:Serif;-inkscape-font-specification:Serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+             xml:space="preserve"
+             transform="scale(1.0004237,0.99957648)"><tspan
+               id="tspan4219"
+               y="207.0322"
+               x="120.46039"
+               sodipodi:role="line">GoodbyeButton</tspan><tspan
+               y="221.01019"
+               x="120.46039"
+               sodipodi:role="line"
+               id="tspan4221"
+               style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.25px;font-family:Serif;-inkscape-font-specification:'Serif Italic'">(class Button)</tspan></text>
+        </g>
+        <g
+           transform="translate(-10,0)"
+           id="g4239">
+          <rect
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;stroke:#000000;stroke-width:2.55758214;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;filter:url(#filter3017);enable-background:accumulate"
+             id="rect4223"
+             width="97"
+             height="58"
+             x="55"
+             y="49.362183"
+             transform="matrix(1.0291933,0,0,0.59416055,-94.010079,163.7539)" />
+          <text
+             transform="scale(1.0004237,0.99957648)"
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.21608162px;line-height:120.00000477%;font-family:Serif;-inkscape-font-specification:Serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+             x="12.506119"
+             y="207.0322"
+             id="text4225"
+             sodipodi:linespacing="120%"><tspan
+               sodipodi:role="line"
+               x="12.50612"
+               y="207.0322"
+               id="tspan4227">HelloButton</tspan><tspan
+               style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.25px;font-family:Serif;-inkscape-font-specification:'Serif Italic'"
+               id="tspan4229"
+               sodipodi:role="line"
+               x="12.506119"
+               y="221.01019">(class Button)</tspan></text>
+        </g>
+        <g
+           transform="translate(6,0)"
+           id="g4251">
+          <rect
+             transform="matrix(1.0291933,0,0,0.59416055,125.98992,163.7539)"
+             y="49.362183"
+             x="55"
+             height="58"
+             width="97"
+             id="rect4231"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;stroke:#000000;stroke-width:2.55758214;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;filter:url(#filter3017);enable-background:accumulate" />
+          <text
+             sodipodi:linespacing="120%"
+             id="text4233"
+             y="207.0322"
+             x="232.41296"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.21608162px;line-height:120.00000477%;font-family:Serif;-inkscape-font-specification:Serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+             xml:space="preserve"
+             transform="scale(1.0004237,0.99957648)"><tspan
+               id="tspan4235"
+               y="207.0322"
+               x="232.41296"
+               sodipodi:role="line">quitButton</tspan><tspan
+               y="221.01019"
+               x="232.41296"
+               sodipodi:role="line"
+               id="tspan4237"
+               style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.25px;font-family:Serif;-inkscape-font-specification:'Serif Italic'">(class Button)</tspan></text>
+        </g>
+      </g>
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4257"
+         d="m 301.59825,134.76364 -113,42.557"
+         style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 300.59825,134.76364 113,42.557"
+         id="path4259"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 301.59825,134.76364 0.5,41.557"
+         id="path4261"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+  </g>
+</svg>

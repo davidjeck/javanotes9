@@ -1,190 +1,140 @@
+import javafx.application.Application;
+import javafx.scene.layout.*;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 /**
- *  This program shows six slider bars that the user can manipulate
+ *  This program shows six sliders that the user can manipulate
  *  to set the red, green, blue, hue, brightness, and saturation components
  *  of a color.  A color patch shows the selected color, and there are
  *  six labels that show the numerical values of all the components.
- *  RGB components are specified as integers in the range 0 to 255.
- *  HSB components are specified as float values in the range 0.0F to 1.0F.
  */
+public class SimpleColorChooser extends Application {
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.event.*;
-
-public class SimpleColorChooser extends JPanel implements ChangeListener {
-	
-	/**
-	 * A main routine enables this class to be run as a program.  The main
-	 * routine just creates a window whose content pane is a panel of 
-	 * type SimpleColorChooser.
-	 */
-	public static void main(String[] args) {
-		JFrame window = new JFrame("Simple Color Chooser");
-		window.setContentPane( new SimpleColorChooser() );
-		window.pack();
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setResizable(false);
-		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		window.setLocation( (screensize.width - window.getWidth()) / 2,
-				               (screensize.height - window.getHeight()) / 2);
-		window.setVisible(true);
-	}
-
-
-	// -----------------------------------------------------------------------
-
-	private float[] hsb = new float[3];   // For holding HSB color components.
-
-	private int r = 255, g = 0, b = 0;      // The RGB color components.
-
-	private JSlider hueSlider, brightnessSlider, saturationSlider,  // Slider bars.
+	private Slider hueSlider, brightnessSlider, saturationSlider,  // Slider bars.
 	redSlider, greenSlider, blueSlider;
 
-	private JLabel hueLabel, brightnessLabel, saturationLabel,  // Display component values.
+	private Label hueLabel, brightnessLabel, saturationLabel,  // Display component values.
 	redLabel, greenLabel, blueLabel;
 
-	private JPanel colorCanvas;  // Color patch for displaying the color.
+	private Pane colorPatch;  // Color patch for displaying the color.
 
-	/**
-	 * Sets up the panel's content, layout, and event listening.
-	 */
-	public SimpleColorChooser() {
+	public static void main(String[] args) {
+		launch();
+	}
 
-		Color.RGBtoHSB(r,g,b,hsb);  // Get HSB equivalent of RGB color
+	public void start(Stage stage) {
 
-		/* Create JSliders with possible values from 0 to 255. */
+		/* Create Sliders with possible values from 0 to 1 or 0 to 360for hue. */
 
-		hueSlider = new JSlider(0,255,(int)(255*hsb[0]));
-		saturationSlider = new JSlider(0,255,(int)(255*hsb[1]));
-		brightnessSlider = new JSlider(0,255,(int)(255*hsb[2]));
-		redSlider = new JSlider(0,255,255);
-		greenSlider = new JSlider(0,255,0);
-		blueSlider = new JSlider(0,255,0);
+		hueSlider = new Slider(0,360,0);
+		saturationSlider = new Slider(0,1,1);
+		brightnessSlider = new Slider(0,1,2);
+		redSlider = new Slider(0,1,1);
+		greenSlider = new Slider(0,1,0);
+		blueSlider = new Slider(0,1,0);
+		
+		/* Set up listeners to respond when a slider value is changed. */
+		
+		hueSlider.valueProperty().addListener( e -> newColor(hueSlider) );
+		saturationSlider.valueProperty().addListener( e -> newColor(saturationSlider) );
+		brightnessSlider.valueProperty().addListener( e -> newColor(brightnessSlider) );
+		redSlider.valueProperty().addListener( e -> newColor(redSlider) );
+		greenSlider.valueProperty().addListener( e -> newColor(greenSlider) );
+		blueSlider.valueProperty().addListener( e -> newColor(blueSlider) );
 
 		/* Create Labels showing current RGB and HSB values. */
 
-		hueLabel = new JLabel(String.format(" Hue = %1.5f", hsb[0]));
-		saturationLabel = new JLabel(String.format(" Saturation = %1.5f", hsb[1]));
-		brightnessLabel = new JLabel(String.format(" Brightness = %1.5f", hsb[2]));
-		redLabel = new JLabel(" Red = " + r);
-		greenLabel = new JLabel(" Green = " + g);
-		blueLabel = new JLabel(" Blue = " + b);
+		hueLabel = makeText(String.format(" Hue = %1.3f", 0.0));
+		saturationLabel = makeText(String.format(" Saturation = %1.3f", 1.0));
+		brightnessLabel = makeText(String.format(" Brightness = %1.3f", 1.0));
+		redLabel = makeText(String.format(" Red = %1.3f", 1.0));
+		greenLabel = makeText(String.format(" Green = %1.3f", 1.0));
+		blueLabel = makeText(String.format(" Blue = %1.3f", 1.0));
 
-		/* Set background colors for JLabels, and make them opaque so they don't
-          inherit the gray background of the panel. */
+		/* Create an object to show the currently selected color. */
+		
+		colorPatch = new Pane();
+		colorPatch.setStyle("-fx-background-color:red; -fx-border-color:black; -fx-border-width:2px");
+		
+		/* Lay out the components */
 
-		hueLabel.setBackground(Color.WHITE);
-		saturationLabel.setBackground(Color.WHITE);
-		brightnessLabel.setBackground(Color.WHITE);
-		redLabel.setBackground(Color.WHITE);
-		greenLabel.setBackground(Color.WHITE);
-		blueLabel.setBackground(Color.WHITE);
-		hueLabel.setOpaque(true);
-		saturationLabel.setOpaque(true);
-		brightnessLabel.setOpaque(true);
-		redLabel.setOpaque(true);
-		greenLabel.setOpaque(true);
-		blueLabel.setOpaque(true);
+		GridPane root = new GridPane();
+		ColumnConstraints c1 = new ColumnConstraints();
+		c1.setPercentWidth(33);
+		ColumnConstraints c2 = new ColumnConstraints();
+		c2.setPercentWidth(34);
+		ColumnConstraints c3 = new ColumnConstraints();
+		c3.setPercentWidth(33);
+		root.getColumnConstraints().addAll(c1, c2, c3);
+		
+		root.add(hueSlider, 0, 0);
+		root.add(saturationSlider, 0, 1);
+		root.add(brightnessSlider, 0, 2);
+		root.add(redSlider, 0, 3);
+		root.add(greenSlider, 0, 4);
+		root.add(blueSlider, 0, 5);
+		root.add(hueLabel, 1, 0);
+		root.add(saturationLabel, 1, 1);
+		root.add(brightnessLabel, 1, 2);
+		root.add(redLabel, 1, 3);
+		root.add(greenLabel, 1, 4);
+		root.add(blueLabel, 1, 5);
+		root.add(colorPatch, 2, 0, 1, 6);
+		root.setStyle("-fx-padding:5px; -fx-border-color:darkblue; -fx-border-width:2px; -fx-background-color:#DDF");
 
-		/* Set the panel to listen for changes to the slicer' values */
+		/* Create the scene and show the stage. */
+		
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("Simple Color Chooser");
+		stage.setResizable(false);
+		stage.show();
 
-		hueSlider.addChangeListener(this);
-		saturationSlider.addChangeListener(this);
-		brightnessSlider.addChangeListener(this);
-		redSlider.addChangeListener(this);
-		greenSlider.addChangeListener(this);
-		blueSlider.addChangeListener(this);
+	} // end start();
+	
 
-		/* Create a canvas whose background color will always be set to the
-          currently selected color. */
-
-		colorCanvas = new JPanel();
-		colorCanvas.setBackground(Color.RED);
-		colorCanvas.setPreferredSize(new Dimension(200,200));
-
-		/* Set up the GUI */
-
-		setLayout(new GridLayout(1,3,3,3));
-		setBackground(Color.DARK_GRAY);
-		setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
-		JPanel sliders = new JPanel();
-		JPanel labels = new JPanel();
-		add(sliders);
-		add(labels);
-		add(colorCanvas);
-
-		/* Add the Sliders and the Labels to their respective panels. */
-
-		sliders.setLayout(new GridLayout(6,1,2,2));
-		sliders.setBorder(BorderFactory.createEmptyBorder(0,5,0,5));
-		sliders.add(redSlider);
-		sliders.add(greenSlider);
-		sliders.add(blueSlider);
-		sliders.add(hueSlider);
-		sliders.add(saturationSlider);
-		sliders.add(brightnessSlider);
-
-		labels.setLayout(new GridLayout(6,1,2,2));
-		labels.setBackground(Color.DARK_GRAY);
-		labels.add(redLabel);
-		labels.add(greenLabel);
-		labels.add(blueLabel);
-		labels.add(hueLabel);
-		labels.add(saturationLabel);
-		labels.add(brightnessLabel);
-
-	} // end constructor
-
-
-	/**
-	 * This is called when the user has changed the values on
-	 * one of the sliders.  All the sliders and labels
-	 * and the color patch are reset to correspond to the new color.
-	 */
-	public void stateChanged(ChangeEvent evt) {
-		JSlider source = (JSlider)evt.getSource();
-		if ( ! source.getValueIsAdjusting() ) {
-			// Ignore change events that are not produced by the user
-			// adjusting the slider; such events are generated when the
-			// change is made programmatically.
-			return;
+	private Label makeText(String message) {
+		   // Make a label to show a given message shown in bold, with some padding
+		   // between the text and the border of the label.
+		Label text = new Label(message);
+		text.setStyle(" -fx-padding: 6px 10px 6px 10px; -fx-font-weight:bold");
+		return text;
+	}
+	
+	
+	private void newColor(Slider whichSlider) {
+		    // Adjust the GUI to a new color value, when one of the sliders has changed.
+		if ( ! whichSlider.isValueChanging() ) {
+			return; // Don't respond to change if it was set programmatically;
+			        // Only respond if it was set by user dragging the slider.
 		}
-		int r1, g1, b1;
-		r1 = redSlider.getValue();
-		g1 = greenSlider.getValue();
-		b1 = blueSlider.getValue();
-		if (r != r1 || g != g1 || b != b1) {  // One of the RGB components has changed.
-			r = r1;
-			g = g1;
-			b = b1;
-			Color.RGBtoHSB(r,g,b,hsb);
-			hueSlider.setValue((int)(255*hsb[0]));
-			saturationSlider.setValue((int)(255*hsb[1]));
-			brightnessSlider.setValue((int)(255*hsb[2]));
+		Color color;
+		if (whichSlider == redSlider || whichSlider == greenSlider || whichSlider == blueSlider) {
+			color = Color.color(redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue());
+			hueSlider.setValue(color.getHue());
+			brightnessSlider.setValue(color.getBrightness());
+			saturationSlider.setValue(color.getSaturation());
 		}
-		else {  // One of the HSB components has changed.
-			hsb[0] = hueSlider.getValue()/255.0F;
-			hsb[1] = saturationSlider.getValue()/255.0F;
-			hsb[2] = brightnessSlider.getValue()/255.0F;
-			int rgb = Color.HSBtoRGB(hsb[0],hsb[1],hsb[2]);
-			r = (rgb >> 16) & 0xFF;
-			g = (rgb >> 8) & 0xFF;
-			b = rgb & 0xFF;
-			redSlider.setValue(r);
-			greenSlider.setValue(g);
-			blueSlider.setValue(b);
+		else {
+			color = Color.hsb(hueSlider.getValue(), saturationSlider.getValue(), brightnessSlider.getValue());
+			redSlider.setValue(color.getRed());
+			greenSlider.setValue(color.getGreen());
+			blueSlider.setValue(color.getBlue());
 		}
-		redLabel.setText(" Red = " + r);
-		greenLabel.setText(" Green = " + g);
-		blueLabel.setText(" Blue = " + b);
-		hueLabel.setText(String.format(" Hue = %1.5f", hsb[0]));
-		saturationLabel.setText(String.format(" Saturation = %1.5f", hsb[1]));
-		brightnessLabel.setText(String.format(" Brightness = %1.5f", hsb[2]));
-		colorCanvas.setBackground(new Color(r,g,b));
-		colorCanvas.repaint();  // Tell the system to redraw the canvas in its new color.
-	} // end stateChanged
-
+		String colorString = String.format("#%02x%02x%02x", (int)(255*color.getRed()),
+				(int)(255*color.getGreen()), (int)(255*color.getBlue()) );
+		colorPatch.setStyle("-fx-border-color:black; -fx-border-width:2px; -fx-background-color:" + colorString);
+		hueLabel.setText(String.format(" Hue = %1.3f", color.getHue()));
+		saturationLabel.setText(String.format(" Saturation = %1.3f", color.getSaturation()));
+		brightnessLabel.setText(String.format(" Brightness = %1.3f", color.getBrightness()));
+		redLabel.setText(String.format(" Red = %1.3f", color.getRed()));
+		greenLabel.setText(String.format(" Green = %1.3f", color.getGreen()));
+		blueLabel.setText(String.format(" Blue = %1.3f", color.getBlue()));
+	}	
 
 
 }  // end class SimpleColorChooser

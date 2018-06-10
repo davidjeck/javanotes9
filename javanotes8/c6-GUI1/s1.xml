@@ -1,368 +1,314 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE section SYSTEM "../javanotes8.dtd" >
 
-<section id="GUI1.1" title="The Basic GUI Application">
+<section id="GUI1.1" title="A Basic JavaFX Application">
    
 <p><start><big>T</big>he command-line programs</start> that you have
-learned how to program would seem very alien to most computer users.
+learned how to write would seem very alien to most computer users.
 The style of interaction where the user and the computer take turns
 typing strings of text seems like something out of the early days
 of computing, although it was only in the mid 1980s that home computers
 with graphical user interfaces started to become available.  Today,
 most people interact with their computers exclusively through a GUI.
 A GUI program offers a much richer type of user interface, where the user uses a mouse
-and keyboard to interact with GUI components such as windows, menus, buttons,
+and keyboard (or other input devices) to interact with GUI components such as windows, menus, buttons,
 check boxes, text input boxes, scroll bars, and so on.</p>
 
-<p>A GUI program still has a <code>main()</code> subroutine, but in general, that main
-routine just creates one or more GUI components and displays them
-on the computer screen. Once the GUI
-components have been created, they follow their <b>own</b> programming&mdash;programming
-that tells them how to draw themselves on the screen and how to respond to events
-such as being clicked on by the user.</p>
+<p>This section introduces some of the basic ideas of programming with
+JavaFX by looking at a very simple GUI application.  ("Application" is the
+preferred term for "program" in this context.)  The application simply
+displays a window containing a message and three buttons.  Here's what the 
+window looks like when it first opens:</p>
 
-<p>A GUI program doesn't have to be immensely complex.  We can, for example,
-write a very simple GUI "Hello World" program that says "Hello" to the user,
-but does it by opening a window where the greeting is displayed:</p>
-   
-<pre>import javax.swing.JOptionPane;
-
-public class HelloWorldGUI1 {
-   
-   public static void main(String[] args) {
-      JOptionPane.showMessageDialog( null, "Hello World!" );
-   }
-
-}</pre>   
-   
-<p>When this program is run, a window appears on the screen that contains the
-message "Hello World!".   The window also contains an "OK" button for the user 
-to click after reading the message.  When the user clicks this button, the 
-window closes and the program ends.  This program can be placed
-in a file named <sourceref href="HelloWorldGUI1.java"/>, compiled, and run
-using the <code>java</code> command on the command line
-just like any other Java program.</p>
-   
-<p>Now, this program is already doing some pretty fancy stuff.  It creates a window,
-it draws the contents of that window, and it handles the event that is generated
-when the user clicks the button.  The reason the program was so easy to write is that all
-the work is done by <code>showMessageDialog()</code>, a <code>static</code> method in the
-built-in class <classname>JOptionPane</classname>.  (Note that the source code 
-"imports" the class <code>javax.swing.JOptionPane</code> to make it possible
-to refer to the <classname>JOptionPane</classname> class using its simple name.
-See <localref href="subroutines.5.3"/> for information about importing classes from
-Java's standard packages.)</p>
-   
-<p>If you want to display a message to the user in a GUI program, this is a good way to
-do it:  Just use a standard class that already knows how to do the work!  And in fact,
-<classname>JOptionPane</classname> is regularly used for just this purpose 
-(but as part of a larger program, usually).
-Of course, if you want to do anything serious in a GUI program, there is a lot more to learn.  To give you
-an idea of the types of things that are involved, we'll look at a short GUI program that
-does the same things as the previous program&mdash;open a window containing a message
-and an OK button, and respond to a click on the button by ending the program&mdash;but
-does it all by hand instead of by using the built-in <classname>JOptionPane</classname> class.
-Mind you, this is <b>not</b> a good way to write the program, but it will
-illustrate some important aspects of GUI programming in Java.</p>
-   
-<p>Here is the source code for the program.  You are not expected to understand it yet.
-I will explain how it works below, but it will take the rest of the chapter before you
-will really understand completely.  In this section, you will just get a brief overview
-of GUI programming.</p>
-   
-<pre>import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
-public class HelloWorldGUI2 {
-   
-   private static class HelloWorldDisplay extends JPanel {
-      public void paintComponent(Graphics g) {
-         super.paintComponent(g);
-         g.drawString( "Hello World!", 20, 30 );
-      }
-   }
-   
-   private static class ButtonHandler implements ActionListener {
-      public void actionPerformed(ActionEvent e) {
-         System.exit(0);
-      }
-   }
-   
-   public static void main(String[] args) {
+<img src="HelloWorldFX-screenshot.png" width="450" height="227" tex="HelloWorldFX-screenshot.eps" texscale="0.6" 
+      bordered="true" alt="The window from the HelloWorldFX application."/>
       
-      HelloWorldDisplay displayPanel = new HelloWorldDisplay();
-      JButton okButton = new JButton("OK");
-      ButtonHandler listener = new ButtonHandler();
-      okButton.addActionListener(listener);
+<np>Clicking the "Say Hello" will get the computer to tell you, "Hello World!".
+Clicking "Say Goodbye" button will change the text of the
+message to "Goodbye".  Clicking the "Quit" button will end the application, which can also
+be ended by clicking the window's close box.</np>
 
-      JPanel content = new JPanel();
-      content.setLayout(new BorderLayout());
-      content.add(displayPanel, BorderLayout.CENTER);
-      content.add(okButton, BorderLayout.SOUTH);
 
-      JFrame window = new JFrame("GUI Test");
-      window.setContentPane(content);
-      window.setSize(250,100);
-      window.setLocation(100,100);
-      window.setVisible(true);
+<subsection id="GUI1.1.1" title="JavaFX Applications">
 
-   }
-   
-}</pre>   
+<p>A JavaFX program (or "application") is represented by an object of type
+<classname>Application</classname>, which is defined in the
+package <code>javafx.application</code>.  <classname>Application</classname>
+is an abstract class, which defines, among other things, one abstract instance method, named <code>start()</code>.
+To create a JavaFX program, you need to create
+a class that extends <classname>Application</classname> and provides a definition
+for the <code>start</code>() method.  (See <localref href="OOP.5.1"/> and <localref href="OOP.5.5"/>.)</p>
 
-<subsection id="GUI1.1.1" title="JFrame and JPanel">
+<p>The class that you write to create a JavaFX application also typically includes a 
+<code>main()</code> method that simply "launches" the application:</p>
+
+<pre>public static void main(String[] args) {
+    launch(args);
+}</pre>
+
+<np>When this <code>main()</code> routine is executed, the <code>launch()</code> method 
+creates a new thread, called the <newword>JavaFX application thread</newword>.
+Recall from <localref href="overview.2"/> that a thread can execute a sequence of instructions that can be run in parallel 
+with other threads.  It is important that anything that affects the GUI be done on
+the JavaFX application thread.  That will be pretty much automatic for the things that
+we do in this chapter, but it's something that will become important when we cover
+threads in <localref href="threads"/> and write some GUI programs that use several threads.
+The <code>launch()</code> method then creates the object that represents the application;
+that object is an instance of the class that contains the call to the <code>launch()</code>
+method.  The <code>start()</code> method of that object is then called on the
+JavaFX application thread, and it is the responsibility of that <code>start()</code>
+method to set up the GUI and open a window on the screen.  (Some versions of Java
+can run a JavaFX <classname>Application</classname> class even if the class does not contain a <code>main()</code>
+method of the above form; however, it is best not to rely on that, and I will always
+include <code>main()</code> in my JavaFX applications.)</np>
+
+<p>Here, then is our first JavaFX application.  We will spend the rest of this 
+section discussing it:</p>
+
+<pre>import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Pos;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.scene.control.Button;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class HelloWorldFX extends Application {
+
+	public void start(Stage stage) {
+		
+		Text message = new Text("First FX Application!");
+		message.setFont( new Font(40) );
+		
+		Button helloButton = new Button("Say Hello");
+		helloButton.setOnAction( e -> message.setText("Hello World!") );
+		Button goodbyeButton = new Button("Say Goodbye");
+		goodbyeButton.setOnAction( e -> message.setText("Goodbye!!") );
+		Button quitButton = new Button("Quit");
+		quitButton.setOnAction( e -> Platform.exit() );
+
+		HBox buttonBar = new HBox( 20, helloButton, goodbyeButton, quitButton );
+		buttonBar.setAlignment(Pos.CENTER);
+		BorderPane root = new BorderPane();
+		root.setCenter(message);
+		root.setBottom(buttonBar);
+		
+		Scene scene = new Scene(root, 450, 200);
+		stage.setScene(scene);
+		stage.setTitle("JavaFX Test");
+		stage.show();
+		
+	} // end start();
+	
+	public static void main(String[] args) {
+		launch(args);  // Run this Application.
+	}
+
+} // end class HelloWorldFX</pre>
+
+<np>The first thing that you will notice is the large number of <code>imports</code> at
+the start of the program, all from subpackages of the <code>javafx</code> package.
+A typical JavaFX program uses many classes from such packages.  When I discuss a
+JavaFX class for the first time, I will usually mention the package that it comes
+from.  But in any case, you can look up the class in the JavaFX API documentation.
+As I write this, it can be found at</np>
+
+<p align="center"><a href="https://docs.oracle.com/javase/8/javafx/api/toc.htm">https://docs.oracle.com/javase/8/javafx/api/toc.htm</a></p>
+
+<p>The <classname>HelloWorldFX</classname> program contains a <code>main</code> method to launch the
+application, and it contains the required <code>start()</code> method.  Of course, we will often
+add other methods to our application classes, to be called by <code>start()</code>.  There are also a couple other methods
+in <classname>Application</classname> that can be overridden.  In particular, there is an
+<code>init()</code>, that will be called by the system before <code>start()</code>, and a <code>stop()</code>
+method that is called by the system when the application is shutting down.  These two methods are
+defined class <classname>Application</classname> to do nothing.  A programmer can redefine <code>init()</code>
+to do some initialization and <code>stop()</code> to do cleanup.  However, we will rarely if ever need them.
+Any initialization that we need can be done in <code>start()</code>.</p>
+
+</subsection>
+
+<subsection id="GUI1.1.2" title="Stage, Scene, and SceneGraph">
    
-<p>In a Java GUI program, each GUI component in the interface is represented by an object in the program.
-One of the most fundamental types of component is the <newword>window</newword>.  Windows have
-many behaviors.  They can be opened and closed.  They can be resized.  They have "titles" that
-are displayed in the title bar above the window.  And most important, they can contain other
-GUI components such as buttons and menus.</p>
+<p>The <code>start()</code> method has a parameter of type <classname>Stage</classname>,
+from package <code>javafx.stage</code>.
+A <classname>Stage</classname> object represents a window on the computer's screen.
+The stage that is passed as a parameter to <code>start()</code> is constructed by the system.
+It represents the main window of a program, and is often referred to as the "primary stage."
+A program can create other windows by constructing new objects of type <classname>Stage</classname>.</p>
+
+<p>A window is an area on the screen that can be filled with content.  It can contain GUI components
+such as menus, buttons, and text input boxes, as well as drawing areas like those used in the
+graphical programs from <localref href="control.8"/>.
+Although the primary stage is created before <code>start()</code> is called, the window does not have
+any content, and it is not yet visible on the screen.  The <code>start()</code> method is
+responsible for adding content to the window and making it visible.  The very last line
+of <code>start()</code> in the <classname>HelloWorldFX</classname> program,
+<code>stage.show()</code>, is what makes the window visible.  The rest of method 
+creates content, adds the content to the window, and sets various configuration options
+for the content and for the window itself.  For example, the line</p>
+
+<pre>stage.setTitle("JavaFX Test");</pre>
+
+<np>sets the text that will appear in the title bar at the top of the window.</np>
+
+<p>A stage shows a <newword>scene</newword>, which fills its content area and serves
+as a container for the GUI components in the window.  A scene is represented by an
+object of type <classname>Scene</classname>.  In the sample program, the statement
+<code>stage.setScene(scene)</code> sets the scene that will be displayed in
+the content area of the stage.</p>
+
+<p>A scene can be filled with things called GUI <newword>components</newword>,
+such as buttons and menu bars.  Each component is represented by an object belonging to a JavaFX class.  
+For example, a push button such as the "Say Hello" button in the sample program, is represented
+by an object belonging to the class <classname>Button</classname>, from the package
+<code>javafx.scene.control</code>.  Some components, such as the object <code>buttonBar</code> 
+of type <classname>HBox</classname>, are <newword>containers</newword>.  A container represents
+a region in the window that can contain other components, including other containers.  
+So, a window contains GUI components, inside containers, which can be inside bigger
+containers, each represented by an object.  All of these objects make up something called
+the <newword>scene graph</newword> for the window.  The scene graph shows the
+containment relationships among all the components in the screen.  For the sample program,
+the scene graph looks like this:</p>
+
+<img src="scene-graph.png" width="448" height="209" 
+      tex="scene-graph.eps" texscale="0.7" alt="Diagram of the scene graph for HelloWorldFX program"/>
+      
+<np>Note that this is not a class hierarchy.  It does not show the relationships among
+the classes of the objects in the program; rather, it is a containment hierarchy that shows
+how the components are contained within other components on the screen.  In this scene graph,
+<code>root</code> and <code>buttonBar</code> are containers while <code>message</code> and
+the three buttons are simple components.</np>
+
+<p>A scene contains a single "root" component, which  is
+a container that contains all of the other components in the scene.  
+In the sample
+program, the root component is named <code>root</code> (although of course that is not required),
+and the root of the scene is set when the <classname>Scene</classname> object is constructed:
+</p>
+
+<pre>Scene scene = new Scene(root, 450, 200);</pre>
+
+<np>The numbers in this constructor specify the width and the height of the scene,
+in pixels.  The numbers can be omitted, in which case the size will be computed based
+on the contents of the scene.</np>
+
+</subsection>
    
-<p>Java, of course, has a built-in class to represent windows.  There are actually several
-different types of window, but the most common type is represented by the <classname>JFrame</classname>
-class (which is included in the package <code>javax.swing</code>).
-A <classname>JFrame</classname> is an independent window that can, for example, act as the main window
-of an application.  One of the most important things to understand is that a <classname>JFrame</classname>
-object comes with many of the behaviors of windows already programmed in.  In particular, it
-comes with the basic properties shared by all windows, such as a titlebar and the ability to be opened and
-closed.  Since a <classname>JFrame</classname> comes with these behaviors, you don't have to
-program them yourself!  This is, of course, one of the central ideas of object-oriented programming.
-What a <classname>JFrame</classname> doesn't come with, of course, is <newword>content</newword>, the 
-stuff that is contained in the window.  If you don't add any other content to a <classname>JFrame</classname>,
-it will just display a blank area&mdash;or, if you don't set its size, it will be so tiny that it will
-be hard to find on the screen.  You can add content either by creating a <classname>JFrame</classname>
-object and then adding the content to it or by creating a subclass of <classname>JFrame</classname> and
-adding the content in the constructor of that subclass.</p>
+<subsection id="GUI1.1.3" title="Nodes and Layout">
+
+<p>Objects that can be part of a scene graph are referred to as <code>nodes</code>.
+Scene graph nodes must belong to one of the subclasses of <classname>javafx.scene.Node</classname>.
+Scene graph objects that can act as containers must belong to one of the subclasses
+of <code>javafx.scene.Parent</code>, which is a subclass of <classname>Node</classname>.
+The nodes that are contained in a parent are called <newword>children</newword>
+of that node.  The root node in a scene graph must be a <classname>Parent</classname>.</p>
+
+<p>The buttons in <classname>HelloWorldFX</classname> are represented by objects of
+type <classname>Button</classname>, from package <code>javafx.scene.control</code>,
+which is a subclass of <classname>Parent</classname>.  (We'll see later that buttons
+can actually contain other nodes.)  The constructor that is used
+to create the button objects specifies the text that is displayed on the button.
+Similarly, <code>message</code> is a node of type <classname>Text</classname>,
+from package <code>javafx.scene.shape</code>, whose purpose is simply to passively
+display a <classname>String</classname>.  <classname>Text</classname> is a subclass
+of <classname>Node</classname> but not of <classname>Parent</classname>.
+One of the properties of a <classname>Text</classname> object is a font, which specifies
+the size and style of the characters in the displayed string.  The font for the text is set by
+calling its <code>setFont()</code> method.  The <classname>Font</classname> constructor that is used in the
+sample program, <code>new&nbsp;Font(40)</code>, takes a parameter that specifies the size of the font.</p>
+
+<p>Containers are <classname>Nodes</classname> which can have other nodes as children.
+The act of arranging a container's children on the screen is referred to as <newword>layout</newword>.
+Layout means setting the size and location of the components inside the container.  While it is possible
+for a program to set the sizes and locations directly, it is more commonly done automatically
+by the container.  Different containers implement different layout policies.  For example,
+an <classname>HBox</classname> is a container that simply arranges the components that it contains
+in a horizontal row.  In the constructor</p>
+
+<pre>HBox buttonBar = new HBox( 20, helloButton, goodbyeButton, quitButton );</pre>
+
+<np>the first parameter specifies the size of a gap that the <classname>HBox</classname> will place between 
+its children, and the remaining parameters are nodes to be added as children of the container.</np>
+
+<p>A <classname>BorderPane</classname> is a container that implements a completely different
+layout policy.  A <classname>BorderPane</classname> can contain up to five components, one
+in the center of the pane and up to four more placed at the top, at the bottom, to the left, and to the right
+of the center.  In the sample program, the root of the scene is a <classname>BorderPane</classname>
+and components are added in the pane's center and bottom positions with the statements</p>
+
+<pre>root.setCenter(message);
+root.setBottom(buttonBar);</pre>
+
+<p>Layout is configurable by a large number of options.  The sample program has only 
+one example of this,</p>
+
+<pre>buttonBar.setAlignment(Pos.CENTER);</pre>
+
+<np>This command centers the buttons within the <classname>HBox</classname>; without it,
+they would be shoved over to the left edge of the window.  <classname>Pos</classname>,
+short for "position," is an enumerated type (see <localref href="basics.3.4"/>).  JavaFX uses
+many enumerated types for specifying various options.</np>
+
+</subsection>
+
+<subsection id="GUI1.1.4" title="Events and Event Handlers">
+
+<p>In addition to setting up the physical layout of the window, the <code>start()</code>
+method configures <newword>event handling</newword>.  In <classname>HelloWorldFX</classname>,
+an event occurs when the user clicks one of the buttons.  The application must be configured
+to respond to, or "handle," these events.  Handling an event involves two objects.
+The event itself is represented by an object that holds information about the event.
+For a button click, the event is of type <classname>ActionEvent</classname>,
+and the information that it carries is the button that was clicked.  The second
+object is of type <classname>EventHandler</classname>, a functional interface that defines
+a method <code>handle(e)</code>, where the parameter, <code>e</code>, is the event object.
+To program a response to an event, you can create a class that implements the <classname>EventHandler</classname>
+interface and provides a definition for the <code>handle()</code> method.  However, since 
+<classname>EventHandler</classname> is a functional interface, the handler can alternatively
+be specified as a lambda expression (see <localref href="subroutines.4a"/>).  Lambda expressions
+are very commonly used in JavaFX for writing event handlers, among other uses.
+For example, the lambda expression</p>
+
+<pre>e -> message.setText("Hello World!")</pre>
+
+<np>represents an event handler that responds to an event
+by changing the text of the message to read "Hello World!".  The parameter, <code>e</code>,
+is the <classname>ActionEvent</classname> object that represents the event.
+In this case, the parameter is not used in the response in any way, but it still has
+to be there to satisfy the syntax of the lambda expression.</np>
+
+<p>In addition to writing the event handler, you also have to <newword>register</newword>
+the handler with the object that will produce the event.  In this case, the object is
+<code>helloButton</code>, and the handler is registered by calling the button's
+<code>setOnAction()</code> method:</p>
+
+<pre>helloButton.setOnAction( e -> message.setText("Hello World!") );</pre>
+
+<np>Handlers for each of the other two buttons are set up in a similar way.  Remember that
+in each case, there is an object that generates the event in response to a user action,
+an object that represents the event, and an event handler that contains the code that
+is executed in response to the event.  This diagram summarizes how it all works:</np>
    
-<p>The main program above declares a variable, <code>window</code>, of type <classname>JFrame</classname>
-and sets it to refer to a new window object with the statement:</p>
-  
-<pre>JFrame window = new JFrame("GUI Test");</pre>
-   
-<np>The parameter (the string "GUI test") in the constructor specifies the title that will be displayed in 
-the titlebar of the window.  This line creates the window object, but the window itself is
-not yet visible on the screen.  Before making the window visible, some of its properties are set
-with these statements:</np>
-   
-<pre>window.setContentPane(content);
-window.setSize(250,100);
-window.setLocation(100,100);</pre>
-   
-<np>The first line here sets the content of the window. (The content itself was created earlier
-in the main program.)  The second line says that the window will be 250 pixels wide and 100 pixels
-high.  The third line says that the upper left corner of the window will be 100 pixels over from
-the left edge of the screen and 100 pixels down from the top.  Once all this has been set
-up, the window is actually made visible on the screen with the command:</np>
-   
-<pre>window.setVisible(true);</pre>
-   
-<np>It might look as if the program ends at that point, and, in fact, the <code>main()</code> routine
-does end.  However, the window is still on the screen and the program as a whole does not end
-until the user clicks the OK button.  Once the window was opened, a new thread was created
-to manage the graphical user interface, and that thread continues to run even after
-<code>main()</code> has finished.</np>
+<img src="event-handling.png" width="561" height="172" tex="event-handling.eps" texscale="0.6" 
+      bordered="true" alt="How ActionEvents on a button are handled"/>
+
+<np>About all that still remains to be explained is the response to a click on the
+"Quit" button: <code>Platform.exit</code>.  The static <code>exit()</code> method in
+the <classname>Platform</classname> class is the preferred way to programmatically
+end a JavaFX program.  It is preferred to <code>System.exit()</code> because it
+cleanly shuts down the application thread and gives it an opportunity to clean
+up by calling the application's <code>stop()</code> method before terminating.</np>
 
 <break/>
-   
-<p>The content that is displayed in a <classname>JFrame</classname> is called its
-<newword>content pane</newword>.  (In addition to its content pane, a <classname>JFrame</classname> can also have
-a menu bar, which is a separate thing that I will talk about <localref href="GUI1.8">later</localref>.)  
-A basic <classname>JFrame</classname>
-already has a blank content pane; you can either add things to that pane or you can replace the
-basic content pane entirely.  In my sample program, the line
-<code>window.setContentPane(content)</code> replaces the original blank content pane with
-a different component.  (Remember that a "component" is just a visual element of a graphical user interface.)
-In this case, the new content is a component of type <classname>JPanel</classname>.</p>
 
-<p><classname>JPanel</classname> is another of the fundamental classes in Swing.  The basic <classname>JPanel</classname>
-is, again, just a blank rectangle.  There are two ways to make a useful <classname>JPanel</classname>:
-The first is to <b>add other components</b> to the panel; the second is to <b>draw something</b> in
-the panel.  Both of these techniques are illustrated in the sample program. In fact, you will find two <classname>JPanels</classname>
-in the program:  <code>content</code>, which is used to contain other components, and <code>displayPanel</code>, which
-is used as a drawing surface.</p>
-   
-<p>Let's look more closely at <code>displayPanel</code>.  This variable is of type <classname>HelloWorldDisplay</classname>,
-which is a static nested class inside the <classname>HelloWorldGUI2</classname> class.  (Nested classes were introduced
-in <localref href="OOP.8"/>.)  This class defines just one instance method, <code>paintComponent()</code>, which
-overrides a method of the same name in the <classname>JPanel</classname> class:</p>
-   
-<pre>private static class HelloWorldDisplay extends JPanel {
-   public void paintComponent(Graphics g) {
-      super.paintComponent(g);
-      g.drawString( "Hello World!", 20, 30 );
-   }
-}</pre>
-
-<np>The <code>paintComponent()</code> method is called by the system when a component needs to be painted
-on the screen.  In the <classname>JPanel</classname> class, the <code>paintComponent</code> method simply
-fills the panel with the panel's background color.  The <code>paintComponent()</code> method in
-<classname>HelloWorldDisplay</classname> begins by calling <code>super.paintComponent(g)</code>.  This
-calls the version of <code>paintComponent()</code> that is defined in the superclass, <classname>JPanel</classname>;
-that is, it fills the panel with the background color.  (See <localref href="OOP.6.2"/> for a discussion of the
-special variable <code>super</code>.)  Then it calls <code>g.drawString()</code> to paint
-the string "Hello World!" onto the panel.  The net result is that whenever a <classname>HelloWorldDisplay</classname>
-is shown on the screen, it displays the string "Hello World!".</np>
-   
-<p>We will often use <classname>JPanels</classname> in this way, as drawing surfaces.  Usually, when we do this,
-we will define a class that is a subclass of <classname>JPanel</classname> and we will write a <code>paintComponent</code>
-method in that class to draw the desired content in the panel.  The subclass of <classname>JPanel</classname>
-can be defined either as a separate class in its own file or as a nested class.  In simple cases, I will
-tend to use a nested class for the convenience.</p>
-   
-</subsection>
-   
-<subsection id="GUI1.1.2" title="Components and Layout">
-   
-<p>Another way of using a <classname>JPanel</classname> is as a <newword>container</newword>
-to hold other components.  Java has many classes that define GUI components.  Except for top-level
-components like windows, components must be <newword>added</newword> to a container before
-they can appear on the screen.  In the sample program,
-the variable named <code>content</code> refers to a <classname>JPanel</classname> that is
-used as a container. Two other components are added to that container.  This is done in the
-statements:</p>
-   
-<pre>content.add(displayPanel, BorderLayout.CENTER);
-content.add(okButton, BorderLayout.SOUTH);</pre>
-
-<np>Here, <code>content</code> refers to an object of type <classname>JPanel</classname>;
-later in the program, this panel becomes the content pane of the window.
-The first component that is added to <code>content</code> is 
-<code>displayPanel</code> which, as discussed above, displays
-the message, "Hello World!".  The second is <code>okButton</code> which represents the button that
-the user clicks to close the window.  The variable
-<code>okButton</code> is of type <classname>JButton</classname>, the Java class that represents 
-push buttons.</np>
-
-<p>The "BorderLayout" stuff in these statements has to do with
-how the two components are arranged in the container.  When components
-are added to a container, there has to be some way of deciding how those components are arranged
-inside the container.  This is called "laying out" the components in the container, and the
-most common technique for laying out components is to use a <newword>layout manager</newword>.
-A layout manager is an object that implements some policy for how to arrange the components
-in a container; different types of layout manager implement different policies.  One type of
-layout manager is defined by the <classname>BorderLayout</classname> class.  In the program, the
-statement</p>
-   
-<pre>content.setLayout(new BorderLayout());</pre>
-   
-<np>creates a new <classname>BorderLayout</classname> object and tells the <code>content</code>
-panel to use the new object as its layout manager.  Essentially, this line determines how
-components that are added to the content panel will be arranged inside the panel.  We will
-cover layout managers in much more detail later, but for now all you need to know is
-that adding <code>okButton</code> in the <code>BorderLayout.SOUTH</code> position puts
-the button at the bottom of the panel, and putting <code>displayPanel</code> in the
-<code>BorderLayout.CENTER</code> position makes it fill any space that is not taken
-up by the button.</np>
-   
-<p>This example shows a general technique for setting up a GUI:  Create a container and
-assign a layout manager to it, create components and add them to the container, and
-use the container as the content pane of a window. A container is itself a
-component, so it is possible that some of the components that are added to the top-level
-container are themselves containers, with their own layout managers and components.
-This makes it possible to build up complex user interfaces in a hierarchical fashion,
-with containers inside containers inside containers&dots;</p>
-
-</subsection>
-
-<subsection id="GUI1.1.3" title="Events and Listeners">
-   
-<p>The structure of containers and components sets up the physical appearance of a
-GUI, but it doesn't say anything about how the GUI <b>behaves</b>.  That is, what
-can the user do to the GUI and how will it respond?  GUIs are largely
-<newword>event-driven</newword>; that is, the program waits for events that are generated
-by the user's actions (or by some other cause).  When an event occurs, the program
-responds by executing an <newword>event-handling method</newword>.  In order to
-program the behavior of a GUI, you have to write event-handling methods to respond
-to the events that you are interested in.</p>
-   
-<p>The most common technique for handling events in Java is to use <newword>event
-listeners</newword>.  A listener is an object that includes one or more event-handling
-methods.  When an event is detected by another object, such as a button or menu,
-the listener object is notified and it responds by running the appropriate event-handling
-method.  An event is detected or generated by an object.  Another object, the listener,
-has the responsibility of responding to the event.  The event itself is actually represented
-by a third object, which carries information about the type of event, when it occurred,
-and so on.  This division of responsibilities makes it easier to organize large programs.</p>
-
-<img src="event-handling.png" width="557" height="168" 
-      alt="illustration of event being generated and sent to listener"
-      bordered="true" tex="event-handling.eps" texscale="0.75"/>
-   
-<p>As an example, consider the OK button in the sample program.  When the user
-clicks the button, an event is generated.  This event is represented by an object belonging
-to the class <classname>ActionEvent</classname>.  The event that is generated is associated
-with the button; we say that the button is the <newword>source</newword> of the event.
-The listener object in this case is an object belonging to the class <classname>ButtonHandler</classname>,
-which is defined as a nested class inside <classname>HelloWorldGUI2</classname>:</p>
-
-<pre>private static class ButtonHandler implements ActionListener {
-   public void actionPerformed(ActionEvent e) {
-      System.exit(0);
-   }
-}</pre>
-   
-<p>This class implements the <classname>ActionListener</classname> interface&mdash;a requirement for
-listener objects that handle events from buttons.  (Interfaces were introduced in 
-<localref href="OOP.7"/>.)  The event-handling method is named <code>actionPerformed</code>,
-as specified by the <classname>ActionListener</classname> interface.  This method contains the
-code that is executed when the user clicks the button; in this case, the code is simply a call
-to <code>System.exit()</code>, which will terminate the program.</p>
-   
-<p>There is one more ingredient that is necessary to get the event from the button to the
-listener object:  The listener object must <newword>register</newword> itself with the button
-as an event listener.  This is done with the statement:</p>
-
-<pre>okButton.addActionListener(listener);</pre>
-   
-<np>This statement tells <code>okButton</code> that when the user clicks the button, the
-ActionEvent that is generated should be sent to <code>listener</code>.  Without this statement,
-the button has no way of knowing that there is something that would like to listen for events
-from the button.</np>
-   
-<p>This example shows a general technique for programming the behavior of a GUI:
-Write classes that include event-handling methods.  Create objects that belong to these
-classes and register them as listeners with the objects that will actually detect or
-generate the events.  When an event occurs, the listener is notified, and the code that you
-wrote in one of its event-handling methods is executed.  At first, this might seem like
-a very roundabout and complicated way to get things done, but as you gain experience
-with it, you will find that it is very flexible and that it goes together very well with
-object oriented programming.</p>
-
-<p>This section has introduced some of the fundamentals of GUI programming.  We will
-spend the rest of the chapter exploring them in more detail.</p>
+<p>This section has been only a brief overview of JavaFX applications, but it has
+introduced many of the fundamental concepts.  We will cover all of this in much
+greater detail in the following sections.</p>
 
 </subsection>
 
 
-<subsection id="GUI1.1.4" title="Some Java GUI History">
-
-<p>The original GUI toolkit for Java was the AWT, the "Abstract Windowing Toolkit." It provided
-a common interface to the GUI components already built into various operating systems.  At the
-very beginning, it used a simpler event model that did not require listener objects, but that model
-was abandoned in favor of listeners very quickly in Java&nbsp;1.1.</p>
-
-<p>When Java was first introduced, one of the important applications was
-<newword>applets</newword>.  An applet is a GUI program that can run on a web page
-in a web browser.  Applets were covered in previous versions of this textbook,
-but they have become much less widely used and have been dropped from this
-seventh edition of the book.</p>
-
-<p>The <newcode>Swing</newcode> GUI toolkit was introduced in Java 1.2
-as an improved alternative to the AWT, with a larger variety of
-sophisticated components and a more logical structure.  Although Swing uses some aspects of
-the AWT, most of its components are written in Java rather than being based on operating system
-components.  Swing has been the standard toolkit for writing GUI programs in Java for over
-ten years, and it is the toolkit that I cover in this book.</p>
-
-<p>More recently, however, another GUI toolkit called <newword>JavaFX</newword> has been
-introduced.  It uses many of the same core ideas as Swing, including components, layout, and
-events, but uses a different structure for its applications and a different set of classes.
-With Java&nbsp;8, JavaFX becomes the preferred approach to writing GUI applications.
-However, I do not cover JavaFX in this book.  JavaFX is compatible with Swing and can use
-Swing components, and Swing will continue to be supported in Java.  (Indeed, the AWT is
-still supported!)  And as I've said, JavaFX is built on the same core ideas as Swing.</p>
-
-</subsection>
-   
 </section>

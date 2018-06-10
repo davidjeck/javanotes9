@@ -3,9 +3,8 @@
 
 <intro>
 <p><start><big>C</big>omputer users today expect</start> to interact
-with their computers using a graphical user interface (GUI).  Java can
-be used to write GUI programs ranging from simple applets which run on
-a Web page to sophisticated stand-alone applications.</p>
+with their computers using a graphical user interface (GUI), and
+Java can be used to write sophisticated GUI programs.</p>
    
 <p>GUI programs
 differ from traditional "straight-through" programs that you have 
@@ -22,11 +21,20 @@ and <localref href="control"/>.
 And of course, objects are everywhere in GUI programming.  
 Events are objects. Colors and fonts are objects.  GUI components such as buttons and
 menus are objects.  Events are handled by instance methods contained in objects. 
-In Java, GUI programming is object-oriented programming.</p>
+In Java, GUI programming is object-oriented programming.  The purpose of this chapter is, as
+much as anything, to give you some experience with a large-scale object-oriented API.</p>
 
-<p>This chapter covers the basics of GUI programming.
-The discussion  will continue in <localref href="GUI2"/> 
-with more details and with more advanced
-techniques.</p>
+<p>Java has had several "toolkits" for building GUI program.  This textbook
+uses <newword>JavaFX</newword> as its toolkit.  The previous version used
+the Swing GUI toolkit, and if you are interested in learning Swing rather
+than JavaFX, you should consult Chapter&nbsp;6 and Chapter&nbsp;13 in
+that version, which is still available at
+<a href="http://math.hws.edu/javanotes7">http://math.hws.edu/javanotes7</a>.</p>
+
+<p>This chapter is just an introduction to JavaFX&nbsp;8, but it covers the
+essential features of GUI programming in enough detail to write some
+interesting programs.  The discussion of JavaFX will continue in <localref href="GUI2"/> 
+with more details and with more advanced techniques, but complete coverage
+of JavaFX would require an entire book of its own.</p>
 
 </intro>

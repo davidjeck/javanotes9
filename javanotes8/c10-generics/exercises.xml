@@ -1005,8 +1005,8 @@ example:</p>
                        }
                     } );</pre>
                     
-<p>Furthermore, in Java 8, the predicate can be defined as a lamda
-expression (see <localref href="OOP.8.4"/>), which simplifies the code
+<p>Furthermore, in Java 8, the predicate can be defined as a lambda
+expression (see <localref href="subroutines.4a"/>), which simplifies the code
 quite a bit:</p>
 
 <pre>result = Predicates.collect(coll, i -&gt; i != null &amp;&amp; i &gt; 0))</pre>

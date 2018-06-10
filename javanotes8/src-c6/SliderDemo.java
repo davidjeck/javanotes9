@@ -1,68 +1,79 @@
 
-// A little program that demonstrates JSliders.
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.geometry.Insets;
 
-import java.awt.*;
+/**
+ *  A little program that demonstrates Sliders.
+ */
+public class SliderDemo extends Application {
 
-import javax.swing.*;
-import javax.swing.event.*;
+	private Slider slider1, slider2, slider3;  // The sliders.
 
-public class SliderDemo extends JPanel implements ChangeListener {
+	private Label label; // A label for reporting changes in the sliders' values.
+
+	public void start(Stage stage) {
+
+		label = new Label("Try dragging the knobs on the sliders!");
+		label.setFont( Font.font(18) );
+
+		slider1 = new Slider(0,10,5);
+
+		slider2 = new Slider();  // slider2 uses default values (0,100,0)
+		slider2.setMajorTickUnit(25); // space between big tick marks, measured using slider values
+		slider2.setMinorTickCount(5); // 5 small tick marks between big tick marks.
+		slider2.setShowTickMarks(true);
+
+		slider3 = new Slider(2000,2100,2018);
+		slider3.setMajorTickUnit(50);  // determines how many labels are shown
+		slider3.setMinorTickCount(49); // so there is a tick mark every 1 unit (ticks are not shown)
+		slider3.setShowTickLabels(true);  // will show labels at 2000, 2050, 2100
+		slider3.setSnapToTicks(true);  // after user finishes drag, value is snapped to a tick mark;
+		                               // since there are minor tick marks at integer values, 
+		                               //   the slider value is snapped to an integer.
+		
+		slider1.valueProperty().addListener( e -> sliderValueChanged(slider1) );
+		slider2.valueProperty().addListener( e -> sliderValueChanged(slider2) );
+		slider3.valueProperty().addListener( e -> sliderValueChanged(slider3) );
+		
+		VBox root = new VBox(12,label,slider1,slider2,slider3);
+		root.setStyle("-fx-background-color:white; -fx-border-color: black");
+		root.setPadding( new Insets(15) );
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("Slider Demo");
+		stage.show();
+
+	}  // end start()
+	
 
 	/**
-	 * A main routine allows this class to be run as an application.
+	 * This method is called by the handlers registered with the sliders when
+	 * the value of the slider changes.  It is called repeatedly as the user
+	 * drags the slider knob.  It can also be called when the drag ends, if 
+	 * the slider's snapToTicks property is true.
+	 * @param whichSlider tells which slider's value has changed
 	 */
-	public static void main(String[] args) {
-		JFrame window = new JFrame("Slider Demo");
-		SliderDemo content = new SliderDemo();
-		window.setContentPane(content);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setLocation(120,70);
-		window.setSize(350,200);
-		window.setVisible(true);
+	private void sliderValueChanged(Slider whichSlider) {
+		String str;
+		if (whichSlider == slider1)
+			str = String.format("First slider value is now %1.2f", slider1.getValue());
+		else if (whichSlider == slider2)
+			str = String.format("Second slider value is now %1.2f", slider2.getValue());
+		else
+			str = String.format("Third slider value is now %1.2f", slider3.getValue());
+		label.setText(str);
 	}
-
-	//---------------------------------------------------------------------
-
-	JSlider slider1, slider2, slider3;  // The sliders.
-
-	JLabel label; // A label for reporting changes in the sliders' values.
-
-	public SliderDemo() {
-
-		setLayout(new GridLayout(4,1));
-		setBorder(BorderFactory.createCompoundBorder(
-				       BorderFactory.createLineBorder(Color.DARK_GRAY, 2),
-				       BorderFactory.createEmptyBorder(8,8,8,8)));
-
-		label = new JLabel("Try dragging the sliders!", JLabel.CENTER);
-		add(label);
-
-		slider1 = new JSlider(0,10,0);
-		slider1.addChangeListener(this);
-		add(slider1);
-
-		slider2 = new JSlider();
-		slider2.addChangeListener(this);
-		slider2.setMajorTickSpacing(25);
-		slider2.setMinorTickSpacing(5);
-		slider2.setPaintTicks(true);
-		add(slider2);
-
-		slider3 = new JSlider(2000,2100,2014);
-		slider3.addChangeListener(this);
-		slider3.setLabelTable(slider3.createStandardLabels(50));
-		slider3.setPaintLabels(true);
-		add(slider3);
-
-	}  // end constructor
-
-	public void stateChanged(ChangeEvent evt) {
-		if (evt.getSource() == slider1)
-			label.setText("Slider one changed to " + slider1.getValue());
-		else if (evt.getSource() == slider2)
-			label.setText("Slider two changed to " + slider2.getValue());
-		else if (evt.getSource() == slider3)
-			label.setText("Slider three changed to " + slider3.getValue());
+	
+	//----------------------------------------------------------------------------
+	
+	public static void main(String[] args) {
+		launch(args);
 	}
 
 }
