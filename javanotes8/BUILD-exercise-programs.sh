@@ -37,7 +37,7 @@ if  $XALAN_COMMAND -xsl convert-exercise-progs.xsl -in javanotes8.xml ; then
    cp src-c4/Mosaic.java src-c4/MosaicCanvas.java exercise-programs/chapter4
    cp src-c4/ArrayProcessor.java exercise-programs/chapter4
    cp src-c5/Deck.java src-c5/Hand.java src-c5/BlackjackHand.java src-c5/Card.java exercise-programs/chapter5
-   cp src-c5/Deck.java src-c5/Hand.java src-c5/BlackjackHand.java src-c5/Card.java exercise-programs/chapter6
+   cp src-c5/Deck.java src-c5/Hand.java src-c5/BlackjackHand.java src-c5/Card.java src-c6/cards.png exercise-programs/chapter6
    cp exercise-programs/chapter5/StatCalc.java exercise-programs/chapter6/StatCalc.java
    cp src-c8/Expr.java exercise-programs/chapter8
    cp src-c11/TextReader.java exercise-programs/chapter11

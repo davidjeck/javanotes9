@@ -63,9 +63,9 @@ if  $XALAN_COMMAND -xsl convert-web.xsl -in javanotes8.xml ; then
    copyfiles 4 subroutines src-textio/textio
    copyfiles 5 OOP src-textio/textio
    copyfiles 6 GUI1 src-c5/Hand.java src-c5/Deck.java src-c5/Card.java src-c5/BlackjackHand.java src-c4/MosaicCanvas.java
-   copyfiles 7 arrays src-textio/textio src-c4/MosaicPanel.java
+   copyfiles 7 arrays src-textio/textio src-c4/MosaicCanvas.java
    copyfiles 8 robustness src-textio/textio
-   copyfiles 9 recursion src-textio/textio src-c4/MosaicPanel.java
+   copyfiles 9 recursion src-textio/textio src-c4/MosaicCanvas.java
    copyfiles 10 generics src-textio/textio
    copyfiles 11 IO src-textio/textio
    copyfiles 12 threads src-textio/textio

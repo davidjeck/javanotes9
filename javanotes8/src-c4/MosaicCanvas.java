@@ -543,16 +543,18 @@ public class MosaicCanvas extends Canvas {
 	// private implementation section -- the only part that actually draws squares
 	
 	private void drawSquare(int row, int col) {
-		if (Platform.isFxApplicationThread()) {
-			drawOneSquare(row,col);
-		}
-		else {
-			Platform.runLater( () -> drawOneSquare(row,col) );
-		}
-		try { // to avoid overwhelming the application thread with draw operations...
-			Thread.sleep(1);
-		}
-		catch (InterruptedException e) {
+		if ( autopaint ) {
+			if (Platform.isFxApplicationThread()) {
+				drawOneSquare(row,col);
+			}
+			else {
+				Platform.runLater( () -> drawOneSquare(row,col) );
+			}
+			try { // to avoid overwhelming the application thread with draw operations...
+				Thread.sleep(1);
+			}
+			catch (InterruptedException e) {
+			}
 		}
 	}
 	
@@ -616,11 +618,11 @@ public class MosaicCanvas extends Canvas {
 		}
 		g.fillRect(x,y,width,height);
 		g.setStroke(Color.hsb(h,s,b+0.2));
-		g.strokeLine(x+0.5,y+0.5,x+width+0.5,y+0.5);
-		g.strokeLine(x+0.5,y+0.5,x+0.5,y+height+0.5);
+		g.strokeLine(x+0.5,y+0.5,x+width-0.5,y+0.5);
+		g.strokeLine(x+0.5,y+0.5,x+0.5,y+height-0.5);
 		g.setStroke(Color.hsb(h,s,b-0.2));
-		g.strokeLine(x+width-0.5,y+0.5,x+width-0.5,y+height+0.5);
-		g.strokeLine(x+0.5,y+height-0.5,x+width+0.5,y+height-0.5);
+		g.strokeLine(x+width-0.5,y+1.5,x+width-0.5,y+height-0.5);
+		g.strokeLine(x+1.5,y+height-0.5,x+width-0.5,y+height-0.5);
 	}
 	
 

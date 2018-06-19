@@ -227,19 +227,20 @@ boolean-valued functions <code>evt.isPrimaryButtonDown()</code>, <code>evt.isMid
 and <code>evt.isSecondaryButtonDown()</code>.</p>
 
 <p>As a simple example, suppose that when the user clicks a <classname>Canvas</classname>,
-<code>canvas</code>, you would like to draw a rectangle at the point where the user clicked.
-If the shift key is down, you want the rectangle to be red; if not, you want it to be blue.
+<code>canvas</code>, you would like to draw a red rectangle at the point where the user clicked.
+But if the shift key is down, you want to draw a blue oval instead.
 An event handler to do that can be defined as:</p>
 
 <pre>canvas.setOnMousePressed( evt -&gt; {
     GraphicsContext g = canvas.getGraphicsContext2D();
     if ( evt.isShiftDown() ) {
-        g.setFill( Color.RED );
+        g.setFill( Color.BLUE );
+        fillRect( evt.getX() - 30, evt.getY() - 15, 60, 30 )
     }
     else {
         g.setFill( Color.BLUE );
+        fillOval( evt.getX() - 30, evt.getY() - 15, 60, 30 );
     }
-    g.fillRect( evt.getX(), evt.getY(), 100, 50 );
 } );</pre>
 
 <p>To get a better idea of how mouse events work, you should try the sample program

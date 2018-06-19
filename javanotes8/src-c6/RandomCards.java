@@ -53,8 +53,7 @@ public class RandomCards extends Application {
 		stage.setTitle("Random Cards");
 		stage.setResizable(false);
 		stage.show();
-		System.out.println(79);
-		System.out.println(123);
+
 	}
 	
 

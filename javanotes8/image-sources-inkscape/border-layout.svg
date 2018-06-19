@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448819"
-   height="1052.3622047"
+   width="229"
+   height="181"
    id="svg3845"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="border-layout.svg"
-   inkscape:export-filename="/home/eck/eclipse-workspace/javanotes7/c6-GUI1/border-layout.png"
+   inkscape:export-filename="/home/eck/git/javanotes8/javanotes8/c6-GUI1/border-layout.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -28,16 +28,20 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="84.469728"
-     inkscape:cy="920"
+     inkscape:cx="196.60981"
+     inkscape:cy="47.999992"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1144"
      inkscape:window-height="949"
      inkscape:window-x="193"
-     inkscape:window-y="52"
-     inkscape:window-maximized="0" />
+     inkscape:window-y="50"
+     inkscape:window-maximized="0"
+     fit-margin-top="2"
+     fit-margin-left="2"
+     fit-margin-right="2"
+     fit-margin-bottom="2" />
   <metadata
      id="metadata3850">
     <rdf:RDF>
@@ -53,16 +57,17 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(3.0000001,0.6378175)">
     <rect
-       style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:2.07155632999999995;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;stroke:#000000;stroke-width:2.07155633;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
        id="rect3853"
        width="222.92844"
        height="174.92844"
        x="0.035778046"
        y="2.3979607" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m -0.5,33.362182 223,0"
        id="path3855"
        inkscape:connector-curvature="0" />
@@ -70,9 +75,9 @@
        inkscape:connector-curvature="0"
        id="path3857"
        d="m -0.5,145.36218 223,0"
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 37,33.362182 37,145.36218"
        id="path3859"
        inkscape:connector-curvature="0" />
@@ -80,10 +85,10 @@
        inkscape:connector-curvature="0"
        id="path3861"
        d="m 187,33.362182 0,111.999998"
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-size:22px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:125%;font-family:Serif;-inkscape-font-specification:Sans;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none"
        x="69"
        y="92.362183"
        id="text3863"
@@ -97,46 +102,46 @@
        id="text3867"
        y="26.362183"
        x="73"
-       style="font-size:22px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:125%;font-family:Serif;-inkscape-font-specification:Sans;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none"
        xml:space="preserve"><tspan
          y="26.362183"
          x="73"
          id="tspan3869"
-         sodipodi:role="line">North</tspan></text>
+         sodipodi:role="line">Top</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3871"
        y="169.36218"
        x="75"
-       style="font-size:22px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:125%;font-family:Serif;-inkscape-font-specification:Sans;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none"
        xml:space="preserve"><tspan
          y="169.36218"
          x="75"
          id="tspan3873"
-         sodipodi:role="line">South</tspan></text>
+         sodipodi:role="line">Bottom</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3875"
        y="-198.31641"
-       x="63.319214"
-       style="font-size:22px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
+       x="59.319214"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:125%;font-family:Serif;-inkscape-font-specification:Sans;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none"
        xml:space="preserve"
        transform="matrix(0,1,-1,0,0,0)"><tspan
          y="-198.31641"
-         x="63.319214"
+         x="59.319214"
          id="tspan3877"
-         sodipodi:role="line">East</tspan></text>
+         sodipodi:role="line">Right</tspan></text>
     <text
        transform="matrix(0,-1,1,0,0,0)"
        xml:space="preserve"
-       style="font-size:22px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Sans"
-       x="-117.21277"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:125%;font-family:Serif;-inkscape-font-specification:Sans;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#800000;fill-opacity:1;stroke:none"
+       x="-111.21277"
        y="28.042969"
        id="text3879"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3881"
-         x="-117.21277"
-         y="28.042969">West</tspan></text>
+         x="-111.21277"
+         y="28.042969">Left</tspan></text>
   </g>
 </svg>

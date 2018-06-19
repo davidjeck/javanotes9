@@ -1,118 +1,104 @@
 
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 /**
  * In this program, the user can type in two real numbers.  The
  * user can click on buttons labeled +, - , *, and / to perform
  * basic arithmetic operations on the numbers.  When the user
  * clicks on a button the answer is displayed. 
- * This class also contains a main() routine, so that
- * it can be run as a stand-alone application.
  */
-public class SimpleCalc extends JPanel implements ActionListener {
+public class SimpleCalc extends Application {
 
-	/**
-	 * This main() routine makes it possible to run the SimpleCalc class
-	 * as a stand-alone application. 
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Simple Calculator");
-		SimpleCalc content = new SimpleCalc();
-		window.setContentPane(content);
-		window.pack();  // Sizes window to preferred size of contents.
-		window.setLocation(100,100);
-		window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		window.setVisible(true);
+		launch(args);
 	}
 
 	//-------------------------------------------------------------------------
 
 
-	private JTextField xInput, yInput;  // Input boxes for the numbers.
+	private TextField xInput, yInput;  // Input boxes for the numbers.
 
-	private JLabel answer;  // JLabel for displaying the answer, or an 
-							//    error message if appropriate.
+	private Label answer;  // JLabel for displaying the answer, or an 
+						   //    error message if appropriate.
 
 
-	public SimpleCalc() {
+	public void start(Stage stage) {
 
-		/* Assign a background color to the panel and its
-			 content panel.  This color will show through in the gaps
-			 between components. */
+		/* Create TextFields for the user's input, initially containing "0" */
 
-		setBackground(Color.GRAY);
+		xInput = new TextField("0");
+		yInput = new TextField("0");
 
-		/* Add an empty border around the panel, which will also
-		 * appear in the gray background color. */
+		/* Create HBoxes to hold the input boxes and labels "x =" and "y =".
+		 * Set the input boxes to grow to fill the available space. */
 
-		setBorder( BorderFactory.createEmptyBorder(5,5,5,5) );
+		HBox xPane = new HBox( new Label(" x = "), xInput );
+		HBox yPane = new HBox( new Label(" y = "), yInput );
 
-		/* Create the input boxes, and make sure that the background
-			 color is white.  (They are likely to be white by default.) */
+		/* Create the four buttons and an HBox to hold them. */
 
-		xInput = new JTextField("0", 10);
-		xInput.setBackground(Color.WHITE);
-		yInput = new JTextField("0", 10);
-		yInput.setBackground(Color.WHITE);
+		Button plus = new Button("+");
+		plus.setOnAction( e -> doOperation('+') );
 
-		/* Create panels to hold the input boxes and labels "x =" and
-			 "y = ".  These panels use the default FlowLayout layout manager. */
+		Button minus = new Button("-");
+		minus.setOnAction( e -> doOperation('-') );
 
-		JPanel xPanel = new JPanel();
-		xPanel.add( new JLabel(" x = "));
-		xPanel.add(xInput);
+		Button times = new Button("*");
+		times.setOnAction( e -> doOperation('*') );
 
-		JPanel yPanel = new JPanel();
-		yPanel.add( new JLabel(" y = "));
-		yPanel.add(yInput);
+		Button divide = new Button("/");
+		divide.setOnAction( e -> doOperation('/') );
+		
+		HBox buttonPane = new HBox( plus, minus, times, divide );
+		
+		/* The four buttons need to be tweaked so that they will fill
+		 * the entire buttonPane.  This can be done by giving each button
+		 * a large maximum width and setting an hgrow constraint
+		 * for the button. */
+		
+		HBox.setHgrow(plus, Priority.ALWAYS);
+		plus.setMaxWidth(Double.POSITIVE_INFINITY);
+		HBox.setHgrow(minus, Priority.ALWAYS);
+		minus.setMaxWidth(Double.POSITIVE_INFINITY);
+		HBox.setHgrow(times, Priority.ALWAYS);
+		times.setMaxWidth(Double.POSITIVE_INFINITY);
+		HBox.setHgrow(divide, Priority.ALWAYS);
+		divide.setMaxWidth(Double.POSITIVE_INFINITY);
 
-		/* Create a panel to hold the four buttons for the four
-			 operations.  A GridLayout is used so that the buttons
-			 will all have the same size and will fill the panel. 
-			 The main panel serves as ActionListener for the buttons. */
+		/* Create the label for displaying the answer in red. 
+		 * Use a bold font. */
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(1,4));
+		answer = new Label("x + y = 0");
+		answer.setTextFill(Color.RED);
+		answer.setStyle("-fx-font-weight:bold");
+		answer.setAlignment(Pos.CENTER);
+		answer.setMaxWidth(Double.POSITIVE_INFINITY);
 
-		JButton plus = new JButton("+");
-		plus.addActionListener(this);
-		buttonPanel.add(plus);
+		/* Create a VBox to hold all the other components.   There is
+		 * a 10-pixel gap between components, and padding around the edges. */
+		
+		VBox root = new VBox( 10, xPane, yPane, buttonPane, answer );
+		root.setPadding( new Insets( 8,3,8,3 ) );
+		root.setStyle("-fx-border-color:black; -fx-border-width:2px");
 
-		JButton minus = new JButton("-");
-		minus.addActionListener(this);
-		buttonPanel.add(minus);
-
-		JButton times = new JButton("*");
-		times.addActionListener(this);
-		buttonPanel.add(times);
-
-		JButton divide = new JButton("/");
-		divide.addActionListener(this);
-		buttonPanel.add(divide);
-
-		/* Create the label for displaying the answer in red
-			 on a white background.  The label is set to be
-			 "opaque" to make sure that the white background
-			 is painted. */
-
-		answer = new JLabel("x + y = 0", JLabel.CENTER);
-		answer.setForeground(Color.RED);
-		answer.setBackground(Color.WHITE);
-		answer.setOpaque(true);
-
-		/* Set up the layout for the main panel, using a GridLayout,
-			 and add all the components that have been created. */
-
-		setLayout(new GridLayout(4,1,3,3));
-		add(xPanel);
-		add(yPanel);
-		add(buttonPanel);
-		add(answer);
-
-	}  // end constructor
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("SimpleCalc");
+		stage.setResizable(false);
+		stage.show();
+		
+	}  // end start();
 
 
 	/**
@@ -120,17 +106,17 @@ public class SimpleCalc extends JPanel implements ActionListener {
 	 * and perform the operation indicated by the button.  Put the result in
 	 * the answer label.  If an error occurs, an error message is put in the label.
 	 */
-	public void actionPerformed(ActionEvent evt) {
+	private void doOperation( char op ) {
 
 		double x, y;  // The numbers from the input boxes.
 
-		/* Get a number from the xInput JTextField.  Use 
+		/* Get a number from the xInput TextField.  Use 
 			 xInput.getText() to get its contents as a String.
 			 Convert this String to a double.  The try...catch
 			 statement will check for errors in the String.  If 
 			 the string is not a legal number, the error message
 			 "Illegal data for x." is put into the answer and
-			 the actionPerformed() method ends. */
+			 this method ends. */
 
 		try {
 			String xStr = xInput.getText();
@@ -139,7 +125,8 @@ public class SimpleCalc extends JPanel implements ActionListener {
 		catch (NumberFormatException e) {
 				// The string xStr is not a legal number.
 			answer.setText("Illegal data for x.");
-			xInput.requestFocusInWindow();
+			xInput.requestFocus();
+			xInput.selectAll();
 			return;
 		}
 
@@ -151,7 +138,8 @@ public class SimpleCalc extends JPanel implements ActionListener {
 		}
 		catch (NumberFormatException e) {
 			answer.setText("Illegal data for y.");
-			yInput.requestFocusInWindow();
+			yInput.requestFocus();
+			yInput.selectAll();
 			return;
 		}
 
@@ -159,21 +147,24 @@ public class SimpleCalc extends JPanel implements ActionListener {
 			 from the button.  Note that division by zero produces
 			 an error message. */
 
-		String op = evt.getActionCommand();
-		if (op.equals("+"))
+		if (op == '+')
 			answer.setText( "x + y = " + (x+y) );
-		else if (op.equals("-"))
+		else if (op == '-')
 			answer.setText( "x - y = " + (x-y) );
-		else if (op.equals("*"))
+		else if (op == '*')
 			answer.setText( "x * y = " + (x*y) );
-		else if (op.equals("/")) {
-			if (y == 0)
+		else if (op == '/') {
+			if (y == 0) {
 				answer.setText("Can't divide by zero!");
-			else
+				yInput.requestFocus();
+				yInput.selectAll();
+			}
+			else {
 				answer.setText( "x / y = " + (x/y) );
+			}
 		}
 
-	} // end actionPerformed()
+	} // end doOperation()
 
 
 }  // end class SimpleCalc

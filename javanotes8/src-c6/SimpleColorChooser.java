@@ -14,11 +14,11 @@ import javafx.scene.paint.Color;
  */
 public class SimpleColorChooser extends Application {
 
-	private Slider hueSlider, brightnessSlider, saturationSlider,  // Slider bars.
-	redSlider, greenSlider, blueSlider;
+	private Slider hueSlider, brightnessSlider, saturationSlider,  // Sliders to control color components.
+						redSlider, greenSlider, blueSlider;
 
-	private Label hueLabel, brightnessLabel, saturationLabel,  // Display component values.
-	redLabel, greenLabel, blueLabel;
+	private Label hueLabel, brightnessLabel, saturationLabel,  // For displaying color component values.
+						redLabel, greenLabel, blueLabel;
 
 	private Pane colorPatch;  // Color patch for displaying the color.
 
@@ -28,7 +28,7 @@ public class SimpleColorChooser extends Application {
 
 	public void start(Stage stage) {
 
-		/* Create Sliders with possible values from 0 to 1 or 0 to 360for hue. */
+		/* Create Sliders with possible values from 0 to 1, or 0 to 360 for hue. */
 
 		hueSlider = new Slider(0,360,0);
 		saturationSlider = new Slider(0,1,1);
@@ -83,7 +83,7 @@ public class SimpleColorChooser extends Application {
 		root.add(redLabel, 1, 3);
 		root.add(greenLabel, 1, 4);
 		root.add(blueLabel, 1, 5);
-		root.add(colorPatch, 2, 0, 1, 6);
+		root.add(colorPatch, 2, 0, 1, 6);  // occupies 6 rows!
 		root.setStyle("-fx-padding:5px; -fx-border-color:darkblue; -fx-border-width:2px; -fx-background-color:#DDF");
 
 		/* Create the scene and show the stage. */

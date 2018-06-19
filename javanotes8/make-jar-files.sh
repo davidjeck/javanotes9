@@ -197,13 +197,10 @@ buildjar chapter6 KeyboardEventDemo
 buildjar chapter6 SubKiller
 buildjar chapter6 TextInputDemo
 buildjar chapter6 SliderDemo
-buildjar chapter6 BorderDemo
-buildjar chapter6 SliderAndButtonDemo
+buildjar chapter6 OwnLayoutDemo
 buildjar chapter6 SimpleCalc
-buildjar chapter6 NullLayoutDemo
-buildjar chapter6 HighLowGUI Card.java Hand.java Deck.java
-buildjar chapter6 MosaicDraw MosaicDrawController.java MosaicPanel.java
-buildjar chapter6 SimpleDialogDemo
+buildjar chapter6 HighLowGUI Card.java Hand.java Deck.java cards.png
+buildjar chapter6 MosaicDraw MosaicCanvas.java
 buildjar chapter7 RandomStringsWithArray
 buildTextIOjar chapter7 ReverseWithDynamicArray DynamicArrayOfInt.java
 buildjar chapter7 SimplePaint2

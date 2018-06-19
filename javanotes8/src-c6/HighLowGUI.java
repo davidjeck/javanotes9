@@ -1,7 +1,17 @@
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * This class implements a simple card game.  The user sees a card 
@@ -10,263 +20,224 @@ import javax.swing.*;
  * three correct predictions, the user wins.  If not, the
  * user loses.
  * 
- * A main() routine allows this class to be run as a program.
- * 
  * This class depends on several additional source code files:
- * Card.java, Hand.java, and Deck.java.
+ * Card.java, Hand.jave, Deck.java, and cards.png. 
  */
-public class HighLowGUI extends JPanel {
+public class HighLowGUI extends Application {
 
-
-	/**
-	 * A main routine allows this class to be run as an application.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("High/Low Card Game");
-		HighLowGUI content = new HighLowGUI();
-		window.setContentPane(content);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setLocation(120,70);
-		window.pack();
-		window.setResizable(false);
-		window.setVisible(true);
+		launch(args);
 	}
 
 	//---------------------------------------------------------------------
 
+	private Canvas board;     // The canvas on which cards and message are drawn.
+	private Image cardImages; // A single image contains the images of every card.
+
+	private Deck deck;      // A deck of cards to be used in the game.
+	private Hand hand;      // The cards that have been dealt so far.
+	private String message; // A message drawn on the canvas, which changes
+					        //    to reflect the state of the game.
+
+	private boolean gameInProgress;  // Set to true when a game begins and to false
+									 //   when the game ends.
+
+	
 	/**
-	 * The constructor lays out the panel.  A CardPanel occupies the CENTER 
-	 * position of the panel (where CardPanel is a subclass of JPanel that is 
-	 * defined below).  On the bottom is a panel that holds three buttons.  
-	 * The CardPanel listens for ActionEvents from the buttons and does all 
-	 * the real work of the program.
+	 * The start() method sets up the GUI and event handling. The root
+	 * pane is a BorderPane. A canvas where occupies the center position 
+	 * of the BorderPane.  On the bottom is a HBox that holds three buttons.  
+	 * ActionEvent handlers are set up to call methods defined elsewhere
+	 * in this class when the user clicks a button.
 	 */
-	public HighLowGUI() {
+	public void start(Stage stage) {
 
-		setBackground( new Color(130,50,40) );
+		cardImages = new Image("cards.png");
 
-		setLayout( new BorderLayout(3,3) );
+		board = new Canvas(4*99 + 20, 123 + 80); 
+		                 // space for 4 cards, with 20-pixel border
+						 // and space on the bottom for a message
+		
+		Button higher = new Button("Higher");
+		higher.setOnAction( e -> doHigher() );
+		Button lower = new Button("Lower");
+		lower.setOnAction( e -> doLower() );
+		Button newGame = new Button("New Game");
+		newGame.setOnAction( e -> doNewGame() );
 
-		CardPanel board = new CardPanel(); // Board will also act as ActionListener.
-		add(board, BorderLayout.CENTER);
+		HBox buttonBar = new HBox( higher, lower, newGame );
+		
+		/* Improve the layout of the buttonBar. Without adjustment
+		 * the buttons will be grouped at the left end of the
+		 * HBox.  My solution is to set their preferred widths
+		 * to make them all the same size and make them fill the
+		 * entire HBox.  */
+		
+		higher.setPrefWidth(board.getWidth()/3.0);
+		lower.setPrefWidth(board.getWidth()/3.0);
+		newGame.setPrefWidth(board.getWidth()/3.0);
+		
+//		buttonBar.setAlignment(Pos.CENTER);  // Alternative layout adjustment:
+											 // group the buttons in the
+											 // center of the HBox.
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBackground( new Color(220,200,180) );
-		add(buttonPanel, BorderLayout.SOUTH);
+//		higher.setMaxWidth(1000);  // Alternative layout adjustment:
+//		lower.setMaxWidth(1000);   // increase the max size of the buttons
+//		newGame.setMaxWidth(1000); // tell the HBox to let them grow.
+//		HBox.setHgrow(higher, Priority.ALWAYS);  // In this case, the buttons
+//		HBox.setHgrow(lower, Priority.ALWAYS);   // fill the HBox, but they are
+//		HBox.setHgrow(newGame, Priority.ALWAYS); // not the same size.
+		
+		BorderPane root = new BorderPane();
+		root.setCenter(board);
+		root.setBottom(buttonBar);
 
-		JButton higher = new JButton( "Higher" );
-		higher.addActionListener(board);
-		buttonPanel.add(higher);
+		doNewGame();  // set up for the first game
 
-		JButton lower = new JButton( "Lower" );
-		lower.addActionListener(board);
-		buttonPanel.add(lower);
-
-		JButton newGame = new JButton( "New Game" );
-		newGame.addActionListener(board);
-		buttonPanel.add(newGame);
-
-		setBorder(BorderFactory.createLineBorder( new Color(130,50,40), 3) );
-
-	}  // end constructor
-
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("High/Low Game");
+		stage.setResizable(false);
+		stage.show();
+		
+	}  // end start()
 
 
 	/**
-	 * A nested class that displays the cards and does all the work
-	 * of keeping track of the state and responding to user events.
+	 * Called by an event handler when user clicks "Higher" button.
+	 * Check the user's prediction.  Game ends if user guessed
+	 * wrong or if the user has made three correct predictions.
 	 */
-	private class CardPanel extends JPanel implements ActionListener {
-
-		Deck deck;       // A deck of cards to be used in the game.
-		Hand hand;       // The cards that have been dealt.
-		String message;  // A message drawn on the canvas, which changes
-		                 //    to reflect the state of the game.
-
-		boolean gameInProgress;  // Set to true when a game begins and to false
-		                         //   when the game ends.
-
-		Font bigFont;      // Font that will be used to display the message.
-		Font smallFont;    // Font that will be used to draw the cards.
-
-		/**
-		 * Constructor creates fonts, sets the foreground and background
-		 * colors and starts the first game.  It also sets a "preferred
-		 * size" for the panel.  This size is respected when the program
-		 * is run as an application, since the pack() method is used to
-		 * set the size of the window.
-		 */
-		CardPanel() {
-			setBackground( new Color(0,120,0) );
-			setForeground( Color.GREEN );
-			smallFont = new Font("SansSerif", Font.PLAIN, 12);
-			bigFont = new Font("Serif", Font.BOLD, 14);
-			setPreferredSize( new Dimension(370, 150));
-			doNewGame();
-		} // end constructor
-
-		/**
-		 * Respond when the user clicks on a button by calling the appropriate 
-		 * method.  Note that the buttons are created and listening is set
-		 * up in the constructor of the HighLowPanel class.
-		 */
-		public void actionPerformed(ActionEvent evt) {
-			String command = evt.getActionCommand();
-			if (command.equals("Higher"))
-				doHigher();
-			else if (command.equals("Lower"))
-				doLower();
-			else if (command.equals("New Game"))
-				doNewGame();
-		} // end actionPerformed()
-		
-
-		/**
-		 * Called by actionPerformed() when user clicks "Higher" button.
-		 * Check the user's prediction.  Game ends if user guessed
-		 * wrong or if the user has made three correct predictions.
-		 */
-		void doHigher() {
-			if (gameInProgress == false) {
-					// If the game has ended, it was an error to click "Higher",
-					// So set up an error message and abort processing.
-				message = "Click \"New Game\" to start a new game!";
-				repaint();
-				return;
-			}
-			hand.addCard( deck.dealCard() );     // Deal a card to the hand.
-			int cardCt = hand.getCardCount();
-			Card thisCard = hand.getCard( cardCt - 1 );  // Card just dealt.
-			Card prevCard = hand.getCard( cardCt - 2 );  // The previous card.
-			if ( thisCard.getValue() < prevCard.getValue() ) {
-				gameInProgress = false;
-				message = "Too bad! You lose.";
-			}
-			else if ( thisCard.getValue() == prevCard.getValue() ) {
-				gameInProgress = false;
-				message = "Too bad!  You lose on ties.";
-			}
-			else if ( cardCt == 4) {
-				gameInProgress = false;
-				message = "You win!  You made three correct guesses.";
-			}
-			else {
-				message = "Got it right!  Try for " + cardCt + ".";
-			}
-			repaint();
-		} // end doHigher()
-		
-
-		/**
-		 * Called by actionPerformed() when user clicks "Lower" button.
-		 * Check the user's prediction.  Game ends if user guessed
-		 * wrong or if the user has made three correct predictions.
-		 */
-		void doLower() {
-			if (gameInProgress == false) {
-					// If the game has ended, it was an error to click "Lower",
-					// So set up an error message and abort processing.
-				message = "Click \"New Game\" to start a new game!";
-				repaint();
-				return;
-			}
-			hand.addCard( deck.dealCard() );     // Deal a card to the hand.
-			int cardCt = hand.getCardCount();
-			Card thisCard = hand.getCard( cardCt - 1 );  // Card just dealt.
-			Card prevCard = hand.getCard( cardCt - 2 );  // The previous card.
-			if ( thisCard.getValue() > prevCard.getValue() ) {
-				gameInProgress = false;
-				message = "Too bad! You lose.";
-			}
-			else if ( thisCard.getValue() == prevCard.getValue() ) {
-				gameInProgress = false;
-				message = "Too bad!  You lose on ties.";
-			}
-			else if ( cardCt == 4) {
-				gameInProgress = false;
-				message = "You win!  You made three correct guesses.";
-			}
-			else {
-				message = "Got it right!  Try for " + cardCt + ".";
-			}
-			repaint();
-		} // end doLower()
-		
-
-		/**
-		 * Called by the constructor, and called by actionPerformed() if
-		 * the use clicks the "New Game" button.  Start a new game.
-		 */
-		void doNewGame() {
-			if (gameInProgress) {
-					// If the current game is not over, it is an error to try
-					// to start a new game.
-				message = "You still have to finish this game!";
-				repaint();
-				return;
-			}
-			deck = new Deck();   // Create the deck and hand to use for this game.
-			hand = new Hand();
-			deck.shuffle();
-			hand.addCard( deck.dealCard() );  // Deal the first card into the hand.
-			message = "Is the next card higher or lower?";
-			gameInProgress = true;
-			repaint();
-		} // end doNewGame()
-
-		
-		/**
-		 * This method draws the message at the bottom of the
-		 * panel, and it draws all of the dealt cards spread out
-		 * across the canvas.  If the game is in progress, an extra
-		 * card is drawn face down representing the card to be dealt next.
-		 */
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.setFont(bigFont);
-			g.drawString(message,10,135);
-			g.setFont(smallFont);
-			int cardCt = hand.getCardCount();
-			for (int i = 0; i < cardCt; i++)
-				drawCard(g, hand.getCard(i), 10 + i * 90, 10);
-			if (gameInProgress)
-				drawCard(g, null, 10 + cardCt * 90, 10);
-		} // end paintComponent()
-
-		
-		
-		/**
-		 * Draws a card as a 80 by 100 rectangle with upper left corner at (x,y).
-		 * The card is drawn in the graphics context g.  If card is null, then
-		 * a face-down card is drawn.  (The cards are rather primitive!)
-		 */
-		void drawCard(Graphics g, Card card, int x, int y) {
-			if (card == null) {  
-				// Draw a face-down card
-				g.setColor(Color.BLUE);
-				g.fillRect(x,y,80,100);
-				g.setColor(Color.WHITE);
-				g.drawRect(x+3,y+3,73,93);
-				g.drawRect(x+4,y+4,71,91);
-			}
-			else {
-				g.setColor(Color.WHITE);
-				g.fillRect(x,y,80,100);
-				g.setColor(Color.GRAY);
-				g.drawRect(x,y,79,99);
-				g.drawRect(x+1,y+1,77,97);
-				if (card.getSuit() == Card.DIAMONDS || card.getSuit() == Card.HEARTS)
-					g.setColor(Color.RED);
-				else
-					g.setColor(Color.BLACK);
-				g.drawString(card.getValueAsString(), x + 10, y + 30);
-				g.drawString("of", x+ 10, y + 50);
-				g.drawString(card.getSuitAsString(), x + 10, y + 70);
-			}
-		} // end drawCard()
+	private void doHigher() {
+		if (gameInProgress == false) {
+				// If the game has ended, it was an error to click "Higher",
+				// So set up an error message and abort processing.
+			message = "Click \"New Game\" to start a new game!";
+			drawBoard();
+			return;
+		}
+		hand.addCard( deck.dealCard() );     // Deal a card to the hand.
+		int cardCt = hand.getCardCount();
+		Card thisCard = hand.getCard( cardCt - 1 );  // Card just dealt.
+		Card prevCard = hand.getCard( cardCt - 2 );  // The previous card.
+		if ( thisCard.getValue() < prevCard.getValue() ) {
+			gameInProgress = false;
+			message = "Too bad! You lose.";
+		}
+		else if ( thisCard.getValue() == prevCard.getValue() ) {
+			gameInProgress = false;
+			message = "Too bad!  You lose on ties.";
+		}
+		else if ( cardCt == 4) {
+			gameInProgress = false;
+			message = "You win!  You made three correct guesses.";
+		}
+		else {
+			message = "Got it right!  Try for " + cardCt + ".";
+		}
+		drawBoard();
+	} // end doHigher()
 
 
-	} // end nested class CardPanel
+	/**
+	 * Called by an event handler when user clicks "Lower" button.
+	 * Check the user's prediction.  Game ends if user guessed
+	 * wrong or if the user has made three correct predictions.
+	 */
+	private void doLower() {
+		if (gameInProgress == false) {
+				// If the game has ended, it was an error to click "Lower",
+				// So set up an error message and abort processing.
+			message = "Click \"New Game\" to start a new game!";
+			drawBoard();
+			return;
+		}
+		hand.addCard( deck.dealCard() );     // Deal a card to the hand.
+		int cardCt = hand.getCardCount();
+		Card thisCard = hand.getCard( cardCt - 1 );  // Card just dealt.
+		Card prevCard = hand.getCard( cardCt - 2 );  // The previous card.
+		if ( thisCard.getValue() > prevCard.getValue() ) {
+			gameInProgress = false;
+			message = "Too bad! You lose.";
+		}
+		else if ( thisCard.getValue() == prevCard.getValue() ) {
+			gameInProgress = false;
+			message = "Too bad!  You lose on ties.";
+		}
+		else if ( cardCt == 4) {
+			gameInProgress = false;
+			message = "You win!  You made three correct guesses.";
+		}
+		else {
+			message = "Got it right!  Try for " + cardCt + ".";
+		}
+		drawBoard();
+	} // end doLower()
+
+
+	/**
+	 * Called by the start() method, and called by an event handler if
+	 * the use clicks the "New Game" button.  Start a new game.
+	 */
+	private void doNewGame() {
+		if (gameInProgress) {
+				// If the current game is not over, it is an error to try
+				// to start a new game.
+			message = "You still have to finish this game!";
+			drawBoard();
+			return;
+		}
+		deck = new Deck();   // Create the deck and hand to use for this game.
+		hand = new Hand();
+		deck.shuffle();
+		hand.addCard( deck.dealCard() );  // Deal the first card into the hand.
+		message = "Is the next card higher or lower?";
+		gameInProgress = true;
+		drawBoard();
+	} // end doNewGame()
+
+
+	/**
+	 * This method draws the message at the bottom of the
+	 * canvas, and it draws all of the dealt cards spread out
+	 * across the canvas.  If the game is in progress, an extra
+	 * card is drawn face down representing the card to be dealt next.
+	 */
+	private void drawBoard() {
+		GraphicsContext g = board.getGraphicsContext2D();
+		g.setFill( Color.DARKGREEN);
+		g.fillRect(0,0,board.getWidth(),board.getHeight());
+		g.setFill( Color.rgb(220,255,220) );
+		g.setFont( Font.font(16) );
+		g.fillText(message,20,180);
+		int cardCt = hand.getCardCount();
+		for (int i = 0; i < cardCt; i++)
+			drawCard(g, hand.getCard(i), 20 + i * 99, 20);
+		if (gameInProgress)
+			drawCard(g, null, 20 + cardCt * 99, 20);
+	} 
+
+
+	/**
+	 * Draws a card with top-left corner at (x,y).  If card is null,
+	 * then a face-down card is drawn.  The cards images are from 
+	 * the file cards.png; this program will fail without it.
+	 */
+	private void drawCard(GraphicsContext g, Card card, int x, int y) {
+		int cardRow, cardCol;
+		if (card == null) {  
+			cardRow = 4;   // row and column of a face down card
+			cardCol = 2;
+		}
+		else {
+			cardRow = 3 - card.getSuit();
+			cardCol = card.getValue() - 1;
+		}
+		double sx,sy;  // top left corner of source rect for card in cardImages
+		sx = 79 * cardCol;
+		sy = 123 * cardRow;
+		g.drawImage( cardImages, sx,sy,79,123, x,y,79,123 );
+	} // end drawCard()
 
 
 } // end class HighLowGUI

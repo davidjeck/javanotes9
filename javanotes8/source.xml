@@ -291,33 +291,22 @@ as the GUI toolbox.</p>
    <li> <sourceref href="chapter6/SliderDemo.java">SliderDemo.java</sourceref> and
    <sourceref href="chapter6/TextInputDemo.java">TextInputDemo.java</sourceref>, 
    small programs that demonstrate basic components, used as examples in <localref href="GUI1.4"/></li>
-   
-   <li><sourceref href="chapter6/BorderDemo.java">BorderDemo.java</sourceref> and</li>
-   <li><sourceref href="chapter6/BorderDemo.java">BorderDemo.java</sourceref>, 
-   from <localref href="GUI1.7"/>, a very simple program that demonstrates six types of border.</li>
-   <li><sourceref href="chapter6/SliderAndButtonDemo.java">SliderAndButtonDemo.java</sourceref>, from <localref href="GUI1.7"/>,
-   shows how to create several components and lay them out in a <classname>GridLayout</classname>.</li>
-   <li><sourceref href="chapter6/SimpleCalc.java">SimpleCalc.java</sourceref>, from <localref href="GUI1.7"/>, lets the
+   <li><sourceref href="chapter6/OwnLayoutDemo.java">OwnLayoutDemo.java</sourceref>, from <localref href="GUI1.5"/>, shows
+   how to lay out the components in a <classname>Pane</classname>, which allows you to do your own layout.</li>
+   <li><sourceref href="chapter6/SimpleCalc.java">SimpleCalc.java</sourceref>, from <localref href="GUI1.5"/>, lets the
    user add, subtract, multiply, or divide two numbers input by the user.  A demo
    of text fields, buttons, and layout with nested subpanels.</li>
-   <li><sourceref href="chapter6/NullLayoutDemo.java">NullLayoutDemo.java</sourceref>, from <localref href="GUI1.7"/>, shows
-   how to lay out the components in a container for which the layout manager has been
-   set to <code>null</code>.</li>
-   <li><sourceref href="chapter6/HighLowGUI.java">HighLowGUI.java</sourceref>, from <localref href="GUI1.7"/>, 
+   <li><sourceref href="chapter6/HighLowGUI.java">HighLowGUI.java</sourceref>, from <localref href="GUI1.5"/>, 
     implements a GUI version of the card game
-   <sourceref href="chapter5/HighLow.java">HighLow.java</sourceref>, in which the user sees a playing card and guesses
-   whether the next card will be higher or lower in value. This program depends on
-   <sourceref href="chapter6/Card.java">Card.java</sourceref>, <sourceref href="chapter6/Hand.java">Hand.java</sourceref>, and
-   <sourceref href="chapter6/Deck.java">Deck.java</sourceref>.</li>
-   <li><sourceref href="chapter6/MosaicDraw.java">MosaicDraw.java</sourceref>, from <localref href="GUI1.8"/>,
-   demonstrates menus and a color chooser dialog.  This is used in a program where
-   the user colors the squares of a mosaic by clicking-and-dragging the mouse. It uses
-   <sourceref href="chapter6/MosaicPanel.java">MosaicPanel.java</sourceref> to define the mosaic panel itself,
-   and it uses <sourceref href="chapter6/MosaicDrawController.java">MosaicDrawController.java</sourceref>
-   to create the panel and menu bar and to handle events.</li>
-   <li><sourceref href="chapter6/SimpleDialogDemo.java">SimpleDialogDemo.java</sourceref>, from <localref href="GUI1.8"/>,
-   is a small program that demonstrates <classname>JColorChooser</classname> and some
-   dialogs from <classname>JOptionPane</classname>.</li>
+    <sourceref href="chapter5/HighLow.java">HighLow.java</sourceref>, in which the user sees a playing card and guesses
+    whether the next card will be higher or lower in value. This program depends on
+    <sourceref href="chapter6/Card.java">Card.java</sourceref>, <sourceref href="chapter6/Hand.java">Hand.java</sourceref>,
+    <sourceref href="chapter6/Deck.java">Deck.java</sourceref>, and an image resource file, 
+    <sourceref href="chapter6/cards.png">cards.png</sourceref>.</li>
+   <li><sourceref href="chapter6/MosaicDraw.java">MosaicDraw.java</sourceref>, from <localref href="GUI1.6"/>,
+   demonstrates menus.  In this program, the user colors the squares of a mosaic by clicking-and-dragging the mouse. It uses
+   <sourceref href="chapter6/MosaicCanvas.java">MosaicCanvas.java</sourceref> to define the mosaic itself.</li>
+
    <li><sourceref href="chapter7/RandomStringsWithArray.java">RandomStringsWithArray.java</sourceref>, 
    from <localref href="arrays.2"/>,
    shows multiple copies of a message in random colors, sizes, and positions.  This is an
