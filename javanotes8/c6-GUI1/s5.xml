@@ -14,12 +14,13 @@ well.</p>
 <p>Components are the visible objects that make up a GUI. Some components are
 <newword>containers</newword>, which can hold other components.  In <code>JavaFX</code> terms,
 a container is a scene graph node that can contain other scene graph nodes
-as "children."  The components in a container must be "laid out," which means setting their
-sizes and positions.  For some containers possible to program the layout yourself, but
+as "children."  The children of a container must be "laid out," which means setting their
+sizes and positions.  It is possible for you to program the layout yourself, but
 layout is usually done automatically by the container.  Different kinds of container
 implement different policies for laying out their child nodes.  
 In this section, we will cover some common types of JavaFX containers and
-their layout policies, and we will look at several programming examples that use 
+their layout policies.  In this section and
+<localref href="GUI1.6">the next</localref>, we will look at several programming examples that use 
 components and layout.</p>
 
 <p>Because a container is itself a scene graph node, you can add a container as a child of
@@ -47,7 +48,8 @@ and maximum sizes in a similar way, based on the minimum and maximum sizes of it
 <p>When setting the size of a child while doing layout, most containers will <b>not</b> set the
 width of the child to be less than the child's minimum width or greater than the child's maximum width, and the same
 for the child's height.  This will be true even if it means that the child will overlap other
-components or will be extend outside the container.  (The part outside the container will not be drawn.)
+components or will extend outside the container.  (The part outside the container 
+might or not be shown, depending on the container.)
 This can also leave empty space in the container.</p>
    
 <p>Resizable nodes, which includes controls and most containers, have instance methods 
@@ -57,9 +59,9 @@ where the parameter is of type <ptype>double</ptype>, with similar instance meth
 the height.  You can also set width and height values simultaneously with method such as
 <code>setMaxSize(w,h)</code> and <code>setPrefSize(w,h)</code>.
 For a container, the values set by these methods will override the values
-that the container would compute based on its children.</p>
+that the would have been computed by the container based the children
+that it contains.</p>
 
-<break/>
 
 <p>In JavaFX, containers that do layout are defined by the class <classname>Pane</classname>
 and its subclasses.  (<classname>Pane</classname> and its subclasses are in package
@@ -102,7 +104,7 @@ A node can be made "unmanaged" by calling</p>
 
 <pre>node.setManaged(false);</pre>
 
-<np>When you do that, any container that contains <code>node</code> as a child
+<np>When you do that, <b>any</b> container that contains <code>node</code> as a child
 will completely ignore <code>node</code>, as far as layout is concerned.  It is
 your responsibility to set its location and (for resizable nodes) size.  Note that
 an unmanaged node must still be placed inside a container for it to appear on
@@ -116,7 +118,7 @@ canvas that displays a checkerboard pattern:</p>
 <img src="null-layout-demo.png" width="400" height="358" alt="OwnLayoutDemo with checkerboard, two buttons, and a message"
      tex="null-layout-demo.eps" texscale="0.6"/>
 
-<np>This is just an example of layout; it doesn't do anything,
+<np>The program is just an example of layout; it doesn't do anything,
 except that clicking the buttons changes the text of the label. (I will use
 this example in <localref href="arrays.5"/> as a starting point for a checkers game.)</np>
 
@@ -230,7 +232,7 @@ It would be very unusual, however, to have no center component.</np>
 
 <p>The <classname>BorderPane</classname> class has two constructors, one with no
 parameters and one that takes a single parameter giving the center child of the pane. 
-Child nodes be added to a <classname>BorderPane</classname>, <code>pane</code>,
+Child nodes can be added to a <classname>BorderPane</classname>, <code>pane</code>,
 using the methods</p>
 
 <pre>pane.setCenter(node);
@@ -260,11 +262,11 @@ The minimum size is computed in a similar way.  The default maximum size of a
 
 <break/>
 
-<p>For most subclasses of
+<p>For some subclasses of
 <classname>Pane</classname>, it is possible to tweak the layout of the
 children by applying things called <newword>layout constraints</newword>.
 For example, what happens in a <classname>BorderPane</classname> if 
-a child cannot be resized to exactly fit the available space.
+a child cannot be resized to exactly fit the available space?
 In that case, the child has a default position within the available
 space.  The center child is centered within the center space of the
 pane, the bottom child is placed at the bottom left corner of the
@@ -298,12 +300,11 @@ constructor:</p>
 <pre>new Insets(top,right,bottom,left)</pre>
 
 <np>There is also a constructor that takes a single parameter,
-which is used as the value for all four properties.</np>
-
-<p>When uses as a margin for a child node, the properties
+which is used as the value for all four properties.
+When used as a margin for a child node, the properties
 specify the width of the margin along the top, right,
 bottom, and left edges of the child.  The margin can
-be specified using another static method:</p>
+be specified using another static method:</np>
 
 <pre>BorderPane.setMargin( child, insets );</pre>
 
@@ -403,7 +404,7 @@ You can add a margin around any child using a static method similar to the
 one that is used for the same purpose in a <classname>BorderPane</classname>.
 You can set the <classname>HBox</classname> to use the preferred heights
 of its children, instead of stretching them to fit the height of the
-hbox by calling <code>hbox.setFillHeight(true)</code>.  You can say
+hbox by calling <code>hbox.setFillHeight(false)</code>.  You can say
 where in the hbox the children are placed, when they do not fill the
 entire hbox by calling <code>hbox.setAlignment(position)</code>;
 the parameter is of type <classname>POS</classname> with a
@@ -478,8 +479,8 @@ added directly to the <classname>VBox</classname>; there is no need to
 wrap it in an <classname>HBox</classname>.  However, in order to
 get the text in the label to appear in the center instead of at the
 left edge of the window, I needed to increase the maximum width of the
-label (so that the <classname>VBox</classname>) will set its width
-to fill the entire available space.  Furthermore, I had to set
+label (so that the <classname>VBox</classname> will set its width
+to fill the entire available space).  Furthermore, I had to set
 the alignment property of the label, to tell the label to place its
 text in the center of the label and not at the left:</p>
 
@@ -614,10 +615,10 @@ for a <code>gridpane</code> that has four rows:</p>
 <np>In this case, the total height of the gridpane is the same,
 no matter how much space is available for it.</np>
 
-<pre>When percentages are used, the grid pane will expand to
+<p>When percentages are used, the grid pane will expand to
 fill available space, and the row height or column width will be computed
 from the percentages.  For example, to force a five-column gridpane to fill
-the available with and to force all columns to have the same size:</pre>
+the available width and to force all columns to have the same size:</p>
 
 <pre>for (int i = 0; i &lt; 5; i++) {
    ColumnConstraints constraints = new ColumnConstraints();
@@ -640,7 +641,7 @@ the entire program.</p>
 
 <p>If you would like a grid in which all the rectangles are the
 same size, you can use a <classname>TilePane</classname>.  A <classname>TilePane</classname>
-arranges equal-size "tiles" in rows and columns.  Each column holds one of the
+arranges equal-size "tiles" in rows and columns.  Each tile holds one of the
 child nodes; there is no way to spread out a child over several tiles.</p>
 
 <p>A <classname>TilePane</classname>, <code>tpane</code>, has a preferred number of rows and a preferred
@@ -650,7 +651,8 @@ number of columns, which you should set by calling</p>
 
 <np>The preferred number of columns will be used if the <classname>TilePane</classname>
 is shown at its preferred size, which is the usual case.  However, that is not necessarily 
-true if it is shown at a different size, then the number of columns.  The number of rows
+true if it is shown at a different size; in that case, the number of columns will be
+determined by the width of the available space.  The number of rows
 will be determined by the number of child nodes that are added to the <classname>TilePane</classname>.
 The children will be laid out in order, filling the first row from left to right, then the
 second row, and so on.  It is not required that the last row be completely filled.
@@ -660,9 +662,9 @@ of preferred rows is specified instead of the number of columns.  However, I hav
 real reason to do that.)</np>
 
 <p>It's very common to have a <classname>TilePane</classname> in which the number of 
-preferred columns is one.  In that case, it is similar to an <classname>VBox</classname>.
+preferred columns is one.  In that case, it is similar to a <classname>VBox</classname>.
 It is also common for the number of columns to be equal to the number of child nodes,
-and in that case, it is similar to a <classname>HBox</classname>.</p>
+and in that case, it is similar to an <classname>HBox</classname>.</p>
 
 <p>At its preferred size, the width of each tile is equal to the largest preferred width
 of any child node, and similarly for the height.  The <classname>TilePane</classname>

@@ -60,10 +60,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="267.79877"
-     inkscape:cy="59.926464"
+     inkscape:cx="118.29877"
+     inkscape:cy="57.926464"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g4270"
      showgrid="false"
      inkscape:window-width="1680"
      inkscape:window-height="998"
@@ -82,7 +82,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -117,7 +117,7 @@
            id="tspan4156"
            sodipodi:role="line"
            x="92.972038"
-           y="127.47057">(class Text)</tspan></text>
+           y="127.47057">(class Label)</tspan></text>
     </g>
     <path
        sodipodi:nodetypes="cc"

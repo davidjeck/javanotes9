@@ -50,12 +50,12 @@ API are defined by subclasses of the class <classname>Control</classname>, from
 package <code>javafx.scene.control</code>.  Controls (with just a couple of exceptions)
 can be manipulated by the user to generate input and events for the program.
 A number of useful methods are defined for controls. I begin by mentioning
-two methods that can be used with any <classname>Control</classname>
+three methods that can be used with any <classname>Control</classname>
 <code>control</code>:</p>
 
 <ul>
 <li><codedef>control.setDisable(true)</codedef> can be called to
-disable the node.  The control can be re-enabled with <codedef>node.setDisable(false)</codedef>.
+disable the control.  The control can be re-enabled with <codedef>node.setDisable(false)</codedef>.
 When a node is disabled, its appearance
 might change, and it cannot be the target of mouse or key events.
 This function can actually be called with any scene graph node, not just controls,
@@ -70,8 +70,7 @@ if the mouse cursor is inside the control and the mouse is not moved for a few
 seconds. The tool tip should give some information about the meaning of the
 control or how to use it.</li>
 <li><codedef>control.setStyle(cssString)</codedef> sets the CSS style
-of the control.  CSS was discussed in <localref href="GUI1.2.5"/>.  I will most
-often use it to add padding and borders to controls.</li>
+of the control.  CSS was discussed in <localref href="GUI1.2.5"/>.</li>
 </ul>
 
    
@@ -99,7 +98,7 @@ but an <classname>Image</classname> is not a <classname>Node</classname>.
 That is, it can't be part of a scene graph.</p>
 
 <p>An <classname>ImageView</classname> is a scene graph node that is a 
-simple wrapper for an image.  It's purpose is simply to display the
+simple wrapper for an image.  Its purpose is simply to display the
 image.  It makes it possible to add the image to a scene graph without
 having to draw the image on a canvas.  The image can be specified as a parameter to the
 <classname>ImageView</classname> constructor.  For example, suppose
@@ -127,7 +126,7 @@ addition to or instead of the text.  The graphic can be any <classname>Node</cla
 but is usually a small icon, implemented as an object of type <classname>ImageView</classname>.
 In fact, all four types of controls inherit their behavior from a common
 superclass named <classname>Labeled</classname>.  In <localref href="GUI1.6.2"/>,
-we will see the menu items also inherit from <classname>Labeled.</classname>.
+we look at menu items, which also inherit from <classname>Labeled</classname>.
 That class defines a number of instance methods that can be used with
 labels, buttons, and other labeled controls, including:</p>
 
@@ -155,7 +154,7 @@ or <code>ContentDisplay.BOTTOM</code>.
 
 <np>All of these setter methods have corresponding getters, such as <code>getText()</code>
 and <code>getFont()</code>.  I have not listed a setter method for the background
-color.  It is possible to set a background color, but it's cumbersome.  ()Setting
+color.  It is possible to set a background color, but it's cumbersome.  (Setting
 the background color of a control, <code>c</code>, to white looks like this:</np>
 
 <pre>c.setBackground(new Background(new BackgroundFill(Color.WHITE,null,null)));</pre>
@@ -187,18 +186,10 @@ some padding.  Here is an example of setting all three properties using CSS:</p>
 <pre>message.setStyle("-fx-border-color: blue; -fx-border-width: 2px; " +
                            "-fx-background-color: white; -fx-padding: 6px");</pre>
 
-<p>I have run into cases where I want the width of a label to expand to fill
-the available space in a container, by adding extra blank space after the end
-of the text.  This can be important when the label has a background color, and you
-want the background to fill the entire space.  This does not seem to happen
-automatically, but I was able to fix the problem by setting the maximum
-width of the label to be at least as large as the available space. That
-can be done by calling <code>label.setMaxWidth(w)</code>, where
-<code>w</code> is a large number.</p>
 
 <break/>
 
-<p> You've already seen buttons used in <localref href="GUI1.1"/>,
+<p> You've already seen buttons used in <localref href="GUI1.1"/>.
 A <classname>Button</classname>, like a <classname>Label</classname> displays
 some text and/or a graphic to the user, and the <classname>Button</classname>
 class, like the <classname>Label</classname> class, has two constructors:</p>
@@ -206,7 +197,7 @@ class, like the <classname>Label</classname> class, has two constructors:</p>
 <pre>Button stopButton = new Button("Stop");
 Button linuxButton = new Button("Get Linux", tuxIcon);</pre>
 
-<p>When the user clicks a button, and event of type <classname>ActionEvent</classname>
+<p>When the user clicks a button, an event of type <classname>ActionEvent</classname>
 is generated.  You can register an event handler for the action with the button's
 <code>setOnAction</code> method.  For example,</p>
 
@@ -226,7 +217,7 @@ The code for this might look like:</p>
 
 <pre>Button startButton = new Button("Run Animation");
 Button stopButton = new Button("Stop Animation");
-startButton.setDisable(true); // Start button is initially disabled.
+stopButton.setDisable(true); // Stop button is initially disabled.
 startButton.setOnAction( e -&gt; {
     animator.start();
     startButton.setDisable(true);
@@ -403,7 +394,7 @@ displayed in an input component.  The contents of the component can be retrieved
 <code>getText()</code> instance method, which returns a value of type <classname>String</classname>.
 You can add a <classname>String</classname> of text onto the end of the text that is already
 in the component by calling the instance method <code>appendText(text)</code>.  The text
-in this method can include "\n" characters to represent line breaks; In a 
+in this method can include "\n" characters to represent line breaks; in a 
 <classname>TextField</classname>they will be ignored.  The instance method
 <code>setFont(font)</code> can be used to change the font that is used in the text component.</p>
 
@@ -441,13 +432,13 @@ specifying the initial content of the box.</p>
 <p>A <classname>TextField</classname> has a preferred number of columns, which by default is 12.
 This determines the preferred width of the text field, that is the size that is used if the
 size is not reset by the program or when the text field is laid out by a container.  The preferred
-number of columns for a <classname>TextField</classname>, <code>input</code> can be changed by calling
+number of columns for a <classname>TextField</classname>, <code>input</code>, can be changed by calling
 <code>input.setPrefColumnCount(n)</code>, where <code>n</code> is a positive integer.</p>
 
 <p>Similarly, a <classname>TextArea</classname> has both a preferred number of columns and a 
-preferred number of rows, which y default are 40 and 10.  The value can be changed using
+preferred number of rows, which by default are 40 and 10.  The value can be changed using
 the <classname>TextArea</classname> instance methods <code>setPrefColumnCount(n)</code>
-and <code>setPrefRowCount(n)</code></p>
+and <code>setPrefRowCount(n)</code>.</p>
 
 
 <p>The <classname>TextArea</classname> class adds a few useful methods to those inherited
@@ -493,7 +484,7 @@ and a text area in a scroll pane.  Here is the window from that program, after
 the text has been edited and scrolled down a few lines:</p>
 
 <img src="TextInputDemo.png" width="550" height="263" tex="TextInputDemo.eps"
-    texscale="0.7" alt="The window from sample program TextInputDemo.png"/>
+    texscale="0.5" alt="The window from sample program TextInputDemo.png"/>
    
 <np>(I pasted the source code of the program into the text area!)</np>
 
@@ -509,7 +500,7 @@ This picture, from the sample program <sourceref href="SliderDemo.java"/>, shows
 three sliders with different decorations and with different ranges of values:</p>
 
 <img src="slider-demo.png" width="377" height="191" alt="three sliders with and without labels and tick marks"
-       tex="slider-demo.eps" texscale="0.6"/>
+       tex="slider-demo.eps" texscale="0.5"/>
 
 
 <np>Here, the second slider is decorated with tick marks, and the third one
@@ -531,7 +522,7 @@ is an enum from package <code>javafx.geometry</code>.</np>
 <classname>Slider</classname> can be read at any time with its <code>getValue()</code> method,
 which returns a value of type <ptype>double</ptype>. If you want to change the
 value, you can do so with the method <code>setValue(val)</code>, which takes a
-parameter of type <ptype>double</ptype>.  Is the specified value is not between
+parameter of type <ptype>double</ptype>.  If the specified value is not between
 the minimum and maximum slider values, it is adjusted to lie in that range.</p>
 
 <p>If you want to respond immediately when the user changes the value of a
@@ -547,7 +538,7 @@ sample program, I add listeners to the sliders with commands such as</p>
 <pre>slider1.valueProperty().addListener( e -> sliderValueChanged(slider1) );</pre>
 
 <np>The listener will be called whenever the value changes, either because the
-user is dragging the knob on the slider or because the program calle <code>setValue()</code>.
+user is dragging the knob on the slider or because the program calls <code>setValue()</code>.
 If you want to know whether the user generated the event, call the slider's 
 boolean-valued <code>isValueChanging()</code>
 method, which returns <code>true</code> if the user is dragging the knob on the slider.</np>
@@ -574,7 +565,7 @@ slider2.setMinorTickCount(5); // 5 small tick marks between big tick marks.
 slider2.setShowTickMarks(true);
 </pre>
 
-<p>Labels on a slider are handled similarly.  A Label will be placed at
+<p>Labels on a slider are handled similarly.  A label will be placed at
 every major tick mark, but some labels will be omitted if they would
 overlap.  To see the labels, you need to call
 <code>setShowTickLabels(true)</code>.  For

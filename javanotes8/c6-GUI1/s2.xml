@@ -98,7 +98,9 @@ with color selection or to find RGB or HSB values for the color that want.</p>
 constants representing colors, such as <code>Color.RED</code>, <code>Color.BLACK</code>,
 <code>Color.LIGHTGRAY</code>, and <code>Color.GOLDENROD</code>.  It might be worth mentioning that
 <code>Color.GREEN</code> is the fairly dark green <code>Color.rgb(0,128,0)</code>;
-the constant representing <code>Color.rgb(0,255,0)</code> is <code>Color.LIME</code>.</p>
+the constant representing <code>Color.rgb(0,255,0)</code> is <code>Color.LIME</code>.
+There is also <code>Color.TRANSPARENT</code>, which represents a fully transparent
+color, with all RGBA color components equal to zero.</p>
 
 <p>Given a <classname>Color</classname>, <code>c</code>, you can find out the
 values of the various color components by calling functions such as
@@ -112,7 +114,7 @@ for <code>c.getHue()</code>, which returns a <ptype>double</ptype> in the range
 <p><classname>Color</classname> is a subclass of another class,
 <classname>Paint</classname>, which represents the more general idea of
 "something that can be used to fill and to stroke shapes."  In addition
-to colors, there are image paint and gradient paints.  I will not use these
+to colors, there are image paints and gradient paints.  I will not use these
 more general paints in this chapter, but they will be covered in
 <localref href="GUI2"/>.  For now, you should just know that when a
 method has a parameter of type <classname>Paint</classname>, you
@@ -129,7 +131,7 @@ from the package <code>javafx.scene.text</code>.  Although the <classname>Font</
 defines a couple of constructors, the best way to make a font object is with
 one of the static factory methods from that class.</p>
 
-<p>A font has a name, a string that specifies a font family such as "Times New Roman."
+<p>A font has a name, which is a string that specifies a font family such as "Times New Roman."
 A given family can have variations such as a bold or an italic version of the font.
 And a font has a size, which is specified in "points," where a point should really be 1/72 inch
 but might in practice be equal to the size of a pixel.  The most general function for
@@ -151,7 +153,7 @@ to use the default font family.</np>
 <classname>FontWeight</classname>.  It will usually be either <code>FontWeight.BOLD</code>
 or <code>FontWeight.NORMAL</code>, although there are a few other values such as
 <code>FontWeight.EXTRA_BOLD</code>.  Similarly, font "posture" is one of the
-constants <code>FontPosture.ITALIC</code> or <code>FontPosture.OBLIQUE</code>.
+constants <code>FontPosture.ITALIC</code> or <code>FontPosture.REGULAR</code>.
 Both <classname>FontWeight</classname> and <classname>FontPosture</classname>
 are from package <code>javafx.scene.text</code>.</p>
 
@@ -229,7 +231,7 @@ in package <code>javafx.scene.canvas</code>.  A <classname>Canvas</classname>
 is a <classname>Node</classname> and so can be part of a scene graph.
 (However, it is not a <classname>Parent</classname>, so it cannot act as
 a container for other nodes and it cannot be the root of a scene graph.
-This means that even is a canvas is the only thing that you want to show
+This means that even when a canvas is the only thing that you want to show
 in a window, it must still be placed into a container that will serve as 
 the root of the scene graph.)</p>
 
@@ -266,7 +268,7 @@ by calling <code>canvas.setWidth(w)</code> and <code>canvas.setHeight(h)</code>.
 Every <classname>Canvas</classname> has an associated <classname>GraphicsContext</classname>;
 different <classname>GraphicsContexts</classname> draw on different <classname>Canvases</classname>.
 You can get the graphics context for a <classname>Canvas</classname>, <code>canvas</code>,
-by calling <classname>canvas.getGraphicsContext2D()</classname>.  For any given <classname>Canvas</classname>,
+by calling <code>canvas.getGraphicsContext2D()</code>.  For any given <classname>Canvas</classname>,
 this method will always return the same <classname>GraphicsContext</classname> object.
 <localref href="control.8"/> discussed some of the things that can be done with a graphics context.
 In particular, you learned that a shape can be stroked and, if it has an interior, filled.
@@ -274,7 +276,7 @@ Methods in <classname>GraphicsContext</classname>, <code>g</code>, that can be u
 include the following, where all numeric parameters are of type <ptype>double</ptype>:</p>
 
 <ul>
-<li><codedef>g.strokeRect(x,y,w,h)</codedef> and <codedef>g.fillOval(x,y,w,h)</codedef> &mdash;
+<li><codedef>g.strokeRect(x,y,w,h)</codedef> and <codedef>g.fillRect(x,y,w,h)</codedef> &mdash;
 Draw a rectangle with top left corner at <code>(x,y)</code>, with width <code>w</code> and
 with height&nbsp;<code>h</code>.  If <code>w</code> or <code>h</code> is less than or
 equal to zero, nothing is drawn.
@@ -290,7 +292,7 @@ oval is <code>rh</code> and its vertical radius is <code>rv</code>.
 </li>
 <li><codedef>g.strokeText(str,x,y)</codedef> and <codedef>g.fillText(x,y)</codedef> &mdash;
 Draw the text of the <classname>String</classname> <code>str</code>.  The point <code>(x,y)</code>
-is the left end of the baseline of the text. (The string is drawn along its baseline, with descenders
+is the left end of the baseline of the text. (A string is drawn on top of its baseline, with descenders
 such as the tail of a "y" extending below the baseline.)  The string can contain multiple lines
 separated by newline ('\n') characters; <code>(x,y)</code> then gives the baseline of the
 first line of the string.  Note that stroking text means drawing just the outlines of the characters.
@@ -312,10 +314,10 @@ drawing.  When anything is drawn using <code>g</code>, the current values of the
 properties are used.  This means that changing the value of a property does not affect anything
 that has already been drawn; the change only applies to things drawn in the future.  Each property
 has a setter method and a getter method.  One of the properties is the <classname>Paint</classname> use for filling (which in
-this chapter will always be a <classname>Color</classname>); this property can get set by calling
+this chapter will always be a <classname>Color</classname>); this property can be set by calling
 <code>g.setFill(paint)</code>, and you can get its current value by calling <code>g.getFill()</code>.
 Similarly, the <classname>Paint</classname> that is used for stroking can be set and get using
-<code>g.setStroke()</code> and <code>g.getStroke()</code>, and the width of strokes can be
+<code>g.setStroke(paint)</code> and <code>g.getStroke()</code>, and the width of strokes can be
 set and get using <code>g.getLineWidth(w)</code> and <code>g.getLineWidth()</code>, where
 <code>w</code> is of type <ptype>double</ptype>.  And you can get and set the font that will be used
 for drawing text with <code>g.setFont(font)</code> and <code>g.getFont()</code>.
@@ -324,7 +326,7 @@ for drawing text with <code>g.setFont(font)</code> and <code>g.getFont()</code>.
 <p>Note that stroking a shape is like dragging the <b>center</b> of a pen along the outline of the shape.
 The size of the pen is given by the linewidth property.  The stroke that is drawn extends on both sides
 of the actual path of the pen by an amount equal to half of the linewidth.  For example, if you
-are drawing a horizontal line f width 1 from (100,100) to (300,100), and if you want the stroke to 
+are drawing a horizontal line of width 1 from (100,100) to (300,100), and if you want the stroke to 
 nicely cover complete pixels, you should actually use (100.5,100.5) and (300.5,100.5) as the coordinates
 of the endpoints of the line.  (Whenever you draw something, you might find that for pixels that are only
 partially covered, the drawing color is blended with the current color instead of replacing it.  This is
@@ -347,7 +349,7 @@ necessary.
 </li>
 <li><codedef>g.drawImage(image,sx,sy,sw,sh,dx,dy,dh,dw)</codedef> &mdash; Draws the contents
 of a specified "source" rectangle in the image to a specified "destination" rectangle on the
-canvas.  This method lets you draw just part of a rectangle.  The source rectangle has
+canvas.  This method lets you draw just part of an image.  The source rectangle has
 upper left corner at <code>(sx,sy)</code>, width <code>sw</code>, and height&nbsp;<code>sh</code>.
 The last four parameters specify the destination rectangle in a similar way.
 </li>
@@ -361,7 +363,7 @@ The program draws multiple copies of the string "Hello JavaFX" using random font
 locations.  The text is filled with random colors and stroked with a thin black stroke:
 </p>
 
-<img src="randomStrings.png" width="400" height="293" tex="randomStrings.eps" texscale="0.7" alt="RandomStrings program"/>
+<img src="randomStrings.png" width="400" height="293" tex="randomStrings.eps" texscale="0.5" alt="RandomStrings program"/>
 
 <np>The program uses five fonts, which are created in the <code>start()</code> method using several
 different static factory methods from the <classname>Font</classname> class:</np>
@@ -383,59 +385,59 @@ text, and a randomly selected font for each copy:</np>
 
 <pre>private void draw() {
 
-	GraphicsContext g = canvas.getGraphicsContext2D();
-	
-	double width = canvas.getWidth();
-	double height = canvas.getHeight();
-	
-	g.setFill( Color.WHITE );  // fill with white background
-	g.fillRect(0, 0, width, height);
+    GraphicsContext g = canvas.getGraphicsContext2D();
+    
+    double width = canvas.getWidth();
+    double height = canvas.getHeight();
+    
+    g.setFill( Color.WHITE );  // fill with white background
+    g.fillRect(0, 0, width, height);
 
-	for (int i = 0; i &lt; 25; i++) {
+    for (int i = 0; i &lt; 25; i++) {
 
-		// Draw one string.  First, set the font to be one of the five
-		// available fonts, at random.  
+        // Draw one string.  First, set the font to be one of the five
+        // available fonts, at random.  
 
-		int fontNum = (int)(5*Math.random()) + 1;
-		switch (fontNum) {
-		case 1:
-			g.setFont(font1);
-			break;
-		case 2:
-			g.setFont(font2);
-			break;
-		case 3:
-			g.setFont(font3);
-			break;
-		case 4:
-			g.setFont(font4);
-			break;
-		case 5:
-			g.setFont(font5);
-			break;
-		} // end switch
+        int fontNum = (int)(5*Math.random()) + 1;
+        switch (fontNum) {
+        case 1:
+            g.setFont(font1);
+            break;
+        case 2:
+            g.setFont(font2);
+            break;
+        case 3:
+            g.setFont(font3);
+            break;
+        case 4:
+            g.setFont(font4);
+            break;
+        case 5:
+            g.setFont(font5);
+            break;
+        } // end switch
 
-		// Set the color to a bright, saturated color, with random hue.
+        // Set the color to a bright, saturated color, with random hue.
 
-		double hue = 360*Math.random();
-		g.setFill( Color.hsb(hue, 1.0, 1.0) );
+        double hue = 360*Math.random();
+        g.setFill( Color.hsb(hue, 1.0, 1.0) );
 
-		// Select the position of the string, at random.
+        // Select the position of the string, at random.
 
-		double x,y;
-		x = -50 + Math.random()*(width+40);
-		y = Math.random()*(height+20);
+        double x,y;
+        x = -50 + Math.random()*(width+40);
+        y = Math.random()*(height+20);
 
-		// Draw the message.
+        // Draw the message.
 
-		g.fillText("Hello JavaFX",x,y);
-		
-		// Also stroke the outline of the strings with black
-		
-		g.setStroke(Color.BLACK);
-		g.strokeText("Hello JavaFX",x,y);
+        g.fillText("Hello JavaFX",x,y);
+        
+        // Also stroke the outline of the strings with black
+        
+        g.setStroke(Color.BLACK);
+        g.strokeText("Hello JavaFX",x,y);
 
-	} // end for
+    } // end for
 
 } // end draw()
 </pre>
@@ -445,7 +447,7 @@ text, and a randomly selected font for each copy:</np>
 <p>The second sample program is similar, but instead of drawing random strings, it draws five
 playing cards dealt at random from a deck:</p>
 
-<img src="randomCards.png" width="519" height="232" tex="randomCards.eps" texscale="0.7" alt="RandomCards program"/>
+<img src="randomCards.png" width="519" height="232" tex="randomCards.eps" texscale="0.5" alt="RandomCards program"/>
 
 <np>The deck and cards are represented using the
 <classname>Deck</classname> and <classname>Card</classname> classes from
@@ -465,7 +467,7 @@ The image file is loaded into the program in the <code>start()</code> method sim
 Suppose that we want to draw the card
 from row number R and column number C in a <classname>GraphicsContext</classname> <code>g</code>
 (where both rows and columns are numbered starting at zero).
-Each card in the image is 79 pixels by 123 pixels, so card that we want has its top
+Each card in the image is 79 pixels by 123 pixels, so the card that we want has its top
 left corner at (79*C,123*R).  If we want to place the card on the canvas with its
 top left corner at (x,y), we can use the third <code>drawImage()</code> method given above,
 which specifies a source rectangle in the image and a destination rectangle on the canvas:
@@ -483,25 +485,25 @@ Here is the <classname>draw()</classname>
 method from the program, which deals five random cards from a deck and draws them:</np>
 
 <pre>private void draw() {
-	
-	GraphicsContext g = canvas.getGraphicsContext2D();
-	
-	Deck deck = new Deck();
-	deck.shuffle();
-	
-	double sx,sy;  // top left corner of source rect for card in cardImages
-	double dx,dy;  // corner of destination rect for card in the canvas
-	
-	for (int i = 0; i &lt; 5; i++) {
-		Card card = deck.dealCard();
-		System.out.println(card); // for testing
-		sx = 79 * (card.getValue()-1);
-		sy = 123 * (3 - card.getSuit());
-		dx = 20 + (79+20) * i;
-		dy = 20;
-		g.drawImage( cardImages, sx,sy,79,123, dx,dy,79,123 );
-	}
-	
+    
+    GraphicsContext g = canvas.getGraphicsContext2D();
+    
+    Deck deck = new Deck();
+    deck.shuffle();
+    
+    double sx,sy;  // top left corner of source rect for card in cardImages
+    double dx,dy;  // corner of destination rect for card in the canvas
+    
+    for (int i = 0; i &lt; 5; i++) {
+        Card card = deck.dealCard();
+        System.out.println(card); // for testing
+        sx = 79 * (card.getValue()-1);
+        sy = 123 * (3 - card.getSuit());
+        dx = 20 + (79+20) * i;
+        dy = 20;
+        g.drawImage( cardImages, sx,sy,79,123, dx,dy,79,123 );
+    }
+    
 } // end draw()</pre>
 
 <np>For the complete program, see <sourceref href="RandomCards.java"/>.</np>
@@ -511,20 +513,20 @@ method from the program, which deals five random cards from a deck and draws the
 <subsection title="A Bit of CSS" id="GUI1.2.5">
 
 <p>JavaFX makes it possible to control the style&mdash;that is, the visual
-appearance&mdash;with <newword>CSS</newword> (Cascading Style Sheets).
+appearance&mdash;of components in a GUI using <newword>CSS</newword> (Cascading Style Sheets).
 CSS is one of several languages that are used to make web pages.  It can
 control things like colors, fonts, and borders of elements of a web page.
 It has been adapted to play a similar role in other contexts, such as
 JavaFX.  I do not intend to cover CSS in any detail, and anything that
 can be done with CSS can also be done with Java code.  However, there
 are some things that are just easier to do with CSS; I will cover
-a few of them in this short section and will use them in my program.
+a few of them in this short section and will use them in my programs.
 For people who already know CSS, a guide to its use in JavaFX is
 available as I write this at</p>
 
 <p align="center"><a href="https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html">https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html</a></p>
 
-<p>A CSS style rule consists of a property and a value for that property.
+<p>A CSS <newword>style rule</newword> consists of a property and a value for that property.
 For example, CSS can be used to place a border around many kinds of GUI component.
 A border has properties with names such as <code>-fx-border-color</code>
 and <code>-fx-border-width</code>.  (All JavaFX CSS properties have names
@@ -542,7 +544,7 @@ represents pure red, and <code>#004444</code> represents a dard blue-green.</p>
 as <code>3px</code> or <code>0.2cm</code>. The syntax is a number followed
 by a unit of measure, with no space between them.  Here, "px" stands for
 "pixels," and <code>3px</code> means 3 pixels.  When a width is given
-by a single size, the size applies to all 4 sides of the border.
+by a single size, the size applies to all four sides of the border.
 Alternative, four sizes can be given, separated by spaces, specifying
 the border width on the top, right, bottom, and left, in that order.
 For example, a thick, blue border could be specifies as</p>
@@ -557,13 +559,18 @@ on the sides as</np>
 <np>When several CSS rules are used together, they should be separated
 by semicolons.</np>
 
-<p>Another CSS property that I will often use is <code>-fx-padding</code>,
-which represents space that is left between the content of a component
+<p>The background color of a component can be set using 
+<code>-fx-background-color</code> as the property name.  The value
+is the same sort of color specification that would be used
+with <code>-fx-border-color</code>.</p>
+
+<p>And the CSS property <code>-fx-padding</code>
+represents space that is left between the content of a component
 and its edge (or border if there is one).  Like border width,
 padding can be specified as either a single size or a list of
 four sizes.  For example: <code>-fx-padding:&nbsp;8px</code>.</p>
 
-<p>You can apply a style to a component using it's <code>setStyle()</code>
+<p>You can apply a style to a component using its <code>setStyle()</code>
 method, whose parameter is a <classname>String</classname> containing
 one or more CSS style rules.  For example, suppose <code>message</code>
 is a <classname>Label</classname>.  By default, labels have no

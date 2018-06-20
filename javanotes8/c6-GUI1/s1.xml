@@ -20,11 +20,11 @@ preferred term for "program" in this context.)  The application simply
 displays a window containing a message and three buttons.  Here's what the 
 window looks like when it first opens:</p>
 
-<img src="HelloWorldFX-screenshot.png" width="450" height="227" tex="HelloWorldFX-screenshot.eps" texscale="0.6" 
+<img src="HelloWorldFX-screenshot.png" width="450" height="227" tex="HelloWorldFX-screenshot.eps" texscale="0.5" 
       alt="The window from the HelloWorldFX application."/>
       
-<np>Clicking the "Say Hello" will get the computer to tell you, "Hello World!".
-Clicking "Say Goodbye" button will change the text of the
+<np>Clicking "Say Hello" will get the computer to tell you, "Hello World!".
+Clicking "Say Goodbye" will change the text of the
 message to "Goodbye".  Clicking the "Quit" button will end the application, which can also
 be ended by clicking the window's close box.</np>
 
@@ -78,34 +78,34 @@ import javafx.scene.text.Font;
 
 public class HelloWorldFX extends Application {
 
-	public void start(Stage stage) {
-		
-		Label message = new Label("First FX Application!");
-		message.setFont( new Font(40) );
-		
-		Button helloButton = new Button("Say Hello");
-		helloButton.setOnAction( e -> message.setText("Hello World!") );
-		Button goodbyeButton = new Button("Say Goodbye");
-		goodbyeButton.setOnAction( e -> message.setText("Goodbye!!") );
-		Button quitButton = new Button("Quit");
-		quitButton.setOnAction( e -> Platform.exit() );
+    public void start(Stage stage) {
+        
+        Label message = new Label("First FX Application!");
+        message.setFont( new Font(40) );
+        
+        Button helloButton = new Button("Say Hello");
+        helloButton.setOnAction( e -> message.setText("Hello World!") );
+        Button goodbyeButton = new Button("Say Goodbye");
+        goodbyeButton.setOnAction( e -> message.setText("Goodbye!!") );
+        Button quitButton = new Button("Quit");
+        quitButton.setOnAction( e -> Platform.exit() );
 
-		HBox buttonBar = new HBox( 20, helloButton, goodbyeButton, quitButton );
-		buttonBar.setAlignment(Pos.CENTER);
-		BorderPane root = new BorderPane();
-		root.setCenter(message);
-		root.setBottom(buttonBar);
-		
-		Scene scene = new Scene(root, 450, 200);
-		stage.setScene(scene);
-		stage.setTitle("JavaFX Test");
-		stage.show();
-		
-	} // end start();
-	
-	public static void main(String[] args) {
-		launch(args);  // Run this Application.
-	}
+        HBox buttonBar = new HBox( 20, helloButton, goodbyeButton, quitButton );
+        buttonBar.setAlignment(Pos.CENTER);
+        BorderPane root = new BorderPane();
+        root.setCenter(message);
+        root.setBottom(buttonBar);
+        
+        Scene scene = new Scene(root, 450, 200);
+        stage.setScene(scene);
+        stage.setTitle("JavaFX Test");
+        stage.show();
+        
+    } // end start();
+    
+    public static void main(String[] args) {
+        launch(args);  // Run this Application.
+    }
 
 } // end class HelloWorldFX</pre>
 
@@ -146,7 +146,7 @@ Although the primary stage is created before <code>start()</code> is called, the
 any content, and it is not yet visible on the screen.  The <code>start()</code> method is
 responsible for adding content to the window and making it visible.  The very last line
 of <code>start()</code> in the <classname>HelloWorldFX</classname> program,
-<code>stage.show()</code>, is what makes the window visible.  The rest of method 
+<code>stage.show()</code>, is what makes the window visible.  The rest of the method 
 creates content, adds the content to the window, and sets various configuration options
 for the content and for the window itself.  For example, the line</p>
 
@@ -207,7 +207,7 @@ The nodes that are contained in a parent are called <newword>children</newword>
 of that node.  The root node in a scene graph must be a <classname>Parent</classname>.</p>
 
 <p>The buttons in <classname>HelloWorldFX</classname> are represented by objects of
-type <classname>Button</classname>, from package <code>javafx.scene.control</code>,
+type <classname>Button</classname>,
 which is a subclass of <classname>Parent</classname>.  (We'll see later that buttons
 can actually contain other nodes.)  The constructor that is used
 to create the button objects specifies the text that is displayed on the button.
@@ -216,7 +216,7 @@ from package <code>javafx.scene.control</code>, whose purpose is simply to passi
 display a <classname>String</classname>. 
 One of the properties of a <classname>Label</classname> object is a font, which specifies
 the size and style of the characters in the displayed string.  The font for the text is set by
-calling its <code>setFont()</code> method.  The <classname>Font</classname> constructor that is used in the
+calling the label's <code>setFont()</code> method.  The <classname>Font</classname> constructor that is used in the
 sample program, <code>new&nbsp;Font(40)</code>, takes a parameter that specifies the size of the font.</p>
 
 <p>Containers are <classname>Nodes</classname> which can have other nodes as children.
