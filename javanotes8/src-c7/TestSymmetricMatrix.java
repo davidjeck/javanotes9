@@ -1,3 +1,5 @@
+import textio.TextIO;
+
 /**
  * A small program to test the class SymmetricMatrix,
  * which represents symmetric matrices of double values.

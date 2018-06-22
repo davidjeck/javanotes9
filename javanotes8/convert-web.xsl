@@ -16,7 +16,10 @@
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Seventh Edition</h2>
         <h2 class="chapter_title">Version 8.0, Summer 2018</h2>
-        <p style="text-align:center">(Under Construction!)</p>
+        <p style="text-align:center">(Under Construction!<br/>
+                          Status: Chapters 1 through 7 have been updated<br/>
+                          but still need proofreading.  Chapters 8 through 13<br/>
+                          have not yet been updated from Version 7.)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
@@ -93,7 +96,7 @@
             charge, for downloading and for on-line use at the Web address:
             <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a></small></i>
           </blockquote>
-        <hr/>
+ <!--       <hr/>
         <h3>Downloading And Other Links</h3>
         <ul>
         <li>
@@ -158,7 +161,6 @@
            </li>
            </ul>
         </li>
-<!-- 
         <li>
           <b>Print Copies Available from Lulu.com:</b>
           <ul>
@@ -185,8 +187,8 @@
           audience.  See the end of the <a href="preface.html">preface</a> for more information and a link.</li>
           </ul>
         </li>
--->
         </ul>
+-->
         </td></tr></table>
         <hr/>
         <div align="right"><small><i>(Summer 2018, Version 8 under construction)

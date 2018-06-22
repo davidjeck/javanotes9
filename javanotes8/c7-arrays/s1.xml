@@ -61,7 +61,7 @@ in an array of <classname>Strings</classname>:</p>
 }</pre>
 
 <np>The meaning of "<code>for (String name : namelist)</code>" is
-"for each string, name, in the array, namelist, do the following".  The effect
+"for each String, name, in the array, namelist, do the following".  The effect
 is that the variable <code>name</code> takes on each of the values in <code>namelist</code>
 in turn, and the body of the loop is executed for each of those values.  Note that
 there is no array index in the loop.  The loop control variable, <code>name</code>,
@@ -199,7 +199,7 @@ and the values of the actual parameters would be <code>numbers[0]</code>,
 </p>
    
 <pre>public static double average( double... numbers ) {
-        // Inside this method, numbers if of type double[].
+        // Inside this method, numbers is of type double[].
    double sum;      // The sum of all the actual parameters.
    double average;  // The average of all the actual parameters.
    sum = 0;
@@ -224,27 +224,27 @@ very last formal parameter.</p>
 <p>As an example, consider a method that can draw a polygon through
 any number of points.  The points are given as values of type <classname>Point</classname>,
 where an object of type <classname>Point</classname> has two instance variables,
-<code>x</code> and <code>y</code>, of type <ptype>int</ptype>.
+<code>x</code> and <code>y</code>, of type <ptype>double</ptype>.
 In this case, the method has one ordinary parameter&mdash;the
 graphics context that will be used to draw the polygon&mdash;in addition to the
 variable arity parameter.  Remember that inside the definition of the
 method, the parameter <code>points</code> becomes an array of 
 <classname>Points</classname>:</p>
    
-<pre>public static void drawPolygon(Graphics g, Point... points) {
+<pre>public static void drawPolygon(GraphicsContext g, Point... points) {
     if (points.length &gt; 1) {  // (Need at least 2 points to draw anything.)
        for (int i = 0; i &lt; points.length - 1; i++) {
            // Draw a line from i-th point to (i+1)-th point
-           g.drawLine( points[i].x, points[i].y, points[i+1].x, points[i+1].y );
+           g.strokeLine( points[i].x, points[i].y, points[i+1].x, points[i+1].y );
        }
        // Now, draw a line back to the starting point.
-       g.drawLine( points[points.length-1].x, points[points.length-1].y,
+       g.strokeLine( points[points.length-1].x, points[points.length-1].y,
                        points[0].x, points[0].y );
     }
 }</pre>
 
 <np>When this method is called, the subroutine call statement must have one actual parameter
-of type <classname>Graphics</classname>, which can be followed by any number of
+of type <classname>GraphicsContext</classname>, which can be followed by any number of
 actual parameters of type <classname>Point</classname>.</np>
    
 <p>For a final example, let's look at a method that strings together all of the
@@ -252,8 +252,8 @@ values in a list of strings into a single, long string.  This example uses a for
 loop to process the array:</p>
 
 <pre>public static String concat( String... values ) {
-   StringBuffer buffer;  // Use a StringBuffer for more efficient concatenation.
-   buffer = new StringBuffer();  // Start with an empty buffer.
+   StringBuilder buffer;  // Use a StringBuilder for more efficient concatenation.
+   buffer = new StringBuilder();  // Start with an empty StringBuilder.
    for ( String str : values ) { // A "for each" loop for processing the values.
        buffer.append(str); // Add string to the buffer.
    }
@@ -282,7 +282,7 @@ that contains the seven values in the list</np>
 
 
 <p>A list initializer of this form can be used <b>only</b> in a declaration
-statement, to give an initial value to a newly declared array variable. It
+statement, where it gives an initial value to a newly declared array variable. It
 cannot be used in an assignment statement to assign a value to a variable that
 already existed. However, there is another, similar notation for
 creating a new array that can be used in other places. The notation uses 
@@ -309,30 +309,26 @@ in a program to represent a value. This means that it can be used in any
 context where an object of type <bnf>base-type</bnf><code>[]</code> is legal.
 For example, you could pass the newly created array as an actual parameter to
 a subroutine.  Consider the following utility method for creating a menu
-from an array of strings:</np>
+from an array of strings.  (Menus were discussed in <localref href="GUI1.6.2"/>.)</np>
 
 <pre>/**
- * Creates a JMenu.  The names for the JMenuItems in the menu are
- * given as an array of strings.
- * @param menuName  the name for the JMenu that is to be created.
- * @param handler  the listener that will respond to items in the menu.
- *    This ActionListener is added as a listener for each JMenuItem.
+ * Creates a Menu.  The names for the MenuItems in the menu are
+ *     given as an array of Strings.
+ * @param menuName  the name for the Menu that is to be created.
  * @param itemNames  an array holding the text that appears in each
- *     JMenuItem.  If a null value appears in the array, the corresponding
- *     item in the menu will be a separator rather than a JMenuItem.
+ *     MenuItem.  If a null value appears in the array, the corresponding
+ *     item in the menu will be a separator rather than a MenuItem.
  * @return  the menu that has been created and filled with items.
  */
-public static JMenu createMenu( 
-            String menuName, ActionListener handler, String[] itemNames ) {
-    JMenu menu = new JMenu(menuName);
+public static Menu createMenu( String menuName, String[] itemNames ) {
+    Menu menu = new Menu(menuName);
     for ( String itemName : itemNames ) {
         if ( itemName == null ) {
-            menu.addSeparator();
+            menu.getItems().add( new SeparatorMenuItem() );
         }
         else {
-            JMenuItem item = new JMenuItem(itemName);
-            item.addActionListener(handler);
-            menu.add(item);
+            MenuItem item = new MenuItem(itemName);
+            menu.getItems().add(item);
         }
     }
     return menu;
@@ -341,16 +337,17 @@ public static JMenu createMenu(
 
 <np>The third parameter in a call to <code>createMenu</code> is an array of 
 strings.  The array that is passed as an actual parameter could be created
-in place, using the <code>new</code> operator.  For example, assuming
-that <code>listener</code> is of type <classname>ActionListener</classname>,
+in place, using the <code>new</code> operator.  For example, 
 we can use the following statement to create an entire File menu:</np>
 
-<pre>JMenu fileMenu = createMenu( "File", listener
+<pre>Menu fileMenu = createMenu( "File", 
               <newcode>new String[] { "New", "Open", "Close", null, "Quit" }</newcode> );</pre>
    
 <np>This should convince you that
 being able to create and use an array "in place" in this way can be very convenient,
-in the same way that anonymous inner classes are convenient.</np>
+in the same way that anonymous inner classes are convenient.  (However, this
+example could have been done even more conveniently if <code>createMenu()</code>
+had been written as a variable arity method!)</np>
    
 <p>By the way, it is perfectly legal to use the "<code>new BaseType[] {&nbsp;&dots;&nbsp;}</code>" syntax
 instead of the array initializer syntax in the declaration of an array variable.  For example,

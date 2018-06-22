@@ -306,23 +306,23 @@ as the GUI toolbox.</p>
    <li><sourceref href="chapter6/MosaicDraw.java">MosaicDraw.java</sourceref>, from <localref href="GUI1.6"/>,
    demonstrates menus.  In this program, the user colors the squares of a mosaic by clicking-and-dragging the mouse. It uses
    <sourceref href="chapter6/MosaicCanvas.java">MosaicCanvas.java</sourceref> to define the mosaic itself.</li>
-
    <li><sourceref href="chapter7/RandomStringsWithArray.java">RandomStringsWithArray.java</sourceref>, 
    from <localref href="arrays.2"/>,
-   shows multiple copies of a message in random colors, sizes, and positions.  This is an
-   improved version of <sourceref href="chapter6/RandomStringsPanel.java">RandomStringsPanel.java</sourceref> that uses an
-   array to keep track of the data, so that the same picture can be redrawn whenever
-   necessary.</li>
+   shows multiple copies of a message in random colors, sizes, and positions.  There is an animation in
+   which the copies move around in the window.  This is an
+   improved version of <sourceref href="chapter6/RandomStrings.java">RandomStrings.java</sourceref> that uses an
+   array to keep track of the data.</li>
    <li><sourceref href="chapter7/SimplePaint2.java">SimplePaint2.java</sourceref>, from <localref href="arrays.3"/>, lets
    the user draw colored curves and stores the data needed for repainting the
    drawing surface in a list of type <atype>ArrayList&lt;CurveData&gt;</atype>.</li>
    <li><sourceref href="chapter7/Life.java">Life.java</sourceref>, from <localref href="arrays.5"/>,
    implements John H. Conway's game of life and is an example of using 2D arrays.  This program
-   depends on <sourceref href="chapter7/MosaicPanel.java">MosaicPanel.java</sourceref>.</li>
+   depends on <sourceref href="chapter7/MosaicCanvas.java">MosaicCanvas.java</sourceref>.</li>
    <li><sourceref href="chapter7/Checkers.java">Checkers.java</sourceref>, from <localref href="arrays.5"/>, lets two
    users play a game of checkers against each other.  Illustrates the use of a 
    two-dimensional array and a variety of programming techniques. 
    (This is the longest program in the book so far, at over 700 lines!)</li>
+   
    <li><sourceref href="chapter9/Maze.java">Maze.java</sourceref> and
    <sourceref href="chapter9/LittlePentominos.java">LittlePentominos.java</sourceref>
    are demo programs mentioned in <localref href="recursion.1"/> as examples of
@@ -480,11 +480,9 @@ along with the programs that use them.</p>
    <li><sourceref href="chapter4/Mosaic.java">Mosaic.java</sourceref> contains 
    subroutines for opening and controlling a
    window that contains a grid of colored rectangles.  
-   It depends on <sourceref href="chapter4/MosaicPanel.java">MosaicPanel.java</sourceref>.
-   This is a toolbox for writing simple stand-alone applications that use a "mosaic window." 
-   It is used in several examples and exercises in <localref href="subroutines"/>
-   and <localref href="GUI1"/>.</li>
-   <li><sourceref href="chapter4/MosaicPanel.java"/>  defines a subclass of JPanel that shows little
+   It depends on <sourceref href="chapter4/MosaicCanvas.java">MosaicCanvas.java</sourceref>.
+   It is used in several examples and exercises in <localref href="subroutines"/>.</li>
+   <li><sourceref href="chapter4/MosaicCanvas.java"/>  defines a subclass of <classname>Canvas</classname> that shows little
    rectangles arranged in rows and columns, with many options.</li>
    <li><sourceref href="chapter5/StatCalc.java">StatCalc.java</sourceref> is a simple
    class that computes some statistics of a set of numbers.  It is used only

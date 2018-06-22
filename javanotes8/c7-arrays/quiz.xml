@@ -202,7 +202,7 @@ if the array has length zero.)</np>
    
 <question>
 <ques><p>Suppose that temperature
-measurements were made on each day of 2014 in each of 100 cities. The
+measurements were made on each day of 2018 in each of 100 cities. The
 measurements have been stored in an array</p>
 <pre>int[][]  temps  =  new  int[100][365];</pre>
 <np>where <code>temps[c][d]</code> holds the measurement for city number <code>c</code>
@@ -291,7 +291,7 @@ terms of the value of its parameter?</p>
 </ques>
 <ans><p>The purpose of this subroutine is to find the sum of the numbers in each
 row of the parameter array <code>data</code>.  The answer is returned as 
-a one-dimensional array of double.  The value of <code>answers[i]</code> is the
+a one-dimensional array of <ptype>double</ptype>.  The value of <code>answers[i]</code> is the
 sum of the numbers in row number <code>i</code> of <code>data</code>.
 </p>
 <p>(In the first two lines of the method, <code>data.length</code> is the

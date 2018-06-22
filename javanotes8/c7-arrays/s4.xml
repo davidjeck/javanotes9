@@ -123,9 +123,8 @@ at the item in the middle of the range. If this item is greater than
 than <code>N</code>, then the first half of the range can be eliminated. If the
 number in the middle just happens to be <code>N</code> exactly, then the search is
 finished. If the size of the range decreases to zero, then the number
-<code>N</code> does not occur in the array. Here is a subroutine that returns the
-location of <code>N</code> in a sorted array <code>A</code>. If <code>N</code> cannot be
-found in the array, then a value of -1 is returned instead:</p>
+<code>N</code> does not occur in the array. Here is a subroutine that implements
+this idea:</p>
 
 <pre>/**
  * Searches the array A for the integer N.
@@ -312,7 +311,8 @@ next subsection.</p>
 
 <p>I will mention that association lists are also called "maps," and Java has
 a standard parameterized type name <classname>Map</classname> that implements
-association lists for keys and values of any type.  You will encounter this
+association lists for keys and values of any type.  The implementation is <b>much</b>
+more efficient than anything you can do with basic arrays. You will encounter this
 class in <localref href="generics"/>.</p>
 
 </subsection>
@@ -474,12 +474,12 @@ public void sortBySuit() {
          Card c1 = hand.get(i);
          if ( c1.getSuit() &lt; c.getSuit() ||
               (c1.getSuit() == c.getSuit() &amp;&amp; c1.getValue() &lt; c.getValue()) ) {
-            pos = i;
+            pos = i;  // Update the minimal card and location.
             c = c1;
          }
       }
-      hand.remove(pos);
-      newHand.add(c);
+      hand.remove(pos);  // Remove card from original hand.
+      newHand.add(c);    // Add card to the new hand.
    }
    hand = newHand;
 }</pre>
@@ -503,23 +503,24 @@ then</p>
    
 <np>returns an <ptype>int</ptype> that is 0 when <code>str1</code> is equal to
 <code>str2</code>, is less than 0 when <code>str1</code> precedes <code>str2</code>,
-and is greater than 0 when <code>str1</code> follows <code>str2</code>.
-The definition of "precedes" and "follows" for strings uses what is called
+and is greater than 0 when <code>str1</code> follows <code>str2</code>. For example,
+you can test whether <code>str1</code> precedes or is equal to <code>str2</code> by
+testing</np>
+
+<pre>if ( str1.compareTo(str2) &lt;= 0 )</pre>
+
+<np>The definition of "precedes" and "follows" for strings uses what is called
 <newword>lexicographic ordering</newword>, which is based on the Unicode
 values of the characters in the strings.  Lexicographic ordering is not
 the same as alphabetical ordering, even for strings that consist entirely
 of letters (because in lexicographic ordering, all the upper case letters
 come before all the lower case letters).  However, for words consisting
 strictly of the 26 lower case letters in the English alphabet, lexicographic
-and alphabetic ordering are the same.  (The same holds true for uppercase letters.)
-Thus, if <code>str1</code> and <code>str2</code> are strings containing only
-letters from the English alphabet, then the test</np>
-   
-<pre>str1.toLowerCase().compareTo(str2.toLowerCase()) &lt; 0</pre>
-   
-<np>is true if and only if <code>str1</code> comes before <code>str2</code>
-in alphabetical order.</np>
-
+and alphabetic ordering are the same.  (The same holds true if the strings consist
+entirely of  uppercase letters.)  The method <code>str1.compareToIgnoreCase(str2)</code>
+compares the two strings after converting any characters that they contain
+to lower case.</np>
+ 
 <break/>
 
 <p>Insertion sort and selection sort are suitable for sorting fairly small

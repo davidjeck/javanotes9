@@ -511,7 +511,7 @@ public class MosaicCanvas extends Canvas {
 	 * value is -1 or is equal to the number of columns, depending on whether
 	 * x is to the left or to the right of the mosaic.
 	 */
-	public int xCoordToColumnNumber(int x) {
+	public int xCoordToColumnNumber(double x) {
 		if (x < 0)
 			return -1;
 		double colWidth = getWidth() / columns;
@@ -529,7 +529,7 @@ public class MosaicCanvas extends Canvas {
 	 * value is -1  or is equal to the number of rows, depending on whether
 	 * y is above or below the mosaic.
 	 */
-	public int yCoordToRowNumber(int y) {
+	public int yCoordToRowNumber(double y) {
 		if (y < 0)
 			return -1;
 		double rowHeight = getHeight() / rows;

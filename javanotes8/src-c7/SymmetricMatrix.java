@@ -16,7 +16,8 @@ public class SymmetricMatrix {
 	}
 	
 	/**
-	 * Returns the matrix entry at position (row,col).
+	 * Returns the matrix entry at position (row,col).  (If col &lt; row
+	 * the value is actually stored at position (col,row).)
 	 */
 	public double get( int row, int col ) {
 		if (row >= col)
@@ -26,7 +27,8 @@ public class SymmetricMatrix {
 	}
 	
 	/**
-	 * Sets the value of the matrix entries at (row,col) and (col,row).
+	 * Sets the value of the matrix entry at (row,col).  (If col &lt; row,
+	 * the value is actually stored at position (col,row).)
 	 */
 	public void set( int row, int col, double value ) {
 		if (row >= col)

@@ -78,7 +78,7 @@ call :buildjar chapter7 RandomStringsWithArray
 call :buildtio chapter7 ReverseWithDynamicArray DynamicArrayOfInt.java
 call :buildjar chapter7 SimplePaint2
 call :buildtio chapter7 TestSymmetricMatrix SymmetricMatrix.java
-call :buildjar chapter7 Life MosaicPanel.java
+call :buildjar chapter7 Life MosaicCanvas.java
 call :buildjar chapter7 Checkers
 call :buildtio chapter8 LengthConverter2
 call :buildtio chapter8 TryStatementDemo

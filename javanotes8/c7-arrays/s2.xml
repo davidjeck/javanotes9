@@ -32,7 +32,7 @@ for ( int i = 0; i &lt; list.length; i++ ) {
 
 <np>This <code>for</code> loop looks like many others that we have written,
 so what's the problem?  The error occurs when <code>i</code> takes on
-its final value in the loop, <code>i</code> equal to <code>lines.length-1</code>.
+its final value in the loop, when <code>i</code> is equal to <code>lines.length-1</code>.
 In that case, <code>i+1</code> is equal to <code>lines.length</code>.  But
 the last element in the array has index <code>lines.length-1</code>,
 so <code>lines.length</code> is not a legal index.  This means that the
@@ -80,7 +80,9 @@ int      playerCt = 0;  // At the start, there are no players.</pre>
 than 0, and the player objects representing the players will be stored in the
 array elements <code>playerList[0]</code>, <code>playerList[1]</code>, &dots;,
 <code>playerList[playerCt-1]</code>. Note that the array element
-<code>playerList[playerCt]</code> is <b>not</b> in use. The procedure for
+<code>playerList[playerCt]</code> is <b>not</b> in use: Besides being the
+number of items in the array, <code>playerCt</code> is also the index
+of the next open spot in the array. The procedure for
 adding a new player, <code>newPlayer</code>, to the game is simple:</p>
 
 <pre>playerList[playerCt] = newPlayer; // Put new player in next
@@ -93,7 +95,7 @@ Suppose you want to delete the player at index
 <code>k</code> in <code>playerList</code>.  The number of players goes down
 by one, so one fewer space is used in the array.  
 If you are not worried about keeping the
-players in any particular order, then one way to do this is to move the player
+players in any particular order, then one way to delete player number <code>k</code> is to move the player
 from the last occupied position in the array
 into position <code>k</code> and then
 to decrement the value of <code>playerCt</code>:</p>
@@ -115,7 +117,7 @@ exactly happens?)</np>
 <p>Suppose that when deleting the player in position <code>k</code>, you'd like to
 keep the remaining players in the same order. (Maybe because they take turns in
 the order in which they are stored in the array.) To do this, all the players
-in positions <code>k+1</code> and above must move down one position in the array.
+in positions <code>k+1</code> and following must move up one position in the array.
 Player <code>k+1</code> replaces player <code>k</code>, who is out of the game. Player
 <code>k+2</code> fills the spot left open when player <code>k+1</code> is moved. And so
 on. The code for this is</p>
@@ -166,7 +168,7 @@ we just need to make a new array that is bigger than the existing array.  The us
 choice is to make a new array twice as big as the old.  We need to meet one
 more requirement:  At the end, the variable that referred to the old array
 must now point to the new array.  That variable is what gives us access to the
-data, and at the end that data is in the new array.  Fortunately, a simple
+data, and in the end, the data is in the new array.  Fortunately, a simple
 assignment statement will make the variable point to the correct array.
 Let's suppose that we are using <code>playerList</code> and <code>playerCt</code>
 to store the players in a game, as in the example above, and we want to add
@@ -227,8 +229,8 @@ might become</np>
 
 <pre>playerList[k] = playerList[playerCt-1];
 playerCt--;
-if ( playerCt &lt; playerList.length/2 ) {
-        // More than half the spaces are empty. Cut the array size in half.
+if ( playerCt &lt; playerList.length/4 ) {
+        // More than 3/4 of the spaces are empty. Cut the array size in half.
     playerList = Arrays.copyOf( playerList, playerList.length/2 );
 }</pre>
 
@@ -237,6 +239,14 @@ of <code>copyOf</code> methods, one for each of the primitive types and one for
 objects.  I should also note that when an array of objects is copied, it is only
 pointers to objects that are copied into the new array.  The contents of the
 objects are not copied.  This is the usual rule for assignment of pointers.</p>
+
+<p>If what you want is a simple copy of an array,  with the same
+size as the original, there is an even easier way to do it.  Every array has
+an instance method named <code>clone()</code> that makes a copy of the array,
+to get a copy of an <ptype>int</ptype> array, <code>A</code>, for example,
+you can simply say</p>
+
+<pre>int[] B  =  A.clone();</pre>
 
 <break/>
 
@@ -267,7 +277,7 @@ see which is "smaller."  We will discuss array-sorting algorithms in <localref h
 <li><codedef>Arrays.sort( array, fromIndex, toIndex )</codedef> &mdash; Sorts just
 the elements from <code>array[fromIndex]</code> up to <code>array[toIndex-1]</code></li>
 <li><codedef>Arrays.binarySearch( array, value )</codedef> &mdash; Searches for <code>value</code>
-in the <code>array</code>.  The array must already be sorted into increasing order.
+in the <code>array</code>.  The array <b>must already be sorted</b> into increasing order.
 This is a function that returns an <ptype>int</ptype>.  If the value is found in the array,
 the return value is the index of an element that contains that value.  If the value does not
 occur in the array, the return value is&nbsp;-1.  We will discuss the binary search algorithm
@@ -281,43 +291,49 @@ in <localref href="arrays.4"/>.</li>
 
 <subsection  id="arrays.2.3" title="RandomStrings Revisited">
    
-<p>One of the examples in <localref href="GUI1.4.2"/> was a GUI program
+<p>One of the examples in <localref href="GUI1.2.4"/> was a GUI program
 that shows multiple copies of a message in random positions, colors, and fonts.
 When the user clicks the program window, the positions, colors, and fonts are
-changed to new random values. Like several other examples from that chapter,
-the program had a flaw: It didn't have any way of storing the data that it would
-need to redraw itself.  Arrays provide us with one possible solution to this
-problem.  We can write a new version of RandomStrings that uses
-an array to store the position, font, and color of each string. When the panel
-is painted, this information is used to draw the strings,
-so that the panel will paint itself correctly whenever it has to be redrawn.
-When the user clicks, the array is filled with new
-random values and the panel is repainted using the new data.  So, the
-only time that the picture will change is in response to a mouse click.
-The new version of the program is <sourceref href="RandomStringsWithArray.java"/>.
-</p>
+changed to new random values.  But suppose that we want the message strings
+to move.  That is, we want to run an animation where the strings drift
+around in the window.  In that case, we need to store the properties of
+each string, since it will be needed to redraw the strings in each frame
+of the animation.  A new of the program that does that is <sourceref href="RandomStringsWithArray.java"/>.</p>
 
-<p>In the program, the number of copies of the message is given by a named
-constant, <code>MESSAGE_COUNT</code>. One way to store the position, color, and
-font of <code>MESSAGE_COUNT</code> strings would be to use four arrays:</p>
+<p>There are 25 strings.  We need to store the (x,y) coordinates where each string is drawn,
+the color of each string, and the font that is used for each string.  To make the
+strings move, I also store a velocity for each string, represented as two numbers
+<code>dx</code> and <code>dx</code>.  In each frame, the <code>dx</code> for each string
+is added to the <code>x</code> coordinate of the string, and <code>dy</code> is
+added to the <code>y</code> coordinate.  Now the data for the string could be
+stored in six arrays</p>
 
-<pre>int[] x = new int[MESSAGE_COUNT];  
-int[] y = new int[MESSAGE_COUNT];
-Color[] color = new Color[MESSAGE_COUNT];
-Font[] font = new Font[MESSAGE_COUNT];</pre>
+<pre>double[] x = new double[25];  
+double[] y = new double[25];
+double[] dx = new double[25];  
+double[] dy = new double[25];
+Color[] color = new Color[25];
+Font[] font = new Font[25];</pre>
 
 <np>These arrays would be filled with random values. In the
-<code>paintComponent()</code> method, the <code>i</code>-th copy of the string would be
+<code>draw()</code> method that draws the canvas, the <code>i</code>-th string would be
 drawn at the point <code>(x[i],y[i])</code>. Its color would be given by
-<code>color[i]</code>. And it would be drawn in the font <code>font[i]</code>. This
-would be accomplished by the <code>paintComponent()</code> method</np>
+<code>color[i]</code>. And it would be drawn in the font <code>font[i]</code>.
+(The <code>dx</code> and <code>dy</code> would not be used in <code>draw()</code>;
+they are used when updating the data for the next frame.)  This
+would be accomplished by the <code>draw()</code> method such as:</np>
 
-<pre>public void paintComponent(Graphics g) {
-   super.paintComponent(); // (Fill with background color.)
-   for (int i = 0; i &lt; MESSAGE_COUNT; i++) {
-      g.setColor( color[i] );
+<pre>public void draw() {
+    GraphicsContext g = canvas.getGraphicsContext2D();
+    g.setFill(Color.WHITE);
+    g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+   super.paintComponent(); // (Fill with white.)
+   for (int i = 0; i &lt; 25; i++) {
+      g.setFill( color[i] );
       g.setFont( font[i] );
-      g.drawString( message, x[i], y[i] );
+      g.fill( MESSAGE, x[i], y[i] );
+      g.setStroke(Color.BLACK);
+      g.strokeText( MESSAGE, x[i], y[i] );
    }
 }</pre>
 
@@ -334,14 +350,11 @@ among the data, because all the data for one copy of the message is physically
 in one place. So, when I wrote the program, I made a simple class to represent
 all the data that is needed for one copy of the message:</np>
 
-<pre>/**
- * An object of this type holds the position, color, and font
- * of one copy of the string.
- */
-private static class StringData {
-   int x, y;     // The coordinates of the left end of baseline of string.
-   Color color;  // The color in which the string is drawn.
-   Font font;    // The font that is used to draw the string.
+<pre>private static class StringData {  // Info needed to draw one string.
+    double x,y;       // location of the string;
+    double dx,dy;     // velocity of the string;
+    Color color;      // color of the string;
+    int fontNumber;   // the font number of the string
 }</pre>
 
 <np>To store the data for multiple copies of the message, I use an array of
@@ -353,49 +366,47 @@ the name <code>stringData</code>:</np>
 <np>Of course, the value of <code>stringData</code> is <code>null</code> until an actual array
 is created and assigned to it. The array has to be created and filled with data.
 Furthermore, each element of the array is an object of type <classname>StringData</classname>
-which has to be created before it can be used.  The following subroutine is used to
-create the array and fill it with random data:</np>
+which has to be created before it can be used.  The following subroutine 
+creates the array and fills it with random data:</np>
 
 <pre>private void createStringData() {
-    int width = getWidth();
-    int height = getHeight();
-    stringData = new StringData[MESSAGE_COUNT];
-    for (int i = 0; i &lt; MESSAGE_COUNT; i++) {
-            // Create an object to represent the data for string number i,
-            // and fill it with random values.
+    stringData = new StringData[25];
+    for (int i = 0; i &lt; 25; i++) {
         stringData[i] = new StringData();
-        int fontIndex = (int)(Math.random() * 5);
-        stringData[i].font = fonts[fontIndex]; // one of 5 fonts, selected at random
-        float hue = (float)Math.random();
-        stringData[i].color = Color.getHSBColor(hue, 1.0F, 1.0F);  // random color
-        stringData[i].x = -50 + (int)(Math.random()*(width+40));  // random x-coord
-        stringData[i].y = (int)(Math.random()*(height+20));  // random y-coord
+        stringData[i].x = canvas.getWidth() * Math.random();
+        stringData[i].y = canvas.getHeight() * Math.random();
+        stringData[i].dx = 1 + 3*Math.random();
+        if (Math.random() &lt; 0.5) // 50% chance that dx is negative
+            stringData[i].dx = -stringData[i].dx;
+        stringData[i].dy = 1 + 3*Math.random();
+        if (Math.random() &lt; 0.5) // 50% chance that dx is negative
+            stringData[i].dy = -stringData[i].dy;
+        stringData[i].color = Color.hsb( 360*Math.random(), 1.0, 1.0 );
+        stringData[i].font = fonts[ (int)(5*Math.random()) ];
     }
 }</pre>
 
 
-<p>This method is called before the panel is painted for the first time.  It is also called
-when the user clicks the panel with the mouse, so that a mouse click will cause new random
-data to be created.  Those are the only times when the picture can change.  For example,
-resizing the window will cause <code>paintComponent()</code> to be called, but since the
-data hasn't changed, <code>paintComponent()</code> will just redraw the same picture.
-Here is the code from <code>paintComponent()</code> that draws all the strings, using the
-data from the array:</p>
+<p>This method is called in the <code>start()</code> method.  It is also called to
+make new random data when the user clicks a button.  The strings can
+now be drawn using a for loop such as:</p>
 
-<pre>for (int i = 0; i &lt; MESSAGE_COUNT; i++) {
-    g.setColor( <newcode>stringData[i].</newcode>color );
+<pre>for (int i = 0; i &lt; 25; i++) {
+    g.setFill( <newcode>stringData[i].</newcode>color );
     g.setFont( <newcode>stringData[i].</newcode>font );
-    g.drawString( message, <newcode>stringData[i].</newcode>x, <newword>stringData[i].</newword>y );
+    g.fillText( MESSAGE, <newcode>stringData[i].</newcode>x, <newword>stringData[i].</newword>y );
+    g.setStroke(Color.BLACK);
+    g.strokeText( MESSAGE, <newcode>stringData[i].</newcode>x, <newword>stringData[i].</newword>y );
 }</pre>
    
-<np>Note that I could also have used a for-each loop here, which might be easier
+<np>But in fact, in my program, I used an equivalent for-each loop, which might be easier
 to understand:</np>
    
-<pre>for ( StringData data : stringData ) {
-    g.setColor( data.color );
-    g.setFont( data.font );
-    g.drawString( message, data.x, data.y );
-}</pre>
+<pre>g.setFill( data.color );
+g.setFont( data.font);
+g.fillText(MESSAGE, data.x, data.y);
+g.setStroke(Color.BLACK);
+g.strokeText(MESSAGE, data.x, data.y);</pre>
    
 <np>In this loop, the loop control variable, <code>data</code>, holds a copy of one
 of the values from the array.  That value is a reference to an object of type
@@ -404,10 +415,14 @@ of the values from the array.  That value is a reference to an object of type
 Once again, the use of a for-each loop has eliminated the need to work with
 array indices.</np>
 
+<p>As for how the animation is done, you can check out the full
+<sourceref href="RandomStringsWithArray.java">source code</sourceref>.  Animation was
+discussed in <localref href="GUI1.3.5"/>.</p>
+
 
 <break/>
 
-<p>RandomStringsWithArray uses one other array of objects. The font for a given copy of the
+<p><code>RandomStringsWithArray</code> uses one other array of objects. The font for a given copy of the
 message is chosen at random from a set of five possible fonts. In the original
 version, there were five variables of type <classname>Font</classname> to
 represent the fonts. The variables were named <code>font1</code>, <code>font2</code>,
@@ -442,16 +457,16 @@ variable of type <atype>Font[]</atype></np>
 
 <pre>Font[] fonts;</pre>
 
-<np>The array is created in the constructor, and each element of the array is set
-to refer to a new <classname>Font</classname> object:</np>
+<np>The array is created in the constructor, using the array literal
+syntax from <localref href="arrays.1.3"/>:</np>
 
-<pre>fonts = new Font[5];  // Create the array to hold the five fonts.
- 
-fonts[0] = new Font("Serif", Font.BOLD, 14);
-fonts[1] = new Font("SansSerif", Font.BOLD + Font.ITALIC, 24);
-fonts[2] = new Font("Monospaced", Font.PLAIN, 20);
-fonts[3] = new Font("Dialog", Font.PLAIN, 30);
-fonts[4] = new Font("Serif", Font.ITALIC, 36);</pre>
+<pre>fonts= new Font[] {
+        Font.font("Times New Roman", FontWeight.BOLD, 20),
+        Font.font("Arial", FontWeight.BOLD, FontPosture .ITALIC, 28),
+        Font.font("Verdana", 32),
+        Font.font(40),
+        Font.font("Times New Roman", FontWeight.BOLD, FontPosture .ITALIC, 60)
+};</pre>
 
 <np>This makes it much easier to select one of the fonts at random. It can be
 done with the statements</np>
@@ -467,7 +482,7 @@ In fact, the preceding four lines can be replaced by the single line:</np>
 <pre>Font randomFont = fonts[ (int)(Math.random() * 5) ];</pre>
    
 <p>This is a very typical application of arrays. Note that this example uses
-the random access property of arrays:  We can pick an array index at random
+the random access property:  We can pick an array index at random
 and go directly to the array element at that index.</p>
 
 <p>Here is another example of the
@@ -592,14 +607,15 @@ as needed if the number of items turns out to be large.</np>
 
 <p>The example <sourceref chapter="3" href="ReverseInputNumbers.java"/> used a partially full array
 of <ptype>int</ptype> to print a list of input numbers in the reverse of the order in
-which they are input.  In that case, an ordinary array of length 100 was used to 
+which they are input.  In that program, an ordinary array of length 100 was used to 
 hold the numbers.  In any given run of the program, the size of the array could
 be much too large, or it could be too small, resulting in an exception.  The program
-can now be written using a DynamicArrayOfInt, which will adapt itself to any number
+can now be written using a DynamicArrayOfInt, which will adapt itself to any reasonable number
 of inputs.  For the program, see <sourceref href="ReverseWithDynamicArray.java"/>.
 It's a silly program, but the principle holds in any application where the amount of
 data cannot be predicted in advance: The size of a dynamic data structure can
-adapt itself to any amount of data.</p>
+adapt itself to any amount of data, limited only by the amount of memory available
+to the program.</p>
 
 <p>This is a nice example, but there is a real problem with it.  Suppose that
 we want to have a dynamic array of <classname>String</classname>.  We can't use

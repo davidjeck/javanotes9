@@ -1,6 +1,17 @@
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.input.MouseEvent;
+
 import java.util.ArrayList;
 
 
@@ -9,39 +20,26 @@ import java.util.ArrayList;
  * Red always starts the game.  If a player can jump an opponent's
  * piece, then the player must jump.  When a player can make no more
  * moves, the game ends.
- * 
- * The class has a main() routine that lets it be run as a stand-alone
- * application. 
  */
-public class Checkers extends JPanel {
+public class Checkers extends Application {
 
-	/**
-	 * Main routine makes it possible to run Checkers as a stand-alone
-	 * application.  Opens a window showing a Checkers panel; the program
-	 * ends when the user closes the window.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Checkers");
-		Checkers content = new Checkers();
-		window.setContentPane(content);
-		window.pack();
-		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		window.setLocation( (screensize.width - window.getWidth())/2,
-				(screensize.height - window.getHeight())/2 );
-		window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		window.setResizable(false);  
-		window.setVisible(true);
+		launch(args);
 	}
 	
 	//---------------------------------------------------------------------
 	
+	CheckersBoard board; // A canvas on which a checker board is drawn,
+                         // defined by a static nested subclass.  Much of
+	                     // the game logic is defined in this class.
 
-	private JButton newGameButton;  // Button for starting a new game.
+
+	private Button newGameButton;  // Button for starting a new game.
 	
-	private JButton resignButton;   // Button that a player can use to end 
+	private Button resignButton;   // Button that a player can use to end 
 									// the game by resigning.
 
-	private JLabel message;  // Label for displaying messages to the user.
+	private Label message;  // Label for displaying messages to the user.
 
 	/**
 	 * The constructor creates the Board (which in turn creates and manages
@@ -49,32 +47,68 @@ public class Checkers extends JPanel {
 	 * the bounds of the components.  A null layout is used.  (This is
 	 * the only thing that is done in the main Checkers class.)
 	 */
-	public Checkers() {
+	public void start(Stage stage) {
 
-		setLayout(null);  // I will do the layout myself.
-		setPreferredSize( new Dimension(350,250) );
+		/* Create the label that will show messages. */
+		
+		message = new Label("Click \"New Game\" to begin.");
+		message.setTextFill( Color.rgb(100,255,100) ); // Light green.
+		message.setFont( Font.font(null, FontWeight.BOLD, 18) );
+		
+		/* Create the buttons and the board.  The buttons MUST be
+		 * created first, since they are used in the CheckerBoard
+		 * constructor! */
 
-		setBackground(new Color(0,150,0));  // Dark green background.
+		newGameButton = new Button("New Game");
+		resignButton = new Button("Resign");
 
-		/* Create the components and add them to the panel. */
+		board = new CheckersBoard(); // a subclass of Canvas, defined below
+		board.drawBoard();  // draws the content of the checkerboard
+		
+		/* Set up ActionEvent handlers for the buttons and a MousePressed handler
+		 * for the board.  The handlers call instance methods in the board object. */
 
-		Board board = new Board();  // Note: The constructor for the
-									//   board also creates the buttons
-									//   and label.
-		add(board);
-		add(newGameButton);
-		add(resignButton);
-		add(message);
+		newGameButton.setOnAction( e -> board.doNewGame() );
+		resignButton.setOnAction( e -> board.doResign() );
+		board.setOnMousePressed( e -> board.mousePressed(e) );
 
-		/* Set the position and size of each component by calling
-		 its setBounds() method. */
+		/* Set the location of each child by calling its relocate() method */
 
-		board.setBounds(20,20,164,164); // Note:  size MUST be 164-by-164 !
-		newGameButton.setBounds(210, 60, 120, 30);
-		resignButton.setBounds(210, 120, 120, 30);
-		message.setBounds(0, 200, 350, 30);
+		board.relocate(20,20);
+		newGameButton.relocate(370, 120);
+		resignButton.relocate(370, 200);
+		message.relocate(20, 370);
+		
+		/* Set the sizes of the buttons.  For this to have an effect, make
+		 * the butons "unmanaged."  If they are managed, the Pane will set
+		 * their sizes. */
+		
+		resignButton.setManaged(false);
+		resignButton.resize(100,30);
+		newGameButton.setManaged(false);
+		newGameButton.resize(100,30);
+		
+		/* Create the Pane and give it a preferred size.   If the
+		 * preferred size were not set, the unmanaged buttons would 
+		 * not be included in the Pane's computed preferred size. */
+		
+		Pane root = new Pane();
+		
+		root.setPrefWidth(500);
+		root.setPrefHeight(420);
+		
+		/* Add the child nodes to the Pane and set up the rest of the GUI */
 
-	} // end constructor
+		root.getChildren().addAll(board, newGameButton, resignButton, message);
+		root.setStyle("-fx-background-color: darkgreen; "
+		                   + "-fx-border-color: darkred; -fx-border-width:3");
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setResizable(false);
+		stage.setTitle("Checkers!");
+		stage.show();
+
+	} // end start()
 
 
 
@@ -108,13 +142,16 @@ public class Checkers extends JPanel {
 
 
 	/**
-	 * This panel displays a 160-by-160 checkerboard pattern with
-	 * a 2-pixel black border.  It is assumed that the size of the
-	 * panel is set to exactly 164-by-164 pixels.  This class does
-	 * the work of letting the users play checkers, and it displays
-	 * the checkerboard.
+	 * This canvas displays a 320-by-320 checkerboard pattern with
+	 * a 2-pixel dark red border.  The canvas will be exactly
+	 * 324-by-324 pixels. This class contains methods that are
+	 * called in response to a mouse click on the canvas and
+	 * in response to clicks on the New Game and Resign buttons.
+	 * Note that the "New Game" and "Resign" buttons must be 
+	 * created before the Board constructor is called, since
+	 * the constructor references the buttons (in the call to doNewGame()).
 	 */
-	private class Board extends JPanel implements ActionListener, MouseListener {
+	private class CheckersBoard extends Canvas {
 
 		CheckersData board; // The data for the checkers board is kept here.
 							//    This board is also responsible for generating
@@ -136,37 +173,20 @@ public class Checkers extends JPanel {
 									//   current player.
 
 		/**
-		 * Constructor.  Create the buttons and label.  Listens for mouse
-		 * clicks and for clicks on the buttons.  Create the board and
+		 * Constructor.  Creates a CheckersData to represent the
+		 * contents of the checkerboard, and calls doNewGame to 
 		 * start the first game.
 		 */
-		Board() {
-			setBackground(Color.BLACK);
-			addMouseListener(this);
-			resignButton = new JButton("Resign");
-			resignButton.addActionListener(this);
-			newGameButton = new JButton("New Game");
-			newGameButton.addActionListener(this);
-			message = new JLabel("",JLabel.CENTER);
-			message.setFont(new  Font("Serif", Font.BOLD, 14));
-			message.setForeground(Color.green);
+		CheckersBoard() {
+			super(324,324);  // canvas is 324-by-324 pixels
 			board = new CheckersData();
 			doNewGame();
 		}
 
 		/**
-		 * Respond to user's click on one of the two buttons.
-		 */
-		public void actionPerformed(ActionEvent evt) {
-			Object src = evt.getSource();
-			if (src == newGameButton)
-				doNewGame();
-			else if (src == resignButton)
-				doResign();
-		}
-
-		/**
-		 * Start a new game
+		 * Start a new game.  This method is called when the Board is first
+		 * created and when the "New Game" button is clicked.  Event handling
+		 * is set up in the start() method in the main class.
 		 */
 		void doNewGame() {
 			if (gameInProgress == true) {
@@ -180,13 +200,15 @@ public class Checkers extends JPanel {
 			selectedRow = -1;   // RED has not yet selected a piece to move.
 			message.setText("Red:  Make your move.");
 			gameInProgress = true;
-			newGameButton.setEnabled(false);
-			resignButton.setEnabled(true);
-			repaint();
+			newGameButton.setDisable(true);
+			resignButton.setDisable(false);
+			drawBoard();
 		}
 
 		/**
-		 * Current player resigns.  Game ends.  Opponent wins.
+		 * Current player resigns.  Game ends.  Opponent wins.  This method is
+		 * called when the user clicks the "Resign" button.  Event handling is
+		 * set up in the start() method in the main class.
 		 */
 		void doResign() {
 			if (gameInProgress == false) {  // Should be impossible.
@@ -207,8 +229,8 @@ public class Checkers extends JPanel {
 		 */
 		void gameOver(String str) {
 			message.setText(str);
-			newGameButton.setEnabled(true);
-			resignButton.setEnabled(false);
+			newGameButton.setDisable(false);
+			resignButton.setDisable(true);
 			gameInProgress = false;
 		}
 
@@ -232,7 +254,7 @@ public class Checkers extends JPanel {
 						message.setText("RED:  Make your move.");
 					else
 						message.setText("BLACK:  Make your move.");
-					repaint();
+					drawBoard();
 					return;
 				}
 
@@ -286,7 +308,7 @@ public class Checkers extends JPanel {
 						message.setText("BLACK:  You must continue jumping.");
 					selectedRow = move.toRow;  // Since only one piece can be moved, select it.
 					selectedCol = move.toCol;
-					repaint();
+					drawBoard();
 					return;
 				}
 			}
@@ -341,7 +363,7 @@ public class Checkers extends JPanel {
 
 			/* Make sure the board is redrawn in its new state. */
 
-			repaint();
+			drawBoard();
 
 		}  // end doMakeMove();
 
@@ -349,48 +371,48 @@ public class Checkers extends JPanel {
 		 * Draw a checkerboard pattern in gray and lightGray.  Draw the
 		 * checkers.  If a game is in progress, highlight the legal moves.
 		 */
-		public void paintComponent(Graphics g) {
+		public void drawBoard() {
 			
 			/* Turn on antialiasing to get nicer ovals. */
 			
-			Graphics2D g2 = (Graphics2D)g;
-			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			GraphicsContext g = getGraphicsContext2D();
+			g.setFont( Font.font(18) );
 
 			/* Draw a two-pixel black border around the edges of the canvas. */
 
-			g.setColor(Color.black);
-			g.drawRect(0,0,getSize().width-1,getSize().height-1);
-			g.drawRect(1,1,getSize().width-3,getSize().height-3);
+			g.setStroke(Color.DARKRED);
+			g.setLineWidth(2);
+			g.strokeRect(1, 1, 322, 322);
 
 			/* Draw the squares of the checkerboard and the checkers. */
 
 			for (int row = 0; row < 8; row++) {
 				for (int col = 0; col < 8; col++) {
 					if ( row % 2 == col % 2 )
-						g.setColor(Color.LIGHT_GRAY);
+						g.setFill(Color.LIGHTGRAY);
 					else
-						g.setColor(Color.GRAY);
-					g.fillRect(2 + col*20, 2 + row*20, 20, 20);
+						g.setFill(Color.GRAY);
+					g.fillRect(2 + col*40, 2 + row*40, 40, 40);
 					switch (board.pieceAt(row,col)) {
 					case CheckersData.RED:
-						g.setColor(Color.RED);
-						g.fillOval(4 + col*20, 4 + row*20, 15, 15);
+						g.setFill(Color.RED);
+						g.fillOval(8 + col*40, 8 + row*40, 28, 28);
 						break;
 					case CheckersData.BLACK:
-						g.setColor(Color.BLACK);
-						g.fillOval(4 + col*20, 4 + row*20, 15, 15);
+						g.setFill(Color.BLACK);
+						g.fillOval(8 + col*40, 8 + row*40, 28, 28);
 						break;
 					case CheckersData.RED_KING:
-						g.setColor(Color.RED);
-						g.fillOval(4 + col*20, 4 + row*20, 15, 15);
-						g.setColor(Color.WHITE);
-						g.drawString("K", 7 + col*20, 16 + row*20);
+						g.setFill(Color.RED);
+						g.fillOval(8 + col*40, 8 + row*40, 28, 28);
+						g.setFill(Color.WHITE);
+						g.fillText("K", 15 + col*40, 29 + row*40);
 						break;
 					case CheckersData.BLACK_KING:
-						g.setColor(Color.BLACK);
-						g.fillOval(4 + col*20, 4 + row*20, 15, 15);
-						g.setColor(Color.WHITE);
-						g.drawString("K", 7 + col*20, 16 + row*20);
+						g.setFill(Color.BLACK);
+						g.fillOval(8 + col*40, 8 + row*40, 28, 28);
+						g.setFill(Color.WHITE);
+						g.fillText("K", 15 + col*40, 29 + row*40);
 						break;
 					}
 				}
@@ -400,30 +422,30 @@ public class Checkers extends JPanel {
 			 is never null while a game is in progress. */      
 
 			if (gameInProgress) {
-				/* First, draw a 2-pixel cyan border around the pieces that can be moved. */
-				g.setColor(Color.cyan);
+				/* First, draw a 4-pixel cyan border around the pieces that can be moved. */
+				g.setStroke(Color.CYAN);
+				g.setLineWidth(4);
 				for (int i = 0; i < legalMoves.length; i++) {
-					g.drawRect(2 + legalMoves[i].fromCol*20, 2 + legalMoves[i].fromRow*20, 19, 19);
-					g.drawRect(3 + legalMoves[i].fromCol*20, 3 + legalMoves[i].fromRow*20, 17, 17);
+					g.strokeRect(4 + legalMoves[i].fromCol*40, 4 + legalMoves[i].fromRow*40, 36, 36);
 				}
 				/* If a piece is selected for moving (i.e. if selectedRow >= 0), then
-				    draw a 2-pixel white border around that piece and draw green borders 
+				    draw a yellow border around that piece and draw green borders 
 				    around each square that that piece can be moved to. */
 				if (selectedRow >= 0) {
-					g.setColor(Color.white);
-					g.drawRect(2 + selectedCol*20, 2 + selectedRow*20, 19, 19);
-					g.drawRect(3 + selectedCol*20, 3 + selectedRow*20, 17, 17);
-					g.setColor(Color.green);
+					g.setStroke(Color.YELLOW);
+					g.setLineWidth(4);
+					g.strokeRect(4 + selectedCol*40, 4 + selectedRow*40, 36, 36);
+					g.setStroke(Color.LIME);
+					g.setLineWidth(4);
 					for (int i = 0; i < legalMoves.length; i++) {
 						if (legalMoves[i].fromCol == selectedCol && legalMoves[i].fromRow == selectedRow) {
-							g.drawRect(2 + legalMoves[i].toCol*20, 2 + legalMoves[i].toRow*20, 19, 19);
-							g.drawRect(3 + legalMoves[i].toCol*20, 3 + legalMoves[i].toRow*20, 17, 17);
+							g.strokeRect(4 + legalMoves[i].toCol*40, 4 + legalMoves[i].toRow*40, 36, 36);
 						}
 					}
 				}
 			}
 
-		}  // end paintComponent()
+		}  // end drawBoard()
 
 		/**
 		 * Respond to a user click on the board.  If no game is in progress, show 
@@ -434,17 +456,12 @@ public class Checkers extends JPanel {
 			if (gameInProgress == false)
 				message.setText("Click \"New Game\" to start a new game.");
 			else {
-				int col = (evt.getX() - 2) / 20;
-				int row = (evt.getY() - 2) / 20;
+				int col = (int)((evt.getX() - 2) / 40);
+				int row = (int)((evt.getY() - 2) / 40);
 				if (col >= 0 && col < 8 && row >= 0 && row < 8)
 					doClickSquare(row,col);
 			}
 		}
-
-		public void mouseReleased(MouseEvent evt) { }
-		public void mouseClicked(MouseEvent evt) { }
-		public void mouseEntered(MouseEvent evt) { }
-		public void mouseExited(MouseEvent evt) { }
 
 
 	}  // end class Board

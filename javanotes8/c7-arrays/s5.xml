@@ -98,8 +98,7 @@ in a "triangular matrix":</p>
 <np>It's easy enough to make a triangular array, if we create each row separately.  To create
 a 7-by-7 triangular array of <ptype>double</ptype>, we can use the code segment</np>
 
-<pre>
-double[][] matrix = new double[7][]; // rows have not yet been created!
+<pre>double[][] matrix = new double[7][]; // rows have not yet been created!
 for (int i = 0; i &lt; 7; i++) {
     matrix[i] = new double[i+1];  // Create row i with i + 1 elements.
 }</pre>
@@ -127,7 +126,8 @@ public class SymmetricMatrix {
     }
     
     /**
-     * Returns the matrix entry at position (row,col).
+     * Returns the matrix entry at position (row,col).  (If col &lt; row
+     * the value is actually stored at position (col,row).)
      */
     public double get( int row, int col ) {
         if (row &gt;= col)
@@ -137,7 +137,8 @@ public class SymmetricMatrix {
     }
     
     /**
-     * Sets the value of the matrix entries at (row,col) and (col,row).
+     * Sets the value of the matrix entry at (row,col).  (If col &lt; row,
+     * the value is actually stored at position (col,row).)
      */
     public void set( int row, int col, double value ) {
         if (row &gt;= col)
@@ -184,7 +185,7 @@ of one cell in the grid.  In the game, an initial grid is set up in which each c
 marked as either alive or dead.  After that, the game "plays itself."  The grid
 evolves through a series of time steps.  The contents of the grid at each time step
 are completely determined by the contents at the previous time step, according to 
-simple rules.  Each cell in the grid looks at its eight neighbors (horizontal, vertical,
+simple rules:  Each cell in the grid looks at its eight neighbors (horizontal, vertical,
 and diagonal) and counts how many of its neighbors are alive.  Then the state of the
 cell in the next step is determined by the rules:</p>
 
@@ -207,8 +208,8 @@ how they apply to four of the cells:</np>
 <p>The Game of Life is interesting because it gives rise to many interesting and surprising
 patterns.  (Look it up on Wikipedia.)  Here, we are just interested in writing a program to
 simulate the game.  The complete program can be found in the file <sourceref href="Life.java"/>.
-In the program, the life grid is shown as an array of squares.  Dead squares are black, and
-living squares are white.  (The program uses <sourceref href="MosaicPanel.java"/> from
+In the program, the life grid is shown as a grid of squares in which dead squares are black and
+living squares are white.  (The program uses <sourceref href="MosaicCanvas.java"/> from
 <localref href="subroutines.6"/> to represent the grid, so you will also need that file to compile
 and run the program.)  In the program, you can fill the life board randomly with dead 
 and alive cells, or you can use the mouse to set up the game board.  There is a "Step" button
@@ -234,10 +235,11 @@ values, the program uses simple nested <code>for</code> loops:</p>
 <np>Note that the expression <code>(Math.random() &lt; 0.25)</code> is a true/false
 value that can be assigned to a <ptype>boolean</ptype> array element.  The array is also
 used to set the color of the cells on the screen.  Since the grid of cells is displayed on screen as a
-<classname>MosaicPanel</classname>, setting the colors is done using the MosaicPanel API.
-Note that the actual drawing is done in the <code>paintComponent()</code> method of
-the MosaicPanel (which has its own 2D array of type <atype>Color[][]</atype> to keep
-track of the colors of each cell).  The Life program just has to set the colors in the mosaic.
+<classname>MosaicCanvas</classname>, setting the colors is done using the MosaicCanvas API.
+Note that the actual drawing is done in the <classname>MosaicCanvas</classname> class
+(which has its own 2D array of type <atype>Color[][]</atype> to keep
+track of the colors of each cell).  The Life program just has to set the colors in the mosaic,
+using the MosaicCanvas API.
 This is done in the program in a method named <code>showBoard()</code> that is
 called each time the board changes.  Again, simple nested <code>for</code>
 loops are used to set the color of each square in the grid:</np>
@@ -350,41 +352,43 @@ Here is the complete method for computing the new board:</np>
 }</pre>
 
 <p>Again, I urge you to check out the source code, <sourceref href="Life.java"/>, and
-try the program.  Don't forget that you will also need <sourceref href="MosaicPanel.java"/>.</p>
+try the program.  Don't forget that you will also need <sourceref href="MosaicCanvas.java"/>.</p>
 
 </subsection>
 
 <subsection id="arrays.5.3" title="Checkers">
 
 <p>As a final example for this chapter, we'll look at a more substantial example of using a 2D array. 
-This is the longest program that we have encountered so far, with 727 lines of
+This is the longest program that we have encountered so far, with 745 lines of
 code.  The program lets two users play checkers against each other.
 The checkers game is played on an eight-by-eight board, which is based on an
-example from <localref href="GUI1.7.5"/>.  The players are called "red" and "black,"
+example from <localref href="GUI1.5.1"/>.  The players are called "red" and "black,"
 after the color of their checkers.  I'm not going to explain the rules of checkers here;
 possibly you can learn them by trying out the program.</p>
 
 <p>In the program, a player
 moves by clicking on the piece that they want to move, and then clicking on the empty square to
 which it is to be moved. As an aid to the players,
-the squares that the current player can legally click
-are highlighted. The square containing a piece that has been selected to be moved, if any, 
-is surrounded by a white border. Other pieces that can legally be moved are surrounded by a
-cyan-colored border. If a piece has has already been selected, each empty square that it
+any square that the current player can legally click at a given time
+is highlighted with a brightly colored border. 
+The square containing a piece that has been selected to be moved, if any, 
+is surrounded by a yellow border. Other pieces that can legally be moved are surrounded by a
+cyan-colored border. If a piece has has already been selected to be moved, each empty square that it
 can legally move to is highlighted with a green border. The game enforces the rule
 that if the current player can jump one of the opponent's pieces, then the
 player must jump. When a player's piece becomes a king, by reaching the
 opposite end of the board, a big white "K" is drawn on the piece.
-Here is a picture of the program in the middle of a game.  It is black's turn
-to move, and the pieces that black can legally move are highlighted with a
-cyan border.  The next step is for black to click on one of those pieces.</p>
+Here is a picture of the program early in a game.  It is black's turn
+to move.  Black has selected the piece in the yellow-outlined square to be moved.
+Black can click one of the squares outlined in green to complete the move, or
+can click one of the squares outlined in cyan to select a different piece to be moved.</p>
 
-<img src="checkers-game.png" width="350" height="250" alt="a game of checkers in progress"
+<img src="checkers-game.png" width="400" height="336" alt="a game of checkers in progress"
       tex="checkers-game.eps" texscale="0.6"/>
 
 <p>I will only cover a part of the programming for this example. I encourage you
 to read the complete source code, <sourceref href="Checkers.java"/>.  It's long and complex,
-but you should understand all the techniques that it uses with some study.  The program is
+but with some study, you should understand all the techniques that it uses.  The program is
 a good example of state-based, event-driven, object-oriented programming.</p>
 
 <break/>
@@ -393,7 +397,9 @@ a good example of state-based, event-driven, object-oriented programming.</p>
 array. Because of the complexity of the program, I wanted to divide it into
 several classes. In addition to the main class, there are several nested classes.
 One of these classes is <classname>CheckersData</classname>, which handles
-the data for the board. It is mainly this class that I want to talk about.</p>
+the data for the board.  It is not directly responsible for any part of the graphics or
+event-handling, but it provides methods that can be called by other
+classes that handle graphics and events.  It is mainly this class that I want to talk about.</p>
 
 <p>The <classname>CheckersData</classname> class has an instance variable named
 <code>board</code> of type <code>int[][]</code>. 
@@ -420,11 +426,12 @@ initial state of the board. The grid of values looks like</np>
 
 <p>A regular black piece can only move "down" the grid. That is, the row number of the
 square it moves to must be greater than the row number of the square it comes
-from. A regular red piece can only move up the grid. Kings of either color, of course,
+from. A regular red piece can only move up the grid. Kings of either color
 can move in both directions.</p>
 
-<p>One function of the <classname>CheckersData</classname> class is to take care of all the
-details of making moves on the board. An instance method named
+<p>One function of the <classname>CheckersData</classname> class is to take care of changes
+to the data structures that need to be made when one of the users moves a checker.
+An instance method named
 <code>makeMove()</code> is provided to do this. When a player moves a piece from
 one square to another, the values of two elements in the array are
 changed. But that's not all. If the move is a jump, then the piece that was
@@ -632,7 +639,7 @@ since it combines several topics that we've looked at: one-dimensional arrays,
 <pre>CheckersMove[] getLegalMoves(int player) {
 
    if (player != RED &amp;&amp; player != BLACK)
-      return null;
+      return null;  // (This will not happen in a correct program.)
 
    int playerKing;  // The constant for a King belonging to the player.
    if (player == RED)
