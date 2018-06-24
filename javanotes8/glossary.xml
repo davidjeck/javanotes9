@@ -111,6 +111,9 @@ the other is a syntax error.</gitem>
 of static and non-static methods and variables.  Static members of a class are part of
 the class itself; non-static, or "instance," members constitute a blueprint for
 creating objects, which are then said to "belong" to the class.</gitem>
+<gitem term="class invariant">A statement about the state of a class, or of an object created from
+that class, that is always true.  Any method in a class, to be correct, must preserve the
+truth of all class invariants.</gitem>
 <gitem term="class variables and class methods">Alternative terms for "static variables" and
 "static methods", which are part of the class itself rather than of objects.</gitem>
 <gitem term="client/server">A model of network communication in which a "server" waits
@@ -312,6 +315,10 @@ be executed repeatedly.  Java has three kinds of loops:  <i>for</i> loops, <i>wh
 loops, and <i>do</i> loops</gitem>
 <gitem term="loop control variable">A variable in a <i>for</i> loop whose value is modified
 as the loop is executed and is checked to determine whether or not to end the loop.</gitem>
+<gitem term="loop invariant">A statement such that, if the statement is true before
+a loop executes, then it will remain true after each execution of the loop, and therefore
+will still be true after the loop ends.  Loop invariants can be a tool for proving
+correctness of loops.</gitem>
 <gitem term="machine language">A programming language consisting of instructions that
 can be executed directed by a computer.  Instructions in machine language are
 encoded as binary numbers.  Each type of computer has its own machine

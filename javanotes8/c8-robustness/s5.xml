@@ -58,7 +58,8 @@ rather informal.</p>
    
 <p>One of the main techniques of analysis of algorithms is
 <newword>asymptotic analysis</newword>.  The term "asymptotic"
-here means basically "the tendency in the long run."  An asymptotic
+here means basically "the tendency in the long run, as the size of
+the input is increased."  An asymptotic
 analysis of an algorithm's run time looks at the question of how
 the run time depends on the size of the problem.  The analysis is
 asymptotic because it only considers what happens to the run time
@@ -156,7 +157,8 @@ same constant times n<sup>2</sup> or n<sup>10</sup>.</p>
 <p>Of course, sometimes it's useful to have a <b>lower limit</b> on the run time.
 That is, we want to be able to say that the run time is greater than or equal to 
 some constant times f(n) (for large values of n).  The notation for this
-is &Omega;(f(n)), read "Omega of f of&nbsp;n." "Omega" is the name of a letter
+is &Omega;(f(n)), read "Omega of f of&nbsp;n" or "Big Omega of f of&nbsp;n."
+"Omega" is the name of a letter
 in the Greek alphabet, and &Omega; is the upper case version of that letter.
 (To be technical, saying that the run time of an algorithm is &Omega;(f(n)) means that
 there is a positive number C and a positive integer M such that whenever n is greater than M,
@@ -167,7 +169,8 @@ finish; &Omega;(f(n)) tells you something about the minimum time.</p>
 <p>The algorithm for adding up the numbers in an array has a run time that
 is &Omega;(n) as well as &BigOh;(n).  When an algorithm has a run time that is
 both &Omega;(f(n)) and &BigOh;(f(n)), its run time is said to be &Theta;(f(n)),
-read "Theta of f of&nbsp;n."  (Theta is another letter from the Greek alphabet.)
+read "Theta of f of&nbsp;n" or "Big Theta of f of&nbsp;n."  
+(Theta is another letter from the Greek alphabet.)
 To say that the run time of an algorithm is &Theta;(f(n)) means that for large
 values of n, the run time is between a*f(n) and b*f(n), where a and b are constants
 (with b greater than&nbsp;a, and both greater than&nbsp;0).</p>
@@ -240,6 +243,10 @@ constant multiple.  This means that as far as asymptotic analysis is concerned, 
 are the same.  That is, if the average case run time is &BigOh;(f(n)) or &Theta;(f(n)), then
 so is the worst case.  However, later in the book, we will encounter a few cases where
 the average and worst case asymptotic analyses differ.</p>
+
+<p>It is also possible to talk about <newcode>best case</newcode> run time
+analysis, which looks at the <b>shortest</b> possible run time for all inputs
+of a given size.  However, a best case analysis is only occasionally useful.</p>
       
 <break/>
    

@@ -11,10 +11,10 @@
         <title>Javanotes 8.0 -- Title Page</title>
         <link href="javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
-        <body>
+        <body><div class="page">
         <div class="content">
         <hr/>
-        <h2 class="chapter_title">Introduction to Programming Using Java, Seventh Edition</h2>
+        <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
         <h2 class="chapter_title">Version 8.0, Summer 2018</h2>
         <p style="text-align:center">(Under Construction!<br/>
                           Status: Chapters 1 through 7 have been updated<br/>
@@ -194,7 +194,7 @@
         <div align="right"><small><i>(Summer 2018, Version 8 under construction)
                            </i></small></div>
         </div>
-        </body>
+        </div></body>
         </html>
    </redirect:write>
    <xsl:call-template name="table-of-contents">
@@ -218,9 +218,9 @@
      <title>Javanotes 8.0 Table of Contents</title>
      <link href="javanotes.css" rel="stylesheet" type="text/css"/>
      </head>
-     <body>
+     <body><div class="page">
      <div class="content">
-        <h3 align="center">Introduction to Programming Using Java, Seventh Edition</h3>
+        <h3 align="center">Introduction to Programming Using Java, Eighth Edition</h3>
         <h2 align="center">Table of Contents</h2>
         <hr/>
         <p align="center"><span class="start"><big>T</big>his is the Table of Contents</span> for the free on-line
@@ -276,7 +276,7 @@
      <hr/>
      <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2014</small></div>
      </div>
-     </body>
+     </div></body>
      </html>
    </redirect:write>
 </xsl:template>
@@ -288,7 +288,7 @@
         <title>Javanotes 8.0, Chapter <xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
-        <body>
+        <body><div class="page">
         <div align="right"><xsl:call-template name="chapter-navbar"/></div>
         <hr/>
         <div class="content">
@@ -312,7 +312,7 @@
         </div>
         <hr/>
         <div align="right"><xsl:call-template name="chapter-navbar"/></div>
-        </body>
+        </div></body>
         </html>
    </redirect:write>
    <xsl:apply-templates select="section">
@@ -349,7 +349,7 @@
      <title>Javanotes 8.0 Preface</title>
      <link href="javanotes.css" rel="stylesheet" type="text/css"/>
      </head>
-     <body>
+     <body><div class="page">
      <div class="content">
         <h3 align="center">Introduction to Programming Using Java<br/>
            Version 8.0, Summer 2018<br/></h3>
@@ -359,7 +359,7 @@
      </div>
      <hr/>
      <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
-     </body>
+     </div></body>
      </html>
    </redirect:write>
 </xsl:template>
@@ -371,7 +371,7 @@
      <title>Javanotes Source Code</title>
      <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
      </head>
-     <body>
+     <body><div class="page">
      <div class="content">
         <h3 align="center">Introduction to Programming Using Java, Seventh Edition</h3>
         <h2 align="center">Source Code</h2>
@@ -380,7 +380,7 @@
      </div>
      <hr/>
      <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2014</small></div>
-     </body>
+     </div></body>
      </html>
    </redirect:write>
 </xsl:template>
@@ -392,7 +392,7 @@
      <title>Javanotes Glossary</title>
      <link href="javanotes.css" rel="stylesheet" type="text/css"/>
      </head>
-     <body>
+     <body><div class="page">
      <div class="content">
         <h3 align="center">Introduction to Programming Using Java, Seventh Edition</h3>
         <h2 align="center">Glossary</h2>
@@ -401,7 +401,7 @@
      </div>
      <hr/>
      <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2014</small></div>
-     </body>
+     </div></body>
      </html>
     </redirect:write>
 </xsl:template>
@@ -420,7 +420,7 @@
         <title>Javanotes 8.0, Section <xsl:value-of select="$chapternum"/>.<xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
-        <body>
+        <body><div class="page">
         <div align="right"><xsl:call-template name="section-navbar"/></div>
         <hr/>
         <xsl:if test="subsection">
@@ -442,7 +442,7 @@
         </div>
         <hr/>
         <div align="right"><xsl:call-template name="section-navbar"/></div>
-        </body>
+        </div></body>
         </html>
     </redirect:write>
 </xsl:template>
@@ -475,7 +475,7 @@
         <title>Javanotes 8.0, Exercises for Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
-        <body>
+        <body><div class="page">
         <div align="right"><xsl:call-template name="exercises-navbar"></xsl:call-template></div>
         <hr/>
         <div class="content">
@@ -495,7 +495,7 @@
         </div>
         <hr/>
         <div align="right"><xsl:call-template name="exercises-navbar"></xsl:call-template></div>
-        </body>
+        </div></body>
         </html>
     </redirect:write>
 </xsl:template>
@@ -517,7 +517,7 @@
            <title>Javanotes 8.0, Solution to Exercise <xsl:value-of select="position()"/>, Chapter <xsl:value-of select="$chapternum"/></title>
            <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
            </head>
-           <body>
+           <body><div class="page">
            <div align="right"><xsl:call-template name="exercise-answer-navbar"></xsl:call-template></div>
            <hr/>
            <div class="content">
@@ -539,7 +539,7 @@
            </div>
            <hr/>
            <div align="right"><xsl:call-template name="exercise-answer-navbar"></xsl:call-template></div>
-           </body>
+           </div></body>
            </html>
        </redirect:write>
     </xsl:for-each>
@@ -569,7 +569,7 @@
         <title>Javanotes 8.0, <xsl:if test="$answers">Answers for </xsl:if>Quiz on Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
-        <body>
+        <body><div class="page">
         <div align="right"><xsl:call-template name="quiz-navbar"><xsl:with-param name="answers" select="$answers"/></xsl:call-template></div>
         <hr/>
         <div class="content">
@@ -600,7 +600,7 @@
         </div>
         <hr/>
         <div align="right"><xsl:call-template name="quiz-navbar"><xsl:with-param name="answers" select="$answers"/></xsl:call-template></div>
-        </body>
+        </div></body>
         </html>
     </redirect:write>
 </xsl:template>

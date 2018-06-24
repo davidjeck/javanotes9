@@ -28,7 +28,7 @@ else {
 impossible to anticipate all the possible things that might go wrong. It's not
 always clear what to do when an error is detected. Furthermore, trying to
 anticipate all the possible problems can turn what would otherwise be a
-straightforward program into a messy tangle of <code>if</code> statements.</np>
+straightforward algorithm into a messy tangle of <code>if</code> statements.</np>
    
 <subsection id="robustness.3.1" title="Exceptions and Exception Classes">
 
@@ -432,8 +432,7 @@ executed and the program will continue on normally from there. Again, if the sec
 routine does not handle the exception, then it also is terminated and the
 routine that called <b>it</b> (if any) gets the next shot at the exception. The
 exception will crash the program only if it passes up through the entire chain
-of subroutine calls without being handled.  (In fact, even this is not quite true:
-In a multithreaded program, only the thread in which the exception occurred is terminated.)</p>
+of subroutine calls without being handled.  This is called "unwinding the call stack."</p>
 
 <p>A subroutine that might generate an exception can announce this fact by
 adding a clause "<code>throws</code> <bnf>exception-class-name</bnf>" 
@@ -665,7 +664,7 @@ the error.</p>
 
 <p>The program that calls the method or uses the class needs to know that
 the error has occurred. In languages that do not support exceptions, the only
-alternative is to return some special value or to set the value of some
+alternative is to return some special value or to set the value of some global
 variable to indicate that an error has occurred. For example, the
 <code>readMeasurement()</code> function in <localref href="robustness.2.2"/> returns
 the value <code>-1</code> if the user's input is illegal. However, this only does any good

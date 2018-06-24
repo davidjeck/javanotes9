@@ -7,7 +7,9 @@
 at two features of Java that are not covered or used elsewhere in this
 textbook, assertions and annotations.  They are included here for 
 completeness, but they are mostly meant for more advanced programming.
-</p>
+(Annotations, in particular, don't really belong in this chapter, 
+but I could not find a better place to put my short introduction
+to the topic.)</p>
  
 <subsection id="robustness.4.1" title="Assertions">
 
@@ -35,6 +37,10 @@ that the code is correctly written, a postcondition is guaranteed to be true,
 but here again testing whether a desired postcondition is <b>actually</b> true
 is a way of checking for a bug that might have screwed up the postcondition.
 This is something that might be desirable during debugging.</p>
+
+<p>And the same thing applies to loop invariants and class invariants.  These
+are things that <b>should</b> be true at certain points in a program.  If they
+are not true at those points, it means that the program contains a bug.</p>
    
 <p>The programming languages C and C++ have always had a facility for adding
 what are called <newword>assertions</newword> to a program. These
@@ -150,11 +156,12 @@ debugging your code, while exceptions are for people who use your code, to alert
 them that they are misusing it.</p>
    
 <p>On the other hand, it never hurts to use an assertion to check a postcondition
-of a method.  A postcondition is something that is supposed to be true after
-the method has executed, and it can be tested with an <code>assert</code> statement at the
-end of the method.  If the postcondition is false, there is a bug in the method
-itself, and that is something that needs to be found during the development
-of the method.</p>
+or an invariant.  These are conditions that are definitely expected to be true
+in any bug-free program, so an assertion is the natural way to check the
+condition while debugging, without imposing an efficiency penalty when
+the program is executed normally.   If the postcondition or invariant is 
+false, there is a bug, and that is something that needs to be found during 
+the testing and debugging phase of programming.</p>
    
 <break/>
 
@@ -166,14 +173,14 @@ option <code>-enableassertions</code> to the <code>java</code> command that
 is used to run the program.  For example, if the class that contains the main 
 program is <classname>RootFinder</classname>, then the command</p>
    
-<pre>java -enableassertions RootFinder</pre>
+<pre>java  -enableassertions  RootFinder</pre>
 
 <np>will run the program with assertions enabled.  
 The <code>-enableassertions</code>
 option can be abbreviated to <code>-ea</code>, so the command can alternatively
 be written as</np>
    
-<pre>java -ea RootFinder</pre>
+<pre>java  -ea  RootFinder</pre>
    
 <p>In fact, it is possible to enable assertions in just part of a program.
 An option of the form
@@ -211,7 +218,7 @@ disabled.</p>
   
 <subsection id="robustness.4.2" title="Annotations">
 
-<p>The term "annotation" refers to notes added to or written alongside a
+<p>The term "annotation" commonly refers to notes added to or written alongside a
 main text, to help you understand or appreciate the text.  An annotation
 might be a note that you make to yourself in the margin of a book.
 It might be a footnote added to an old novel by an editor to explain

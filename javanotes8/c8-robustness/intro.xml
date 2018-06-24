@@ -14,22 +14,28 @@ programs <i>right</i>.</p>
 Programs are fragile. A tiny error can cause a program to misbehave or crash.
 Most of us are familiar with this from our own experience with computers. And
 we've all heard stories about software glitches that cause spacecraft to crash,
-telephone service to fail, and, in a few cases, people to die.</p>
+web sites to go offline, telephone service to fail, and, in a few cases, people to die.</p>
 
 <p>Programs don't have to be as bad as they are. It might well be impossible to
 guarantee that programs are problem-free, but careful programming and
 well-designed programming tools can help keep the problems to a minimum. This
-chapter will look at issues of correctness and robustness of programs. It
-also looks more closely at exceptions and the <code>try..catch</code>
-statement, and it introduces <newword>assertions</newword>, another of the 
+chapter will look at issues of correctness and robustness of programs.
+<localref href="robustness.2"/> discusses how you can think about and
+analyze programs to make the programs that you write more likely to 
+be correct&mdash;possibly even provably correct.</p>
+
+<p><localref href="robustness.3"/> looks more closely at exceptions and the <code>try..catch</code>
+statement, and <localref href="robustness.4"/> introduces <newword>assertions</newword>, another of the 
 tools that Java provides as an aid in writing correct programs.</p>
 
-<p>We will also look at another issue that is important for programs
+<p>In <localref href="robustness.5"/>, we look at another issue that is important for programs
 in the real world: efficiency.  Even a completely correct program is not 
 very useful if it takes an unreasonable amount of time to run.  The last
 section of this chapter introduces techniques for analyzing the run time
 efficiency of algorithms.</p>
-   
 
+<p>Some of the topics in this chapter are the topics of advanced courses in
+computer science, and only a brief overview can be given here.  But what you do 
+learn here will be useful in the rest of the book.</p>  
 
 </intro>

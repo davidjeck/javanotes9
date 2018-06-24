@@ -1,8 +1,20 @@
 
-body {
-   background: #EEEEEE;
-   color: black;
+html, body {
+	margin: 0;
+	padding: 0;
 }
+body {
+   background-color:gray;
+}
+div.page {
+   background-color: #EEEEEE;
+   color: black;
+   max-width: 9.5in;
+   margin: 0 auto;
+   padding: 8px;
+   border: thin solid black;
+}
+
 a:link {
    color: #0000CC;
    text-decoration: underline;
@@ -22,16 +34,16 @@ a:hover {
 }
 
 div.content {
-   margin-left: 25pt;
-   margin-right: 25pt;
+   margin-left: 25px;
+   margin-right: 25px;
 }
 
 pre.exercisecode {
-   margin-left: 25pt;
+   margin-left: 25px;
 }
 
 pre {
-   margin-left: 60pt;
+   margin-left: 60px;
 }
 
 .chapter_title {
@@ -55,7 +67,7 @@ hr.break {
 }
 
 ul.contents {
-   margin-left: 20pt;
+   margin-left: 20px;
 }
 
 img.bordered {
@@ -142,8 +154,8 @@ span.sourceref {
 }
 
 p.glossary_item {
-    text-indent: -30pt;
-    padding-left: 30pt;
+    text-indent: -30px;
+    padding-left: 30px;
 }
 
 span.glossary_term {

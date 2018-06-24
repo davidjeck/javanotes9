@@ -37,7 +37,7 @@ personal computer there can be more serious consequences, such as lost work or
 lost money. When computers are given more important tasks, the consequences of
 failure can be proportionately more serious.</p>
 
-<p>About fifteen years ago, the failure of two multi-million dollar space missions to
+<p>About twenty years ago, the failure of two multi-million dollar space missions to
 Mars was prominent in the news. Both failures were probably due to software
 problems, but in both cases the problem was not with an incorrect program as
 such. In September 1999, the Mars Climate Orbiter burned up in the Martian
@@ -108,7 +108,7 @@ programming languages themselves. Java was designed to provide some protection
 against certain types of errors. How can a language feature help prevent
 errors? Let's look at a few examples.</p>
 
-<p>Early programming languages did not require variables to be declared. In
+<p>Some programming languages do not require variables to be declared. In
 such languages, when a variable name is used in a program, the variable is
 created automatically. You might consider this more convenient than having to
 declare every variable explicitly, but there is an unfortunate consequence: An
@@ -161,8 +161,8 @@ example, the discussion of buffer overflow errors later in this section.)</p>
 of object type holds either a pointer to an object or the special value
 <code>null</code>. Any attempt to use a <code>null</code> value as if it were a pointer
 to an actual object will be detected by the system. In some other languages,
-again, it's up to the programmer to avoid such null pointer errors. In my old
-Macintosh computer, a <code>null</code> pointer was actually implemented as if it
+again, it's up to the programmer to avoid such null pointer errors. In my first
+Macintosh computer, a long time ago, a <code>null</code> pointer was actually implemented as if it
 were a pointer to memory location zero. A program could use a null pointer to
 change values stored in memory near location zero. Unfortunately, the Macintosh
 stored important system data in those locations. Changing that data could cause

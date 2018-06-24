@@ -284,7 +284,7 @@ restrictions on when that can be done).</np>
 a value of type <classname>FunctionR2R</classname>.  We could write it as
 <code>x&nbsp;-&gt;&nbsp;Math.sqrt(x)</code>.  However, this lambda expression is a
 simple wrapper for a <i>Math.sqrt</i> function that already exists.  Instead of
-writing out the lambda expression expression, that function can be written as a
+writing out the lambda expression, that function can be written as a
 <newword>method reference</newword>, which takes the form <code>Math::sqrt</code>.
 (Recall that in Java, "method" is another word for "subroutine.")
 This method reference is just a shorthand for the lambda expression, and it

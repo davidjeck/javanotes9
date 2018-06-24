@@ -7,7 +7,7 @@
 <web><start><big>T</big>his page contains links</start> to the source code for</web>
 <tex><start><big>T</big>his appendix contains a list</start> of the</tex>
 examples appearing in the free, on-line textbook <i>Introduction 
-to Programming Using Java,</i> Seventh Edition.
+to Programming Using Java,</i> Eighth Edition.
 <web>The <a href="../index.html">index&nbsp;page</a></web>
 <tex>The web site for the book, 
 <a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a>,</tex>
@@ -137,8 +137,8 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    statement that includes autoclosing of a resource.</li>
    <li><sourceref href="chapter8/LengthConverter3.java">LengthConverter3.java</sourceref>, 
    from <localref href="robustness.3"/>, is
-   a revision of the previous example that uses exceptions to handle errors in the
-   user's input.</li>
+   a revision of <sourceref href="chapter8/LengthConverter2.java">LengthConverter2.java</sourceref> 
+   that uses exceptions to handle errors in the user's input.</li>
    <li><sourceref href="chapter9/TowersOfHanoi.java">TowersOfHanoi.java</sourceref>, 
    from <localref href="recursion.1"/>,
    prints out the steps in a solution to the Towers of Hanoi problem; an example

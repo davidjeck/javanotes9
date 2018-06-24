@@ -3,17 +3,6 @@
 
 <quiz>
    
-<question>
-<ques><p>What does it mean to say
-that a program is <i>robust</i>?</p>
-</ques>
-<ans><p>A robust program is one that can
-handle errors and other unexpected conditions in some reasonable way. This
-means that the program must anticipate possible errors and respond to them if
-they occur.</p>
-</ans>
-</question>
-
    
 <question>
 <ques><p>Why do programming languages
@@ -66,6 +55,33 @@ precondition is that <code>x&nbsp;&gt;=&nbsp;0</code>, and the preceding stateme
 is "<code>x&nbsp;=&nbsp;Math.abs(y);</code>", then we know that the precondition is
 satisfied, since the absolute value of any number is greater than or equal to
 zero.</p>
+</ans>
+</question>
+
+<question>
+<ques><p>Find a useful loop invariant for the <code>while</code> loop in
+the binary search algorithm (<localref href="arrays.4.1"/>).</p>
+</ques>
+<ans><p>The <code>binarySearch()</code> method searches for an integer
+<code>N</code> in a sorted array of integers <atype>A[]</atype>.  The
+loop invariant is implicit in the discussion of the method in
+<localref href="arrays.4.1"/>: "If <code>N</code> is in the array,
+then <code>N</code>  is in at one of the indices in the range
+<code>lowestPossibleLoc</code> and <code>highestPossibleLoc</code>."</p>
+<p>This statement is true before the loop is started, since at that
+point, the the range of indices from <code>lowestPossibleLoc</code> to 
+<code>highestPossibleLoc</code> includes the entire array.  In the loop,
+when <code>A[mid]</code> is compared to <code>N</code>, the fact that
+<code>A</code> is sorted means that half of the range of possible
+indices can be discarded.  After the value of <code>lowestPossibleLoc</code> or 
+<code>highestPossibleLoc</code> is modified to take that into account,
+the loop invariant remains true.</p>
+<p>If at any point <code>N</code> is found, the loop ends and the
+method returns the correct value.  If <code>N</code> is never found,
+the loop will end when <code>lowestPossibleLoc</code> is larger
+than <code>highestPossibleLoc</code>.  At that point, the truth
+of the loop invariant implies that <code>N</code> is not in the
+array.</p>
 </ans>
 </question>
 
