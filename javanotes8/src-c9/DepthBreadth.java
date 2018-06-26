@@ -1,6 +1,19 @@
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.geometry.Pos;
+import javafx.animation.AnimationTimer;
+
 import java.util.ArrayList;
 
 /**
@@ -24,26 +37,16 @@ import java.util.ArrayList;
  *    (Note:  If the user clicks on a white square while a computation is
  * already running, then that square will be "encountered" and added to
  * the set of red squares.)
- *    This class contains a main() routine that allows it to be run as a
- * standalone application.
  */
-public class DepthBreadth extends JPanel implements MouseListener, ActionListener {
+public class DepthBreadth extends Application {
 
-
-	/**
-	 * main() routine just opens a window with a DepthBreadth panel
-	 * as its content pane.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Stack and Queue Demo");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setContentPane( new DepthBreadth(334,380) );
-		window.pack();
-		window.setResizable(false);
-		window.setLocation(150,100);
-		window.setVisible(true);
+		launch(args);
 	}
+	//----------------------------------------------------------------------
 
+	
+	// ------------------ NESTED CLASSES for stacks and queues --------------
 
 	/**
 	 * Represents one square in the grid, by specifying the
@@ -152,9 +155,16 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 	}  // end nested class Queue
 
 
-
+	//------------------------------------------------------------------------------------------
+	
 
 	private final static int SQUARE_SIZE = 12;  // Size of one square in the grid.
+	
+	private Canvas canvas;       // The canvas where the squares are drawn.
+	private GraphicsContext g;   // Graphics context for drawing on the canvas.
+	
+	private int width = 334;     // Size of the scene (since I'm doing my own layout).
+	private int height = 410;
 
 	private int rows;     // Number of rows in the grid.  This depends on the size of the panel.
 	private int columns;  // Number of columns in the grid.  This depends on the size of the panel.
@@ -167,11 +177,11 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 	private boolean[][] finished;   // finished[r][c] is set to true when a square is
 									//   finished (i.e. processed).  Finished squares are gray.
 
-	private JButton abortButton;  // User can click this to terminate the computation.
+	private Button abortButton;  // User can click this to terminate the computation.
 
-	private JLabel message;   // For displaying information to the user.
+	private Label message;   // For displaying information to the user.
 
-	private JComboBox<String> methodChoice; // For selecting the method of 
+	private ComboBox<String> methodChoice; // For selecting the method of 
 											//   selecting which red square to process.
 
 	private final static int STACK = 0,     // Possible values for the method.
@@ -181,86 +191,95 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 	private int method; // Used to hold the selected method while a
 						//    computation is running.
 
-	private Timer timer;  // A timer that drives the computation.
-						  // When no computation is in progress, timer is null.                          
+	private AnimationTimer timer;  // A timer that drives the computation.
+						           // When no computation is in progress, timer is null.                          
 
 	private Queue queue;                     // Exactly one of these is used to store the
 	private Stack stack;                     //   red squares while the computation is running.
 	private ArrayList<Location> randomList;  //   Which one is used depends on the method.
 
 
-	/**
-	 * Construct the panel.
-	 * @param width the width of the panel
-	 * @param height the height of the panel.  The height and width must be passed
-	 * as parameters because they are needed to determine how many rows and columns 
-	 * are drawn.  The height and width also become the preferred size of the panel.
-	 */
-	public DepthBreadth(int width, int height) {
 
-		setLayout(null);
-		setBackground(new Color(220,220,255));
-		setPreferredSize(new Dimension(width,height));
-		setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.BLUE));
-		addMouseListener(this);
+	/**
+	 * Start method sets up the GUI and event handlers.
+	 */
+	public void start(Stage stage) {
 
 		/* Determine the number of rows and columns and create the
                   encountered and finished arrays. */
 
-		rows = (height - 100) / SQUARE_SIZE;
+		rows = (height - 130) / SQUARE_SIZE;
 		columns = (width - 20) / SQUARE_SIZE;
 
 		encountered = new boolean[rows][columns];
 		finished = new boolean[rows][columns];
 
 		/* Create the components. */
+		
+		canvas = new Canvas(1+columns*SQUARE_SIZE, 1+rows*SQUARE_SIZE);
+		g = canvas.getGraphicsContext2D();
+		canvas.setOnMousePressed( e -> mousePressed(e) );
 
-		Font labelFont = new Font("SansSerif",Font.PLAIN,14);
+		message = new Label("Click any square to begin.");
+		message.setTextFill(Color.BLUE);
+		message.setFont(Font.font( null, FontWeight.BOLD, 14 ));
 
-		message = new JLabel("Click any square to begin.",JLabel.CENTER);
-		message.setForeground(Color.blue);
-		message.setFont(labelFont);
+		methodChoice = new ComboBox<String>();
+		methodChoice.getItems().add("Stack");
+		methodChoice.getItems().add("Queue");
+		methodChoice.getItems().add("Random");
+		methodChoice.setEditable(false);
+		methodChoice.setValue("Queue");
 
-		methodChoice = new JComboBox<String>();
-		methodChoice.addItem("Stack");
-		methodChoice.addItem("Queue");
-		methodChoice.addItem("Random");
-		methodChoice.setBackground(Color.WHITE);
+		abortButton = new Button("Abort");
+		abortButton.setDisable(true);
+		abortButton.setOnAction( e -> doAbort() );
 
-		abortButton = new JButton("Abort");
-		abortButton.setEnabled(false);
-		abortButton.addActionListener(this);
-		abortButton.setBackground(Color.LIGHT_GRAY);
+		Label lb = new Label("Use:");  // An unchanging informational label.
+		lb.setTextFill(Color.BLUE);
+		message.setFont(Font.font( null, FontWeight.BOLD, 14 ));
 
-		JLabel lb = new JLabel("Use:", JLabel.RIGHT);  // An unchanging informational label.
-		lb.setForeground(Color.BLUE);
-		lb.setFont(labelFont);
+		/* Create a root pane and add all the components.
+		 * Do the layout by hand! */
+		
+		Pane root = new Pane(canvas, message, abortButton, methodChoice, lb);
+		root.setStyle("-fx-background-color: #BBF; -fx-border-color: #00A; -fx-border-width:2px");
+		
+		canvas.relocate(10,10);
+		message.setManaged(false);
+		message.relocate(15, height-118);
+		message.resize(width-30, 25);
+		message.setAlignment(Pos.CENTER);
+		abortButton.setManaged(false);
+		abortButton.relocate(75, height-85);
+		abortButton.resize(width-150, 30);
+		methodChoice.setManaged(false);
+		methodChoice.relocate(75, height-42);
+		methodChoice.resize(width-150, 30);
+		lb.relocate(30, height-35);
+		
+		/* Set up the scene and window and show the window. */
+		
+		Scene scene = new Scene(root, width, height );
+		stage.setScene(scene);
+		stage.setResizable(false);
+		stage.setTitle("Stack and Queue Demo");
+		draw();  // Draw initial grid.
+		stage.show();
 
-		/* Add the components to the panel and set their sizes and positions. */
-
-		add(message);
-		add(lb);
-		add(methodChoice);
-		add(abortButton);
-
-		message.setBounds(15, height-80, width-30, 18);
-		lb.setBounds(15, height-54, 50, 18);
-		methodChoice.setBounds(75, height-56, width-150, 22);
-		abortButton.setBounds(75, height-29, width-150, 22);
-
-	} // end init();
+	} // end start();
 
 
 	/**
-	 * The user has clicked the mouse on the panel.  If the user has clicked on 
+	 * The user has clicked the mouse on the canvas.  If the user has clicked on 
 	 * a position in the grid, start a computation to start processing from that 
 	 * square, or if a computation is already running, "encounter" the square.
 	 */
 	public void mousePressed(MouseEvent evt) {
-		int row = (evt.getY() - 10) / SQUARE_SIZE;
-		int col = (evt.getX() - 10) / SQUARE_SIZE;
+		int row = (int)((evt.getY() - 1) / SQUARE_SIZE);
+		int col = (int)((evt.getX() - 1) / SQUARE_SIZE);
 		if (row < 0 || row >= rows || col < 0 || col >= columns)
-			return;
+			return; // shouldn't happen
 		if (timer == null) {
 				// Start a new computation at the point where the user clicked.
 			startComputation(row,col);
@@ -269,21 +288,10 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 				// A computation is already in progress.
 				// Mark the square where the user clicked as encountered.
 			encounter(row,col);
-			repaint(10, 10, columns*SQUARE_SIZE, rows*SQUARE_SIZE);
+			draw();
 		}
 	} // end mousePressed()
 
-
-	/**
-	 * When the user clicks the button, call doAbort().  Otherwise, this 
-	 * is a Timer event, so do the next step in the computation.
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		if (evt.getSource() == abortButton)
-			doAbort();
-		else
-			continueComputation();
-	}
 
 
 	/**
@@ -292,12 +300,13 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 	 * the square at (startRow,startCol).
 	 */	
 	void startComputation(int startRow, int startCol) {
-		for (int r = 0; r < rows; r++)
+		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < columns; c++) {
 				encountered[r][c] = false;
 				finished[r][c] = false;  
 			}
-		method = methodChoice.getSelectedIndex();
+		}
+		method = methodChoice.getSelectionModel().getSelectedIndex();
 		switch (method) {
 		case STACK:
 			stack = new Stack();
@@ -312,11 +321,19 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 			message.setText("Using a randomized list.");
 			break;
 		}
-		abortButton.setEnabled(true);
-		methodChoice.setEnabled(false);
+		abortButton.setDisable(false);
+		methodChoice.setDisable(true);
 		encounter(startRow,startCol);
-		repaint(10, 10, columns*SQUARE_SIZE, rows*SQUARE_SIZE);
-		timer = new Timer(75,this);
+		timer = new AnimationTimer() {
+			int frame = 0;
+			public void handle(long now) {
+				if (frame % 3 == 0) { 
+					   // only in every 3rd frame, about 20 times per second.
+					continueComputation();
+				}
+				frame++;
+			}
+		};
 		timer.start();
 	}
 
@@ -336,14 +353,13 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 				// computation is complete.
 			timer.stop();
 			timer = null;
-			methodChoice.setEnabled(true);
-			abortButton.setEnabled(false);
+			methodChoice.setDisable(false);
+			abortButton.setDisable(true);
 			message.setText("Click any square to begin.");
 			queue = null;
 			stack = null;
 			randomList = null;
 		}
-		repaint(10, 10, columns*SQUARE_SIZE, rows*SQUARE_SIZE);
 	}
 
 
@@ -355,8 +371,8 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 		if (timer != null) {
 			timer.stop();
 			timer = null;
-			methodChoice.setEnabled(true);
-			abortButton.setEnabled(false);
+			methodChoice.setDisable(false);
+			abortButton.setDisable(true);
 			message.setText("Click any square to begin.");
 			queue = null;
 			stack = null;
@@ -427,7 +443,9 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 
 	/**
 	 * Process the red square at (r,c) by encountering its horizontal and 
-	 * vertical neighbors. 
+	 * vertical neighbors.  Any neighbors will be changed to red, and
+	 * the square at (r,c) will be changed to gray.  The grid is
+	 * redrawn to show the change.
 	 */
 	void finish(int r, int c) {
 		encounter(r-1,c);
@@ -435,34 +453,27 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 		encounter(r,c-1);
 		encounter(r,c+1);
 		finished[r][c] = true;
+		draw();
 	}
 
-
-	public void mouseReleased(MouseEvent e) { }  // Methods required by MouseListener interface
-	public void mouseClicked(MouseEvent e) { }
-	public void mouseEntered(MouseEvent e) { }
-	public void mouseExited(MouseEvent e) { }
-
-
 	/**
-	 * Paint the grid of squares.  (Other components contained in the panel paint themselves.)
+	 * Paint the grid of squares.  This is called every time the grid data changes, even
+	 * if it's just one square that has been changed.  (Not too efficient, but efficient
+	 * enough for this program.)
 	 */
-	public void paintComponent(Graphics g) {
+	public void draw() {
 
-		super.paintComponent(g);   //Fill with background color
+		/* Fill the entire canvas with white, then draw  black lines around 
+		 * the edges and between the squares of the grid. */
 
-		/* Fill the area occupied by the grid with white, then draw
-               black lines around this area and between the squares of
-               the grid. */
+		g.setFill(Color.WHITE);
+		g.fillRect(0, 0, 1+columns*SQUARE_SIZE, 1+rows*SQUARE_SIZE);
 
-		g.setColor(Color.white);
-		g.fillRect(10, 10, columns*SQUARE_SIZE, rows*SQUARE_SIZE);
-
-		g.setColor(Color.black);
+		g.setStroke(Color.BLACK);
 		for (int i = 0; i <= rows; i++)
-			g.drawLine(10, 10 + i*SQUARE_SIZE, columns*SQUARE_SIZE + 10, 10 + i*SQUARE_SIZE);
+			g.strokeLine(0.5, 0.5 + i*SQUARE_SIZE, columns*SQUARE_SIZE + 0.5, 0.5 + i*SQUARE_SIZE);
 		for (int i = 0; i <= columns; i++)
-			g.drawLine(10 + i*SQUARE_SIZE, 10, 10 + i*SQUARE_SIZE, rows*SQUARE_SIZE + 10);
+			g.strokeLine(0.5 + i*SQUARE_SIZE, 0.5, 0.5 + i*SQUARE_SIZE, rows*SQUARE_SIZE + 0.5);
 
 		/* Fill "encountered" squares with red and "finished" squares with gray.
                Other squares remain white.  */
@@ -470,16 +481,16 @@ public class DepthBreadth extends JPanel implements MouseListener, ActionListene
 		for (int r = 0; r < rows; r++)
 			for (int c = 0; c < columns; c++) {
 				if (finished[r][c]) {
-					g.setColor(Color.gray);
-					g.fillRect(11 + c*SQUARE_SIZE, 11 + r*SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1);
+					g.setFill(Color.GRAY);
+					g.fillRect(1 + c*SQUARE_SIZE, 1 + r*SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1);
 				}
 				else if (encountered[r][c]) {
-					g.setColor(Color.red);
-					g.fillRect(11 + c*SQUARE_SIZE, 11 + r*SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1);
+					g.setFill(Color.RED);
+					g.fillRect(1 + c*SQUARE_SIZE, 1 + r*SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1);
 				}
 			}
 
-	} // end paintComponent();
+	} // end draw();
 
 
 

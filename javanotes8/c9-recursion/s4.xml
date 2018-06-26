@@ -22,7 +22,9 @@ binary tree of integers would be made up of objects of the following type:</p>
 <code>right</code> pointers in a <code>TreeNode</code> can be <code>null</code> or can
 point to other objects of type <code>TreeNode</code>. A node that points to another
 node is said to be the <newword>parent</newword> of that node, and
-the node it points to is called a <newword>child</newword>. In the
+the node it points to is called a <newword>child</newword>.  In a binary
+tree, a child is either a "left child" or a "right child," and a node can
+have a right child even if it has no left child.  In the
 picture below, for example, node 3 is the parent of node 6, and nodes 4
 and 5 are children of node 2. Not every linked structure made up of tree nodes
 is a binary tree. A binary tree must have the following properties: There is
@@ -114,8 +116,8 @@ then the right subtree. In a <newword>postorder traversal</newword>,
 the left subtree is traversed, then the right subtree, and then the root node
 is processed. And in an <newword>inorder traversal</newword>, the
 left subtree is traversed first, then the root node is processed, then the
-right subtree is traversed. Printing subroutines that use postorder and inorder
-traversal differ from <code>preorderPrint</code> only in the placement of the
+right subtree is traversed. Subroutines that use postorder and inorder
+traversal to print the contents of a tree differ from <code>preorderPrint()</code> only in the placement of the
 statement that outputs the root item:</p>
 
 <pre>/**
@@ -180,9 +182,9 @@ becomes more efficient because binary search can be used.
 However, inserting a new item into the array
 is still inefficient since it means moving, on average, half of the items in
 the array to make a space for the new item. A binary tree can be used to store
-an ordered list of strings, or other items, in a way that makes both searching
+an ordered in a way that makes both searching
 and insertion efficient. A binary tree used in this way is called a
-<newword>binary sort tree.</newword></p>
+<newword>binary sort tree</newword> or <newword>BST</newword></p>
 
 <p>A binary sort tree is a binary tree with the following property: For every
 node in the tree, the item in that node is greater than or equal to every item in the left

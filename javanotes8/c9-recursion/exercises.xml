@@ -82,7 +82,8 @@ a few thousand.</p>
 and how I computed <code>fibonacci(N)</code> non-recursively.</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="FibonacciAndFactorial">import java.math.BigInteger;
+<pre><prog name="FibonacciAndFactorial">import java.util.Scanner;
+import java.math.BigInteger;
 
 /**
  * Computes factorial(N) and fibonacci(N) for integers N entered by
@@ -96,9 +97,10 @@ public class FibonacciAndFactorial {
     * user inputs a zero.
     */
    public static void main( String[] args ) {
+      Scanner in = new Scanner( System.in );
       while (true) {
-         System.out.print("\n\nEnter a postive integer, or 0 to end:  ");
-         int N = TextIO.getlnInt();
+         System.out.print("\n\nEnter a positive integer, or 0 to end:  ");
+         int N = in.nextInt();
          if (N == 0)
             break;
          else if (N &lt; 0) {
@@ -219,11 +221,13 @@ encapsulate the data and routines needed to represent the tree and to use a vari
 <classname>BinarySortTree</classname> in the program.)</p>
    
 <p>Only a few changes are needed in the <code>main()</code> routine of the original program. They are
-shown in &newcodestyle; in the solution shown below. All-in-all, the substitution of the binary tree 
+shown in &newcodestyle; in the solution given below. All-in-all, the substitution of the binary tree 
 for the arraylist is very straightforward.</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="ListAllWordsFromFileWithTree">/**
+<pre><prog name="ListAllWordsFromFileWithTree">import textio.TextIO;
+
+/**
  * Makes an alphabetical list of all the words in a file selected
  * by the user.  The list can be written to a file.  
  * <newcode>The words are stored in a binary sort tree.</newcode>
@@ -260,7 +264,7 @@ public class ListAllWordsFromFileWithTree {
          while (word != null) {
             word = word.toLowerCase();  // convert word to lower case
             if ( <newcode>treeContains(root,word) == false</newcode> ) {
-                  // This is a new word, so add it to the list
+                  // This is a new word, so add it to the <newcode>tree</newcode>
                <newcode>treeInsert(word);</newcode>
             }
             word = readNextWord();
@@ -1307,7 +1311,9 @@ modified to check for an x. If it finds one, it has to return a new
 straightforward. They are shown in &newcodestyle; in the solution that follows.</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="SimpleParser4">/*
+<pre><prog name="SimpleParser4">import textio.TextIO;
+
+/*
     This program reads standard expressions typed in by the user. 
     The program constructs an expression tree to represent the
     expression.  It then prints the value of the tree.  It also uses
@@ -1759,7 +1765,9 @@ for <code>B</code>, I can compute the value with a single statement:</p>
 statements.</np>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="SimpleParser5">/*
+<pre><prog name="SimpleParser5">import textio.TextIO;
+
+/*
     This program reads standard expressions typed in by the user. 
     The program constructs an expression tree to represent the
     expression.  <newcode>It computes the derivative of the expression and

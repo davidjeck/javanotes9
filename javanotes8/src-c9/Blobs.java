@@ -1,7 +1,17 @@
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.geometry.Pos;
 
 /**
  * This program demonstrates recursion by counting the number of
@@ -16,35 +26,26 @@ import javax.swing.*;
  * reported.  The program can also count and report the number
  * of blobs.  When the user clicks a "New Blobs" button,
  * the grid is randomly re-filled.
- * 
- * This class includes a main() routine, so that it can be run
- * as a stand-alone application.  
  */
-public class Blobs extends JPanel implements MouseListener, ActionListener {
+public class Blobs extends Application {
 
-
-
-	/**
-	 * This main routine opens a window that displays a BlobsPanel,
-	 * which is a static nested class in this class.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Recursive Blob Counting");
-		window.setContentPane( new Blobs(454,400) );
-		window.pack();
-		window.setResizable(false);
-		window.setLocation(150,100);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setVisible(true);
+		launch(args);
 	}
-
+	//-------------------------------------------------------------------------
 
 
 	final static int SQUARE_SIZE = 9;  // Size of one square in the grid.
 
-	JLabel message;       // For displaying information to the user.
+	final static int width = 454;  // full size of the Scene
+	final static int height = 400;
+	
+	Canvas canvas;       // Where the blobs are drawn.
+	GraphicsContext g;   // For drawing on the canvas.
 
-	JComboBox<String> percentFill;  // When the user clicks the "New Blobs" button
+	Label message;       // For displaying information to the user.
+
+	ComboBox<String> percentFill;   // When the user clicks the "New Blobs" button
 									// to randomly fill the grid, this menu controls
 									// the probability that a given square in the grid
 									// is filled.
@@ -58,91 +59,81 @@ public class Blobs extends JPanel implements MouseListener, ActionListener {
 						 //   has already been visited by the getBlobSize() method.
 
 
-	/**
-	 * Construct the panel.  Use a null layout and 
-	 * set the bounds of the components in the panel directly.  The panel
-	 *  listens for mouse clicks on itself.
-	 * @param width the width of the panel
-	 * @param height the height of the panel.  The width and height must be
-	 * known before the panel can be constructed, since they are used in the
-	 * constructor to lay out the panel and to decide on the number of rows
-	 * and columns in the grid.  The width and height are also used to set
-	 * a preferred size for the panel; this preferred size is used in the
-	 * application version when the window is "packed."
-	 */
-	public Blobs(int width, int height) {
-
-		setLayout(null);
-		setBackground(new Color(220,220,255));
-		addMouseListener(this);
-		setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.BLUE));
-		setPreferredSize( new Dimension(width,height) );
-
+	public void start(Stage stage) {
+		
 		/* Determine the number of rows and columns and create the
-               filled and visited arrays.  Fill the squares at random. */
+         * filled and visited arrays.  Fill the squares at random. */
 
 		rows = (height - 120) / SQUARE_SIZE;
 		columns = (width - 20) / SQUARE_SIZE;
-
 		filled = new boolean[rows][columns];
 		visited = new boolean[rows][columns];
 
 		for (int r = 0; r < rows; r++)
 			for (int c = 0; c < columns; c++)
 				filled[r][c] = (Math.random() < 0.3);
-
+		
+		canvas = new Canvas( 1+columns*SQUARE_SIZE, 1+rows*SQUARE_SIZE );
+		g = canvas.getGraphicsContext2D();
+		canvas.setOnMousePressed( e -> mousePressed(e) );
+		
 		/* Create the components. */
 
-		message = new JLabel("Click a square to get the blob size.", JLabel.CENTER);
-		message.setForeground(Color.BLUE);
-		message.setFont(new Font("Helvetica",Font.PLAIN,14));
+		message = new Label("Click a square to get the blob size.");
+		message.setTextFill(Color.BLUE);
+		message.setFont( Font.font(null,FontWeight.BOLD,14) );
 
-		percentFill = new JComboBox<String>();
-		percentFill.addItem("10% fill");
-		percentFill.addItem("20% fill");
-		percentFill.addItem("30% fill");
-		percentFill.addItem("40% fill");
-		percentFill.addItem("50% fill");
-		percentFill.addItem("60% fill");
-		percentFill.addItem("70% fill");
-		percentFill.addItem("80% fill");
-		percentFill.addItem("90% fill");
-		percentFill.setBackground(Color.WHITE);
-		percentFill.setSelectedIndex(2);
+		percentFill = new ComboBox<String>();
+		percentFill.getItems().add("10% fill");
+		percentFill.getItems().add("20% fill");
+		percentFill.getItems().add("30% fill");
+		percentFill.getItems().add("40% fill");
+		percentFill.getItems().add("50% fill");
+		percentFill.getItems().add("60% fill");
+		percentFill.getItems().add("70% fill");
+		percentFill.getItems().add("80% fill");
+		percentFill.getItems().add("90% fill");
+		percentFill.setEditable(false);
+		percentFill.setValue("40% fill");
 
-		JButton newButton = new JButton("New Blobs");
-		newButton.addActionListener(this);
-		newButton.setBackground(Color.LIGHT_GRAY);
+		Button newButton = new Button("New Blobs");
+		newButton.setOnAction( e -> fillGrid() );
 
-		JButton countButton = new JButton("Count the Blobs");
-		countButton.addActionListener(this);
-		countButton.setBackground(Color.LIGHT_GRAY);
+		Button countButton = new Button("Count the Blobs");
+		countButton.setOnAction( e -> countBlobs() );
 
-		/* Add the components to the panel and set their sizes and positions. */
+		/* Create a root pane and add all the components.
+		 * Do the layout by hand! */
+		
+		Pane root = new Pane(canvas, message, percentFill, newButton, countButton);
+		root.setStyle("-fx-background-color: #BBF; -fx-border-color: #00A; -fx-border-width:2px");
+		
+		canvas.relocate(10,10);
+		message.setManaged(false);
+		message.relocate(15, height-100);
+		message.resize( width-30, 23);
+		message.setAlignment(Pos.CENTER);
+		countButton.setManaged(false);
+		countButton.relocate(15, height-72);
+		countButton.resize(width-30, 28);
+		newButton.setManaged(false);
+		newButton.relocate(15, height-37);
+		newButton.resize((width-40)/2, 28);
+		percentFill.setManaged(false);
+		percentFill.relocate(width/2 + 5, height-37);
+		percentFill.resize((width-40)/2, 28);
+		
+		/* Set up the scene and window and show the window. */
+		
+		Scene scene = new Scene(root, width, height );
+		stage.setScene(scene);
+		stage.setResizable(false);
+		stage.setTitle("Random Blob Counter");
+		fillGrid();
+		stage.show();
 
-		add(message);
-		add(newButton);
-		add(percentFill);
-		add(countButton);
+	} // end start()
 
-		message.setBounds(15, height-100, width-30, 23);
-		countButton.setBounds(15, height-70, width-30, 28);
-		newButton.setBounds(15, height-35, (width-40)/2, 28);
-		percentFill.setBounds(width/2 + 5, height-35, (width-40)/2, 28);
-
-	} // end constructor
-
-
-	/**
-	 * When the user clicks a button, call the appropriate method.
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		String cmd = evt.getActionCommand();
-		if (cmd.equals("New Blobs"))
-			fillGrid();
-		else if (cmd.equals("Count the Blobs"))
-			countBlobs();
-	}
 
 
 	/**
@@ -153,14 +144,14 @@ public class Blobs extends JPanel implements MouseListener, ActionListener {
 	 *  so there won't be any red-colored squares in the grid.
 	 */
 	private void fillGrid() {
-		double probability = (percentFill.getSelectedIndex() + 1) / 10.0;
+		double probability = (percentFill.getSelectionModel().getSelectedIndex() + 1) / 10.0;
 		for (int r = 0; r < rows; r++)
 			for (int c = 0; c < columns; c++) {
 				filled[r][c] = (Math.random() < probability);
 				visited[r][c] = false;
 			}
 		message.setText("Click a square to get the blob size.");
-		repaint();
+		draw();
 	}
 
 
@@ -194,7 +185,7 @@ public class Blobs extends JPanel implements MouseListener, ActionListener {
 					count++;
 			}
 
-		repaint();  // Note that all the filled squares will be red!
+		draw();  // Note that all the filled squares will be red!
 
 		message.setText("The number of blobs is " + count);
 
@@ -209,13 +200,13 @@ public class Blobs extends JPanel implements MouseListener, ActionListener {
 	 */
 	private int getBlobSize(int r, int c) {
 		if (r < 0 || r >= rows || c < 0 || c >= columns) {
-				// This position is not in the grid, so there is
-				// no blob at this position.
+			// This position is not in the grid, so there is
+			// no blob at this position.
 			return 0;
 		}
 		if (filled[r][c] == false || visited[r][c] == true) {
-				// This square is not part of a blob, or else it has
-				// already been counted, so return zero.
+			// This square is not part of a blob, or else it has
+			// already been counted, so return zero.
 			return 0;
 		}
 		visited[r][c] = true;   // Mark the square as visited so that
@@ -237,11 +228,11 @@ public class Blobs extends JPanel implements MouseListener, ActionListener {
 	 * user has clicked on a position in the grid, count
 	 * the number of squares in the blob at that position.
 	 */
-	public void mousePressed(MouseEvent evt) {
-		int row = (evt.getY() - 10) / SQUARE_SIZE;
-		int col = (evt.getX() - 10) / SQUARE_SIZE;
+	private void mousePressed(MouseEvent evt) {
+		int row = (int)((evt.getY()-1) / SQUARE_SIZE);
+		int col = (int)((evt.getX()-1) / SQUARE_SIZE);
 		if (row < 0 || row >= rows || col < 0 || col >= columns) {
-			message.setText("Please click on a square!");
+			message.setText("Please click on a square!"); // shouldn't happen
 			return;
 		}
 		for (int r = 0; r < rows; r++)
@@ -254,36 +245,27 @@ public class Blobs extends JPanel implements MouseListener, ActionListener {
 			message.setText("Blob at (" + row + "," + col + ") contains 1 square.");
 		else
 			message.setText("Blob at (" + row + "," + col + ") contains " + size + " squares.");
-		repaint();
+		draw();
 	}
-
-
-	public void mouseReleased(MouseEvent e) { }  // Methods required by MouseListener interface
-	public void mouseClicked(MouseEvent e) { }
-	public void mouseEntered(MouseEvent e) { }
-	public void mouseExited(MouseEvent e) { }
 
 
 	/**
 	 * Paint the panel, showing the grid of squares.  (The other components 
 	 * in the panel draw themselves.)
 	 */
-	public void paintComponent(Graphics g) {
+	public void draw() {
+		
+		/* Fill the entire canvas with white, then draw  black lines around 
+		 * the edges and between the squares of the grid. */
 
-		super.paintComponent(g);  // Fill with background color.
+		g.setFill(Color.WHITE);
+		g.fillRect(0, 0, columns*SQUARE_SIZE, rows*SQUARE_SIZE);
 
-		/* Fill the area occupied by the grid with white, then draw
-               black lines around this area and between the squares of
-               the grid. */
-
-		g.setColor(Color.WHITE);
-		g.fillRect(10, 10, columns*SQUARE_SIZE, rows*SQUARE_SIZE);
-
-		g.setColor(Color.BLACK);
+		g.setStroke(Color.BLACK);
 		for (int i = 0; i <= rows; i++)
-			g.drawLine(10, 10 + i*SQUARE_SIZE, columns*SQUARE_SIZE + 10, 10 + i*SQUARE_SIZE);
+			g.strokeLine(0.5, 0.5 + i*SQUARE_SIZE, columns*SQUARE_SIZE + 0.5, 0.5 + i*SQUARE_SIZE);
 		for (int i = 0; i <= columns; i++)
-			g.drawLine(10 + i*SQUARE_SIZE, 10, 10 + i*SQUARE_SIZE, rows*SQUARE_SIZE + 10);
+			g.strokeLine(0.5 + i*SQUARE_SIZE, 0.5, 0.5 + i*SQUARE_SIZE, rows*SQUARE_SIZE + 0.5);
 
 		/* Fill "visited" squares with red and "filled" squares with gray.
                Other squares remain white.  */
@@ -291,16 +273,16 @@ public class Blobs extends JPanel implements MouseListener, ActionListener {
 		for (int r = 0; r < rows; r++)
 			for (int c = 0; c < columns; c++) {
 				if (visited[r][c]) {
-					g.setColor(Color.RED);
-					g.fillRect(11 + c*SQUARE_SIZE, 11 + r*SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1);
+					g.setFill(Color.RED);
+					g.fillRect(1 + c*SQUARE_SIZE, 1 + r*SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1);
 				}
 				else if (filled[r][c]) {
-					g.setColor(Color.GRAY);
-					g.fillRect(11 + c*SQUARE_SIZE, 11 + r*SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1);
+					g.setFill(Color.GRAY);
+					g.fillRect(1 + c*SQUARE_SIZE, 1 + r*SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1);
 				}
 			}
 
-	} // end paintComponent();
+	} // end draw();
 
 
 } // end class Blobs

@@ -126,7 +126,7 @@ of strings.  The first string in the list is stored in the first node, the secon
 string is stored in the second node, and so on.  The pointers and the node objects
 are used to build the structure, but the data that we want to represent
 is the list of strings.  Of course, we could just as easily represent a list of integers or
-a list of <classname>JButtons</classname> or a list of any other type of data
+a list of <classname>Buttons</classname> or a list of any other type of data
 by changing the type of the <code>item</code> that is stored in each node.</np>
 
 

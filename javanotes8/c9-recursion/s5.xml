@@ -34,6 +34,9 @@ language&mdash;even of an artificial programming language&mdash;is one that is s
 far from being completely solved. However, BNF does express the basic structure
 of the language, and it plays a central role in the design of compilers.</p>
 
+<p>A variety of different notations are used for BNF.  The one that I will use here is
+fairly common.  Although other notations are used, they express the same concepts.</p>
+
 <p>In English, terms such as "noun", "transitive verb," and "prepositional
 phrase" are <newword>syntactic categories</newword> that describe
 building blocks of sentences. Similarly, "statement", "number," and "while
@@ -143,10 +146,6 @@ parsing. The grammar must satisfy a certain property. Essentially, while
 parsing a phrase, it must be possible to tell what syntactic category is coming
 up next just by looking at the next item in the input. Many grammars are
 designed with this property in mind.</p>
-
-<p>I should also mention that many variations of BNF are in use. The one that
-I've described here is one that is well-suited for recursive descent
-parsing.</p>
 
 <break/>
 
@@ -477,7 +476,8 @@ becomes</p>
 </pre>
 
 <p>In some real compilers, the parser creates a tree to represent the program
-that is being parsed. This tree is called a <newword>parse tree</newword>. 
+that is being parsed. This tree is called a <newword>parse tree</newword>
+or <newword>abstract syntax tree</newword>. 
 Parse trees are somewhat different in form from expression trees,
 but the purpose is the same. Once you have the tree, there are a number of
 things you can do with it. For one thing, it can be used to generate machine

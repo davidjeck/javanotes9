@@ -58,7 +58,7 @@ take into account. Each of these illustrates an important general fact about
 recursive subroutines. First of all, the binary search algorithm begins by
 looking at the "middle element of the list." But what if the list is empty? If
 there are no elements in the list, then it is impossible to look at the middle
-element. In the terminology of <localref href="robustness.2.1"/>, having
+element. In the terminology of <localref href="robustness.2.2"/>, having
 a non-empty list is a "precondition" for looking at the middle element, and
 this is a clue that we have to modify the algorithm to take this precondition
 into account. What should we do if we find ourselves searching for a specified
@@ -213,7 +213,7 @@ instructions for solving the problem:</p>
  */
 static void towersOfHanoi(int disks, int from, int to, int spare) {
     if (disks == 1) {
-        // There is only one disk to be moved.  Just move it.
+            // There is only one disk to be moved.  Just move it.
         System.out.printf("Move disk 1 from stack %d to stack %d%n", 
                                from, to);
     }
@@ -288,7 +288,7 @@ provides a visual demonstration of a recursive algorithm.  In
 <sourceref href="Maze.java"/>, recursion is used to solve a maze.
 In <sourceref href="LittlePentominos.java"/>, it is used to solve
 a well-known kind of puzzle.  (LittlePentominos.java also requires
-the file <sourceref href="MosaicPanel.java"/>.) It would be useful
+the file <sourceref href="MosaicCanvas.java"/>.) It would be useful
 to run the programs and watch them for a while, but the source code
 uses some techniques that won't be covered until <localref href="threads"/>.</p>
 
@@ -316,7 +316,7 @@ rest of the solution. If that fails, then the subroutine goes on to the next
 piece&mdash;another example of recursive backtracking.
 A generalized version of the pentominos program with many more features
 can be found at 
-<a href="http://math.hws.edu/xJava/PentominosSolver/">http://math.hws.edu/xJava/PentominosSolver/</a>.</p>
+<a href="http://math.hws.edu/eck/js/pentominos/pentominos.html">http://math.hws.edu/eck/js/pentominos/pentominos.html</a>.</p>
 
    
 </subsection>
@@ -483,22 +483,23 @@ One example is MergeSort, which you can look up if you are interested.</p>
 <subsection id="recursion.1.4" title="Blob Counting">
 
 <p>Next, we will look at counting the number of squares in a group of
-connected squares.  I call a group of squares a "blob," and the sample program
+connected squares.  I call a group of connected squares a "blob," and the sample program
 that we will consider is <sourceref href="Blobs.java"/>.
-The  program displays a grid of small white
-and gray squares.  Here is a screenshot from the program, showing the
+The  program displays a grid of small white, gray,
+and reds squares.  Here is a screenshot from the program, showing the
 grid of squares along with some controls:</p>
 
-<img src="blobs.png" width="454" height="400" alt="screenshot from Blobs.java"
-    tex="blobs.eps" texscale="0.6"/>
+<img src="blobs.png" width="363" height="320" alt="screenshot from Blobs.java"
+    tex="blobs.eps" texscale="0.7"/>
 
-<p>The gray squares are considered to be
+<p>The gray or red squares are considered to be
 "filled" and the white squares are "empty." For the purposes of this example, we
 define a "blob" to consist of a filled square and all the filled squares that
 can be reached from it by moving up, down, left, and right through other filled
 squares. If the user clicks on any filled square in the program, the computer will
 count the squares in the blob that contains the clicked square, and it will change the color of
-those squares to red.  The program has several controls.  There is a 
+those squares to red.  In the picture, one of the blobs is shown in red.
+The program has several controls.  There is a 
 "New Blobs" button; clicking this button will create a new random
 pattern in the grid. A pop-up menu specifies the approximate percentage of
 squares that will be filled in the new pattern. The more filled squares, the
@@ -520,8 +521,9 @@ boolean values,</p>
 and in column <code>c</code> of the grid is filled. The number of rows in the grid
 is stored in an instance variable named <code>rows</code>, and the number of
 columns is stored in <code>columns</code>. The program uses a recursive instance
-method named <code>getBlobSize()</code> to count the number of squares in the blob
-that contains the square in a given row <code>r</code> and column <code>c</code>. If
+method named <code>getBlobSize(r,c)</code> to count the number of squares in a blob.
+The parameters <code>r</code> and <code>c</code> tell which blob to count, namely
+the blob that includes the square in a row <code>r</code> and column <code>c</code>. If
 there is no filled square at position <code>(r,c)</code>, then the answer is zero.
 Otherwise, <code>getBlobSize()</code> has to count all the filled squares that can
 be reached from the square at position <code>(r,c)</code>. The idea is to use
@@ -556,7 +558,8 @@ flaw: It leads to an infinite recursion!</np>
 }  // end <newcode>INCORRECT</newcode> getBlobSize()</pre>
 
 <p>Unfortunately, this routine will count the same square more than once. In
-fact, it will try to count each square infinitely often! Think of yourself
+fact, if there are at least two squares in the blob,
+then it will try to count each square infinitely often! Think of yourself
 standing at position <code>(r,c)</code> and trying to follow these instructions.
 The first instruction tells you to move up one row. You do that, and then you
 apply the same procedure. As one of the steps in that procedure, you have to
@@ -616,7 +619,7 @@ int getBlobSize(int r, int c) {
 <p>In the program, this method is used to determine the size of a blob when the
 user clicks on a square. After <code>getBlobSize()</code> has performed its task,
 all the squares in the blob are still marked as visited. The
-<code>paintComponent()</code> method draws visited squares in red, which makes the
+method that draws the grid of squares shows visited squares in red, which makes the
 blob visible. The <code>getBlobSize()</code> method is also used for counting
 blobs. This is done by the following method, which includes comments to explain
 how it works:</p>
@@ -653,8 +656,9 @@ void countBlobs() {
             count++;
       }
                   
-   repaint();  // Note that all the filled squares will be red,
-               //   since they have all now been visited.
+   draw();  // Redraw the entire grid of squares. 
+            // Note that all the filled squares will be red,
+            //   since they have all now been visited.
    
    message.setText("The number of blobs is " + count);
          

@@ -96,6 +96,39 @@ static int countZerosRecursively( ListNode head ) {
 }</pre>
 </ans>
 </question>
+
+<question>
+<ques><p>Let <classname>ListNode</classname> be defined as in the previous
+problem.  Suppose that <code>head</code> is a variable of type
+<classname>ListNode</classname> that points to the first node in a
+linked list.  Write a code segment that will add the number 42 in a new
+node at the <b>end</b> of the list.  Assume that the list is not empty.
+(There is no "tail pointer" for the list.)</p>
+</ques>
+<ans>
+<pre>ListNode tail;  // Since no tail pointer is given, we need to make one
+tail = head;  // We are assuming that this is not null.
+while (tail.next != null) {
+    tail = tail.next;
+}
+// At this point, tail points to the last node in the list
+ListNode node42;
+node42 = new ListNode();  // create a new node
+node42.item = 42;    // the item in the new node is 42
+tail.next = node42;  // attach the new node to the list
+</pre>
+<np>(Explanation: To add a list node at the end of the list, we need a pointer to
+the last node in the list.  Since no such pointer is given, we have to
+make one.  Start with a pointer that is equal to <code>head</code>, and
+move it down the list until it points to the last node in the list.
+We know that  <code>tail</code> is pointing to the last node in the list if
+<code>tail.next</code> is <code>null</code>.  Use a <code>while</code>
+loop to move <code>tail</code> down the list until that is true.
+Then we can make a new node and attach it to the list by setting
+<code>tail.next</code> to point to it.  The value of <code>node42.next</code>
+is <code>null</code>, and that <code>null</code> marks the new end of the list.)</np>
+</ans>
+</question>
    
    
 <question>
@@ -174,6 +207,40 @@ should return a value of type <ptype>int</ptype>.</np>
        return total;
     }
  }</pre>
+</ans>
+</question>
+
+<question>
+<ques><p>Let <classname>TreeNode</classname> be the same class as in the previous
+problem.  Write a recursive subroutine that makes a copy of a binary tree.
+The subroutine has a parameter that points to the root of the tree that is
+to be copied.  The return type is <classname>TreeNode</classname>,
+and the return value should be a pointer to the root of the copy.
+The copy should consist of newly created nodes, and it should have exactly
+the same structure as the original tree.
+</p>
+</ques><ans>
+<pre>static TreeNode copyTree( TreeNode root ){
+        // Make a copy of the tree that root points to.
+    if (root == null) {
+        return null;  // The copy of an empty tree is an empty tree
+    }
+    else {
+            // The tree is not empty.  We need to make a new node
+            // to be the root of the copy, and then we need to copy
+            // the left and right subtrees.
+         TreeNode rootOfCopy = new TreeNode();
+         rootOfCopy.item = root.item;
+         rootOfCopy.left = copyTree( root.left );
+         rootOfCopy.right = copyTree( root.right );
+         return rootOfCopy;
+    }
+}</pre>
+<np>(The essential point here is that the subtrees of the original tree
+can be copied using recursive calls to <code>copyTree()</code>.  For example,
+<code>copyTree(root.left)</code> will make a complete copy of the left
+subtree of the original tree, and that can become the left subtree of
+the new root node.  This works even if <code>root.left</code> is <code>null</code>.)</np>
 </ans>
 </question>
    

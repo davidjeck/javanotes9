@@ -1,7 +1,8 @@
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /**
  * This program solves pentominos puzzles.  A pentomino consists of 5 connected squares.  There are exactly
@@ -11,25 +12,19 @@ import javax.swing.*;
  * 60 of the 64 available squares on the board.  The squares that are to be left empty are selected
  * in advance at random and are colored black.  The main point of the program is to demo a
  * recursive backtracking algorithm, so the process is slowed down enough to see what is going
- * on.  See http://math.hws.edu/xJava/PentominosSolver for a greatly enhanced version of this program,
- * including the ability to quickly find solutions.
+ * on.  See http://math.hws.edu/eck/js/pentominos/pentominos.html for a greatly enhanced version of this 
+ * program, written in JavaScript, including the ability to quickly find solutions.
  * 
- * Note that this class depends on another class, MosaicPanel.
- *
- * This class has a main routine, so that it can be run as an application.
+ * Note that this class depends on another class, MosaicCanvas.
  */
-public class LittlePentominos extends JPanel {
+public class LittlePentominos extends Application {
 	
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Pentominos! Click to Restart");
-		window.setContentPane( new LittlePentominos() );
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.pack();
-		window.setLocation(120,80);
-		window.setVisible(true);
+		launch(args);
 	}
+	//---------------------------------------------------------------------------------------------
 
-	private MosaicPanel board;  // for displaying the board on the screen
+	private MosaicCanvas board;  // for displaying the board on the screen
 
 	private boolean[] used = new boolean[13];  //  used[i] tells whether piece # i is already on the board
 
@@ -127,41 +122,43 @@ public class LittlePentominos extends JPanel {
 
 	private Color pieceColor[] = {  // the colors of pieces number 1 through 12; pieceColor[0] is not used.
 			null,
-			new Color(200,0,0),
-			new Color(150,150,255),
-			new Color(0,200,200),
-			new Color(255,150,255),
-			new Color(0,200,0),
-			new Color(150,255,255),
-			new Color(200,200,0),
-			new Color(0,0,200),
-			new Color(255,150,150),
-			new Color(200,0,200),
-			new Color(255,255,150),
-			new Color(150,255,150)
+			Color.rgb(200,0,0),
+			Color.rgb(150,150,255),
+			Color.rgb(0,200,200),
+			Color.rgb(255,150,255),
+			Color.rgb(0,200,0),
+			Color.rgb(150,255,255),
+			Color.rgb(200,200,0),
+			Color.rgb(0,0,200),
+			Color.rgb(255,150,150),
+			Color.rgb(200,0,200),
+			Color.rgb(255,255,150),
+			Color.rgb(150,255,150)
 	};
 
 
 	/**
-	 * Creates the panel, which holds nothing but a MosaidPanel that represents the pentominos.
+	 * Sets up and shows the window, which holds nothing but a MosaicCanvas.
+	 * Starts a thread that solve pentominos puzzles (slowly, so the backtracking
+	 * process can be seen!).
 	 */
-	public LittlePentominos() {
+	public void start(Stage stage) {
 
-		board = new MosaicPanel(rows,cols,50,50,Color.GRAY,2);  // for displaying the board
+		board = new MosaicCanvas(rows,cols,50,50);  // for displaying the board
 		board.setAlwaysDrawGrouting(true);
 		board.setDefaultColor(Color.WHITE);
-		board.setGroutingColor(Color.LIGHT_GRAY);
+		board.setGroutingColor(Color.LIGHTGRAY);
 
-		board.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent evt) {
-				start();
-			}
-		});
-
-		setLayout(new BorderLayout());
-		add(board, BorderLayout.CENTER);
-
-		start();
+		board.setOnMousePressed( e -> startSolving() );  // mouse click restarts with new board
+		
+		Pane root = new Pane(board);
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setResizable(false);
+		stage.setTitle("Pentominos Solver Demo");
+		stage.show();
+		
+		startSolving();  // Creates and starts the thread.
 
 	}
 
@@ -170,9 +167,10 @@ public class LittlePentominos extends JPanel {
 	/**
 	 * Start or restart, with a board that is empty except for four black squares.
 	 */
-	public void start() {  // Start the thread, if not already done, and set up a random board.
+	private void startSolving() {  // Start the thread, if not already done, and set up a random board.
 		if (gameThread == null || !gameThread.isAlive()) {
 			gameThread = new GameThread();
+			gameThread.setDaemon(true);
 			gameThread.start();
 		}
 		gameThread.setMessage(RESTART_RANDOM_MESSAGE);
@@ -181,7 +179,7 @@ public class LittlePentominos extends JPanel {
 
 
 	private class GameThread extends Thread {  // This represents the thread that solves the puzzle.
-
+											   // All the real work of the program is done in this class.
 
 		boolean aborted;  // used in play() to test whether the solution process has been aborted by a "restart"
 
@@ -364,13 +362,13 @@ public class LittlePentominos extends JPanel {
 		public void run() { 
 			while (true) {
 				try {
-					board.repaint();
+					board.forceRedraw();
 					if (message == RESTART_RANDOM_MESSAGE) {
 						setUpRandomBoard();
 						setMessage(GO_MESSAGE);
-						doDelay(2000);
+						doDelay(1000);
 					}
-					board.repaint();
+					board.forceRedraw();
 					doDelay(25);
 					// begin next game
 					message = 0;
@@ -391,7 +389,7 @@ public class LittlePentominos extends JPanel {
 					aborted = false;
 					if (!obviousBlockExists())
 						play(startRow,startCol);   // run the recursive algorithm that will solve the puzzle
-					board.repaint();
+					board.forceRedraw();
 				}
 				catch (Exception e) {
 					System.out.println("An internal error has occurred:\n"+ e + "\nRESTARTING.");

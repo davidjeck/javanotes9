@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 /**
  *  This program demonstrates a few routines for processing binary
@@ -32,6 +33,8 @@ public class SortTreeDemo {
 
 
 	public static void main(String[] args) {
+		
+		Scanner in = new Scanner( System.in );  // for reading user's input
 
 		System.out.println("This program stores strings that you enter in a binary sort");
 		System.out.println("tree.  After each item is inserted, the contents of the tree");
@@ -47,7 +50,7 @@ public class SortTreeDemo {
 			System.out.println("\n\nEnter a string to be inserted, or press return to end.");
 			System.out.print("?  ");
 			String item;  // The user's input.
-			item = TextIO.getln().trim().toLowerCase(); 
+			item = in.nextLine().trim().toLowerCase(); 
 			if (item.length() == 0)
 				break;
 			if (treeContains(root,item)) {

@@ -147,7 +147,9 @@ abstract idea of a stack, and as long as the stack operations work the way they
 are supposed to, we are OK. Here is a second implementation of the
 <classname>StackOfInts</classname> class, using a dynamic array:</p>
 
-<pre>public class StackOfInts {  // (alternate version, using an array)
+<pre>import java.util.Arrays;  // For the Arrays.copyOf() method.
+
+public class StackOfInts {  // (alternate version, using an array)
 
    private int[] items = new int[10];  // Holds the items on the stack.
    
@@ -159,8 +161,7 @@ are supposed to, we are OK. Here is a second implementation of the
    public void push( int N ) {
        if (top == items.length) {
               // The array is full, so make a new, larger array and
-              // copy the current stack items into it.  (Note that
-              // java.util.Arrays must be imported.)
+              // copy the current stack items into it. 
            items = Arrays.copyOf( items, 2*items.length );
        }
        items[top] = N;  // Put N in next available spot.
@@ -215,6 +216,7 @@ the worst case run time is &Theta;(n), where n is the number of items on the sta
 (However, the worst case occurs only rarely, and there is a natural sense in which the
 <i>average</i> case run time for the array implementation is still &Theta;(1).)</p>
 
+
 </subsection>
    
 <subsection id="recursion.3.2" title="Queues">
@@ -224,7 +226,8 @@ items, and there are restrictions about how items can be added to and removed
 from the list. However, a queue has two ends, called the front and the back of
 the queue. Items are always added to the queue at the back and removed from the
 queue at the front. The operations of adding and removing items are called
-<newword>enqueue</newword> and <newword>dequeue</newword>.
+<newword>enqueue</newword> and <newword>dequeue</newword> in this book.
+(These terms are not completely standardized, in the way that "push" and "pop" are.)
 An item that is added to the back of the queue will remain on the queue until
 all the items in front of it have been removed. This should sound familiar. A
 queue is like a "line" or "queue" of customers waiting for service. Customers
@@ -339,6 +342,15 @@ this, writing the <classname>QueueOfInts</classname> class is not all that diffi
    
 } // end class QueueOfInts</pre>
 
+<np>To help you follow what is being done here with the <code>tail</code> pointer,
+it might help to think in terms of a class invariant (<localref href="robustness.2.3"/>):
+"If the queue is non-empty, then <code>tail</code> points to the last node in the queue."
+This invariant must be true at the beginning and at the end of each method call. For example,
+applying this to the <code>enqueue()</code> method, in the case of a non-empty list,
+the invariant tells us that a new node can be added to the back of the list simply
+by saying "<code>tail.next&nbsp;= newNode</code>.  It also tells us how the
+value of <code>tail</code> must be set before returning from the method: it must
+be set to point to the node that was just added to the queue.</np>
 
 <p>Queues are typically used in a computer (as in real life) when only one item
 can be processed at a time, but several items can be waiting for processing.
@@ -348,7 +360,7 @@ For example:</p>
 <li>In a Java program that has multiple threads, the threads that want
 processing time on the CPU are kept in a queue. When a new thread is started,
 it is added to the back of the queue. A thread is removed from the front of the
-queue, given some processing time, and then&mdash;if it has not terminated&mdash;is
+queue, it is given some processing time, and then&mdash;if it has not terminated&mdash;is
 sent to the back of the queue to wait for another turn.</li>
 <li>Events such as keystrokes and mouse clicks are stored in a queue called the
 "event queue". A program removes events from the event queue and processes
@@ -376,9 +388,10 @@ used, a stack would be considered "unfair").</p>
 the sample program <sourceref href="DepthBreadth.java"/>. 
 I suggest that you try out the program.
 The program shows a grid of squares.  Initially, all the squares are white.
-When you click on a white square, the
-program will gradually mark all the squares in the grid, starting from the one
-where you click. To understand how the program does this, think of yourself in
+When you click on a white square, that square is "marked" by turning it red.
+The program than starts marking squares that are connected, horizontally or vertically, 
+to squares that have already been marked.  This process will eventually
+process every square in the grid. To understand how the program works, think of yourself in
 the place of the program. When the user clicks a square, you are handed an index
 card. The location of the square&mdash;its row and column&mdash;is written on the
 card. You put the card in a pile, which then contains just that one card. Then,
@@ -392,10 +405,10 @@ the pile to be processed.</p>
 <p>In the program, while a square is in the pile, waiting to be processed, it is colored red;
 that is, red squares have been <i>encountered</i> but not yet <i>processed</i>.
 When a square is taken from the pile and processed, its color changes to gray.
-Once a square has been colored gray, its color won't change again.
-Eventually, all the squares have been processed, and the procedure ends. 
-At that time, every square is gray.  In the
-index card analogy, the pile of cards has been emptied.</p>
+Once a square has been colored gray, the program will never consider it again,
+since all of its neighbors have already been accounted for.
+Eventually, all the squares have been processed, all the squares are gray, and the procedure ends. 
+In the index card analogy, the pile of cards has been emptied.</p>
 
 <p>The program can use your choice of three methods: Stack, Queue, and Random.
 In each case, the same general procedure is used. The only difference is how
@@ -409,8 +422,8 @@ started by selecting a square near the middle of the grid.  A stack is used
 for the picture on the left, a queue for the picture in the middle, and
 random selection for the picture on the right:</p>
 
-<img src="depth-breadth.png" width="600" height="228" alt="three screenshots from DepthBreadth"
-      tex="depth-breadth.eps" texscale="0.6"/>
+<img src="depth-breadth.png" width="590" height="231" alt="three screenshots from DepthBreadth"
+      tex="depth-breadth.eps" texscale="0.6" bordered="true"/>
 
 <np>The patterns that are produced are very different.  When using a stack, the program explores
 out as far as possible before it starts backtracking to look at previously encountered squares.
@@ -450,7 +463,12 @@ a stack. It will be removed from the stack and destroyed when the subroutine
 returns. If the subroutine calls another subroutine, the activation record of
 the second subroutine is pushed onto the stack, on top of the activation record
 of the first subroutine. The stack can continue to grow as more subroutines are
-called, and it shrinks as those subroutines return.</p>
+called, and it shrinks as those subroutines return</p>
+
+<p>In the case of a recursive subroutine, which calls itself, there can be
+several activation records on the stack for the same subroutine.  This is
+how the computer keeps track of many recursive calls at the same time:
+It has a different activation record for each call.</p>
    
 </subsection>
    

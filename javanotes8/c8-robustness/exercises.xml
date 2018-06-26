@@ -787,7 +787,8 @@ returns <code>true</code> if the character <code>ch</code> is a digit.</p>
 
 <p><b>The main program class:</b></p>
 
-<pre><prog name="RomanConverter">
+<pre><prog name="RomanConverter">import textio.TextIO;
+
     /** 
      * This program will convert Roman numerals to ordinary arabic numerals
      * and vice versa.  The user can enter a numerals of either type.  Arabic
