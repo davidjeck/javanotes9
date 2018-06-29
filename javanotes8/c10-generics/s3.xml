@@ -40,8 +40,8 @@ for working with maps.  The map interface, <classname>Map&lt;K,V&gt;</classname>
 parameterized by <b>two</b> types.  The first type parameter, <classname>K</classname>,
 specifies the type of objects that are possible keys in the map; the second type parameter,
 <classname>V</classname>, specifies the type of objects that are possible values in the
-map.  For example, a map of type <classname>Map&lt;Date,JButton&gt;</classname>
-would associate values of type <classname>JButton</classname> to keys of
+map.  For example, a map of type <classname>Map&lt;Date,Button&gt;</classname>
+would associate values of type <classname>Button</classname> to keys of
 type <classname>Date</classname>.  For a map of type
 <classname>Map&lt;String,String&gt;</classname>, both the keys and the values
 are of type <classname>String</classname>.</p>
@@ -137,7 +137,7 @@ programming application, there would be no need to define a new class; we could
 simply use a map of type <classname>Map&lt;String,String&gt;</classname>. A directory
 could be defined as</p>
    
-<pre>Map&lt;String,String&gt; directory = new TreeMap&lt;String,String&gt;();</pre>
+<pre>Map&lt;String,String&gt; directory = new TreeMap&lt;&gt;();</pre>
    
 <np>(using <classname>TreeMap</classname> so that the entries are kept in sorted order by name).
 Then <code>directory.put(name,number)</code> would record a phone number
@@ -252,7 +252,7 @@ while (entryIter.hasNext()) {
    System.out.println( "   (" + key + "," + value + ")" );
 }</pre>
    
-<np>or, using a for-each loop:</np>
+<np>or, using a for-each loop to avoid some of the ugly type names:</np>
 
 <pre>System.out.println("The map contains the following associations:");
 for ( Map.Entry&lt;String,Double&gt; entry : map.entrySet() ) {
@@ -306,12 +306,12 @@ are between <code>fromKey</code> and <code>toKey</code> (including <code>fromKey
 excluding <code>toKey</code>). There are also views <code>map.headMap(toKey)</code> and
 <code>map.tailMap(fromKey)</code> which are defined analogously to <code>headSet</code>
 and <code>tailSet</code>. Suppose,
-for example, that <code>blackBook</code> is a map of type
+for example, that <code>phoneBook</code> is a map of type
 <classname>TreeMap&lt;String,String&gt;</classname> in which the keys
 are names and the values are phone numbers. We can print out all the entries
 from <code>blackBook</code> where the name begins with "M" as follows:</p>
 
-<pre>Map&lt;String,String&gt; ems = blackBook.subMap("M","N");
+<pre>Map&lt;String,String&gt; ems = phonekBook.subMap("M","N");
      // This submap contains entries for which the key is greater
      // than or equal to "M" and strictly less than "N".
      
@@ -330,8 +330,8 @@ rather than just to find a single value. Suppose, for example that a database
 of scheduled events is stored in a map of type <classname>TreeMap&lt;Date,Event&gt;</classname> 
 in which the keys are the
 times of the events, and suppose you want a listing of all events that are
-scheduled for some time on July 4, 2014. Just make a submap containing all keys
-in the range from 12:00 AM, July 4, 2014 to 12:00 AM, July 5, 2014, and output
+scheduled for some time on July 4, 2018. Just make a submap containing all keys
+in the range from 12:00 AM, July 4, 2018 to 12:00 AM, July 5, 2018, and output
 all the entries from that submap. This type of search, which is known as a
 <newword>subrange query</newword> is quite common.</p>
 
@@ -358,7 +358,8 @@ until you come to the one you are looking for. In a binary sort tree, you have
 to start at the root and move down the tree until you find the item you want.
 When you search for a key/value pair in a hash table, you can go directly to
 the location that contains the item you want. You don't have to look through
-any other items. (This is not quite true, but it's close.) The location of the
+any other items. (This is not quite true, but if the hash table is working properly,
+it's close.) The location of the
 key/value pair is computed from the key: You just look at the key, and then you
 go directly to the location where it is stored.</p>
 

@@ -131,22 +131,34 @@ span.bnf {
 	color: #009900;
 }
 
-span.question {
+p.question {
+    text-indent: 0;
     font-weight: bold;
     color: #990000;
+    margin: 4px 0 0 0;
 }
 
-tr.question {
-    background: #FFFFE8;
+div.quiz-question {
+    background: #FFFFEE;
+    padding: 0 8px;
+    border: thin solid #808000;
+    border-radius:8px;
+    margin: 8px 12px;
 }
 
-span.answer {
+p.answer {
+    text-indent: 0;
     font-weight: bold;
     color: #000080;
+    margin: 4px 0 0 0;
 }
 
-tr.answer {
-    background: #E8E8FF
+div.quiz-answer {
+    background: #EEEEFF;
+    padding: 0 8px;
+    border: thin solid #000080;
+    border-radius:8px;
+    margin: 8px 12px 20px 12px;
 }
 
 span.sourceref {

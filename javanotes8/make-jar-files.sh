@@ -211,7 +211,7 @@ buildTextIOjar chapter8 LengthConverter2
 buildTextIOjar chapter8 TryStatementDemo
 buildTextIOjar chapter9 TowersOfHanoi
 buildjar chapter9 Maze
-buildjar chapter9 LittlePentominos MosaicPanel.java
+buildjar chapter9 LittlePentominos MosaicCanvas.java
 buildjar chapter9 Blobs
 buildTextIOjar chapter9 ListDemo StringList.java
 buildTextIOjar chapter9 PostfixEval StackOfDouble.java
@@ -224,6 +224,7 @@ buildTextIOjar chapter10 WordListWithTreeSet
 buildTextIOjar chapter10 WordListWithPriorityQueue
 buildTextIOjar chapter10 SimpleInterpreter
 buildTextIOjar chapter10 WordCount
+buildjar chapter10 RiemannSumStreamExperiment
 buildTextIOjar chapter11 DirectoryList
 buildTextIOjar chapter11 PhoneDirectoryFileDemo
 buildjar chapter11 TrivialEdit

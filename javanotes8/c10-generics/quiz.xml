@@ -316,6 +316,92 @@ as a static method in class <classname>Collections</classname>.)</p>
 </ans>
 </question>
    
-   
+<question>
+<ques><p>Suppose that <code>words</code> is an array of <classname>Strings</classname>.
+Explain what is done by the following code:</p>
+<pre>long n = Arrays.stream(words)
+              .filter( w -> (w != null) )
+              .map( w -> w.toLowerCase() )
+              .distinct()
+              .count();</pre>
+</ques>
+<ans><p>This code counts the number of different strings in the array, ignoring
+case.  It starts with a stream containing all the strings from the array.
+The <code>filter()</code> operation only lets non-null values through.
+This makes sure that there won't be a <code>NullPointerExcetion</code>
+in the next step, when <code>w.toLowerCase()</code> is evaluated.
+The <code>map()</code> replaces each string in the stream with a lower case
+version, so that there will be no difference between upper and lower case
+versions of the same string.  The <code>distinct() eliminates duplicates
+from the stream.  And <code>count()</code> returns the number of strings
+in the resulting. stream, which now contains just one lower-case copy
+of every string that occurs in the array.</code></p>
+</ans>
+</question>
+
+<question>
+<ques><p>Use the stream API to print all the even integers from 2 to 20.
+Start with <code>IntStream.range</code> and apply a
+<code>filter</code> operation.</p>
+</ques>
+<ans>
+<pre>IntStream.range(2,20)
+         .filter( n -> (n % 2 == 0) )
+         .forEach( n -> System.out.println(n) );</pre>
+              
+<p>(<code>IntStream.range()</code> can be used to create a stream
+containing all of the integers 2 to 20.  The predicate
+"<code>n&nbsp;->&nbsp;(n%2&nbsp;==&nbsp;0)</code>" is true just for
+even integers, so the stream that emerges from the <code>filter</code>
+operation contains the numbers 2, 4, &dots; 20.  Finally, we can
+apply an operation to each of the numbers of the stream by using
+the <code>forEach</code> terminal operator.  The operation
+<code>forEachOrdered</code> would also work, but since the stream
+is sequential, <code>forEach</code> will print out the numbers in 
+order.  If we were using a parallel stream, it is possible that
+<code>forEach</code> could print the numbers out of order.)</p>
+</ans>
+</question>
+
+<question>
+<ques><p>Write a generic method <code>countIf(c,t)</code> with
+type parameter <code>&lt;T&gt;</code>, where the first parameter,
+<code>c</code>, is of type <atype>Collection&lt;T&gt;</atype>,
+and the second parameter, <code>p</code>, is of type
+<atype>Predicate&lt;T&gt;</atype>.  The method should return
+the number of items in the collection for which the predicate
+is true.  Give two versions, one using a loop and the other
+using the stream API.</p>
+</ques>
+<ans><p>The first version uses a for-each loop, and uses the fact that
+a <classname>Predicate</classname> contains a <ptype>boolean</ptype>-valued
+function named <code>test()</code> for testing whether the predicate is
+true:</p>
+
+<pre>public static &lt;T&gt; int countIf( Collection&lt;T&gt; items, Predicate&lt;T&gt; pred ) ) {
+    int count = 0;
+    for ( T x : items ) {
+        if ( pred.test(x) )
+            count++;
+    }
+    return count;
+}</pre>
+
+<p>The second version uses the stream API, with a <code>filter()</code> operation
+that lets through only the items for which the predicate is true.  Note that
+<code>filter()</code> takes a parameter that is a predicate.  Usually, the
+parameter is given by a lambda expression, but in this case, the predicate is
+<code>pred</code>, so we need to pass <code>pred</code> as the paramter
+to <code>filter()</code>.</p>
+
+<pre>public static &lt;T&gt; int countIf( Collection&lt;T&gt; items, Predicate&lt;T&gt; pred ) {
+    long ct = items.parallelStream()
+                   .filter(pred)
+                   .count();
+         // .count() returns a long, but I want countIf to return an int
+    return (int)ct; 
+}</pre>
+</ans>
+</question>
    
 </quiz>

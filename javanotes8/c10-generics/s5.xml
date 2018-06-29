@@ -33,7 +33,7 @@ linked list as a private instance variable.  To implement
 queues of strings, for example, we can define the class:</p>
    
 <pre>class QueueOfStrings {
-   private LinkedList&lt;String&gt; items = new LinkedList&lt;String&gt;();
+   private LinkedList&lt;String&gt; items = new LinkedList&lt;&gt;();
    public void enqueue(String item) {
       items.addLast(item);
    }
@@ -47,7 +47,7 @@ queues of strings, for example, we can define the class:</p>
    
 <p>This is a fine and useful class.  But, if this is how we write queue classes, and
 if we want queues of <classname>Integers</classname>
-or <classname>Doubles</classname> or <classname>JButtons</classname> or any other type,
+or <classname>Doubles</classname> or <classname>Colors</classname> or any other type,
 then we will have to write a different class for each type.  The code for all of these
 classes will be almost identical, which seems like a lot of redundant programming.
 To avoid the redundancy, we can write a <b>generic</b> <classname>Queue</classname>
@@ -58,7 +58,7 @@ type <classname>String</classname> with a type parameter such as&nbsp;<classname
 and we add the type parameter to the name of the class:</p>
 
 <pre>class Queue&lt;T&gt; {
-   private LinkedList&lt;T&gt; items = new LinkedList&lt;T&gt;();
+   private LinkedList&lt;T&gt; items = new LinkedList&lt;&gt;();
    public void enqueue(T item) {
       items.addLast(item);
    }
@@ -76,7 +76,7 @@ just like any regular type name.  It's used to declare the return type for
 <code>enqueue</code>, and even as the actual type parameter in <classname>LinkedList&lt;T&gt;</classname>.
 Given this class definition, we can use parameterized types such
 as <classname>Queue&lt;String&gt;</classname> and <classname>Queue&lt;Integer&gt;</classname>
-and <classname>Queue&lt;JButton&gt;</classname>.  That is, the <classname>Queue</classname> class
+and <classname>Queue&lt;Color&gt;</classname>.  That is, the <classname>Queue</classname> class
 is used in exactly the same way as built-in generic classes like <classname>LinkedList</classname>
 and <classname>HashSet</classname>.</p>
    
@@ -89,7 +89,7 @@ meaningful name for the type parameter, you might define the <classname>Queue</c
 class as:</p>
       
 <pre>class Queue&lt;<newcode>ItemType</newcode>&gt; {
-   private LinkedList&lt;<newcode>ItemType</newcode>&gt; items = new LinkedList&lt;<newcode>ItemType</newcode>&gt;();
+   private LinkedList&lt;<newcode>ItemType</newcode>&gt; items = new LinkedList&lt;&gt;();
    public void enqueue(<newcode>ItemType</newcode> item) {
       items.addLast(item);
    }
@@ -121,8 +121,8 @@ possibly of different types.  A simple version of such a class can be defined as
    
 <np>This class can be used to declare variables and create objects such as:</np>
    
-<pre>Pair&lt;String,Color&gt; colorName = new Pair&lt;String,Color&gt;("Red", Color.RED);
-Pair&lt;Double,Double&gt; coordinates = new Pair&lt;Double,Double&gt;(17.3,42.8);</pre>
+<pre>Pair&lt;String,Color&gt; colorName = new Pair&lt;&gt;("Red", Color.RED);
+Pair&lt;Double,Double&gt; coordinates = new Pair&lt;&gt;(17.3,42.8);</pre>
    
 <np>Note that in the definition of the constructor in this class, the name "<code>Pair</code>"
 does <b>not</b> have type parameters.  You might have expected "<code>Pair&lt;T,S&gt;</code>".
@@ -256,7 +256,7 @@ in any collection:</p>
 <p>Since <classname>Collection&lt;T&gt;</classname> is itself a generic type,
 this method is very general.  It can operate on an <classname>ArrayList</classname>
 of <classname>Integers</classname>, a <classname>TreeSet</classname> of <classname>Strings</classname>,
-a <classname>LinkedList</classname> of <classname>JButtons</classname>,&nbsp;&dots;.</p>
+a <classname>LinkedList</classname> of <classname>Buttons</classname>,&nbsp;&dots;.</p>
 
 </subsection>
    
@@ -360,8 +360,7 @@ This would be bad: Since <classname>Oval</classname> is not a subclass of <class
 an <classname>Oval</classname> is <b>not</b> a <classname>Rect</classname>, 
 and a list of <classname>Rects</classname> should never be able to contain an <classname>Oval</classname>.
 The method call <code>addOval(rectangles,oval)</code> does not make sense and
-<b>should</b> be illegal, so the rule that a collection of <classname>Rects</classname> 
-is not a collection of <classname>Shapes</classname> is a good rule.)</np>
+<b>should</b> be illegal.)</np>
    
 <p>As another example, consider the method <code>addAll()</code> from the
 interface <classname>Collection&lt;T&gt;</classname>.  In my description of
@@ -490,9 +489,8 @@ our complete generic queue class becomes:</p>
 can be an <code>interface</code> instead of a class.  Note that the term
 "<code>extends</code>"  (not "<code>implements</code>") is used
 in the wildcard type, even if <classname>T</classname> is an interface.  For
-example, we will see that <classname>Runnable</classname> is an <code>interface</code>
-that defines the method <code>public void run()</code>.  (Runnable objects
-are usually associated with threads; see <localref href="threads"/>.)
+example, we have seen that <classname>Runnable</classname> is an <code>interface</code>
+that defines the method <code>public void run()</code>. 
 Here is a method that runs all the objects in a collection of
 <classname>Runnables</classname> by executing the <code>run()</code>
 method from each runnable object:</p>
@@ -535,45 +533,46 @@ Bounded types exist for this purpose.</p>
    
 <p>We start with a small, not very realistic example.  
 Suppose that you would like to create groups of GUI
-components using a generic class named <classname>ComponentGroup</classname>.
-For example, the parameterized type <classname>ComponentGroup&lt;JButton&gt;</classname>
-would represent a group of <classname>JButtons</classname>, while 
-<classname>ComponentGroup&lt;JPanel&gt;</classname> would represent a group
-of <classname>JPanels</classname>.  The class will include methods that can be
+components using a generic class named <classname>ControlGroup</classname>.
+For example, the parameterized type <classname>ControlGroup&lt;Button&gt;</classname>
+would represent a group of <classname>Buttons</classname>, while 
+<classname>ControlGroup&lt;Slider&gt;</classname> would represent a group
+of <classname>Sliders</classname>.  The class will include methods that can be
 called to apply certain operations to all components in the group at once.
 For example, there will be an instance method of the form</p>
    
-<pre>public void repaintAll() {
+<pre>public void disableAll() {
    .
-   .  // Call the repaint() method of every component in the group.
+   .  // Call c.setDisable(true) for every component,c, in the group.
    .
 }</pre>
    
-<np>The problem is that the <code>repaint()</code> method is defined in a
-<classname>JComponent</classname> object, but not for objects of arbitrary
+<np>The problem is that the <code>setDisable()</code> method is defined in a
+<classname>Control</classname> object, but not for objects of arbitrary
 type.  It wouldn't make sense to allow types such as
-<classname>ComponentGroup&lt;String&gt;</classname> or 
-<classname>ComponentGroup&lt;Integer&gt;</classname>, since <classname>Strings</classname>
-and <classname>Integers</classname> don't have <code>repaint()</code> methods.
+<classname>ControlGroup&lt;String&gt;</classname> or 
+<classname>ControlGroup&lt;Integer&gt;</classname>, since <classname>Strings</classname>
+and <classname>Integers</classname> don't have <code>setDisable()</code> methods.
 We need some way to restrict the type parameter <classname>T</classname>
-in <classname>ComponentGroup&lt;T&gt;</classname> so that only <classname>JComponent</classname>
-and subclasses of <classname>JComponent</classname> are allowed
+in <classname>ControlGroup&lt;T&gt;</classname> so that only <classname>Control</classname>
+and subclasses of <classname>Control</classname> are allowed
 as actual type parameters.
-We can do this by using the <newword>bounded type</newword> "<code>T&nbsp;extends&nbsp;JComponent</code>"
+We can do this by using the <newword>bounded type</newword> "<code>T&nbsp;extends&nbsp;Control</code>"
 instead of a plain "<code>T</code>" in the definition of the class:
 </np>
 
-<pre>public class ComponentGroup&lt;<newcode>T extends JComponent</newcode>&gt; {
+<pre>public class ControlGroup&lt;<newcode>T extends Control</newcode>&gt; {
    private ArrayList&lt;T&gt; components; // For storing the components in this group.
-   public void repaintAll() {
-      for ( JComponent c : components )
+   public void disableAll( ) {
+      for ( Control c : components )
          if (c != null)
-            c.repaint();
+            c.setDisable(false);
+      }
    }
-   public void setAllEnabled( boolean enable ) {
-      for ( JComponent c : components )
+   public void enableAll( ) {
+      for ( Control c : components )
          if (c != null)
-            c.setEnabled(enable);
+            c.setDisable(true);
       }
    }
    public void add( T c ) {  // Add a value c, of type T, to the group.
@@ -584,19 +583,18 @@ instead of a plain "<code>T</code>" in the definition of the class:
    .
 }</pre>
    
-<p>The restriction "<code>extends JComponent</code>" on <code>T</code> makes it
-illegal to create the parameterized types <classname>ComponentGroup&lt;String&gt;</classname> and
-<classname>ComponentGroup&lt;Integer&gt;</classname>, since the actual type parameter
-that replaces "<code>T</code>" is required to be either <classname>JComponent</classname> itself
-or a subclass of <classname>JComponent</classname>.
+<p>The restriction "<code>extends Control</code>" on <code>T</code> makes it
+illegal to create the parameterized types <classname>ControlGroup&lt;String&gt;</classname> and
+<classname>ControlGroup&lt;Integer&gt;</classname>, since the actual type parameter
+that replaces "<code>T</code>" is required to be either <classname>Control</classname> itself
+or a subclass of <classname>Control</classname>.
 With this restriction, we know&mdash;and, more important, the compiler knows&mdash;that
-the objects in the group are of type <classname>JComponent</classname> and the
-operations <code>c.repaint()</code> and <code>c.setEnabled()</code> are defined
-for any <code>c</code> in the group.</p>
+the objects in the group are of type <classname>Control</classname> and the
+operation <code>c.setDisable()</code> is defined for any <code>c</code> in the group.</p>
   
 <p>In general, a bounded type parameter "<code>T&nbsp;extends&nbsp;SomeType</code>" means roughly
 "a type, <classname>T</classname>, that is either equal to <classname>SomeType</classname>
-or is a subclass of <classname>SomeType</classname>", and the upshot is that any
+or is a subclass of <classname>SomeType</classname>; the upshot is that any
 object of type <classname>T</classname> is also of type <classname>SomeType</classname>, and
 any operation that is defined for objects of type <classname>SomeType</classname>
 is defined for objects of type <classname>T</classname>.  The type
@@ -613,31 +611,29 @@ the way, is that, in contrast to wildcard types, bounded type parameters can onl
 use "<code>extends</code>", never "<code>super</code>".</p> 
    
 <p>Bounded type parameters can be used when declaring generic methods.
-For example, as an alternative to the generic <classname>ComponentGroup</classname>
+For example, as an alternative to the generic <classname>ControlGroup</classname>
 class, one could write a free-standing generic <code>static</code> method that can
-repaint any collection of <classname>JComponents</classname> as follows:</p>
+disable any collection of <classname>Controls</classname> as follows:</p>
    
-<pre>public static &lt;T extends JComponent&gt; void repaintAll(Collection&lt;T&gt; comps) {
-   for ( JComponent c : comps )
+<pre>public static &lt;T extends Control&gt; void disableAll(Collection&lt;T&gt; comps) {
+   for ( Control c : comps )
       if (c != null)
-         c.repaint();
+         c.setDisable(false);
 }</pre>
    
-<np>Using "<code>&lt;T extends JComponent&gt;</code>" as the formal type parameter
+<np>Using "<code>&lt;T extends Control&gt;</code>" as the formal type parameter
 means that the method can only be called for collections whose base type is
-<classname>JComponent</classname> or some subclass of <classname>JComponent</classname>.
-Thus, it is legal to call <code>repaintAll(coll)</code> where <code>coll</code>
-is of type <classname>List&lt;JPanel&gt;</classname> but not where
-<code>coll</code> is of type <classname>Set&lt;String&gt;</classname>.</np>
+<classname>Control</classname> or some subclass of <classname>Control</classname>,
+such as <code>Button</code> or <code>Slider</code>.</np>
    
 
 <p>Note that we don't really need a generic type parameter in this case.  We can
 write an equivalent method using a wildcard type:</p>
       
-<pre>public static void repaintAll(Collection&lt;? extends JComponent&gt; comps) {
-   for ( JComponent c : comps )
+<pre>public static void disableAll(Collection&lt;? extends Control&gt; comps) {
+   for ( Control c : comps )
       if (c != null)
-         c.repaint();
+         c.setDisable(false);
 }</pre>
 
 <np>In this situation, the version that uses the wildcard type is to be preferred,
@@ -710,27 +706,6 @@ of type <classname>T</classname>.  This just means that instead of using
 <classname>Comparable&lt;T&gt;</classname>:</p>
    
 <pre>static &lt;T extends <newcode>Comparable&lt;T&gt;</newcode>&gt; void sortedInsert(List&lt;T&gt; sortedList, ...</pre>
-   
-<break/>
-   
-<p>With this example, I will leave the topic of generic types and generic programming.
-In this chapter, I have occasionally used terms such as "strange" and "weird" to
-talk about generic programming in Java.  I will confess that I have some affection
-for the more simple-minded generic programming style of Smalltalk.  Nevertheless,
-I recognize the power and increased robustness of generics in Java.  I hope that
-I have convinced you that using the Java Collection Framework is reasonably
-natural and straightforward, and that using it can save you a lot of time and
-effort compared to repeatedly recoding the same data structures and algorithms
-from scratch.  Things become more technical when you
-start writing new generic classes and methods of your own, and the syntax is
-(as I've said) a little strange.  But with some practice, you'll get used to the
-syntax and will find that it's not that difficult after all.</p>
-   
-
-
-
  
 </subsection>
-
-<endchapter/>
 </section>

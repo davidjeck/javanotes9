@@ -433,12 +433,12 @@ that contains the same elements as <code>coll</code>, but with duplicates remove
 in sorted order.  This means that we can
 abbreviate the four lines in the above example to the single command:</p>
 
-<pre>ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;( new TreeSet&lt;String&gt;(coll) );</pre>
+<pre>ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;( new TreeSet&lt;&gt;(coll) );</pre>
 
 <np>This makes a sorted list of the elements of <code>coll</code> with no
-duplicates. Although the repeated type parameter, "<code>&lt;String&gt;</code>", makes
-it a bit ugly to look at, this is still
-a nice example of the power of generic programming.</np>
+duplicates. This is a nice example of the power of generic programming.
+(Note that the type parameter, <code>String</code>, is optional in the two
+constructors in this example, since it can be deduced by the compiler.)</np>
 
 <break/>
 
@@ -453,7 +453,7 @@ particular order, and so do not need to implement the <classname>Comparable</cla
 <p>The <code>equals()</code> method is used to determine whether two objects in
 a <classname>HashSet</classname> are to be considered the same.
 An <classname>Iterator</classname> for a <classname>HashSet</classname> will visit its
-elements in what seems to be a completely arbitrary order, and it's possible
+elements in what seems to be a completely arbitrary order, and it's even possible
 for the order to change completely when a new element is added. 
 Use a <classname>HashSet</classname> instead of a
 <classname>TreeSet</classname> when the elements it contains are not comparable, or when the
@@ -492,126 +492,11 @@ without changing the value of <code>A</code> or <code>B</code>.  See
 
    
 </subsection>
-   
-<subsection id="generics.2.4" title="EnumSet">
-   
-<p>Enumerated types (or "enums") were introduced in <localref href="basics.3.4"/>.  
-Suppose that <classname>E</classname>
-is an enumerated type.  Since <classname>E</classname> is a class, it is possible to create
-objects of type <classname>TreeSet&lt;E&gt;</classname> and <classname>HashSet&lt;E&gt;</classname>.
-However, because enums are so simple, trees and hash tables are not the most efficient
-implementation for sets of enumerated type values.  Java provides the class
-<code>java.util.EnumSet</code> as an alternative way to create such sets.</p>
-   
-<p>Sets of enumerated type values are created using <code>static</code> methods
-in the class <classname>EnumSet</classname>.  For example, if <code>e1</code>, 
-<code>e2</code>, and <code>e3</code> are values belonging to the enumerated type
-<classname>E</classname>, then the method</p>
-   
-<pre>EnumSet.of( e1, e2, e3 )</pre>
-   
-<np>creates and returns a set of type <classname>EnumSet&lt;E&gt;</classname> that
-contains exactly the elements <code>e1</code>, <code>e2</code>, and <code>e3</code>.
-The set implements the interface <classname>Set&lt;E&gt;</classname>, so all
-the usual set and collection operations are available.  The implementation
-of these operations is very efficient.  The implementation uses what is
-called a <classname>bit vector</classname>.  A bit is a quantity that has only
-two possible values, zero and one.  A set of type <classname>EnumSet&lt;E&gt;</classname>
-is represented by a bit vector that contains one bit for each enum constant in the
-enumerated type <classname>E</classname>; the bit corresponding to the enum
-constant <code>e</code> is 1 if <code>e</code> is a member of the set and is
-0 if <code>e</code> is not a member of the set.  The bit vectors for
-two sets of type <classname>EnumSet&lt;E&gt;</classname> can be very easily
-combined to represent such operations as the union and intersection of two
-sets.  The bit vector representation is feasible for <classname>EnumSets</classname>,
-but not for other sets in Java, because an enumerated type contains only a
-small finite number of enum constants.  (Java actually has a class named
-<classname>BitSet</classname> that uses bit vectors to represent finite sets
-of non-negative integers, but this class is not part of
-the Java Collection Framework and does not implement
-the <classname>Set</classname> interface.)</np>
-   
-<p>The function <code>EnumSet.of()</code> can be used with any positive number of parameters.
-All the parameters must be values of the same enumerated type.  Null values are not
-allowed. An <classname>EnumSet</classname> cannot contain the value <code>null</code>&mdash;any
-attempt to add <code>null</code> to an <classname>EnumSet</classname> will
-result in a <classname>NullPointerException</classname>.
-</p>
-   
-<p>There is also a function <code>EnumSet.range(e1,e2)</code> that returns an
-<classname>EnumSet</classname> consisting of the enum constants between <code>e1</code>
-and <code>e2</code>, inclusive.  The ordering of enum constants is the same as
-the order in which they are listed in the definition of the enum.
-In <code>EnumSet.range(e1,e2)</code>, <code>e1</code> and <code>e2</code> must
-belong to the same enumerated type, and <code>e1</code> must be less than or
-equal to <code>e2</code>.</p>
-   
-<p>If <classname>E</classname> is an enum, then <code>EnumSet.allOf(E.class)</code>
-is a set that contains all values of type <classname>E</classname>.
-<code>EnumSet.noneOf(E.class)</code> is an <newword>empty set</newword>,
-a set of type <classname>EnumSet&lt;E&gt;</classname> that contains no elements at all.
-Note that in <code>EnumSet.allOf(E.class)</code> and <code>EnumSet.noneOf(E.class)</code>,
-the odd-looking parameter represents the enumerated type class itself.  If <code>eset</code> is a set of
-type <classname>EnumSet&lt;E&gt;</classname>, then <code>EnumSet.complementOf(eset)</code>
-is a set that contains all the enum constants of <classname>E</classname> that
-are <b>not</b> in <code>eset</code>.</p>
-
-<p>As an example, consider a program that keeps schedules of events.  The program
-must keep track of repeating events that happen on specified days of the week.
-For example, an event might take place only on weekdays, or only on
-Wednesdays and Fridays.  In other words, associated with the event is
-the <b>set</b> of days of the week on which it takes place.  This information
-can be represented using the enumerated type</p>
-   
-<pre>enum Day { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }</pre>
-   
-<np>The days of the week on which an event takes place would then be a value
-of type <classname>EnumSet&lt;Day&gt;</classname>.  An object of type
-<classname>RepeatingEvent</classname> would have an instance variable of type
-<classname>EnumSet&lt;Day&gt;</classname> to hold this information.
-An event that takes place on Wednesdays and Fridays would have the associated set</np>
-   
-<pre>EnumSet.of( Day.WEDNESDAY, Day.FRIDAY )</pre>
-   
-<np>We could define some common sets of <classname>Days</classname> as</np>
-
-<pre>EnumSet&lt;Day&gt; weekday = EnumSet.range( Day.MONDAY, Day.FRIDAY );
-EnumSet&lt;Day&gt; weekend = EnumSet.complementOf( weekday );
-EnumSet&lt;Day&gt; everyday = EnumSet.allOf( Day.class );</pre>
-   
-<p><classname>EnumSets</classname> are often used to specify sets of
-"options" that are to be applied during some type of processing.  For example,
-a program that draws characters in fancy fonts might have various options that
-can be applied.  Let's say that the options are bold, italic, underlined, strikethrough,
-and boxed.  Note that we are assuming that options can be combined in arbitrary
-ways.  For example, you can have italic, boxed, underlined characters. This
-just means that we need to keep track of a <b>set</b> of options.  If the
-options are represented by the enumerated type
-</p>
-
-<pre>enum FontOption { BOLD, ITALIC, UNDERLINED, STRIKETHROUGH, BOXED }</pre>
-
-<np>then a set of options is represented by a value of type 
-<classname>EnumSet&lt;FontOption&gt;</classname>.  Suppose that
-<code>options</code> is a variable of this type that represents the
-set of options that are currently being applied by the program.
-Then we can do things like:</np>
-   
-<ul>
-<li><code>options = EnumSet.noneOf( FontOption.class )</code> &mdash; Turn off all options.</li>
-<li><code>options = EnumSet.of( FontOption.BOLD )</code> &mdash; Use bold, with no other options.</li>
-<li><code>options.add( FontOption.BOLD )</code> &mdash; Add bold to any options that are already on.</li>
-<li><code>options.remove( FontOption.UNDERLINED )</code> &mdash; Turn underlining off (if it's on).</li>
-</ul>
-   
-<np>This is a nice, safe way to work with sets of options. Applications like
-this are one of the major reasons that enumerated types were introduced.</np>
-   
-</subsection>
+ 
 
 <subsection id="generics.2.5" title="Priority Queues">
 
-<p>A <newword>priority queue</newword> is an ADT that represents a collection of
+<p>A <newword>priority queue</newword> is an abstract data type that represents a collection of
 items, where each item has an assigned "priority" that allows any two items
 to be compared.  Operations on a priority queue include <i>add</i>, which adds
 an item to the collection, and <i>remove</i>, which removes and returns an item
@@ -664,7 +549,7 @@ without removing duplicates.  For example, if <code>coll</code> is of type
 <classname>Collection&lt;String&gt;</classname>, then the following code segment will print all the
 items from <code>coll</code> in order, including duplicates:</p>
 
-<pre>PriorityQueue&lt;String&gt; pq = new PriorityQueue&lt;String&gt;();
+<pre>PriorityQueue&lt;String&gt; pq = new PriorityQueue&lt;&gt;();
 pq.addAll( coll );
 while ( ! pq.isEmpty() ) {
     System.out.println( pq.remove() );

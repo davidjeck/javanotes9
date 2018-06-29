@@ -33,7 +33,7 @@ to learn how to use them.</p>
 <subsection id="OOP.7.1" title="Defining and Implementing Interfaces">
 
 
-<p>We've encountered the term "interface" in other contexts, in connection with black
+<p>We encountered the term "interface" in other contexts, in connection with black
 boxes in general and subroutines in particular. The interface of a subroutine
 consists of the name of the subroutine, its return type, and the number and
 types of its parameters. This is the information you need to know if you want
@@ -165,6 +165,9 @@ multiple inheritance.  It's not true multiple inheritance, however, since interf
 still cannot define instance variables.  Default methods can call abstract methods that
 are defined in the same interface, but they cannot refer to any instance variables.</p>
 
+<p>Note that a functional interface can include default methods in addition to
+the single abstract method that it specified.</p>
+
 <p>A default method in an interface must be marked with the modifier <code>default</code>.
 It can optionally be marked <code>public</code> but, as for everything else in interfaces,
 default methods are automatically public and the <code>public</code> modifier can be omitted.
@@ -226,7 +229,6 @@ what it does?</p>
 a "mixin" in other programming languages, namely the ability to mix functionality from
 another source into a class. Since a class can implement several interfaces,
 it is possible to mix in functionality from several different sources.</p>
-
 
 </subsection>
 

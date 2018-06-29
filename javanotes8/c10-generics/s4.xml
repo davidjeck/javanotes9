@@ -77,7 +77,7 @@ The symbol table in the program is represented by a variable named
 At the beginning of the program, the symbol table object is created with the command:
 </p>
 
-<pre>symbolTable = new HashMap&lt;String,Double&gt;();</pre>
+<pre>symbolTable = new HashMap&lt;&gt;();</pre>
 
 <np>This creates a map that initially contains no key/value associations.
 To execute a "let" command, the program uses the symbol table's <code>put()</code> method to
@@ -95,11 +95,7 @@ The actual value that is stored in the symbol table is an object of
 type <classname>Double</classname>.  We can use the <ptype>double</ptype>
 value <code>val</code> in the call to <code>put</code> because Java does
 an automatic conversion of type <ptype>double</ptype> to <classname>Double</classname>
-when necessary.  The <ptype>double</ptype> value is "wrapped" in an object
-of type <classname>Double</classname>, so that, in effect, the above statement
-is equivalent to</np>
-   
-<pre>symbolTable.put( varName, new Double(val) );</pre>
+when necessary.</np>
 
 
 <np>Just for fun, I decided to pre-define two
@@ -171,7 +167,7 @@ must use the wrapper class, <classname>Integer</classname>, for the objects in t
 <p>To summarize, an index will be represented by a <classname>TreeMap</classname>. The keys
 for the map will be terms, which are of type <classname>String</classname>. The values in the
 map will be <classname>TreeSets</classname> that contain <classname>Integers</classname> 
-that are the page numbers of every page on which a term appears.  The parameterized type that
+representing page numbers.  The parameterized type that
 we should use for the sets is <classname>TreeSet&lt;Integer&gt;</classname>.
 For the <classname>TreeMap</classname> that represents the index as a whole,
 the key type is <classname>String</classname> and the value type is
@@ -182,8 +178,7 @@ the key type is <classname>String</classname> and the value type is
    
 <np>This is just the usual <classname>TreeMap&lt;K,V&gt;</classname> with
 <code>K=String</code> and <code>V=TreeSet&lt;Integer&gt;</code>.  A type name
-as complicated as this one can look intimidating (especially, I think,
-when used in a constructor with the <code>new</code> operator), but if you think about
+as complicated as this one can look intimidating, but if you think about
 the data structure that we want to represent, it makes sense.  Given a
 little time and practice, you can get used to types like this one.</np>
 
@@ -194,8 +189,11 @@ map. Let's leave aside the question of how we find the references
 to put in the index, and just look at how the <classname>TreeMap</classname> is used. 
 It can be created with the commands:</p>
 
-<pre>TreeMap&lt;String,TreeSet&lt;Integer&gt;&gt;  index;         // Declare the variable.
-index = new TreeMap&lt;String,TreeSet&lt;Integer&gt;&gt;();  // Create the map object.</pre>
+<pre>TreeMap&lt;String,TreeSet&lt;Integer&gt;&gt;  index; // Declare the variable.
+index = new TreeMap&lt;&gt;();  // Create the map object.</pre>
+
+<np>(Note that even for this complex type, the type parameters can be omitted
+from the constructor.)</np>
 
 <p>Now, suppose that we find a reference to some <code>term</code>
 (of type <classname>String</classname>) on some <code>pageNum</code>
@@ -222,7 +220,7 @@ void addReference(String term, int pageNum) {
           // found for the term.  Make a new set containing
           // the page number and add it to the index, with
           // the term as the key.
-       TreeSet&lt;Integer&gt; firstRef = new TreeSet&lt;Integer&gt;();
+       TreeSet&lt;Integer&gt; firstRef = new TreeSet&lt;&gt;();
        firstRef.add( pageNum );  // pageNum is "autoboxed" to give an Integer!
        index.put(term,firstRef);
    }
@@ -260,7 +258,7 @@ void printIndex() {
         String term = entry.getKey();
         TreeSet&lt;Integer&gt; pageSet = entry.getValue();
    
-        System.out.print( term + " " );
+        System.out.print( term + ": " );
         for ( int page : pageSet ) {
             System.out.print( page + " " );
         }
@@ -303,8 +301,8 @@ with a for-each loop.  It might be fun to look at a few ways to solve this probl
 One alternative is to use an iterator:</p>
 
 <pre>Iterator&lt;Integer&gt;  iter = pageSet.iterator();
-int firstPage = iter.next();  // In this program, we know the set has at least
-                              // one element.
+int firstPage = iter.next();  // In this program, we know the set has
+                              // at least one element.
 System.out.print(firstPage);
 while ( iter.hasNext() ) {
    int nextPage = iter.next();
@@ -358,35 +356,29 @@ defines a method for comparing two objects of type&nbsp;<classname>T</classname>
 
 <np>This method  should return an integer
 that is negative, zero, or positive, depending on whether <code>obj1</code> is less
-than, equal to, or greater than <code>obj2</code>. We need an object of type
-<classname>Comparator&lt;String&gt;</classname>
-that will compare two <classname>Strings</classname> based on alphabetical order. The easiest
-way to do this is to convert the <classname>Strings</classname>
-to lower case and use the default comparison on the lower case
-<classname>Strings</classname>. The following class defines such a comparator:</np>
+than, equal to, or greater than <code>obj2</code>. We want to
+compare two <classname>Strings</classname> ignoring case.
+The <classname>String</classname>
+class already includes a method that does that, <code>compartToIgnoreCase()</code>.
+But to use a non-default comparison in a <classname>TreeMap</classname>,
+we need an object of type <classname>Comparator&lt;String&gt;</classname>. Since
+<classname>Comparator</classname> is a functional interface, an easy
+way to specify the comparator is to use lambda expression:</np>
 
-<pre>
-/**
- * Represents a Comparator that can be used for comparing two
- * strings based on alphabetical order.
- */
-class AlphabeticalOrder implements Comparator&lt;String&gt; {
-   public int compare(String str1, String str2) {
-      String s1 = str1.toLowerCase();  // Convert to lower case.
-      String s2 = str2.toLowerCase();
-      return s1.compareTo(s2);  // Compare lower-case Strings.
-   }
-}
-</pre>
+<pre>(a,b) -&gt; a.compareToIgnoreCase()</pre>
 
-<p>To solve our indexing problem, we just need to tell our index to use an
-object of type <classname>AlphabeticalOrder</classname> for comparing keys. This is done by
-providing a <classname>Comparator</classname> object as a parameter to the constructor. We
-just have to create the <code>index</code> in our example with the command:</p>
+<np>To solve our indexing problem, we just need to pass this comparator as
+a parameter to the <classname>TreeMap</classname> constructor:</np>
 
-<pre>index = new TreeMap&lt;String,TreeSet&lt;Integer&gt;&gt;( new AlphabeticalOrder() );</pre>
+<pre>index = new TreeMap&lt;&gt;( (a,b) -&gt; a.compareToIgnoreCase() );</pre>
 
-<np>This does work.  However, I've been concealing one technicality. Suppose, for example,
+<np>In fact, since the lambda expression is just calling a method that already
+exists in the <classname>String</classname> class, it could actually be
+given as a method reference (see <localref href="subroutines.4a.4"/>):</np>
+
+<pre>index = new Treemat&lt;&gt;( String::compareToIgnoreCase );</pre>
+
+<p>This does work.  However, there one technicality. Suppose, for example,
 that the indexing program calls <code>addReference("aardvark",56)</code> and that it later
 calls <code>addReference("Aardvark",102)</code>. The words "aardvark" and
 "Aardvark" differ only in that one of them begins with an upper case letter;
@@ -404,7 +396,7 @@ into a single list, and when the index is printed it will contain only the first
 version of the word that was encountered by the program.  This is probably 
 acceptable behavior in this example. If
 not, some other technique must be used to sort the terms into alphabetical
-order.</np>
+order.</p>
 
 </subsection>
 
@@ -456,7 +448,7 @@ counter. A <classname>Map</classname> can be used to implement these operations.
 word, we want to look up a <classname>WordData</classname> object in the <classname>Map</classname>. This
 means that the word is the <b>key</b>, and the <classname>WordData</classname> object is
 the <b>value.</b> (It might seem strange that the key is also one of the
-instance variables in the value object, but in fact this is probably the most
+instance variables in the value object, but in fact this is a very
 common situation: The value object contains all the information about some
 entity, and the key is one of those pieces of information; the partial information
 in the key is used to retrieve the full information in the value object.) After reading the
@@ -467,7 +459,7 @@ the words in alphabetical order.  The data is stored in a variable named
 <code>words</code> of type <classname>TreeMap&lt;String,WordData&gt;</classname>.
 The variable is declared and the map object is created with the statement:</p>
    
-<pre>TreeMap&lt;String,WordData&gt; words = new TreeMap&lt;String,WordData&gt;();</pre>
+<pre>TreeMap&lt;String,WordData&gt; words = new TreeMap&lt;&gt;();</pre>
 
 <p>When the program reads a word from a file, it calls <code>words.get(word)</code>
 to find out if that word is already in the map. If the return value is
@@ -496,29 +488,12 @@ while (word != null) {
 
 <p>After reading the words and printing them out in alphabetical order, the
 program has to sort the words by frequency and print them again. To do
-the sorting using a generic algorithm, I defined a simple <classname>Comparator</classname> class
-for comparing two word objects according to their frequency counts.  The
-class implements the interface <classname>Comparator&lt;WordData&gt;</classname>,
-since it will be used to compare two objects of type <classname>WordData</classname>:</p>
+the sorting using a generic algorithm, we can copy the <classname>WordData</classname>
+objects into a list and then use the generic method
+<code>Collections.sort(list,comparator)</code>, which specifies a comparator
+as its second parameter.  The comparator can be given as a lambda expression.</p>
 
-<pre>/**
- * A comparator class for comparing objects of type WordData according to 
- * their counts.  This is used for sorting the list of words by frequency.
- */
-private static class CountCompare implements Comparator&lt;WordData&gt; {
-   public int compare(WordData data1, WordData data2) {
-      return data2.count - data1.count;
-          // The return value is positive if data1.count &lt; data2.count.
-          // I.E., data1 comes after data2 in the ordering if there
-          // were FEWER occurrences of data1.word than of data2.word.
-          // The words are sorted according to decreasing counts.
-   }
-} // end class CountCompare</pre>
-
-<p>Given this class, we can sort the <classname>WordData</classname> objects according to
-frequency by first copying them into a list and then using the generic method
-<code>Collections.sort(list,comparator)</code>. 
-The <classname>WordData</classname> objects that we need are
+<p>The <classname>WordData</classname> objects that we need are
 the values in the map, <code>words</code>.  Recall that <code>words.values()</code> returns a
 <classname>Collection</classname> that contains all the values from the map. The constructor for the
 <classname>ArrayList</classname> class lets you specify a collection to be copied into the
@@ -526,8 +501,8 @@ list when it is created. So, we can use the following commands to create a list 
 <classname>ArrayList&lt;WordData&gt;</classname> containing the word
 data and then sort that list according to frequency:</p>
 
-<pre>ArrayList&lt;WordData&gt; wordsByFrequency = new ArrayList&lt;WordData&gt;( words.values() );
-Collections.sort( wordsByFrequency, new CountCompare() );</pre>
+<pre>ArrayList&lt;WordData&gt; wordsByFrequency = new ArrayList&lt;&gt;( words.values() );
+Collections.sort( wordsByFrequency, (a,b) -> b.count - a.count );</pre>
 
 <np>You should notice that these two lines replace a lot of code! It requires
 some practice to think in terms of generic data structures and algorithms, but

@@ -9,7 +9,7 @@ generic programming in <localref href="arrays.2.4"/>, where we looked at dynamic
 integers. The source code presented there for working with dynamic arrays of
 integers works only for data of type <ptype>int</ptype>. But the source code for
 dynamic arrays of <ptype>double</ptype>, <classname>String</classname>, 
-<classname>JButton</classname>, or any
+<classname>Color</classname>, or any
 other type would be almost identical, except for the substitution of one type name
 for another.  It seems silly to write essentially the
 same code over and over.  Java's approach to this problem is parameterized types.
@@ -17,26 +17,24 @@ As we saw in <localref href="arrays.3"/>, the parameterized class
 <classname>ArrayList</classname> implements dynamic arrays.  Since it
 is parameterized, there are types such as <atype>ArrayList&lt;String&gt;</atype>
 to represent dynamic arrays of <classname>String</classname>,
-<atype>ArrayList&lt;JButton&gt;</atype> for dynamic arrays of buttons, and
+<atype>ArrayList&lt;Color&gt;</atype> for dynamic arrays of colors, and
 more generally <atype>ArrayList&lt;T&gt;</atype> for any object type&nbsp;<classname>T</classname>.
 <classname>ArrayList</classname> is just one class, but the source code works
 for many different types.  This is generic programming.</p>
 
-<p>The <classname>ArrayList</classname> class is just one of several standard
-classes that are used for generic programming in Java. We will spend the next few sections
-looking at these classes and how they are used, and we'll see that there are also
-generic methods and generic interfaces. All the classes and interfaces discussed in
+<p>The <classname>ArrayList</classname> class is just one of many standard
+classes that are used for generic programming in Java. We will spend the next three sections
+looking at some of these classes and how they are used, and we'll see that there are also
+generic methods and generic interfaces. The classes and interfaces discussed in
 these sections are defined in the package <code>java.util</code>, and you will need
-an import statement at the beginning of your program to get access to them.
-(Before you start putting "<code>import</code>&nbsp;<code>java.util.*</code>" at the
-beginning of every program, you should know that some things in
-<code>java.util</code> have names that are the same as things in other packages.
-For example, both <code>java.util.List</code> and <code>java.awt.List</code>
-exist, so it is often better to import the individual classes that you need.)</p>
+import statements at the beginning of your programs to get access to them.
+</p>
    
-<p>In the final section of this chapter, we will see that it is possible to define
+<p>In <localref href="generics.5"/>, we will see that it is possible to define
 new generic classes, interfaces, and methods.  Until then, we will stick to using
-the generics that are predefined in Java's standard library.</p>
+Java's predefined generics.  And in
+<localref href="generics.6"/>, we will look at <newword>streams</newword>,
+a relatively new feature of Java that makes extensive use of generics.</p>
 
 <p>It is no easy task to design a library for generic programming. Java's
 solution has many nice features but is certainly not the only possible
@@ -97,8 +95,8 @@ not defined, and the program will crash.</p>
 
 <subsection id="generics.1.2" title="Generic Programming in C++">
 
-<p>Unlike Smalltalk, C++ is a very strongly typed language, even more so than
-Java. Every variable has a type, and can only hold data values of that type.
+<p>Unlike Smalltalk, C++ is a very strongly typed language.
+Every variable has a type, and can only hold data values of that type.
 This means that the kind of generic programming that is used in Smalltalk is
 impossible in C++.
 Nevertheless, C++ has a powerful and flexible system of
@@ -204,7 +202,8 @@ closer to C++ and farther from Smalltalk.  In this chapter, I will use the
 parameterized types exclusively, but you should remember that their use is not mandatory.
 It is still legal to use a parameterized class as a non-parameterized type, such as
 a plain <classname>ArrayList</classname>.  In that case, any type of object can be
-stored in the data structure.</p>
+stored in the data structure.  (But if that is what you really want to do, it would
+be preferable to use the type <atype>ArrayList&lt;Object&gt;</atype>.)</p>
    
 <p>Note that there is a significant difference between parameterized classes in Java
 and template classes in C++.  A template class in C++ is not really a class at all&mdash;it's
@@ -236,14 +235,22 @@ written as <atype>ArrayList&lt;ArrayList&lt;String&gt;&gt;</atype>&mdash;which i
 up only in fairly advanced programming.  Most people who use parameterized types
 will not encounter the problems, and they will get the benefits of type-safe generic programming
 with little difficulty.</p>
+
+<p>It's worth noting that if the type parameter in a parameterized type can be
+deduced by the compiler, then the name of the type parameter can be omitted.  For
+example, the word "String" is optional in the constructor in this statement,
+because the <classname>ArrayList</classname> that is created must be an
+<atype>ArrayList&lt;String&gt;</atype> to match the type of the variable:</p>
+
+<pre>ArrayList&lt;String&gt; words = new ArrayList&lt;&gt;();</pre>
    
 </subsection>
 
 <subsection id="generics.1.4" title="The Java Collection Framework">
 
-<p>As I've said, Java comes with a number of parameterized classes that
+<p>As I've said, Java comes with a number of parameterized types that
 implement common data structures.  This collection of data structure
-classes is referred to as the <newword>Java Collection Framework</newword>,
+classes and interfaces is referred to as the <newword>Java Collection Framework</newword>,
 or <newword>JFC</newword>.  We will spend the next few sections learning 
 about the JFC.</p>
 
@@ -485,12 +492,12 @@ while ( iter.hasNext() ) {
 
 <np>The same general form will work for other types of processing. For example,
 the following code will remove all <code>null</code> values from any
-collection of type <classname>Collection&lt;JButton&gt;</classname>
+collection of type <classname>Collection&lt;Color&gt;</classname>
 (as long as that collection supports removal of values):</np>
 
-<pre>Iterator&lt;JButton&gt; iter = coll.iterator():
+<pre>Iterator&lt;Color&gt; iter = coll.iterator():
 while ( iter.hasNext() ) {
-    JButton item = iter.next();
+    Color item = iter.next();
     if (item == null)
        iter.remove();
 }</pre>
@@ -498,12 +505,12 @@ while ( iter.hasNext() ) {
 <np>(Note, by the way, that when <classname>Collection&lt;T&gt;</classname>,
 <classname>Iterator&lt;T&gt;</classname>, or any other parameterized type is 
 used in actual code, they are always used with actual types such as
-<classname>String</classname> or <classname>JButton</classname> in place
+<classname>String</classname> or <classname>Color</classname> in place
 of the "formal type parameter"&nbsp;<classname>T</classname>.
 An iterator of type <classname>Iterator&lt;String&gt;</classname> is used
 to iterate through a collection of <classname>Strings</classname>;
-an iterator of type <classname>Iterator&lt;JButton&gt;</classname> is used
-to iterate through a collection of <classname>JButtons</classname>;
+an iterator of type <classname>Iterator&lt;Color&gt;</classname> is used
+to iterate through a collection of <classname>Color</classname>;
 and so on.)</np>
 
 <p>An iterator is often used to apply the same operation to all the elements
@@ -716,7 +723,8 @@ zero, depending on whether <code>obj1</code> comes before
 or is considered to be the same as <code>obj2</code> for the purposes of this comparison. 
 Comparators are useful for comparing objects that do not implement the
 <classname>Comparable</classname> interface and for defining several different orderings on
-the same collection of objects.</np>
+the same collection of objects.  Since <classname>Comparator</classname> is 
+a function interface, comparators are often defined by lambda expressions.</np>
    
 <p>In the next two sections, we'll see how <classname>Comparable</classname> and
 <classname>Comparator</classname> are used in the context of collections and maps.</p>
@@ -762,7 +770,7 @@ example, if <code>numbers</code> is a variable of type <classname>Collection&lt;
 it is legal to call <code>numbers.add(17)</code> or <code>numbers.remove(42)</code>.
 You can't literally add the primitive type value 17 to <code>numbers</code>, but
 Java will automatically convert the 17 to the corresponding wrapper object,
-<code>new&nbsp;Integer(17)</code>, and the wrapper object will be added to
+<code>Integer.valueOf(17)</code>, and the wrapper object will be added to
 the collection.  (The creation of the object does add some time and memory
 overhead to the operation, and you should keep that in mind in situations
 where efficiency is important.  An array of <ptype>int</ptype> is more

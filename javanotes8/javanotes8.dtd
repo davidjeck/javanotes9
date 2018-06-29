@@ -244,6 +244,7 @@
 <!ENTITY generics_s3 SYSTEM "c10-generics/s3.xml">
 <!ENTITY generics_s4 SYSTEM "c10-generics/s4.xml">
 <!ENTITY generics_s5 SYSTEM "c10-generics/s5.xml">
+<!ENTITY generics_s6 SYSTEM "c10-generics/s6.xml">
 <!ENTITY generics_exercises SYSTEM "c10-generics/exercises.xml">
 <!ENTITY generics_quiz SYSTEM "c10-generics/quiz.xml">
 

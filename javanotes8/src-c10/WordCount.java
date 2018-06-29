@@ -1,4 +1,6 @@
 
+import textio.TextIO;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
@@ -33,21 +35,6 @@ public class WordCount {
 	} // end class WordData
 
 
-	/**
-	 * A comparator for comparing objects of type WordData according to 
-	 * their counts.  This is used for sorting the list of words by frequency.
-	 */
-	private static class CountCompare implements Comparator<WordData> {
-		public int compare(WordData data1, WordData data2) {
-			return data2.count - data1.count;
-				// The return value is positive if data2.count > data1.count.
-				// I.E., data1 comes after data2 in the ordering if there
-				// were more occurrences of data2.word than of data1.word.
-				// The words are sorted according to decreasing counts.
-		}
-	} // end class CountCompare
-
-
 	public static void main(String[] args) {
 
 		System.out.println("\n\n   This program will ask you to select an input file.");
@@ -74,7 +61,7 @@ public class WordCount {
 			// Create a TreeMap to hold the data.  Read the file and record
 			// data in the map about the words that are found in the file.
 
-			TreeMap<String,WordData> words = new TreeMap<String,WordData>();
+			TreeMap<String,WordData> words = new TreeMap<>();
 			String word = readNextWord();
 			while (word != null) {
 				word = word.toLowerCase();  // convert word to lower case
@@ -96,10 +83,11 @@ public class WordCount {
 			}
 
 			// Copy the word data into an array list, and sort the list
-			// into order of decreasing frequency.
+			// into order of decreasing frequency, using a lambda expression
+			// for the Comparator that will be using in sorting.
 
-			ArrayList<WordData> wordsByFrequency = new ArrayList<WordData>( words.values() );
-			Collections.sort( wordsByFrequency, new CountCompare() );
+			ArrayList<WordData> wordsByFrequency = new ArrayList<>( words.values() );
+			Collections.sort( wordsByFrequency, (a,b) -> b.count - a.count );
 
 			// Output the data from the map and from the list.
 

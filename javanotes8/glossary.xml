@@ -267,6 +267,10 @@ one out (by translating it into equivalent machine language instructions).</gite
 <gitem term="I/O">Input/Output, the way a computer program communicates with the
 rest of the world, such as by displaying data to the user, getting information from the user,
 reading and writing files, and sending and receiving data over a network.</gitem>
+<gitem term="IO stream">An abstraction representing a source of input data or a destination
+for output data.  Java has four basic IO stream classes representing input and output
+of character and binary data.  These classes form the foundation for Java's
+input/output API.</gitem>
 <gitem term="iterator">An object associated with a collection, such a list or a set,
 that can be used to traverse that collection.  The iterator will visit each member of
 the collection in turn.</gitem>
@@ -329,9 +333,12 @@ where they are available to the CPU.  Other forms of memory, such as a disk driv
 also store information, but only main memory is directly accessible to the CPU.
 Programs and data from a disk drive have to be copied into main memory before they can be used
 by the CPU.</gitem>
-<gitem term="map">An associative array; a data structure that associates an object from some
+<gitem term="map (data structure)">An associative array; a data structure that associates an object from some
 collection to each object in some set.  In Java, maps are
 represented by the generic interface <classname>Map&lt;T,S&gt;</classname></gitem>
+<gitem term="map (stream operator)">One of the fundamental operations on streams, defined
+as part of Java's stream API.  A map operator applies a function to each
+element of a stream, producing a new stream consisting of the values output by the function.</gitem>
 <gitem term="member variable">A variable defined in a class but not inside a method,
  as opposed to a local variable, which is defined inside some method.</gitem>
 <gitem term="memory">Memory in a computer is used to hold programs and data.</gitem>
@@ -428,6 +435,9 @@ in order for the program to proceed correctly from that point.  A precondition o
 is something that must be true when the subroutine is called, in order for the subroutine to
 function properly.  Subroutine preconditions are often restrictions on the values of the actual
 parameters that can be passed into the subroutine.</gitem>
+<gitem term="predicate">A function that outputs a <ptype>boolean</ptype> value.
+Predicates in Java can be represented by the parameterized functional interface
+<atype>Predicate&lt;T&gt;</atype>.</gitem>
 <gitem term="priority queue">A data structure representing a collection of items where each item
 has a "priority." A priority queue has operations <i>add</i> and <i>remove</i>.  Items
 can be added in any order, but the <i>remove</i> operation always removes an item of
@@ -474,6 +484,9 @@ data can be written to the memory as well as read from it.</gitem>
 recursive subroutine is one that calls itself, either directly, or indirectly through a
 chain of other subroutines.  Recursive algorithms work by reducing a complex problem into
 smaller problems which can be solved either directly or by applying the same algorithm "recursively."</gitem>
+<gitem term="reduce (stream operator)">One of the fundamental operations on a stream.  A reduce
+operation combines all the elements from a stream in some way, such as by summing them or finding
+their maximum, producing a final result.</gitem>
 <gitem term="RGB">A color system in which colors are specified by three numbers (in Java, integers
 in the range 0 to 255) giving the red, green, and blue components of the color.</gitem>
 <gitem term="reference">Another term for "pointer."</gitem>
@@ -529,10 +542,11 @@ structure of a GUI program can often be represented as a state machine.</gitem>
 <gitem term="step-wise refinement">A technique for developing an algorithm by starting
 with a general outline of the procedure, often expressed in pseudocode, and then
 gradually filling in the details.</gitem>
-<gitem term="stream">An abstraction representing a source of input data or a destination
-for output data.  Java has four basic stream classes representing input and output
-of character and binary data.  These classes form the foundation for Java's
-input/output API.</gitem>
+<gitem term="stream">In Java 8, an abstraction representing a stream of values that
+can be processed.  A stream can be created from a <classname>Collection</classname>,
+an array, or some other data source.  Java's stream API includes many predefined
+operations that can be applied to streams.
+The term "stream" also refers to IO streams, which are used for input and output.</gitem>
 <gitem term="stroke">A drawing operation that applies a color (or other type of paint) to pixels along
 the boundary of a shape.</gitem>
 <gitem term="source code">Text written in a high-level programming language, which must

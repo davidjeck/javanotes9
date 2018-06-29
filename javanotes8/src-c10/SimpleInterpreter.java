@@ -41,6 +41,7 @@
  */
 
 import java.util.HashMap;
+import textio.TextIO;
 
 public class SimpleInterpreter {
 
@@ -71,7 +72,7 @@ public class SimpleInterpreter {
 
 		// Create the map that represents symbol table.
 
-		symbolTable = new HashMap<String,Double>();
+		symbolTable = new HashMap<>();
 
 		// To start, add variables named "pi" and "e" to the symbol
 		// table.  Their values are the usual mathematical constants.
@@ -79,11 +80,11 @@ public class SimpleInterpreter {
 		symbolTable.put("pi", Math.PI);
 		symbolTable.put("e", Math.E);
 
-		TextIO.putln("\n\nEnter commands; press return to end.");
-		TextIO.putln("Commands must have the form:\n");
-		TextIO.putln("      print <expression>");
-		TextIO.putln("  or");
-		TextIO.putln("      let <variable> = <expression>");
+		System.out.println("\n\nEnter commands; press return to end.");
+		System.out.println("Commands must have the form:\n");
+		System.out.println("      print <expression>");
+		System.out.println("  or");
+		System.out.println("      let <variable> = <expression>");
 
 		while (true) {
 			TextIO.put("\n?  ");
@@ -102,12 +103,12 @@ public class SimpleInterpreter {
 				TextIO.getln();
 			}
 			catch (ParseError e) {
-				TextIO.putln("\n*** Error in input:    " + e.getMessage());
-				TextIO.putln("*** Discarding input:  " + TextIO.getln());
+				System.out.println("\n*** Error in input:    " + e.getMessage());
+				System.out.println("*** Discarding input:  " + TextIO.getln());
 			}
 		}
 
-		TextIO.putln("\n\nDone.");
+		System.out.println("\n\nDone.");
 
 	} // end main()
 
@@ -132,7 +133,7 @@ public class SimpleInterpreter {
 		if ( TextIO.peek() != '\n' )
 			throw new ParseError("Extra data after end of expression.");
 		symbolTable.put( varName, val );  // Add to symbol table.
-		TextIO.putln("ok");
+		System.out.println("ok");
 	}
 
 
@@ -146,7 +147,7 @@ public class SimpleInterpreter {
 		TextIO.skipBlanks();
 		if ( TextIO.peek() != '\n' )
 			throw new ParseError("Extra data after end of expression.");
-		TextIO.putln("Value is " + val);
+		System.out.println("Value is " + val);
 	}
 
 

@@ -172,6 +172,10 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    <li><sourceref href="chapter10/WordCount.java">WordCount.java</sourceref>, from <localref href="generics.4"/>,
    counts the number of occurrences of each word in a file.  The program uses
    several features from the Java Collection Framework.</li>
+   <li><sourceref href="chapter10/RiemannSumStreamExperiment.java">RiemannSumStreamExperiment.java</sourceref>,
+   from <localref href="generics.6"/>, demos Java's stream API.  Runs an experiment to measure
+   the compute time for a problem when it is solved using a for loop, using a sequential stream,
+   and using a parallel stream.</li>
    <li><sourceref href="chapter11/ReverseFile.java">ReverseFile.java</sourceref>, from <localref href="IO.2"/>, shows how
    to read and write files in a simple command-line application; uses the
    non-standard class <sourceref href="chapter11/TextReader.java">TextReader.java</sourceref>.  
@@ -252,7 +256,7 @@ as the GUI toolbox.</p>
    <li><sourceref href="chapter4/RandomMosaicWalk.java">RandomMosaicWalk.java</sourceref>, a
    program that displays a window full of colored squares with a moving
    disturbance, from <localref href="subroutines.6"/>.  This program depends on
-   <sourceref href="chapter4/MosaicPanel.java">MosaicPanel.java</sourceref> and 
+   <sourceref href="chapter4/MosaicCanvas.java">MosaicCanvas.java</sourceref> and 
    <sourceref href="chapter4/Mosaic.java">Mosaic.java</sourceref>.</li>
    <li><sourceref href="chapter4/RandomMosaicWalk2.java">RandomMosaicWalk2.java</sourceref> 
    is a version of the previous example, 
@@ -327,7 +331,7 @@ as the GUI toolbox.</p>
    <sourceref href="chapter9/LittlePentominos.java">LittlePentominos.java</sourceref>
    are demo programs mentioned in <localref href="recursion.1"/> as examples of
    recursion.  They use techniques that have not covered until <localref href="threads"/>.
-   Note that LittlePentominos depends on <sourceref href="chapter9/MosaicPanel.java">MosaicPanel.java</sourceref>.</li>
+   Note that LittlePentominos depends on <sourceref href="chapter9/MosaicCanvas.java">MosaicCanvas.java</sourceref>.</li>
    <li><sourceref href="chapter9/Blobs.java">Blobs.java</sourceref>, from <localref href="recursion.1"/>,
    uses recursion to count groups of colored squares in a grid.</li>
    <li><sourceref href="chapter9/DepthBreadth.java">DepthBreadth.java</sourceref>, from <localref href="recursion.3"/>,

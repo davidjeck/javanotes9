@@ -1,4 +1,5 @@
 import java.util.TreeSet;
+import textio.TextIO;
 
 /**
  * Makes an alphabetical list of all the words in a file selected
@@ -28,7 +29,7 @@ public class WordListWithTreeSet {
 				System.out.println("No input file selected.  Exiting.");
 				System.exit(1);
 			}
-			TreeSet<String> wordSet = new TreeSet<String>();  // The words from the file.
+			TreeSet<String> wordSet = new TreeSet<>();  // The words from the file.
 			String word = readNextWord();
 			while (word != null) {  // word == null when the end of file is reached.
 				word = word.toLowerCase();  // Convert word to lower case.

@@ -7,7 +7,8 @@
 <exercise-question><p>Rewrite the <classname>PhoneDirectory</classname> class
 from <localref href="arrays.4.2"/> so that it uses a <classname>TreeMap</classname>
 to store directory entries, instead of an array.  (Doing this was suggested
-in <localref href="generics.3.1"/>.)</p>
+in <localref href="generics.3.1"/>.)  You should also write a short program
+to test the class.</p>
 </exercise-question>
 <exercise-discuss><p>The class that you are asked to write for this exercise
 really is very trivial.  Everything that the class needs to do is already done
@@ -216,7 +217,7 @@ anything, that the next character is legal. If not, throw an exception. This
 adds a lot of code, but the nice thing about throwing exceptions is that it
 doesn't disturb the logical flow of the routine.</np>
 
-<p>There is one possible bug in the algorithm. It assumes that there is at
+<p>There is one possible bug in the algorithm as given. It assumes that there is at
 least one number in the set. But in mathematics, a set can be empty. I decided
 to allow for the possibility of empty sets in my program. See the solution,
 below.</p>
@@ -241,7 +242,8 @@ no extra data on the line.</np>
 </exercise-discuss>
 <exercise-code>
 <pre>
-<prog name="SetCalc">import java.util.TreeSet;
+<prog name="SetCalc">import textio.TextIO;
+import java.util.TreeSet;
 
 
 /**
@@ -285,14 +287,10 @@ public class SetCalc {
          catch (IllegalArgumentException e) {
                // An error was found in the input line.
             System.out.println("Error in input: " + e.getMessage());
-            System.out.print("Discarding input: ");
          }
-         do {  // Copy extra characters on line to output.  If there 
-               // was no error, then the only character that is copied
-               // is the end-of-line character.
-            ch = TextIO.getAnyChar();
-            System.out.print(ch);
-         } while (ch != '\n');
+         TextIO.getln();  // Read and discard the rest of the line.
+                          // If there was no error, the only thing that
+                          // is discarded is the end-of-line character.
       }
 
    } // end main()
@@ -373,7 +371,7 @@ public class SetCalc {
          if (! Character.isDigit(TextIO.peek()))
             throw new IllegalArgumentException("Expected an integer.");
          int n = TextIO.getInt(); // Read the integer.
-         set.add( new Integer(n) );
+         set.add( Integer.valueOf(n) );  // (Could have just said set.add(n)!)
          TextIO.skipBlanks();
          if (TextIO.peek() == ']')
             break;  // ']' marks the end of the set.
@@ -412,7 +410,7 @@ that can be used for computing a hash code for the object,
 so at least you don't have to define your own hash function. 
 Do not use <b>any</b> of Java's built-in generic types; create your own linked
 lists using nodes as covered in <localref href="recursion.2.2"/>.  However,
-you do <b>not</b> have to worry about increasing the size of the table when
+you are <b>not</b> have to increase the size of the table when
 it becomes too full.</p>
 <p>You should also write a short program to test your solution.</p>
 </exercise-question>
@@ -447,7 +445,7 @@ an empty list, or it is a pointer to the first node in a linked list.</np>
 
 <p>Given any key, we can find the linked list that should contain that key by
 looking at the hash code of the key. The code computed by calling
-<code>key.hashCode()</code> is of type <ptype>int</ptype>. We need a value that is in the
+<code>key.hashCode()</code>, which returns a value of type <ptype>int</ptype>. We need a value that is in the
 range of legal indices for the array. As noted in <localref href="generics.3.3"/>,
 the value can be computed as <code>Math.abs(key.hashCode())&nbsp;%&nbsp;table.length</code>, 
 where <code>table</code> is the array.</p>
@@ -460,7 +458,17 @@ so I will not discuss them further here. You can look at the solution, below.</p
 <p>Although it is not required by the exercise, I defined a <code>resize()</code>
 method that is used to increase the size of the table when the table becomes
 too full. I call this method in the <code>put()</code> method when the table
-becomes more than 3/4 full.</p>
+becomes more than 3/4 full.  The hash table class has an instance variable, <code>count</code>, that
+is equal to the number of items in the array, so it only necessary to check the value of
+<code>count</code> when deciding to increase the array size.  Having <code>count</code>
+is also important for implementing the <code>size()</code> method efficiently, since
+<code>size()</code> can simply return <code>count</code> as its return value.</p>
+
+<p>(By the way, the statement that "<code>count</code> is equal to the number of items
+in the array"" is a class invariant for the <classname>HashTable</classname> class.
+(See <localref href="robustness.2.3"/>.)
+It is important that all of the methods in the class maintain the truth of this
+class invariant.")</p>
 
 <p>A major part of developing a class for general use is testing. It's
 important to design a testing procedure that will test all aspects of the
@@ -485,8 +493,7 @@ can't be created at run time, as noted in <localref href="generics.1.3"/>.</p>
  * type String.  Keys cannot be null.  The default constructor creates a table 
  * that initially has 64 locations, but a different initial size can be specified 
  * as a parameter to the constructor.  The table increases in size if it 
- * becomes more than 3/4 full; to help implement this, a count of the number
- * of items in the hash table is kept in an instance variable.
+ * becomes more than 3/4 full.
  */
 public class HashTable {
 
@@ -758,7 +765,9 @@ public class HashTable {
 </prog></pre>
 <p><b><u>A Class for Testing:</u></b></p>
 <pre>
-<prog name="TestHashTable">/**
+<prog name="TestHashTable">import textio.TextIO;
+
+/**
  * A little program to test the HashTable class.  Note that I
  * start with a really small table so that I can easily test
  * the resize() method.
@@ -823,10 +832,8 @@ public class TestHashTable {
 
 <exercise>
 <exercise-question><p>A <newword>predicate</newword> is a boolean-valued function with one parameter.
-Some languages use predicates in generic programming. Java&nbsp;7 doesn't, but this
-exercise looks at how predicates might work. </p>
-
-<p>In Java, we could implement "predicate objects" by defining a generic interface:</p>
+Java has the parameterized functional interface <atype>Predicate&lt;T&gt;</atype>
+to represent predicates.  The definition of <atype>Predicate&lt;T&gt;</atype> could be:</p>
 
 <pre>public interface Predicate&lt;T&gt; {
     public boolean test( T obj );
@@ -834,15 +841,19 @@ exercise looks at how predicates might work. </p>
 
 <p>The idea is that an object that implements this interface knows how to
 "test" objects of type <classname>T</classname>
-in some way.   Define a class that contains 
+in some way.   Java already has some methods that use predicates, such as the
+<code>removeIf(p)</code> method that is defined for any <classname>Collection</classname>.
+(See <localref href="generics.6.1"/>).  However, this exercise asks you to write
+a few similar methods yourself.  Define a class that contains 
 the following generic static methods for working with predicate objects.
 The name of the class should be <classname>Predicates</classname>, in analogy
 with the standard class <classname>Collections</classname> that provides various
-<code>static</code> methods for working with collections.</p>
+<code>static</code> methods for working with collections.  You should
+<b>not</b> use the stream API for this exercise.</p>
 
 <pre>public static &lt;T&gt; void remove(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred)
-   // Remove every object, obj, from coll for which
-   // pred.test(obj) is true.
+   // Remove every object, obj, from coll for which pred.test(obj) 
+   // is true.  (This does the same thing as coll.removeIf(pref).)
    
 public static &lt;T&gt; void retain(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred)
    // Remove every object, obj, from coll for which
@@ -859,35 +870,18 @@ public static &lt;T&gt; int find(ArrayList&lt;T&gt; list, Predicate&lt;T&gt; pre
    // for which the predicate is true, if any.
    // If there is no such item, return -1.</pre>
    
-<np>(In C++, methods similar to these are included as a standard part of the
-generic programming framework.  And Java&nbsp;8 has a similar predicate interface,
-and the <classname>Collections</classname> class has a <code>removeIf()</code> method
-that uses a predicate.)</np>
 </exercise-question>
 <exercise-discuss><p>The code for this exercise is pretty short, but it
 involves some advanced ideas, including methods with bounded type parameters
 (from <localref href="generics.5.4"/>).  Aside from that,
-the main point of the exercise is to introduce predicates and show how they might
-be useful in generic programming. The operation of finding all the items in a
+the main point of the exercise is to work with predicates and to see how they are
+useful in generic programming. The operation of finding all the items in a
 collection that satisfy some condition is very common. The code to do it is not
 hard to write, but even so, it is nice to have it done once and for all. In this
 exercise, the condition that the items have to satisfy is represented as a
 <classname>Predicate</classname>. The <code>collect()</code> method provides a general way to
-find all the items that satisfy the condition. The items are dumped into a
-collection, which can then be processed further if necessary. If I wanted to
-carry this generic programming thing even further, I would define another
-interface:</p>
-
-<pre>public interface Processor&lt;T&gt; {
-   public void process( T obj );
-}</pre>
-
-<np>and define a generic method for applying a <classname>Processor</classname> object to each
-item in a collection. With <classname>Predicates</classname> and <classname>Processors</classname> in hand,
-it would hardly ever be necessary to write a loop for iterating through all the
-items in a collection.</np>
-
-<break/>
+find all the items that satisfy the condition. The items, in this case,
+are to be dumped into a <classname>List</classname>.</p>
 
 <p>The implementation of the <code>collect()</code> method simply uses a
 for-each loop to go through the collection, <code>coll</code>, and puts every
@@ -895,10 +889,7 @@ item that satisfies the predicate into a list. The method returns an object of
 type <classname>List</classname>, but <classname>List</classname> is only an interface. Any real list must
 belong to one of the classes that implement this interface, such as
 <classname>LinkedList</classname> or <classname>ArrayList</classname>. I create the list as an
-<classname>ArrayList</classname>, but a <classname>LinkedList</classname> would also be reasonable.
-(Perhaps the return type of the method should have been specified as
-<classname>ArrayList</classname> rather than <classname>List</classname> so that users of the method would
-know exactly what they are getting.)</p>
+<classname>ArrayList</classname>, but a <classname>LinkedList</classname> would also be reasonable.</p>
 
 <pre>/**
  * Return a List that contains all the objects, obj, from the collection, 
@@ -939,12 +930,25 @@ public static &lt;T&gt; void remove(Collection&lt;T&gt; coll, Predicate&lt;T&gt;
 <code>find()</code> method is easy to write using an ordinary <code>for</code>
 loop.  See my solution, below.</np>
 
-<p>My test program simply creates some collections and applies the methods from
+<p>If you look at the documentation for <atype>Predicate&lt;T&gt;</atype>,
+you will see that it defines a method <code>negate()</code>.  (It is defined
+in the interface as a <code>default</code> method.  A functional interface can
+only define one abstract method, but it can define additional methods if they are
+default methods.)  If <code>pred</code>
+is a predicate, then <code>pred.negate()</code> that is true when pred is false
+and is false when pred is true.  This means that <code>retain()</code> could
+actually be defined simply as</p>
+
+<pre>public static &lt;T&gt; void retain(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred) {
+    remove( coll, pred.negate() );
+}</pre>
+
+<p>My test program creates some collections and applies the methods from
 the <classname>Predicates</classname> class to them. My collections contain objects of type
 <classname>Integer</classname> and I made two <classname>Predicates</classname> that work on objects of
-this type. To define such a predicate, we need a class that implements the interface
-<classname>Predicate&lt;Integer&gt;</classname>, and then we have to make an object belonging to
-that class. For example, I define the class:</p>
+this type. One way to create such a predicate is to write a class that implements the interface
+<classname>Predicate&lt;Integer&gt;</classname>, and then to make an object belonging to
+that class. For example, I could have defined the class:</p>
 
 <pre>/**
  * An object of type Even tests an Object of type Integer to see whether the 
@@ -960,70 +964,33 @@ static class Even implements Predicate&lt;Integer&gt; {
    }
 } // end class Even</pre>
 
-<np>The predicate object is then created with a command:</np>
+<np>The predicate object could then created with a command:</np>
 
 <pre>Predicate&lt;Integer&gt; pred = new Even():</pre>
 
-<np>A predicate object belonging to class <classname>Even</classname> will throw an exception
-if its <code>test()</code> method is applied to a <code>null</code> value. If this class were 
-meant for more
-general use, it might be better to define <code>test()</code> so that it simply
-returns the answer "false" in this case:</np>
+<np>But of course, it is also possible to define the
+predicate more simply as a lambda expression:</np>
 
-<pre>/**
- * An object of type Even tests an Object of type Integer to see whether the 
- * integer that it represents is an even number.  <newcode>When applied to a null</newcode>
- * <newcode>object, the test returns the value false.</newcode>
- */
-static class Even implements Predicate&lt;Integer&gt; {
-   public boolean test(Integer i) {
-      <newcode>if (i == null)
-         return false;</newcode>
-      else if ( i % 2 == 0 )
-         return true;
-      else
-         return false;
-   }
-} // end class Even</pre>
+<pre>Predicate&lt;Integer&gt; pred = i -> (i % 2 == 0);</pre>
 
-<break/>
+<np>or, of course, we could simply use the lambda expression
+at the point where the predicate is needed.  For example:</np>
 
-<p>Note that a <classname>Predicate</classname> is an object, but we are really only
-interested in the <code>test()</code> method of the object. In some languages,
-including C++, it is possible to pass a function as a parameter to another
-function. In those languages, predicates are simply functions that return
-boolean values, and working with predicates does not require the overhead of
-making classes and objects. Of course, things are not so bad in Java if you
-make use of an anonymous nested class to define the predicate. In fact, you can
-define the predicate right in the function call where you need it. For
-example:</p>
+<pre>result = Predicates.collect(coll, i -&gt; (i % 2 == 0) )</pre>
 
-<pre>result = Predicates.collect( coll, 
-                    new Predicate&lt;Integer&gt;() {
-                       public boolean test(Integer i) {
-                          return (i != null &amp;&amp; i &gt; 100);
-                       }
-                    } );</pre>
-                    
-<p>Furthermore, in Java 8, the predicate can be defined as a lambda
-expression (see <localref href="subroutines.4a"/>), which simplifies the code
-quite a bit:</p>
-
-<pre>result = Predicates.collect(coll, i -&gt; i != null &amp;&amp; i &gt; 0))</pre>
+<np>I hope that you can see how using the lambda expression simpliies
+the code quite a bit!</np>
 
 </exercise-discuss>
 <exercise-code>
-<p><b><u>The Predicate interface must be defined:</u></b></p>
    
-<pre><prog name="Predicate">interface Predicate&lt;T&gt; {
-   public boolean test( T obj );
-}
-</prog></pre>
-   
-<p><b><u>The Predicates class:</u></b></p>
-   
-<pre><prog name="Predicates">import java.util.*;
+<p><b><u>The Predicates Class:</u></b></p>
 
+<pre><prog name="Predicates">import java.util.Collection;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * This class defines some static methods for working
@@ -1090,48 +1057,20 @@ public class Predicates {
 
    
 } // end class Predicates
+
 </prog></pre>
    
 <p><b><u>The Test program:</u></b></p>
    
 <pre>
 <prog name="TestPredicates">import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Perform some simple tests on the Predicates class.
  */
 public class TestPredicates {
 
-   /**
-    * An object of type Even tests an Object of type Integer to see whether the 
-    * integer that it represents is an even number. Note that the test() method 
-    * should only be applied to non-null values of type Integer.
-    */
-   static class Even implements Predicate&lt;Integer&gt; {
-      public boolean test(Integer i) {
-         if ( i % 2 == 0 )
-            return true;
-         else
-            return false;
-      }
-   } // end class Even
-
-   
-   /**
-    * An object of type Big tests an Object of type Integer to see whether the 
-    * integer that it represents is bigger than 100.  Note that the test() method 
-    * should only be applied to non-null values of type Integer.
-    */
-   static class Big implements Predicate&lt;Integer&gt; {
-      public boolean test(Integer i) {
-         if ( i &gt; 100 )
-            return true;
-         else
-            return false;
-      }
-   } // end class Big
-
-   
    /**
     * For convenience make a Collection containing some integers.  The Collection 
     * is actually a TreeSet, but that is not relevant to the main program.
@@ -1151,8 +1090,6 @@ public class TestPredicates {
       return set;
    } // end makeSet()
 
-
-
    /**
     * Main routine tests the Predicates class by making Collections of Integers 
     * and applying the methods from the Predicates class to them.
@@ -1163,7 +1100,7 @@ public class TestPredicates {
 
       List&lt;Integer&gt; result;        // The result of applying collect() to coll.
 
-      Predicate&lt;Integer&gt; pred = new Even();  // Tests if an Integer is even.
+      Predicate&lt;Integer&gt; pred = i -> (i % 2 == 0);  // Tests if an Integer is even.
 
       coll = makeSet();
       System.out.println("Original collection: " + coll);
@@ -1184,7 +1121,7 @@ public class TestPredicates {
       System.out.println("Find first even: at index " + i);
 
 
-      pred = new Big();        // Tests if an Integer is bigger than 100.
+      pred = n -> (n > 100);        // Tests if an Integer is bigger than 100.
 
       coll = makeSet();
       System.out.println("Original collection: " + coll);
@@ -1207,6 +1144,193 @@ public class TestPredicates {
    } // end main()
 
 } // end class TestPredicates
+</prog></pre>
+</exercise-code>
+</exercise>
+
+<exercise>
+<exercise-question><p>This is a short exercise in using the stream API. 
+Suppose that the class <classname>Score</classname> is defined as</p>
+
+<pre>class ScoreInfo {
+String firstName;
+    String lastName;
+    int score;
+    Score( String lName, String fName, int s ) {
+        firstName = fName;
+        lastName = lName;
+        score = s;
+    }
+}</pre>
+
+<np>and that <code>scoreData</code> is an array of <classname>ScoreInfos</classname>
+containing information about the scores of students on a test.
+Use the stream API to do each of the following tasks:</np>
+<ul>
+<li>print the number of students (without using <code>scoreData.length</code>)</li>
+<li>print the average score for all of the students</li>
+<li>print the number of students who got an A (score greater than or equal to 90)</li>
+<li>use the <code>collect()</code> stream operation to create 
+    a <classname>List&lt;String&gt;</classname> that contains the names of students whose score was less than 70;
+    the names should be in the form first name followed by last name</li>
+<li>print the names from the <classname>List</classname> that was generated in the previous task</li>
+<li>print out the student's names and scores, ordered last name</li>
+<li>print out the student's names and scores, ordered by score</li>
+</ul>
+<np>You can put all of the code in <code>main()</code> routine and include
+<classname>ScoreInfo</classname> as a <code>static</code> nested class.
+Do not use <b>any</b> for loops or other control structures.  Do everything
+using the stream API.  For testing your code, you can use this array:</np>
+
+<pre>private static ScoreInfo[] scoreData = new ScoreInfo[] {
+        new Score("Smith","John",70),
+        new Score("Doe","Mary",85),
+        new Score("Page","Alice",82),
+        new Score("Cooper","Jill",97),
+        new Score("Flintstone","Fred",66),
+        new Score("Rubble","Barney",80),
+        new Score("Smith","Judy",48),
+        new Score("Dean","James",90),
+        new Score("Russ","Joe",55),
+        new Score("Wolfe","Bill",73),
+        new Score("Dart","Mary",54),
+        new Score("Rogers","Chris",78),
+        new Score("Toole","Pat",51),
+        new Score("Khan","Omar",93),
+        new Score("Smith","Ann",95)
+};</pre>
+</exercise-question>
+<exercise-discuss><p>In each case, to process the values from the array using the stream 
+API, we need to make a stream containing those values.  That's done by calling
+<code>Arrays.stream(scoreData)</code>.  From there, we just need to apply the
+appropriate stream operators to get the desired results.  I have added some
+comments on each of the assigned tasks to the program.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="StreamTest">import java.util.List;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+/**
+ * This program tests the stream API by doing various computations.
+ */
+public class StreamTest {
+
+    /**
+     * Data for one student about a score on a test.
+     */
+    private static class ScoreInfo {
+        String firstName;
+        String lastName;
+        int score;
+        ScoreInfo( String lName, String fName, int s ) {
+            firstName = fName;
+            lastName = lName;
+            score = s;
+        }
+    }
+    
+    /**
+     * A test array of StudentInfo that will be used to create streams.
+     */
+    private static ScoreInfo[] scoreData = new ScoreInfo[] {
+            new ScoreInfo("Smith","John",70),
+            new ScoreInfo("Doe","Mary",85),
+            new ScoreInfo("Page","Alice",82),
+            new ScoreInfo("Cooper","Jill",97),
+            new ScoreInfo("Flintstone","Fred",66),
+            new ScoreInfo("Rubble","Barney",80),
+            new ScoreInfo("Smith","Judy",48),
+            new ScoreInfo("Dean","James",90),
+            new ScoreInfo("Russ","Joe",55),
+            new ScoreInfo("Wolfe","Bill",73),
+            new ScoreInfo("Dart","Mary",54),
+            new ScoreInfo("Rogers","Chris",78),
+            new ScoreInfo("Toole","Pat",51),
+            new ScoreInfo("Khan","Omar",93),
+            new ScoreInfo("Smith","Ann",95)
+    };
+        
+    
+    public static void main(String[] args) {
+        
+        /* The number of students can be computed simply by applying
+         * the .count() operation to a stream created from the array. */
+        
+        long count = Arrays.stream(scoreData).parallel().count();
+        System.out.println("Number of students: " + count);
+        
+        /* To get the average, use the .sum() operation, and divide by count. */
+        
+        int total = Arrays.stream(scoreData).parallel()
+                              .mapToInt( s -> s.score )
+                              .sum();
+        System.out.printf("Average grade:  %1.2f%n", (double)total/count );
+        
+        /* To get the number of students who got an A, first filter the
+         * stream letting through only students who satisfy the
+         * predicate  s -> s.score >= 90.  This predicate returns true
+         * only for students whose score is greater than or equal to 90.
+         * The number is then computed by applying .count() to the 
+         * resulting stream. */
+        
+        long countA = Arrays.stream(scoreData).parallel()
+                   .filter( s -> s.score >= 90 )
+                   .count();
+        System.out.println("Number who got an A: " + countA);
+        System.out.println();
+        
+        /* To get a list of names of students who failed, first filter
+         * the stream to let through only ScoreInfo objects with score
+         * less than 70.  Since we want the names of students, we need
+         * to convert the stream of ScoreInfo objects into a stream
+         * of strings by applying a mapping operation.  Then applying
+         * .collect(Collectors.toList()) produces the List that we need. */
+
+        List&lt;String> failing = Arrays.stream(scoreData)
+                                          .filter( s -> (s.score &lt; 70) )
+                                          .map( s -> (s.firstName + " " + s.lastName) )
+                                          .collect( Collectors.toList() );
+        
+        /* Now we need to print the list, which can easily be done with
+         * a for-each loop.  However, it can also be done using .forEach()
+         * operation on a stream.  In this case, the String Consumer in the
+         * .forEach() operation is given as the method reference 
+         * System.out::println.  That is, it is the println() method in the
+         * object System.out.  This method reference is the same as writing
+         * the lambda expression  s -> System.out.println(s).  */
+        
+        System.out.println("Failing students: ");
+        failing.stream().forEach( System.out::println );
+        System.out.println();
+        
+        /* To print the data ordered by last name, apply the .sorted() operation
+         * to sort the values in the stream by last name, then use .forEach()
+         * to output the information from each ScoreInfo object in the stream. 
+         * The .sorted() operation takes a parameter that is a Comparator for
+         * comparing two values from the stream.  In this case, we just
+         * compare the lastNames from two ScoreInfo objects, using the standard
+         * compareTo() method for Strings. */
+        
+        System.out.println("Data sorted by last name:");
+        Arrays.stream(scoreData)
+             .sorted( (s1,s2) -> s1.lastName.compareTo(s2.lastName) )
+             .forEach( s -> System.out.printf(
+                                 "  %s, %s: %d%n", s.lastName, s.firstName, s.score) );
+        System.out.println();
+        
+        /* The data can be output ordered by score in the same way, using a
+         * different comparator in the .sorted() operation. */
+        
+        System.out.println("Data sorted by score:");
+        Arrays.stream(scoreData)
+             .sorted( (s1,s2) -> s1.score - s2.score )
+             .forEach( s -> System.out.printf(
+                                 "  %s, %s: %d%n", s.lastName, s.firstName, s.score) );
+        
+    }
+    
+} // end StreamTest
 </prog></pre>
 </exercise-code>
 </exercise>
@@ -1273,8 +1397,7 @@ that we have to keep track of line numbers. We can do this by looking for
 new-line characters as we skip over the characters between words. 
 While we do this, we have to be on the alert for the special character
 <code>TextIO.EOF</code> that is returned by <code>TextIO.peek()</code>
-when the end of the file is reached.  A pseudocode
-algorithm can be given as:</p>
+when the end of the file is reached.  A pseudocode algorithm can be given as:</p>
 
 <pre>Open the input files.
 
@@ -1315,7 +1438,9 @@ is called by the <code>main()</code> routine, the next character in input
 is already known to be a letter.)</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="Concordance">import java.util.Map;
+<pre><prog name="Concordance">import textio.TextIO;
+
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -1710,7 +1835,9 @@ in the symbol table as the name of a standard function:</p>
 <p><b>Changes from the program <sourceref href="SimpleInterpreter.java"/>
 are shown in &newcodestyle;.</b></p>
    
-<pre><prog name="SimpleInterpreter2">/*
+<pre><prog name="SimpleInterpreter2">import textio.TextIO;
+
+/*
     This program can evaluate expressions that can include
     numbers, variables, parentheses, and the operators +,
     -, *, /, and ^ (where ^ indicates raising to a power),

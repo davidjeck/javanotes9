@@ -1,4 +1,5 @@
 import java.util.PriorityQueue;
+import textio.TextIO;
 
 /**
  * Makes an alphabetical list of all the words in a file selected
@@ -29,7 +30,7 @@ public class WordListWithPriorityQueue {
 				System.out.println("No input file selected.  Exiting.");
 				System.exit(1);
 			}
-			PriorityQueue<String> wordList = new PriorityQueue<String>();  // The words from the file.
+			PriorityQueue<String> wordList = new PriorityQueue<>();  // The words from the file.
 			String word = readNextWord();
 			while (word != null) {  // word == null when the end of file is reached.
 				word = word.toLowerCase();  // Convert word to lower case.

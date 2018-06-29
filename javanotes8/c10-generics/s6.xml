@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes8.dtd" >
+
+<section id="generics.6" title="Introduction the Stream API">
+   
+<p><start><big>A</big>mong its new features, </start>Java 8 introduced
+a <newword>stream API</newword>, which represents a new way of
+expressing operations on collections of data.  A major motivation
+for the new approach is to make it possible for Java compiler to
+"parallelize" a computation, that is, to break it into pieces that
+can be run simultaneously on several processors.  Doing so can
+significantly speed up the computation.  <localref href="threads"/>
+will discuss parallel programming in Java using threads.  Using
+threads directly can be difficult and error-prone.  The stream
+API offers the possibility of parallelizing some kinds of
+computation automatically and safely, and it is not surprising
+that it has generated a lot of interest on those grounds.</p>
+
+<p>The classes and interfaces that define the stream API 
+are defined in package <code>java.util.stream</code>.
+<classname>Stream</classname> is an interface in that package 
+that represents streams and defines the basic operations on streams.</p>
+  
+<p>A <newword>stream</newword> is simply 
+a sequence of data values.  A stream can be created from a <classname>Collection</classname>,
+from an array, or from a variety of other data sources.
+The stream API provides a set of operators that operate on
+streams.  (The API is covered in this chapter because it makes
+extensive use of generic programming and parameterized types.)
+To perform some computation using the stream API means creating a stream to get the
+data from some source, and then applying a sequence of stream
+operations that will produce the result that you want.  Once a 
+stream has been used in this way, it cannot be reused.  Of course,
+you can usually make another stream from the same data source
+if you want to use it in another computation.</p>
+
+<p>Expressing a computation as a sequence of stream operations requires a new
+kind of thinking, and it takes some getting used to.  Let's
+start with an example.
+Suppose that <code>stringList</code> is a large <atype>ArrayList&lt;String&gt;</atype>,
+where none of the elements are <code>null</code>, and you want to know the average
+length of the strings in the list.  This can be done easily with a for-each loop:</p>
+
+<pre>int lengthSum = 0;
+for ( String str : stringList ) {
+    lengthSum = lengthSum + str.length();
+}
+double average = (double)lengthSum / stringList.size();</pre>
+
+<np>To do the same thing with the steam API, you could use:</np>
+
+<pre>int lengthSum = stringList.parallelStream()
+                          .mapToInt( str -> str.length() )
+                          .sum();
+double average = (double)lengthSum / stringList.size();</pre>
+
+<np>In this version, <code>stringList.parallelStream()</code> creates a 
+stream consisting of all the elements of the list.  The fact that it is
+a "parallelStream" makes it possible to parallelize the computation.
+The method <code>mapToInt()</code> applies a <newword>map</newword>
+operation to the stream of strings.  That is, it takes each string from
+the stream and applies a function to it; in this case, the function
+computes the length of the string, giving a value
+an <ptype>int</ptype>.  The result of the map operation is to produce
+a new stream, this time a stream of integers, consisting of all
+the outputs from the function.  The final operation, <code>sum()</code>,
+adds up all the numbers in the stream of integers and returns the
+result.</np>
+
+<p>The net result is that we've added up the lengths of
+all the streams in the list.  Because of the potential for parallelization,
+the stream version might be substantially faster than the for loop version.
+In practice, there is significant overhead involved in setting up and
+manipulating streams, so the list would have to be fairly large before
+you would see any speedup.  In fact, for small lists, the stream version
+will almost certainly take longer than the for loop.</p>
+
+<p>The stream API is complex, and I can only give a basic introduction
+to it here&mdash;but hopefully enough to convey some of its spirit.</p>
+
+
+<subsection title="Generic Functional Interfaces" id="generics.6.1">
+
+<p>Many stream operators take parameters, which are often given
+as lambda expressions.  The <code>mapToInt()</code> operator in
+the above example takes a parameter representing a function
+from <classname>String</classname> to <ptype>int</ptype>.  The
+type for that parameter is given by a parameterized functional interface,
+<atype>ToIntFunction&lt;T&gt;</atype>, from package <code>java.util.function</code>.
+This interface represents the general idea of a function that takes an
+input of type <classname>T</classname> and outputs an <ptype>int</ptype>.
+If you were to look at the definition of that interface, it would be
+something like</p>
+
+<pre>public interface ToIntFunction&lt;T&gt; {
+    public int applyAsInt( T x );
+}</pre>
+
+<np><atype>Stream&lt;T&gt;</atype> is also a parameterized interface.  In the
+example, <code>stringList</code> is of type <atype>ArrayList&lt;String&gt;</atype>,
+and the stream that is created by <code>stringList.parallelStream()</code> is
+of type <atype>Steam&lt;String&gt;</atype>.  When the <code>mapToInt()</code>
+operator is applied to that stream, it expects a parameter of type
+<atype>ToIntFunction&lt;String&gt;</atype>.  The lambda expression
+"<code>str&nbsp;-&gt;&nbsp;str.length()</code>" maps a <classname>String</classname> to an
+<ptype>int</ptype>, so it represents a value of the correct type.  Fortunately,
+you don't need to think about all of that to use the stream API: All you need to
+know is that to convert a stream of strings to a stream of integers using
+<code>mapToInt</code>, you need to provide a function that maps strings to ints.
+However, if you want to read the API documentation, you will have to deal with
+parameter types similar to <classname>ToIntFunction</classname>.</np>
+
+<p>The package <code>java.util.function</code> contains a large number of generic
+functional interfaces.  Many of them, like <classname>ToIntFunction</classname>,
+are parameterized types, and they are all generic in that they represent very
+generic functions, with no set meaning.  For example, the functional interface
+<classname>DoubleUnaryOperator</classname> represents the general idea of
+a function from <ptype>double</ptype> to <ptype>double</ptype>.  This interface
+is essentially the same as my example <classname>FunctionR2R</classname> from
+<localref href="subroutines.4a.2"/> (except for the name of the function that
+it defines, which is often irrelevant).</p>
+
+<p>The interfaces in <code>java.util.function</code> are used to specify 
+parameter types for many stream operators as well as for other built-in
+functions in the Java API, and you can certainly use them to specify
+parameter types for your own subroutines as well.  I will discuss
+some of them here.  Most of the others are variations on the ones
+that I cover.</p>
+
+<p>The general term <newword>predicate</newword> refers to a function
+whose return type is <ptype>boolean</ptype>.  The functional interface <atype>Predicate&lt;T&gt;</atype>
+defines a <ptype>boolean</ptype>-valued function <code>test(t)</code> with a
+parameter of type <classname>T</classname>.  This interface is used,
+for example, as the parameter type for the method <code>removeIf(p)</code>,
+which is defined for any <classname>Collection</classname>.  For example,
+if <code>strList</code> is of type <atype>LinkedList&lt;String&gt;</atype>,
+then you can remove all <code>null</code> values from the list simply
+by saying</p>
+
+<pre>strList.removeIf( s -> (s == null) );</pre>
+
+<np>The parameter is a <atype>Predicate&lt;String&gt;</atype> that tests
+whether its input, <code>s</code>, is <code>null</code>.  The <code>removeIf()</code>
+method removes all elements from the list for which the value of the predicate
+is <code>true</code>.</np>
+
+<p>A predicate for testing <ptype>int</ptype> values could be represented by
+the type <atype>Predicate&lt;Integer&gt;</atype>, but that introduces the 
+overhead of autoboxing every <ptype>int</ptype> in a wrapper of type
+<classname>Integer</classname>.  To avoid that overhead, the package
+<code>java.util.function</code> has the functional interface
+<classname>IntPredicate</classname>, which defines the <ptype>boolean</ptype>-valued
+function <code>test(n)</code>, where <code>n</code> is of type <ptype>int</ptype>.
+Similarly, it defines <classname>DoublePredicate</classname> and
+<classname>LongPredicate</classname>.  This is typical of how the stream
+API deals with primitive types.  For example, it defines <classname>IntStream</classname>
+to represent a stream of <ptype>ints</ptype> as a more efficient alternative
+to <atype>Stream&lt;Integer&gt;</atype>.</p>
+
+<p>The functional interface <atype>Supplier&lt;T&gt;</atype> defines a function,
+<code>get()</code> with no parameters and a return type of <classname>T</classname>.
+It represents a source of values of type <classname>T</classname>.
+There is a companion interface <atype>Consumer&lt;T&gt;</atype> that
+defines the <code>void</code> function <code>accept(t)</code> with a
+parameter of type <classname>T</classname>.  There are also specialized
+versions for primitive types, including <classname>IntSupplier</classname>,
+<classname>IntConsumer</classname>, <classname>DoubleSupplier</classname>
+and <classname>DoubleConsumer</classname>.  I will give examples of using
+suppliers and consumers below.</p>
+
+<p><atype>Function&lt;T,R&gt;</atype> represents functions from values
+of type <classname>T</classname> to values of type <classname>R</classname>.
+This functional interface defines the function <code>apply(t)</code>,
+where <code>t</code> is of type <classname>T</classname> and the
+return type is <classname>R</classname>.  The interface <atype>UnaryOperator&lt;T&gt;</atype>
+is essentially <atype>Function&lt;T,T&gt;</atype>; that is, it represents a function whose
+input and output types are the same.  Note that <classname>DoubleUnaryOperator</classname>
+is a specialized version of <atype>UnaryOperator&lt;Double&gt;</atype>, and
+of course there is also <classname>IntUnaryOperator</classname>.</p>
+
+<p>Finally, I will mention <atype>BinaryOperator&lt;T&gt;</atype>
+and its specializations such as <classname>IntBinaryOperator</classname>. The interface
+<atype>BinaryOperator&lt;T&gt;</atype> defines the function <code>apply(t1,t2)</code>
+where <code>t1</code> and <code>t2</code> are both of type <classname>T</classname>
+and the return type is also <classname>T</classname>.  Binary operators include
+things like addition of numbers or concatenation of strings.</p>
+
+</subsection>
+
+<subsection title="Making Streams" id="generics.6.2">
+
+<p>To use the stream API, you have to start by creating a stream. 
+There are many ways to make streams.</p>
+
+<p>There are two basic types of streams, <newword>sequential streams</newword>
+and <newword>parallel streams</newword>.  The difference is that 
+operations on parallel streams can, potentially, be parallelized
+while the values in a sequential stream are always processed sequentially,
+in a single process, as they would be by a <code>for</code> loop.
+(It might not be clear why sequential streams should exist, but some
+operations cannot be safely parallelized.)  It is possible to convert
+a stream from one type to the other type.  If <code>stream</code>
+is a <classname>Stream</classname>, then <code>stream.parallel()</code>
+represents the same stream of values, but converted to a parallel
+stream (if it was not already parallel).  Similarly,
+<code>stream.sequential()</code> is a sequential stream with the
+same values as <code>stream</code>.</p>
+
+<p>We have already seen that if <code>c</code> is any <classname>Collection</classname>,
+then <code>c.parallelStream()</code> is a stream whose values are the values from
+the collection.  As you might suspect, it is a parallel stream.  The method
+<code>c.stream()</code> creates a sequential stream of the same values.
+This works for any collection, including lists and sets.  You could also
+get the parallel stream by calling <code>c.stream().parallel()</code>.</p>
+
+<p>An array does not have a <code>stream()</code> method, but you can create
+a stream from an array using a <code>static</code> method in class
+<classname>Arrays</classname> from package <code>java.util.</code>  If
+<code>A</code> is an array, then</p>
+
+<pre>Arrays.stream(A)</pre>
+
+<np>is a sequential stream containing the values from the array.  (To get
+a parallel stream, use <code>Arrays.stream(A).parallel()</code>.)
+This works for arrays of objects and for arrays of the primitive types
+<ptype>int</ptype>, <ptype>double</ptype>, and <ptype>long</ptype>.
+If <code>A</code> is of type <atype>T[]</atype>, where <classname>T</classname>
+is an object type, then the stream is of type <atype>Stream&lt;T&gt;</atype>.
+If <code>A</code> is an array of <ptype>int</ptype>, the result is
+an <classname>IntStream</classname>, and similarly for <ptype>double</ptype>
+and <ptype>long</ptype>.</np>
+
+<p>Suppose <code>supplier</code> is of type <atype>Supplier&lt;T&gt;</atype>.
+It should be possible to create a stream of values of type <classname>T</classname>
+by calling <code>supplier.get()</code> over and over.  That stream
+can in fact created using</p>
+
+<pre>Stream.generate( supplier )</pre>
+
+<np>The stream is sequential and is effectively infinite.  That is, it will continue to
+produce values forever or until trying to do so produces an error.
+Similarly, <code>IntStream.generate(s)</code> will create the stream of <ptype>int</ptype> values
+from an <classname>IntSupplier</classname>, and <code>DoubleStream.generate(s)</code>
+creates a stream of <ptype>doubles</ptype>.  For example,</np>
+
+<pre>DoubleStream.generate( () -> Math.random() )</pre>
+
+<np>creates an infinite stream of random numbers.  In fact, you
+can get a similar stream of random values from a variable, <code>rand</code>, of type
+<classname>Random</classname> (see <localref href="OOP.3.1"/>):
+<code>rand.doubles()</code> is an infinite stream of random numbers in the range 0 to 1.
+If you only want a finite number of random numbers, use <code>rand.doubles(count)</code>.
+The <classname>Random</classname> class has other methods for creating streams of
+random <ptype>doubles</ptype> and <ptype>ints</ptype>.  You will find other methods
+that create streams in various standard classes.</np>
+
+<p>The <classname>IntStream</classname> interface defines a method for creating a stream
+containing a given range of integer values.  The stream</p>
+
+<pre>IntStream.range( start, end )</pre>
+
+<np>is a sequential stream containing the values <code>start</code>,
+<code>start+1</code>, &dots;, <code>end-1</code>.  Note that
+<code>end</code> is not included.</np>
+
+</subsection>
+
+
+<subsection title="Operations on Streams" id="generics.6.3">
+
+<p>Some operations on a stream produce another stream.  They are referred
+to as "intermediate operations" because you will still have to do something
+with the resulting stream to produce a final result.  "Terminal operations"
+on the other hand apply to a stream and produce a result that is not
+a stream.  The general pattern for working with streams is to create
+a stream, possibly apply a sequence of intermediate operations to it,
+and then apply a terminal operation to produce the desired final result.
+In the example at the beginning of this section, <code>mapToInt()</code>
+is an intermediate operation that converted the stream of strings into
+a stream of ints, and <code>sum()</code> is a terminal operation that 
+found the sum of the numbers in the stream of ints.</p>
+
+<p>The two most basic intermediate operations are <newword>filter</newword>
+and <newword>map</newword>. A filter applies a <classname>Predicate</classname> to a stream, and it creates a
+new stream consisting of the values from the original stream for
+which the predicate is true.  For example, if we had a <ptype>boolean</ptype>-valued function
+<code>isPrime(n)</code> that tests whehter an integer <code>n</code> is prime, then</p>
+
+<pre>IntSteam.range(2,1000).filter( n -> isPrime(n) )</pre>
+
+<np>would create a stream containing all the prime numbers in the range
+2 to 1000.  (I'm not saying this is a <i>good</i> way to produce those
+numbers!)</np>
+
+<p>A map applies a <classname>Function</classname> to each value in a stream,
+and creates a stream consisting of the output values.  For example, suppose
+that <code>strList</code> is <atype>ArrayList&lt;String&gt;</atype> and
+we would like a stream consisting of all the non-null strings in the
+list, converted to lower case:</p>
+
+<pre>strList.filter( s -> (s != null) ).map( s -> s.toLowerCase() )</pre>
+
+<np>The specializations <code>mapToInt()</code> and <code>mapToDouble()</code>
+exist to map <classname>Streams</classname> into
+<classname>IntStreams</classname> and <classname>DoubleStreams</classname>.</np>
+
+<p>Here are a few more intermediate operations on a stream, <code>S</code>, that
+can be useful:
+<code>S.limit(n)</code>, where <code>n</code> is an integer, creates a
+stream containing only the first <code>n</code> values from <code>S</code>.
+(If <code>S</code> has fewer than <code>n</code> values, then
+<code>S.limit(n)</code> is the same as&nbsp;<code>S</code>.)
+<code>S.distinct()</code> creates a stream from the values of <code>S</code>
+by omitting duplicate values, so that all the values in <code>S.distinct()</code>
+are different. And <code>S.sorted()</code> creates a stream containing the same
+values as <code>s</code>, but in sorted order; to sort items that do not
+have a natural ordering, you can provide a <classname>Comparator</classname>
+as a parameter to <code>sorted()</code>.  Note that <code>S.limit(n)</code>
+can be especially useful for truncating what would otherwise be an 
+infinite stream, such as a stream generated from a <classname>Supplier</classname>.</p>
+
+<break/>
+
+<p>To actually get anything done with a stream, you need to apply
+a terminal operation at the end.  The operator <code>forEach(c)</code>
+applies a <classname>Consumer</classname>, <code>c</code>, to each element
+of stream.  The result is not a stream, since consumers do not produce
+values.  The effect of <code>S.forEach(c)</code> on a stream <code>S</code>
+is simply to do something with each value in the stream. For example,
+we have a whole new way to print all the strings in a list of strings:</p>
+
+<pre>stringList.stream().forEach( s -> System.out.println(s) );</pre>
+
+<np>The consumer function is not guaranteed to be applied to the
+values from the stream in the same order that they occur in the
+stream. Of you want that guarantee, you can use <code>forEachOrdered(c)</code>
+instead of <code>forEach(c)</code>.</np>
+
+<p>If we want to print out only some of the strings, say those that
+have length at least 5, and if we want them in sorted order, we can apply 
+some filters:</p>
+
+<pre>stringList.stream()
+          .filter( s -> (s.length() >= 5) )
+          .sorted()
+          .forEach( s -> System.out.println(s) )</pre>
+
+<p>Some terminal operations output a single value.  For example,
+<code>S.count()</code> returns the number of values in the stream <code>S</code>.
+And for <classname>IntStreams</classname>
+and <classname>DoubleStreams</classname>, <code>sum()</code>,
+<code>min()</code>, and <code>max()</code>
+compute the total, minimum, and maximum of all the values 
+in the stream.  Suppose, for example, that you would like to
+test the random number generator by generating 10000 random
+numbers and counting how many of them asre less than&nbsp;0.5:</p>
+
+<pre>long half = DoubleStream.generate( Math::random )
+                       .limit(10000)
+                       .filter( x -> (x &lt; 0.5) )
+                       .count();</pre>
+
+<np>Note that <code>count()</code> returns a <ptype>long</ptype> rather
+than an <ptype>int</ptype>.  Also note that I've used the method reference <code>Math::random</code> here
+instead of the equivalent lambda expression "<code>()&nbsp;->&nbsp;Math.random()</code>".
+If you are having trouble reading things like this, keep in mind that the pattern
+is: Create a stream, apply some intermediate operations, apply a terminal operation.
+Here, an infinite stream of random numbers is generated by calling
+<code>Math.random()</code> over and over.  The operation <code>limit(10000)</code>
+truncates that stream to 10000 values, so that in fact only 10000 values are generated.
+The <code>filter()</code> operation only lets through numbers <code>x</code> such
+that <code>x&nbsp;&lt;&nbsp;0.5</code> is true.  And finally, <code>count()</code>
+returns the number of items in the resulting stream.</np>
+
+<p>The terminal operators <code>allMatch(p)</code> and <code>anyMatch(p)</code> take
+a predicate as parameter and compute a <ptype>boolean</ptype> value.  The value
+of <code>allMatch(p)</code> is true if the predicate, <code>p</code>, is true for
+every value in the stream to which it is applied.  The value of <code>anyMatch(p)</code> is true if
+there is at least one value in the stream for which <code>p</code> is true.  Note that
+<code>anyMatch()</code> will stop processing, and will return <code>true</code> 
+as its output, if it finds a value that satisfies the
+predicate. And <code>allMatch()</code> will stop processing if it finds a value that
+does not match the predicate.</p>
+
+<p>Many terminal operations that compute a single value can be expressed in
+terms of a more general operation, <newword>reduce</newword>.
+A reduce operation combines the values from a string using a 
+<classname>BinaryOperator</classname>.  For example, a sum is computed
+by a reduce operation in which the binary operations is addition.
+The binary operator should be associative, which means that the order
+in which the operator is applied doesn't matter.  There is no
+built-in terminal operator to compute the product of the values
+in a stream, but we can do that directly with <code>reduce</code>.
+Suppose, for example, that <code>A</code> is an array of
+<ptype>double</ptype>, and we want the product of all the
+non-zero elements in&nbsp;<code>A</code>:</p>
+
+<pre>double multiply = Arrays.stream(A).filter( x -> (x != 0) )
+                                  .reduce( 1, (x,y) -> x*y );</pre>
+                                  
+<np>The binary operator here maps a pair of number <code>(x,y)</code> to
+their product <code>x*y</code>.  The first parameter to <code>reduce()</code>
+is an "identity" for the binary operation.  That is, it is a value that
+<code>1*x = x</code> for any <code>x</code>. The maximum of a stream
+of <ptype>double</ptype> could be computed with <code>reduce()</code> by
+using <code>reduce(Double.NEGATIVE_INFINITY, (x,y) -> Math.max(x,y))</code>.</np>
+
+<p>The last major terminal operation is <code>collect(c)</code>, a very general operation
+which collects all of the values in the stream into a data structure or a single
+summary result of some type.  The parameter,
+<code>c</code> is something called a collector.  The collector will
+ordinarily be given by one of the <code>static</code> functions in the
+<classname>Collectors</classname> class.  This can get very complicated, and
+I will only give one basic example.  The function
+<code>Collectors.toList()</code> returns a <classname>Collector</classname> that can be used
+with <code>collect()</code> to put all of the values from the stream
+into a <classname>List</classname>.  For example, suppose that
+<code>A</code> is an array of non-null <classname>Strings</classname>, and
+we want a list of all the strings in <code>A</code> that begin with
+the substring "Fred":</p>
+
+<pre>List&lt;String&gt; freds = Arrays.stream(A)
+                            .filter( s -> s.startsWith("Fred") )
+                            .collect( Collectors.toList() );</pre>
+
+<np>That's actually pretty easy!</np>
+
+</subsection>
+
+
+
+<subsection title="An Experiment" id="generics.6.4">
+
+<p>None of the examples of using streams that I have given so far
+is very practical.  In most cases, a simple for loop would have been
+just as easy to write and probably more efficient.  That's especially
+true since I've mostly used sequential streams, and most of the
+examples cannot be efficiently parallelized.  (A notable exception is
+the reduce operation, which is important precisely because it
+parallelizes well.)  Let's look at an example where the
+stream API is applied to a long computation that might get
+some real speedup with parallelization.  The problem is
+to compute a Riemann sum.  This is something from Calculus,
+but you don't need to understand anything at all about what it means.  Here is a
+traditional method for computing the desired sum:</p>
+
+<pre>/**
+ * Use a basic for loop to compute a Riemann sum.
+ * @param f  The function that is to be summed.
+ * @param a  The left endpoint of the interval over which f is summed.
+ * @param b  The right endpoint.
+ * @param n  The number of subdivisions of the interval.
+ * @return   The value computed for the Riemann sum.
+ */
+private static double riemannSumWithForLoop( 
+        DoubleUnaryOperator f, double a, double b, int n) {
+    double sum = 0;
+    double dx = (b - a) / n;
+    for (int i = 0; i &lt; n; i++) {
+        double x = a + i*dx;
+        sum = sum + f.applyAsDouble(x);
+    }
+    return sum * dx;
+}</pre>
+
+<np>The first parameter is a functional interface, so we could call this method,
+for example, with</np>
+
+<pre>reimannSumWithForLoop( x -> Math.sin(x), 0, Math.PI, 10000 )</pre>
+
+<np>How can we apply the stream API to this problem?  To imitate the
+<code>for</code> loop, we can start by generating the integers
+from 0 to <code>n</code> as a stream, using <code>IntStream.range(0,n)</code>.
+This gives a sequential stream.  To enable parallelism, we have to convert
+it to a parallel stream by applying the <code>.parallel()</code>
+operation.  To compute the values that we want to sum up, we can
+we can apply a map operation that maps the stream of <ptype>ints</ptype>
+to a stream of <ptype>doubles</ptype> by mapping the integer <code>i</code> to
+<code>f.applyAsDouble(a+i*dx)</code>.  Finally, we can apply <code>sum()</code>
+as the terminal operation.  Here is version of the Riemann sum method that
+uses a parallel stream:</np>
+
+<pre>private static double riemannSumWithParallelStream( 
+        DoubleUnaryOperator f, double a, double b, int n) {
+    double dx = (b - a) / n;
+    double sum = IntStream.range(0,n)
+                          .parallel()
+                          .mapToDouble( i -> f.applyAsDouble(a + i*dx) )
+                          .sum();
+    return sum * dx;
+}</pre>
+
+<np>I also wrote a version <code>riemannSumWithSequentialStream()</code>, that
+leaves out the <code>.parallel()</code> operator.  All three versions can
+be found in the sample program <sourceref href="RiemannSumStreamExperiment.java"/>.
+The main routine in that program calls each of the three methods, using various
+values for <code>n</code>.  It times how long each method takes to compute the
+sum, and reports the result.</np>
+
+<p>As might be expected, I found that the version that uses a sequential stream is uniformly
+slower than the other versions.  The sequential stream version does essentially
+the same thing as the for loop version, but with the extra overhead involved
+with creating and manipulating streams.  The situation for parallel streams
+is more interesting, and the results depend on the machine on which the program
+is executed.  On one old machine with four processors, the for loop version
+was faster for <code>n</code> = 100,000, but the parallel version was 
+much faster for 1,000,000 items or more.  On another machine, the parallel version
+was faster for 10,000 or more items.  Note that there is a limit to how much
+faster the parallel version can be.  On a machine with K processors, the
+parallel version cannot be more than K times faster than the sequential
+version, and will probably in reality be somewhat slower than that.
+I encourage you to try out the sample program on your own computer!</p>
+
+<p>It is even conceivable (or at least this is a goal of the stream API) 
+that you have a machine on which Java can run
+parallel code on your graphics card, making use of the many processors
+that it contains.  In that happens, you might see a very large
+speedup.</p>
+
+
+</subsection>
+
+<endchapter/>
+
+</section>

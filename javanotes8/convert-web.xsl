@@ -587,16 +587,16 @@
            Sample answers to these questions can be found <a href="quiz_answers.html">here</a>.</p>
            </xsl:otherwise>
         </xsl:choose>
-        <table width="95%" cellpadding="8" align="center" border="1">
         <xsl:for-each select="question">
-           <tr class="question"><td valign="top"><span class="question">Question&#160;<xsl:number count="question"/>:</span></td>
-           <td><xsl:apply-templates select="ques"/></td></tr>
+           <div class="quiz-question"><p class="question">Question&#160;<xsl:number count="question"/>:</p>
+           <xsl:apply-templates select="ques"/>
+           </div>
            <xsl:if test="$answers">
-              <tr class="answer"><td valign="top"><span class="answer">Answer:</span></td>
-              <td><xsl:apply-templates select="ans"/></td></tr>
+              <div class="quiz-answer"><p class="answer">Answer:</p>
+              <xsl:apply-templates select="ans"/>
+              </div>
            </xsl:if>
         </xsl:for-each>
-        </table>
         </div>
         <hr/>
         <div align="right"><xsl:call-template name="quiz-navbar"><xsl:with-param name="answers" select="$answers"/></xsl:call-template></div>
