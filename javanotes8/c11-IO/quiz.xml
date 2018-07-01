@@ -5,14 +5,14 @@
    
 <question>
 <ques><p>In Java, input/output is
-done using streams. Streams are an <i>abstraction.</i> Explain what this means
+done using I/O streams. I/O streams are an <i>abstraction.</i> Explain what this means
 and why it is important.</p>
 </ques>
-<ans><p>A stream represents a source
+<ans><p>An I/O stream represents a source
 from which data can be read or a destination to which data can be written. A
 stream is an abstraction because it represents the abstract idea of a source or
 destination of data, as opposed to specific, concrete sources and destinations
-such as a particular file or network connection. The stream abstraction is
+such as a particular file or network connection. The I/O stream abstraction is
 important because it allows programmers to do input/output using the same
 methods for a wide variety of data sources and destinations. It hides the
 details of working with files, networks, and the screen and keyboard.</p>
@@ -21,8 +21,8 @@ details of working with files, networks, and the screen and keyboard.</p>
    
    
 <question>
-<ques><p>Java has two types of
-streams: character streams and byte streams. Why? What is the difference
+<ques><p>Java has two types of I/O
+stream: character streams and byte streams. Why? What is the difference
 between the two types of streams?</p>
 </ques>
 <ans><p>Character streams are for
@@ -89,10 +89,10 @@ address that it represents.</p>
 </question>
 
 <question>
-<ques><p>What is the purpose of the <classname>JFileChooser</classname>
+<ques><p>What is the purpose of the <classname>FileChooser</classname>
 class?</p>
 </ques>
-<ans><p>An object of type <classname>JFileChooser</classname> represents a
+<ans><p>An object of type <classname>FileChooser</classname> represents a
 dialog box that can be used in a GUI program to let the user select a file
 that is to be used for input or for output.</p>
 </ans>
@@ -184,10 +184,10 @@ at least ten lines. Don't bother to make the program robust.  Do not use
 <classname>TextIO</classname> to process the file; read from the file using
 methods covered in this chapter.</p>
 </ques>
-<ans><p>I will give three different solutions.  The first uses the non-standard
-<classname>TextReader</classname> class from <localref href="IO.1.4"/> to read the
-lines from the file. The other two solutions use the standard classes
-<classname>BufferedReader</classname> and <classname>Scanner</classname>.
+<ans><p>I will give three different solutions.  The first 
+two solutions use the standard classes <classname>BufferedReader</classname> 
+and <classname>Scanner</classname> in the usual way.
+The third solution uses the stream API and the <classname>BufferedReader</classname> <code>lines()</code> method.
 All of these classes make it easy to read a line of text from an input stream.</p>
 
 <p>For each program, I do everything in one big <code>try</code> statement. If
@@ -197,20 +197,22 @@ command-line argument, an <classname>IndexOutOfBoundsException</classname> will 
 when the program refers to <code>args[0]</code>. If a file is specified, but it
 doesn't exist, then a <classname>FileNotFoundException</classname> will occur. (The
 exercise says to assume that the file has at least ten lines, but if there are
-fewer than ten lines in the file, <classname>TextReader</classname> and 
-<classname>Scanner</classname> will throw an exception, while <classname>BufferedReader</classname>
-will just print a <code>null</code> for each missing line.)</p>
+fewer than ten lines in the file, the <classname>Scanner</classname> solution will
+crash, the first <classname>BufferedReader</classname>
+solution will just print a <code>null</code> for each missing line, and the
+second <classname>BufferedReader</classname> solution will stop after
+it has read all the lines that the file contains.)</p>
 
 
 <pre>import java.io.*;
-// (TextReader.class must be made available to this program.)
-public class TenLinesWithTextReader {
+import java.util.Scanner;
+public class TenLinesWithScanner {
 
    public static void main(String[] args) {
       try {
-         TextReader in = new TextReader( new FileReader(args[0]) );
-         for (int lineCt = 0; lineCt &lt; 10; lineCt++)) {
-            String line = in.getln();
+         Scanner scanner = new Scanner( new File(args[0]) );
+         for (int lineCt = 0; lineCt &lt; 10; lineCt++) {
+            String line = scanner.nextLine();
             System.out.println(line);
          }
       }
@@ -219,17 +221,17 @@ public class TenLinesWithTextReader {
       }
    }
    
-}  // end class TenLinesWithTextReader
+}  // end class TenLinesWithScanner
 
-//-----------------------------------------------------------------   
-   
+//-----------------------------------------------------------------
+
 import java.io.*;
 public class TenLinesWithBufferedReader {
 
    public static void main(String[] args) {
       try {
          BufferedReader in = new BufferedReader( new FileReader(args[0]) );
-         for (int lineCt = 0; lineCt &lt; 10; lineCt++)) {
+         for (int lineCt = 0; lineCt &lt; 10; lineCt++) {
             String line = in.readLine();
             System.out.println(line);
          }
@@ -244,23 +246,38 @@ public class TenLinesWithBufferedReader {
 //-----------------------------------------------------------------   
 
 import java.io.*;
-import java.util.Scanner;
-public class TenLinesWithScanner {
+public class TenLinesWithStreamAPI {
 
-   public static void main(String[] args) {
-      try {
-         Scanner scanner = new Scanner( new File(args[0]) );
-         for (int lineCt = 0; lineCt &lt; 10; lineCt++)) {
-            String line = scanner.nextLine();
-            System.out.println(line);
-         }
-      }
-      catch (Exception e) {
-         System.out.println("Error: " + e);
-      }
+    public static void main(String[] args) {
+	    try {
+	         BufferedReader in = new BufferedReader( new FileReader(args[0]) );
+	         in.lines()     // Make a Stream&lt;String&gt; containing lines from file.
+	           .limit(10)   // Truncate the string after at most 10 items.
+	           .forEach( s -> System.out.println(s) );  // Print each line.
+	    }
+	    catch (Exception e) {
+	        System.out.println("Error: " + e);
+	    }
    }
-   
-}  // end class TenLinesWithScanner</pre>
+} // end class TenLinesWithStreamAPI
+</pre>
+
+<np>Note: I didn't close the files that were used in any of these solutions,
+although it would have been good form to do so.  The easiest way to make sure that
+the files is closed is to use a <code>try..catch</code> statement with resources.
+For example:</np>
+
+<pre>try ( BufferedReader in = new BufferedReader(new FileReader(args[0])) ) {
+   for (int lineCt = 0; lineCt &lt; 10; lineCt++) {
+      String line = in.readLine();
+      System.out.println(line);
+   }
+}
+catch (Exception e) {
+   System.out.println("Error: " + e);
+}
+</pre>
+
 </ans>
 </question>
    

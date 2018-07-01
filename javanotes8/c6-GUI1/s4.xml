@@ -452,35 +452,14 @@ if <code>wrap</code> is false, the line will simply extend outside the text area
 the user will have to scroll the text area
 horizontally to see the entire line.  The default value of <code>wrap</code> is false.</p>
    
-
 <p>Since it might be necessary to scroll a text area to see all the text that it
-contains, you might expect a text area to come with scroll bars.  Unfortunately,
-this does not happen automatically.  To get scroll bars for a text area, you
-have to put the <classname>TextArea</classname> inside another control,
-called a <classname>ScrollPane</classname>.  This can be done as follows:</p>
-
-<pre>TextArea inputArea = new TextArea();
-ScrollPane scroller = new JcrollPane( inputArea );</pre>
-
-<np>The scroll pane provides scroll bars that can be used to scroll the text
-in the text area.  The scroll bars will appear only when needed, that is 
-when the size of the text exceeds the size of the text area.  Note that when
-you want to put the text area into a container, you should add the scroll pane,
-not the text area itself, to the container.</np>
-
-<p>When you add a text area to a scroll pane, the text area will, by default,
-have its natural size, as determined by the preferred number of rows and
-number of columns.  If the scroll pane is larger than the text area,
-the extra space will be filled with a background color.  I usually prefer
-to have the scroll pane resize the text area so that it exactly fits
-inside the scroll pane's content area.  To make that happen, call</p>
-
-<pre>scroller.setFitToWidth(true);
-scroller.setFitToHeight(true);</pre>
+contains, a <classname>TextArea</classname> comes with scroll bars.  The scroll
+bars are visible only when they are needed because the text cannot fit in the
+available space.</p>
 
 <p>See the sample program
 <sourceref href="TextInputDemo.java"/> for a short example of using a text field
-and a text area in a scroll pane.  Here is the window from that program, after
+and a text area.  Here is the window from that program, after
 the text has been edited and scrolled down a few lines:</p>
 
 <img src="TextInputDemo.png" width="550" height="263" tex="TextInputDemo.eps"

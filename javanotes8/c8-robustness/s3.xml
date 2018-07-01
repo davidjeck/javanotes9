@@ -324,21 +324,21 @@ finally {
 <np>The <code>finally</code> clause
 ensures that the network connection will definitely be closed, whether or
 not an error occurs during the communication.  The pseudocode in this
-example follows a general pattern that can be used to robustly obtain a resource, 
-use the resource, and then release the resource.</np>
+example follows a general pattern that can be used to robustly obtain a , 
+use the , and then release the .</np>
 
 <break/>
 
-<p>The pattern of obtaining a resource, then using the resource, and then releasing
-the resource is very common.  Note that the resource can only be released if no error occurred
+<p>The pattern of obtaining a , then using the , and then releasing
+the  is very common.  Note that the  can only be released if no error occurred
 while obtaining it.  And, if it was successfully obtained, then it should be
 closed whether or not an error occurs while using it.  This pattern is so common
 that it leads to one last option in the <code>try</code> statement syntax.
-With this option, you only need code to obtain the resource, and you don't need
+With this option, you only need code to obtain the , and you don't need
 to worry about releasing it.  That will happen automatically at the end of the
 <code>try</code> statement.</p>
 
-<p>In order for this to work, the resource must be represented by an object that
+<p>In order for this to work, the  must be represented by an object that
 implements an interface named <classname>AutoCloseable</classname>, which defines
 a single method named <code>close()</code>, with no parameters.  Standard Java
 classes that represent things like files and network connections already implement
@@ -346,7 +346,7 @@ classes that represent things like files and network connections already impleme
 class, which was introduced in <localref href="basics.4.6"/>.  In that section, 
 I showed how to use a Scanner to read from <code>System.in</code>.  Although
 I didn't do it in that section, it's considered good form to close a Scanner
-after using it.  Here is an example that uses the resource pattern in a 
+after using it.  Here is an example that uses the  pattern in a 
 <code>try</code> statement to make sure that the Scanner is closed automatically:</p>
 
 <pre>try( Scanner in = new Scanner(System.in) ) {
@@ -356,7 +356,7 @@ catch (Exception e) {
     // ... some error occurred while using the Scanner
 }</pre>
 
-<np>The statement that allocates the resource goes in parentheses after
+<np>The statement that allocates the  goes in parentheses after
 the word "try".  The statement must have the form of a variable declaration
 that includes an initialization of the variable.  The variable is
 local to the <code>try</code> statement.  (You can actually declare several

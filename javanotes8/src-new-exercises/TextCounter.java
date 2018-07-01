@@ -7,7 +7,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ScrollPane;
 
 
 /**
@@ -39,9 +38,6 @@ public class TextCounter extends Application {
      */ 
     public void start(Stage stage) {
 
-        /* The text area will be put into a ScrollPane to provide scroll bars for
-           the TextArea, and the scroll pane will be added to the root VBox.  */
-
         textInput = new TextArea();
         textInput.setPrefRowCount(15);
         textInput.setPrefColumnCount(30);
@@ -70,7 +66,7 @@ public class TextCounter extends Application {
 
         /* Use a VBox as the root component. */
 
-        VBox root = new VBox( 4, new ScrollPane(textInput), new BorderPane(countButton),
+        VBox root = new VBox( 4, textInput, new BorderPane(countButton),
                                   lineCountLabel, wordCountLabel, charCountLabel );
         root.setStyle("-fx-background-color: #009; -fx-border-color: #009; -fx-border-width:3px");
         

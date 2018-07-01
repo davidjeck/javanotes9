@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -14,7 +13,7 @@ import javafx.geometry.Pos;
 
 /**
  * This program simply demonstrates using a TextField
- * and a TextArea in a ScrollPane.
+ * and a TextArea.
  */
 public class TextInputDemo extends Application {
 	
@@ -52,16 +51,7 @@ public class TextInputDemo extends Application {
 		contentInput.setFont( Font.font(16) );
 		contentInput.setPrefRowCount(6);
 		contentInput.setPrefColumnCount(30);
-		
-		/* Put the TextArea in a ScrollPane that will add scroll bars when needed. 
-		 * Configure the ScrollPane to resize the TextArea when the ScrollPane is
-		 * resized; without this, the TextArea would always have its preferred
-		 * size, possibly leaving blank space around it.*/
-		
-		ScrollPane scroller = new ScrollPane(contentInput);
-		scroller.setFitToWidth(true);
-		scroller.setFitToHeight(true);
-		
+				
 		/* A button that will clear the TextArea.  It also selects all of the
 		 * text in the TextField and gives the focus to the TextField.  If the 
 		 * user just starts typing at that point, the old text will be deleted
@@ -84,11 +74,11 @@ public class TextInputDemo extends Application {
 		
 		BorderPane root = new BorderPane();
 		root.setStyle("-fx-background-color: #444444");
-		root.setCenter(scroller);  // Add the ScrollPane, not the TextArea to the container!
+		root.setCenter(contentInput); 
 		root.setTop(titleInput);
 		root.setBottom(clearButton);
 		BorderPane.setAlignment(clearButton, Pos.CENTER); // Put button in center, not at left.
-		BorderPane.setMargin(scroller, new Insets(2));  // Set margins around scroller, titleInput
+		BorderPane.setMargin(contentInput, new Insets(2));  // Set margins around components
 		BorderPane.setMargin(titleInput, new Insets(2,2,0,2));
 		
 		/* And the scene to the window and make it visible. */

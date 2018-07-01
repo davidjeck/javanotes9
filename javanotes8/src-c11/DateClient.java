@@ -12,7 +12,7 @@ import java.io.*;
  * line of text from the connection and then closes the
  * connection.  It displays the text that it read on
  * standard output.  This program is meant to be used with
- * the server program, DataServer, which sends the current
+ * the server program, DateServer, which sends the current
  * date and time on the computer where the server is running.
  */
 

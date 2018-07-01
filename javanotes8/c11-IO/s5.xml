@@ -64,9 +64,9 @@ rules, but the basic ideas are similar.  Here is a short, well-formed XML docume
    
 <pre>&lt;?xml version="1.0"?&gt;
 &lt;simplepaint version="1.0"&gt;
-   &lt;background red='255' green='153' blue='51'/&gt;
+   &lt;background red='1' green='0.6' blue='0.2'/&gt;
    &lt;curve&gt;
-      &lt;color red='0' green='0' blue='255'/&gt;
+      &lt;color red='0' green='0' blue='1'/&gt;
       &lt;symmetric&gt;false&lt;/symmetric&gt;
       &lt;point x='83' y='96'/&gt;
       &lt;point x='116' y='149'/&gt;
@@ -78,7 +78,7 @@ rules, but the basic ideas are similar.  Here is a short, well-formed XML docume
       &lt;point x='400' y='543'/&gt;
    &lt;/curve&gt;
    &lt;curve&gt;
-      &lt;color red='255' green='255' blue='255'/&gt;
+      &lt;color red='1' green='1' blue='1'/&gt;
       &lt;symmetric&gt;true&lt;/symmetric&gt;
       &lt;point x='54' y='305'/&gt;
       &lt;point x='79' y='289'/&gt;
@@ -114,7 +114,7 @@ A document can also include a few other things, such as comments, that I
 will not discuss here.</p>
      
 <p>The author of a well-formed XML document gets to choose the tag names
-and attribute names, and meaningful names can be chosen to descibe the
+and attribute names, and meaningful names can be chosen to describe the
 data to a human reader.  (For a valid XML document
 that uses a DTD, it's the author of the DTD who gets to choose the tag names.)</p>
    
@@ -156,31 +156,30 @@ We'll look at another version of that program that can save
 the user's drawing using an XML format for the data file.
 The new version is <sourceref href="SimplePaintWithXML.java"/>
 The sample XML document shown earlier in this section
-was produced by this program.  I designed the format of that document
+can be used with that program.  I designed the format of that document
 to represent all the data needed to reconstruct a picture in
 <code>SimplePaint</code>.  The document encodes the background color
 of the picture and a list of curves.  Each <code>&lt;curve&gt;</code>
 element contains the data from one object of type <classname>CurveData</classname>.</p>
    
 <p>It is easy enough to write data in a customized XML format, although we
-have to be very careful to follow all the syntax rules.  Here is how I
-write the data for a <code>SimplePaint</code> picture to a
+have to be very careful to follow all the syntax rules.  Here is how <code>SimplePaintWithXML</code>
+writes the data for a <code>SimplePaint</code> picture to a
 <classname>PrintWriter</classname>, <code>out</code>.  This produces
 an XML file with the same structure as the example shown above:</p>
    
 <pre>out.println("&lt;?xml version=\"1.0\"?&gt;");
 out.println("&lt;simplepaint version=\"1.0\"&gt;");
-Color bgColor = getBackground();
-out.println("   &lt;background red='" + bgColor.getRed() + "' green='" +
-      bgColor.getGreen() + "' blue='" + bgColor.getBlue() + "'/&gt;");
+out.println("   &lt;background red='" + backgroundColor.getRed() + "' green='" +
+        backgroundColor.getGreen() + "' blue='" + backgroundColor.getBlue() + "'/&gt;");
 for (CurveData c : curves) {
-   out.println("   &lt;curve&gt;");
-   out.println("      &lt;color red='" + c.color.getRed() + "' green='" +
-         c.color.getGreen() + "' blue='" + c.color.getBlue() + "'/&gt;");
-   out.println("      &lt;symmetric&gt;" + c.symmetric + "&lt;/symmetric&gt;");
-   for (Point pt : c.points)
-      out.println("      &lt;point x='" + pt.x + "' y='" + pt.y + "'/&gt;");
-   out.println("   &lt;/curve&gt;");
+    out.println("   &lt;curve&gt;");
+    out.println("      &lt;color red='" + c.color.getRed() + "' green='" +
+            c.color.getGreen() + "' blue='" + c.color.getBlue() + "'/&gt;");
+    out.println("      &lt;symmetric&gt;" + c.symmetric + "&lt;/symmetric&gt;");
+    for (Point2D pt : c.points)
+        out.println("      &lt;point x='" + pt.getX() + "' y='" + pt.getY() + "'/&gt;");
+    out.println("   &lt;/curve&gt;");
 }
 out.println("&lt;/simplepaint&gt;");</pre>
    
@@ -214,7 +213,7 @@ to read the XML from the input box and build a DOM representation of that
 document.  If the input is not well-formed XML, an error message is displayed.
 If it is legal, the program will traverse the DOM representation and
 display a list of elements, attributes, and textual content that it
-encounters.  The program uses a few techniques that I won't discuss here.)</p>
+encounters.  The program uses a few techniques for processing XML that I won't discuss here.)</p>
 
 <p>In Java, the DOM representation of an XML document file can be created
 with just two statements.  If <code>selectedFile</code> is a variable of
@@ -318,7 +317,7 @@ DOM representations.  Let's look at a few code fragments.  Suppose that
 in the course of processing a document you come across an <classname>Element</classname>
 node that represents the element</p>
    
-<pre>&lt;background red='255' green='153' blue='51'/&gt;</pre>
+<pre>&lt;background red='1' green='0.6' blue='0.2'/&gt;</pre>
    
 <np>This element might be encountered either while traversing the
 document with <code>getChildNodes()</code> or in the result of
@@ -329,10 +328,10 @@ case, the element represents a color, and the red, green, and blue components
 are given by the attributes of the element.  If <code>element</code> is a variable
 that refers to the node, the color can be obtained by saying:</np>
    
-<pre>int r = Integer.parseInt( element.getAttribute("red") );
-int g = Integer.parseInt( element.getAttribute("green") );
-int b = Integer.parseInt( element.getAttribute("blue") );
-Color bgColor = new Color(r,g,b);</pre>
+<pre>double r = Double.parseDouble( element.getAttribute("red") );
+double g = Double.parseDouble( element.getAttribute("green") );
+double b = Double.parseDouble( element.getAttribute("blue") );
+Color bgColor = Color.color(r,g,b);</pre>
    
 <np>Suppose now that <code>element</code> refers to the node that represents
 the element</np>
@@ -351,7 +350,7 @@ else
    symmetric = false;</pre>
    
 <np>Next, consider an example that uses a <classname>NodeList</classname>.
-Suppose we encounter an element that represents a list of <classname>Points</classname>:
+Suppose we encounter an element that represents a list of <classname>Point2D</classname>:
 </np>
    
 <pre>&lt;pointlist&gt;
@@ -363,11 +362,11 @@ Suppose we encounter an element that represents a list of <classname>Points</cla
    
 <np>Suppose that <code>element</code> refers to the node that represents
 the <code>&lt;pointlist&gt;</code> element.  Our goal is to build the list
-of type <code>ArrayList&lt;Point&gt;</code> that is represented by the
+of type <code>ArrayList&lt;Point2D&gt;</code> that is represented by the
 element.  We can do this by traversing the <classname>NodeList</classname>
 that contains the child nodes of <code>element</code>:</np>
    
-<pre>ArrayList&lt;Point&gt; points = new ArrayList&lt;Point&gt;();
+<pre>ArrayList&lt;Point2D&gt; points = new ArrayList&lt;&gt;();
 NodeList children = element.getChildNodes();
 for (int i = 0; i &lt; children.getLength(); i++) {
    Node child = children.item(i);   // One of the child nodes of element.
@@ -375,8 +374,8 @@ for (int i = 0; i &lt; children.getLength(); i++) {
       Element pointElement = (Element)child;  // One of the &lt;point&gt; elements.
       int x = Integer.parseInt( pointElement.getAttribute("x") );
       int y = Integer.parseInt( pointElement.getAttribute("y") );
-      Point pt = new Point(x,y); // Create the Point represented by pointElement.
-      points.add(pt);            // Add the point to the list of points.
+      Point2D pt = new Point2D(x,y); // Create the Point represented by pointElement.
+      points.add(pt);  // Add the point to the list of points.
    }
 }</pre>
    
@@ -394,65 +393,60 @@ traverse the DOM representation of the file.  It's not a trivial process,
 but I hope that you can follow it:</p>
 
 <pre>Color newBackground = Color.WHITE;
-ArrayList&lt;CurveData&gt; newCurves = new ArrayList&lt;CurveData&gt;();
-
+ArrayList&lt;CurveData> newCurves = new ArrayList&lt;>();
 Element rootElement = xmldoc.getDocumentElement();
-   
 if ( ! rootElement.getNodeName().equals("simplepaint") )
-   throw new Exception("File is not a SimplePaint file.");
+    throw new Exception("File is not a SimplePaint file.");
 String version = rootElement.getAttribute("version");
 try {
-   double versionNumber = Double.parseDouble(version);
-   if (versionNumber &gt; 1.0)
-      throw new Exception("File requires a newer version of SimplePaint.");
+    double versionNumber = Double.parseDouble(version);
+    if (versionNumber > 1.0)
+        throw new Exception("File requires a newer version of SimplePaint.");
 }
 catch (NumberFormatException e) {
 }
-
 NodeList nodes = rootElement.getChildNodes();
-   
 for (int i = 0; i &lt; nodes.getLength(); i++) {
    if (nodes.item(i) instanceof Element) {
       Element element = (Element)nodes.item(i);
-      if (element.getTagName().equals("background")) { // Read background color.
-         int r = Integer.parseInt(element.getAttribute("red"));
-         int g = Integer.parseInt(element.getAttribute("green"));
-         int b = Integer.parseInt(element.getAttribute("blue"));
-         newBackground = new Color(r,g,b);
+      if (element.getTagName().equals("background")) {
+         double r = Double.parseDouble(element.getAttribute("red"));
+         double g = Double.parseDouble(element.getAttribute("green"));
+         double b = Double.parseDouble(element.getAttribute("blue"));
+         newBackground = Color.color(r,g,b);
       }
-      else if (element.getTagName().equals("curve")) { // Read data for a curve.
+      else if (element.getTagName().equals("curve")) {
          CurveData curve = new CurveData();
          curve.color = Color.BLACK;
-         curve.points = new ArrayList&lt;Point&gt;();
-         newCurves.add(curve);  // Add this curve to the new list of curves.
+         curve.points = new ArrayList&lt;>();
+         newCurves.add(curve);
          NodeList curveNodes = element.getChildNodes();
          for (int j = 0; j &lt; curveNodes.getLength(); j++) {
-            if (curveNodes.item(j) instanceof Element) {
-               Element curveElement = (Element)curveNodes.item(j);
-               if (curveElement.getTagName().equals("color")) { 
-                  int r = Integer.parseInt(curveElement.getAttribute("red"));
-                  int g = Integer.parseInt(curveElement.getAttribute("green"));
-                  int b = Integer.parseInt(curveElement.getAttribute("blue"));
-                  curve.color = new Color(r,g,b);
-               }
-               else if (curveElement.getTagName().equals("point")) {
-                  int x = Integer.parseInt(curveElement.getAttribute("x"));
-                  int y = Integer.parseInt(curveElement.getAttribute("y"));
-                  curve.points.add(new Point(x,y));
-               }
-               else if (curveElement.getTagName().equals("symmetric")) {
-                  String content = curveElement.getTextContent();
-                  if (content.equals("true"))
-                     curve.symmetric = true;
-               }
-            }
+           if (curveNodes.item(j) instanceof Element) {
+             Element curveElement = (Element)curveNodes.item(j);
+             if (curveElement.getTagName().equals("color")) {
+               double r = Double.parseDouble(curveElement.getAttribute("red"));
+               double g = Double.parseDouble(curveElement.getAttribute("green"));
+               double b = Double.parseDouble(curveElement.getAttribute("blue"));
+               curve.color = Color.color(r,g,b);
+             }
+             else if (curveElement.getTagName().equals("point")) {
+               double x = Double.parseDouble(curveElement.getAttribute("x"));
+               double y = Double.parseDouble(curveElement.getAttribute("y"));
+               curve.points.add(new Point2D(x,y));
+             }
+             else if (curveElement.getTagName().equals("symmetric")) {
+               String content = curveElement.getTextContent();
+               if (content.equals("true"))
+                 curve.symmetric = true;
+             }
+           }
          }
       }
-   }
+   }         
 }
-curves = newCurves;  // Change picture in window to show the data from file.
-setBackground(newBackground);
-repaint();</pre>
+backgroundColor = newBackground;
+curves = newCurves;</pre>
 
 <np>You can find the complete source code in <sourceref href="SimplePaintWithXML.java"/>.</np> 
 

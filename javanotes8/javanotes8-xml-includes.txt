@@ -128,7 +128,7 @@
 </chapter>
 
 
-<chapter id="IO" title="Advanced Input/Output:&textitlebreak; Streams, Files, and Networking" shorttitle="Streams, Files, and Networking">
+<chapter id="IO" title="Advanced Input/Output:&textitlebreak; I/O Streams, Files, and Networking" shorttitle="I/O Streams, Files, and Networking">
    &IO_intro;
    &IO_s1;
    &IO_s2;

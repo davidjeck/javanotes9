@@ -2185,10 +2185,7 @@ lines is just the number of new line characters in the <classname>String</classn
 one. Words are a little harder to count. <localref href="control.ex.4"/> 
 has some advice about finding the
 words in a <classname>String</classname>. Essentially, you want to count the number of
-characters that are first characters in words. Don't forget to put your
-<classname>TextArea</classname> in a <classname>ScrollPane</classname>,
-and add the scroll pane to the container, not the text area. Scrollbars should appear when the
-user types more text than will fit in the available area. Here is a picture of my solution:</p>
+characters that are first characters in words.  Here is a picture of my solution:</p>
 <img src="text-count.png" width="342" height="346" alt="TextCounter program showing some text and the numbers of words, lines and chars"
       tex="text-count.eps" texscale="0.6"/>
 </exercise-question>
@@ -2243,15 +2240,15 @@ method:</p>
 
     /* Use a VBox as the root component. */
 
-    VBox root = new VBox( 4, new ScrollPane(textInput), new BorderPane(countButton),
+    VBox root = new VBox( 4, textInput, new BorderPane(countButton),
                               lineCountLabel, wordCountLabel, charCountLabel );
     root.setStyle(
         "-fx-background-color: #009; -fx-border-color: #009; -fx-border-width:3px" );</pre>
 
 <np>The first parameter to the <classname>VBox</classname> constructor is the spacing
 between components, and the remaining parameter are added as child nodes of the
-<classname>VBox</classname>. Note that both <code>textInput</code> and
-<code>countButton</code> are wrapped in panes which are then added to the
+<classname>VBox</classname>. Note that both
+<code>countButton</code> IS wrapped in a pane which is then added to the
 <classname>VBox</classname>.</np>
 
 <p>The <code>ActionEvent</code> handler for the button calls the 
@@ -2325,7 +2322,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ScrollPane;
 
 
 /**
@@ -2357,9 +2353,6 @@ public class TextCounter extends Application {
      */ 
     public void start(Stage stage) {
 
-        /* The text area will be put into a ScrollPane to provide scroll bars for
-           the TextArea, and the scroll pane will be added to the root VBox.  */
-
         textInput = new TextArea();
         textInput.setPrefRowCount(15);
         textInput.setPrefColumnCount(30);
@@ -2388,7 +2381,7 @@ public class TextCounter extends Application {
 
         /* Use a VBox as the root component. */
 
-        VBox root = new VBox( 4, new ScrollPane(textInput), new BorderPane(countButton),
+        VBox root = new VBox( 4, textInput, new BorderPane(countButton),
                                   lineCountLabel, wordCountLabel, charCountLabel );
         root.setStyle("-fx-background-color: #009; -fx-border-color: #009; -fx-border-width:3px");
         

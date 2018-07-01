@@ -1,10 +1,15 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Reads numbers from a file named data.dat and writes them to a file
  * named result.dat in reverse order.  The input file should contain
  * exactly one real number per line.
+ *    This version of the ReverseFile program uses try-with-resource
+ * statements to safely open and close the Scanner that is used to
+ * read the data and the PrintWriter that is used to
+ * write the data.
  */
 public class ReverseFileWithResources {
 
@@ -16,22 +21,17 @@ public class ReverseFileWithResources {
 		
 		// Read the data from the input file.
 
-		try( TextReader data = new TextReader(new FileReader("data.dat")) ) {
+		try( Scanner data = new Scanner(new File("data.dat")) ) {
 			// Read numbers, adding them to the ArrayList.
-			while ( data.eof() == false ) {  // Read until end-of-file.
-				double inputNumber = data.getlnDouble();
+			while ( data.hasNextDouble() ) {  // Read until end-of-file.
+				double inputNumber = data.nextDouble();
 				numbers.add( inputNumber );
 			}
 		}
 		catch (FileNotFoundException e) {
-			    // Can only be caused by the TextReader constructor
+			    // Can be caused if file does not exist or can't be read.
 			System.out.println("Can't open input file data.dat!");
 			System.out.println("Error: " + e);
-		    return;  // Return from main(), since an error has occurred.
-		}
-		catch (IOException e) {
-			    // Can occur when the TextReader tries to read a number.
-			System.out.println("Error while reading from file: " + e);
 		    return;  // Return from main(), since an error has occurred.
 		}
 		

@@ -22,8 +22,8 @@ capability that is used by a Web browser when it downloads pages for you to
 view. The main classes for this style of networking are <code>java.net.URL</code>
 and <code>java.net.URLConnection</code>. An object of type <classname>URL</classname> is an
 abstract representation of a <newword>Universal Resource Locator</newword>, 
-which is an address for an HTML document or other resource on
-the Web.  A <classname>URLConnection</classname> represents a network connection to such a
+which is an address for an HTML document or other resource.
+A <classname>URLConnection</classname> represents a network connection to such a
 resource.</p>
 
 <p>The second style of I/O, which is more general and more important,
@@ -53,7 +53,8 @@ Every resource has an address, which identifies it uniquely and contains enough
 information for a Web browser to find the resource on the network and retrieve
 it. The address is called a "url" or "universal resource locator."
 (URLs can actually refer to resources from other sources besides the web;
-after all, they are "universal".)</p>
+after all, they are "universal."  For example, they can represent files on
+your computer.)</p>
 
 <p>An object belonging to the <classname>URL</classname> class represents such an address.
 Once you have a <classname>URL</classname> object, you can use it to open a
@@ -170,7 +171,7 @@ program to decide what to do when an error occurs.</p>
 <np>A complete program that uses this subroutine can be found in the file
 <sourceref href="FetchURL.java"/>.  When you run the program, you can specify 
 the URL on the command line; if not, you will be prompted to enter the URL.
-For this program, a URL can begin with "http://" for a URL that refers to
+For this program, a URL can begin with "http://" or "https://" for a URL that refers to
 a resource on the web, with "file://" for a URL that refers to a file on
 your computer, or with "ftp://" for a URL that uses the "File Transfer Protocol."
 If it does not start with any of these, then "http://" is added to the start
@@ -223,9 +224,9 @@ service, and the client gets access to that service by connecting to the
 server. This is called the <newword>client/server model</newword> of
 network communication. In many actual applications, a server program can
 provide connections to several clients at the same time. When a client connects
-to a server's listening socket, that socket does not stop listening. Instead,
+to a server's listening socket in server of that type, that socket does not stop listening. Instead,
 it continues listening for additional client connections at the same time that
-the first client is being serviced. To do this, it is necessary to use
+the first client is being serviced. To do that, it is necessary to use
 threads. We'll look at how it works in the <localref href="threads">next chapter</localref>.</p>
 
 <p>The <classname>URL</classname> class that was discussed at the beginning of this section
@@ -247,7 +248,7 @@ can also be referred to by <newword>domain names</newword> such as
 math.hws.edu or www.whitehouse.gov. (See <localref href="overview.7"/>.)
 Traditional (or <newword>IPv4</newword>) IP addresses are 32-bit integers.  
 They are usually written
-in the so-called "dotted decimal" form, such as <code>64.89.144.135</code>, 
+in the so-called "dotted decimal" form, such as <code>64.89.144.237</code>, 
 where each of the four numbers in the address represents an 8-bit 
 integer in the range 0 through 255.  A new version of the Internet Protocol, 
 <newword>IPv6</newword>, is currently being introduced.
@@ -318,8 +319,8 @@ constructor is</p>
    
 <np>The port number must be in the range 0 through 65535, and should generally
 be greater than 1024.   The constructor might throw a <classname>SecurityException</classname>
-if a smaller port number is specified.  An <classname>IOException</classname> can
-occur if, for example, the specified port number is already in use.
+if a port number smaller than 1024 is specified.  An <classname>IOException</classname> can
+also occur if, for example, the specified port number is already in use.
 (A parameter value of 0 in this method tells the server socket to listen on any
 available port.)</np>
 
@@ -413,7 +414,7 @@ void doClientConnection(String computerName, int serverPort) {
 you think it sounded hard, then it's even harder.) If networks were completely
 reliable, things would be almost as easy as I've described. The problem,
 though, is to write robust programs that can deal with network and human error.
-I won't go into detail here.  However, what I've covered here
+I won't go into detail.  However, what I've covered here
 should give you the basic ideas of network programming, and it is enough to
 write some simple network applications.  Let's look at a few working examples of client/server
 programming.</p>
@@ -453,7 +454,7 @@ import java.io.*;
  * line of text from the connection and then closes the
  * connection.  It displays the text that it read on
  * standard output.  This program is meant to be used with
- * the server program, DataServer, which sends the current
+ * the server program, DateServer, which sends the current
  * date and time on the computer where the server is running.
  */
 public class DateClient {
@@ -510,7 +511,8 @@ generated when the connection is opened or closed and when data is read
 from the input stream. The connection's input stream is wrapped
 in a <classname>BufferedReader</classname>,
 which has a <code>readLine()</code> method that makes it easy to read
-one line of text.  (See <localref href="IO.1.4"/>.)</p>
+one line of text.  If that method returns <code>null</code>, it probably
+means that the server closed the connection without sending any data.</p>
 
 <p>In order for this program to run without error, the server program must be
 running on the computer to which the client tries to connect. By the way, it's
@@ -635,7 +637,7 @@ method is available in every output stream class. Calling it ensures that data
 that has been written to the stream is actually sent to its destination. You
 should generally call this function every time you use an output stream to send data over
 a network connection. If you don't do so, it's possible that the stream will
-collect data until it has a large batch of data to send. This is done for
+collect data until it has a reasonably large batch of data to send. This is done for
 efficiency, but it can impose unacceptable delays when the client is waiting
 for the transmission. It is even possible that some of the data might remain
 untransmitted when the socket is closed, so it is especially important to call
@@ -652,7 +654,7 @@ network application will work on some types of computers but not on others.</p>
 client reads it. It's also possible to have two-way communication between
 client and server. As a first example, we'll look at a client and server that
 allow a user on each end of the connection to send messages to the other user.
-The program works in a command-line interface where the users type in their
+The program works in a command-line environment where the users type in their
 messages. In this example, the server waits for a connection from a single
 client and then closes down its listener so that no other clients can connect.
 After the client and server are connected, both ends of the connection work in
@@ -853,9 +855,9 @@ be shut down.</p>
 can use two command-line windows. In one, give the command "<code>java CLChatServer</code>"
 to start the server. Then, in the other, use the command "<code>java CLChatClient
 localhost</code>" to connect to the server that is running on the same machine.
-Note that if you run <classname>CLChatClient</classname> without specifying a
-computer on the command line, then you will be asked to type in the name or
-IP address of the server computer.</p>
+If the server is not listening on the default port, you can add the port number
+as a second command line option to the program.  If you don not specify the
+connection information on the command line, you will will be asked to enter it.</p>
    
 
 </subsection>

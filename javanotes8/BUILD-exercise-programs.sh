@@ -40,12 +40,12 @@ if  $XALAN_COMMAND -xsl convert-exercise-progs.xsl -in javanotes8.xml ; then
    cp src-c5/Deck.java src-c5/Hand.java src-c5/BlackjackHand.java src-c5/Card.java src-c6/cards.png exercise-programs/chapter6
    cp exercise-programs/chapter5/StatCalc.java exercise-programs/chapter6/StatCalc.java
    cp src-c8/Expr.java exercise-programs/chapter8
-   cp src-c11/TextReader.java exercise-programs/chapter11
    mkdir exercise-programs/chapter12/netgame
    cp -r src-c12/netgame/common exercise-programs/chapter12/netgame
    mkdir exercise-programs/chapter12/netgame/newchat
    mv exercise-programs/chapter12/*Message*.java exercise-programs/chapter12/*Chat*.java exercise-programs/chapter12/netgame/newchat
    rm -r exercise-programs/chapter6/textio
+   rm -r exercise-programs/chapter11/textio
    rm -r exercise-programs/chapter13/textio
    
    cp README-exercise-solutions.txt exercise-programs

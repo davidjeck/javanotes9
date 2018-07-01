@@ -1,8 +1,15 @@
-import java.awt.*;
-import java.awt.event.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.Priority;
+import javafx.geometry.Pos;
+
 import java.io.StringReader;
 
-import javax.swing.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
@@ -19,26 +26,19 @@ import org.xml.sax.InputSource;
  * 
  * This class has a main() routine, so it can be run as a stand-alone application.
  */
-public class XMLDemo extends JPanel {
+public class XMLDemo extends Application {
 
 	public static void main(String[] args) {
-		JFrame window = new JFrame("XMLDemo");
-		window.setContentPane(new XMLDemo());
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.pack();
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		if (window.getHeight() > screen.height-100)
-			window.setSize(window.getWidth(), screen.height-100);
-		window.setLocation(100,60);
-		window.setVisible(true);
+		launch(args);
 	}
+	//----------------------------------------------------------
 
 	private final static String initialInput = 
 			        "<?xml version=\"1.0\"?>\n" +
 					"<simplepaint version=\"1.0\">\n" +
-					"   <background red='255' green='153' blue='51'/>\n" +
+					"   <background red='1' green='0.6' blue='0.2'/>\n" +
 					"   <curve>\n" +
-					"      <color red='0' green='0' blue='255'/>\n" +
+					"      <color red='0' green='0' blue='1'/>\n" +
 					"      <symmetric>false</symmetric>\n" +
 					"      <point x='83' y='96'/>\n" +
 					"      <point x='116' y='149'/>\n" +
@@ -50,7 +50,7 @@ public class XMLDemo extends JPanel {
 					"      <point x='400' y='543'/>\n" +
 					"   </curve>\n" +
 					"   <curve>\n" +
-					"      <color red='255' green='255' blue='255'/>\n" +
+					"      <color red='1' green='1' blue='1'/>\n" +
 					"      <symmetric>true</symmetric>\n" +
 					"      <point x='54' y='305'/>\n" +
 					"      <point x='79' y='289'/>\n" +
@@ -62,55 +62,44 @@ public class XMLDemo extends JPanel {
 					"</simplepaint>\n";
 
 
-	private JTextArea input;
-	private JTextArea output;
+	private TextArea input;
+	private TextArea output;
 
-	public XMLDemo() {
-		setLayout(new BorderLayout(3,3));
-		setPreferredSize(new Dimension(600,800));
-		setBackground(Color.GRAY);
-		setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
-		JPanel buttonBar = new JPanel();
-		add(buttonBar,BorderLayout.SOUTH);
-		JPanel mainPanel = new JPanel();
-		mainPanel.setBackground(Color.GRAY);
-		mainPanel.setLayout(new GridLayout(2,1,3,3));
-		add(mainPanel,BorderLayout.CENTER);
-		input = new JTextArea(initialInput);
-		input.setLineWrap(false);
-		input.setMargin(new Insets(3,3,3,3));
-		mainPanel.add(new JScrollPane(input));
-		output = new JTextArea();
-		output.setLineWrap(true);
-		output.setWrapStyleWord(true);
-		output.setMargin(new Insets(3,3,3,3));
-		output.setEditable(false);
-		mainPanel.add(new JScrollPane(output));
-		JButton clearButton = new JButton("Clear");
-		clearButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				input.setText("");
-				output.setText("");
-				input.requestFocus();
-			}
+	public void start(Stage stage) {
+		
+		input = new TextArea(initialInput);
+		input.setPrefRowCount(15);
+		
+		output = new TextArea();
+		output.setPrefRowCount(15);
+		
+		Button parseButton = new Button("Parse XML Input");
+		parseButton.setOnAction( e -> doParse() );
+		Button clearButton = new Button("Clear");
+		clearButton.setOnAction( e -> {
+			input.setText("");
+			output.setText("");
+			input.requestFocus();
+		} );
+		Button restoreButton = new Button("Restore Initial Input");
+		restoreButton.setOnAction( e -> {
+			input.setText(initialInput);
+			output.setText("");
+			input.requestFocus();
 		});
-		buttonBar.add(clearButton);
-		JButton restoreButton = new JButton("Restore Initial Input");
-		restoreButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				input.setText(initialInput);
-				input.setCaretPosition(0);
-				input.requestFocus();
-			}
-		});
-		buttonBar.add(restoreButton);
-		JButton parseButton = new JButton("Parse XML Input");
-		parseButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				doParse();
-			}
-		});
-		buttonBar.add(parseButton);
+		
+		HBox buttons = new HBox(5, parseButton, clearButton, restoreButton);
+		buttons.setAlignment(Pos.CENTER);
+		
+		VBox root = new VBox(5, input, buttons, output);
+		VBox.setVgrow(input, Priority.ALWAYS);
+		VBox.setVgrow(output, Priority.ALWAYS);
+		root.setStyle("-fx-border-width:5px; -fx-border-color: gray; -fx-background-color:gray");
+		
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("XML Demo");
+		stage.show();
 	}
 
 
@@ -136,8 +125,8 @@ public class XMLDemo extends JPanel {
 			output.setText("ERROR:  The input is not well-formed XML.\n\n" + e);
 			return;
 		}
-		output.append("Input has been parsed successfully.\n");
-		output.append("Nodes in the DOM representation:\n\n");
+		output.appendText("Input has been parsed successfully.\n");
+		output.appendText("Nodes in the DOM representation:\n\n");
 		Element root = xmldoc.getDocumentElement();
 		listNodes(root,"",1);
 	}
@@ -153,11 +142,11 @@ public class XMLDemo extends JPanel {
 	 *    Gives the level of nesting of node within the root element of the document.
 	 */
 	private void listNodes(Element node, String indent, int level) {
-		output.append(indent + level + ". Element named:  " + node.getTagName() + '\n');
+		output.appendText(indent + level + ". Element named:  " + node.getTagName() + '\n');
 		NamedNodeMap attributes = node.getAttributes();
 		for (int i = 0; i < attributes.getLength(); i++) {
 			Attr attribute = (Attr)attributes.item(i);
-			output.append(indent + "         with attribute named: " + attribute.getName()
+			output.appendText(indent + "         with attribute named: " + attribute.getName()
 					+ ",  value:  " + attribute.getValue() + '\n');
 		}
 		indent += "   ";
@@ -173,10 +162,10 @@ public class XMLDemo extends JPanel {
 				String text = child.getTextContent();
 				text = text.trim();
 				if (text.length() > 0)
-					output.append(prefix + "Text node containing:  " + text + '\n');
+					output.appendText(prefix + "Text node containing:  " + text + '\n');
 			}
 			else 
-				output.append(prefix + "(Some other type of node.)\n");
+				output.appendText(prefix + "(Some other type of node.)\n");
 		}
 	}
 

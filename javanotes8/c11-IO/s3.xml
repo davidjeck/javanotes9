@@ -22,8 +22,8 @@ using <classname>TextIO</classname>.  The example in this section will
 work for any file.</p>
 
 <p>Since the program should be able to copy any file, we can't assume that the
-data in the file is in human-readable form. So, we have to use byte streams
-<classname>InputStream</classname> and <classname>OutputStream</classname> 
+data in the file is in human-readable form. So, we have to use the byte streams,
+<classname>InputStream</classname> and <classname>OutputStream</classname>,
 to operate on the file.  The program simply copies all the
 data from the <classname>InputStream</classname> to the <classname>OutputStream</classname>, one byte at a
 time. If <code>source</code> is the variable that refers to the
@@ -183,19 +183,26 @@ public class CopyFile {
    
 } // end class CopyFile</pre>
 
-<np>It is not terribly efficient to copy one byte at a time.  Efficiency could
+<np>It is actually quite inefficient to copy one byte at a time.  Efficiency could
 be improved by using alternative versions of the <code>read()</code> and
 <code>write()</code> methods that read and write multiple bytes (see the
 API for details).  Alternatively, the input and output streams could
 be wrapped in objects of type <classname>BufferedInputStream</classname>
-and <classname>BufferedOutputStream</classname> which automatically read
+and <classname>BufferedOutputStream</classname>which automatically read
 from and write data to files in larger blocks, which is more efficient
-than reading and writing individual bytes.</np>
+than reading and writing individual bytes.  This would require changing only
+the two lines in the program that create the streams.  For example, the
+input stream could be created using</np>
+
+<pre>source = new BufferedInputStream(new FileInputStream(sourceName));</pre>
+
+<np>The buffered stream would then be used in exactly the same way as the
+unbuffered stream.</np>
 
 <p>(There is also a sample program <sourceref href="CopyFileAsResources.java"/> that
 does the same thing as <code>CopyFile</code> but uses the resource pattern in a 
 <code>try..catch</code> statement to make sure that the streams are closed in
-all cases.)</p>
+all cases.  See the discussion at the end of <localref href="robustness.3.2"/>))</p>
 
 </subsection>
    
@@ -303,100 +310,10 @@ using the following code:</p>
 <np>The net effect of this is that all the data, including the changes,
 will be there the next time the program is run.  I've shown you all the
 file-handling code from the program.  If you would like to see the rest
-of the program, see the source code
-file, <sourceref href="PhoneDirectoryFileDemo.java"/>.</np>
+of the program, see the <sourceref href="PhoneDirectoryFileDemo.java">source code</sourceref>.</np>
    
 </subsection>
 
-<subsection id="IO.3.3" title="Files in GUI Programs">
-   
-<p>The previous examples in this section use a command-line interface, but graphical
-user interface programs can also manipulate files. Programs typically have an
-"Open" command that reads the data from a file and displays it in a window and
-a "Save" command that writes the data from the window into a file. We can
-illustrate this in Java with a simple text editor program, <sourceref href="TrivialEdit.java"/>.
-The window for this
-program uses a <classname>JTextArea</classname> component to display some text that the user
-can edit. It also has a menu bar, with a "File" menu that includes "Open" and
-"Save" commands. These commands are implemented using the techniques for
-reading and writing files that were covered in 
-<localref href="IO.2"/>.</p>
-
-<p>When the user selects the Open command from the File menu in the
-<code>TrivialEdit</code> program, the program pops up a file dialog box where the
-user specifies the file. It is assumed that the file is a text file.
-A limit of 10000 characters is put on the size of the file, since a <classname>JTextArea</classname>
-is not meant for editing large amounts of text.
-The program reads the text contained in the specified file,
-and sets that text to be the content of the <classname>JTextArea</classname>.
-The program also sets the title bar of the window to show the name of the file
-that was opened.  All this is done in the following method, which is
-just a variation of the <code>readFile()</code> method presented
-in <localref href="IO.2"/>:</p>
-
-<pre>/**
- * Carry out the Open command by letting the user specify a file to be opened 
- * and reading up to 10000 characters from that file.  If the file is read 
- * successfully and is not too long, then the text from the file replaces the 
- * text in the JTextArea.
- */
-public void doOpen() {
-    if (fileDialog == null)
-        fileDialog = new JFileChooser();
-    fileDialog.setDialogTitle("Select File to be Opened");
-    fileDialog.setSelectedFile(null);  // No file is initially selected.
-    int option = fileDialog.showOpenDialog(this);
-    if (option != JFileChooser.APPROVE_OPTION)
-        return;  // User canceled or clicked the dialog's close box.
-    File selectedFile = fileDialog.getSelectedFile();
-    Scanner in;
-    try {
-        in = new Scanner( selectedFile );
-    }
-    catch (FileNotFoundException e) {
-        JOptionPane.showMessageDialog(this,
-             "Sorry, but an error occurred while trying to open the file:\n" + e);
-        return;
-    }
-    try {
-        StringBuilder input = new StringBuilder();
-        while (in.hasNextLine()) {
-            String lineFromFile = in.nextLine();
-            if (lineFromFile == null)
-                break;  // End-of-file has been reached.
-            input.append(lineFromFile);
-            input.append('\n');
-            if (input.length() > 10000)
-                throw new IOException("Input file is too large for this program.");
-        }
-        text.setText(input.toString());
-        editFile = selectedFile;
-        setTitle("TrivialEdit: " + editFile.getName());
-    }
-    catch (Exception e) {
-        JOptionPane.showMessageDialog(this,
-            "Sorry, but an error occurred while trying to read the data:\n" + e);
-    }
-    finally {
-        in.close();
-    }
-}</pre>
-   
-<np>In this program, the instance variable <code>editFile</code> is used to keep
-track of the file that is currently being edited, if any, and the
-<code>setTitle()</code> method from class <classname>JFrame</classname>
-is used to set the title of the window to show the name of the file.
-(<classname>TrivialEdit</classname> is defined as a subclass of <classname>JFrame</classname>.)
-</np>
-
-<p>Similarly, the response to the Save command is a minor variation on the
-<code>writeFile()</code> method from <localref href="IO.2"/>.
-I will not repeat it here.  If you would like to see the entire
-program, you will find the source code in the file
-<sourceref href="TrivialEdit.java"/>.</p>
-
-</subsection>
-   
 <subsection id="IO.3.4" title="Storing Objects in Files">
 
 <p>Whenever data is stored in files, some definite format must be adopted for
@@ -408,7 +325,7 @@ The representation that is used for data in files should also be robust.
 at several different ways of representing the same data.  This example
 builds on the example <sourceref chapter="7" href="SimplePaint2.java"/> from
 <localref href="arrays.3.3"/>.  (You might want to run it now to remind yourself
-of what it can do.)  In that program, the user could use the
+of what it can do.)  In that program, the user can use the
 mouse to draw simple sketches.  Now, we will add file input/output capabilities
 to that program.  This will allow the user to save a sketch to a file and later read
 the sketch back from the file into the program so that the user can continue
@@ -419,198 +336,45 @@ exactly restored when the file is read by the program.</p>
  
 <p>The new version of the program can be found in the source code
 file <sourceref href="SimplePaintWithFiles.java"/>.  A "File" menu
-has been added to the new version.  It contains
-two sets of Save/Open commands, one for saving and reloading sketch data
-in text form and one for data in binary form.  We will consider both
-possibilities here, in some detail.</p>
+has been added to the new version.  It implements "Save" and
+"Open" commands for writing program data to a file and reading
+saved data back into the program</p>
    
 <p>The data for a sketch consists of the background color of the picture
 and a list of the curves that were drawn by the user.  A curve consists of
-a list of <classname>Points</classname>.  <classname>Point</classname> is
-a standard class in package <code>java.awt</code>; a <classname>Point</classname>
-<code>pt</code> has instance variables <code>pt.x</code> and <code>pt.y</code>
-of type <ptype>int</ptype> that represent the pixel coordinates of a point on the xy-plane.
+a list of <classname>Point2Ds</classname>.  The class <classname>Point2D</classname> is
+found in package <code>javafx.geometry</code>; a <classname>Point2D</classname>,
+<code>pt</code>, has instance methods <code>pt.getX()</code> and <code>pt.getY()</code>
+that return the coordinates of a point in the xy-plane as values of type <ptype>double</ptype>.
 Each curve can be a different color.  Furthermore, a curve can be "symmetric," which
 means that in addition to the curve itself, the horizontal and vertical reflections
 of the curve are also drawn.  The data for each
-curve is stored in an object of type <classname>CurveData</classname>, which
+curve are stored in an object of type <classname>CurveData</classname>, which
 is defined in the program as:</p>
    
 <pre>/**
  * An object of type CurveData represents the data required to redraw one
  * of the curves that have been sketched by the user.
  */
-private static class CurveData implements Serializable {
+private static class CurveData {
    Color color;  // The color of the curve.
    boolean symmetric;  // Are horizontal and vertical reflections also drawn?
-   ArrayList&lt;Point&gt; points;  // The points on the curve.
+   ArrayList&lt;Point2D&gt; points;  // The points on the curve.
 }</pre>
    
 <np>Then, a list of type <atype>ArrayList&lt;CurveData&gt;</atype> is used to hold
-data for all of the curves that the user has drawn.
-Note that in the new version of the program,
-the <classname>CurveData</classname> class has been declared to "<code>implement Serializable</code>".
-This allows objects of type <classname>CurveData</classname> to be written
-in binary form to an <classname>ObjectOutputStream</classname>.
-See <localref href="IO.1.6"/>.</np>
+data for all of the curves that the user has drawn.</np>
    
-<p>Let's think about how the data for a sketch could be saved to an 
-<classname>ObjectOuputStream</classname>.  The sketch is displayed on the
-screen in an object of type <classname>SimplePaintPanel</classname>, which
-is a subclass of <classname>JPanel</classname>.  All the data needed for
-the sketch is stored in instance variables of that object.  One possibility
-would be to simply write the entire <classname>SimplePaintPanel</classname>
-component as a single object to the stream.  This could be done in a method
-in the <classname>SimplePaintPanel</classname> class with the statement</p>
-   
-<pre>outputStream.writeObject(this);</pre>
-   
-<np>where <code>outputStream</code> is the <classname>ObjectOutputStream</classname>
-and "<code>this</code>" refers to the <classname>SimplePaintPanel</classname> itself.
-This statement saves the entire current state of the panel.  To read the data
-back into the program, you would create an <classname>ObjectInputStream</classname>
-for reading the object from the file, and you would
-retrieve the object from the file with the statement</np>
-
-<pre>SimplePaintPanel newPanel = (SimplePaintPanel)in.readObject();</pre>
-   
-<np>where <code>in</code> is the <code>ObjectInputStream</code>.  Note that the
-type-cast is necessary because the method <code>in.readObject()</code> returns
-a value of type <classname>Object</classname>.  (To get the saved sketch to
-appear on the screen, the <code>newPanel</code> must replace the current
-content pane in the program's window; furthermore, the menu bar of the window
-must be replaced, because the menus are associated with a particular
-<classname>SimplePaintPanel</classname> object.)</np>
-   
-<p>It might look tempting to be able to save data and restore it with a single
-command, but in this case, it's not a good idea.  The main problem with doing
-things this way is that <b>the serialized form of objects that represent
-Swing components can change</b> from one version of Java to the next.
-This means that data files that contain serialized components such as
-a <classname>SimplePaintPanel</classname> might become unusable in the
-future, and the data that they contain will be effectively lost.  This
-is an important consideration for any serious application.</p>
-   
-<p>Taking this into consideration, my program uses a different format when
-it creates a binary file.  The data written to the file consists of
-(1)&nbsp;the background color of the sketch, (2)&nbsp;the number of curves
-in the sketch, and (3)&nbsp;all the <classname>CurveData</classname> objects
-that describe the individual curves. The method that saves the data is
-similar to the <code>writeFile()</code> method from <localref href="IO.2.3"/>.
-Here is the complete <code>doSaveAsBinary()</code> method from
-<code>SimplePaintWithFiles</code>, with the changes from the generic
-<code>writeFile()</code> method shown in &newcodestyle;:</p>
-   
-<pre>/**
- * Save the user's sketch to a file in binary form as serialized
- * objects, using an ObjectOutputStream.  Files created by this method 
- * can be read back into the program using the doOpenAsBinary() method.
- */
-private void doSaveAsBinary() {
-   if (fileDialog == null)      
-      fileDialog = new JFileChooser(); 
-   File selectedFile;  //Initially selected file name in the dialog.
-   <newcode>if (editFile == null)
-      selectedFile = new File("sketchData.binary");
-   else
-      selectedFile = new File(editFile.getName());</newcode>
-   fileDialog.setSelectedFile(selectedFile); 
-   fileDialog.setDialogTitle("Select File to be Saved");
-   int option = fileDialog.showSaveDialog(this);
-   if (option != JFileChooser.APPROVE_OPTION)
-      return;  // User canceled or clicked the dialog's close box.
-   selectedFile = fileDialog.getSelectedFile();
-   if (selectedFile.exists()) {  // Ask the user whether to replace the file.
-      int response = JOptionPane.showConfirmDialog( this,
-            "The file \"" + selectedFile.getName()
-            + "\" already exists.\nDo you want to replace it?", 
-            "Confirm Save",
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.WARNING_MESSAGE );
-      if (response != JOptionPane.YES_OPTION)
-         return;  // User does not want to replace the file.
-   }
-   <newcode>ObjectOutputStream out;</newcode>
-   try {
-      <newcode>FileOutputStream stream = new FileOutputStream(selectedFile); 
-      out = new ObjectOutputStream( stream );</newcode>
-   }
-   catch (Exception e) {
-      JOptionPane.showMessageDialog(this,
-         "Sorry, but an error occurred while trying to open the file:\n" + e);
-      return;
-   }
-   try {
-      <newcode>out.writeObject(getBackground());
-      out.writeInt(curves.size());
-      for ( CurveData curve : curves )
-         out.writeObject(curve);
-      out.flush();
-      out.close();
-      editFile = selectedFile;
-      setTitle("SimplePaint: " + editFile.getName());</newcode>
-   }
-   catch (Exception e) {
-      JOptionPane.showMessageDialog(this,
-         "Sorry, but an error occurred while trying to write the file:\n" + e);
-   }   
-}</pre>
-   
-<np>The heart of this method consists of the following lines, which do the actual
-writing of the data to the file:</np>
-   
-<pre>out.writeObject(getBackground()); // Writes the panel's background color.
-out.writeInt(curves.size());      // Writes the number of curves.
-for ( CurveData curve : curves )  // For each curve...
-   out.writeObject(curve);        //   write the corresponding CurveData object.</pre>
-   
-<np>The last line depends on the fact that the <classname>CurveData</classname>
-class implements the <classname>Serializable</classname> interface.  (So does the
-first; the <classname>Color</classname> class, like many of Java's standard classes,
-implements <classname>Serializable</classname>.)</np>
-
-<p>The <code>doOpenAsBinary()</code> method, which is responsible for reading
-sketch data back into the program from an <classname>ObjectInputStream</classname>,
-has to read exactly the same data that was written, in the same order, and use
-that data to build the data structures that will represent the sketch while
-the program is running.  Once the data structures have been successfully built,
-they replace the data structures that describe the previous contents of the panel.
-This is done as follows:</p>
-   
-<pre>/* Read data from the file into local variables */
-
-Color newBackgroundColor = (Color)in.readObject();
-int curveCount = in.readInt();
-ArrayList&lt;CurveData&gt; newCurves = new ArrayList&lt;CurveData&gt;();
-for (int i = 0; i &lt; curveCount; i++)
-   newCurves.add( (CurveData)in.readObject() );
-in.close();
-   
-/* Copy the data that was read into the instance variables that 
-   describe the sketch that is displayed by the program.*/
-   
-curves = newCurves;
-setBackground(newBackgroundColor);
-repaint();</pre>
-   
-<p>This is only a little harder than saving the entire <classname>SimplePaintPanel</classname>
-component to the file in one step, and it is more robust since the serialized form
-of the objects that are saved to file is unlikely to change in the future.
-But it still suffers from the general fragility of binary data.</p>
-   
-<break/>
-   
-<p>An alternative to using object streams is to save the data in human-readable, 
-character form.  The basic idea is the same:  All the data necessary to reconstitute
+<p>Let's think about how the data for a sketch could be saved to a text file/
+The basic idea is that all data necessary to reconstitute
 a sketch must be saved to the output file in some definite format.  The method
 that reads the file must follow exactly the same format as it reads the data,
 and it must use the data to rebuild the data structures that represent the sketch
 while the program is running.</p>
    
-<p>When writing character data, we can't write out entire objects in one
-step.  All the data has to be expressed, ultimately, in terms of simple 
+<p>When writing character data, all of the data has to be expressed, ultimately, in terms of simple 
 data values such as strings and primitive type values.  A color, for example,
-can be expressed in terms of three integers giving the red, green, and blue
+can be expressed in terms of three numbers giving the red, green, and blue
 components of the color.  The first (not very good) idea that comes to mind might be to
 just dump all the necessary data, in some definite order, into the file.
 Suppose that <code>out</code> is a <classname>PrintWriter</classname> that
@@ -629,7 +393,7 @@ for ( CurveData curve : curves ) {  // For each curve, write...
    out.println( curve.color.getBlue() );
    out.println( curve.symmetric ? 0 : 1 );   // the curve's symmetry property
    out.println( curve.points.size() );       // the number of points on curve
-   for ( Point pt : curve.points ) {         // the coordinates of each point
+   for ( Point2D pt : curve.points ) {         // the coordinates of each point
       out.println( pt.x );
       out.println( pt.y );
    }
@@ -641,28 +405,28 @@ a <classname>Scanner</classname> named <code>scanner</code> to read
 the data file.  Then it could say:</np>
    
 <pre>Color newBackgroundColor;                // Read the background Color.
-int red = scanner.nextInt();
-int green = scanner.nextInt();
-int blue = scanner.nextInt();
-newBackgroundColor = new Color(red,green,blue);
+double red = scanner.nextDouble();
+double green = scanner.nextDouble();
+double blue = scanner.nextDouble();
+newBackgroundColor = Color.color(red,green,blue);
 
-ArrayList&lt;CurveData&gt; newCurves = new ArrayList&lt;CurveData&gt;();
+ArrayList&lt;CurveData&gt; newCurves = new ArrayList&lt;&gt;();
    
 int curveCount = scanner.nextInt();      // The number of curves to be read.
 for (int i = 0; i &lt; curveCount; i++) {
    CurveData curve = new CurveData();
-   int r = scanner.nextInt();            // Read the curve's color.
-   int g = scanner.nextInt();
-   int b = scanner.nextInt();
-   curve.color = new Color(r,g,b);
+   double r = scanner.nextDouble();            // Read the curve's color.
+   double g = scanner.nextDouble();
+   double b = scanner.nextDouble();
+   curve.color = Color.color(r,g,b);
    int symmetryCode = scanner.nextInt(); // Read the curve's symmetry property.
    curve.symmetric = (symmetryCode == 1);
-   curveData.points = new ArrayList&lt;Point&gt;();
+   curveData.points = new ArrayList&lt;&gt;();
    int pointCount = scanner.nextInt();  // The number of points on this curve.
    for (int j = 0; j &lt; pointCount; j++) {
       int x = scanner.nextInt();        // Read the coordinates of the point.
       int y = scanner.nextInt();
-      curveData.points.add(new Point(x,y));
+      curveData.points.add(new Point2D(x,y));
    }
    newCurves.add(curve);
 }
@@ -687,10 +451,10 @@ Here is a short but complete data file for the program; just by
 looking at it, you can probably tell what is going on:</p>
 
 <pre>SimplePaintWithFiles 1.0
-background 110 110 180
+background 0.4 0.4 0.5
 
 startcurve
-  color 255 255 255
+  color 1 1 1
   symmetry true
   coords 10 10
   coords 200 250
@@ -698,7 +462,7 @@ startcurve
 endcurve
 
 startcurve
-  color 0 255 255
+  color 0 1 1
   symmetry false
   coords 10 400
   coords 590 400
@@ -732,22 +496,25 @@ added.</p>
    
 <p>Outputting data in this format is easy.  Suppose that <code>out</code>
 is a <classname>PrintWriter</classname> that is being used to write
-the sketch data to a file.  Then the output can be done with:</p>
+the sketch data to a file.  Then the output is be done with:</p>
    
-<pre>out.println("SimplePaintWithFiles 1.0"); // Name and version number.
-Color bgColor = getBackground();
-out.println( "background " + bgColor.getRed() + " " +
-      bgColor.getGreen() + " " + bgColor.getBlue() );
+<pre>out.println("SimplePaintWithFiles 1.0"); // Version number.
+out.println( "background " + backgroundColor.getRed() + " " +
+        backgroundColor.getGreen() + " " + backgroundColor.getBlue() );
 for ( CurveData curve : curves ) {
-   out.println();
-   out.println("startcurve");
-   out.println("  color " + curve.color.getRed() + " " +
-         curve.color.getGreen() + " " + curve.color.getBlue() );
-   out.println( "  symmetry " + curve.symmetric );
-   for ( Point pt : curve.points )
-      out.println( "  coords " + pt.x + " " + pt.y );
-   out.println("endcurve");
+    out.println();
+    out.println("startcurve");
+    out.println("  color " + curve.color.getRed() + " " +
+            curve.color.getGreen() + " " + curve.color.getBlue() );
+    out.println( "  symmetry " + curve.symmetric );
+    for ( Point2D pt : curve.points )
+        out.println( "  coords " + pt.getX() + " " + pt.getY() );
+    out.println("endcurve");
 }</pre>
+
+<np>In the program, this code is used in a <code>doSave()</code> method that
+is similar to the one that is presented in <localref href="IO.2.3"/>.  The method
+uses a file dialog box to allow the user to select the output file.</np>
    
 <p>Reading the data is somewhat harder, since the input routine has to
 deal with all the extra words in the data.  In my input routine,
@@ -759,92 +526,92 @@ as the default background color.  This is possible because
 each item of data is labeled with a word that describes its
 meaning; the labels can be used to drive the processing of
 the input.  Here is the complete method from <sourceref href="SimplePaintWithFiles.java"/>
-that reads data files in text format.  It uses a
+that reads data files created by the <code>doSave()</code> method.  It uses a
 <classname>Scanner</classname> to read items from the file:</p>
    
-<pre>private void doOpenAsText() {
-   
-   if (fileDialog == null)
-      fileDialog = new JFileChooser();
-   fileDialog.setDialogTitle("Select File to be Opened");
-   fileDialog.setSelectedFile(null);  // No file is initially selected.
-   int option = fileDialog.showOpenDialog(this);
-   if (option != JFileChooser.APPROVE_OPTION)
-      return;  // User canceled or clicked the dialog's close box.
-   File selectedFile = fileDialog.getSelectedFile();
-   
-   Scanner scanner;  // For reading from the data file.
-   try {
-      Reader stream = new BufferedReader(new FileReader(selectedFile));
-      scanner = new Scanner( stream );
-   }
-   catch (Exception e) {
-      JOptionPane.showMessageDialog(this,
-            "Sorry, but an error occurred while trying to open the file:\n" + e);
-      return;
-   }
-   
-   try {  // Read the contents of the file.
-      String programName = scanner.next();
-      if ( ! programName.equals("SimplePaintWithFiles") )
-         throw new IOException("File is not a SimplePaintWithFiles data file.");
-      double version = scanner.nextDouble();
-      if (version > 1.0)
-         throw new IOException("File requires newer version of this program.");
-      Color newBackgroundColor = Color.WHITE; // default value
-      ArrayList&lt;CurveData&gt; newCurves = new ArrayList&lt;CurveData&gt;();
-      while (scanner.hasNext()) {
-         String itemName = scanner.next();
-         if (itemName.equalsIgnoreCase("background")) {
-            int red = scanner.nextInt();
-            int green = scanner.nextInt();
-            int blue = scanner.nextInt();
-            newBackgroundColor = new Color(red,green,blue);
-         }
-         else if (itemName.equalsIgnoreCase("startcurve")) {
-            CurveData curve = new CurveData();
-            curve.color = Color.BLACK;  // default value
-            curve.symmetric = false;    // default value
-            curve.points = new ArrayList&lt;Point&gt;();
-            itemName = scanner.next();
-            while ( ! itemName.equalsIgnoreCase("endcurve") ) {
-               if (itemName.equalsIgnoreCase("color")) {
-                  int r = scanner.nextInt();
-                  int g = scanner.nextInt();
-                  int b = scanner.nextInt();
-                  curve.color = new Color(r,g,b);
-               }
-               else if (itemName.equalsIgnoreCase("symmetry")) {
-                  curve.symmetric = scanner.nextBoolean();
-               }
-               else if (itemName.equalsIgnoreCase("coords")) {
-                  int x = scanner.nextInt();
-                  int y = scanner.nextInt();
-                  curve.points.add( new Point(x,y) );
-               }
-               else {
-                  throw new Exception("Unknown term in input.");
-               }
-               itemName = scanner.next();
+<pre>private void doOpen() {
+    FileChooser fileDialog = new FileChooser();
+    fileDialog.setTitle("Select File to be Opened");
+    fileDialog.setInitialFileName(null);  // No file is initially selected.
+    if (editFile == null)
+        fileDialog.setInitialDirectory(new File(System.getProperty("user.home")));
+    else
+        fileDialog.setInitialDirectory(editFile.getParentFile());
+    File selectedFile = fileDialog.showOpenDialog(window);
+    if (selectedFile == null)
+        return;  // User canceled.
+    Scanner scanner;
+    try {
+        scanner = new Scanner( selectedFile );
+    }
+    catch (Exception e) {
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR,
+                "Sorry, but an error occurred\nwhile trying to open the file.");
+        errorAlert.showAndWait();
+        return;
+    }
+    try {
+        String programName = scanner.next();
+        if ( ! programName.equals("SimplePaintWithFiles") )
+            throw new IOException("File is not a SimplePaintWithFiles data file.");
+        double version = scanner.nextDouble();
+        if (version > 1.0)
+            throw new IOException("File requires a newer version of SimplePaintWithFiles.");
+        Color newBackgroundColor = Color.WHITE;
+        ArrayList&lt;CurveData> newCurves = new ArrayList&lt;CurveData>();
+        while (scanner.hasNext()) {
+            String itemName = scanner.next();
+            if (itemName.equalsIgnoreCase("background")) {
+                double red = scanner.nextDouble();
+                double green = scanner.nextDouble();
+                double blue = scanner.nextDouble();
+                newBackgroundColor = Color.color(red,green,blue);
             }
-            newCurves.add(curve);
-         }
-         else {
-            throw new Exception("Unknown term in input.");
-         }
-      }
-   
-      scanner.close();
-      setBackground(newBackgroundColor);  // Install the new picture data.
-      curves = newCurves;
-      repaint();
-      editFile = selectedFile;
-      setTitle("SimplePaint: " + editFile.getName());
-   }
-   catch (Exception e) {
-      JOptionPane.showMessageDialog(this,
-            "Sorry, but an error occurred while trying to read the data:\n" + e);
-   }   
+            else if (itemName.equalsIgnoreCase("startcurve")) {
+                CurveData curve = new CurveData();
+                curve.color = Color.BLACK;
+                curve.symmetric = false;
+                curve.points = new ArrayList&lt;Point2D>();
+                itemName = scanner.next();
+                while ( ! itemName.equalsIgnoreCase("endcurve") ) {
+                    if (itemName.equalsIgnoreCase("color")) {
+                        double r = scanner.nextDouble();
+                        double g = scanner.nextDouble();
+                        double b = scanner.nextDouble();
+                        curve.color =Color.color(r,g,b);
+                    }
+                    else if (itemName.equalsIgnoreCase("symmetry")) {
+                        curve.symmetric = scanner.nextBoolean();
+                    }
+                    else if (itemName.equalsIgnoreCase("coords")) {
+                        double x = scanner.nextDouble();
+                        double y = scanner.nextDouble();
+                        curve.points.add( new Point2D(x,y) );
+                    }
+                    else {
+                        throw new Exception("Unknown term in input.");
+                    }
+                    itemName = scanner.next();
+                }
+                newCurves.add(curve);
+            }
+            else {
+                throw new Exception("Unknown term in input.");
+            }
+        }
+        scanner.close();
+        backgroundColor = newBackgroundColor;
+        curves = newCurves;
+        redraw();
+        editFile = selectedFile;
+        window.setTitle("SimplePaint: " + editFile.getName());
+    }
+    catch (Exception e) {
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR,
+                "Sorry, but an error occurred while\ntrying to read the data:\n" 
+                        + e);
+        errorAlert.showAndWait();
+    }    
 }</pre>
    
 <p>The main reason for this long discussion of file formats has been to
@@ -857,8 +624,8 @@ representation problem that has become increasingly common.</p>
    
 <break/>
    
-<p>In addition to being able to save sketch data in both text form and
-binary form, <code>SimplePaintWithFiles</code> can also save the
+<p>In addition to being able to save sketch data in  text form, 
+<code>SimplePaintWithFiles</code> can also save the
 picture itself as an image file that could be, for example, printed
 or put on a web page.  This is a preview of image-handling techniques
 that will be covered in <localref href="GUI2"/>, and it uses

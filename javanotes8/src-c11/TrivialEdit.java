@@ -1,9 +1,17 @@
 import java.io.*;
 import java.util.Scanner;
-import java.awt.*;
-import java.awt.event.*;
 
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 
 
 /**
@@ -23,41 +31,39 @@ import javax.swing.*;
  *  particular, a limit of 10000 characters is put on the size of the 
  *  files that it can read.
  */
-public class TrivialEdit extends JFrame {
+public class TrivialEdit extends Application {
 
-
-	/**
-	 * The main program just opens a window belonging to this TrivialEdit class. 
-	 * Then the window takes care of itself until the program is ended with the 
-	 * Quit command or when the user closes the window.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new TrivialEdit();
-		window.setVisible(true);
+		launch(args);
 	}
+	//-----------------------------------------------------------------------
 
 
-	private JTextArea text;   // Holds the text that is displayed in the window.
-
-	private JFileChooser fileDialog;  // File dialog for use in doOpen() an doSave().
+	private TextArea text;   // Holds the text that is displayed in the window.
 
 	private File editFile;  // The file, if any that is currently being edited.
+	                        // If non-null, this file was selected by the user
+	                        // in a file open or file save dialog.
 
+	private Stage mainWindow;  // The program window, used for changing the window title.
 
 	/**
-	 * Create a TrivialEdit window, with a JTextArea where the user can
-	 * edit some text and with a menu bar.
+	 * Open a window, with a TextArea where the user can
+	 * edit some text and with a menu bar for file operations.
 	 */
-	public TrivialEdit() {
-		super("TrivialEdit: Untitled");  // Specifies title of the window.
-		setJMenuBar( makeMenus() );
-		text = new JTextArea(25,50);
-		text.setMargin( new Insets(3,5,0,0) ); // Some space around the text.
-		JScrollPane scroller = new JScrollPane(text);
-		setContentPane(scroller);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		pack();
-		setLocation(50,50);
+	public void start(Stage stage) {
+		mainWindow = stage;
+		
+		text = new TextArea();
+		text.setPrefColumnCount(50);
+		text.setPrefRowCount(25);
+		
+		BorderPane root = new BorderPane( text );
+		root.setTop( makeMenuBar() );
+		
+		stage.setTitle("TrivialEdit: Untitled");
+		stage.setScene( new Scene(root) );
+		stage.show();
 	}
 
 
@@ -66,115 +72,94 @@ public class TrivialEdit extends JFrame {
 	 * File menu.  This menu contains four commands, New, Open, Save,
 	 * and Quit.
 	 */
-	private JMenuBar makeMenus() {
+	private MenuBar makeMenuBar() {
+		Menu fileMenu = new Menu("File");
 
-		ActionListener listener = new ActionListener() {
-			// An object that will serve as listener for menu items.
-			public void actionPerformed(ActionEvent evt) {
-				// This will be called when the user makes a selection
-				// from the File menu.  This routine just checks 
-				// which command was selected and calls another 
-				// routine to carry out the command.
-				String cmd = evt.getActionCommand();
-				if (cmd.equals("New"))
-					doNew();
-				else if (cmd.equals("Open..."))
-					doOpen();
-				else if (cmd.equals("Save..."))
-					doSave();
-				else if (cmd.equals("Quit"))
-					doQuit();
-			}
-		};
+		MenuItem newCmd = new MenuItem("New");
+		newCmd.setOnAction( e -> doNew() );
+		fileMenu.getItems().add(newCmd);
 
-		JMenu fileMenu = new JMenu("File");
+		MenuItem openCmd = new MenuItem("Open...");
+		openCmd.setOnAction( e -> doOpen() );
+		fileMenu.getItems().add(openCmd);
 
-		JMenuItem newCmd = new JMenuItem("New");
-		newCmd.addActionListener(listener);
-		fileMenu.add(newCmd);
+		MenuItem saveCmd = new MenuItem("Save...");
+		saveCmd.setOnAction( e -> doSave() );
+		fileMenu.getItems().add(saveCmd);
 
-		JMenuItem openCmd = new JMenuItem("Open...");
-		openCmd.addActionListener(listener);
-		fileMenu.add(openCmd);
+		fileMenu.getItems().add( new SeparatorMenuItem() );
 
-		JMenuItem saveCmd = new JMenuItem("Save...");
-		saveCmd.addActionListener(listener);
-		fileMenu.add(saveCmd);
+		MenuItem quitCmd = new MenuItem("Quit");
+		quitCmd.setOnAction( e -> doQuit() );
+		fileMenu.getItems().add(quitCmd);
 
-		fileMenu.addSeparator();
-
-		JMenuItem quitCmd = new JMenuItem("Quit");
-		quitCmd.addActionListener(listener);
-		fileMenu.add(quitCmd);
-
-		JMenuBar bar = new JMenuBar();
-		bar.add(fileMenu);
+		MenuBar bar = new MenuBar(fileMenu);
 		return bar;
 
-	} // end makeMenus()
+	} // end makeMenuBar()
 
 
 	/**
 	 * Carry out the "New" command from the File menu by clearing all 
-	 * the text from the JTextArea.  Also sets the title bar of the
+	 * the text from the TextArea.  Also sets the title bar of the
 	 * window to read "TrivialEdit: Untitled".
 	 */
 	private void doNew() {
 		text.setText("");
 		editFile = null;
-		setTitle("TrivialEdit: Untitled");
+		mainWindow.setTitle("TrivialEdit: Untitled");
 	}
 
 
 	/**
 	 *  Carry out the Save command by letting the user specify an output file 
-	 *  and writing the text from the JTextArea to that file.
+	 *  and writing the text from the TextArea to that file.
 	 */
 	private void doSave() {
-		if (fileDialog == null)      
-			fileDialog = new JFileChooser(); 
-		File selectedFile;  //Initially selected file name in the dialog.
-		if (editFile == null)
-			selectedFile = new File("filename.txt");
-		else
-			selectedFile = new File(editFile.getName());
-		fileDialog.setSelectedFile(selectedFile); 
-		fileDialog.setDialogTitle("Select File to be Saved");
-		int option = fileDialog.showSaveDialog(this);
-		if (option != JFileChooser.APPROVE_OPTION)
-			return;  // User canceled or clicked the dialog's close box.
-		selectedFile = fileDialog.getSelectedFile();
-		if (selectedFile.exists()) {  // Ask the user whether to replace the file.
-			int response = JOptionPane.showConfirmDialog( this,
-					"The file \"" + selectedFile.getName()
-					+ "\" already exists.\nDo you want to replace it?", 
-					"Confirm Save",
-					JOptionPane.YES_NO_OPTION, 
-					JOptionPane.WARNING_MESSAGE );
-			if (response != JOptionPane.YES_OPTION)
-				return;  // User does not want to replace the file.
+		FileChooser fileDialog = new FileChooser(); 
+		if (editFile == null) {
+			   // No file is being edited.  Set file name in dialog to "filename.txt"
+			   // and set the directory in the dialog to the user's home directory.
+			fileDialog.setInitialFileName("filename.txt");
+			fileDialog.setInitialDirectory( new File( System.getProperty("user.home")));
 		}
+		else {
+			   // Get the file name and directory for the dialog from
+			   // the file that is currently being edited.
+			fileDialog.setInitialFileName(editFile.getName());
+			fileDialog.setInitialDirectory(editFile.getParentFile());
+		}
+		fileDialog.setTitle("Select File to be Saved");
+		File selectedFile = fileDialog.showSaveDialog(mainWindow);
+		if ( selectedFile == null )
+			return;  // User did not select a file.
+		// Note: User has selected a file AND if the file exists has
+		//    confirmed that it is OK to erase the exiting file.
 		PrintWriter out; 
 		try {
 			FileWriter stream = new FileWriter(selectedFile); 
 			out = new PrintWriter( stream );
 		}
 		catch (Exception e) {
-			JOptionPane.showMessageDialog(this,
-					"Sorry, but an error occurred while trying to open the file:\n" + e);
+			   // Most likely to occur if the user doesn't have permission to read the file.
+			Alert errorAlert = new Alert(Alert.AlertType.ERROR,
+					"Sorry, but an error occurredwhile\ntrying to open the file for output.");
+			errorAlert.showAndWait();
 			return;
 		}
 		try {
 			out.print(text.getText());  // Write text from the TextArea to the file.
+			out.flush(); // (Probably not needed; it's probably done by out.close();
 			out.close();
 			if (out.checkError())   // (need to check for errors in PrintWriter)
 				throw new IOException("Error check failed.");
 			editFile = selectedFile;
-			setTitle("TrivialEdit: " + editFile.getName());
+			mainWindow.setTitle("TrivialEdit: " + editFile.getName());
 		}
 		catch (Exception e) {
-			JOptionPane.showMessageDialog(this,
-					"Sorry, but an error occurred while trying to write the text:\n" + e);
+			Alert errorAlert = new Alert(Alert.AlertType.ERROR,
+					"Sorry, but an error occurred while\ntrying to write data to the file.");
+			errorAlert.showAndWait();
 		}	
 	}
 
@@ -183,24 +168,27 @@ public class TrivialEdit extends JFrame {
 	 * Carry out the Open command by letting the user specify a file to be opened 
 	 * and reading up to 10000 characters from that file.  If the file is read 
 	 * successfully and is not too long, then the text from the file replaces the 
-	 * text in the JTextArea.
+	 * text in the TextArea.
 	 */
 	public void doOpen() {
-		if (fileDialog == null)
-			fileDialog = new JFileChooser();
-		fileDialog.setDialogTitle("Select File to be Opened");
-		fileDialog.setSelectedFile(null);  // No file is initially selected.
-		int option = fileDialog.showOpenDialog(this);
-		if (option != JFileChooser.APPROVE_OPTION)
-			return;  // User canceled or clicked the dialog's close box.
-		File selectedFile = fileDialog.getSelectedFile();
+		FileChooser fileDialog = new FileChooser();
+		fileDialog.setTitle("Select File to be Opened");
+		fileDialog.setInitialFileName(null);  // No file is initially selected.
+		if (editFile == null)
+			fileDialog.setInitialDirectory(new File(System.getProperty("user.home")));
+		else
+			fileDialog.setInitialDirectory(editFile.getParentFile());
+		File selectedFile = fileDialog.showOpenDialog(mainWindow);
+		if (selectedFile == null)
+			return;  // User canceled.
 		Scanner in;
 		try {
 			in = new Scanner( selectedFile );
 		}
 		catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(this,
-					"Sorry, but an error occurred while trying to open the file:\n" + e);
+			Alert errorAlert = new Alert(Alert.AlertType.ERROR,
+					"Sorry, but an error occurred\nwhile trying to open the file.");
+			errorAlert.showAndWait();
 			return;
 		}
 		try {
@@ -211,16 +199,22 @@ public class TrivialEdit extends JFrame {
 					break;  // End-of-file has been reached.
 				input.append(lineFromFile);
 				input.append('\n');
-				if (input.length() > 10000)
-					throw new IOException("Input file is too large for this program.");
+				if (input.length() > 10000) {
+					Alert errorAlert = new Alert(Alert.AlertType.ERROR,
+							"Sorry, but an error occurred while\ntrying to read the data:\n" +
+									"Input file is too large for this program.");
+					errorAlert.showAndWait();
+					return;
+				}
 			}
 			text.setText(input.toString());
 			editFile = selectedFile;
-			setTitle("TrivialEdit: " + editFile.getName());
+			mainWindow.setTitle("TrivialEdit: " + editFile.getName());
 		}
 		catch (Exception e) {
-			JOptionPane.showMessageDialog(this,
-					"Sorry, but an error occurred while trying to read the data:\n" + e);
+			Alert errorAlert = new Alert(Alert.AlertType.ERROR,
+					"Sorry, but an error occurred while\ntrying to read the data.");
+			errorAlert.showAndWait();
 		}
 		finally {
 			in.close();

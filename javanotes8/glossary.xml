@@ -267,7 +267,7 @@ one out (by translating it into equivalent machine language instructions).</gite
 <gitem term="I/O">Input/Output, the way a computer program communicates with the
 rest of the world, such as by displaying data to the user, getting information from the user,
 reading and writing files, and sending and receiving data over a network.</gitem>
-<gitem term="IO stream">An abstraction representing a source of input data or a destination
+<gitem term="I/O stream">An abstraction representing a source of input data or a destination
 for output data.  Java has four basic IO stream classes representing input and output
 of character and binary data.  These classes form the foundation for Java's
 input/output API.</gitem>
@@ -546,7 +546,7 @@ gradually filling in the details.</gitem>
 can be processed.  A stream can be created from a <classname>Collection</classname>,
 an array, or some other data source.  Java's stream API includes many predefined
 operations that can be applied to streams.
-The term "stream" also refers to IO streams, which are used for input and output.</gitem>
+The term "stream" also refers to I/O streams, which are used for input and output.</gitem>
 <gitem term="stroke">A drawing operation that applies a color (or other type of paint) to pixels along
 the boundary of a shape.</gitem>
 <gitem term="source code">Text written in a high-level programming language, which must

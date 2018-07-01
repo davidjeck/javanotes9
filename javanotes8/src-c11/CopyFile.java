@@ -6,7 +6,11 @@ import java.io.*;
  *  first command-line argument can be "-f"; if present, the program
  *  will overwrite an existing file; if not, the program will report
  *  an error and end if the output file already exists.  The number
- *  of bytes that are copied is reported.
+ *  of bytes that are copied is reported. (Note that for efficiency,
+ *  the input and output streams in this program should really be
+ *  wrapped in a BufferedInputStream and a BufferedOutputStream.
+ *  For example, the input stream would be created using
+ *  "source = new BufferedInputStream(new FileInputStream(sourceName))".
  */
 public class CopyFile {
 

@@ -176,13 +176,10 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    from <localref href="generics.6"/>, demos Java's stream API.  Runs an experiment to measure
    the compute time for a problem when it is solved using a for loop, using a sequential stream,
    and using a parallel stream.</li>
-   <li><sourceref href="chapter11/ReverseFile.java">ReverseFile.java</sourceref>, from <localref href="IO.2"/>, shows how
-   to read and write files in a simple command-line application; uses the
-   non-standard class <sourceref href="chapter11/TextReader.java">TextReader.java</sourceref>.  
-   <sourceref href="chapter11/ReverseFileWithScanner.java">ReverseFileWithScanner.java</sourceref>
-   is a version of the program that uses a <classname>Scanner</classname> instead of a 
-   <classname>TextReader</classname>.  And <sourceref href="chapter11/ReverseFileWithResources.java">ReverseFileWithResources.java</sourceref>
-   is a version that uses the "resource" pattern in <code>try..catch</code> statements.</li>
+   <li><sourceref href="chapter11/ReverseFileWithScanner.java">ReverseFileWithScanner.java</sourceref>,
+    from <localref href="IO.2"/>, shows how to read and write files in a simple command-line application.
+    <sourceref href="chapter11/ReverseFileWithResources.java">ReverseFileWithResources.java</sourceref>
+    is a version that uses the "resource" pattern in <code>try..catch</code> statements.</li>
    <li><sourceref href="chapter11/DirectoryList.java">DirectoryList.java</sourceref>, from <localref href="IO.2"/>, lists
    the contents of a directory specified by the user; demonstrates the use of
    the <classname>File</classname> class.</li>
@@ -495,8 +492,9 @@ along with the programs that use them.</p>
    <li><sourceref href="chapter8/Expr.java">Expr.java</sourceref> defines a class <classname>Expr</classname> that
    represent mathematical expressions involving the variable <code>x</code>.  It is used only
    in a couple of the exercises in <localref href="robustness"/>.</li>
-   <li><sourceref href="chapter11/TextReader.java">TextReader.java</sourceref>, from
-   <localref href="IO.1.4"/>, for reading character data from input streams.  Input methods
+   <li><sourceref href="chapter11/TextReader.java">TextReader.java</sourceref> The <classname>TextReader</classname>
+   class is not used in this textbook, but it might be useful to some readers.
+   A <classname>TextReader</classname> reads character data from input streams.  Input methods
    in an object of type <classname>TextReader</classname> are similar to the static input
    methods in <classname>TextIO</classname>.</li>
    <li><sourceref href="chapter12/netgame/common/">netgame.common</sourceref> is a package that defines a 

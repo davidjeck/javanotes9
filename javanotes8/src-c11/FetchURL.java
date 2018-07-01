@@ -33,7 +33,7 @@ public class FetchURL {
 		}
 		urlLC = url.toLowerCase();
 		if ( ! (urlLC.startsWith("http://") || urlLC.startsWith("ftp://") || 
-				urlLC.startsWith("file://"))) {
+				urlLC.startsWith("file://") || urlLC.startsWith("https://") )) {
 			url = "http://" + url;
 			System.out.println("Using: " + url);
 		}

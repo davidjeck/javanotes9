@@ -45,7 +45,7 @@ public class GUIDemo extends Application {
 		transcript.setEditable(false);
 		transcript.setPrefRowCount(7);
 		transcript.setPrefColumnCount(20);
-		root.add(new ScrollPane(transcript), 2, 0, 1, 4);
+		root.add(transcript, 2, 0, 1, 4);
 
 		Label lab = new Label("Push Button:");
 		root.add(lab, 0, 0);
