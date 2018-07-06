@@ -1,9 +1,18 @@
 package netgame.tictactoe;
 
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 
 import java.io.IOException;
 import netgame.common.*;
@@ -13,7 +22,7 @@ import netgame.common.*;
  * game of TicTacToe.  The window is meant to be created by
  * the program netgame.tictactoe.Main.
  */
-public class TicTacToeWindow extends JFrame {
+public class TicTacToeWindow extends Stage {
 	
 	/**
 	 * The state of the game.  This state is a copy of the official
@@ -28,16 +37,67 @@ public class TicTacToeWindow extends JFrame {
 	 */
 	private TicTacToeGameState state;
 	
+	private volatile boolean connecting;  // Set to true until connection is established to hub
 	
-	private Board board;     // A panel that displays the board.  The user
+	private Canvas board;     // A panel that displays the board.  The user
 	                         // makes moves by clicking on this panel.
 
-	private JLabel message;  // Displays messages to the user about the status of the game.
+	private Label message;  // Displays messages to the user about the status of the game.
 	
 	private int myID;        // The ID number that identifies the player using this window.
 
 	private TicTacToeClient connection;  // The Client object for sending and receiving 
 	                                     // network messages.
+	
+
+	/**
+	 * Creates, configures, and opens the window. Also creates a thread that attempts to
+	 * open a connection to the server.
+	 * @param hostName  the name or IP address of the host where the server is running.
+	 * @param serverPortNumber  the port number on the server computer where 
+	 *                            the Hub is listening for connections.
+	 */
+	public TicTacToeWindow(String hostName, int serverPortNumber) {
+
+		connecting = true;
+		
+		message = new Label("Waiting for connection.");
+		message.setFont( Font.font("Arial", FontWeight.BOLD, 16) );
+		message.setPadding( new Insets(10));
+		board = new Canvas(400,400);
+		board.setOnMousePressed( e -> doMouseClick(e.getX(), e.getY()) );
+		drawBoard();
+
+		BorderPane content = new BorderPane(board);
+		content.setBottom(message);
+		BorderPane.setAlignment(message, Pos.CENTER);
+
+		setScene( new Scene(content) );
+		setTitle("Net TicTacToe");
+		setResizable(false);
+		setOnHidden( evt -> {
+			    // When the user clicks the window's close box, this listener will
+			    // send a disconnect message to the Hub and will end the program.
+			    // The other player will then be notified that this player has disconnected.
+			if (connection != null) {
+				connection.disconnect();  // Send a disconnect message to the hub.
+				try {
+					Thread.sleep(333); // Wait one-half second to allow the message to be sent.
+				}
+				catch (InterruptedException e) {
+				}
+			}
+			System.exit(0);  // In case connecting thread is still around, make sure it dies.
+		});
+		setX(100 + 50*Math.random());
+		setY(100 + 50*Math.random());
+		show();
+		
+		Thread connector = new Thread( () -> connect(hostName, serverPortNumber) );
+		connector.start();
+		
+	} // end constructor
+	
 	
 	/**
 	 * This class defines the client object that handles communication with the Hub.
@@ -54,17 +114,13 @@ public class TicTacToeWindow extends JFrame {
 		/**
 		 * Responds to a message received from the Hub.  The only messages that
 		 * are supported are TicTacToeGameState objects.  When one is received,
-		 * the newState() method in the TicTacToeWindow class is called.  To avoid
-		 * problems with synchronization, that method is called using
-		 * SwingUtilities.invokeLater() so that it will run in the GUI event thread.
+		 * the newState() method in the TicTacToeWindow class is called. That
+		 * method is called using Platform.runLater() so that it will run on
+		 * the JavaFX application thread.
 		 */
-		protected void messageReceived(final Object message) {
+		protected void messageReceived(Object message) {
 			if (message instanceof TicTacToeGameState) {
-				SwingUtilities.invokeLater(new Runnable(){
-					public void run() {  // calls a method at the end of the TicTacToeWindow class
-						newState( (TicTacToeGameState)message ); 
-					}
-				});
+				Platform.runLater( () -> newState( (TicTacToeGameState)message ) );
 			}
 		}
 
@@ -73,105 +129,87 @@ public class TicTacToeWindow extends JFrame {
 		 * and the program ends.
 		 */
 		protected void serverShutdown(String message) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					JOptionPane.showMessageDialog(TicTacToeWindow.this, 
+			Platform.runLater( () -> {
+				Alert alert = new Alert(Alert.AlertType.INFORMATION,
 							"Your opponent has disconnected.\nThe game is ended.");
-					System.exit(0);
-				}
+				TicTacToeWindow.this.hide();
+				alert.showAndWait();
+				System.exit(0);
 			});
 		}
 		
-	}
+	} // end nested class TicTacToeClient
 	
 	
+
 	/**
-	 * A JPanel that draws the TicTacToe board.
+	 * When the window is created, this method is called in a separate
+	 * thread to make the connection to the server.  If an error
+	 * occurs, the program is terminated
 	 */
-	private class Board extends JPanel {  // Defines the board object
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			if (state == null || state.board == null) {
-				g.drawString("Starting up.", 20, 35);
-				return;
-			}
-			((Graphics2D)g).setStroke(new BasicStroke(10));
-			((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g.drawLine(150,50,150,350);
-			g.drawLine(250,50,250,350);
-			g.drawLine(50,150,350,150);
-			g.drawLine(50,250,350,250);
-			for (int row = 0; row < 3; row++) {
-				for (int col = 0; col < 3; col++) {
-					if (state.board[row][col] == 'X') {
-						g.setColor(Color.RED);
-						g.drawLine(70+col*100, 70+row*100, 130+col*100, 130+row*100);
-						g.drawLine(70+col*100, 130+row*100, 130+col*100, 70+row*100);
-					}
-					else if (state.board[row][col] == 'O') {
-						g.setColor(Color.BLUE);
-						g.drawOval(65+col*100,65+row*100, 70, 70);
-					}
+	private void connect(String hostName, int serverPortNumber) {
+		TicTacToeClient c;
+		int id;
+		try {
+			c = new TicTacToeClient(hostName, serverPortNumber);
+			id = c.getID();
+			Platform.runLater( () -> {
+				connecting = false;
+				connection = c;
+				myID = id;
+				drawBoard();
+				message.setText("Waiting for two players to connect.");
+			});
+		}
+		catch (Exception e) {
+			Platform.runLater( () -> {
+				Alert alert = new Alert(Alert.AlertType.INFORMATION, "Sorry, could not connect to\n"
+						+ hostName + " on port " + serverPortNumber + "\nShutting down.");
+				alert.showAndWait();
+				System.exit(0);
+			});
+		}
+	}
+		
+	
+	private void drawBoard() {
+		GraphicsContext g = board.getGraphicsContext2D();
+		g.setFill(Color.WHITE);
+		g.fillRect(0,0,board.getWidth(),board.getHeight());
+		g.setStroke(Color.BLACK);
+		g.setLineWidth(6);
+		g.strokeRect(0,0,board.getWidth(),board.getHeight());
+		g.setFill(Color.BLACK);
+		if (connecting) {
+			g.fillText("Connecting...", 20, 35);
+			return;
+		}
+		if (state == null || state.board == null) {
+			g.fillText("Starting up.", 20, 35);
+			return;
+		}
+		g.setLineWidth(10);
+		g.setStroke(Color.BLACK);
+		g.strokeLine(150,50,150,350);
+		g.strokeLine(250,50,250,350);
+		g.strokeLine(50,150,350,150);
+		g.strokeLine(50,250,350,250);
+		for (int row = 0; row < 3; row++) {
+			for (int col = 0; col < 3; col++) {
+				if (state.board[row][col] == 'X') {
+					g.setStroke(Color.RED);
+					g.strokeLine(70+col*100, 70+row*100, 130+col*100, 130+row*100);
+					g.strokeLine(70+col*100, 130+row*100, 130+col*100, 70+row*100);
+				}
+				else if (state.board[row][col] == 'O') {
+					g.setStroke(Color.BLUE);
+					g.strokeOval(65+col*100,65+row*100, 70, 70);
 				}
 			}
 		}
 	}
 
 
-	/**
-	 * Creates and configures the window, opens a connection to the server, and makes
-	 * the widow visible on the screen.  This constructor can block until the connection
-	 * is established.
-	 * @param hostName  the name or IP address of the host where the server is running.
-	 * @param serverPortNumber  the port number on the server computer when the Hub is listening for connections.
-	 * @throws IOException if some I/O error occurs while trying to open the connection.
-	 * @throws Client.DuplicatePlayerNameException  it playerName is already in use by another player in the game.
-	 */
-	public TicTacToeWindow(String hostName, int serverPortNumber)  throws IOException {
-		super("Net TicTacToe");
-		connection = new TicTacToeClient(hostName, serverPortNumber);
-		myID = connection.getID();
-		board = new Board();
-		message = new JLabel("Waiting for two players to connect.", JLabel.CENTER);
-		board.setBackground(Color.WHITE);
-		board.setPreferredSize(new Dimension(400,400));
-		board.addMouseListener(new MouseAdapter() { // A mouse listener to respond to user's clicks.
-			public void mousePressed(MouseEvent evt) {
-				doMouseClick(evt.getX(), evt.getY());
-			}
-		});
-		message.setBackground(Color.LIGHT_GRAY);
-		message.setOpaque(true);
-		JPanel content = new JPanel();
-		content.setLayout(new BorderLayout(2,2));
-		content.setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
-		content.setBackground(Color.GRAY);
-		content.add(board,BorderLayout.CENTER);
-		content.add(message,BorderLayout.SOUTH);
-		setContentPane(content);
-		pack();
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter(){
-			    // When the user clicks the window's close box, this listener will
-			    // send a disconnect message to the Hub and will end the program.
-			    // The other player will then be notified that this player has disconnected.
-			public void windowClosing(WindowEvent evt) {
-				dispose();
-				connection.disconnect();  // Send a disconnect message to the hub.
-				try {
-					Thread.sleep(333); // Wait one-half second to allow the message to be sent.
-				}
-				catch (InterruptedException e) {
-				}
-				System.exit(0);
-			}
-		});
-		setLocation(200,100);
-		setVisible(true);
-	}
-	
-	
 	/**
 	 * This method is called when the user clicks the tictactoe board.  If the
 	 * click represents a legal move at a legal time, then a message is sent
@@ -181,7 +219,7 @@ public class TicTacToeWindow extends JFrame {
 	 * "official" game state is maintained by the Hub.  Doing things this
 	 * way guarantees that both players see the same board.
 	 */
-	private void doMouseClick(int x, int y) {
+	private void doMouseClick(double x, double y) {
 		if (state == null || state.board == null)
 			return;
 		if (!state.gameInProgress) {
@@ -196,8 +234,8 @@ public class TicTacToeWindow extends JFrame {
 		if (myID !=state.currentPlayer) {
 			return;  // it's not this player's turn.
 		}
-		int row = (y-50) / 100;
-		int col = (x-50) / 100;
+		int row = (int)((y-50) / 100);
+		int col = (int)((x-50) / 100);
 		if (row >= 0 && row < 3 && col >= 0 && col < 3 && state.board[row][col] == ' ' ) {
 			   // User has clicked an empty square.  Send the move to the Hub
 			   // as an array of two ints containing the row number and column
@@ -211,22 +249,18 @@ public class TicTacToeWindow extends JFrame {
 	 * This method is called when a new game state is received from the hub.
 	 * It stores the new state in the instance variable that represents the
 	 * game state and updates the user interface to reflect the state.
-	 * Note that this method is called on the GUI event thread (using
-	 * SwingUtilitites.invokeLater()) to avoid synchronization problems.
-	 * (Synchronization is an issue when a method that manipulates the
-	 * GUI is called from a thread other than the GUI event thread.  In this
-	 * problem, there is also the problem that a message can actually be
-	 * received before the constructor has completed, which would lead to errors
-	 * in this method from uninitialized variables, if SwingUtilities.invokeLater()
-	 * were not used.)
+	 * Note that this method is called on the application thread (using
+	 * Platform.runLater()) to avoid synchronization problems.
 	 */
 	private void newState(TicTacToeGameState state) {
 		if ( state.playerDisconnected ) {
-			JOptionPane.showMessageDialog(this, "Your opponent has disconnected.\nThe game is ended.");
+			Alert alert = new Alert(Alert.AlertType.INFORMATION,
+					                   "Your opponent has disconnected.\nThe game is ended.");
+			alert.showAndWait();
 			System.exit(0);
 		}
 		this.state = state;
-		board.repaint();
+		drawBoard();
 		if ( state.board == null ) {
 			return;  // haven't started yet -- waiting for 2nd player
 		}
@@ -251,4 +285,5 @@ public class TicTacToeWindow extends JFrame {
 		}
 	}
 
-}
+} // end TicTacToeWindow
+

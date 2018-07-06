@@ -1,11 +1,18 @@
 import textio.TextIO;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * This program counts the number of prime integers between 3000001 and 6000000.
  * The work is divided among one to five threads.  The number of threads is
  * chosen by the user.
+ * 
+ * This is a slightly modified version of ThreadTest2.  It uses an AtomicInteger
+ * object to add up the total number of primes found by the various threads.
+ * ThreadTest2 used an ordinary int variable and used synchronization to handle
+ * the race condition when a value is added to the total.
  */
-public class ThreadTest2 {
+public class ThreadTest3 {
 
 	/**
 	 * The starting point for the range of integers that are tested for primality.
@@ -20,23 +27,15 @@ public class ThreadTest2 {
 	 * a different range of integers.  After it finishes counting, it adds its count
 	 * to the total.
 	 */
-	private static int total;
-
-	/**
-	 * Adds x to total.  This method is synchronized so that it can be safely used by
-	 * several different threads.
-	 */
-	synchronized private static void addToTotal(int x) {
-		total = total + x;
-		System.out.println(total + " primes found so far.");
-	}
+	private static AtomicInteger total = new AtomicInteger();
 
 	/**
 	 * A Thread belonging to this class will count primes in a specified range
 	 * of integers.  The range is from min to max, inclusive, where min and max
 	 * are given as parameters to the constructor.  After counting, the thread
 	 * outputs a message about the number of primes that it has found, and it
-	 * adds its count to the overall total by calling the addToTotal(int) method.
+	 * adds its count to the overall total by using the addAndGet() method
+	 * in an AtomicInteger.
 	 */
 	private static class CountPrimesThread extends Thread {
 		int count = 0;
@@ -49,7 +48,12 @@ public class ThreadTest2 {
 			count = countPrimes(min,max);
 			System.out.println("There are " + count + 
 					" primes between " + min + " and " + max);
-			addToTotal(count);
+			int currentTotal = total.addAndGet(count);
+			    // NOTE THAT A RACE CONDITION STILL OCCURS RIGHT HERE.
+			    // The value of total might have increased again before
+			    // currentTotal is output.  However, using an AtomincInteger
+			    // does ensure that the final total is correct.
+			System.out.println("Number of primes found so far: " + currentTotal);
 		}
 	}
 
@@ -66,7 +70,6 @@ public class ThreadTest2 {
 		CountPrimesThread[] worker = new CountPrimesThread[numberOfThreads];
 		for (int i = 0; i < numberOfThreads; i++)
 			worker[i] = new CountPrimesThread(  START+i*increment+1, START+(i+1)*increment );
-		total = 0;
 		for (int i = 0; i < numberOfThreads; i++)
 			worker[i].start();
 		for (int i = 0; i < numberOfThreads; i++) {

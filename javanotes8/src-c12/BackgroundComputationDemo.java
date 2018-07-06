@@ -1,9 +1,16 @@
-import java.awt.*;
-import java.awt.event.*;
 
-import javax.swing.*;
-
-import java.awt.image.BufferedImage;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
  * This demo program uses a thread to compute an image "in the background".
@@ -13,136 +20,115 @@ import java.awt.image.BufferedImage;
  * to understand what the image means.)  The user starts the computation by
  * clicking a "Start" button.  A separate thread is created and is run at
  * a lower priority, which will make sure that the GUI thread will get a
- * chance to run to repaint the display as necessary.
+ * chance to run to repaint the display as necessary.  All changes to the
+ * GUI from the animation thread are made by calling Platform.runLater().
  */
-public class BackgroundComputationDemo extends JPanel {
+public class BackgroundComputationDemo extends Application {
 
-	/**
-	 * This main routine just shows a panel of type BackgroundComputationDemo.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Demo: Background Computation in a Thread");
-		BackgroundComputationDemo content = new BackgroundComputationDemo();
-		window.setContentPane(content);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.pack();
-		window.setResizable(false);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		if (window.getWidth() > screenSize.width-100 || window.getHeight() > screenSize.height-100) {
-			double scale1 = (double)(screenSize.width-100)/window.getWidth();
-			double scale2 = (double)(screenSize.height-100)/window.getHeight();
-			double scale = Math.min(scale1,scale2);
-			window.setSize( (int)(scale*window.getWidth()), (int)(scale*window.getHeight()) );
-		}
-		window.setLocation( (screenSize.width - window.getWidth()) / 2,
-				(screenSize.height - window.getHeight()) / 2 );
-		window.setVisible(true);
+		launch(args);
 	}
-
+	//-----------------------------------------------------------------------------
 
 	private Runner runner;  // the thread that computes the image
 
 	private volatile boolean running;  // used to signal the thread to abort
 
-	private JButton startButton; // button the user can click to start or abort the thread
+	private Button startButton; // button the user can click to start or abort the thread
 
-	private BufferedImage image; // contains the image that is computed by this program
+	private Canvas canvas;      // the canvas where the image is displayed
+	private GraphicsContext g;  // the graphics context for drawing on the canvas
+	
+	private Color[] palette;    // The color palette, containing the colors of the spectrum
 
+	int width, height;          // the size of the canvas
 
+	
 	/**
-	 * The display is a JPanel that shows the image.  The part of the image that has
-	 * not yet been computed is gray.  If the image has not yet been created, the
-	 * entire display is filled with gray.
+	 * Set up the GUI and event handling.  The canvas will be 1200-by-1000 pixels,
+	 * if that fits comfortably on the screen; otherwise, size will be reduced to fit.
+	 * This method also makes the color palette, containing colors in spectral order.
 	 */
-	private JPanel display = new JPanel() {
-		protected void paintComponent(Graphics g) {
-			if (image == null)
-				super.paintComponent(g);  // fill with background color, gray
-			else {
-					/* Copy the image onto the display.  This is synchronized because
-					 * there are two threads that compete for access to the image:
-					 * the thread that computes the image and the thread that does the
-					 * painting.  The two threads both synchronize on the image object,
-					 * although any object could be used.
-					 */
-				synchronized(image) {
-					g.drawImage(image,0,0,null);
-				}
-			}
+	public void start(Stage stage) {
+		
+		palette = new Color[256];
+		for (int i = 0; i < 256; i++)
+			palette[i] = Color.hsb(360*(i/256.0), 1, 1);
+		
+		int screenWidth = (int)Screen.getPrimary().getVisualBounds().getWidth();
+		int screenHeight = (int)Screen.getPrimary().getVisualBounds().getHeight();
+		width = Math.min(1200,screenWidth - 50);
+		height = Math.min(1000, screenHeight - 120);
+		
+		canvas = new Canvas(width,height);
+		g = canvas.getGraphicsContext2D();
+		g.setFill(Color.LIGHTGRAY);
+		g.fillRect(0,0,width,height);
+		startButton = new Button("Start!");
+		startButton.setOnAction( e -> doStartOrStop() );
+		HBox bottom = new HBox(startButton);
+		bottom.setStyle("-fx-padding: 6px; -fx-border-color:black; -fx-border-width: 2px 0 0 0");
+		bottom.setAlignment(Pos.CENTER);
+		BorderPane root = new BorderPane(canvas);
+		root.setBottom(bottom);
+		root.setStyle("-fx-border-color:black; -fx-border-width: 2px");
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("Demo: Background Computation in a Thread");
+		stage.setResizable(false);
+		stage.show();
+	}
+	
+	
+	/**
+	 * This method is called from the animation thread when one row of pixels needs
+	 * to be added to the image.
+	 * @param rowNumber the row of pixels whose colors are to be set
+	 * @param colorArray an array of colors, one for each pixel
+	 */
+	private void drawOneRow( int rowNumber, Color[] colorArray ) {
+		for (int i = 0; i < width; i++) {
+			   // Color an individual pixel by filling in a 1-by-1 pixel
+			   // rectangle.  Not the most efficient way to do this, but
+			   // good enough for this demo.
+			g.setFill(colorArray[i]);
+			g.fillRect(i,rowNumber,1,1);
 		}
-	};
-
-
-	/**
-	 * Constructor creates a panel to hold the display, with a "Start" button below it.
-	 */
-	public BackgroundComputationDemo() {
-		display.setPreferredSize(new Dimension(1600,1200));
-		display.setBackground(Color.LIGHT_GRAY);
-		setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		setLayout(new BorderLayout());
-		add(display, BorderLayout.CENTER);
-		startButton = new JButton("Start");
-		JPanel bottom = new JPanel();
-		bottom.add(startButton);
-		bottom.setBackground(Color.WHITE);
-		add(bottom,BorderLayout.SOUTH);
-		startButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (running)
-					stop();
-				else
-					start();
-			}
-		});
 	}
 
 
 	/**
 	 * This method is called when the user clicks the Start button,
-	 * while no thread is running.  It starts a new thread and
-	 * sets the signaling variable, running, to true;  Also changes
-	 * the text on the Start button to "Abort".
+	 * If no thread is running, it creates and starts a new thread and
+	 * sets the signaling variable, running, to true.  Note that
+	 * the thread is responsible for changing the text on the button.
 	 * Note that the priority of the thread is set to be one less
 	 * than the priority of the thread that calls this method, that
-	 * is of Swing's event-handling thread.  This means that the event-handling
+	 * is of the JavaFX application thread.  This means that the application
 	 * thread is run in preference to the computation thread.  When there is an
-	 * event to be handled, such as painting the display or reacting to a
-	 * button click, the event-handling thread will wake up to handle the
-	 * event.
+	 * event to be handled, such as updating the display or reacting to a
+	 * button click, the event-handling thread should wake up immediately
+	 * to handle the event.
 	 */
-	private void start() {
-		startButton.setEnabled(false);
-		int width = display.getWidth() + 2;
-		int height = display.getHeight() + 2;
-		if (image == null)
-			image = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-		Graphics g = image.getGraphics(); // fill image with gray
-		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(0,0,width,height);
-		g.dispose();
-		display.repaint();
-		startButton.setText("Abort");
-		runner = new Runner();
-		try {
-			runner.setPriority( Thread.currentThread().getPriority() - 1 );
+	private void doStartOrStop() {
+		if (running == false) { // create a thread and start it.
+			startButton.setDisable(true);  // will be reenabled by the thread.
+			g.setFill(Color.LIGHTGRAY);
+			g.fillRect(0,0,width,height);
+			runner = new Runner();
+			try {
+				runner.setPriority( Thread.currentThread().getPriority() - 1 );
+			}
+			catch (Exception e) {
+			}
+			running = true;  // Set the signal before starting the thread!
+			runner.start();
 		}
-		catch (Exception e) {
+		else {  // stop the thread
+			startButton.setDisable(true);  // will be reenabled by the thread.
+			running = false;
+			runner = null;
 		}
-		running = true;  // Set the signal before starting the thread!
-		runner.start();
-	}
-
-
-	/**
-	 * This method is called when the user clicks the button while
-	 * a thread is running.  A signal is sent to the thread to terminate,
-	 * by setting the value of the signaling variable, running, to false.
-	 */
-	private void stop() {
-		startButton.setEnabled(false);
-		running = false;
-		runner = null;
 	}
 
 
@@ -151,6 +137,7 @@ public class BackgroundComputationDemo extends JPanel {
 	 * run method computes the image one pixel at a time.  After computing
 	 * the colors for each row of pixels, the colors are copied into the
 	 * image, and the part of the display that shows that row is repainted.
+	 * All modifications to the GUI are made using Platform.runLater().
 	 * (Since the thread runs in the background, at lower priority than
 	 * the event-handling thread, the event-handling thread wakes up
 	 * immediately to repaint the display.)
@@ -158,16 +145,7 @@ public class BackgroundComputationDemo extends JPanel {
 	private class Runner extends Thread {
 		double xmin, xmax, ymin, ymax;
 		int maxIterations;
-		int[] rgb;
-		int[] palette;
-		int width, height;
 		Runner() {
-			width = image.getWidth();
-			height = image.getHeight();
-			rgb = new int[width];
-			palette = new int[256];
-			for (int i = 0; i < 256; i++)
-				palette[i] = Color.getHSBColor(i/255F, 1, 1).getRGB();
 			xmin = -1.6744096740931858;
 			xmax = -1.674409674093473;
 			ymin = 4.716540768697223E-5;
@@ -176,12 +154,14 @@ public class BackgroundComputationDemo extends JPanel {
 		}
 		public void run() {
 			try {
-				startButton.setEnabled(true);
+				Platform.runLater( () -> startButton.setDisable(false) );
+				Platform.runLater( () -> startButton.setText("Abort!") );
 				double x, y;
 				double dx, dy;
 				dx = (xmax-xmin)/(width-1);
 				dy = (ymax-ymin)/(height-1);
 				for (int row = 0; row < height; row++) {  // Compute one row of pixels.
+					final Color[] rgb = new Color[width];
 					y = ymax - dy*row;
 					for (int col = 0; col < width; col++) {
 						x = xmin + dx*col;
@@ -195,27 +175,23 @@ public class BackgroundComputationDemo extends JPanel {
 							xx = newxx; 
 						}
 						if (count == maxIterations)
-							rgb[col] = 0;
+							rgb[col] = Color.BLACK;
 						else
 							rgb[col] = palette[count%palette.length];
+						if (! running) {  // Check for the signal to abort the computation.
+							return;
+						}
 					}
-					if (! running) {  // Check for the signal to abort the computation.
-						return;
-					}
-					synchronized(image) {
-							/* Add the newly computed row of pixel colors to the image.  This is
-							 * synchronized because this thread and the thread that paints the
-							 * display might both try to access the image simultaneously.
-							 */
-						image.setRGB(0, row, width, 1, rgb, 0, width);
-					}
-					display.repaint(0,row,width,1); // Repaint just the newly computed row.
+					final int rowNum = row; // Need a final variable for the lambda expression
+					Platform.runLater( () -> drawOneRow(rowNum,rgb) );
 				}
 			}
 			finally {
-				startButton.setText("Start Again");
-				startButton.setEnabled(true);
-				running = false; // Make sure running is false after the thread ends.
+				 // Make sure the state is correct after the thread ends for any reason.
+				Platform.runLater( () -> startButton.setText("Start Again") );
+				Platform.runLater( () -> startButton.setDisable(false) );
+				running = false;
+				runner = null;
 			}
 		}
 	}

@@ -270,6 +270,71 @@ can be mostly replaced in that context by lambda expressions.</np>
 
 </subsection>
    
+<subsection id="OOP.8.4" title="Local Classes and Lambda Expressions">
+
+<p>A class can be defined inside a subroutine definition.  Such classes are
+called <newword>local classes</newword>.  A local class can only be
+used inside the subroutine where it is defined.  However, an object
+that is defined by a local class can be used outside that subroutine.
+It can be returned as the value of the subroutine, or it can be passed
+as a parameter to another subroutine.  This is possible because an
+object belonging to some class <classname>B</classname> can be
+assigned to a variable of type <classname>A</classname>, as long
+as <classname>B</classname> is a subclass of <classname>A</classname> or,
+if <classname>A</classname> is an interface, as long as
+class <classname>B</classname> implements interface&nbsp;<classname>A</classname>.
+For example, if a subroutine takes a parameter of type
+<classname>Drawable</classname>, where <classname>Drawable</classname>
+is the interface defined above, then any object that implements
+<classname>Drawable</classname> can be passed as a parameter to that
+subroutine.  And that object can be defined by a local class.</p>
+
+<p>In an example earlier in this section, we passed a customized object
+of type <classname>Drawable</classname> to the <code>drawTwice()</code>
+method, which takes a parameter of type <classname>Drawable</classname>.
+In that example, the class was an anonymous inner class.  Local classes
+are often anonymous, but that is not required.  It is also true that
+anonymous classes are often local classes, but that is also not required.  For
+example, an anonymous class could be used to define the initial value
+of a global variable.  In that case, the anonymous class is not enclosed
+in any subroutine and therefore is not local.</p>
+
+<p>The definition of a local class can use local variables from the
+subroutine where it is defined.  It can also use parameters to
+that subroutine.  However, there is a restriction on the use of such
+variables and parameters in a local class:  The local variable or parameter must be
+declared to be <code>final</code> or, if it is not declared <code>final</code>,
+then it must be "effectively final."  A parameter is effectively final
+if its value is not changed inside the subroutine (including in any
+local class that references the parameter).  A local variable is
+effectively final if its value is never changed after it is initialized.
+Note that there is no such restriction on global variables that
+are used in the definition of a local class.</p>
+
+<p>The same restriction on the use of local variables also applies to
+lambda expressions, which are very similar to anonymous classes.  Here
+is an example using the stream API and the <classname>Runnable</classname>
+interface, which are discussed in <localref href="subroutines.4a"/>.
+This subroutine will print out the numbers 1 to 10 in some indeterminate
+order (since it uses a parallel stream):</p>
+
+<pre>static void print1to10() {
+    ArrayList&lt;Runnable&gt; printers = new ArrayList&lt;&gt;();
+    for (int i = 1; i &lt;= 10; i++) {
+        int x = i;
+        printers.add( () -> System.out.println(x) );
+    }
+    printers.parallelStream().forEach( r -> r.run() );
+}</pre>
+
+<np>The local variable <code>x</code> is effectively final and therefore
+can be used in the lambda expression.  On the other hand, it would have
+been illegal to use the variable <code>i</code> directly in the lambda
+expression, since <code>i</code> is not effectively final; its value
+is changed when <code>i++</code> is executed.</np>
+
+</subsection>
+   
 <endchapter/>
 
 </section>

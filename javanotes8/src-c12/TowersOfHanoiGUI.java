@@ -1,8 +1,15 @@
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.awt.image.BufferedImage;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
  *  This program shows an animation of the famous Towers of Hanoi problem, for a pile
@@ -17,32 +24,21 @@ import java.awt.image.BufferedImage;
  *  clicks "Next" or "Run", the notify() method is called to notify the thread to
  *  wake up and continue.  A "status" variable is used to communicate commands to
  *  the thread.
- *  
- *  A main() routine allows this class to be run as an application. 
  */
-public class TowersOfHanoiGUI extends JPanel implements Runnable, ActionListener {
+public class TowersOfHanoiGUI extends Application {
 
-	/**
-	 * A main() routine to allow this class to be run as a stand-alone
-	 * application.  Just opens a window containing a panel of type
-	 * TowersOfHanoiGUI.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Towers Of Hanoi");
-		window.setContentPane(new TowersOfHanoiGUI());
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.pack();
-		window.setResizable(false);
-		window.setLocation(300,200);
-		window.setVisible(true);
+		launch(args);
 	}
+	//-----------------------------------------------------------
 
-	private static Color BACKGROUND_COLOR = new Color(255,255,180); // 4 colors used in drawing.
-	private static Color BORDER_COLOR = new Color(100,0,0);
-	private static Color DISK_COLOR = new Color(0,0,180);
-	private static Color MOVE_DISK_COLOR = new Color(180,180,255);
+	private static Color BACKGROUND_COLOR = Color.rgb(255,255,180); // 4 colors used in drawing.
+	private static Color BORDER_COLOR = Color.rgb(100,0,0);
+	private static Color DISK_COLOR = Color.rgb(0,0,180);
+	private static Color MOVE_DISK_COLOR = Color.rgb(180,180,255);
 
-	private BufferedImage OSC;   // The off-screen canvas.  Frames are drawn here, then copied to the screen.
+	private Canvas canvas;     // The canvas where the "towers" are drawn.
+	private GraphicsContext g; // The graphics context for drawing on the canvas.
 
 	private int status;   // Controls the execution of the thread; value is one of the following constants.
 
@@ -70,88 +66,80 @@ public class TowersOfHanoiGUI extends JPanel implements Runnable, ActionListener
 	private int moveDisk;
 	private int moveTower;
 
-	private Display display;  // A subpanel where the frames of the animation are shown.
 
-	private JButton runPauseButton;  // 3 control buttons for controlling the animation
-	private JButton nextStepButton;
-	private JButton startOverButton;
+	private Button runPauseButton;  // 3 control buttons for controlling the animation
+	private Button nextStepButton;
+	private Button startOverButton;
 
 
 	/**
-	 * This class defines the panel that is used as a display, to show
-	 * the frames of the animation.  The paintComponent() method in this
-	 * class simply copies the off-screen canvas, OSC, to the screen.
-	 * This display will be given a preferred size of 430-by-143, which
-	 * is the same size as the canvas.  But to allow for possible small
-	 * variations from this size, OSC is drawn centered on the panel.
+	 * Set up the GUI and event handling.
 	 */
-	private class Display extends JPanel {
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			int x = (getWidth() - OSC.getWidth())/2;
-			int y = (getHeight() - OSC.getHeight())/2;
-			g.drawImage(OSC, x, y, null);
-		}
-	}
+	public void start (Stage stage) {
+		canvas = new Canvas(430,143);
+		g = canvas.getGraphicsContext2D();
+
+		runPauseButton = new Button("Run");
+		runPauseButton.setOnAction( e -> doStopGo() );
+		runPauseButton.setMaxWidth(10000);
+		runPauseButton.setPrefWidth(10);
+		nextStepButton = new Button("Next Step");
+		nextStepButton.setOnAction( e -> doNextStep() );
+		nextStepButton.setMaxWidth(10000);
+		nextStepButton.setPrefWidth(10);
+		startOverButton = new Button("Start Over");
+		startOverButton.setOnAction( e -> doRestart() );
+		startOverButton.setMaxWidth(10000);
+		startOverButton.setPrefWidth(10);
+		startOverButton.setDisable(true);
+		HBox bottom = new HBox( runPauseButton, nextStepButton, startOverButton);
+		bottom.setStyle("-fx-border-color: rgb(100,0,0); -fx-border-width: 4px 0 0 0");
+		HBox.setHgrow(runPauseButton, Priority.ALWAYS);
+		HBox.setHgrow(nextStepButton, Priority.ALWAYS);
+		HBox.setHgrow(startOverButton, Priority.ALWAYS);
+		
+		BorderPane root = new BorderPane(canvas);
+		root.setBottom(bottom);
+		root.setStyle("-fx-border-color: rgb(100,0,0); -fx-border-width: 4px");
+		
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setResizable(false);
+		stage.show();
+
+		new AnimationThread().start();  // create and start the thread that will solve
+		                                // the puzzles.  The thread will immediately
+                                        // block until user clicks "Run" or "Next Step".
+	} // end start()
 
 
 	/**
-	 *  Create the panel, containing a display panel and, beneath it,
-	 *  a sub-panel containing the three control buttons.  This
-	 *  constructor also creates the off-screen canvas, and creates
-	 *  and starts the animation thread.
-	 */
-	public TowersOfHanoiGUI () {
-		OSC = new BufferedImage(430,143,BufferedImage.TYPE_INT_RGB);
-		display = new Display();
-		display.setPreferredSize(new Dimension(430,143));
-		display.setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 2));
-		display.setBackground(BACKGROUND_COLOR);
-		setLayout(new BorderLayout());
-		add(display, BorderLayout.CENTER);
-		JPanel buttonBar = new JPanel();
-		add(buttonBar, BorderLayout.SOUTH);
-		buttonBar.setLayout(new GridLayout(1,0));
-		runPauseButton = new JButton("Run");
-		runPauseButton.addActionListener(this);
-		buttonBar.add(runPauseButton);
-		nextStepButton = new JButton("Next Step");
-		nextStepButton.addActionListener(this);
-		buttonBar.add(nextStepButton);
-		startOverButton = new JButton("Start Over");
-		startOverButton.addActionListener(this);
-		startOverButton.setEnabled(false);
-		buttonBar.add(startOverButton);
-		new Thread(this).start();
-	}
-
-
-	/**
-	 *  Event-handling method for the control buttons.  Changes in the
+	 *  Event-handling methods for the control buttons.  Changes in the
 	 *  value of the status variable will be seen by the animation thread,
 	 *  which will respond appropriately.
 	 */
-	synchronized public void actionPerformed(ActionEvent evt) {
-		Object source = evt.getSource();
-		if (source == runPauseButton) {  // Toggle between running and paused.
-			if (status == GO) {  // Animation is running.  Pause it.
-				status = PAUSE;
-				nextStepButton.setEnabled(true);
-				runPauseButton.setText("Run");
-			}
-			else {  // Animation is paused.  Start it running.
-				status = GO;
-				nextStepButton.setEnabled(false);  // Disabled when animation is running
-				runPauseButton.setText("Pause");
-			}
+	synchronized private void doStopGo() {
+		if (status == GO) {  // Animation is running.  Pause it.
+			status = PAUSE;
+			nextStepButton.setDisable(false);
+			runPauseButton.setText("Run");
 		}
-		else if (source == nextStepButton) {  // Set status to make animation run one step.
-			status = STEP;
-		}
-		else if (source == startOverButton) { // Set status to make animation restart.
-			status = RESTART;
+		else {  // Animation is paused.  Start it running.
+			status = GO;
+			nextStepButton.setDisable(true);  // Disabled when animation is running
+			runPauseButton.setText("Pause");
 		}
 		notify();  // Wake up the thread so it can see the new status value!
+	}
+	
+	synchronized private void doNextStep() {
+		status = STEP;
+		notify();
+	}
+
+	synchronized private void doRestart() {
+		status = RESTART;
+		notify();
 	}
 
 
@@ -168,21 +156,35 @@ public class TowersOfHanoiGUI extends JPanel implements Runnable, ActionListener
 	 *  the solve() method to be aborted.  The exception is caught to prevent
 	 *  it from crashing the thread.  
 	 */
-	public void run() {
-		while (true) {
-			runPauseButton.setText("Run");
-			nextStepButton.setEnabled(true);
-			startOverButton.setEnabled(false);
-			setUpProblem();  // Sets up the initial state of the puzzle
-			status = PAUSE;
-			checkStatus(); // Returns only when user has clicked "Run" or "Next"
-			startOverButton.setEnabled(true);
-			try {
-				solve(10,0,1,2);  // Move 10 disks from pile 0 to pile 1.
+	private class AnimationThread extends Thread {
+		public void run() {
+			while (true) {
+				Platform.runLater( () -> {
+					runPauseButton.setText("Run");
+					runPauseButton.setDisable(false);
+					nextStepButton.setDisable(false);
+					startOverButton.setDisable(true);
+				});
+				setUpProblem();  // Sets up the initial state of the puzzle
+				status = PAUSE;
+				checkStatus(); // Returns only when user has clicked "Run" or "Next Step"
+				Platform.runLater( () -> startOverButton.setDisable(false) );
+				try {
+					solve(10,0,1,2);  // Move 10 disks from pile 0 to pile 1.
+						// When solution is done, give the user a chance to see it,
+						// and make them click "Restart" to continue with a new solution.
+					status = PAUSE;
+					Platform.runLater( () -> { // make sure user can only click startOver.
+						runPauseButton.setDisable(true);
+						nextStepButton.setDisable(true);
+						startOverButton.setDisable(false);
+					} );
+					checkStatus();  // Returns only when use clicks "Start Over"
+				}
+				catch (IllegalStateException e) {
+					// Exception was thrown because user clicked "Start Over".
+				}
 			}
-			catch (IllegalStateException e) {
-				// Exception was thrown because user clicked "Start Over".
-			}			
 		}
 	}
 
@@ -211,7 +213,7 @@ public class TowersOfHanoiGUI extends JPanel implements Runnable, ActionListener
 		// At this point, status is RUN, STEP, or RESTART.
 		if (status == RESTART)
 			throw new IllegalStateException("Restart");
-		// At this point, status is RUN or STEP.
+		// At this point, status is RUN or STEP, and solution should proceed.
 	}
 
 
@@ -226,12 +228,7 @@ public class TowersOfHanoiGUI extends JPanel implements Runnable, ActionListener
 			tower[0][i] = 10 - i;
 		towerHeight = new int[3];
 		towerHeight[0] = 10;
-		if (OSC != null) {
-			Graphics g = OSC.getGraphics();
-			drawCurrentFrame(g);
-			g.dispose();
-		}
-		display.repaint();
+		Platform.runLater( () -> drawInitialFrame() );
 	}
 
 
@@ -270,14 +267,14 @@ public class TowersOfHanoiGUI extends JPanel implements Runnable, ActionListener
 		moveTower = fromStack;
 		delay(120);
 		towerHeight[fromStack]--;
-		putDisk(MOVE_DISK_COLOR,moveDisk,moveTower);
+		putDisk(MOVE_DISK_COLOR,moveDisk,moveTower,towerHeight[fromStack]);
 		delay(80);
-		putDisk(BACKGROUND_COLOR,moveDisk,moveTower);
+		putDisk(BACKGROUND_COLOR,moveDisk,moveTower,towerHeight[fromStack]);
 		delay(80);
 		moveTower = toStack;
-		putDisk(MOVE_DISK_COLOR,moveDisk,moveTower);
+		putDisk(MOVE_DISK_COLOR,moveDisk,moveTower,towerHeight[toStack]);
 		delay(80);
-		putDisk(DISK_COLOR,moveDisk,moveTower);
+		putDisk(DISK_COLOR,moveDisk,moveTower,towerHeight[toStack]);
 		tower[toStack][towerHeight[toStack]] = moveDisk;
 		towerHeight[toStack]++;
 		moveDisk = 0;
@@ -303,48 +300,50 @@ public class TowersOfHanoiGUI extends JPanel implements Runnable, ActionListener
 	/**
 	 * Draw a specified disk to the off-screen canvas.  This is
 	 * used only during the moveOne() method, to draw the disk
-	 * that is being moved.  Calls display.repaint() to redraw
-	 * display using the newly modified image.
+	 * that is being moved.  This method is called from the animation
+	 * thread. It uses Platform.runLater() to apply the drawing to
+	 * the canvas.
 	 * @param color the color of the disk (use background color to erase).
 	 * @param disk the number of the disk that is to be drawn, 1 to 10.
 	 * @param t the number of the pile on top of which the disk is drawn.
+	 * @param h the height of the tower
 	 */
-	private void putDisk(Color color, int disk, int t) {
-		Graphics g = OSC.getGraphics();
-		g.setColor(color);
-		g.fillRoundRect(75+140*t - 5*disk - 5, 116-12*towerHeight[t], 10*disk+10, 10, 10, 10);
-		g.dispose();
-		display.repaint();
+	private void putDisk(Color color, int disk, int t, int h) {
+		Platform.runLater( () -> {
+			g.setFill(color);
+			if (color == BACKGROUND_COLOR) {
+				   // When drawing in the background color, to erase a disk, a slightly
+				   // larger roundrect is drawn.  This is done to make sure that the
+				   // disk is completely erased, since the anti-aliasing that was done
+				   // when the disk was drawn can allow the disk color to bleed into pixels
+				   // that lie outside the actual disk.
+				g.fillRoundRect(75+140*t - 5*disk - 6, 116-12*h - 1, 10*disk+12, 12, 10, 10);
+			}
+			else {
+				g.fillRoundRect(75+140*t - 5*disk - 5, 116-12*h, 10*disk+10, 10, 10, 10);
+			}
+		});
 	}
 
 
 	/**
-	 * Called to draw the current frame, not including the moving disk,
-	 * if any, which is drawn as part of the moveOne() method.
+	 * Called to draw the starting state of the towers, with all the
+	 * disks on the first base.
+	 * This method is called on the JavaFX application thread.
 	 */
-	synchronized private void drawCurrentFrame(Graphics g) {
-			// Called to draw the current frame.  But it is not drawn during
-			// the animation of the solution.  During the animation, the
-			// moveDisk() method just modifies the existing picture.
-		g.setColor(BACKGROUND_COLOR);
+	private void drawInitialFrame() {
+		g.setFill(BACKGROUND_COLOR);
 		g.fillRect(0,0,430,143);
-		g.setColor(BORDER_COLOR);
-		if (tower == null)
-			return;
+		g.setFill(BORDER_COLOR);
 		g.fillRect(10,128,130,5);
 		g.fillRect(150,128,130,5);
 		g.fillRect(290,128,130,5);
-		g.setColor(DISK_COLOR);
+		g.setFill(DISK_COLOR);
 		for (int t = 0; t < 3; t++) {
 			for (int i = 0; i < towerHeight[t]; i++) {
 				int disk = tower[t][i];
 				g.fillRoundRect(75+140*t - 5*disk - 5, 116-12*i, 10*disk+10, 10, 10, 10);
 			}
-		}
-		if (moveDisk > 0) {
-			g.setColor(MOVE_DISK_COLOR);
-			g.fillRoundRect(75+140*moveTower - 5*moveDisk - 5, 116-12*towerHeight[moveTower], 
-					10*moveDisk+10, 10, 10, 10);
 		}
 	}
 

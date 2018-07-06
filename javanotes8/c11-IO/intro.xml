@@ -21,7 +21,7 @@ commands that are similar to those that you have already used.
 In fact, standard output (<code>System.out</code>) and
 standard input (<code>System.in</code>) are examples of I/O streams.
 (Note that I/O streams are <b>not</b> streams in the sense of the stream
-API that was covered in <localref href=""/>.)</p>
+API that was covered in <localref href="generics.6"/>.)</p>
 
 <p>Working with files and networks requires familiarity with exceptions, which
 were covered in <localref href="robustness.3"/>. Many of

@@ -244,6 +244,7 @@ buildjar chapter12 BackgroundComputationDemo
 buildjar chapter12 MultiprocessingDemo1
 buildjar chapter12 MultiprocessingDemo2
 buildjar chapter12 MultiprocessingDemo3
+buildTextIOjar chapter12 ThreadTest4
 buildjar chapter12 TowersOfHanoiGUI
 buildjar chapter12 GUIChat
 buildpackagejar chapter12 netgame.chat.ChatRoomServer netgame TextIO netgame/chat netgame/common
@@ -283,7 +284,8 @@ echo chapter11 ReverseFileWithScanner -- requires a file named data.dat in the c
 echo chapter11 ReverseFileWithResources -- requires a file named data.dat in the current directory
 echo chapter11 CopyFile -- requires command-line parameters
 echo chapter11 CopyFileAsResource -- requires command-line parameters
-echo chapter12 BackgroundCompWithInvoke -- duplicates functionality of BackgroundComputationDemo
+echo chapter12 ThreadTest3 -- duplicates the functionality of ThreadTest2
+echo chapter12 MultiprocessorDemo4 -- duplicates the functionality of MultiprocessorDemo3 
 echo chapter12 CLDateServerWithThreads -- duplicates functionality of DateServer
 echo chapter12 CLDateServerWithThreadPool -- duplicates functionality of DateServer
 echo chapter12 CLMandelbrotMaster -- needs command line arguments

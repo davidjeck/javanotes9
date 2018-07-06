@@ -209,7 +209,10 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    run simultaneously and finish in an indeterminate order.</li>
    <li><sourceref href="chapter12/ThreadTest2.java">ThreadTest2.java</sourceref>, from section <localref href="threads.1"/>,
    divides up a task (counting primes) among several threads, to demonstrate parallel
-   processing and the use of synchronization.</li>
+   processing and the use of synchronization.  <sourceref href="chapter12/ThreadTest3.java">ThreadTest3.java</sourceref>,
+   from the same section, is a minor modification of <code>ThreadTest2.java</code> that uses
+   an <classname>AtomicInteger</classname> instead of synchronization to safely add up values from 
+   several threads.</li>
    <li><sourceref href="chapter12/DateServerWithThreads.java">DateServerWithThreads.java</sourceref> and 
    <sourceref href="chapter12/DateServerWithThreadPool.java">DateServerWithThreadPool.java</sourceref>,
    from <localref href="threads.4"/>, are modifications of <sourceref href="chapter11/DateServer.java"/>
@@ -373,6 +376,9 @@ as the GUI toolbox.</p>
    using <code>wait()</code> and <code>notify()</code> directly that can be used
    as a replacement for <classname>LinkedBlockingQueue</classname> in
    <code>MultiprocessingDemo3</code>.</li>
+   <li><sourceref href="chapter12/MultiprocessingDemo4.java">MultiprocessingDemo4.java</sourceref>, from <localref href="threads.3"/>
+   has the same functionality as <code>MultiprocessingDemo3</code>, but uses an <classname>ExecutorService</classname>,
+   from package <code>java.util.concurrent</code>, to execute the tasks.</li>
    <li><sourceref href="chapter12/TowersOfHanoiGUI.java">TowersOfHanoiGUI.java</sourceref>, from <localref href="threads.3"/>,
    shows an animation of the famous Towers Of Hanoi problem.  The user can control
    the animation with Run/Pause, Next, and StartAgain buttons.  The program is

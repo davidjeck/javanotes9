@@ -104,7 +104,8 @@ computer that has more than one processor.  If so, the execution time could be
 as little as 2 seconds, since each of two processors can do half of the 4-seconds
 worth of work.  If the computer has only one processor, however, the two-threaded
 program will still take 4 seconds, since all the work will have to be done
-by the single processor.</p>
+by the single processor.  (Even on a multiprocessor computer, it might take longer
+than 2 seconds, if the work is not divided evenly between the two threads.)</p>
 </ans>
 </question>
 

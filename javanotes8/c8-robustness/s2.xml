@@ -211,7 +211,7 @@ else
 <subsection id="robustness.2.3" title="Invariants">
 
 <p>Let's look at how loops work in more detail.  Consider a
-subroutine for finding the sum of the elemetns in an array of <ptype>int</ptype>:</p>
+subroutine for finding the sum of the elements in an array of <ptype>int</ptype>:</p>
 
 <pre>static int arraySum( int[] A ) {
     int total = 0;
@@ -435,6 +435,10 @@ has to be incremented, the invariant means that you will have to make the array 
 
 <p>In future chapters, I will occasionally point out how how it can be useful to
 think in terms of preconditions, postconditions, and invariants.</p>
+
+<p>I should note that reasoning about invariants becomes much more complicated in parallel
+programs, when several threads that are running at the same time and are accessing the
+same data.  This will be an issue when we encounter threads in <localref href="threads"/>.</p>
 
 </subsection>
 

@@ -1,6 +1,19 @@
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.stage.FileChooser;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 
 import java.io.*;
 import java.net.*;
@@ -14,13 +27,15 @@ import java.net.*;
  * The window has an input box where the user can enter
  * messages to be sent over the connection.  A connection
  * can be closed by clicking a button in the window or by
- * closing the window.   It is possible to open additional 
- * windows to support simultaneous chats (or to test the program 
- * by opening a connection from one window to another).
- * This class contains a main() routine, so it can be run as
- * a stand-alone application.
+ * closing the window.   To test the program, several
+ * copies of the program can be run on the same computer.
  */
-public class GUIChat extends JFrame {
+public class GUIChat extends Application {
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+	//--------------------------------------------------------------
 
 	/**
 	 * Possible states of the thread that handles the network connection.
@@ -40,305 +55,211 @@ public class GUIChat extends JFrame {
 	 */
 	private static String defaultHost = "localhost";
 
-	/**
-	 * Used to keep track of where on the screen the previous window
-	 * was opened, so that the next window can be placed at a 
-	 * different position.
-	 */
-	private static Point previousWindowLocation;
-
-	/**
-	 * The number of windows that are currently open.  If this drops to
-	 * zero, then the program is terminated by calling System.exit();
-	 */
-	private static int openWindowCount;
-
-	/**
-	 * The number of windows that have been created.  This is used
-	 * in the title bar of the second and subsequent windows.
-	 */
-	private static int windowsCreated;
 
 	/**
 	 * The thread that handles the connection; defined by a nested class.
+	 * (This variable 
 	 */
-	private ConnectionHandler connection;
-
-
-	/**
-	 * The main() routine makes it possible to run this class as an
-	 * application; it just creates a GUIChat window and makes it visible.
-	 */
-	public static void main(String[] args) {
-		GUIChat window = new GUIChat();
-		window.setVisible(true);
-	}
-
+	private volatile ConnectionHandler connection;
 
 	/**
 	 * Control buttons that appear in the window.
 	 */
-	private JButton newButton, listenButton, connectButton, closeButton, 
-	clearButton, quitButton, saveButton, sendButton;
+	private Button listenButton, connectButton, closeButton, 
+									clearButton, quitButton, saveButton, sendButton;
 
 	/**
 	 * Input boxes for connection information (port numbers and host names).
 	 */
-	private JTextField listeningPortInput, remotePortInput, remoteHostInput;
+	private TextField listeningPortInput, remotePortInput, remoteHostInput;
 
 	/**
 	 * Input box for messages that will be sent to the other side of the
 	 * network connection.
 	 */
-	private JTextField messageInput;
+	private TextField messageInput;
 
 	/**
 	 * Contains a transcript of messages sent and received, along with
 	 * information about the progress and state of the connection.
 	 */
-	private JTextArea transcript;
-
-
+	private TextArea transcript;
+	
 	/**
-	 * Constructor creates a window with a default title.  The
-	 * constructor does not make the window visible.
+	 * The program's window.
 	 */
-	public GUIChat() {
-		this( windowsCreated == 0 ? "Chat Window" :
-			"Chat Window #" + (windowsCreated+1) );
-	}
-
+	private Stage window;
+	
+	
 	/**
-	 * Constructor creates a window with a specified title.  The
-	 * constructor does not make the window visible.
+	 * Set up the GUI and event handling.
 	 */
-	public GUIChat(String title) {
-
-		super(title);
-
-		ActionListener actionHandler = new ActionHandler();
-		newButton = new JButton("New");
-		newButton.addActionListener(actionHandler);
-		listenButton = new JButton("Listen on port:");
-		listenButton.addActionListener(actionHandler);
-		connectButton = new JButton("Connect to:");
-		connectButton.addActionListener(actionHandler);
-		closeButton = new JButton("Disconnect");
-		closeButton.addActionListener(actionHandler);
-		closeButton.setEnabled(false);
-		clearButton = new JButton("Clear Transcript");
-		clearButton.addActionListener(actionHandler);
-		sendButton = new JButton("Send");
-		sendButton.addActionListener(actionHandler);
-		sendButton.setEnabled(false);
-		saveButton = new JButton("Save Transcript");
-		saveButton.addActionListener(actionHandler);
-		quitButton = new JButton("Quit");
-		quitButton.addActionListener(actionHandler);
-		messageInput = new JTextField();
-		messageInput.addActionListener(actionHandler);
+	public void start(Stage stage) {
+		window = stage;
+		
+		listenButton = new Button("Listen on port:");
+		listenButton.setOnAction( this::doAction );
+		connectButton = new Button("Connect to:");
+		connectButton.setOnAction( this::doAction );
+		closeButton = new Button("Disconnect");
+		closeButton.setOnAction( this::doAction );
+		closeButton.setDisable(true);
+		clearButton = new Button("Clear Transcript");
+		clearButton.setOnAction( this::doAction );
+		sendButton = new Button("Send");
+		sendButton.setOnAction( this::doAction );
+		sendButton.setDisable(true);
+		sendButton.setDefaultButton(true);
+		saveButton = new Button("Save Transcript");
+		saveButton.setOnAction( this::doAction );
+		quitButton = new Button("Quit");
+		quitButton.setOnAction( this::doAction );
+		messageInput = new TextField();
+		messageInput.setOnAction( this::doAction );
 		messageInput.setEditable(false);
-		transcript = new JTextArea(20,60);
-		transcript.setLineWrap(true);
-		transcript.setWrapStyleWord(true);
+		transcript = new TextArea();
+		transcript.setPrefRowCount(20);
+		transcript.setPrefColumnCount(60);
+		transcript.setWrapText(true);
 		transcript.setEditable(false);
-		listeningPortInput = new JTextField(defaultPort,5);
-		remotePortInput = new JTextField(defaultPort,5);
-		remoteHostInput = new JTextField(defaultHost,18);
+		listeningPortInput = new TextField(defaultPort);
+		listeningPortInput.setPrefColumnCount(5);
+		remotePortInput = new TextField(defaultPort);
+		remotePortInput.setPrefColumnCount(5);
+		remoteHostInput = new TextField(defaultHost);
+		remoteHostInput.setPrefColumnCount(18);
+		
+		HBox buttonBar = new HBox(5, quitButton, saveButton, clearButton, closeButton);
+		buttonBar.setAlignment(Pos.CENTER);
+		HBox connectBar = new HBox(5, listenButton, listeningPortInput, connectButton, 
+				                                remoteHostInput, new Label("port:"), remotePortInput);
+		connectBar.setAlignment(Pos.CENTER);
+		VBox topPane = new VBox(8, connectBar, buttonBar);
+		BorderPane inputBar = new BorderPane(messageInput);
+		inputBar.setLeft( new Label("Your Message:"));
+		inputBar.setRight(sendButton);
+		BorderPane.setMargin(messageInput, new Insets(0,5,0,5));
+		
+		BorderPane root = new BorderPane(transcript);
+		root.setTop(topPane);
+		root.setBottom(inputBar);
+		root.setStyle("-fx-border-color: #444; -fx-border-width: 3px");
+		inputBar.setStyle("-fx-padding:5px; -fx-border-color: #444; -fx-border-width: 3px 0 0 0");
+		topPane.setStyle("-fx-padding:5px; -fx-border-color: #444; -fx-border-width: 0 0 3px 0");
 
-		JPanel content = new JPanel();
-		content.setLayout(new BorderLayout(3,3));
-		content.setBackground(Color.GRAY);
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new GridLayout(2,1,3,3));
-		topPanel.setBackground(Color.GRAY);
-		JPanel buttonBar = new JPanel();
-		buttonBar.setLayout(new FlowLayout(FlowLayout.CENTER,3,3));
-		JPanel connectBar = new JPanel();
-		connectBar.setLayout(new FlowLayout(FlowLayout.CENTER,3,3));
-		JPanel inputBar = new JPanel();
-		inputBar.setLayout(new BorderLayout(3,3));
-		inputBar.setBackground(Color.GRAY);
-
-		content.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3));
-		content.add(topPanel, BorderLayout.NORTH);
-		topPanel.add(connectBar);
-		topPanel.add(buttonBar);
-		content.add(inputBar, BorderLayout.SOUTH);
-		content.add(new JScrollPane(transcript));
-		buttonBar.add(newButton);
-		buttonBar.add(quitButton);
-		buttonBar.add(saveButton);
-		buttonBar.add(clearButton);
-		buttonBar.add(closeButton);
-		connectBar.add(listenButton);
-		connectBar.add(listeningPortInput);
-		connectBar.add(Box.createHorizontalStrut(12));
-		connectBar.add(connectButton);
-		connectBar.add(remoteHostInput);
-		connectBar.add(new JLabel("port:"));
-		connectBar.add(remotePortInput);
-		inputBar.add(new JLabel("Your Message:"), BorderLayout.WEST);
-		inputBar.add(messageInput, BorderLayout.CENTER);
-		inputBar.add(sendButton, BorderLayout.EAST);
-
-		setContentPane(content);
-
-		pack();
-		if (previousWindowLocation == null)
-				// I've added some randomness as a kludge so that if a user
-			    // starts two programs on the same machines, both windows will
-				// not be in exactly the same place.  This is to make sure the
-				// user can see that there are two windows.
-			previousWindowLocation = new Point((int)(40+30*Math.random()),
-					  (int)(80+50*Math.random()));
-		else {
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			previousWindowLocation.x += 50;
-			if (previousWindowLocation.x + getWidth() > screenSize.width)
-				previousWindowLocation.x = 10;
-			previousWindowLocation.y += 30;
-			if (previousWindowLocation.y + getHeight() > screenSize.height)
-				previousWindowLocation.y = 50;
-		}
-		setLocation(previousWindowLocation);
-
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		openWindowCount++;
-		windowsCreated++;
-
-		addWindowListener( new WindowAdapter() {
-			public void windowClosed(WindowEvent evt) {
-				if (connection != null && 
-						connection.getConnectionState() != ConnectionState.CLOSED) {
-					connection.close();
-				}
-				openWindowCount--;
-				if (openWindowCount == 0) {
-					try {
-						System.exit(0);
-					}
-					catch (SecurityException e) {
-					}
-				}
-			}
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("Two-user Networked Chat");
+		stage.setOnHidden( e -> {
+			   // If a connection exists when the window is closed, close the connection.
+			if (connection != null) 
+				connection.close(); 
 		});
+		stage.show();
 
-	} // end constructor
-
+	} // end start()
+	
+	
+	/**
+	 * A little wrapper for showing an error alert.
+	 */
+	private void errorMessage(String message) {
+		Alert alert = new Alert(Alert.AlertType.ERROR, message);
+		alert.showAndWait();
+	}
 
 	/**
-	 * Defines responses to buttons, and when the user presses return
-	 * in the message input box.
+	 * Defines responses to buttons.  (In this program, I use one
+	 * method to handle all the buttons; the source of the event
+	 * can be used to determine which button was clicked.)
 	 */
-	private class ActionHandler implements ActionListener {
-		public void actionPerformed(ActionEvent evt) {
-			Object source = evt.getSource();
-			if (source == newButton) {
-				GUIChat window = new GUIChat();
-				window.setVisible(true);
-			}
-			else if (source == listenButton) {
-				if (connection == null || 
-						connection.getConnectionState() == ConnectionState.CLOSED) {
-					String portString = listeningPortInput.getText();
-					int port;
-					try {
-						port = Integer.parseInt(portString);
-						if (port < 0 || port > 65535)
-							throw new NumberFormatException();
-					}
-					catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(GUIChat.this, 
-								portString + "is not a legal port number.");
-						return;
-					}
-					connectButton.setEnabled(false);
-					listenButton.setEnabled(false);
-					closeButton.setEnabled(true);
-					connection = new ConnectionHandler(port);
-				}
-			}
-			else if (source == connectButton) {
-				if (connection == null || 
-						connection.getConnectionState() == ConnectionState.CLOSED) {
-					String portString = remotePortInput.getText();
-					int port;
-					try {
-						port = Integer.parseInt(portString);
-						if (port < 0 || port > 65535)
-							throw new NumberFormatException();
-					}
-					catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(GUIChat.this, 
-								portString +"is not a legal port number.");
-						return;
-					}
-					connectButton.setEnabled(false);
-					listenButton.setEnabled(false);
-					connection = new ConnectionHandler(remoteHostInput.getText(),port);
-				}
-			}
-			else if (source == closeButton) {
-				if (connection != null)
-					connection.close();
-			}
-			else if (source == clearButton) {
-				transcript.setText("");
-			}
-			else if (source == quitButton) {
+	private void doAction(ActionEvent evt) {
+		Object source = evt.getSource();
+		if (source == listenButton) {
+			if (connection == null || 
+					connection.getConnectionState() == ConnectionState.CLOSED) {
+				String portString = listeningPortInput.getText();
+				int port;
 				try {
-					System.exit(0);
+					port = Integer.parseInt(portString);
+					if (port < 0 || port > 65535)
+						throw new NumberFormatException();
 				}
-				catch (SecurityException e) {
+				catch (NumberFormatException e) {
+					errorMessage(portString + "is not a legal port number.");
+					return;
 				}
+				connectButton.setDisable(true);
+				listenButton.setDisable(true);
+				closeButton.setDisable(false);
+				connection = new ConnectionHandler(port);
 			}
-			else if (source == saveButton) {
-				doSave();
-			}
-			else if (source == sendButton || source == messageInput) {
-				if (connection != null && 
-						connection.getConnectionState() == ConnectionState.CONNECTED) {
-					connection.send(messageInput.getText());
-					messageInput.selectAll();
-					messageInput.requestFocus();
+		}
+		else if (source == connectButton) {
+			if (connection == null || 
+					connection.getConnectionState() == ConnectionState.CLOSED) {
+				String portString = remotePortInput.getText();
+				int port;
+				try {
+					port = Integer.parseInt(portString);
+					if (port < 0 || port > 65535)
+						throw new NumberFormatException();
 				}
+				catch (NumberFormatException e) {
+					errorMessage(portString +"is not a legal port number.");
+					return;
+				}
+				connectButton.setDisable(true);
+				listenButton.setDisable(true);
+				connection = new ConnectionHandler(remoteHostInput.getText(),port);
+			}
+		}
+		else if (source == closeButton) {
+			if (connection != null)
+				connection.close();
+		}
+		else if (source == clearButton) {
+			transcript.setText("");
+		}
+		else if (source == quitButton) {
+			try {
+				window.hide();
+			}
+			catch (SecurityException e) {
+			}
+		}
+		else if (source == saveButton) {
+			doSave();
+		}
+		else if (source == sendButton || source == messageInput) {
+			if (connection != null && 
+					connection.getConnectionState() == ConnectionState.CONNECTED) {
+				connection.send(messageInput.getText());
+				messageInput.selectAll();
+				messageInput.requestFocus();
 			}
 		}
 	}
-
+	
 
 	/**
 	 * Save the contents of the transcript area to a file selected by the user.
 	 */
 	private void doSave() {
-		JFileChooser fileDialog = new JFileChooser(); 
-		File selectedFile;  //Initially selected file name in the dialog.
-		selectedFile = new File("transcript.txt");
-		fileDialog.setSelectedFile(selectedFile); 
-		fileDialog.setDialogTitle("Select File to be Saved");
-		int option = fileDialog.showSaveDialog(this);
-		if (option != JFileChooser.APPROVE_OPTION)
+		FileChooser fileDialog = new FileChooser(); 
+		fileDialog.setInitialFileName("transcript.txt");
+		fileDialog.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileDialog.setTitle("Select File to be Saved");
+		File selectedFile = fileDialog.showSaveDialog(window);
+		if (selectedFile == null)
 			return;  // User canceled or clicked the dialog's close box.
-		selectedFile = fileDialog.getSelectedFile();
-		if (selectedFile.exists()) {  // Ask the user whether to replace the file.
-			int response = JOptionPane.showConfirmDialog( this,
-					"The file \"" + selectedFile.getName()
-					+ "\" already exists.\nDo you want to replace it?", 
-					"Confirm Save",
-					JOptionPane.YES_NO_OPTION, 
-					JOptionPane.WARNING_MESSAGE );
-			if (response != JOptionPane.YES_OPTION)
-				return;  // User does not want to replace the file.
-		}
 		PrintWriter out; 
 		try {
 			FileWriter stream = new FileWriter(selectedFile); 
 			out = new PrintWriter( stream );
 		}
 		catch (Exception e) {
-			JOptionPane.showMessageDialog(this,
-					"Sorry, but an error occurred while trying to open the file:\n" + e);
+			errorMessage("Sorry, but an error occurred while\ntrying to open the file:\n" + e);
 			return;
 		}
 		try {
@@ -348,8 +269,7 @@ public class GUIChat extends JFrame {
 				throw new IOException("Error check failed.");
 		}
 		catch (Exception e) {
-			JOptionPane.showMessageDialog(this,
-					"Sorry, but an error occurred while trying to write the text:\n" + e);
+			errorMessage("Sorry, but an error occurred while\ntrying to write the text:\n" + e);
 		}	
 	}
 
@@ -359,12 +279,7 @@ public class GUIChat extends JFrame {
 	 * @param message text to be added; a line feed is added at the end.
 	 */
 	private void postMessage(String message) {
-		transcript.append(message + '\n');
-			// The following line is a nasty kludge that was the only way I could find to force
-			// the transcript to scroll so that the text that was just added is visible in
-			// the window.  Without this, text can be added below the bottom of the visible area
-			// of the transcript.
-		transcript.setCaretPosition(transcript.getDocument().getLength());
+		Platform.runLater( () -> transcript.appendText(message + '\n') );
 	}
 
 
@@ -376,7 +291,8 @@ public class GUIChat extends JFrame {
 	 * connection, any blocking of the graphical user interface is avoided.  By
 	 * using a thread for reading messages sent from the other side, the messages
 	 * can be received and posted to the transcript asynchronously at the same
-	 * time as the user is typing and sending messages.
+	 * time as the user is typing and sending messages.  All changes to the GUI
+	 * that are made by this class are done using Platform.runLater().
 	 */
 	private class ConnectionHandler extends Thread {
 
@@ -399,6 +315,8 @@ public class GUIChat extends JFrame {
 			state = ConnectionState.LISTENING;
 			this.port = port;
 			postMessage("\nLISTENING ON PORT " + port + "\n");
+			try { setDaemon(true); }
+			catch (Exception e) {}
 			start();
 		}
 
@@ -412,6 +330,8 @@ public class GUIChat extends JFrame {
 			this.remoteHost = remoteHost;
 			this.port = port;
 			postMessage("\nCONNECTING TO " + remoteHost + " ON PORT " + port + "\n");
+			try { setDaemon(true); }
+			catch (Exception e) {}
 			start();
 		}
 
@@ -426,7 +346,9 @@ public class GUIChat extends JFrame {
 		 * Send a message to the other side of the connection, and post the
 		 * message to the transcript.  This should only be called when the
 		 * connection state is ConnectionState.CONNECTED; if it is called at
-		 * other times, it is ignored.
+		 * other times, it is ignored.  (Although it is unlikely, it is
+		 * possible for this method to block, if the system's buffer for
+		 * outgoing data fills.)
 		 */
 		synchronized void send(String message) {
 			if (state == ConnectionState.CONNECTED) {
@@ -482,12 +404,14 @@ public class GUIChat extends JFrame {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream());
 			state = ConnectionState.CONNECTED;
-			closeButton.setEnabled(true);
-			sendButton.setEnabled(true);
-			messageInput.setEditable(true);
-			messageInput.setText("");
-			messageInput.requestFocus();
-			postMessage("CONNECTION ESTABLISHED\n");
+			Platform.runLater( () -> { 
+				closeButton.setDisable(false);
+				sendButton.setDisable(false);
+				messageInput.setEditable(true);
+				messageInput.setText("");
+				messageInput.requestFocus();
+				postMessage("CONNECTION ESTABLISHED\n");
+			});
 		}
 
 		/**
@@ -509,12 +433,14 @@ public class GUIChat extends JFrame {
 		 */
 		private void cleanUp() {
 			state = ConnectionState.CLOSED;
-			listenButton.setEnabled(true);
-			connectButton.setEnabled(true);
-			closeButton.setEnabled(false);
-			sendButton.setEnabled(false);
-			messageInput.setEditable(false);
-			postMessage("\n*** CONNECTION CLOSED ***\n");
+			Platform.runLater( () -> {
+				listenButton.setDisable(false);
+				connectButton.setDisable(false);
+				closeButton.setDisable(true);
+				sendButton.setDisable(true);
+				messageInput.setEditable(false);
+				postMessage("\n*** CONNECTION CLOSED ***\n");
+			});
 			if (socket != null && !socket.isClosed()) {
 				// Make sure that the socket, if any, is closed.
 				try {

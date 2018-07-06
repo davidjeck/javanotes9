@@ -11,40 +11,24 @@ In this section, we will look at some basic techniques, with more
 to come as the chapter progresses.</p>
 
 
-<subsection id="threads.2.1" title="Threads Versus Timers">
+<subsection id="threads.2.1" title="Threads, Timers, and JavaFX">
 <p>One of the most basic uses of threads is to perform some periodic
 task at set intervals.  In fact, this is so basic that there is
-a specialized class for performing this task&mdash;and you've
-already worked with it.  The <classname>Timer</classname> class,
-in package <code>javax.swing</code>, can generate a sequence of
-<classname>ActionEvents</classname> separated by a specified
-time interval.  Timers were introduced in <localref href="GUI1.5"/>,
-where they were used to implement animations.  Behind the scenes,
-a <classname>Timer</classname> uses a thread.  The thread sleeps most
-of the time, but it wakes up periodically to generate the
-events associated with the timer.  Before timers were introduced,
-threads had to be used directly to implement a similar functionality.</p>
+are specialized classes for performing this task&mdash;and you've
+already worked with one of them.  The <classname>AnimationTimer</classname> class,
+in package <code>javafx.animation</code>, which were introduced in 
+<localref href="GUI1.3.5"/>.   An AnimationTimer calls its
+<code>handle()</code> method periodically, about 60 times per second.
+Before timers were introduced, threads had to be used to 
+implement a similar functionality.</p>
 
-<p>In a typical use of a timer for animation, each event from the
-timer causes a new frame of the animation to be computed and displayed.
-In the response to the event, it is only necessary to update some
-state variables and to repaint the display to reflect the changes.
-A <classname>Timer</classname> to do that every thirty milliseconds
-might be created like this:
-</p>
 
-<pre>Timer timer = new Timer( 30, new ActionListener() {
-    public void actionPerformed(ActionEvent evt) {
-        updateForNextFrame();
-        display.repaint();
-    }
-} );
-timer.start();</pre>
-
-<p>Suppose that we wanted to do the same thing with a thread.  The <code>run()</code>
+<p>Suppose that we wanted to do something similar with a thread. 
+That is, we would like to call some subroutine at periodic
+intervals, say 30 times per second.  The <code>run()</code>
 method of the thread would have to execute a loop
-in which the thread sleeps for 30 milliseconds, then wakes up to do the
-updating and repainting.  This could be implemented in a nested class as follows
+in which the thread sleeps for 30 milliseconds, then wakes up to
+call the subroutine.  This could be implemented in a nested class as follows
 using the method <code>Thread.sleep()</code> that was discussed in
 <localref href="threads.1.2"/>:</p>
 
@@ -56,16 +40,15 @@ using the method <code>Thread.sleep()</code> that was discussed in
            }
            catch (InterruptedException e) {
            }
-           updateForNextFrame();
-           display.repaint();
+           callSubroutine();
        }
     }
 }</pre>
 
-<np>To run the animation, you would create an object belonging to this class
+<np>To use this class, you would create an object belonging to it
 and call its <code>start()</code> method.  As it stands, there would be no way
-to stop the animation once it is started.  One way to make it possible to stop
-the animation would be to end the loop when a <code>volatile</code> <ptype>boolean</ptype>
+to stop the thread once it is started.  One way to make that possible
+would be to end the loop when a <code>volatile</code> <ptype>boolean</ptype>
 variable, <code>terminate</code>, becomes <code>true</code>, as discussed in 
 <localref href="threads.1.4"/>.  Since thread objects can only be executed once, 
 in order to restart the animation after it has been stopped in this way, it would be necessary
@@ -73,81 +56,95 @@ to create a new thread.  In the <localref href="threads.3">next&nbsp;section</lo
 we'll see some more versatile techniques for controlling threads.</np>
 
 <p>There is a subtle difference between using threads and using timers for
-animation.  The thread that is used by a Swing <classname>Timer</classname> does
-nothing but generate events.  The event-handling code that is executed in response
-to those events is actually executed in the Swing event-handling GUI thread, which also handles
+animation.  The thread that is used by a JavaFX <classname>AniamtionTimer</classname> does
+nothing but call its <code>handle()</code> routine repeatedly.  That method is
+actually executed in the JavaFX application thread, which also handles
 repainting of components and responses to user actions.  This is important because
-the Swing GUI is not <newword>thread-safe</newword>.  That is, it does not use
+JavaFX is not <newword>thread-safe</newword>.  That is, it does not use
 synchronization to avoid race conditions among threads trying to access GUI
-components and their state variables.  As long as everything is done in the Swing event
-thread, there is no problem.  A problem can arise when another thread manipulates
-components or the variables that are also used in the GUI thread.  In the <classname>Animator</classname>
-example given above, this could happen when the thread calls the
-<code>updateForNextFrame()</code> method.  The variables that are modified in
-<code>updateForNextFrame()</code> would also be used by the <code>paintComponent()</code>
-method that draws the frame. There is a race condition here:  If these two methods 
-are being executed simultaneously, there is a possibility that <code>paintComponent()</code>
-will use inconsistent variable values&mdash;some appropriate for the new frame, some
-for the previous frame.</p>
+components and their state variables.  As long as everything is done in the application
+thread, there is no problem.  A problem can arise when another thread tries to manipulate
+components or the variables that are also used in the GUI thread.  Using syncrhonization
+would be a solution in some cases.  The best solution is probably to
+use an <classname>AnimationTimer</classname>, if that is possible. But if you really
+need to use a separate thread, you might be able to use <code>Platform.runLater()</code>.</p>
 
-<p>One solution to this problem would be to declare both <code>paintComponent()</code> and 
-<code>updateForNextFrame()</code> to be <code>synchronized</code> methods.  A better
-solution in this case is to use a timer rather than a thread.  In practice, race
-conditions might not be a problem for a simple animation, even if they are
-implemented using threads.  But it can become a real issue when threads are used for
-more complex tasks.</p>
+<p><code>Platform.runLater(r)</code> is a static method in class
+<classname>Platform</classname>, from package <code>javafx.application</code>.
+Teh parameter is an object of type <classname>Runnable</classname>, the same
+interface that is used when creating threads.  <code>Platform.runLater(r)</code>
+can be called from any thread.  Its purpose is to submit <code>r</code> to be
+run, on the JavaFX application thread.  <code>Platform.runLater(r)</code>
+returns immediately, without waiting for <code>r</code> to be run;
+<code>r.run()</code> will be called by the application thread at some future time
+(which means with a fraction of a second, and perhaps almost immediately, unless the computer
+is excessively busy).  <classname>Runnables</classname> are executed in the
+order in which they are submitted.
+Since the <classname>Runnable</classname> is called on the application thread, 
+it can safely operate on the GUI, without synchronization.  It is often convenient to specify the
+parameter to <code>Platform.runLater()</code> as a lambda expression of
+type <classname>Runnable</classname>.</p>
 
-<p>I should note that the <code>repaint()</code> method of a component can be
-safely called from any thread, without worrying about synchronization.  Recall that
-<code>repaint()</code> does not actually do any painting itself.  It just tells the
-system to schedule a paint event.  The actual painting will be done later, in the
-Swing event-handling thread.  I will also note that Java has another timer class,
-<classname>java.util.Timer</classname>, that is appropriate for use in non-GUI programs.</p>
+<p>I will use <code>Platform.runLater()</code> in several examples in this chapter.
+In then <localref href="GUI2">next&nbsp;chapter</localref>, we will see that
+JavaFX also has some higher-level features for working with threads.</p>
 
-<p>The sample program <sourceref href="RandomArtWithThreads.java"/> uses a thread
-to drive a very simple animation.  You can compare it to <sourceref chapter="6" href="RandomArt.java"/>,
-from <localref href="GUI1.5"/>, which implemented the same animation with a timer.
-In this example, the thread does nothing except to call <code>repaint()</code>, so
-there is no need for synchronization.</p>
+<p>As an example, the sample program <sourceref href="RandomArtWithThreads.java"/> uses a thread
+to drive a very simple animation.  In this example, the thread does nothing except to call 
+a <code>redraw()</code> method every two seconds.  The method redraws the content of a canvas.
+<code>Platform.runLater()</code> is used to execute <code>redraw()</code> on the 
+application thread.  The user can click a button to start and stop the animation.
+A new thread is created each time the animation is started.
+A <code>volatile</code> boolean variable, <code>running</code>,
+is set to <code>false</code> when the user stops the animation, as a signal to the 
+thread to stop, as discussed in <localref href="threads.1.4"/>. 
+The thread is defined by the following class:</p>
+
+<pre>private class Runner extends Thread {
+    public void run() {
+        while (running) {
+            Platform.runLater( () -> redraw() );
+            try {
+                Thread.sleep(2000);  // Wait two seconds between redraws.
+            }
+            catch (InterruptedException e) {
+            }
+        }
+    }
+}</pre>
 
 </subsection>
 
 
 <subsection id="threads.2.2" title="Recursion in a Thread">
 
-<p>Although timers should be used in preference to threads when possible,
-there are times when it is reasonable to use a thread even for a straightforward
-animation.  One reason to do so is when the thread is running a
+<p>One reason to use a separate thread to drive an animation is when the thread is running a
 recursive algorithm, and you want to repaint the display many times over the
 course of the recursion.  (Recursion is covered in <localref href="recursion.1"/>.)
-It's difficult to drive a recursive algorithm with a series of events from a timer; 
+It's difficult to break up a recursive algorithm into a series of method calls in a timer;
 it's much more natural to use a single recursive method call to do the recursion, and
-it's easy to do that in a thread.
-</p>
+it's easy to do that in a thread.</p>
 
 <p>As an example, the program <sourceref href="QuicksortThreadDemo.java"/> uses an
 animation to illustrate the recursive QuickSort algorithm for sorting an array.
 In this case, the array contains colors, and the goal is to sort the colors into
-a standard spectrum from red to violet.   In the program, the user randomizes 
-the array and starts the sorting process by clicking the "Start" button below the display.  
-The "Start" button changes to a "Finish" button that can be used to abort the sort
+a standard spectrum from red to violet.   In the program, the user clicks
+a "Start" button to start the process.  The order of the colors is randomized
+and QuickSort is called to sort them, showing the process in slow motion.  During the sort,
+the "Start" button changes to a "Finish" button that can be used to abort the sort
 before it finishes on its own. (It's an interesting program to watch, and it might
-even help you to understand QuickSort better, so you should try running it.)
-</p>
+even help you to understand QuickSort better, so you should try running it.)</p>
 
-
-<p>In this program, the display's <code>repaint()</code> method is called every time
-the algorithm makes a change to the array.  Whenever this is done, the thread sleeps
-for 100 milliseconds to allow time for the display to be repainted and for the user to
-see the change.  There is also a longer delay, one full second, just after the 
+<p>In this program, the picture in a <classname>Canvas</classname> needs to change every time
+the algorithm makes a change to the array.  The array is changed in the animation thread,
+but the corresponding change to the canvas has to be made in the JavaFX application thread,
+using <code>Platform.runLater()</code>, as discussed above.
+Whenever <code>Platform.runLater()</code> is called, the thread sleeps
+for 100 milliseconds to allow time for the application thread to run the <code>Runnable</code> 
+and for the user to see the change.  There is also a longer delay, one full second, just after the 
 array is randomized, before the sorting starts.  Since these delays occur at several
 points in the code, <code>QuicksortThreadDemo</code> defines a <code>delay()</code>
-method that makes the thread that calls it sleep for a specified period.  The
-<code>delay()</code> method calls <code>display.repaint()</code> just before
-sleeping.  While the animation thread sleeps, the event-handling thread will have
-a chance to run and will have plenty of time to repaint the display.  (I didn't use
-synchronization in this example, but it would have been a good idea to do so.)
-</p>
+method that makes the thread that calls it sleep for a specified period.</p>
 
 <p>An interesting question is how to
 implement the "Finish" button, which should abort the sort and terminate the thread.
@@ -167,7 +164,6 @@ Here, then, is the <code>delay()</code> method:</p>
 <pre>private void delay(int millis) {
    if (! running)
       throw new ThreadTerminationException();
-   display.repaint();
    try {
       Thread.sleep(millis);
    }
@@ -181,37 +177,51 @@ Here, then, is the <code>delay()</code> method:</p>
 thread's <code>run()</code> method:</np>
 
 <pre>/**
- * This class defines the threads that run the recursive
+ * This class defines the thread that runs the recursive
  * QuickSort algorithm.  The thread begins by randomizing the
- * array, hue.  It then calls quickSort() to sort the entire array.
- * If quickSort() is aborted by a ThreadTerminationException,
+ * hue array.  It then calls quickSort() to sort the entire array.
+ * If quickSort() is aborted by a ThreadTerminationExcpetion,
  * which would be caused by the user clicking the Finish button,
  * then the thread will restore the array to sorted order before
  * terminating, so that whether or not the quickSort is aborted,
- * the array ends up sorted.
+ * the array ends up sorted.  In any case, in the end, it 
+ * resets the text on the button to "Start".
  */
 private class Runner extends Thread {
-   public void run() {
-      try {
-         for (int i = hue.length-1; i > 0; i--) { // Randomize array.
+    public void run() {
+        for (int i = 0; i &lt; hue.length; i++) {
+               // fill hue array with indices in order
+            hue[i] = i;
+        }
+        for (int i = hue.length-1; i > 0; i--) { 
+               // Randomize the order of the hues.
             int r = (int)((i+1)*Math.random());
             int temp = hue[r];
             hue[r] = hue[i];
-            hue[i] = temp;
-         }
-         delay(1000);  // Wait one second before starting the sort.
-         quickSort(0,hue.length-1);  // Sort the whole array, recursively.
-      }
-      catch (ThreadTerminationException e) { // User clicked "Finish".
-         for (int i = 0; i &lt; hue.length; i++)
-            hue[i] = i;  // restore original array values.
-      }
-      finally {// Make sure running is false and button label is correct. 
-         running = false; 
-         startButton.setText("Start");
-         display.repaint();
-      }
-   }
+               // The last assignment that needs to be done in this
+               // loop is hue[i] = temp.  The value of hue[i] will
+               // not change after this, so the assignment is done
+               // by calling a method setHue(i,temp) that will change
+               // the value in the array and also use Platform.runLater()
+               // to change the color of the i-th color bar in the canvas.
+            setHue(i,temp);
+        }
+        try {
+            delay(1000);  // Wait one second before starting the sort.
+            quickSort(0,hue.length-1);  // Sort the whole array.
+        }
+        catch (ThreadTerminationException e) { // User aborted quickSort.
+                // Put the colors back into sorted order.  The drawSorted()
+                // method draws all of the color bars in sorted order.
+            Platform.runLater( () -> drawSorted() );
+        }
+        finally {
+            running = false;  // make sure running is false; this is only
+                              //   really necessary if the thread terminated
+                              //   normally
+            Platform.runLater( () -> startButton.setText("Start") );
+        }
+    }
 }</pre>
 
 <p>The program uses a variable, <code>runner</code>, of type <classname>Runner</classname>
@@ -230,10 +240,11 @@ value as soon as it starts and interpret it as a signal to stop before doing
 anything.  Remember that when <code>runner.start()</code> is called, <code>runner</code>
 starts running in parallel with the thread that called it.</np>
 
-<p>Stopping the thread is a little more interesting, because the thread might be sleeping
-when the "Finish" button is pressed.  The thread has to wake up before it can act on the
-signal that it is to terminate.  To make the thread a little more responsive, we can 
-call <code>runner.interrupt()</code>, which will wake the thread if it is sleeping.
+<p>When the user clicks the "Finish" button, the value of <code>running</code> is set to
+<code>false</code> as a signal to the thread to terminate.  However, the thread might be sleeping
+when the "Finish" button is pressed, and in that case, the thread has to wake up before it can act on the
+signal.  To make the thread a little more responsive, the program calls
+<code>runner.interrupt()</code>, which will wake the thread if it is sleeping.
 (See <localref href="threads.1.2"/>.)  This doesn't have much practical effect in this 
 program, but it does make the program respond noticeably more quickly if the user
 presses "Finish" immediately after pressing "Start," while the thread is sleeping for
@@ -255,7 +266,8 @@ user interface will effectively freeze up during that time.  This can be very an
 if the delay is more than a fraction of a second.  Fortunately, modern computers
 can do an awful lot of computation in a fraction of a second.</p>
 
-<p>However, some computations are too big to be done in event handlers.  The solution, in
+<p>However, some computations are too big to be done in event handlers (or in <classname>Runnables</classname>
+passed to <code>Platform.runlater()</code>).  A solution, in
 that case, is to do the computation in another thread that runs in parallel with the
 event-handling thread.  This makes it possible for the computer to respond to user
 events even while the computation is ongoing.  We say that the computation is
@@ -265,45 +277,42 @@ done "in the background."</p>
 When a thread is used to drive a simple animation, it actually does very little work.  
 The thread only has to wake up several times
 each second, do a few computations to update state variables for the next frame of the animation,
-and call <code>repaint()</code> to cause the next frame to be displayed.  There is 
-plenty of time while the thread is sleeping for the computer to redraw the display
-and handle any other events generated by the user.</p>
+and then draw that frame.  This leaves
+plenty of time while the animation thread is sleeping between frames for the JavaFX application
+thread to do any necessary redrawing of the GUI and to handle any other events.</p>
 
 <p>When a thread is used for background computation, however, we want to keep the computer
 as busy as possible working on the computation.  The thread will compete for processor
-time with the event-handling thread; if you are not careful, event-handling&mdash;repainting
+time with the application thread; if you are not careful, event-handling&mdash;redrawing
 in particular&mdash;can still be delayed.  Fortunately, you can use thread priorities
 to avoid the problem.  By setting the computation thread to run at a lower priority than
 the event-handling thread, you make sure that events will be processed as quickly as
 possible, while the computation thread will get all the extra processing time.  Since
-event handling generally uses very little processing time, this means that most of
+event handling generally uses very little time, this means that most of
 the processing time goes to the background computation, but the interface is still
 very responsive.  (Thread priorities were discussed in <localref href="threads.1.2"/>.)</p>
 
 <p>The sample program <sourceref href="BackgroundComputationDemo.java"/> is 
 an example of background processing.  This program creates an image that takes
-a while to compute.  The program uses some techniques for working with images
-that will not be covered until <localref href="GUI2.1"/>, for now all that you 
-need to know is that it takes some computation to compute the color of each pixel
+a while to compute because it takes some computation to compute the color of each pixel
 in the image.  The image itself is a piece of a mathematical object known as
-the Mandelbrot set.  We will use the same image in several examples in this chapter,
-and will return to the Mandelbrot set in <localref href="GUI2.5"/>.</p>
+the Mandelbrot set.  We will use the same image in several examples in this chapter.</p>
 
 <p>In outline, <code>BackgroundComputationDemo</code> is similar to the
 <code>QuicksortThreadDemo</code> discussed above.  The computation is done in
 a thread defined by a nested class, <classname>Runner</classname>.  A <code>volatile</code>
-<ptype>boolean</ptype> variable, <code>running</code>, is used to control the thread.
+<ptype>boolean</ptype> variable, <code>running</code>, is used to control the thread:
 If the value of <code>running</code> is set to <code>false</code>, the thread should
 terminate.  The sample program has a button that the user clicks to start and to abort the
 computation.  The difference is that the thread in this case is meant to run
 continuously, without sleeping.  To allow the user to see that progress is being
 made in the computation (always a good idea), every time the thread computes a row
-of pixels, it copies those pixels to the image that is shown on the screen.
+of pixels, it uses <code>Platform.runLater() to </code>copy those pixels to the image that is shown on the screen.
 The user sees the image being built up line-by-line.</p>
 
 <p>When the computation thread is created in response to the "Start" button,
-we need to set it to run at a priority lower than the event-handling thread.
-The code that creates the thread is itself running in the event-handling thread,
+we need to set it to run at a priority lower than the JavaFX application thread.
+The code that creates the thread is itself running in the application thread,
 so we can use a priority that is one less than the priority of the thread
 that is executing the code.  
 Note that the priority is set inside a <code>try..catch</code> statement.
@@ -322,43 +331,17 @@ catch (Exception e) {
 running = true;  // Set the signal before starting the thread!
 runner.start();</pre>
 
-<p>The other major point of interest in this program is that we have
-two threads that are both using the object that represents the image.
-The computation thread accesses the image in order to set the color
-of its pixels.  The event-handling thread accesses the same image
-when it copies the image to the screen.  Since the image is a resource
-that is shared by several threads, access to the image object should
-be synchronized.  When the <code>paintComponent()</code> method copies
-the image to the screen (using a method that we have not yet covered),
-it does so in a <code>synchronized</code> statement:</p>
-
-<pre>synchronized(image) {
-    g.drawImage(image,0,0,null);
-}</pre>
-
-<np>When the computation thread sets the colors of a row of pixels
-(using another unfamiliar method), it also uses <code>synchronized</code>:</np>
-
-<pre>synchronized(image) {
-    image.setRGB(0,row, width, 1, rgb, 0, width);
-}</pre>
-
-<np>Note that both of these statements are synchronized on the same object,
-<code>image</code>.  This is essential.  In order to prevent the two code
-segments from being executed simultaneously, the synchronization must be
-on the same object.  I use the <code>image</code> object here because it is convenient, 
-but just  about any object would do; it is <b>not</b> required that you synchronize
-on the object to which you are trying to control access.</np>
-
 <p>Although <code>BackgroundComputationDemo</code> works OK, there is one
 problem:  The goal is to get the computation done as quickly as possible, using
 all available processing time.  The program accomplishes that goal on a computer
 that has only one processor.  But on a computer that has several processors,
 we are still using only <b>one</b> of those processors for the computation.
-It would be nice to get all the processors working on the problem.  To
+(And in fact, in that case the business about thread priority is not 
+all that relevant, because the animation thread and the application thread
+can run both run simultaneously, on different processors.)
+It would be nice to get <b>all</b> of the processors working on the computation.  To
 do that, we need real parallel processing, with several computation threads.
-We turn to that problem next.
-</p>
+We turn to that problem next.</p>
 
 
 </subsection>
@@ -379,7 +362,7 @@ bottom half. Here is picture of the program nearing the end
 of a computation using three threads.  The gray areas represent
 parts of the image that have not yet been computed:</p>
 
-<img src="multiprocessing-demo-1.png" width="362" height="278" alt="a partially computer Mandelbrot from MultiprocessingDemo1"
+<img src="multiprocessing-demo-1.png" width="400" height="315" alt="a partially complete Mandelbrot from MultiprocessingDemo1"
       tex="multiprocessing-demo-1.eps" texscale="0.75"/>
    
 <np>You should try out the program.
@@ -425,8 +408,7 @@ for (int i = 0; i &lt; threadCount; i++) {
 <p>Beyond creating more than one thread, very few changes are needed to get
 the benefits of multiprocessing.  Just as in  the previous example, 
 each time a thread has computed the colors for a row of pixels, it copies that
-row into the image, and synchronization is used in exactly the same way to
-control access to the image.</p>
+row into the image, using <code>Platform.runLater()</code>.</p>
 
 <p>One thing is new, however.  When all the threads have finished running,
 the name of the button in the program changes from "Abort" to "Start Again",
@@ -434,78 +416,44 @@ and the pop-up menu, which has been disabled while the threads were running,
 is re-enabled.  The problem is, how to tell when all the threads have
 terminated?  (You might think about why we can't use <code>join()</code> to
 wait for the threads to end, as was done in the example in <localref href="threads.1.2"/>;
-at least, we certainly can't do that in the event-handling thread!)
-In this example, I use an instance variable, <code>threadsCompleted</code>, 
-to keep track of how many threads have terminated so far.  As each thread finishes, it calls
+at least, we certainly can't do that in the JavaFX application thread!)
+In this example, I use an instance variable, <code>threadsRunning</code>, 
+to keep track of how many computation threads are still running.  As each thread finishes, it calls
 a method that adds one to the value of this variable.  (The method is called in the
 <code>finally</code> clause of a <code>try</code> statement to make absolutely sure
-that it is called.)  When the number of threads
-that have finished is equal to the number of threads that were created, the
-method updates the state of the program appropriately.  Here is the method:
+that it is called when the thread ends.)  When the number of running threads
+drops to zero, the method updates the state of the program appropriately.  Here is the method
+that is called by each thread just before terminating:
 </p>
+
 <pre>synchronized private void threadFinished() {
-    threadsCompleted++;
-    if (threadsCompleted == workers.length) { // All threads have finished.
-        startButton.setText("Start Again");
-        startButton.setEnabled(true);
-        running = false; // Make sure running is false after the threads end.
-        workers = null;  // Discard the array that holds the threads.
-        threadCountSelect.setEnabled(true); // Re-enable pop-up menu.
+    threadsRunning--;
+    if (threadsRunning == 0) { // all threads have finished
+        Platform.runLater( () -> {
+               // make sure GUI state is correct when threads end.
+            startButton.setText("Start Again");
+            startButton.setDisable(false);
+            threadCountSelect.setDisable(false);
+        });
+        running = false;
+        workers = null;
     }
 }</pre>
 
 <p>Note that this method is <code>synchronized</code>.  This is to avoid the
-race condition when <code>threadsCompleted</code> is incremented.  Without the
+race condition when <code>threadsRunning</code> is decremented.  Without the
 synchronization, it is possible that two threads might call the method at the same
 time.  If the timing is just right, both threads could read the same value for
-<code>threadsCompleted</code> and get the same answer when they increment it.
-The net result will be that <code>threadsCompleted</code>
-goes up by one instead of by two.   One thread is not properly counted, and 
-<code>threadsCompleted</code> will never become equal to the number of threads
-created.  The program would hang in a kind of deadlock.  The problem would
+<code>threadsRunning</code> and get the same answer when they decrement it.
+The net result will be that <code>threadsRunning</code>
+goes down by one instead of by two.   One thread is not properly counted, and 
+<code>threadsRunning</code> will never become zero.
+The program would hang in a kind of deadlock.  The problem would
 occur only very rarely, since it depends on exact timing.  But in a large
 program, problems of this sort can be both very serious and very hard to
 debug.  Proper synchronization makes the error impossible.</p>
 
 </subsection>
 
-<subsection id="threads.2.5" title="The SwingUtilities Approach">
-
-<p>Using <code>synchronized</code> is important for controlling access to shared
-resources, but it does have some performance penalty.  In Java GUI programming, there
-is an alternative.
-The class <classname>SwingUtilities</classname> in package <code>javax.swing</code>
-contains a variety of static methods that are useful in GUI programming.
-One of those is</p>
-
-<pre>public static invokeLater( Runnable task )</pre>
-
-<np>In the statement <code>SwingUtilities.invokeLater(task)</code>, <code>task</code>
-is an object that implements the <code>Runnable</code> interface and so has a
-<code>run()</code> method.  The statement causes <code>task</code> to be added
-to the GUI event queue.  The task's <code>run()</code> method will be executed 
-some time later by the GUI thread, after any other events in the queue have
-been processed.  Since the task is executed by the same thread that handles
-events and repaints the screen, there is no problem with the task accessing
-the same resources as the painting or event handling code.  This eliminates
-the need for synchronizing access to those resources.</np>
-
-<p>As an example, the sample program <sourceref href="BackgroundCompWithInvoke.java"/> is
-a slight modification of <sourceref href="BackgroundComputationDemo.java"/>, which
-was discussed earlier in this section.  In the revised version, <code>SwingUtilities.invokeLater</code>
-replaces <code>synchronized</code>.  You can check the source code if you are interested.</p>
-
-<p>After a thread calls <code>SwingUtilities.invokeLater(task)</code>, the thread continues
-immediately without waiting for the <code>task</code> to be completed.  This is a problem
-if the thread depends in some way on the results of the task.  The method
-<code>SwingUtilities.invokeAndWait(task)</code> schedules the <code>task</code>
-to be executed in the GUI thread, then blocks until the task has actually been completed.
-That is, the thread that called <code>SwingUtilities.invokeAndWait</code> will go 
-to sleep until it is notified that the task has been executed.  This method can throw
-several types of checked exceptions, so it is usually called in a <code>try..catch</code>
-statement.  You can consult Java documentation for more information.
-</p>
-
-</subsection>
 
 </section>

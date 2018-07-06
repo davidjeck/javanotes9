@@ -3,7 +3,9 @@ import java.util.LinkedList;
 /**
  *  As a simple example of using wait() and notify(), this class
  *  implements the three methods of a LinkedBlockingQueue that
- *  are used in the sample program MultiprocessingDemo3.
+ *  are used in the sample program MultiprocessingDemo3.  This class
+ *  could be used as a replacement for the standard LinkedBlockingQueue
+ *  in that program.
  */
 public class MyLinkedBlockingQueue {
 
@@ -30,4 +32,4 @@ public class MyLinkedBlockingQueue {
 		}
 	}
 
-}
+}  // end MyLinkedBlockingQueue

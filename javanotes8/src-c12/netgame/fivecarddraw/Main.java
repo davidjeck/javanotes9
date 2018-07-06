@@ -1,14 +1,30 @@
 package netgame.fivecarddraw;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+
+import netgame.common.*;
 
 
 /**
- *  A main class for the network Five Card Draw Poker game.  Main routine
- *  shows a dialog where the user can choose to be a server or
- *  a client.  If the user chooses to be a server, then a PokerHub
+ *  A main class for the network Poker game.  This program
+ *  shows a primary window where the user can choose to be a server or
+ *  a client.  If the user chooses to be a server, then a TicTacToeHub
  *  is created to manage the game; the game will not start until a
  *  second player has connected as a client.  To act as a client,
  *  the user must know the host name or IP address of the computer
@@ -18,157 +34,182 @@ import javax.swing.*;
  *  In either case, a PokerWindow is created where the game will 
  *  be played.
  */
-public class Main {
+public class Main extends Application {
 
-	private static final int DEFAULT_PORT = 32058;
+	private static final int DEFAULT_PORT = 32010;
 	
 	public static void main(String[] args) {
+		launch(args);
+	}
+	//------------------------------------------------------------------------------
+	
+	private Stage window;  // The first window that shows on the screen, with connection controls.
+	
+	private Label message;
+	private TextField listeningPortInput;
+	private TextField hostInput;
+	private TextField connectPortInput;
+	
+	public void start(Stage stage) {
+		
+		window = stage;
 		
 		// First, construct a panel that will be placed into a JOptionPane confirm dialog.
 		
-		JLabel message = new JLabel("Welcome to NetPoker!", JLabel.CENTER);
-		message.setFont(new Font("Serif", Font.BOLD, 16));
+		Button okButton = new Button("OK");
+		okButton.setDefaultButton(true);
+		Button cancelButton = new Button("Cancel");
+		cancelButton.setCancelButton(true);
 		
-		final JTextField listeningPortInput = new JTextField("" + DEFAULT_PORT, 5);
-		final JTextField hostInput = new JTextField(30);
-		final JTextField connectPortInput = new JTextField("" + DEFAULT_PORT, 5);
+		message = new Label("Welcome to Networked Poker!");
+		message.setFont(Font.font("Times New Roman", FontWeight.BOLD, 24));
 		
-		final JRadioButton selectServerMode = new JRadioButton("Start a new game");
-		final JRadioButton selectClientMode = new JRadioButton("Connect to existing game");
+		listeningPortInput = new TextField("" + DEFAULT_PORT);
+		listeningPortInput.setPrefColumnCount(5);
+		hostInput = new TextField();
+		hostInput.setPrefColumnCount(30);
+		connectPortInput = new TextField("" + DEFAULT_PORT);
+		connectPortInput.setPrefColumnCount(5);
 		
-		ButtonGroup group = new ButtonGroup();
-		group.add(selectServerMode);
-		group.add(selectClientMode);
-		ActionListener radioListener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == selectServerMode) {
-					listeningPortInput.setEnabled(true);
-					hostInput.setEnabled(false);
-					connectPortInput.setEnabled(false);
-					listeningPortInput.setEditable(true);
-					hostInput.setEditable(false);
-					connectPortInput.setEditable(false);
-				}
-				else {
-					listeningPortInput.setEnabled(false);
-					hostInput.setEnabled(true);
-					connectPortInput.setEnabled(true);
-					listeningPortInput.setEditable(false);
-					hostInput.setEditable(true);
-					connectPortInput.setEditable(true);
-				}
-			}
-		};
-		selectServerMode.addActionListener(radioListener);
-		selectClientMode.addActionListener(radioListener);
+		RadioButton selectServerMode = new RadioButton("Start a new game");
+		selectServerMode.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+		RadioButton selectClientMode = new RadioButton("Connect to existing game");
+		selectClientMode.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+		
+		ToggleGroup group = new ToggleGroup();
+		selectServerMode.setToggleGroup(group);
+		selectClientMode.setToggleGroup(group);
+		
+		Label listenPortLabel = new Label("Listen On Port: ");
+		listenPortLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+		Label hostLabel = new Label("Computer: ");
+		hostLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+		Label connectPortLabel = new Label("Port Number: ");
+		connectPortLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+		
+		HBox row2 = new HBox(listenPortLabel,listeningPortInput);
+		HBox row4 = new HBox(hostLabel,hostInput);
+		HBox row5 = new HBox(connectPortLabel,connectPortInput);
+		
+		VBox inputs = new VBox(15,message,selectServerMode,row2,selectClientMode,row4,row5);
+		VBox.setMargin(row2, new Insets(0,0,0,50));
+		VBox.setMargin(row4, new Insets(0,0,0,50));
+		VBox.setMargin(row5, new Insets(0,0,0,50));
+		inputs.setStyle("-fx-padding:20px; -fx-border-color:black; -fx-border-width:2px");
+		HBox bottom = new HBox(8,cancelButton,okButton);
+		bottom.setPadding(new Insets(10,0,0,0));
+		bottom.setAlignment(Pos.CENTER);
+		BorderPane root = new BorderPane();
+		root.setCenter(inputs);
+		root.setBottom(bottom);
+		root.setPadding( new Insets(15,15,10,15) );
+	
+		stage.setScene( new Scene(root) );
+		stage.setTitle("Net TicTacToe");
+		stage.setResizable(false);
+		
+		cancelButton.setOnAction( e -> Platform.exit() );
+		okButton.setOnAction( e -> doOK( selectServerMode.isSelected() ) );
+
+		selectServerMode.setOnAction( e -> {
+			listeningPortInput.setDisable(false);
+			hostInput.setDisable(true);
+			connectPortInput.setDisable(true);
+			listeningPortInput.setEditable(true);
+			hostInput.setEditable(false);
+			connectPortInput.setEditable(false);
+		});
+		selectClientMode.setOnAction( e -> {
+			listeningPortInput.setDisable(true);
+			hostInput.setDisable(false);
+			connectPortInput.setDisable(false);
+			listeningPortInput.setEditable(false);
+			hostInput.setEditable(true);
+			connectPortInput.setEditable(true);
+		});
+		
 		selectServerMode.setSelected(true);
-		hostInput.setEnabled(false);
-		connectPortInput.setEnabled(false);
+		hostInput.setDisable(true);
+		connectPortInput.setDisable(true);
 		hostInput.setEditable(false);
 		connectPortInput.setEditable(false);
 		
+		stage.show();
 		
-		JPanel inputPanel = new JPanel();
-		inputPanel.setLayout(new GridLayout(0,1,5,5));
-		inputPanel.setBorder(BorderFactory.createCompoundBorder(
-				     BorderFactory.createLineBorder(Color.BLACK, 2),
-				     BorderFactory.createEmptyBorder(6,6,6,6) ));
-		
-		inputPanel.add(message);
-		
-		JPanel row;
-		
-		inputPanel.add(selectServerMode);
-		
-		row = new JPanel();
-		row.setLayout(new FlowLayout(FlowLayout.LEFT));
-		row.add(Box.createHorizontalStrut(40));
-		row.add(new JLabel("Listen on port: "));
-		row.add(listeningPortInput);
-		inputPanel.add(row);
-		
-		inputPanel.add(selectClientMode);
-		
-		row = new JPanel();
-		row.setLayout(new FlowLayout(FlowLayout.LEFT));		
-		row.add(Box.createHorizontalStrut(40));
-		row.add(new JLabel("Computer: "));
-		row.add(hostInput);
-		inputPanel.add(row);
+	} // end start()
 
-		row = new JPanel();
-		row.setLayout(new FlowLayout(FlowLayout.LEFT));
-		row.add(Box.createHorizontalStrut(40));
-		row.add(new JLabel("Port Number: "));
-		row.add(connectPortInput);
-		inputPanel.add(row);
-		
-		// Show the dialog, get the user's response and -- if the user doesn't
-		// cancel -- start a game.  If the user chooses to run as the server
-		// then a PokerHub (server) is created and after that a PokerWindow
-		// is created that connects to the server running on  localhost, which was
-		// just created.  In that case, the game will wait for a second connection. 
-		// If the user chooses to connect to an existing server, then only
-		// a PokerWindow is created, that will connect to the specified
+	
+	private void errorMessage(String message) {
+		Alert alert = new Alert(Alert.AlertType.ERROR, message);
+		alert.showAndWait();
+	}
+	
+	
+	private void doOK( boolean openAsServer) {
+		// If the user has choosen to run as the server, then a PokerHub (server) 
+		// is created and after that a PokerWindow is created that connects to the new
+		// server running on  localhost.  In that case, the game will wait for a second 
+		// connection. 
+	    //    If the user chooses to connect to an existing server, then only
+		// a PokerWindow is created, which will connect to the specified
 		// host where the server is running.
 		
-		while (true) {  // Repeats until a game is started or the user cancels.
-
-			int action = JOptionPane.showConfirmDialog(null, inputPanel, "Net Poker", 
-					JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-		
-			if (action != JOptionPane.OK_OPTION)
+		if (openAsServer) {
+			int port;
+			try {
+				port = Integer.parseInt(listeningPortInput.getText().trim());
+				if (port <= 0)
+					throw new Exception();
+			}
+			catch (Exception e) {
+				errorMessage("The value in the \"Listen on port\" box\nis not a legal positive integer!");
+				message.setText("Illegal port number.  Please try again!");
+				listeningPortInput.selectAll();
+				listeningPortInput.requestFocus();
 				return;
-			
-			if (selectServerMode.isSelected()) {
-				int port;
-				try {
-					port = Integer.parseInt(listeningPortInput.getText().trim());
-					if (port <= 0)
-						throw new Exception();
-				}
-				catch (Exception e) {
-					message.setText("Illegal port number!");
-					listeningPortInput.selectAll();
-					listeningPortInput.requestFocus();
-					continue;
-				}
-				try {
-					new PokerHub(port);
-				}
-				catch (Exception e) {
-					message.setText("Error: Can't listen on port " + port);
-					listeningPortInput.selectAll();
-					listeningPortInput.requestFocus();
-					continue;
-				}
-				new PokerWindow("localhost", port);
-				break;
 			}
-			else {
-				String host;
-				int port;
-				host = hostInput.getText().trim();
-				if (host.length() == 0) {
-					message.setText("You must enter a computer name!");
-					hostInput.requestFocus();
-					continue;
-				}
-				try {
-					port = Integer.parseInt(connectPortInput.getText().trim());
-					if (port <= 0)
-						throw new Exception();
-				}
-				catch (Exception e) {
-					message.setText("Illegal port number!");
-					connectPortInput.selectAll();
-					connectPortInput.requestFocus();
-					continue;
-				}
-				new PokerWindow(host,port);
-				break;
+			Hub hub;
+			try {
+				hub = new PokerHub(port);
 			}
+			catch (Exception e) {
+				errorMessage("Sorry, could not listen on port number " + port);
+				message.setText("Please try a different port number!");
+				listeningPortInput.selectAll();
+				listeningPortInput.requestFocus();
+				return;
+			}
+			new PokerWindow("localhost", port);
+			window.hide();
+		}
+		else {
+			String host;
+			int port;
+			host = hostInput.getText().trim();
+			if (host.length() == 0) {
+				errorMessage("You must enter the name or IP address\nof the computer that is hosting the game.");
+				message.setText("You must enter a computer name!");
+				hostInput.requestFocus();
+				return;
+			}
+			try {
+				port = Integer.parseInt(connectPortInput.getText().trim());
+				if (port <= 0)
+					throw new Exception();
+			}
+			catch (Exception e) {
+				errorMessage("The value in the \"Port Number\" box\nis not a legal positive integer!");
+				message.setText("Illegal port number.  Please try again!");
+				connectPortInput.selectAll();
+				connectPortInput.requestFocus();
+				return;
+			}
+			new PokerWindow(host,port);
+			window.hide();
 		}
 		
-	}
-}
+	} // end doOK
+			
+		
+} // end NetPoker Main
+

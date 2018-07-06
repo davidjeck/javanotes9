@@ -310,6 +310,8 @@ constant <ptype>char</ptype> value, A, when it appears in a Java program.</gitem
 <gitem term="location (in memory)">The computer's memory is made up of a sequence of
 locations.  These locations are sequentially numbered, and the number that identifies
 a particular location is called the address of that location.</gitem>
+<gitem term="local class">A class that is defined inside a method definition. Local classes
+are often anonymous, but that is not required.</gitem>
 <gitem term="local variable">A variable declared within a method, for use only inside
 that method.  A variable declared inside a block
 is valid from the point where it is declared until the end of

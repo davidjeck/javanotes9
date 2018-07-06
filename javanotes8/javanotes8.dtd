@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!ENTITY pi "&#960;">       <!-- these are used by javanotes7.xml but are redefined in javanotes7-tex.xml -->
+<!ENTITY pi "&#960;">       <!-- these are used by javanotes8.xml but are redefined in javanotes8-tex.xml -->
 <!ENTITY Omega "&#937;">
 <!ENTITY Theta "&#920;">
 <!ENTITY nbsp "&#160;">
 <!ENTITY BigOh "O">
 <!ENTITY dots "...">
-<!ENTITY mdash " -- ">
+<!ENTITY mdash "&#8212;">
 <!ENTITY leftquote '"'>
 <!ENTITY textitlebreak "">
 <!ENTITY newcodestyle "red">

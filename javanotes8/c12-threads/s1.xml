@@ -30,10 +30,8 @@ that is responsible for executing the <code>main</code> routine of the program.
 This main thread can in turn create other threads that can continue even after
 the main thread has terminated.  In a GUI program, there is at least one additional
 thread, which is responsible for handling events and drawing components on the screen.
-This GUI thread is created when the first window is opened.  So in fact, you have
-already done parallel programming!  When a <code>main</code> routine opens a window,
-both the main thread and the GUI thread can continue to run in parallel.  Of
-course, parallel programming can be used in much more interesting ways.</p>
+In JavaFX, that thread is the application thread, which does all the work 
+involved with handling events and drawing components on the screen.</p>
    
 <p>Unfortunately, parallel programming is even more difficult than ordinary,
 single-threaded programming.  When several threads are working together on a
@@ -146,7 +144,6 @@ class that implements the interface <code>java.lang.Runnable</code>.  The
 it is possible to create a <classname>Thread</classname> whose task is to
 execute the <classname>Runnable's</classname> <code>run()</code> method.</p>
 
-
 <p>The <classname>Thread</classname> class has a constructor that
 takes a <classname>Runnable</classname> as its parameter.
 When an object that implements the <classname>Runnable</classname> interface
@@ -187,14 +184,14 @@ can use it to make a thread, you can consider defining the thread using
 a nested class that is a subclass of the <classname>Thread</classname> class.  (See <localref href="OOP.8"/>.)
 </np>
    
-<p>Finally, I'll note that it is sometimes convenient to define a thread using an
-<b>anonymous</b> inner class (<localref href="OOP.8.3"/>).  For example:</p>
+<p>Finally, I'll note that <classname>Runnable</classname> is a functional interface,
+so that a <classname>Runnable</classname> object can be given as a lambda expression.
+In particular, the parameter to <code>new&nbsp;Thread(r)</code> can be a
+lambda expression. For example:</p>
 
-<pre>Thread greetingsFromFred = new Thread() {
-   public void run() {
-      System.out.println("Greetings from Fred!");
-   }
-};
+<pre>Thread greetingsFromFred = new Thread( 
+    () -> System.out.println("Greetings from Fred!")
+);
 greetingsFromFred.start();</pre>
    
 <break/>
@@ -203,9 +200,11 @@ greetingsFromFred.start();</pre>
 the sample program <sourceref href="ThreadTest1.java"/>.  This program creates
 several threads.  Each thread performs exactly the same task.  The task is to count
 the number of integers less than 5000000 that are prime. (The particular task
-that is done is not important for our purposes
-here.  This is a demo program; it would be silly in a real program to have multiple threads that
-do the same thing.)  This computation should take no more than a few seconds on a modern computer.  
+that is done is not important for our purposes here, as long as it is something
+that takes a non-trivial amount of time.
+This is a demo program; it would be silly in a real program to have multiple threads that
+do the same thing, and the method that is used for counting the primes is not efficient.)  
+This computation should take no more than a few seconds on a modern computer.  
 The threads that perform this task are defined by the
 following static nested class:</p>
    
@@ -254,7 +253,7 @@ the specified number of threads:</np>
 <np>It would be a good idea for you to compile and run the program.</np>
 
    
-<p>When I ran the program with one thread on my computer, it took 6.251 seconds for 
+<p>When I ran the program with one thread on my old computer, it took 6.251 seconds for 
 the computer to do the computation.  When I ran it using eight threads, the output was:</p>
    
 <pre>Creating 8 prime-counting threads...
@@ -270,7 +269,7 @@ Thread 6 counted 348513 primes in 12.563 seconds.
 </pre>
    
 <p>The second line was printed immediately after the first. At this point, the main
-program has ended but the eight threads continue to run.  After a pause of about 12.5
+program has ended but the eight threads continued to run.  After a pause of about 12.5
 seconds, all eight threads completed at about the same time.  The order in which the
 threads complete is not the same as the order in which they were started, and
 the order is indeterminate.  That is, if the program is run again, the order
@@ -450,8 +449,8 @@ alive.  That is, the fact that a daemon thread is still alive is not enough to k
 the Java Virtual Machine running.  A daemon thread might exist, for example, only to provide
 some service to other, non-daemon threads.  When there are no more non-daemon threads,
 there will be no further call for the daemon thread's services, so the program might
-as well shut down.
-</p>
+as well shut down. (A call to <code>System.exit()</code> forces the JVM to terminate,
+even if there are non-daemon threads still running.)</p>
 
 <p>The priority of a thread is a more important property.
 Every thread has a <newword>priority</newword>, specified as an integer.  A thread
@@ -477,7 +476,7 @@ to run with a priority value just below the normal priority, you can call</p>
 
 <p>Note that <code>thrd.setPriority()</code> can also throw an exception of type 
 <classname>SecurityException</classname>, if the thread that calls the method is not
-allowed to set the priority of <code>thrd</code>.</p>   
+allowed to set the priority of <code>thrd</code> to the specified value.</p>   
 
 <p>Finally, I'll note that the static method <codedef>Thread.currentThread()</codedef> returns the current
 thread.  That is, the return value of this method is the thread that executed the method.  This allows a
@@ -591,7 +590,7 @@ this method, it is guaranteed that it will finish executing it without having
 another thread change the value of <code>tsc.count</code> in the meantime.  There is
 no possibility of a race condition.
 Note that the guarantee depends on the fact that <code>count</code> is a <code>private</code>
-variable.  This forces all access to <code>tsc.count</code> to occur in the
+variable.  This forces <b>all</b> access to <code>tsc.count</code> to occur in the
 <code>synchronized</code> methods that are provided by the class. 
 If <code>count</code> were <code>public</code>, it would be possible
 for a thread to bypass the synchronization by, for example, saying <code>tsc.count++</code>.
@@ -604,13 +603,13 @@ synchronized.</np>
 race conditions that might arise when using a counter.  Consider the <code>if</code>
 statement:</p>
 
-<pre>if ( tsc.getValue() == 0 ) {
+<pre>if ( tsc.getValue() == 10 ) {
    doSomething();
 }</pre>
    
 <np>where <code>doSomething()</code> is some method that requires the value of the counter
-to be zero.  There is still a race condition here, which occurs if a second thread
-increments the counter between the time the first thread tests <code>tsc.getValue()&nbsp;==&nbsp;0</code>
+to be &nbsp;10.  There is still a race condition here, which occurs if a second thread
+increments the counter between the time the first thread tests <code>tsc.getValue()&nbsp;==&nbsp;10</code>
 and the time it executes <code>doSomething()</code>.  The first thread needs exclusive
 access to the counter during the execution of the whole <code>if</code> statement.
 (The synchronization in the <classname>ThreadSafeCounter</classname> class only gives it
@@ -658,6 +657,14 @@ then Thread&nbsp;A has to wait until Thread&nbsp;B releases the lock.  In fact,
 Thread&nbsp;A will go to sleep, and will not be awoken until the lock becomes
 available.</p>
 
+<p>The discussion of invariants in <localref href="robustness.2.3"/> mentioned
+that reasoning about invariants becomes much more complicated when threads are
+involved.  The problem is race conditions.  We would like our <classname>ThreadSafeCounter</classname> 
+class to have the class invariant that "the value of <code>count</code> is the number of times that
+<code>increment()</code> has been called."  In a single-threaded program, that would be
+true even without synchronization.  However, in a multithreaded program, synchronization is
+needed to ensure that the class invariant is really invariant.</p>
+
 <break/>
 
 <p>As a simple example of shared resources, we return to the prime-counting
@@ -670,8 +677,7 @@ and it will count the primes in its assigned part.  At the end of its
 computation, the thread has to add its count to the overall total of primes
 in the entire range.  The variable that represents the total is shared by
 all the threads, since each thread has to add a number to the total.
-If each thread just says
-</p>
+If each thread just says</p>
    
 <pre>total = total + count;</pre>
    
@@ -679,7 +685,8 @@ If each thread just says
 at the same time and that the final total will be wrong.  To prevent this
 race condition, access to <code>total</code> has to be synchronized. My
 program uses a synchronized method to add the counts to the total.  This
-method is called once by each thread:</np>
+method is called once by each thread, and it is the only method in which
+the value of <code>total</code> is changed:</np>
    
 <pre>synchronized private static void addToTotal(int x) {
    total = total + x;
@@ -725,7 +732,8 @@ unless great care is taken to avoid them.</p>
 
 <p>Synchronization is only one way of controlling communication among threads.  
 We will cover several other techniques later in the chapter.  For now, 
-we finish this section with one more communication technique: volatile variables.</p>
+we finish this section with two such techniques: volatile variables
+and atomic variables.</p>
 
 <p>In general, threads communicate
 by sharing variables and accessing those variables in synchronized methods or
@@ -745,13 +753,15 @@ changes the value of a shared variable, the local copies in the caches of other 
 are not immediately changed, so the other threads can continue to see the old value,
 at least briefly.</p>
 
-<p>When a <code>synchronized</code> method or statement is entered, threads are forced to update
-their caches to the most current values of the variables in the cache.  So, using shared
-variables in synchronized code is always safe.</p>
+<p>It is safe to use a shared variable in a synchronized method or statement, as long
+all access to that variable is synchronized, using the same syncrhonization object
+in all cases.  More precisely, any thread that accesses a variable in synchronized
+code is guaranteed to see changes that were made by other threads, as long as the
+changes were made in code that was synchronized on the same object.</p>
    
 <p>It is possible to use a shared variable safely <b>outside</b> of synchronized code,
 but in that case, the variable must be declared to be <newword>volatile</newword>.
-The <code>volatile</code> keyword is a modifier that can be added to a variable
+The <code>volatile</code> keyword is a modifier that can be added to a global variable
 declaration, as in</p>
    
 <pre>private volatile int count;</pre>
@@ -763,8 +773,10 @@ the variable will immediately be visible to all threads.  This makes it safe
 for threads to refer to <code>volatile</code> shared variables even outside of synchronized code.
 Access to volatile variables is less efficient than access to 
 non-volatile variables, but more efficient than using synchronization.
-(Remember, though, that synchronization is still the only way to prevent
-race conditions.)</np>
+(Remember, though, that using a volatile variable does not solve race
+conditions that occur, for example, when the value of the variable is
+incremented.  The increment operation can still be interrupted by 
+another thread.)</np>
    
 <p>When the <code>volatile</code> modifier is applied to an object variable,
 only the variable itself is declared to be volatile, not the contents of the
@@ -798,11 +810,79 @@ first place, since it seems to complicate things unnecessarily.  Caching is allo
 of the structure of multiprocessing computers.   In many multiprocessing computers,
 each processor has some local memory that is directly connected to the processor.
 A thread's cache can be stored in the local memory of the processor on which the thread is running.
-Access to this local memory is much faster than access to other memory, so it
+Access to this local memory is much faster than access to the main memory that is shared by all processors, so it
 is more efficient for a thread to use a local copy of a shared variable rather
-than some "master copy" that is stored in non-local memory.)</p>
+than some "master copy" that is stored in main memory.)</p>
 
 </subsection>
    
+ 
+
+<subsection id="threads.1.5" title="Atomic Variables">
+
+<p>The problem with a statement like "<code>count = count&nbsp;+&nbsp;1</code>" for
+parallel programming is that it takes several steps to execute the statement.   The
+statement is only correctly executed if those steps are completed without interruption.</p>
+
+<p>An <newword>atomic</newword> operation is something that cannot be interrupted.
+It is an all-or-nothing affair.  It cannot be partly completed.  Most computers
+have operations that are atomic on the machine language level.  For example,
+there might be  a machine language instruction that can atomically increment
+the value in a memory location.  Such an instruction could be used without fear
+of race conditions.</p>
+
+<p>In a program, an operation can be atomic even if it is not literally atomic
+on the machine language level.  An operation can be considered atomic if it
+can never be <b>seen</b> by any thread as partly completed.  For example,
+we can say that the  <classname>ThreadSafeCounter</classname> class that was 
+defined above has an atomic increment operation.  Synchronization can be
+seen as a way of ensuring that operations are, are least effectively, atomic.</p>
+
+<p>Still, it would be nice to have atomic operations that don't require
+synchronization, especially since such operations might be implemented
+very efficiently on the hardware level.</p>
+
+<p>Java has a package <code>java.util.concurrent.atomic</code> that defines
+classes that implement atomic operations on several simple variable types.
+We will look at the class <classname>AtomicInteger</classname>, which
+defines some atomic operations on an integer value, including atomic add, increment, 
+and decrement.  Suppose, for example, that we want to add some integer values
+that are being produced by a number of different threads.  We can do that
+with an <classname>AtomicInteger</classname> such as</p>
+
+<pre>private static AtomicInteger total = new AtomicInteger();</pre>
+
+<np>The total is created with an initial value of zero.
+When a thread wants to add a value to the total, it can use the
+method <code>total.addAndGet(x)</code>, which adds <code>x</code>
+to the total and returns the new value of total after <code>x</code>
+has been added.  This is an atomic operation, which cannot be
+interrupted, so we can be sure that the value of total will be
+correct in the end.  The sample program <sourceref href="ThreadTest3.java"/>
+is a small variation on <sourceref href="ThreadTest2.java"/> that uses
+an <classname>AtomicInteger</classname> instead of synchronization
+to safely add up values from several threads.</np>
+
+<p><classname>AtomicInteger</classname> had similar methods for adding one to the total and
+subtracting one from the total: <code>total.incrementAndGet()</code>
+and <code>total.decrementAndGet()</code>.  The method
+<code>total.getAndSet(x)</code> sets the value of the total to
+<code>x</code> and returns the previous value that <code>x</code>
+is replacing.  All of these operations are done atomically (either because
+they use atomic machine language instructions or because they 
+use syncrhonization internally).</p>
+
+<p>I should close with my usual warning: Using an atomic variable does not
+automatically solve all race conditions involving that variable.  For example,
+in the code</p>
+
+<pre>int currentTotal = total.addAndGet(x);
+System.out.println("Current total is " + currentTotal);</pre>
+
+<np>it is possible that by the time the output statement is executed,
+the total has been changed by another thread so that <code>currentTotal</code>
+is no longer the current value of total!</np>
+
+</subsection>
 
 </section>

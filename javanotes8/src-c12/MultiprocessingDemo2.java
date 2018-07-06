@@ -1,10 +1,20 @@
-import java.awt.*;
-import java.awt.event.*;
 
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
-import java.awt.image.BufferedImage;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 
 /**
  * This demo program divides up a large computation into a fairly
@@ -18,179 +28,156 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *  which is used just because it takes some time to compute.  
  * There is no need to understand what the image means.)  
  */
-public class MultiprocessingDemo2 extends JPanel {
+public class MultiprocessingDemo2 extends Application {
 
-	/**
-	 * This main routine just shows a panel of type MultiprocessingDemo2.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Multiprocessing Demo 2");
-		MultiprocessingDemo2 content = new MultiprocessingDemo2();
-		window.setContentPane(content);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.pack();
-		window.setResizable(false);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		if (window.getWidth() > screenSize.width-100 || window.getHeight() > screenSize.height-100) {
-			double scale1 = (double)(screenSize.width-100)/window.getWidth();
-			double scale2 = (double)(screenSize.height-100)/window.getHeight();
-			double scale = Math.min(scale1,scale2);
-			window.setSize( (int)(scale*window.getWidth()), (int)(scale*window.getHeight()) );
-		}
-		window.setLocation( (screenSize.width - window.getWidth()) / 2,
-				(screenSize.height - window.getHeight()) / 2 );
-		window.setVisible(true);
+		launch(args);
 	}
-
+	//---------------------------------------------------------------------
+	
 
 	private WorkerThread[] workers;  // the threads that compute the image
 
 	private ConcurrentLinkedQueue<Runnable> taskQueue;  // holds individual tasks.
 
-	private volatile int threadsCompleted; // how many threads have finished?
-
+	private volatile int threadsRunning; // how many threads are still running?
+	
 	private volatile boolean running;  // used to signal the thread to abort
 
-	private JButton startButton; // button the user can click to start or abort the thread
+	private Button startButton; // button the user can click to start or abort the thread
+	
+	private ComboBox<String> threadCountSelect;  // for specifying the number of threads to be used
+	
+	private Canvas canvas;      // the canvas where the image is displayed
+	private GraphicsContext g;  // the graphics context for drawing on the canvas
+	
+	private Color[] palette;    // The color palette, containing the colors of the spectrum
 
-	private JComboBox<String> threadCountSelect;  // for specifying the number of threads to be used
+	int width, height;          // the size of the canvas
 
-	private BufferedImage image; // contains the image that is computed by this program
-
-	int[] palette;  // Holds a spectrum of RGB color values; used in computing pixel colors.
-
-
+	
 	/**
-	 * The display is a JPanel that shows the image.  The part of the image that has
-	 * not yet been computed is gray.  If the image has not yet been created, the
-	 * entire display is filled with gray.
+	 * Set up the GUI and event handling.  The canvas will be 1200-by-1000 pixels,
+	 * if that fits comfortably on the screen; otherwise, size will be reduced to fit.
+	 * This method also makes the color palette, containing colors in spectral order.
 	 */
-	private JPanel display = new JPanel() {
-		protected void paintComponent(Graphics g) {
-			if (image == null)
-				super.paintComponent(g);  // fill with background color, gray
-			else {
-				/* Copy the image onto the display.  This is synchronized because
-				 * there are several threads that compete for access to the image:
-				 * the threads that compute the image and the thread that does the
-				 * painting.  These threads all synchronize on the image object,
-				 * although any object could be used.
-				 */
-				synchronized(image) {
-					g.drawImage(image,0,0,null);
-				}
-			}
-		}
-	};
-
-
-	/**
-	 * Constructor creates a panel to hold the display, with a "Start" button 
-	 * and a pop-up menu for selecting the number of threads below it.
-	 */
-	public MultiprocessingDemo2() {
-		display.setPreferredSize(new Dimension(1600,1200));
-		display.setBackground(Color.LIGHT_GRAY);
-		setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		setLayout(new BorderLayout());
-		add(display, BorderLayout.CENTER);
-		JPanel bottom = new JPanel();
-		startButton = new JButton("Start");
-		bottom.add(startButton);
-		threadCountSelect = new JComboBox<String>();
-		threadCountSelect.addItem("Use 1 thread.");
-		threadCountSelect.addItem("Use 2 threads.");
-		threadCountSelect.addItem("Use 3 threads.");
-		threadCountSelect.addItem("Use 4 threads.");
-		threadCountSelect.addItem("Use 5 threads.");
-		threadCountSelect.addItem("Use 6 threads.");
-		threadCountSelect.addItem("Use 7 threads.");
-		threadCountSelect.addItem("Use 8 threads.");
-		threadCountSelect.addItem("Use 9 threads.");
-		threadCountSelect.addItem("Use 10 threads.");
-		threadCountSelect.addItem("Use 20 threads.");
-		threadCountSelect.setSelectedIndex(1);
-		bottom.add(threadCountSelect);
-		bottom.setBackground(Color.WHITE);
-		add(bottom,BorderLayout.SOUTH);
-		palette = new int[256];
+	public void start(Stage stage) {
+		
+		palette = new Color[256];
 		for (int i = 0; i < 256; i++)
-			palette[i] = Color.getHSBColor(i/255F, 1, 1).getRGB();
-		startButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (running)
-					stop();
-				else
-					start();
-			}
-		});
+			palette[i] = Color.hsb(360*(i/256.0), 1, 1);
+		
+		int screenWidth = (int)Screen.getPrimary().getVisualBounds().getWidth();
+		int screenHeight = (int)Screen.getPrimary().getVisualBounds().getHeight();
+		width = Math.min(1200,screenWidth - 50);
+		height = Math.min(1000, screenHeight - 120);
+		
+		canvas = new Canvas(width,height);
+		g = canvas.getGraphicsContext2D();
+		g.setFill(Color.LIGHTGRAY);
+		g.fillRect(0,0,width,height);
+		startButton = new Button("Start!");
+		startButton.setOnAction( e -> doStartOrStop() );
+		threadCountSelect = new ComboBox<String>();
+		threadCountSelect.setEditable(false);
+		threadCountSelect.getItems().add("Use 1 thread.");
+		threadCountSelect.getItems().add("Use 2 threads.");
+		threadCountSelect.getItems().add("Use 3 threads.");
+		threadCountSelect.getItems().add("Use 4 threads.");
+		threadCountSelect.getItems().add("Use 5 threads.");
+		threadCountSelect.getItems().add("Use 6 threads.");
+		threadCountSelect.getItems().add("Use 7 threads.");
+		threadCountSelect.getItems().add("Use 8 threads.");
+		threadCountSelect.getItems().add("Use 9 threads.");
+		threadCountSelect.getItems().add("Use 10 threads.");
+		threadCountSelect.getItems().add("Use 20 threads.");
+		threadCountSelect.getSelectionModel().select(1);
+		HBox bottom = new HBox(8,startButton,threadCountSelect);
+		bottom.setStyle("-fx-padding: 6px; -fx-border-color:black; -fx-border-width: 2px 0 0 0");
+		bottom.setAlignment(Pos.CENTER);
+		BorderPane root = new BorderPane(canvas);
+		root.setBottom(bottom);
+		root.setStyle("-fx-border-color:black; -fx-border-width: 2px");
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("Multiprocessing Demo 2");
+		stage.setResizable(false);
+		stage.show();
 	}
-
-
+	
+	
 	/**
-	 * This method is called when the user clicks the Start button,
-	 * while no computation is in progress.  It starts as many new
+	 * This method is called from the computation threads when one row of pixels needs
+	 * to be added to the image.
+	 * @param rowNumber the row of pixels whose colors are to be set
+	 * @param colorArray an array of colors, one for each pixel
+	 */
+	private void drawOneRow( int rowNumber, Color[] colorArray ) {
+		for (int i = 0; i < width; i++) {
+			   // Color an individual pixel by filling in a 1-by-1 pixel
+			   // rectangle.  Not the most efficient way to do this, but
+			   // good enough for this demo.
+			g.setFill(colorArray[i]);
+			g.fillRect(i,rowNumber,1,1);
+		}
+	}
+	
+	
+	/**
+	 * This method is called when the user clicks the button,
+	 * If no computation is in progress, then it starts as many new
 	 * threads as the user has specified.  It creates one 
 	 * MandelbrotTask object for each row of the image and places
 	 * all the tasks into a queue.  The threads will remove tasks
 	 * from the queue to process them.  The threads are run at lower
 	 * priority than the event-handling thread, in order to keep the
 	 * GUI responsive. 
+	 *    If this method is called when a computation is in progress,
+	 * it sets the value of the signal variable, running to false,
+	 * as a signal to the threads that they should terminate.
 	 */
-	private void start() {
-		startButton.setText("Abort"); // change name while computation is in progress
-		threadCountSelect.setEnabled(false); // will be re-enabled when all threads finish
-		int width = display.getWidth() + 2;
-		int height = display.getHeight() + 2;
-		if (image == null)
-			image = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-		Graphics g = image.getGraphics();  // fill image with gray
-		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(0,0,width,height);
-		g.dispose();
-		display.repaint();
-
-		taskQueue = new ConcurrentLinkedQueue<Runnable>();
-
-		double xmin = -1.6744096740931858;
-		double xmax = -1.674409674093473;
-		double ymin = 4.716540768697223E-5;
-		double ymax = 4.716540790246652E-5;
-		int maxIterations = 10000;
-		double dx = (xmax-xmin)/(width-1);
-		double dy = (ymax-ymin)/(height-1);
-		for (int row = 0; row < height; row++) {
-			double y = ymax - row*dy;
-			MandelbrotTask task = new MandelbrotTask(row, width, maxIterations, xmin, y, dx);
-			taskQueue.add(task);
+	private void doStartOrStop() {
+		if (running) {
+			startButton.setDisable(true);  // will be re-enabled when all threads finish
+			running = false;
 		}
-
-		int threadCount = threadCountSelect.getSelectedIndex() + 1;
-		if (threadCount == 11)
-			threadCount = 20;
-		workers = new WorkerThread[threadCount];
-		running = true;  // Set the signal before starting the threads!
-		threadsCompleted = 0;  // Records how many of the threads have terminated.
-		for (int i = 0; i < threadCount; i++) {
-			workers[i] = new WorkerThread();
-			try {
-				workers[i].setPriority( Thread.currentThread().getPriority() - 1 );
+		else {
+			startButton.setText("Abort"); // change name while computation is in progress
+			threadCountSelect.setDisable(true); // will be re-enabled when all threads finish
+			g.setFill(Color.LIGHTGRAY);  // fill canvas with gray
+			g.fillRect(0,0,width,height);
+	
+			taskQueue = new ConcurrentLinkedQueue<Runnable>();
+	
+			double xmin = -1.6744096740931858;
+			double xmax = -1.674409674093473;
+			double ymin = 4.716540768697223E-5;
+			double ymax = 4.716540790246652E-5;
+			int maxIterations = 10000;
+			double dx = (xmax-xmin)/(width-1);
+			double dy = (ymax-ymin)/(height-1);
+			for (int row = 0; row < height; row++) {
+				double y = ymax - row*dy;
+				MandelbrotTask task = new MandelbrotTask(row, width, maxIterations, xmin, y, dx);
+				taskQueue.add(task);  // Tasks must be added to the queue before threads are started!
 			}
-			catch (Exception e) {
+	
+			int threadCount = threadCountSelect.getSelectionModel().getSelectedIndex() + 1;
+			if (threadCount == 11)
+				threadCount = 20;
+			workers = new WorkerThread[threadCount];
+			running = true;  // Set the signal variable before starting the threads!
+			threadsRunning = threadCount;  // Records how many of the threads are still running
+			for (int i = 0; i < threadCount; i++) {
+				workers[i] = new WorkerThread();
+				try {
+					workers[i].setPriority( Thread.currentThread().getPriority() - 1 );
+				}
+				catch (Exception e) {
+				}
+				workers[i].start();
 			}
-			workers[i].start();
 		}
-	}
-
-
-	/**
-	 * This method is called when the user clicks the button while
-	 * a thread is running.  A signal is sent to the thread to terminate,
-	 * by setting the value of the signaling variable, running, to false.
-	 */
-	private void stop() {
-		startButton.setEnabled(false);  // will be re-enabled when all threads finish
-		running = false;
 	}
 
 
@@ -202,13 +189,16 @@ public class MultiprocessingDemo2 extends JPanel {
 	 * pop-up menu.
 	 */
 	synchronized private void threadFinished() {
-		threadsCompleted++;
-		if (threadsCompleted == workers.length) { // all threads have finished
-			startButton.setText("Start Again");
-			startButton.setEnabled(true);
+		threadsRunning--;
+		if (threadsRunning == 0) { // all threads have finished
+			Platform.runLater( () -> {
+				   // make sure state is correct when threads end.
+				startButton.setText("Start Again");
+				startButton.setDisable(false);
+				threadCountSelect.setDisable(false);
+			});
 			running = false; // Make sure running is false after the thread ends.
 			workers = null;
-			threadCountSelect.setEnabled(true); // re-enable pop-up menu
 		}
 	}
 
@@ -235,7 +225,7 @@ public class MultiprocessingDemo2 extends JPanel {
 			this.width = width;
 		}
 		public void run() {
-			int[] rgb= new int[width];     // The colors computed for the pixels.
+			Color[] rgb= new Color[width];     // The colors computed for the pixels.
 			for (int i = 0; i < rgb.length; i++) {
 				double x = xmin + i * dx;
 				int count = 0;
@@ -248,18 +238,11 @@ public class MultiprocessingDemo2 extends JPanel {
 					xx = newxx; 
 				}
 				if (count == maxIterations)
-					rgb[i] = 0;
+					rgb[i] = Color.BLACK;
 				else
 					rgb[i] = palette[count % 256];
 			}
-			synchronized(image) {
-				/* Add the newly computed row of pixel colors to the image.  This is
-				 * synchronized because this thread and the thread that paints the
-				 * display might both try to access the image simultaneously.
-				 */
-				image.setRGB(0,rowNumber, width, 1, rgb, 0, width);
-			}
-			display.repaint(0,rowNumber,width,1); // Repaint just the newly computed row.
+			Platform.runLater( () -> drawOneRow(rowNumber, rgb) );
 		}
 	}
 

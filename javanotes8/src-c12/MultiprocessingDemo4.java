@@ -12,55 +12,44 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 
 /**
  * This demo program divides up a large computation into a fairly
  * large number of smaller tasks.  The computation is to compute
  * an image, and each task computes one row of pixels in the image.
  * 
- * A thread pool is created at the beginning of the program, with
- * one thread for each available processor.  The threads remove
- * tasks from a blocking queue and execute them.  The threads never
- * terminate (until the program ends).  To start a computation, tasks
- * are created and added to the blocking queue.  As soon as the 
- * first tasks are added to the queue, the threads "wake up" and
- * start working on them.
+ * The functionality of this program is identical to MultiprocessingDemo3.
+ * This version of the program uses an ExecutorService to execute the tasks.
+ * When the user clicks "Start", a new ExecutorService is created and all
+ * of the tasks that are part of computing the image are added to it.
+ * If the user aborts a computation, the executor's shutDownNow() method
+ * is called, which makes the executor drop any waiting tasks from its
+ * queue.
  * 
  * (The image is a small piece of the famous Mandelbrot set,
  *  which is used just because it takes some time to compute.  
  * There is no need to understand what the image means.)  
  */
-public class MultiprocessingDemo3 extends Application {
+public class MultiprocessingDemo4 extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 	//-----------------------------------------------------------------------------------
 
-	private LinkedBlockingQueue<Runnable> taskQueue;  // The queue that holds individual tasks;
-
-	private boolean jobInProgress; // Set to true when a job starts, false when it ends.
-
-	private int jobNumber;  // Job number of the current computation job.
-                            // A "job" is the computation of an entire image,
-                            // whereas a "task" is one part of a job.
-							// jobNumber is incremented after a job has completed.
-							// Note that any left-over tasks from a job are ignored
-							// when they finally complete.  This can happen when the
-							// user aborts a computation, since if a thread is working
-							// on a task when that happens, it will continue to work
-							// on that task until the task completes, so the task can
-							// complete after the job of which it is a part has been
-							// aborted.  (Note:  The task itself could check the current
-							// job number as it is running and terminate early if the
-							// job number has changed.  This would make sense if the
-							// task's computation were very long.)
+	private ExecutorService executor;  // The executor that executes the MandelbrotTasks.
+	                                   // When a job is started, an executor is created to
+	                                   // execute the tasks that make up that job.  (A job
+	                                   // consists of computing a complete image; a task is
+	                                   // computing one line of the image.)  The value of
+	                                   // this variable is null when no job is in progress.
 
 	private int tasksRemaining; // How many tasks in the current job still remain to be done?
-	    // (REMARK: jobInProgress, jobNumber, and tasksRemaining can all be modified by
-	    //  more than one thread.  They do not need to be volatile because all access to
-	    //  these variables is done in synchronized methods.)
+	                            // (Note: the variables executor and tasksRemaining can be
+	                            // modified by various threads.  They are not volatile because
+	                            // all access is done in synchronized methods.)
 
 	private Button startButton; // button the user can click to start or abort the thread
 
@@ -102,7 +91,7 @@ public class MultiprocessingDemo3 extends Application {
 		root.setStyle("-fx-border-color:black; -fx-border-width: 2px");
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
-		stage.setTitle("Multiprocessing Demo 3");
+		stage.setTitle("Multiprocessing Demo 4");
 		stage.setResizable(false);
 		stage.show();
 	}
@@ -123,28 +112,7 @@ public class MultiprocessingDemo3 extends Application {
 			g.fillRect(i,rowNumber,1,1);
 		}
 	}
-	
-
-	/**
-	 * This is called the first time the user clicks "Start" to 
-	 * create the thread pool and the blocking queue of tasks that
-	 * is used to send tasks to the thread pool.  The number of 
-	 * threads is equal to the number of available processors.
-	 * There is no need to keep any references to the thread
-	 * objects.  They only have to be started here, and they
-	 * will just keep running until the program ends.
-	 */
-	private void createThreadPool() {
-		taskQueue = new LinkedBlockingQueue<Runnable>();
-		int processors = Runtime.getRuntime().availableProcessors();
-		for (int i = 0; i < processors; i++) {
-			   // Threads will block while waiting for
-			   // tasks to arrive in the queue.
-			WorkerThread worker = new WorkerThread();
-			worker.start();
-		}
-	}
-	
+		
 
 	/**
 	 * This method is called when the user clicks the Start button.
@@ -154,21 +122,20 @@ public class MultiprocessingDemo3 extends Application {
 	 * the thread pool.
 	 */
 	synchronized private void doStartOrStop() {
-		if (jobInProgress) {
+		if (executor != null) { // a job is in progress
 			startButton.setText("Start Again");
-			taskQueue.clear();
-			jobNumber++;
-			jobInProgress = false;
+			executor.shutdownNow(); // Drop any remaining jobs.
+			executor = null;  // signals that now no job is progress
 		}
-		else {
-			createThreadPool();
+		else {  // start a new job
+			int processors =  Runtime.getRuntime().availableProcessors();
+			executor = Executors.newFixedThreadPool(processors);
 			
 			startButton.setText("Abort"); // change name while computation is in progress
 			g.setFill(Color.LIGHTGRAY);  // Fill canvas with gray
 			g.fillRect(0,0,width,height);
 
 			tasksRemaining = height;
-			jobInProgress = true;
 
 			double xmin = -1.6744096740931858;
 			double xmax = -1.674409674093473;
@@ -180,9 +147,10 @@ public class MultiprocessingDemo3 extends Application {
 			for (int row = 0; row < height; row++) { // Add tasks for current job to job queue.
 				double y = ymax - row*dy;
 				MandelbrotTask task = new MandelbrotTask(
-						               jobNumber, row, width, maxIterations, xmin, y, dx);
-				taskQueue.add(task);
+						               executor, row, width, maxIterations, xmin, y, dx);
+				executor.execute(task);
 			}
+			executor.shutdown();  // Will shut down after completing submitted tasks.
 		}
 	}
 	
@@ -197,8 +165,11 @@ public class MultiprocessingDemo3 extends Application {
 	 * the task is part of the current job, not a previous, aborted job.
 	 */
 	synchronized private void taskFinished(MandelbrotTask task) {
-		if (task.jobNumber != jobNumber) {
+		if (task.myExecutor != executor) {
 			    // The task is part of a previous job.  Ignore it.
+			    // (executor in this case is probably null, but could be
+			    // an executor running the next job.  In either case, this
+			    // task is from a previous job.)
 			System.out.println("Dropping results from previous job."); // for testing
 			return;
 		}
@@ -206,9 +177,7 @@ public class MultiprocessingDemo3 extends Application {
 		tasksRemaining--;
 		if (tasksRemaining == 0) { // all threads have finished
 			Platform.runLater( () -> startButton.setText("StartAgain") );
-			taskQueue.clear();
-			jobNumber++;
-			jobInProgress = false;
+			executor = null;  // signals that now no job is in progress
 		}
 	}
 
@@ -222,16 +191,19 @@ public class MultiprocessingDemo3 extends Application {
 	 * aborted.  In that case, the data should be discarded.
 	 */
 	private class MandelbrotTask implements Runnable {
-		int jobNumber;  // Which job is this task part of?
+		ExecutorService myExecutor;  // Which Executor will execute this task?
+		                             // This is used in taskFinished to avoid
+		                             // processing the result from a task that is
+		                             // part of a previous job.
 		int rowNumber;  // Which row of pixels does this task compute?
 		double xmin;    // The x-value for the first pixel in the row.
 		double y;       // The y-value for all the pixels in the row.
 		double dx;      // The change in x-value from one pixel to the next.
 		int maxIterations;  // The maximum count in the Mandelbrot algorithm.
 		Color[] rgb;     // The colors computed for the pixels.
-		MandelbrotTask( int jobNumber, int rowNumber, int width, 
+		MandelbrotTask( ExecutorService executor, int rowNumber, int width, 
 				              int maxIterations, double xmin, double y, double dx) {
-			this.jobNumber = jobNumber;
+			this.myExecutor = executor;
 			this.rowNumber = rowNumber;
 			this.maxIterations = maxIterations;
 			this.xmin = xmin;
@@ -261,45 +233,4 @@ public class MultiprocessingDemo3 extends Application {
 	}
 
 
-	/**
-	 * This class defines the worker threads that make up the thread pool.
-	 * A WorkerThread runs in a loop in which it retrieves a task from the 
-	 * taskQueue and calls the run() method in that task.  Note that if
-	 * the queue is empty, the thread blocks until a task becomes available
-	 * in the queue.  The thread will run at a priority the is one less
-	 * than the priority of the thread that calls the constructor.
-	 * 
-	 * A WorkerThread is designed to run in an infinite loop.  It will
-	 * end only when the Java virtual machine exits. (This assumes that
-	 * the tasks that are executed don't throw exceptions, which is true
-	 * in this program.)  The constructor sets the thread to run as
-	 * a daemon thread; the Java virtual machine will exit when the
-	 * only threads are daemon threads. 
-	 */
-	private class WorkerThread extends Thread {
-		WorkerThread() {
-			try {
-				setPriority( Thread.currentThread().getPriority() - 1);
-			}
-			catch (Exception e) {
-			}
-			try {
-				setDaemon(true);
-			}
-			catch (Exception e) {
-			}
-		}
-		public void run() {
-			while (true) {
-				try {
-					Runnable task = taskQueue.take();
-					task.run();
-				}
-				catch (InterruptedException e) {
-				}
-			}
-		}
-	}
-
-
-} // end MultiprocessingDemo3
+} // end MultiprocessingDemo4

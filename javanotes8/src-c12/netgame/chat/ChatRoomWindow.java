@@ -1,15 +1,30 @@
 package netgame.chat;
 
-import java.awt.*;
-import java.awt.event.*;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.geometry.Insets;
+
 import java.io.IOException;
-import javax.swing.*;
+import java.util.Optional;
+
 import netgame.common.*;
 
 /* This class is a demo of the "netgame" package.  It's not exactly a game, but
  * it uses the netgame infrastructure of Hub + Clients to send and receive
  * messages in the chat room.  The chat room server is just a netgame Hub.
  * A ChatRoomWindow has a subclass that represents a Client for that Hub.
+ * You must run ChatRoomServer on a known computer.  Several copies of
+ * ChatRoomWindow can then connect to that server.
  */
 
 /**
@@ -25,26 +40,106 @@ import netgame.common.*;
  * <p>Participants in the chat room are represented only by ID numbers
  * that are assigned to them by the server when they connect.
  */
-public class ChatRoomWindow extends JFrame {
+public class ChatRoomWindow extends Application {
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+	//----------------------------------------------------------------------------
 	
 	private final static int PORT = 37829; // The ChatRoom port number; can't be 
 	                                       // changed here unless the ChatRoomServer
 	                                       // program is also changed.
 
+	private TextField messageInput;   // For entering messages to be sent to the chat room
+	private Button sendButton;        // Sends the contents of the messageInput.
+	private Button quitButton;        // Leaves the chat room cleanly, by sending a DisconnectMessage
+	
+	private TextArea transcript;      // Contains all messages sent by chat room participant, as well
+	                                  //    as a few additional status messages, 
+	                                  //    such as when a new user arrives.
+	
+	private ChatClient connection;      // Represents the connection to the Hub; used to send messages;
+	                                    // also receives and processes messages from the Hub.
+	
+	private volatile boolean connected; // This is true while the client is connected to the hub.
+	
+	
 	/**
 	 * Gets the host name (or IP address) of the chat room server from the
-	 * user and opens a ChatRoomWindow.  The program ends when the user
+	 * user and then opens the main window.  The program ends when the user
 	 * closes the window.
 	 */
-	public static void main(String[] args) {
-		String host = JOptionPane.showInputDialog(
-				       "Enter the host name of the\ncomputer that hosts the chat room:");
+	public void start( Stage stage ) {
+		
+		TextInputDialog question = new TextInputDialog();
+		question.setHeaderText("Enter the host name of the\ncomputer that hosts the chat room.");
+		question.setContentText("Host Name:");
+		Optional<String> response = question.showAndWait();
+		if ( ! response.isPresent() )
+			System.exit(0);
+		String host = response.get().trim();
 		if (host == null || host.trim().length() == 0)
-			return;
-		ChatRoomWindow window = new ChatRoomWindow(host);
-		window.setLocation(200,100);
-		window.setVisible(true);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			System.exit(0);
+
+		transcript = new TextArea();
+		transcript.setPrefRowCount(30);
+		transcript.setPrefColumnCount(60);
+		transcript.setWrapText(true);
+		transcript.setEditable(false);
+
+		sendButton = new Button("send");
+		quitButton = new Button("quit");
+		messageInput = new TextField();
+		messageInput.setPrefColumnCount(40);
+		sendButton.setOnAction( e -> doSend() );
+		quitButton.setOnAction( e -> doQuit() );
+		sendButton.setDefaultButton(true);
+		sendButton.setDisable(true);
+		messageInput.setEditable(false);
+		messageInput.setDisable(true);
+		
+		HBox bottom = new HBox(8, new Label("YOU SAY:"), messageInput, sendButton, quitButton);
+		HBox.setHgrow(messageInput, Priority.ALWAYS);
+		HBox.setMargin(quitButton, new Insets(0,0,0,50));
+		bottom.setPadding(new Insets(8));
+		bottom.setStyle("-fx-border-color: black; -fx-border-width:2px");
+		BorderPane root = new BorderPane(transcript);
+		root.setBottom(bottom);
+		
+		stage.setScene( new Scene(root) );
+		stage.setTitle("Networked Chat");
+		stage.setResizable(false);
+		stage.setOnHidden( e -> doQuit() );
+		stage.show();
+		
+		new Thread() {
+			    // This is a thread that opens the connection to the server.  Since
+			    // that operation can block, it's not done directly in the constructor.
+			    // Once the connection is established, the user interface elements are
+			    // enabled so the user can send messages.  The Thread dies after
+			    // the connection is established or after an error occurs.
+			public void run() {
+				try {
+					addToTranscript("Connecting to " + host + " ...");
+					connection = new ChatClient(host);
+					connected = true;
+					Platform.runLater( () -> {
+						messageInput.setEditable(true);
+						messageInput.setDisable(false);
+						sendButton.setDisable(false);
+						messageInput.requestFocus();
+					});
+				}
+				catch (IOException e) {
+					Platform.runLater( () -> {
+						addToTranscript("Connection attempt failed.");
+						addToTranscript("Error: " + e);
+					});
+				}
+			}
+		}.start();
+
 	}
 	
 	
@@ -83,10 +178,12 @@ public class ChatRoomWindow extends JFrame {
 		 */
 		protected void connectionClosedByError(String message) {
 			addToTranscript("Sorry, communication has shut down due to an error:\n     " + message);
-			sendButton.setEnabled(false);
-			messageInput.setEnabled(false);
-			messageInput.setEditable(false);
-			messageInput.setText("");
+			Platform.runLater( () -> {
+				sendButton.setDisable(true);
+				messageInput.setDisable(true);
+				messageInput.setDisable(true);
+				messageInput.setText("");
+			});
 			connected = false;
 			connection = null;
 		}
@@ -109,108 +206,26 @@ public class ChatRoomWindow extends JFrame {
 
 	
 	
-	private JTextField messageInput;   // For entering messages to be sent to the chat room
-	private JButton sendButton;        // Sends the contents of the messageInput.
-	private JButton quitButton;        // Leaves the chat room cleanly, by sending a DisconnectMessage
-
-	private JTextArea transcript;      // Contains all messages sent by chat room participant, as well
-	                                   // as a few additional status messages, such as when a new user arrives.
-	
-	private ChatClient connection;      // Represents the connection to the Hub; used to send messages;
-	                                    // also receives and processes messages from the Hub.
-	
-	private volatile boolean connected; // This is true while the client is connected to the hub.
-	
-	
-	/**
-	 * Constructor creates the window and starts the process of connecting
-	 * to the hub; the actual connection is done in a separate thread.
-	 * @param host  The IP address or host name of the computer where the server is running.
-	 */
-	private ChatRoomWindow(final String host) {
-		super("Chat Room");
-		setBackground(Color.BLACK);
-		setLayout(new BorderLayout(2,2));
-		transcript = new JTextArea(30,60);
-		transcript.setLineWrap(true);
-		transcript.setWrapStyleWord(true);
-		transcript.setMargin(new Insets(5,5,5,5));
-		transcript.setEditable(false);
-		add(new JScrollPane(transcript), BorderLayout.CENTER);
-		sendButton = new JButton("send");
-		quitButton = new JButton("quit");
-		messageInput = new JTextField(40);
-		messageInput.setMargin(new Insets(3,3,3,3));
-		ActionHandler ah = new ActionHandler();
-		sendButton.addActionListener(ah);
-		quitButton.addActionListener(ah);
-		messageInput.addActionListener(ah);
-		sendButton.setEnabled(false);
-		messageInput.setEditable(false);
-		messageInput.setEnabled(false);
-		JPanel bottom = new JPanel();
-		bottom.setBackground(Color.LIGHT_GRAY);
-		bottom.add(new JLabel("You say:"));
-		bottom.add(messageInput);
-		bottom.add(sendButton);
-		bottom.add(Box.createHorizontalStrut(30));
-		bottom.add(quitButton);
-		add(bottom,BorderLayout.SOUTH);
-		pack();
-		addWindowListener( new WindowAdapter() { // calls doQuit if user closes window
-			public void windowClosing(WindowEvent e) {
-				doQuit();
-			}
-		});
-		new Thread() {
-			    // This is a thread that opens the connection to the server.  Since
-			    // that operation can block, it's not done directly in the constructor.
-			    // Once the connection is established, the user interface elements are
-			    // enabled so the user can send messages.  The Thread dies after
-			    // the connection is established or after an error occurs.
-			public void run() {
-				try {
-					addToTranscript("Connecting to " + host + " ...");
-					connection = new ChatClient(host);
-					connected = true;
-					messageInput.setEditable(true);
-					messageInput.setEnabled(true);
-					sendButton.setEnabled(true);
-					messageInput.requestFocus();
-				}
-				catch (IOException e) {
-					addToTranscript("Connection attempt failed.");
-					addToTranscript("Error: " + e);
-				}
-			}
-		}.start();
-	}
 	
 	
 	/**
 	 * Adds a string to the transcript area, followed by a blank line.
 	 */
 	private void addToTranscript(String message) {
-		transcript.append(message);
-		transcript.append("\n\n");
-	        // The following line is a nasty kludge that was the only way I could find to force
-	        // the transcript to scroll so that the text that was just added is visible in
-	        // the window.  Without this, text can be added below the bottom of the visible area
-	        // of the transcript.
-		transcript.setCaretPosition(transcript.getDocument().getLength());
+		Platform.runLater( () ->	transcript.appendText(message + "\n\n") );
 	}
 	
 	
 	/**
 	 * Called when the user clicks the Quit button or closes
-	 * the window by clicking its close box.
+	 * the window by clicking its close box. Called from the
+	 * application thread.
 	 */
 	private void doQuit() {
 		if (connected)
 			connection.disconnect();  // Sends a DisconnectMessage to the server.
-		dispose();
 		try {
-			Thread.sleep(1000); // Time for DisconnectMessage to actually be sent.
+			Thread.sleep(500); // Time for DisconnectMessage to actually be sent.
 		}
 		catch (InterruptedException e) {
 		}
@@ -218,31 +233,23 @@ public class ChatRoomWindow extends JFrame {
 	}
 
 	
-	/**
-	 * Defines the object that handles all ActionEvents for the program.
+
+	/** 
+	 * Send the string entered by the user as a message
+	 * to the Hub, using the ChatClient that handles communication
+	 * for this ChatRoomWindow.  Note that the string is not added
+	 * to the transcript here.  It will get added after the Hub
+	 * receives the message and broadcasts it to all clients,
+	 * including this one.  Called from the application thread.
 	 */
-	private class ActionHandler implements ActionListener {
-		public void actionPerformed(ActionEvent evt) {
-			Object src = evt.getSource();
-			if (src == quitButton) {  // Disconnect from the server and end the program.
-				doQuit();
-			}
-			else if (src == sendButton || src == messageInput) {
-				   // Send the string entered by the user as a message
-				   // to the Hub, using the ChatClient that handles communication
-				   // for this ChatRoomWindow.  Note that the string is not added
-				   // to the transcript here.  It will get added after the Hub
-				   // receives the message and broadcasts it to all clients,
-				   // including this one.
-				String message = messageInput.getText();
-				if (message.trim().length() == 0)
-					return;
-				connection.send(message);
-				messageInput.selectAll();
-				messageInput.requestFocus();
-			}
-		}
+	private void doSend() {
+		String message = messageInput.getText();
+		if (message.trim().length() == 0)
+			return;
+		connection.send(message);
+		messageInput.selectAll();
+		messageInput.requestFocus();
 	}
 	
 
-}
+}  // end class ChatRoomWindow

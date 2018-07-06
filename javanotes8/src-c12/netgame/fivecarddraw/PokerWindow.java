@@ -1,16 +1,34 @@
 package netgame.fivecarddraw;
 
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.geometry.Insets;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
 import netgame.common.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+
 import java.io.IOException;
-import java.net.URL;
+import java.util.Optional;
+
 
 /**
  * A window for one player in a two-player networked game of
  * Five Card Draw Poker.  The window is created by the main 
- * program, netgem.fivecarddraw.*.
+ * program, netgame.fivecarddraw.Main.
  * <p>When a PokerWindow is opened, it establishes a
  * a connection to a PokerHub at a specified host and port.
  * Once two players have connected to the hub, the hub will
@@ -35,70 +53,145 @@ import java.net.URL;
  * is used between the PokerWindows and the PokerHub,
  * see the comments on the PokerHub class.
  */
-public class PokerWindow extends JFrame {
+public class PokerWindow extends Stage {
+	
+	
+	private PokerClient connection;   // Handles communication with the PokerHub; used to send messages to the hub.
+
+	private PokerGameState state;     // Represents the state of the game, as seen by this player.  The state is
+	                                  //   received as a message from the hub whenever the state changes.  This
+	                                  //   variable changes only in the newState() method.
+	
+	private boolean[] discard;        // When the player is discarding cards, this array tells which cards the
+	                                  //   player wants to discard.  discard[i] is true if player is discarding 
+	                                  //   the i-th card in the hand.
+	
+	private PokerCard[] opponentHand; // The opponent's hand.  This variable is dull during the playing of a
+	                                  //   hand.  It becomes non-null if the opponent's hand is sent to this
+	                                  //   player at the end of one hand of poker.
+	
+	private Canvas canvas;          // The content pane of the window, defined by the inner class, Display.
+
+	private Image cardImages;         // An image holding pictures of all the cards.  The Image is loaded
+	                                  // as a resource by the PokerWindow constructor from a resource file
+	                                  // "netgame/fivecarddraw/cards.png."   (The program will be non-functional
+	                                  // if that resource file is not there.)
+	
+	
+	private Button dealButton;   // User interface components shown along the right side of the window
+	private Button drawButton;
+	private Button betButton;
+	private Button callButton;
+	private Button passButton;
+	private Button foldButton;
+	private Button quitButton;	
+	private TextField betInput;
+	
+	private String message = "";                     // text that is displayed on the canvas
+	private String messageFromServer = "";
+	private String money = "", opponentsMoney = "", pot = "";
 	
 	
 	/**
 	 * The constructor sets up the window and makes it visible on the screen.  
 	 * It starts a thread that will open a connection to a PokerHub.
-	 * The window will become operational when the game stops, or it will be closed
+	 * The window will become operational when the game starts, or it will be closed
 	 * and the program terminated if the connection attempt fails.
 	 * @param hubHostName the host name or IP address where the PokerHub is listening.
 	 * @param hubPort the port number where the PokerHub is listening.
 	 */
 	public PokerWindow(final String hubHostName, final int hubPort) {
-		super("NetPoker");
-		ClassLoader cl = getClass().getClassLoader();
-		URL imageURL = cl.getResource("netgame/fivecarddraw/cards.png");  // Image required for drawing cards.
-		cardImages = Toolkit.getDefaultToolkit().createImage(imageURL);
-		display = new Display();
-		setContentPane(display);
-		pack();
+
+		cardImages = new Image("netgame/fivecarddraw/cards.png");
+		messageFromServer  = "WAITING FOR CONNECTION";
+		
+		canvas = new Canvas(550,575);
+		drawBoard();
+		canvas.setOnMousePressed( evt -> doClick(evt.getX(),evt.getY()) );
+		
+		betInput = new TextField();
+		betInput.setEditable(false);
+		betInput.setPrefColumnCount(5);
+		VBox.setMargin(betInput,new Insets(0,10,0,15));
+
+		VBox controls = new VBox();
+		EventHandler<ActionEvent> listener = this::doAction;
+		dealButton = makeButton("DEAL",listener,controls);
+		drawButton = makeButton("DRAW",listener,controls);
+		betButton = makeButton("BET:",listener,controls);
+		controls.getChildren().add(betInput);
+		passButton = makeButton("PASS",listener,controls);
+		callButton = makeButton("CALL",listener,controls);
+		foldButton = makeButton("FOLD",listener,controls);
+		quitButton = makeButton("QUIT",listener,controls);
+		quitButton.setDisable(false);
+		
+		BorderPane root = new BorderPane(canvas);
+		root.setRight(controls);
+		
+		setScene(new Scene(root));
+		setOnHiding( e -> doQuit() );
+		setTitle("NetPoker");
 		setResizable(false);
-		setLocation(200,100);
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		addWindowListener( new WindowAdapter() {  // A listener to end the program when the user closes the window.
-			public void windowClosing(WindowEvent evt) {
-				doQuit();
-			}
-		});
-		display.addMouseListener( new MouseAdapter(){  // Respond to clicks on the display by calling the doClick() method.
-			public void mousePressed(MouseEvent evt) {
-				doClick(evt.getX(),evt.getY());
-			}
-		});
-		setVisible(true);
-		new Thread() {  // A thread to open the connection to the server.
-			public void run() {
-				try {
-					final PokerClient c = new PokerClient(hubHostName,hubPort);
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							connection = c;
-							if (c.getID() == 1) { 
-								   // This is Player #1.  Still have to wait for second player to
-								   // connect.  Change the message display to reflect that fact.
-							     messageFromServer.setText("Waiting for an opponent to connect...");
-							}
-						}
-					});
-				}
-				catch (final IOException e) {
-					   // Error while trying to connect to the server.  Tell the
-					   // user, and end the program.  Use SwingUtilties.invokeLater()
-					   // because this happens in a thread other than the GUI event thread.
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							dispose();
-							JOptionPane.showMessageDialog(null,"Could not connect to "
-									+ hubHostName +".\nError:  " + e);
-							System.exit(0);
-						}
-					});
-				}
-			}
-		}.start();
+		setX(200);
+		setY(100);
+		show();
+		
+		new Thread( () -> connect(hubHostName,hubPort) ).start();
+		
+	} // end start()
+	
+	
+	/**
+	 * Utility routine used by the constructor to make a button, add it
+	 * to the VBox, and add a listener for ActionEvents. All buttons will
+	 * have the same size, 95x40.
+	 */
+	private Button makeButton(String text, EventHandler<ActionEvent> listener, VBox box) {
+		Button button = new Button(text);
+		button.setDisable(true);
+		button.setPrefSize(95,40);
+		button.setFont(Font.font(null, FontWeight.BOLD, 15));
+		button.setOnAction(listener);
+		box.getChildren().add(button);
+		VBox.setMargin(button, new Insets(30,10,0,10));
+		return button;
 	}
+	
+	
+	/**
+	 * When the window is created, this method is called in a separate
+	 * thread to make the connection to the server.  If an error
+	 * occurs, the program is terminated
+	 */
+	private void connect(String hostName, int serverPortNumber) {
+		PokerClient c;
+		try {
+			c = new PokerClient(hostName, serverPortNumber);
+			int id = c.getID();
+			Platform.runLater( () -> {
+				connection = c;
+				if (id == 1) {
+					   // This is Player #1.  Still have to wait for second player to
+					   // connect.  Change the message display to reflect that fact.
+					messageFromServer  = "Waiting for an opponent to connect...";
+					drawBoard();
+				}
+			});
+		}
+		catch (Exception e) {
+			Platform.runLater( () -> {
+				Alert alert = new Alert(Alert.AlertType.INFORMATION, 
+						"Sorry, could not connect to\n"
+						+ hostName + " on port " + serverPortNumber 
+						+ "\nShutting down.");
+				alert.showAndWait();
+				System.exit(0);
+			});
+		}
+	}
+		
+
 	
 	
 	// ---------------------- Private inner classes -----------------------------------
@@ -125,26 +218,26 @@ public class PokerWindow extends JFrame {
 		 * then the newState() method in the PokerWindow class is called
 		 * to handle the change in the state of the game.  If the message
 		 * is of type String, it represents a message that is to be
-		 * displayed to the user; the string is displayed in the JLabel
+		 * displayed to the user; the string is displayed as
 		 * messageFromServer.  If the message is of type PokerCard[],
-		 * then it is the opponent's hand.  This had is sent when the
+		 * then it is the opponent's hand.  That hand is sent when the
 		 * game has ended and the player gets to see the opponent's hand.
 		 * <p>Note that this method is called from a separate thread, not
 		 * from the GUI event thread.  In order to avoid synchronization
-		 * issues, this method uses SwingUtilties.invokeLater() to carry 
+		 * issues, this method uses Platform.runLater() to carry 
 		 * out its task in the GUI event thread.
 		 */
 		protected void messageReceived(final Object message) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					if (message instanceof PokerGameState)
-						newState( (PokerGameState)message );
-					else if (message instanceof String)
-						messageFromServer.setText( (String)message );
-					else if (message instanceof PokerCard[]) {
-						opponentHand = (PokerCard[])message;
-						display.repaint();
-					}
+			Platform.runLater( () -> {
+				if (message instanceof PokerGameState)
+					newState( (PokerGameState)message );
+				else if (message instanceof String) {
+					messageFromServer  =  (String)message ;
+					drawBoard();
+				}
+				else if (message instanceof PokerCard[]) {
+					opponentHand = (PokerCard[])message;
+				    drawBoard();
 				}
 			});
 		}
@@ -155,164 +248,110 @@ public class PokerWindow extends JFrame {
 		 * of this, and the program is terminated.
 		 */
 		protected void serverShutdown(String message) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					JOptionPane.showMessageDialog(PokerWindow.this,
-							"Your opponent has quit.\nThe game is over.");
-					System.exit(0);
-				}
+			Platform.runLater( () -> {
+				showMessage("Your opponent has quit.\nThe game is over.");
+				System.exit(0);
 			});
 		}
 		
 	} // end nested class PokerClient
 	
+	private static Font font16 = Font.font(16);  //fonts for use in drawBoard
+	private static Font font24 = Font.font(24); 
+	private static Font font38 = Font.font(38); 
+
+	private void drawBoard() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
+		g.setFill(Color.BEIGE);
+		g.fillRect(0,0,canvas.getWidth(), canvas.getHeight());
+		g.setStroke(Color.DARKRED);
+		g.setLineWidth(8);
+		g.strokeRect(0,0,canvas.getWidth(),canvas.getHeight());
+		
+		g.setFill(Color.GREEN);
+		g.setFont(font24);
+		g.fillText(opponentsMoney,100,40);
+		g.fillText(money,100,550);
+		g.setFont(font38);
+		g.fillText(pot,150,300);
+		g.setFill(Color.DARKRED);
+		g.setFont(font16);
+		g.fillText(message,30,355);
+		g.fillText(messageFromServer,30,230);
+		
+		if (state == null) {
+			   // Still waiting for connections.  Don't draw anything.
+			return;
+		}
+		
+		if (state.hand == null) {
+			   // This happens only while waiting for the first hand to be dealt.
+			   // Draw outlines of the card locations for this player's hand.
+			g.setStroke(Color.DARKRED);
+			g.setLineWidth(2);
+			for (int x = 25; x < 500; x += 105)
+				g.strokeRect(x,380,80,124);
+		}
+		else {
+			   // Draw the cards in this player's hand.
+			for (int i = 0; i < 5; i++) {
+				if (discard != null && discard[i])
+					drawCard(g,null,25+i*105,380);
+				else
+					drawCard(g,state.hand[i],25+i*105,380);
+			}
+		}
+		if (state.hand == null) {
+			   // This happens only while waiting for the first hand to be dealt.
+			   // Draw outlines of the card locations for the opponent's hand.
+			g.setStroke(Color.DARKRED);
+			g.setLineWidth(2);
+			for (int x = 25; x < 500; x += 105)
+				g.strokeRect(x,70,80,124);
+		}
+		else if (opponentHand == null) {
+			   // The opponent's hand exists but is unknown.  Draw it as face-down cards.
+			for (int i = 0; i < 5; i++)
+				drawCard(g,null,25+i*105,70);
+		}
+		else {
+			   // The opponent's hand is known.  Draw the cards.
+			for (int i = 0; i < 5; i++)
+				drawCard(g,opponentHand[i],25+i*105,70);
+		}
+	}	
+
+	
+	private void showMessage(String message) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
+		alert.showAndWait();
+	}
+	
 
 	
 	/**
-	 * The display class defines a JPanel that is used as the content
-	 * pane for the PokerWindow.
-	 */
-	private class Display extends JPanel {
-		
-		final Color brown = new Color(130,70,0);
-		final Color green = new Color(0,100,0);
-		
-		/**
-		 * The constructor creates labels,  buttons, and a text field and adds
-		 * them to the panel.  An action listener of type ButtonHandler is created
-		 * and is added to all the buttons and the text field.
-		 */
-		Display() {
-			setLayout(null);  // Layout will be done by hand.
-			setPreferredSize(new Dimension(675,585));
-			setBackground(new Color(255,245,200));
-			setBorder(BorderFactory.createLineBorder(brown, 3));
-			opponentsMoney = makeLabel(100,10,400,30,24,green);
-			messageFromServer = makeLabel(30,205,500,25,16,brown);
-			message = makeLabel(30,325,500,25,16,brown);
-			pot = makeLabel(150,255,300,45,38,green);
-			money = makeLabel(100,535,400,30,24,green);
-			messageFromServer.setText("WAITING FOR CONNECTION");
-			ButtonHandler listener = new ButtonHandler();
-			dealButton = makeButton("DEAL",575,60,listener);
-			drawButton = makeButton("DRAW",575,120,listener);
-			betButton = makeButton("BET",575,180,listener);
-			passButton = makeButton("PASS",575,290,listener);
-			callButton = makeButton("CALL",575,350,listener);
-			foldButton = makeButton("FOLD",575,410,listener);
-			quitButton = makeButton("QUIT",575,470,listener);
-			quitButton.setEnabled(true);
-			betInput = new JTextField();
-			betInput.setMargin(new Insets(2,2,2,2));
-			betInput.setEditable(false);
-			add(betInput);
-			betInput.setBounds(595,220,64,28);
-			betInput.addActionListener(listener);
-		}
-		
-		/**
-		 * Utility routine used by constructor to make a label and add it to the
-		 * panel.  The label has specified bounds, font size, and color, and its
-		 * text is initially empty.
-		 */
-		JLabel makeLabel(int x, int y, int width, int height, int fontSize, Color color) {
-			JLabel label = new JLabel();
-			add(label);
-			label.setBounds(x,y,width,height);
-			label.setOpaque(false);
-			label.setForeground(color);
-			label.setFont(new Font("Serif", Font.BOLD, fontSize));
-			return label;
-		}
-		
-		/**
-		 * Utility routine used by the constructor to make a button and add it
-		 * to the panel. The button has a specified text and (x,y) position and
-		 * is 80-by-35 pixels.  An action listener is added to the button.
-		 */
-		JButton makeButton(String text, int x, int y, ActionListener listener) {
-			JButton button = new JButton(text);
-			add(button);
-			button.setEnabled(false);
-			button.setBounds(x,y,80,35);
-			setFont(new Font("SansSerif", Font.BOLD, 24));
-			button.addActionListener(listener);
-			return button;
-		}
-		
-		/**
-		 * The paint component just draws the cards, when appropriate.  The remaining
-		 * content of the panel consists of sub-components (labels, buttons, text field).
-		 */
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			if (state == null) {
-				   // Still waiting for connections.  Don't draw anything.
-				return;
-			}
-			if (state.hand == null) {
-				   // This happens only while waiting for the first hand to be dealt.
-				   // Draw outlines of the card locations for this player's hand.
-				g.setColor(brown);
-				for (int x = 25; x < 500; x += 105)
-					g.drawRect(x,380,80,124);
-			}
-			else {
-				   // Draw the cards in this player's hand.
-				for (int i = 0; i < 5; i++) {
-					if (discard != null && discard[i])
-						drawCard(g,null,25+i*105,380);
-					else
-						drawCard(g,state.hand[i],25+i*105,380);
-				}
-			}
-			if (state.hand == null) {
-				   // This happens only while waiting for the first hand to be dealt.
-				   // Draw outlines of the card locations for the opponent's hand.
-				g.setColor(brown);
-				for (int x = 25; x < 500; x += 105)
-					g.drawRect(x,70,80,124);
-			}
-			else if (opponentHand == null) {
-				   // The opponent's hand exists but is unknown.  Draw it as face-down cards.
-				for (int i = 0; i < 5; i++)
-					drawCard(g,null,25+i*105,70);
-			}
-			else {
-				   // The opponent's hand is known.  Draw the cards.
-				for (int i = 0; i < 5; i++)
-					drawCard(g,opponentHand[i],25+i*105,70);
-			}
-		}
-		
-	} // end nested class Display
-	
-	
-	
-	/**
-	 * A class to define the action listener that responds when the user clicks
-	 * a button or presses return while typing in the text field.  Note that 
+	 * A class to define the action event handler that responds when the user clicks
+	 * a button.  The button that was clicked is given by evt.getSource().  Note that 
 	 * once an action is taken, the buttons that were enabled are disabled,
 	 * to prevent the user from generating extra messages while the hub is
 	 * processing the user's action.
 	 */
-	private class ButtonHandler implements ActionListener {
-		public void actionPerformed(ActionEvent evt) {
+		public void doAction(ActionEvent evt) {
 			Object src = evt.getSource();
 			if (src == quitButton) {  // end the program
 				doQuit();
 			}
 			else if (src == dealButton) { 
 				    // send "deal" as a message to the hub, which will start the next hand of the game
-				dealButton.setEnabled(false);
+				dealButton.setDisable(true);
 				connection.send("deal");
 			}
 			else if (src == foldButton) { 
 				   // send "fold" as a message to the hub, which will end the game because this user folded
-				foldButton.setEnabled(false);
-				betButton.setEnabled(false);
-				passButton.setEnabled(false);
-				callButton.setEnabled(false);
+				foldButton.setDisable(true);
+				betButton.setDisable(true);
+				passButton.setDisable(true);
+				callButton.setDisable(true);
 				betInput.setEditable(false);
 				betInput.setText("");
 				connection.send("fold");
@@ -320,10 +359,10 @@ public class PokerWindow extends JFrame {
 			else if (src == passButton) { 
 				   // send the integer 0 as a message, indicating that the user places no bet;
 				   // this is only possible for the first bet in a betting round
-				foldButton.setEnabled(false);
-				betButton.setEnabled(false);
-				passButton.setEnabled(false);
-				callButton.setEnabled(false);
+				foldButton.setDisable(true);
+				betButton.setDisable(true);
+				passButton.setDisable(true);
+				callButton.setDisable(true);
 				betInput.setEditable(false);
 				betInput.setText("");
 				connection.send(new Integer(0));
@@ -332,10 +371,10 @@ public class PokerWindow extends JFrame {
 				   // send an integer equal to the minimum possible bet as a message to the hub;
 				   // this means "see" in the first betting round and "call" in the second, and
 				   // it will end the current betting round.
-				foldButton.setEnabled(false);
-				betButton.setEnabled(false);
-				passButton.setEnabled(false);
-				callButton.setEnabled(false);
+				foldButton.setDisable(true);
+				betButton.setDisable(true);
+				passButton.setDisable(true);
+				callButton.setDisable(true);
 				betInput.setEditable(false);
 				betInput.setText("");
 				connection.send(new Integer(state.amountToSee));
@@ -349,13 +388,13 @@ public class PokerWindow extends JFrame {
 						ct++;
 				}
 				if (ct == 0) {
-					int resp = JOptionPane.showConfirmDialog(PokerWindow.this,
-							"Are you sure that you want to draw ZERO cards?\n"
-							   +"If not, click 'No' and select the cards taht"
-							   +"you want to discard.", 
-							 "Discarding no cards?", 
-							 JOptionPane.YES_NO_OPTION);
-					if (resp != JOptionPane.YES_OPTION)
+					Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+							"Are you sure you want to draw NO cards?\n"
+							   +"If not, click 'No', and select\n" 
+							   + "the cards that you want to discard.",
+							   ButtonType.NO, ButtonType.YES);
+					Optional<ButtonType> resp = alert.showAndWait();
+					if (! resp.isPresent() || resp.get() == ButtonType.NO)
 						return;
 				}
 				int[] cardNums = new int[ct];
@@ -365,10 +404,10 @@ public class PokerWindow extends JFrame {
 						cardNums[j++] = i;
 				}
 				discard = null;  // We are finished with the discard array.
-				drawButton.setEnabled(false);
+				drawButton.setDisable(true);
 				connection.send(cardNums);
 			}
-			else if (src == betButton || src == betInput) {
+			else if (src == betButton) {
 				   // User wants to place a bet.  Check that the bet is legal.  If it is,
 				   // send the bet amount as a message to the hub.
 				int amount;
@@ -378,16 +417,15 @@ public class PokerWindow extends JFrame {
 						throw new NumberFormatException();
 				}
 				catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(PokerWindow.this,
-							"The bet amount must be\na legal positive integer.");
+					showMessage("The bet amount must be\na legal positive integer.");
 					betInput.selectAll();
 					betInput.requestFocus();
 					return;
 				}
 				if ( (state.status == PokerGameState.RAISE_SEE_OR_FOLD_ROUND_1 ||
-						state.status == PokerGameState.RAISE_CALL_OR_FOLD_ROUND_2) && amount < state.amountToSee) {
-					JOptionPane.showMessageDialog(PokerWindow.this,
-					           "Your bet must be at least " + state.amountToSee
+						state.status == PokerGameState.RAISE_CALL_OR_FOLD_ROUND_2)
+						   && amount < state.amountToSee) {
+					showMessage("Your bet must be at least " + state.amountToSee
 					           + "\n to match your opponent's bet.");
 					betInput.selectAll();
 					betInput.requestFocus();
@@ -398,47 +436,6 @@ public class PokerWindow extends JFrame {
 				connection.send(new Integer(amount));
 			}
 		}
-	} // end nested class ButtonHandler
-	
-	
-
-	// ------------------- Private member variables and methods ---------------------------
-	
-	
-	private PokerClient connection;   // Handles communication with the PokerHub; used to send messages to the hub.
-
-	private PokerGameState state;     // Represents the state of the game, as seen by this player.  The state is
-	                                  //   received as a message from the hub whenever the state changes.  This
-	                                  //   variable changes only in the newState() method.
-	
-	private boolean[] discard;        // When the player is discarding cards, this array tells which cards the
-	                                  //   player wants to discard.  discard[i] is true if player is discarding 
-	                                  //   the i-th card in the hand.
-	
-	private PokerCard[] opponentHand; // The opponent's hand.  This variable is dull during the playing of a
-	                                  //   hand.  It becomes non-null if the opponent's hand is sent to this
-	                                  //   player at the end of one hand of poker.
-	
-	private Display display;          // The content pane of the window, defined by the inner class, Display.
-
-	private Image cardImages;         // An image holding pictures of all the cards.  The Image is loaded
-	                                  // as a resource by the PokerWindow constructor from a resource file
-	                                  // "netgame/fivecarddraw/cards.png."   (The program will be non-functional
-	                                  // if that resource file is not there.)
-	
-	
-	private JButton dealButton;   // User interface components that are be added to the display panel.
-	private JButton drawButton;
-	private JButton betButton;
-	private JButton callButton;
-	private JButton passButton;
-	private JButton foldButton;
-	private JButton quitButton;
-	private JTextField betInput;
-	private JLabel message;
-	private JLabel messageFromServer;
-	private JLabel money, opponentsMoney, pot;
-	
 	
 	
 	/**
@@ -452,17 +449,17 @@ public class PokerWindow extends JFrame {
 		
 		// Set the enabled status of the buttons to enable actions that are appropriate in the current state.
 		
-		dealButton.setEnabled(state.status == PokerGameState.DEAL);
-		drawButton.setEnabled(state.status == PokerGameState.DRAW);
-		betButton.setEnabled(state.status == PokerGameState.BET_OR_FOLD
-				        || state.status == PokerGameState.RAISE_SEE_OR_FOLD_ROUND_1
-				        || state.status == PokerGameState.RAISE_CALL_OR_FOLD_ROUND_2);
-		foldButton.setEnabled(state.status == PokerGameState.BET_OR_FOLD
-		                || state.status == PokerGameState.RAISE_SEE_OR_FOLD_ROUND_1
-				        || state.status == PokerGameState.RAISE_CALL_OR_FOLD_ROUND_2);
-		passButton.setEnabled(state.status == PokerGameState.BET_OR_FOLD);
-		callButton.setEnabled(state.status == PokerGameState.RAISE_SEE_OR_FOLD_ROUND_1
-		                || state.status == PokerGameState.RAISE_CALL_OR_FOLD_ROUND_2);
+		dealButton.setDisable(state.status != PokerGameState.DEAL);
+		drawButton.setDisable(state.status != PokerGameState.DRAW);
+		betButton.setDisable(state.status != PokerGameState.BET_OR_FOLD
+				        && state.status != PokerGameState.RAISE_SEE_OR_FOLD_ROUND_1
+				        && state.status != PokerGameState.RAISE_CALL_OR_FOLD_ROUND_2);
+		foldButton.setDisable(state.status != PokerGameState.BET_OR_FOLD
+		                && state.status != PokerGameState.RAISE_SEE_OR_FOLD_ROUND_1
+				        && state.status != PokerGameState.RAISE_CALL_OR_FOLD_ROUND_2);
+		passButton.setDisable(state.status != PokerGameState.BET_OR_FOLD);
+		callButton.setDisable(state.status != PokerGameState.RAISE_SEE_OR_FOLD_ROUND_1
+		                && state.status != PokerGameState.RAISE_CALL_OR_FOLD_ROUND_2);
 		
 		// Set the name of callButton to "CALL" during the second round of
 		// betting and to "SEE" at other times.
@@ -474,7 +471,7 @@ public class PokerWindow extends JFrame {
 		
 		// When it's time for this player to make a bet, enable the betInput text field,
 		// set its content to be the minimum possible bet plus $10, and select the
-		// text input so that the user can simply type the bet and press return.  The
+		// text input so that the user can simply type the bet.  The
 		// betInput is not editable except when its time for the user to place a bet.
 		// Once the user places the bet (or sees, calls, passes, or folds), the
 		// betInput is once again made empty and uneditable.
@@ -497,11 +494,11 @@ public class PokerWindow extends JFrame {
 		
 		// Show the current amounts of the user's money, the opponent's money, and the pot.
 		
-		money.setText("You have $ " + state.money);
-		opponentsMoney.setText("Your opponent has $ " + state.opponentMoney);
+		money  = "You have $ " + state.money;
+		opponentsMoney  = "Your opponent has $ " + state.opponentMoney;
 		if (state.status != PokerGameState.DEAL && state.status != PokerGameState.WAIT_FOR_DEAL)
 			opponentHand = null;
-		pot.setText("Pot:  $ " + state.pot);
+		pot  = "Pot:  $ " + state.pot;
 		
 		// If it's time for the user to select cards to be discarded, create the
 		// discard array that will record which cards have been selected to be discarded.
@@ -510,36 +507,36 @@ public class PokerWindow extends JFrame {
 			discard = new boolean[5];
 		}
 		
-		// Set the JLable, message, to show instructions to the user that are appropriate for the state.
+		// Set the message to show instructions to the user that are appropriate for the state.
 		
 		switch (state.status) {
 		case PokerGameState.DEAL:
-			message.setText("Click the DEAL button to start the game.");
+			message  = "Click the DEAL button to start the game.";
 			break;
 		case PokerGameState.DRAW:
-			message.setText("Click the cards you want to discard, then click DRAW.");
+			message  = "Click the cards you want to discard, then click DRAW.";
 			break;
 		case PokerGameState.BET_OR_FOLD:
-			message.setText("Place your BET, PASS, or FOLD.");
+			message  = "Place your BET, PASS, or FOLD.";
 			break;
 		case PokerGameState.RAISE_SEE_OR_FOLD_ROUND_1:
-			message.setText("Place your BET, SEE, or FOLD.");
+			message  = "Place your BET, SEE, or FOLD.";
 			break;
 		case PokerGameState.RAISE_CALL_OR_FOLD_ROUND_2:
-			message.setText("Place your BET, CALL, or FOLD.");
+			message  = "Place your BET, CALL, or FOLD.";
 			break;
 		case PokerGameState.WAIT_FOR_BET:
-			message.setText("Waiting for opponent to bet.");
+			message  = "Waiting for opponent to bet.";
 			break;
 		case PokerGameState.WAIT_FOR_DEAL:
-			message.setText("Waiting for opponent to deal.");
+			message  = "Waiting for opponent to deal.";
 			break;
 		case PokerGameState.WAIT_FOR_DRAW:
-			message.setText("Waiting for opponent to draw.");
+			message  = "Waiting for opponent to draw.";
 			break;
 		}
 		
-		repaint();
+		drawBoard();
 
 	} // end newState()
 	
@@ -552,7 +549,7 @@ public class PokerWindow extends JFrame {
 	 * PokerGameState.DRAW).  While discarding, if the user clicks
 	 * a card, that card is turned over.
 	 */
-	private void doClick(int x, int y) {
+	private void doClick(double x, double y) {
 		if (state == null || state.status != PokerGameState.DRAW)
 			return;
 		for (int i = 0; i < 5; i++) {
@@ -563,7 +560,7 @@ public class PokerWindow extends JFrame {
 				   // If the card is already selected for discarding, 
 				   // it will be de-selected.
 				discard[i] = !discard[i];
-				repaint();
+				drawBoard();
 				break;
 			}
 		}
@@ -579,7 +576,7 @@ public class PokerWindow extends JFrame {
 	 * can also terminate.
 	 */
 	private void doQuit() {
-		dispose(); // Close the window.
+		hide(); // Close the window.
 		if (connection != null) {
 			connection.disconnect();
 			try { // time for the disconnect message to be sent.
@@ -602,7 +599,7 @@ public class PokerWindow extends JFrame {
 	 * @param x the x-coord of the upper left corner of the card
 	 * @param y the y-coord of the upper left corner of the card
 	 */
-	public void drawCard(Graphics g, PokerCard card, int x, int y) {
+	public void drawCard(GraphicsContext g, PokerCard card, int x, int y) {
 		int cx;    // x-coord of upper left corner of the card inside cardsImage
 		int cy;    // y-coord of upper left corner of the card inside cardsImage
 		if (card == null) {
@@ -629,7 +626,7 @@ public class PokerWindow extends JFrame {
 				break;
 			}
 		}
-		g.drawImage(cardImages,x,y,x+79,y+123,cx,cy,cx+79,cy+123,this);
+		g.drawImage( cardImages, cx,cy,79,123, x,y,79,123 );
 	}
 	
 	
