@@ -180,8 +180,8 @@ public class TimedComputation {
 
     public static void main(String[] args) {
 
-        long startTime; // Starting time of program, in milliseconds.
-        long endTime;   // Time when computations are done, in milliseconds.
+        long startTime; // Starting time of program, in nanoseconds.
+        long endTime;   // Time when computations are done, in nanoseconds.
         long compTime;  // Run time in nanoseconds.
         double seconds; // Time difference, in seconds.
 
@@ -240,7 +240,7 @@ of variables and subroutines.  For example, an object might represent a point in
 and it might contain variables named <code>x</code> and <code>y</code> to represent the
 coordinates of that point.  Every point object would have an <code>x</code> and a <code>y</code>,
 but different points would have different values for these variables.  A class, named
-<classname>Point</classname>, for example, could exist to define the common structure of
+<classname>Point</classname> for example, could exist to define the common structure of
 all point objects, and all such objects would then be values of type <classname>Point</classname>.</p>
 
 <p>As another example, let's look again at <code>System.out.println</code>.  <classname>System</classname>
@@ -506,7 +506,7 @@ as <code>vacation.ordinal()</code>.</p>
 <p>Using enums can make a program more readable, since you can use meaningful names for the values.
 And it can prevent certain types of errors, since a compiler can check that the values assigned
 to an enum variable are in fact legal values for that variable.
-However, we will in fact use them only occasionally in this book.  For now, you should just appreciate
+For now, you should just appreciate
 them as the first example of an important concept: creating new types.
 Here is a little example that shows enums being used in a complete program:</p>
    

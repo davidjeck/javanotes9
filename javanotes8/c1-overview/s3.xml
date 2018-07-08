@@ -28,9 +28,15 @@ instruction from the program, decides what is necessary to carry out that
 instruction, and then performs the appropriate machine-language commands to do
 so.</p>
 
+<p>(A compiler is like a human translator who translates an entire book from
+one language to another, producing a new book in the second language.
+An interpreter is more like a human interpreter who translates a speech at
+the United Nations from one language to another at the same time that
+the speech is being given.)</p>
+
 <p>One use of interpreters is to execute high-level language programs. For
 example, the programming language Lisp is usually executed by an interpreter
-rather than a compiler. However, interpreters have another purpose: they can
+rather than a compiler. However, interpreters have another purpose: They can
 let you use a machine-language program meant for one type of computer on a
 completely different type of computer. For example, one of the original home
 computers was the Commodore&nbsp;64 or "C64".  While you might not find an actual

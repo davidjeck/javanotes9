@@ -275,7 +275,7 @@ start with <code>0b</code> or <code>0B</code> and contain only the digits
 0 and&nbsp;1; for example: 0b10110.</p>
 
 <p>As a final complication, numeric
-literals in Java&nbsp;7 can include the underscore character&nbsp;("<code>_</code>"), which
+literals can include the underscore character&nbsp;("<code>_</code>"), which
 can be used to separate groups of digits.  For example, the integer constant
 for two billion could be written 2_000_000_000, which is a good deal easier to decipher
 than 2000000000.  There is no rule about how many digits have to be in each group.

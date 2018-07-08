@@ -166,7 +166,7 @@ use preemptive multitasking.</li>
 
 <p>Ordinary users, and indeed ordinary programmers, have no need to deal with
 interrupts and interrupt handlers. They can concentrate on the different tasks
-or threads that they want the computer to perform; the details of how the
+that they want the computer to perform; the details of how the
 computer manages to get all those tasks done are not important to them. In
 fact, most users, and many programmers, can ignore threads and multitasking
 altogether. However, threads have become increasingly important as computers
@@ -198,7 +198,7 @@ basic, essential software without which a computer would not be able to
 function. Other programs, such as word processors and Web browsers,
 are dependent upon the operating system. Common desktop operating systems include
 Linux, various versions of Windows, and Mac&nbsp;OS.  Operating systems
-for smartphones and tables include Android and iOS.</p>
+for smartphones and tablets include Android and iOS.</p>
     
     
 </section>

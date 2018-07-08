@@ -137,7 +137,7 @@ of DrawableObject. The class Line would be a
 subclass of TwoPointObject and (indirectly) of DrawableObject. A subclass of a
 class is said to <newword>inherit</newword> the properties of that
 class. The subclass can add to its inheritance and it can even "override" part
-of that inheritance (by defining a different response to some method).
+of that inheritance (by defining a different response to some message).
 Nevertheless, lines, rectangles, and so on <b>are</b> drawable
 objects, and the class DrawableObject expresses this relationship.</p>
 

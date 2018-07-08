@@ -7,8 +7,8 @@ public class TimedComputation {
 
 	public static void main(String[] args) {
 
-		long startTime; // Starting time of program, in milliseconds.
-		long endTime;   // Time when computations are done, in milliseconds.
+		long startTime; // Starting time of program, in nanoseconds.
+		long endTime;   // Time when computations are done, in nanoseconds.
 		long compTime;  // Run time in nanoseconds.
 		double seconds; // Time difference, in seconds.
 

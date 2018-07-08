@@ -35,4 +35,4 @@ public class Interest2WithScanner {
 
 	} // end of main()
 
-} // end of class Interest2With Scanner
+} // end of class Interest2WithScanner

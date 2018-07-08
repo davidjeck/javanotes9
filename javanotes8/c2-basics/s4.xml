@@ -6,7 +6,8 @@
 <p><start><big>W</big>e have seen that it is very easy</start> to display 
 text to the user with the functions <code>System.out.print</code> and <code>System.out.println</code>.
 But there is more to say on the topic of outputting text.  Furthermore, most programs
-use data that is input to the program at run time, so you need to know how to do input
+use data that is input to the program at run time rather than built into the program. 
+So you need to know how to do input
 as well as output.  This section explains how to get
 data from the user, and it covers output in more detail than we have seen so far. It also
 has a section on using files for input and output.
@@ -58,7 +59,7 @@ where <code>amount</code> is a variable of type <ptype>double</ptype>:
 <pre>System.out.printf( "%1.2f", amount );</pre>
    
    
-<np>The output format of a value is specified by a <newword>format specifier</newword>.
+<np>The output format for a value is give by a <newword>format specifier</newword> in the format string.
 In this example, the format specifier is <code>%1.2f</code>.
 The format string (in the simple cases that I cover here) contains one format specifier for
 each of the values that is to be output.  Some typical format specifiers are 
@@ -513,7 +514,7 @@ occur, though more rarely, when writing to files.</p>
 <p>A complete understanding of input/output in Java requires
 a knowledge of object oriented programming.  We will return to
 the topic later, in <localref href="IO"/>.
-The file I/O capabilities in <classname>TextIO</classname> are rather
+The file I/O capabilities in the <classname>TextIO</classname> class are rather
 primitive by comparison.  Nevertheless, they are sufficient 
 for many applications, and they will allow you to get some
 experience with files sooner rather than later.</p>
@@ -674,7 +675,7 @@ public class Interest2WithScanner {
       
    } // end of main()
    
-} // end of class Interest2With Scanner</pre>
+} // end of class Interest2WithScanner</pre>
 
 <np>Note the inclusion of the two lines given above to import <code>Scanner</code> and
 create <code>stdin</code>.  Also note the substitution of

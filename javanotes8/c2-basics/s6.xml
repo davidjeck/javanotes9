@@ -15,7 +15,8 @@ programming, there are several common IDEs, including Eclipse, NetBeans,
 and BlueJ. I cannot give complete or definitive information on Java programming environments
 in this section, but I will try to give enough information to let you compile
 and run the examples from this textbook.  (Readers are strongly encouraged to read,
-compile, and run the examples.  Source code can be downloaded from the
+compile, and run the examples.  Source code for sample programs and solutions to
+end-of-chapter exercises can be downloaded from the
 book's web page, <a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a>.)</p>
 
 <p>One thing to keep in mind is that you do not have to pay any money
@@ -56,8 +57,12 @@ JavaFX GUI toolkit.  JavaFX is included in the JDK for Java 8, 9, or 10 from Ora
 but Oracle has announced that it will not be included in Java 11 and later; instead,
 it will be available as a separate download. For the alternative OpenJDK, JavaFX has never
 been included as a standard component, but is available separately as OpenJFX.
-For example, on my Ubuntu Linux desktop computer, I had to install an "openjfx"
-package in addition to the "openjdk" package.</p>
+As I write this, it is only available for OpenJDK&nbsp;8, but a version for
+OpenJDK 9 through 11 is under development.
+On my Ubuntu Linux desktop computer using Java&nbsp;8, I had to install an "openjfx"
+package in addition to the "openjdk" package.  All of the examples and exercise
+solutions for this book were developed in that environment, and they were also
+compiled using JDK&nbsp;10 from Oracle.</p>
    
 </subsection>
    
@@ -114,7 +119,7 @@ you can organize your files any way you like.</p>
 <code>javac</code> is used to compile Java source code, and <code>java</code>
 is used to run Java programs.  If
 a JDK is correctly installed on your computer, it should recognize these
-commands when you type them in on the command line.  Try typing the commands
+commands when you type them on the command line.  Try typing the commands
 <code>java&nbsp;-version</code> and <code>javac&nbsp;-version</code> which
 should tell you which version of Java is installed.  If you get a message
 such as "Command not found," then Java is not correctly installed.  If the
@@ -151,7 +156,7 @@ file.</np>
 to read input from the user (see <localref href="basics.4.3"/>).  Since <classname>TextIO</classname>
 is not a standard part of Java, you must make it available to any program that uses it.
 This means that your working directory should contain a folder named <code>textio</code>,
-and inside that program should be the file <sourceref href="textio/TextIO.java">TextIO.java</sourceref>.
+and inside that folder should be the file <sourceref href="textio/TextIO.java">TextIO.java</sourceref>.
 You can copy <code>TextIO.java</code> from this book's source directory, or your can download it from the web site,
 but you should be sure to place it inside a folder named <code>textio</code>.
 </p>
@@ -252,7 +257,7 @@ There are several versions of the Eclipse IDE; you can use the "Eclipse IDE for 
 <p>The first time you start Eclipse, you will be asked to specify a <newword>workspace</newword>,
 which is the directory where all your work will be stored.  You can accept the default name, or
 provide one of your own.  When startup is complete, the Eclipse window will be filled by a large 
-"Welcome" screen that includes links to extensive documentation and tutorials.  You can close this screen, by
+"Welcome" screen that includes links to extensive documentation and tutorials.  You should close this screen, by
 clicking the "X" next to the word "Welcome"; you can get back to it later by choosing "Welcome"
 from the "Help" menu.</p>
 
@@ -262,7 +267,7 @@ a program can do I/O, or it can contain a list of all your projects.
 If there are several views in one section of the window,
 then there will be tabs at the top of the section to select the view that is displayed in that
 section.  Each view displays a different type of information.  The whole set of views is called
-a <newword>perspective</newword>.  Eclipse uses different perspectives, that is different
+a <newword>perspective</newword>.  Eclipse uses different perspectives, that is, different
 sets of views of different types of information, for different tasks.  For compiling and
 running programs, the only perspective that you will need is the "Java Perspective,"
 which is the default.  As you become more experienced, you might want to the use
@@ -272,8 +277,8 @@ the "Debug Perspective," which has features designed to help you find semantic e
 that contains text editor views.  This is where you will create and edit your programs.
 To the left of this is the
 Package Explorer view, which will contain a list of your Java projects and source code
-files.  To then right are some other views that I don't find very useful, 
-and I suggest that you close them by clicking the small "X" next to the name of each one.
+files.  To the right are some other views that I don't find very useful; 
+I suggest that you close them by clicking the small "X" next to the name of each one.
 Several other views that <b>will</b>
 be useful appear in a section of the window
 below the editing area.  If you accidently close one of the important views, such as the
@@ -299,7 +304,7 @@ that come with Java.</p>
 your Eclipse Java project.  Assuming that you have downloaded the source code file onto your
 computer, you can copy-and-paste it into the Eclipse window.  (Right-click the file icon, 
 or control-click on Mac&nbsp;OS, select "Copy" 
-from the pop-up menu, the right-click the project's src folder in the Eclipse window, and select
+from the pop-up menu, then right-click the project's src folder in the Eclipse window, and select
 "Paste". Be sure to paste it into the src folder, not into the project itself; files outside
 the source folder are not treated as Java source code files.) Alternatively, you can try dragging
 the file icon onto the src folder in the Eclipse project.</p>
@@ -308,7 +313,8 @@ the file icon onto the src folder in the Eclipse project.</p>
 <p>To use the <classname>TextIO</classname> based examples from this textbook, you must add the
 source code file <sourceref href="TextIO.java"/> to your project.  This file has to be in
 a "package" named <code>textio</code>.  If you have downloaded <code>TextIO.java</code>
-and placed it into a folder named "textio," as described above, then you can simply copy-and-paste that folder
+and placed it into a folder named "textio," as described above, then you can simply copy-and-paste 
+the <code>textio</code> folder
 into the "src" folder of your project.  
 Alternatively, you can create the <code>textio</code>
 package using the "New/Package" command from the "File" menu.  This will make a
@@ -364,7 +370,7 @@ error immediately as you type; some errors will go away as you type
 in more of the program.  If an error marker displays a small "light
 bulb," Eclipse is offering to try to fix the error for you.  Click
 the light bulb&mdash;or simply hover your mouse over the actual error&mdash;to 
-get a list of possible fixes, then double click
+get a list of possible fixes, then click
 the fix that you want to apply.  For example, if you use an undeclared
 variable in your program, Eclipse will offer to declare it for you.
 You can actually use this error-correcting feature to get Eclipse
@@ -403,11 +409,18 @@ easy to go back to the editor, make changes, and run it again.</p>
 
 <break/>
 
-<p>Unfortunately, Eclipse does not currently come with built-in support for JavaFX,
-the GUI toolkit that is used in this textbook.  However, support can be installed
-using the "Install New Software" command in the "Help" menu.  See
+<p><b>About JavaFX and Eclipse:</b> Eclipse will work with JavaFX,
+the GUI toolkit that is used in this textbook.  However, you might
+want to install a plugin named <code>efxclipse</code> for better
+support.  See
 <a href="http://www.eclipse.org/efxclipse/index.html">www.eclipse.org/efxclipse/</a>
-for information.</p>
+for information.  If, like me, you are using Eclipse with OpenJDK&nbsp;8 and OpenJFX,
+you might get an error when you try to use OpenJFX classes and methods.
+This is because OpenJFX is installed as an "extension," and Eclipse doesn't
+like to run extension code.  To get rid of the errors, open the Eclipse
+preferences dialog, go to "Java" / "Compiler" / "Errors and Warnings".
+Under "Errors and Warnings" / "Deprecated and restricted API", set
+"Forbidden reference (access rule)" to "Ignore".</p>
 
 </subsection>
 
@@ -416,8 +429,9 @@ for information.</p>
    
 <p>Another IDE for professional programming is NetBeans. It can be downloaded from
 <a href="http://netbeans.org">netbeans.org</a>.  Alternatively, a bundle containing
-both NetBeans and the JDK is available on Oracle's Java download page.  Netbeans
-currently supports Oracle's Java 8, including JavaFX.</p>
+both NetBeans and JDK&nbsp;8 is available on Oracle's Java download page.  As I write this,
+Netbeans only supports Oracle's Java 8, including JavaFX, but support for later versions
+is planned.</p>
 
 <p>Using NetBeans is very similar to using Eclipse.  Even the layout of its window is
 very similar to the Eclipse window.  Create a project in NetBeans with the "New Project"
@@ -451,7 +465,7 @@ Just press Control-Space as you are typing to get a list of possible completions
 are learning to program.  It is much less complex than Eclipse or NetBeans, but it
 does have some features that make it useful for education.
 BlueJ can be downloaded from <a href="http://bluej.org">bluej.org</a>.  It currently
-supports Java 8, and requires that you have a JDK, not just a JRE.</p>
+supports Java&nbsp;8, and requires that you have a JDK, not just a JRE.</p>
 
 <p>In BlueJ, you can begin a project with the "New Project" command in the "Project" menu.
 A BlueJ project is simply a folder.  When you create a project, you will have to select

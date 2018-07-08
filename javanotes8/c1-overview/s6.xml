@@ -60,20 +60,21 @@ the AWT or <newword>Abstract Windowing Toolkit</newword>, was
 available in the original version of Java. The other, which is known as
 <newword>Swing</newword>, was introduced in Java version 1.2,
 and was the standard GUI toolkit for many years.  The third GUI toolkit,
-Java&nbsp;FX, became a standard part of Java in Version&nbsp;8.  Although
-Swing, and even the AWT, can still be used, Java&nbsp;FX is now the preferred
-way to write GUI applications.  This textbook covers Java&nbsp;FX exclusively.
+JavaFX, became a standard part of Java in Version&nbsp;8 (but might
+require separate installation in some versions of Java).  Although
+Swing, and even the AWT, can still be used, JavaFX is meant as a more modern
+way to write GUI applications.  This textbook covers JavaFX exclusively.
 (If you need to learn Swing, you can take a look at the previous version of this book.)
 </p>
 
 <p>When a user interacts with GUI components,
 "events" are generated.  For example, clicking a push button generates an event, and pressing
-return while typing in a text field generates an event.
+a key on the keyboard generates an event.
 Each time an
 event is generated, a message is sent to the program telling it that the event
 has occurred, and the program responds according to its program. In fact, a typical GUI
 program consists largely of "event handlers" that tell the program how to respond
-to various types of events. In this example, the program has been programmed
+to various types of events. In the above example, the program has been programmed
 to respond to each event by displaying a message in the text area.
 In a more realistic example, the event handlers would have more to do.</p>
 
@@ -81,7 +82,7 @@ In a more realistic example, the event handlers would have more to do.</p>
 the <localref href="overview.5">previous&nbsp;section</localref>, are sent to objects. In fact, Java
 GUI components are implemented as objects. Java includes many predefined
 classes that represent various types of GUI components. Some of these classes
-are subclasses of others. Here is a diagram showing just a few of the Java&nbsp;FX GUI classes
+are subclasses of others. Here is a diagram showing just a few of the JavaFX GUI classes
 and their relationships:</p>
 
 <img width="605" height="272" src="overview-fig5.png" tex="overview-fig5.eps" texscale="0.7"/>
@@ -90,7 +91,7 @@ and their relationships:</p>
 object-oriented programming and inheritance are used here. Note that all the
 GUI classes shown here are subclasses, directly or indirectly, of a class called
 <classname>Control</classname>, which represents general properties
-that are shared by many Java&nbsp;FX components. In the diagram,
+that are shared by many JavaFX components. In the diagram,
 two of the direct subclasses of <classname>Control</classname>
 themselves have subclasses. The classes <classname>TextField</classname> and
 <classname>TextArea</classname>, which have certain behaviors in common, are grouped
