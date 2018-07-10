@@ -151,7 +151,7 @@ for (i = 0; i &lt; list.length; i++) {
 <np>The first time through the loop, <code>i</code> is 0, and <code>list[i]</code>
 refers to <code>list[0]</code>. So, it is the value stored in the variable
 <code>list[0]</code> that is printed. The second time through the loop, <code>i</code>
-is 1, and the value stored in <code>list[1]</code> is printed. The loop ends after
+is 1, and the value stored in <code>list[1]</code> is printed. If the length of the list is 5, then the loop ends after
 printing the value of <code>list[4]</code>, when <code>i</code> becomes equal to 5 and
 the continuation condition "<code>i&nbsp;&lt;&nbsp;list.length</code>" is no longer true. This
 is a typical example of using a loop to process an array.</np>

@@ -16,10 +16,10 @@
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
         <h2 class="chapter_title">Version 8.0, Summer 2018</h2>
-        <p style="text-align:center">(Under Construction!<br/>
-                          Status: Chapters 1 through 7 have been updated<br/>
-                          but still need proofreading.  Chapters 8 through 13<br/>
-                          have not yet been updated from Version 7.)</p>
+        <p style="text-align:center">(<b>Under Construction!</b><br/>
+                          Status: Chapters 1 through 12 have been updated<br/>
+                          but still need proofreading.  Chapter 13<br/>
+                          has not yet been updated from Version 7.)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
@@ -34,11 +34,11 @@
          programmers who want to learn something about Java.  It is certainly not meant to
          provide complete coverage of the Java language.
         </p>
-        <p>The eighth edition requires Java 8 or higher, including JavaFX.  There are a few mentions of
-         Java&#160;9, but all sample code works with Java&#160;8.
+        <p>The eighth edition requires Java 8 or higher, including JavaFX. 
          Earlier editions of the book are still available; 
          see the <a href="preface.html">preface</a> for links.
          </p>
+ <!--
          <p>You can the download this
          web site for use on your own computer. 
          PDF, <span style="white-space:pre">e-book</span>, and print versions of the textbook are also available.
@@ -49,7 +49,6 @@
          the book!  You can download the source code separately or as part of the web site using the links below.
          See <a href="README-running-the-examples.txt">README&#160;file</a>
          for information about how to compile and run the examples.</b></p>
- <!--
          <form method="post" action="http://math.hws.edu/cgi-bin/htsearch">
          <p><big><b>Search this Text:</b></big> Although this book does not have a
          conventional index, you can search it for terms that interest you. Note that

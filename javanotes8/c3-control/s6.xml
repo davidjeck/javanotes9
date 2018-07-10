@@ -63,7 +63,6 @@ statements to execute:</np>
 else if (<bnf>expression</bnf> == <bnf>constant-2</bnf>) { 
     <bnf>statements-2</bnf>
 } 
-else
     .
     .
     .
@@ -74,7 +73,8 @@ else {
     <bnf>statements-(N+1)</bnf>
 }</pre>
 
-<p>The <code>break</code> statements in the <code>switch</code> are technically optional. The effect of a
+<p>The <code>break</code> statements in the <code>switch</code> are not actually
+required by the syntax of the <code>switch</code> statement. The effect of a
 <code>break</code> is to make the computer jump past the end of the switch statement,
 skipping over all the remaining cases.
 If you leave out the break statement, the computer will just forge ahead after
@@ -137,7 +137,7 @@ respond to each possible choice in a different way. If the options are numbered
 1, 2,&nbsp;&dots;, then the number of the chosen option can be used in a
 <code>switch</code> statement to select the proper response.</p>
 
-<p>In a <classname>TextIO</classname>-based program, the menu can be presented as a numbered
+<p>In a command-line program, the menu can be presented as a numbered
 list of options, and the user can choose an option by typing in its number.
 Here is an example that could be used in a variation of the
 <code>LengthConverter</code> example from the <localref href="control.5">previous

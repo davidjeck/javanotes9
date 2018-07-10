@@ -23,7 +23,7 @@ want to count procedures that might go on forever.) An algorithm is not the same
 program. A program is written in some particular programming language. An
 algorithm is more like the <b>idea</b> behind the program, but it's the idea of
 the <b>steps</b> the program will take to perform its task, not just the idea
-of the <b>task</b> itself. When describing an algorithm, the steps 
+of what the task need to accomplish in the end. When describing an algorithm, the steps 
 don't necessarily have to be specified in complete detail, 
 as long as the steps are unambiguous and it's clear that
 carrying out the steps will accomplish the assigned task. An algorithm can be

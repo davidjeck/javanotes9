@@ -1230,8 +1230,8 @@ erasing the code that it already contains.</p>
 
 <p>The checkerboard should be 400-by-400  pixels.  You can change the size of
 the drawing area in <code>SimpleGraphicsStarter.java</code> by modifying the
-first two lines of the <code>main()</code> routine to set <code>width</code>
-and <code>height</code> to 400.  A checkerboard
+first two lines of the <code>start()</code> subroutine to set <code>width</code>
+and <code>height</code> to 400 instead of 800 and 600.  A checkerboard
 contains 8 rows and 8 columns of squares.  If the size of the drawing area is 400,
 that means that each square should be 50-by-50 pixels.  
 The squares are red and black (or whatever other colors you choose). Here is a tricky way
@@ -1409,7 +1409,7 @@ the start, and then repeats the same motion over and over.  For oscillating moti
 similar, but the square should move back and forth between the two edges of the drawing area; that is,
 it moves left-to-right during the first half of the animation and then backwards from right-to-left
 during the second half.  To write the program, you can start with a copy of
-the sample program <sourceref href="SimpleAnimationStarter.java"/>, as in the previous exercise.</p>
+the sample program <sourceref href="SimpleAnimationStarter.java"/>.</p>
 <p>A cyclic motion has to repeat every N frames for some value of N.  What you draw in some
 frame of the animation depends on the <code>frameNumber</code>.  The <code>frameNumber</code> just keeps
 increasing forever.  To implement cyclic motion, what you really want is a "cyclic frame number" that

@@ -44,7 +44,7 @@ line if you want. But as a matter of good programming style, you should lay out
 your program on the page in a way that will make its structure as clear as
 possible. In general, this means putting one statement per line and using
 indentation to indicate statements that are contained inside control
-structures. This is the format that I will generally use in my examples.</p>
+structures. This is the format that I will use in my examples.</p>
 
 <p>Here are two examples of blocks:</p>
 
@@ -382,7 +382,8 @@ else                               if (x &gt;= 0)
 </pre>
 
 <np>After the code on the left is executed, <code>x</code> is 1; after the code on the
-right, <code>x</code> is&nbsp;2.</np>
+right, <code>x</code> is&nbsp;2.  If you don't believe this, work though the code step-by-step,
+doing exactly what the computer does when it executes each step.</np>
 
 </subsection>
 

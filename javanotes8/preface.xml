@@ -12,9 +12,11 @@ programming.  Chapters 1 through 7 can be used as a textbook in a one-semester
 college-level course or in a year-long high school course.  The remaining
 chapters can be covered in a second course.</p>
 
-<p>The Seventh Edition of the book covers "Java&nbsp;7."  The most recent
-version of Java is 8, but this book has only a few very short mentions of
-the new features in Java&nbsp;8.</p>
+<p>The Eighth Edition of the book covers "Java&nbsp;8," and it uses
+JavaFX&nbsp;8 for GUI programming.  Although later
+versions of Java have been released, I have no plans to cover them
+in this textbook.  (However, all sample programs and exercise solutions
+have been compiled using Java&nbsp;10 as well as Java&nbsp;8.)</p>
    
 <p>The home web site for this book is
 <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.
@@ -22,7 +24,7 @@ The page at that address contains links for downloading a copy of
 the web site and for downloading PDF versions of the book.
 The web site&mdash;and the web site download&mdash;includes source code for the sample programs that are
 discussed in the text, answers to end-of-chapter quizzes and a discussion
-and solution for each end-of-chapter exercises.  Readers are encouraged
+and solution for each end-of-chapter exercise.  Readers are encouraged
 to download the source code for the examples and to read and run the
 programs as they read the book.  Readers are also strongly encouraged
 to read the exercise solutions if they want to get the most out of this book.</p>
@@ -56,7 +58,7 @@ graphical user interfaces. Arrays are introduced in Chapter&nbsp;3 with a full t
 Chapter&nbsp;8 is a short chapter that marks a turning point in the book, moving beyond the
 fundamental ideas of programming to cover more advanced topics.
 Chapter&nbsp;8 is about writing robust, correct, and efficient programs.
-Chapters&nbsp;9 and 10 cover recursion and data structures, including the Java Collection
+Chapters&nbsp;9 and 10 cover recursion and data structures, including generic programming and the Java Collection
 Framework.  Chapter&nbsp;11 is about files and networking.  Chapter&nbsp;12
 covers threads and parallel processing.  Finally,
 Chapter&nbsp;13 returns to the topic of graphical user interface programming
@@ -64,25 +66,19 @@ to cover some of Java's more advanced capabilities.</p>
 
 <break/>
 
-<p>The Seventh Edition of "Introduction to Programming using Java" is not a huge update from
-the sixth edition.  In fact, my main motivation for the new version was to remove any 
-use of applets or coverage of applets from the book.  Applets are Java programs that run on a web page.
-When Java first came out, they were exciting, and it seemed like they would become a major
-way of creating active content for the Web.  Up until the sixth edition, the web pages for this
-book included applets for running many of the sample programs.
-However, because of security issues and the emergence of other technologies, applets are 
-no longer widely used.  Furthermore, the most recent versions of 
-Java  made it fairly difficult and unpleasant to use the applets in the book.  In place
-of applets, I have tried to make it as easy as possible for readers to download the
-sample programs and run them on their own computers.</p>
-
-<p>Another significant change in the seventh edition is that arrays are now introduced in
-Chapter&nbsp;3 in a basic form that is used throughout the next three chapters.  Previously,
-arrays were not introduced until Chapter&nbsp;7, after objects and GUI programming had already
-been covered.  Much of the more advanced coverage of arrays is still in Chapter&nbsp;7.</p>
-
-<p>Aside from that, there are many small improvements throughout, mostly related to features
-that were new in Java&nbsp;7.  Version 7.0.3 is the final release of the seventh edition.</p>
+<p>The biggest change from the seventh edition of this textbook is a switch from
+Swing to JavaFX for GUI programming.  With just a few exceptions in code that
+the user is not meant to read, all example code and exercises use JavaFX.
+(Unfortunately, even as I was working on the new edition, the future of JavaFX
+has become unclear as Oracle has announced that it will not be included as
+part of the standard download of JDK&nbsp;11 and later; however, it will
+still be available to be downloaded and installed separately.)
+The eighth edition also incorporates some features that were introduced
+in Java&nbsp;8: lambda expressions and the stream API.  Lambda expressions are
+covered fairly early, as part of the material on subroutines in Chapter&nbsp;4.
+They are used extensively with JavaFX in Chapter&nbsp;6 and Chapter&nbsp;13, as
+well as with the stream API, which is introduced in Section&nbsp;10.6.
+Aside from these major changes, there are small improvements throughout.</p>
 
 <break/>
    
@@ -107,15 +103,17 @@ at the following Web addresses:</p>
 <li>Sixth edition: <a href=
 "http://math.hws.edu/eck/cs124/javanotes6/">http://math.hws.edu/eck/cs124/javanotes6/</a> (Covers Java 5.0, with a bit of 6.0.)</li>
 <li>Seventh edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 7.)</li>
+"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes7/</a> (Covers Java 7.)</li>
+<li>Eighth edition: <a href=
+"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 8.)</li>
 </ul>
    
 
 <p><i>Introduction to Programming using Java</i> is <b>free</b>, but it is not in the
-public domain. Version&nbsp;7 is published under the terms of the
-Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License. 
+public domain. Version&nbsp;8 is published under the terms of the
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 License. 
 To view a copy of this license, visit 
-<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">http://creativecommons.org/licenses/by-nc-sa/3.0/</a>.
+<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">http://creativecommons.org/licenses/by-nc-sa/4.0/</a>.
 For example, you can:</p>
 
 <ul>

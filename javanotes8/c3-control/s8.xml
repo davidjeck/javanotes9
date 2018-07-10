@@ -302,8 +302,8 @@ rest.</p>
 
 <p>(By the way, you might notice that the <code>main()</code> subroutine uses the word
 <code>static</code> in its definition, but <code>drawPicture()</code> does not.  This has to
-do with the fact that the drawing area in this program is an object, and <code>drawPicture</code>
-is a subroutine in that object.  The difference between static and non-static subroutines
+do with the fact that <code>drawPicture</code>
+is a subroutine in an object rather than in a class.  The difference between static and non-static subroutines
 is important but not something that we need to worry about for the time being.  It will become
 important for us in <localref href="OOP"/>.)</p>
 
@@ -330,7 +330,7 @@ running.  By using either of these variables in your code, you can draw a differ
 
 <p>As an example of animation, we look at drawing a set of nested rectangles.
 The rectangles will shrink towards the center of the drawing, giving an illusion of
-infinite motion.  Here's the middle of one frame from the animation:</p>
+infinite motion.  One frame from the animation looks like this:</p>
 
 <img src="moving-rects.png" width="501" height="304" alt="a set of rectangles nested one inside the next"
    tex="moving-rects.eps" texscale="0.5"/>
@@ -403,7 +403,8 @@ the moving rectangle example:</np>
 
     g.setStroke(Color.BLACK);  // Draw the rectangle outlines in black.
 
-    inset = frameNumber % 15;
+    inset = frameNumber % 15 + 0.5;  // (The 0.5 is a technicality that gives
+                                     //  a sharper picture.)
 
     rectWidth = width - 2*inset;
     rectHeight = height - 2*inset;

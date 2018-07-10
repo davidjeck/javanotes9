@@ -58,13 +58,13 @@ so we can't simply say that every illegal parameter value will result in an
 
 <subsection id="control.7.2" title="try..catch">
    
-<p>When an exception occurs, we say that the exception is "thrown".
+<p>When an exception occurs, we say that the exception is "thrown."
 For example, we say that <code>Integer.parseInt(str)</code> <newword>throws</newword>
 an exception of type <classname>NumberFormatException</classname> when the value of 
 <code>str</code> is illegal.  When an exception is thrown, it is possible
 to "catch" the exception and prevent it from crashing the program.  This is
 done with a <newword>try..catch</newword> statement.  In simplified
-form, the syntax for a <code>try..catch</code> can be:</p>
+form, the syntax for a <code>try..catch</code> statement can be:</p>
 
 <pre>try {
    <bnf>statements-1</bnf>
@@ -76,7 +76,7 @@ catch ( <bnf>exception-class-name</bnf>  <bnf>variable-name</bnf> ) {
 <np>The <bnf>exception-class-name</bnf> could be <classname>NumberFormatException</classname>,
 <classname>IllegalArgumentException</classname>, or some other exception class.
 When the computer executes this <code>try..catch</code> statement, 
-it executes the statements in the <code>try</code>
+it executes <bnf>statements-1</bnf>, the statements inside the <code>try</code>
 part.  If no exception occurs during the execution of <bnf>statements-1</bnf>, then the computer
 just skips over the <code>catch</code> part and proceeds with the rest of the program.
 However, if an exception of type <bnf>exception-class-name</bnf> occurs during the

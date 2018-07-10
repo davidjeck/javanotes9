@@ -261,7 +261,7 @@ two types of counting going on. We have to count the number of divisors and we
 also have to count the number of possible divisors that have been tested. So
 the program needs two counters. When the second counter reaches 10000000, the program
 outputs a '.' and resets the counter to zero so that we can start counting the
-next group of one million. Reverting to pseudocode, the algorithm now looks
+next group of ten million. Reverting to pseudocode, the algorithm now looks
 like</p>
 
 <pre>Get a positive integer, N, from the user
