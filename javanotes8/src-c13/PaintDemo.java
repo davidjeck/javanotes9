@@ -1,259 +1,252 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.Rectangle2D;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import java.net.URL;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Paint;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.geometry.Pos;
 
 /**
- * This program demonstrates GradientPaint and TexturePaint.
- * This class has a main() routine and so can be run as an application.
+ * This program demonstrates ImagePattern and LinearGradient paints.
+ * A polygon is drawn that is filled with a paint selected by the user.
+ * The user can also drag the vertices of the polygon.
+ * This program requires image resource files named face-smile.png
+ * and tile.png.
  */
-public class PaintDemo extends JPanel {
+public class PaintDemo extends Application {
 
-	/**
-	 * The main routine simply opens a window that shows a PaintDemo panel.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("PaintDemo - Drag the Vertices");
-		PaintDemo content = new PaintDemo();
-		window.setContentPane(content);
-		window.pack();  
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		window.setLocation( (screenSize.width - window.getWidth())/2,
-				(screenSize.height - window.getHeight())/2 );
-		window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		window.setVisible(true);
+		launch(args);
+	}
+	//----------------------------------------------------------------------------
+
+
+	private Canvas canvas;  // The canvas where the polygon is drawn.
+
+	private Paint paint;  // The paint that is used to fill the polygon in the canvas.
+
+	private Image smiley, tile;  // Images for ImagePaint.
+
+	private RadioButton gradientButton1, gradientButton2;  // Select the type of paint.
+	private RadioButton patternButton1, patternButton2;
+
+	private ToggleGroup paintStyleButtonGroup;  // Toggle group controlling the radio buttons.
+
+	private double gradientAngle = 45, gradientWidth = 50;  // Settings that affect the paint.
+	private double patternOffset = 0, patternScale = 100;
+
+	private Slider slider1, slider2;  // Sliders that control the settings;  Which 
+									  // setting is affected depends on current paint type.
+
+	private Label label1 = new Label("  Gradient Angle:");  // Labels change, depending
+	private Label label2 = new Label("  Gradient Width:");  //   on type of paint.
+
+	private double[] xcoord = {100, 420, 300, 470, 230, 40};  // Coords for vertices of polygon.
+	private double[] ycoord = {100, 30, 240, 260, 480, 300};
+
+	private int draggedPoint = -1;  // When a vertex is being dragged, this is the index
+	                                // of the vertex coords in the above arrays.  The value
+	                                // -1 means no vertex is being dragged.
+
+
+	/**
+	 * Set up GUI and event handling.
+	 */
+	public void start(Stage stage) {
+
+		smiley = new Image("face-smile.png");
+		tile = new Image("tile.png");
+
+		canvas = new Canvas(500,500);
+		slider1 = new Slider(0,360,gradientAngle);
+		slider2 = new Slider(10,300,gradientWidth);
+		gradientButton1 = new RadioButton("Black/Gray Gradient");
+		gradientButton2 = new RadioButton("Red/Green/Blue Gradient");
+		patternButton1 = new RadioButton("Smiley Face Pattern");
+		patternButton2 = new RadioButton("Tile Pattern");
+		gradientButton1.setSelected(true);
+
+		paintStyleButtonGroup = new ToggleGroup();
+		gradientButton1.setToggleGroup(paintStyleButtonGroup);
+		gradientButton2.setToggleGroup(paintStyleButtonGroup);
+		patternButton1.setToggleGroup(paintStyleButtonGroup);
+		patternButton2.setToggleGroup(paintStyleButtonGroup);
+		
+		canvas.setOnMousePressed( this::mousePressed );
+		canvas.setOnMouseDragged( this::mouseDragged );
+		paintStyleButtonGroup.selectedToggleProperty().addListener( e -> {
+			if (paintStyleButtonGroup.getSelectedToggle() != null)
+				paintStyleChanged();
+		});
+		slider1.valueProperty().addListener( e -> {
+			if (slider1.isValueChanging())
+				setPaint();
+		});
+		slider2.valueProperty().addListener( e -> {
+			if (slider2.isValueChanging())
+				setPaint();
+		});
+
+		setPaint();
+		
+		BorderPane root = new BorderPane(canvas);
+		root.setStyle("-fx-border-color: #444; -fx-border-width: 4");
+
+		TilePane bottom = new TilePane(12,12);
+		bottom.setStyle("-fx-padding: 12px; -fx-border-color: #444; -fx-border-width:3px 0 0 0");
+		bottom.setTileAlignment(Pos.CENTER_LEFT);
+		bottom.setAlignment(Pos.CENTER);
+		bottom.setPrefColumns(2);
+		bottom.getChildren().addAll(label1, slider1, label2, slider2,
+				         gradientButton1, patternButton1, gradientButton2, patternButton2);
+		root.setBottom(bottom);
+		
+		stage.setScene(new Scene(root));
+		stage.setResizable(false);
+		stage.setTitle("PaintDemo -- Drag the Vertices");
+		stage.show();
+	}
+
+	
+	/**
+	 *  Fill the canvas with white, then draw the polygon filled with the
+	 *  current fillPaint.  Draw small squares at the polygon vertices;
+	 *  the use can drag these squares to move the vertices.
+	 */
+	private void drawCanvas() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
+		g.setFill(Color.WHITE);
+		g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+		g.setFill(paint);
+		g.fillPolygon(xcoord, ycoord, 6);
+		g.setStroke(Color.BLACK);
+		g.setLineWidth(2);
+		g.strokePolygon(xcoord, ycoord, 6);
+		g.setFill(Color.BLACK);
+		for (int i = 0; i < 6; i++)
+			g.fillRect(xcoord[i] - 4, ycoord[i] - 4, 9, 9);
+	}
+
+	
+	/**
+	 * Called when the use pressed the mouse on the canvas.  Searches the
+	 * polygon vertices to find one near the mouse position.  If one is
+	 * found, the user can drag it.
+	 */
+	private void mousePressed(MouseEvent e) {
+		draggedPoint = -1;
+		for (int i = 0; i < 6; i++) {
+			if (Math.abs(xcoord[i] - e.getX()) < 5 && Math.abs(ycoord[i] - e.getY()) < 5) {
+				draggedPoint = i;
+				break;
+			}
+		}
+	}
+
+	
+	/**
+	 * Called when the mouse is dragged on the canvas.  If a vertex is being
+	 * dragged, move it to the current mouse position and redraw the canvas.
+	 */
+	private void mouseDragged(MouseEvent e) {
+		if (draggedPoint < 0)
+			return;
+		double x = Math.max(0, Math.min(e.getX(),canvas.getWidth()));
+		double y = Math.max(0, Math.min(e.getY(),canvas.getHeight()));
+		xcoord[draggedPoint] = x;
+		ycoord[draggedPoint] = y;
+		drawCanvas();
 	}
 
 
 	/**
-	 * The display area of the program shows a filled polygon that can be filled
-	 * with various kinds of paint.  The vertices of the polygon can be dragged
-	 * by the user.
+	 * Responds when a user clicks on the radio button to select a new paint style.
+	 * This method sets up the labels and sliders to correspond to the kind of 
+	 * paint that has been selected.  Calls setPaint() to apply the paint to the
+	 * canvas.
 	 */
-	private class Display extends JPanel implements MouseListener, MouseMotionListener {
-		int[] xcoord, ycoord;
-		int draggedPoint = -1;
-		Display() {
-			setBackground(Color.WHITE);
-			setPreferredSize(new Dimension(400,300));
-			addMouseListener(this);
-			addMouseMotionListener(this);
+	private void paintStyleChanged() {
+		Toggle currentButton = paintStyleButtonGroup.getSelectedToggle();
+		if (currentButton == gradientButton1 || currentButton == gradientButton2) {
+			label1.setText("  Gradient Angle:");
+			label2.setText("  Gradient Width:");
+			slider1.setMin(0);
+			slider1.setMax(360);
+			slider1.setValue(gradientAngle);
+			slider2.setMin(20);
+			slider2.setMax(200);
+			slider2.setValue(gradientWidth);
+			setPaint();
 		}
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			Graphics2D g2 = (Graphics2D)g;
-			if (xcoord == null) {
-				xcoord = new int[] { scaleX(0.2), scaleX(0.8), scaleX(0.5),
-						scaleX(0.95), scaleX(0.35), scaleX(0.1) };
-				ycoord = new int[] { scaleY(0.15), scaleY(0.1), scaleY(0.5),
-						scaleY(0.45), scaleY(0.9), scaleY(0.7) };
-			}
-			g2.setPaint(paint);
-			g2.fillPolygon(xcoord, ycoord, 6);
-			g2.setColor(Color.BLACK);
-			g2.setStroke(new BasicStroke(2));
-			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-			g2.drawPolygon(xcoord, ycoord, 6);
-			for (int i = 0; i < 6; i++)
-				g2.fillRect(xcoord[i] - 3, ycoord[i] - 3, 7, 7);
+		else if (currentButton == patternButton1 || currentButton == patternButton2){
+			label1.setText("  Image Offset:");
+			label2.setText("  Image Scale:");
+			slider1.setMin(0);
+			slider1.setMax(100);
+			slider1.setValue(patternOffset);
+			slider2.setMin(30);
+			slider2.setMax(200);
+			slider2.setValue(patternScale);
+			setPaint();
 		}
-		private int scaleX(double x) {
-			return (int)(x * getWidth());
-		}
-		private int scaleY(double y) {
-			return (int)(y * getHeight());
-		}
-		public void mousePressed(MouseEvent e) {
-			draggedPoint = -1;
-			for (int i = 0; i < 6; i++) {
-				if (Math.abs(xcoord[i] - e.getX()) < 4 && Math.abs(ycoord[i] - e.getY()) < 4) {
-					draggedPoint = i;
-					break;
-				}
-			}
-		}
-		public void mouseDragged(MouseEvent e) {
-			if (draggedPoint < 0)
-				return;
-			int x = Math.max(0, Math.min(e.getX(),getWidth()));
-			int y = Math.max(0, Math.min(e.getY(),getHeight()));
-			xcoord[draggedPoint] = x;
-			ycoord[draggedPoint] = y;
-			repaint();
-		}
-		public void mouseReleased(MouseEvent e) { }
-		public void mouseMoved(MouseEvent e) { }
-		public void mouseClicked(MouseEvent e) { }
-		public void mouseEntered(MouseEvent e) { }
-		public void mouseExited(MouseEvent e) { }
 	}
-
-
-	/**
-	 * Responds when a user clicks on the radio button to set up the labels and sliders
-	 * to correspond to the kind of paint that has been selected.  Calls setPaint()
-	 * to make the display use the new selected paint.
-	 */
-	private ActionListener buttonlistener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			currentButton = (JRadioButton)e.getSource();
-			slider1.removeChangeListener(sliderlistener);  //(Yuck! Had to do this to avoid notifying
-			slider2.removeChangeListener(sliderlistener);  // slider listeners when changes are made.)
-			if (currentButton == gradientButton1 || currentButton == gradientButton2) {
-				label1.setText("  Gradient Angle:");
-				label2.setText("  Gradient Width:");
-				slider1.setMinimum(0);
-				slider1.setMaximum(360);
-				slider1.setValue(gradientAngle);
-				slider2.setMinimum(10);
-				slider2.setMaximum(300);
-				slider2.setValue(gradientWidth);
-			}
-			else {
-				label1.setText("  Texture Offset:");
-				label2.setText("  Texture Scale:");
-				slider1.setMinimum(0);
-				slider1.setMaximum(100);
-				slider1.setValue(textureOffset);
-				slider2.setMinimum(25);
-				slider2.setMaximum(200);
-				slider2.setValue(textureScale);
-			}
-			slider1.addChangeListener(sliderlistener);
-			slider2.addChangeListener(sliderlistener);
-			setPaint();
-		}
-	};
-
-
-	/**
-	 * When the user changes the value on one of the sliders, this 
-	 * ChangeListener responds by changing the Paint to reflect the
-	 * changed value.
-	 */
-	private ChangeListener sliderlistener = new ChangeListener() {
-		public void stateChanged(ChangeEvent e) {
-			setPaint();
-		}
-	};
 
 
 	/**
 	 * Called when the type of paint or the values on the sliders are changed.
-	 * Creates the new Paint and redraws the display to show the change.
+	 * Creates the new Paint and redraws the canvas to show the change.
 	 */
 	private void setPaint() {
+		Toggle currentButton = paintStyleButtonGroup.getSelectedToggle(); // (can be null)
 		if (currentButton == gradientButton1 || currentButton == gradientButton2) {
 			gradientAngle = slider1.getValue();
 			gradientWidth = slider2.getValue();
-			int x = getWidth()/2;
-			int y = getHeight()/2;
-			int dx = (int)( gradientWidth * Math.cos(gradientAngle/180.0 * Math.PI) );
-			int dy = (int)( gradientWidth * Math.sin(gradientAngle/180.0 * Math.PI) );
-			if (currentButton == gradientButton1)
-				paint = new GradientPaint(x,y,Color.LIGHT_GRAY,x+dx,y+dy,Color.BLACK,true);
-			else
-				paint = new GradientPaint(x,y,Color.RED,x+dx,y+dy,Color.YELLOW,true);
+			double x1 = canvas.getWidth()/2;
+			double y1 = canvas.getHeight()/2;
+			double x2 = x1 + gradientWidth * Math.cos(gradientAngle/180.0 * Math.PI);
+			double y2 = y1 + gradientWidth * Math.sin(gradientAngle/180.0 * Math.PI);
+			if (currentButton == gradientButton1)  {
+				paint = new LinearGradient(x1,y1,x2,y2,false,CycleMethod.REFLECT,
+						new Stop(0,Color.BLACK), new Stop(1,Color.LIGHTGRAY));
+			}
+			else {
+				paint = new LinearGradient(x1,y1,x2,y2,false,CycleMethod.REFLECT,
+						new Stop(0,Color.RED), new Stop(0.5,Color.GREEN), new Stop(1,Color.BLUE));
+			}
+			drawCanvas();
 		}
-		else {
-			textureOffset = slider1.getValue();
-			textureScale = slider2.getValue();
-			BufferedImage texture;
-			if (currentButton == textureButton1)
+		else if (currentButton == patternButton1 || currentButton == patternButton2){
+			patternOffset = slider1.getValue();
+			patternScale = slider2.getValue();
+			Image texture;
+			if (currentButton == patternButton1)
 				texture = smiley;
 			else
-				texture = queen;
-			int width = texture.getWidth() * textureScale / 100;
-			int height = texture.getHeight() * textureScale / 100;
-			int offsetX = width * textureOffset / 100;
-			int offsetY = height * textureOffset / 100;
-			Rectangle2D anchor = new Rectangle2D.Double(offsetX,offsetY,width,height);
-			paint = new TexturePaint(texture,anchor);
+				texture = tile;
+			double width = texture.getWidth() * patternScale / 100;
+			double height = texture.getHeight() * patternScale / 100;
+			double offsetX = width * patternOffset / 100;
+			double offsetY = height * patternOffset / 100;
+			paint = new ImagePattern(texture,offsetX,offsetY,width,height,false);
+			drawCanvas();
 		}
-		display.repaint();
 	}
 
 
-	private Display display = new Display();  // The display area where the polygon is drawn.
 
-	private Paint paint;  // The paint that is used to fill the polygon in the display.
+} // end class PaintDemo
 
-	private BufferedImage smiley, queen;  // Images for texture paint.
-
-	private JRadioButton gradientButton1, gradientButton2;  // Select the type of paint.
-	private JRadioButton textureButton1, textureButton2;
-
-	private JRadioButton currentButton;   // The currently selected radio button.
-
-	private int gradientAngle = 45, gradientWidth = 50;  // Settings that affect the paint.
-	private int textureOffset = 0, textureScale = 100;
-
-	private JSlider slider1, slider2;  // Sliders that control the settings;  Which 
-									   // setting is affected depends on current paint type.
-
-	private JLabel label1 = new JLabel("  Gradient Angle:");  // Labels change, depending
-	private JLabel label2 = new JLabel("  Gradient Width:");  //   on type of paint.
-
-
-	/**
-	 * Constructor.
-	 */
-	public PaintDemo() {
-		setLayout(new BorderLayout(3,3));
-		setBorder(BorderFactory.createLineBorder(Color.GRAY,3));
-		setBackground(Color.GRAY);
-		add(display, BorderLayout.CENTER);
-		JPanel bottom = new JPanel();
-		bottom.setLayout(new GridLayout(0,2,5,5));
-		add(bottom, BorderLayout.SOUTH);
-		slider1 = new JSlider(0,360,gradientAngle);
-		slider1.addChangeListener(sliderlistener);
-		slider2 = new JSlider(10,300,gradientWidth);
-		slider2.addChangeListener(sliderlistener);
-		bottom.add(label1);
-		bottom.add(slider1);
-		bottom.add(label2);
-		bottom.add(slider2);
-		ButtonGroup group = new ButtonGroup();
-		gradientButton1 = new JRadioButton("Black/Gray Gradient");
-		gradientButton1.addActionListener(buttonlistener);
-		bottom.add(gradientButton1);
-		group.add(gradientButton1);
-		gradientButton1.setSelected(true);
-		currentButton = gradientButton1;
-		gradientButton2 = new JRadioButton("Red/Yellow Gradient");
-		gradientButton2.addActionListener(buttonlistener);
-		bottom.add(gradientButton2);
-		group.add(gradientButton2);
-		setPaint();
-		try {
-			ClassLoader cl = PaintDemo.class.getClassLoader();
-			URL imageURL = cl.getResource("TinySmiley.png");
-			if (imageURL != null)
-				smiley = ImageIO.read(imageURL);
-			imageURL = cl.getResource("QueenOfHearts.png");
-			queen = ImageIO.read(imageURL);
-		}
-		catch (Exception e) {
-			return;  // Can't load the images, so don't add the texture radio buttons.
-		}
-		textureButton1 = new JRadioButton("Smiley Face");
-		textureButton1.addActionListener(buttonlistener);
-		bottom.add(textureButton1);
-		group.add(textureButton1);
-		textureButton2 = new JRadioButton("Queen Of Hearts");
-		textureButton2.addActionListener(buttonlistener);
-		bottom.add(textureButton2);
-		group.add(textureButton2);
-	}
-
-}

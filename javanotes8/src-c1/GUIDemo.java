@@ -70,7 +70,6 @@ public class GUIDemo extends Application {
 		lab = new Label("Pop-up Menu:");
 		root.add(lab, 0, 3);
 		ComboBox<String> combobox = new ComboBox<>();
-		combobox.setEditable(false);
 		combobox.getItems().addAll("First Option", "Second Option", "Third Option", "Fourth Option");
 		combobox.setValue("First Option");
 		combobox.setOnAction( e -> transcript.appendText("Selected " + 

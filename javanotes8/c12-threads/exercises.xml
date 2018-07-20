@@ -2623,7 +2623,9 @@ from <classname>ChatRoomWindow</classname> to make it possible
 for the user to send private messages.  Just add a text input
 box for the message, a button to send the message, and
 a <classname>ComboBox</classname> that contains a list of
-possible recipients.  The user enters a message, selects
+possible recipients.  (The ComboBox control has not yet been
+covered in this book, but see <localref href="GUI2.3.3"/>.)
+The user enters a message, selects
 the recipient from the list, and clicks the button to send.
 The program constructs a <classname>PrivateMessage</classname>
 containing the message and the ID number of the recipient,

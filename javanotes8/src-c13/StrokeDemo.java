@@ -1,159 +1,162 @@
-import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.layout.TilePane;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 /**
- * This program demonstrates the effect of using different Strokes when
- * drawing lines and rectangles.  Fifteen small panels are shown, in three
- * rows and five columns.  Each panel uses a different stroke.  The stroke
- * widths are 1, 2, 5, 10, or 20, depending on the column.  The first row
- * uses the default values of the stroke for cap and join.  The second row
- * uses BasicStroke.CAP_ROUND and BasicStroke.JOIN_ROUND.  The third row
- * uses BasicStroke.CAP_BUTT and BasicStroke.JOIN_BEVEL.  In addition the
- * third row uses a dash pattern.  The program illustrates antialiasing,
- * which is off in the first row and on in the second and third rows.
- * This class has a main() routine and so can be run as an application.
+ * This program demonstrates the effect of using different stroke properties 
+ * when stroking lines and rectangles.  Fifteen small canvases are shown, in three
+ * rows and five columns.  Each canvas uses different stroke properties.  The
+ * line widths are 1, 2, 5, 10, or 15, depending on the column.  The first row
+ * uses the default values for LineCap and LineJoin.  The second row
+ * uses StrokeLineCap.ROUND and StrokeLineJoin.ROUND.  The third row
+ * uses StrokeLineCap.BUTT and StrokeLineJoin.BEVEL.  In addition the
+ * third row uses a dash pattern.
  */
-public class StrokeDemo extends JPanel {
+public class StrokeDemo extends Application {
 
-	/**
-	 * The main routine simply opens a window that shows a StrokeDemo panel.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Click and Drag; Right-click for Rectangles");
-		StrokeDemo content = new StrokeDemo();
-		window.setContentPane(content);
-		window.pack();  
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		window.setLocation( (screenSize.width - window.getWidth())/2,
-				(screenSize.height - window.getHeight())/2 );
-		window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		window.setVisible(true);
+		launch(args);
 	}
+	//---------------------------------------------------------------------
+
+
+	private Display[] displays;    // The 15 canvasses.
+
+	private double startX, startY; // Record the starting point of a drag operation.
 
 
 	/**
-	 * Each of the 15 panels in the program is an object of type Display.
+	 * Each of the 15 canvases in the program is an object of type Display.
+	 * Canvas size is 150-by-150.  The constructor specifies the properties
+	 * of strokes that are drawn on the canvas.
 	 */
-	private class Display extends JPanel {
-		Stroke stroke;  // The stroke used for drawing in this panel.
-		boolean antialiased;   // Should antialiasing be used?
-		boolean drawLine = true;   // Should a line be drawn, or a rectangle?
-		int x1, y1, x2, y2;  // Endpoints of line or corners of rectangle.
-		Display(Stroke s, boolean a) {
-			stroke = s;
-			antialiased = a;
-			x1 = y1 = 15;
-			x2 = 80;
-			y2 = 85;
-			setPreferredSize(new Dimension(100,100));
-			setBackground(Color.WHITE);
+	private class Display extends Canvas {
+		GraphicsContext g;  // graphics context for drawing on this canvas
+		boolean offset;  // for a line of width 1, coordinates will be offset by 0.5
+		Display(StrokeLineCap cap, StrokeLineJoin join, double lineWidth, double[] dashPattern) {
+			super(150,150);
+			g = getGraphicsContext2D();
+			g.setLineCap(cap);
+			g.setLineJoin(join);
+			g.setLineWidth(lineWidth);
+			if (dashPattern != null)
+				g.setLineDashes(dashPattern);
+			g.setFill(Color.WHITE);
+			g.setStroke(Color.BLACK);
+			offset = lineWidth == 1;
+			draw(true,20,20,125,135);
 		}
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			Graphics2D g2 = (Graphics2D)g;
-			g2.setStroke(stroke);
-			if (antialiased) {
-				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-						RenderingHints.VALUE_ANTIALIAS_ON);
+		void draw( boolean drawLine, double x1, double y1, double x2, double y2) {
+			    // Draw a line from (x1,y1) to (x2,y2), or stroke a rectangle
+			    // with corners at (x1,y1) and (x2,y2).
+			if (offset) {
+				x1 += 0.5;
+				x2 += 0.5;
+				y1 += 0.5;
+				y2 += 0.5;
 			}
+			g.fillRect(0,0,150,150);
 			if (drawLine)
-				g2.drawLine(x1,y1,x2,y2);
+				g.strokeLine(x1,y1,x2,y2);
 			else {
-				int a = Math.min(x1,x2);
-				int b = Math.min(y1,y2);
-				int w = Math.abs(x1 - x2);
-				int h = Math.abs(y1 - y2);
-				g2.drawRect(a,b,w,h);
+				double x = Math.min(x1,x2);
+				double y = Math.min(y1,y2);
+				double w = Math.abs(x1 - x2);
+				double h = Math.abs(y1 - y2);
+				g.strokeRect(x,y,w,h);
 			}
 		}
-	}
+	} // end class display
 
 
 	/**
-	 * An object of type MouseHandler is used as a MouseListener and MouseMotionListener
-	 * on each of the Display panels in the main panel.  When the user clicks and drags
-	 * on ANY panel, ALL panels are repainted to show a line or rectangle between the 
-	 * start point of the mouse drag operation and the current point.  If a right-mouse 
-	 * click starts the draw operation (Command-click on Mac), a rectangle is drawn;
-	 * otherwise a line is drawn.
+	 * The start method creates and lays out the 20 display canvasses in a TilePane
+	 * with 3 rows and 5 columns.  Each canvas is created using different stroke properties.
 	 */
-	private class MouseHandler implements MouseListener, MouseMotionListener {
-		public void mousePressed(MouseEvent e) {
-			for (int i = 0; i < 5; i++)
-				for (int j = 0; j < 3; j++) {
-					displays[i][j].x1 = e.getX();
-					displays[i][j].x2 = e.getX();
-					displays[i][j].y1 = e.getY();
-					displays[i][j].y2 = e.getY();
-					displays[i][j].drawLine = ! e.isMetaDown();
-					displays[i][j].repaint();
-				}
+	public void start(Stage stage) {
+
+		TilePane root = new TilePane(5,5);
+		root.setPrefColumns(5);
+		root.setStyle("-fx-background-color:#008; -fx-border-color: #008; -fx-border-width: 5");
+
+		double[] dashPattern = { 7, 7 };
+
+		displays = new Display[] {
+
+				new Display(StrokeLineCap.SQUARE, StrokeLineJoin.MITER, 1, null),
+				new Display(StrokeLineCap.SQUARE, StrokeLineJoin.MITER, 2, null),
+				new Display(StrokeLineCap.SQUARE, StrokeLineJoin.MITER, 5, null),
+				new Display(StrokeLineCap.SQUARE, StrokeLineJoin.MITER, 10, null),
+				new Display(StrokeLineCap.SQUARE, StrokeLineJoin.MITER, 20, null),
+
+				new Display(StrokeLineCap.ROUND, StrokeLineJoin.ROUND, 1, null),
+				new Display(StrokeLineCap.ROUND, StrokeLineJoin.ROUND, 2, null),
+				new Display(StrokeLineCap.ROUND, StrokeLineJoin.ROUND, 5, null),
+				new Display(StrokeLineCap.ROUND, StrokeLineJoin.ROUND, 10, null),
+				new Display(StrokeLineCap.ROUND, StrokeLineJoin.ROUND, 20, null),
+
+				new Display(StrokeLineCap.BUTT, StrokeLineJoin.BEVEL, 1, dashPattern),
+				new Display(StrokeLineCap.BUTT, StrokeLineJoin.BEVEL, 2, dashPattern),
+				new Display(StrokeLineCap.BUTT, StrokeLineJoin.BEVEL, 5, dashPattern),
+				new Display(StrokeLineCap.BUTT, StrokeLineJoin.BEVEL, 10, dashPattern),
+				new Display(StrokeLineCap.BUTT, StrokeLineJoin.BEVEL, 20, dashPattern)
+		};
+
+		for (Display canvas : displays) {
+			root.getChildren().add(canvas);
+			canvas.setOnMousePressed( this::mousePressed );
+			canvas.setOnMouseDragged( this::mouseDragged );
 		}
-		public void mouseDragged(MouseEvent e) {
-			for (int i = 0; i < 5; i++)
-				for (int j = 0; j < 3; j++) {
-					displays[i][j].x2 = e.getX();
-					displays[i][j].y2 = e.getY();
-					displays[i][j].repaint();
-				}
+		
+		stage.setScene( new Scene(root) );
+		stage.setTitle("Left- or Right-Click and Drag on Any Canvas");
+		stage.setResizable(false);
+		stage.show();
+		
+	} 
+
+
+	/**
+	 * Called when the user presses the mouse on ANY one of the 15 canvasses.
+	 * Draws a line or rectangle on ALL canvasses, using the same point for
+	 * both endpoints of the line or for corners of the rectangle.  This will
+	 * show something in some canvasses, depending on the lineCap and lineJoin
+	 * used in the canvas.
+	 */
+	private void mousePressed(MouseEvent e) {
+		double x = e.getX();
+		double y = e.getY();
+		boolean drawLine = e.getButton() == MouseButton.SECONDARY; 
+		for (Display canvas : displays) {
+			canvas.draw(drawLine,x,y,x,y);
 		}
-		public void mouseReleased(MouseEvent e) { }
-		public void mouseMoved(MouseEvent e) { }
-		public void mouseClicked(MouseEvent e) { }
-		public void mouseEntered(MouseEvent e) { }
-		public void mouseExited(MouseEvent e) { }
+		startX = x;
+		startY = y;
+	}
+	
+
+	/**
+	 * Called when the user drags the mouse on any of the 15 canvases.  Draws
+	 * a line or rectangle on all canvases, using the start point of the drag
+	 * and the current position of the mouse.
+	 */
+	public void mouseDragged(MouseEvent e) {
+		double x = e.getX();
+		double y = e.getY();
+		boolean drawLine = e.getButton() == MouseButton.SECONDARY; 
+		for (Display canvas : displays) {
+			canvas.draw(drawLine,startX,startY,x,y);
+		}
 	}
 
 
-	/**
-	 * The arrays of Displays that represent the 15 small panels in the program.
-	 */
-	private Display[][] displays = new Display[5][3];
+} // end StrokeDemo
 
-
-	/**
-	 * The constructor creates and lays out the 15 display panels in a grid.
-	 * Each panel is created with a different Stroke.  The first row of panels
-	 * is not antialiased, but the other two rows are.
-	 */
-	public StrokeDemo() {
-		setLayout(new GridLayout(3,5,3,3));
-		setBorder(BorderFactory.createLineBorder(Color.GRAY,3));
-		setBackground(Color.GRAY);
-		displays[0][0] = new Display(new BasicStroke(1), false);
-		displays[1][0] = new Display(new BasicStroke(2), false);
-		displays[2][0] = new Display(new BasicStroke(5), false);
-		displays[3][0] = new Display(new BasicStroke(10), false);
-		displays[4][0] = new Display(new BasicStroke(20), false);
-		displays[0][1] = new Display(new BasicStroke(1, 
-				BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND), true);
-		displays[1][1] = new Display(new BasicStroke(2, 
-				BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND), true);
-		displays[2][1] = new Display(new BasicStroke(5, 
-				BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND), true);
-		displays[3][1] = new Display(new BasicStroke(10, 
-				BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND), true);
-		displays[4][1] = new Display(new BasicStroke(20, 
-				BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND), true);
-		displays[0][2] = new Display(new BasicStroke(1, BasicStroke.CAP_BUTT, 
-				BasicStroke.JOIN_BEVEL, 10, new float[] {5,5}, 0), true);
-		displays[1][2] = new Display(new BasicStroke(2, BasicStroke.CAP_BUTT, 
-				BasicStroke.JOIN_BEVEL, 10, new float[] {5,5}, 0), true);
-		displays[2][2] = new Display(new BasicStroke(5, BasicStroke.CAP_BUTT, 
-				BasicStroke.JOIN_BEVEL, 10, new float[] {5,5}, 0), true);
-		displays[3][2] = new Display(new BasicStroke(10, BasicStroke.CAP_BUTT, 
-				BasicStroke.JOIN_BEVEL, 10, new float[] {5,5}, 0), true);
-		displays[4][2] = new Display(new BasicStroke(20, BasicStroke.CAP_BUTT, 
-				BasicStroke.JOIN_BEVEL, 10, new float[] {5,5}, 0), true);
-		MouseHandler listener = new MouseHandler();
-		for (int row = 0; row < 3; row++)
-			for (int col = 0; col < 5; col++) {
-				add(displays[col][row]);
-				displays[col][row].addMouseListener(listener);
-				displays[col][row].addMouseMotionListener(listener);
-			}
-	}
-
-}

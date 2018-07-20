@@ -1,749 +1,746 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE section SYSTEM "../javanotes8.dtd" >
 
-<section id="GUI2.3" title="Actions and Buttons">
+<section id="GUI2.3" title="Complex Components and MVC">
    
-<p><start><big>F</big>or the past two sections</start>, we have been looking
-at some  of the more advanced aspects of the Java graphics API.  But the
-heart of most graphical user interface programming is using GUI components.
-In this section and the next, we'll be looking at <classname>JComponents</classname>.
-We'll cover several component classes that were not covered in <localref href="GUI1"/>,
-as well as some additional features of classes that were covered there.</p>
+<p><start><big>T</big>here is a lot more complexity</start> than we have
+see so far lurking in the JavaFX API.  However, a lot of that
+complexity works to your benefit as a programmer, since a lot of it is hidden in
+typical uses of JavaFX components.  You don't have to know about all the most
+complex details of controls in order to use them effectively in most programs.</p>
    
-<p>This section is mostly about buttons.  Buttons are among the simplest of
-GUI components, and it seems like there shouldn't be all that much to say
-about them.  However, buttons are not as simple as they seem.  For one thing,
-there are many different types of buttons.  The basic functionality of
-buttons in Java is defined by the class <code>javax.swing.AbstractButton</code>.
-Subclasses of this class represent push buttons, check boxes, and radio
-buttons.  Menu items are also considered to be buttons.  The
-<classname>AbstractButton</classname> class defines a surprisingly
-large API for controlling the appearance of buttons.  This section will
-cover part of that API, but you should see the class documentation for
-full details.</p>
-   
-<p>In this section, we'll also encounter a few classes that do not themselves define
-buttons but that are related to the button API, starting with "actions."</p>
-   
-   
-<subsection id="GUI2.3.1" title="Action and AbstractAction">
-   
-<p>The <classname>JButton</classname> class represents push buttons.  Up until
-now, we have created push buttons using the constructor</p>
-   
-<pre>public JButton(String text);</pre>
-   
-<np>which specifies text that will appear on the button.  We then added an
-<classname>ActionListener</classname> to the button, to respond when the
-user presses it.  Another way to create a <classname>JButton</classname> is
-using an <classname>Action</classname>.  The <classname>Action</classname>
-interface represents the general idea of some action that can be performed,
-together with properties associated with that action, such as a name for
-the action, an icon that represents the action, and whether the action
-is currently enabled or disabled.  <classname>Actions</classname> are
-usually defined using the class <classname>AbstractAction</classname>,
-an <code>abstract</code> class which includes a method</np>
-   
-<pre>public void actionPerformed(ActionEvent evt)</pre>
-   
-<np>that must be defined in any concrete subclass.  Often, this is done
-in an anonymous inner class.  For example, suppose that <code>display</code>
-is an object that has a <classname>clear()</classname> method.  Then
-an <classname>Action</classname> object that represents the action 
-"clear the display" can be defined as:</np>
-   
-<pre>Action clearAction = new AbstractAction("Clear") {
-   public void actionPerformed(ActionEvent evt) { 
-      display.clear();
-   }
-};</pre>
-   
-<np>The parameter, <code>"Clear"</code>, in the constructor of the
-<classname>AbstractAction</classname> is the name of the action.  Other
-properties can be set by calling the method <code>putValue(key,value)</code>,
-which is part of the <classname>Action</classname> interface.  For example,</np>
-   
-<pre>clearAction.putValue(Action.SHORT_DESCRIPTION, "Clear the Display");</pre>
-   
-<np>sets the <code>SHORT_DESCRIPTION</code> property of the action to
-have the value "Clear the Display".  The <code>key</code> parameter 
-in the <code>putValue()</code> method is usually given as one of several
-constants defined in the <classname>Action</classname> interface.  As
-another example, you can change the name of an action by using
-<code>Action.NAME</code> as the <code>key</code> in the <code>putValue()</code>
-method.</np>
-   
-<p>Once you have an <classname>Action</classname>, you can use it in the constructor
-of a button.  For example, using the action <code>clearAction</code> defined
-above, we can create the <classname>JButton</classname></p>
-   
-<pre>JButton clearButton = new JButton( clearAction );</pre>
-   
-<np>The name of the action will be used as the text of the button,
-and some other properties of the button will be taken from properties of the
-action.  For example, if the <code>SHORT_DESCRIPTION</code> property of the
-action has a value, then that value is used as the tooltip text for
-the button.  (The tooltip text appears when the user hovers the mouse
-over the button.)  Furthermore, when you change a property of the
-action, the corresponding property of the button will also be
-changed.  For example, changing the Action's property associated with the key
-<code>Action.NAME</code> will also change the text on the button.</np>
-   
-<p>The <classname>Action</classname> interface defines a <code>setEnabled()</code>
-method that is used to enable and disable the action.  The <code>clearAction</code> action can be enabled
-and disabled by calling <code>clearAction.setEnabled(true)</code> and
-<code>clearAction.setEnabled(false)</code>.  When you do this, any button that
-has been created from the action is also enabled or disabled at the same time.</p>
-   
-<p>Now of course, the question is, <b>why</b> should you want to use <classname>Actions</classname>
-at all?  One advantage is that using actions can help you to organize your code
-better.  You can create separate objects that represent each of the actions that
-can be performed in your program.  This represents a nice division of responsibility.
-Of course, you could do the same thing with individual <classname>ActionListener</classname>
-objects, but then you couldn't associate descriptions and other properties with
-the actions.</p>
-   
-<p>More important is the fact that <classname>Actions</classname> can also be used in
-other places in the Java API.  You can use an <classname>Action</classname> to create
-a <classname>JMenuItem</classname> in the same way as for a <classname>JButton</classname>:</p>
-   
-<pre>JMenuItem clearCommand = new JMenuItem( clearAction );</pre>
-   
-<np>A <classname>JMenuItem</classname>, in fact, is a kind of button and shares many
-of the same properties that a <classname>JButton</classname> can have.  You can use
-the <b>same</b> <classname>Action</classname> to create both a button and a menu
-item (or even several of each if you want).
-Whenever you enable or disable the action or change its name, the button and the
-menu item will <b>both</b> be changed to match.  If you change the <code>NAME</code>
-property of the action, the text of both the menu item and the button will be
-set to the new name of the action.  If you disable the action, both menu item
-and button will be disabled.  You can think of the button and
-the menu items as being two presentations of the <classname>Action</classname>,
-and you don't have to keep track of the button or menu item after you create them.
-You can do everything that you need to do by manipulating the <classname>Action</classname>
-object.</np>
-      
-<p>By the way, if you want to add a menu item that is defined by an <classname>Action</classname>
-to a menu, you don't even need to create the <classname>JMenuItem</classname> yourself.
-You can add the action object directly to the menu, and the menu item will be created
-from the properties of the action.  For example, if <code>menu</code> is a <classname>JMenu</classname>
-and <code>clearAction</code> is an <classname>Action</classname>, you can simply say
-<code>menu.add(clearAction)</code>.</p>
+<p>JavaFX defines several component classes that are much more complex than those
+we have looked at, but even the most complex components are not very
+difficult to use for many purposes.  In this section, we'll look at components
+that support display and manipulation of lists and tables.
+To use these complex components effectively, it's helpful to know something about
+the Model-View-Controller pattern that is used as a basis for the design of
+many GUI components.  That pattern is discussed later in this section.</p>
 
-<p><classname>Actions</classname> have some other useful properties that we will encounter
-later in this section.</p>
+<p>There are a number of JavaFX controls that are not covered in this book.  Some useful
+ones that you might want to look into include:  <classname>TabbedPane</classname>,
+<classname>SplitPane</classname>, <classname>Tree</classname>, <classname>JProgressBar</classname>, and
+various specialized input controls such as <classname>ColorPicker</classname>,
+<classname>DatePicker</classname>, <classname>PasswordField</classname>,
+and <classname>Spinner</classname>.</p>
    
-</subsection>
-      
-   
-<subsection id="GUI2.3.2" title="Icons on Buttons">
-   
-<p>In addition to&mdash;or instead of&mdash;text, buttons can also show icons.
-Icons are represented by the <classname>Icon</classname> interface and are usually
-created as <classname>ImageIcons</classname>, as discussed in <localref href="GUI2.1.4"/>.
-For example, here is a picture of a button that displays an image of a large "X"
-as its icon:</p>
-   
-<img src="button-with-icon.png" width="134" height="38" 
-   alt="a JButton with both text and an icon" tex="button-with-icon.eps" texscale="0.75"/>
-   
-<np>The icon for a button can be set by calling the button's <code>setIcon()</code> method,
-or by passing the icon object as a parameter to the constructor when the button is created.
-To create the button shown above, I created an <classname>ImageIcon</classname> from a
-<classname>BufferedImage</classname> on which I drew the picture that I wanted, and
-I constructed the <classname>JButton</classname> using a constructor that takes
-both the text and the icon for the button as parameters.  Here's the code segment
-that does it:</np>
-   
-<pre>BufferedImage image = new BufferedImage(24,24,BufferedImage.TYPE_INT_RGB);
- 
-Graphics2D g2 = (Graphics2D)image.getGraphics();
-g2.setColor(Color.LIGHT_GRAY);             // Draw the image for the icon.
-g2.fillRect(0,0,24,24);
-g2.setStroke( new BasicStroke(3) );        //    Use thick lines.
-g2.setColor(Color.BLACK);
-g2.drawLine(4,4,20,20);                    //    Draw the "X".
-g2.drawLine(4,20,20,4);
-g2.dispose();
+<p>We start this section with a short example of writing a custom control&mdash;something 
+that you might consider when even the large variety of components that are already
+defined in JavaFX don't do quite what you want (or when they do too much,
+and you want something simpler).</p>
 
-Icon clearIcon = new ImageIcon(image);     // Create the icon.
 
-JButton clearButton = new JButton("Clear the Display", clearIcon);</pre>   
+<subsection title="A Simple Custom Component" id="GUI2.3.1">
 
-<p>You can create a button with an icon but no text by using a constructor
-that takes just the icon as parameter.  Another alternative is for the
-button to get its icon from an <classname>Action</classname>.  When a button
-is constructed from an action, it takes its icon from the value of the
-action property <code>Action.SMALL_ICON</code>.  For example, suppose that
-we want to use an action named <code>clearAction</code> to create the
-button shown above.  This could be done with:</p>
+<p>JavaFX's standard component classes are usually all you need to construct a user
+interface. At some point, however, you might need something a bit different.
+In that case, you can consider writing your own component class, by building on one of the
+components that JavaFX does provide or on the basic <classname>Control</classname> class that
+serves as the base class for all controls.</p>
 
-<pre>clearAction.putValue( Action.SMALL_ICON, clearIcon );
-JButton clearButton = new JButton( clearAction );</pre>
-   
-<np>The icon could also be associated with the action by passing it
-as a parameter to the constructor of an <classname>AbstractAction</classname>:</np>
-   
-<pre>Action clearAction = new AbstractAction("Clear the Display", clearIcon) {
-   public void actionPerformed(ActionEvent evt) {
-      .
-      .  // Carry out the action.
-      .
-   }  
-}
-JButton clearButton = new JButton( clearAction );</pre>
+<p>For example, suppose I have a need for a "stopwatch" control. When the
+user clicks on the stopwatch, I want it to start timing. When the user clicks
+again, I want it to display the elapsed time since the first click. The textual
+display can be done with a <classname>Label</classname>, but we want 
+a <classname>Label</classname> that
+can respond to mouse clicks. We can get this behavior by defining a
+<classname>StopWatchLabel</classname> component as a subclass of the <classname>Label</classname> class. A
+<classname>StopWatchLabel</classname> object will listen for mouse clicks on itself. The first
+time the user clicks, it will change its display to "Timing..." and remember
+the time when the click occurred. When the user clicks again, it will check the
+time again, and it will compute and display the elapsed time. (Of course, I
+don't necessarily have to define a subclass. I could use a regular label in my
+program, set up a listener to respond to mouse events on the label, and let the
+program do the work of keeping track of the time and changing the text displayed
+on the label. However, by writing a new class, I have something that can be
+<b>reused</b> in other projects. I also have all the code involved in the stopwatch
+function collected together neatly in one place. For more complicated
+components, both of these considerations are very important.)</p>
 
-<np>The <code>SMALL_ICON</code> for an <classname>Action</classname> will also be 
-used by a <classname>JMenuItem</classname> created from the action.
-(An action can also have an icon associated with the key 
-<code>Action.LARGE_ICON_KEY</code>.  If it does, then a <classname>JButton</classname>
-will use the "large" icon in preference to the "small" icon.  However, a
-<classname>JMenuItem</classname> will only use a small icon.)</np>
-   
+<p>The <classname>StopWatchLabel</classname> class is not very hard to write. I need an instance
+variable to record the time when the user starts the stopwatch. 
+In the mouse event handling method that responds to mouse clicks on the stopwatch, I need
+to know whether the timer is being started or stopped, so I need a <ptype>boolean</ptype>
+instance variable, <code>running</code>, to keep track of this aspect of the component's state. 
+We can use he method <code>System.currentTimeMillis()</code> to get the current time,
+in milliseconds, as a value of type <ptype>long</ptype>.   When the timer is started,
+we can store the current time in an instance variable, <code>startTime</code>.  
+When the timer is stopped, we can use the current time and the start time to compute
+the elapsed time that the timer has been running.
+The complete <code>StopWatch</code> class is very short:</p>
 
-<p>The appearance of buttons can be tweaked in many ways.  For example, you
-can change the size of the gap between the button's text and its icon.  You can
-associate additional icons with a button that are used when the button is
-in certain states, such as when it is pressed or when it is disabled.  
-It is even possible to change the positioning of the text with respect to
-the icon.  For example, to place the text centered below the icon on
-a button, you can say:</p>
+<pre>import javafx.scene.control.Label;
 
-<pre>button.setHorizontalTextPosition(JButton.CENTER);
-button.setVerticalTextPosition(JButton.BOTTOM);</pre>
-   
-<np>These methods and many others are defined in the
-class <classname>AbstractButton</classname>.  This class is a superclass
-for <classname>JMenuItem</classname>, as well as for <classname>JButton</classname>
-and for the classes that define check boxes and radio buttons.</np>
-   
-<p>Finally, I will mention that it is possible to use icons on <classname>JLabels</classname>
-in much the same way that they can be used on <classname>JButtons</classname>.
-Placing an <classname>ImageIcon</classname> on a <classname>JLabel</classname>
-can be a convenient way to add a static image to your GUI.</p>
-   
-</subsection>
-   
-   
-<subsection id="GUI2.3.3" title="Making Choices">
-
-<p>The <classname>JCheckBox</classname> class was covered in 
-<localref href="GUI1.6.3"/>, and the equivalent for use in menus,
-<classname>JCheckBoxMenuItem</classname>, in <localref href="GUI1.8.1"/>.
-A checkbox lets the user make a choice between two alternatives.
-A checkbox has two states, selected and not selected, and the user
-can change the state by clicking on the check box.  The state
-of a checkbox can also be set programmatically by calling its
-<code>setSelected()</code> method, and the current value of the
-state can be checked using the <code>isSelected()</code> method.</p>
-
-   
-<p>Closely related to checkboxes are <newword>radio buttons</newword>.
-Like a checkbox, a radio button can be either selected or not.  However,
-radio buttons are expected to occur in groups, and at most one radio button in a
-group can be selected at any given time.  Radio button groups let the user
-make a choice among several alternatives.  In Java, a radio button is represented
-by an object of type <classname>JRadioButton</classname>. When used in isolation, a
-<classname>JRadioButton</classname> acts just like a <classname>JCheckBox</classname>, 
-and it has the same
-methods and events. Ordinarily, however, a <classname>JRadioButton</classname> is used in a
-group. A group of radio buttons is represented by an object belonging to the
-class <classname>ButtonGroup</classname>. A <classname>ButtonGroup</classname> is <b>not</b> a component
-and does not itself have a visible representation on the screen. A
-<classname>ButtonGroup</classname> works behind the scenes to organize a group of radio
-buttons, to ensure that at most one button in the group can be selected at any given
-time.</p>
-
-<p>To use a group of radio buttons, you must create a <classname>JRadioButton</classname>
-object for each button in the group, and you must create one object of type
-<classname>ButtonGroup</classname> to organize the individual buttons into a group. Each
-<classname>JRadioButton</classname> must be added individually to some container, so that it
-will appear on the screen. (A <classname>ButtonGroup</classname> plays no role in the
-placement of the buttons on the screen.) Each <classname>JRadioButton</classname> must also
-be added to the <classname>ButtonGroup</classname>, which has an <code>add()</code> method for
-this purpose. If you want one of the buttons to be selected initially, you
-can call <code>setSelected(true)</code> for that button. If you don't do this, then
-none of the buttons will be selected until the user clicks on one of them.</p>
-
-<p>As an example, here is how you could set up a set of radio buttons that can
-be used to select a color:</p>
-
-<pre>JRadioButton redRadio, blueRadio, greenRadio, yellowRadio;
-         // Variables to represent the radio buttons.
-         // These should probably be instance variables, so
-         // that they can be used throughout the program.
- 
-ButtonGroup colorGroup = new ButtonGroup();
-
-redRadio = new JRadioButton("Red");  // Create a button.
-colorGroup.add(redRadio);            // Add it to the group.
-   
-blueRadio = new JRadioButton("Blue");
-colorGroup.add(blueRadio);
- 
-greenRadio = new JRadioButton("Green");
-colorGroup.add(greenRadio);
- 
-yellowRadio = new JRadioButton("Yellow");
-colorGroup.add(yellowRadio);
- 
-redRadio.setSelected(true);  // Make an initial selection.</pre>
-
-<np>The individual buttons must still be added to a container if they are to
-appear on the screen. If you want to respond immediately when the user clicks
-on one of the radio buttons, you can register an <classname>ActionListener</classname> for
-each button.  Just as for
-checkboxes, it is not always necessary to register listeners for radio buttons.
-In some cases, you can simply check the state of each button when you need to
-know it, using the button's <code>isSelected()</code> method.</np>
-         
-<p>You can add the equivalent of a group of radio buttons to a menu by using
-the class <classname>JRadioButtonMenuItem</classname>.  To use this class,
-create several objects of this type, and create a <classname>ButtonGroup</classname>
-to manage them.  Add each <classname>JRadioButtonMenuItem</classname> to
-the <classname>ButtonGroup</classname>, and also add them to
-a <classname>JMenu</classname>.  If you want one of the items to be selected
-initially, call its <code>setSelected()</code> method to set its selection state
-to true.  You can add <classname>ActionListeners</classname> to each
-<classname>JRadioButtonMenuItem</classname> if you need to take some action
-when the user selects the menu item; if not, you can simply check the selected states
-of the buttons whenever you need to know them.  As an example, suppose that
-<code>menu</code> is a <classname>JMenu</classname>.  Then you can add a
-group of buttons to <code>menu</code> as follows:</p>
-   
-<pre>JRadioButtonMenuItem selectRedItem, selectGreenItem, selectBlueItem;
-   // These might be defined as instance variables
-ButtonGroup group = new ButtonGroup();
-selectRedItem = new JRadioButtonMenuItem("Red");
-group.add(selectRedItem);
-menu.add(selectRedItem);
-selectGreenItem = new JRadioButtonMenuItem("Green");
-group.add(selectGreenItem);
-menu.add(selectGreenItem);
-selectBlueItem = new JRadioButtonMenuItem("Blue");
-group.add(selectBlueItem);
-menu.add(selectBlueItem);</pre>
-
-<break/>
-   
-<p>When it's drawn on the screen, a <classname>JCheckBox</classname> includes
-a little box that is either checked or unchecked to show the state of the box.
-That box is actually a pair of <classname>Icons</classname>.
-One icon is shown when the check box is unselected; the other is shown when it
-is selected.  You can change the appearance of the check box by substituting
-different icons for the standard ones.</p>
-   
-<p>The icon that is shown when the check box is unselected is just the main
-icon for the <classname>JCheckBox</classname>.  You can provide a different
-unselected icon in the constructor or you can change the icon using the
-<code>setIcon()</code> method of the <classname>JCheckBox</classname> object.
-To change the icon that is shown when the check box is selected, use
-the <code>setSelectedIcon()</code> method of the <classname>JCheckBox</classname>.
-All this applies equally to <classname>JRadioButton</classname>,
-<classname>JCheckBoxMenuItem</classname>, and <classname>JRadioButtonMenuItem</classname>.
-</p>
-   
-<p>An example of this can be found in the sample program <sourceref href="ToolBarDemo.java"/>,
-which is discussed in the next subsection.  That program creates a set of radio buttons
-that use custom icons.  The buttons are created by the following method:</p>
-
-<pre>/**
- * Create a JRadioButton and add it to a specified button group.  The button
- * is meant for selecting a drawing color in the display.  The color is used to 
- * create two custom icons, one for the unselected state of the button and one
- * for the selected state.  These icons are used instead of the usual
- * radio button icons.
- * @param c the color of the button, and the color to be used for drawing.
- *    (Note that c has to be "final" since it is used in the anonymous inner
- *    class that defines the response to ActionEvents on the button.)
- * @param grp the ButtonGroup to which the radio button will be added.
- * @param selected if true, then the state of the button is set to selected.
- * @return the radio button that was just created; sorry, but the button
- *    is not as pretty as I would like!
+/**
+ * A custom component that acts as a simple stop-watch.  When the user 
+ * clicks on it, this component starts timing.  When the user clicks again,
+ * it displays the time between the two clicks.  Clicking a third time
+ * starts another timer, etc.  While it is timing, the label just
+ * displays the message "Timing....".
  */
-private JRadioButton makeColorRadioButton(final Color c, 
-                                           ButtonGroup grp, boolean selected) {
-   
-   /* Create an ImageIcon for the normal, unselected state of the button,
-      using a BufferedImage that is drawn here from scratch. */
-   
-   BufferedImage image = new BufferedImage(30,30,BufferedImage.TYPE_INT_RGB);
-   Graphics g = image.getGraphics();
-   g.setColor(Color.LIGHT_GRAY);
-   g.fillRect(0,0,30,30);
-   g.setColor(c);
-   g.fill3DRect(1, 1, 24, 24, true);
-   g.dispose();
-   Icon unselectedIcon = new ImageIcon(image);
-   
-   /* Create an ImageIcon for the selected state of the button. */
- 
-   image = new BufferedImage(30,30,BufferedImage.TYPE_INT_RGB);
-   g = image.getGraphics();
-   g.setColor(Color.DARK_GRAY);
-   g.fillRect(0,0,30,30);
-   g.setColor(c);
-   g.fill3DRect(3, 3, 24, 24, false);
-   g.dispose();
-   Icon selectedIcon = new ImageIcon(image);
-   
-   /* Create and configure the button. */
+public class StopWatchLabel extends Label {
 
-   JRadioButton button = new JRadioButton(unselectedIcon);
-   button.setSelectedIcon(selectedIcon);
-   button.addActionListener( new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-           // The action for this button sets the current drawing color
-           // in the display to c.
-         display.setCurrentColor(c);
-      }
-   });
-   grp.add(button);
-   if (selected)
-      button.setSelected(true);
+    private long startTime;   // Start time of timer.
+                              //   (Time is measured in milliseconds.)
 
-   return button;
-} // end makeColorRadioButton </pre>
-   
-<break/>
+    private boolean running;  // True when the timer is running.
 
-   
-<p>It is possible to create radio buttons and check boxes&mdash;both the
-regular sort and the corresponding menu items&mdash;from <classname>Actions</classname>.
-The button or checkbox takes its name, main icon, tooltip text, and enabled/disabled state from the
-action. And the Action's <code>actionPerformed()</code> method is called when the user
-changes the state. Furthermore, an action has a property named <code>Action.SELECTED_KEY</code>, which 
-means that the action itself can have a selected state.  By default, the
-value of the <code>SELECTED_KEY</code> property is <code>null</code> and is not
-used for anything.  However, you can set the value to be true or false by calling
-<code>action.putValue(Action.SELECTED_KEY,true)</code> or
-<code>action.putValue(Action.SELECTED_KEY,false)</code>.  Once you have done so,
-the action's <code>SELECTED_KEY</code> property and the selected state of any
-checkbox or radio button created from the action will automatically be kept
-in sync.  You can find out the current value of the property by calling
-<code>action.getValue(Action.SELECTED_KEY)</code>.  Note that the value of
-a property is actually an object.  When you set the value to <code>true</code>
-or <code>false</code>, the value is wrapped in an object of type
-<classname>Boolean</classname>.  The return type of <code>action.getValue()</code>
-is <classname>Object</classname>, so you will probably need to type-cast the return value
-to <classname>Boolean</classname>.</p>
-
-<break/>
-
-<p>Java has another component that lets the user choose from a set of options:
-the <classname>JComboBox</classname>.  A combo box contains a list of items,
-but only displays the currently selected items.  The user clicks the combo box
-to see a pop-up list of options and can then select from the list.  The functionality
-is similar to a group of radio buttons.</p>
-
-<p><classname>JComboBox</classname> is a parameterized class, where the type parameter
-specifies the type of items that that combo box can hold.  Most commonly, the items
-are strings, and the type is <atype>JComboBox&lt;String&gt;</atype>.  This is the only
-case I will discuss.
-When a <classname>JComboBox&lt;String&gt;</classname> object is first constructed, it initially contains
-no items. An item is added to the bottom of the list of options by calling the combo box's instance
-method, <code>addItem(str)</code>, where <code>str</code> is the string that will be
-displayed in the menu.</p>
-
-<p>For example, the following code will create an object of type
-<classname>JComboBox</classname> that contains the options Red, Blue, Green, and Black:</p>
-
-<pre>JComboBox&lt;String&gt; colorChoice = new JComboBox&lt;String&gt;();
-colorChoice.addItem("Red");
-colorChoice.addItem("Blue");
-colorChoice.addItem("Green");
-colorChoice.addItem("Black");</pre>
-
-<p>You can call the <code>getSelectedIndex()</code> method of a <classname>JComboBox</classname>
-to find out which item is currently selected. This method returns an integer
-that gives the position of the selected item in the list, where the items are
-numbered starting from zero. Alternatively, you can call
-<code>getSelectedItem()</code> to get the selected item itself. (This method
-returns a value of type <classname>Object</classname>&mdash;even when the items
-are limited to being strings.)  You can change the selection by
-calling the method <code>setSelectedIndex(n)</code>, where <code>n</code> is an integer
-giving the position of the item that you want to select.</p>
-
-<p>The most common way to use a <classname>JComboBox</classname> is to call its
-<code>getSelectedIndex()</code> method when you have a need to know which item is
-currently selected. However, 
-<classname>JComboBox</classname> components generate <classname>ActionEvents</classname> when
-the user selects an item, and you can register
-an <classname>ActionListener</classname> with the <classname>JComboBox</classname> if you want to respond
-to such events as they occur.</p>
-
-<p><classname>JComboBoxes</classname> have a nifty feature, which is probably not all that
-useful in practice. You can make a <classname>JComboBox</classname> "editable" by calling its
-method <code>setEditable(true)</code>. If you do this, the user can edit the
-selection by clicking on the <classname>JComboBox</classname> and typing. This allows the
-user to make a selection that is not in the pre-configured list that you
-provide. (The "Combo" in the name "JComboBox" refers to the fact that it's a
-kind of combination of menu and text-input box.) If the user has edited the
-selection in this way, then the <code>getSelectedIndex()</code> method will return
-the value <code>-1</code>, and <code>getSelectedItem()</code> will return the string
-that the user typed. An <classname>ActionEvent</classname> is triggered if the user presses
-return while typing in the <classname>JComboBox</classname>.</p>
-
-<break/>
-
-<p>There is a lot of information in this section.  The sample program <sourceref href="ChoiceDemo.java"/>
-demonstrates the use of combo boxes, check boxes, and radio buttons&mdash;including the
-use of Actions with check boxes and radio buttons.  I encourage you to run the program to see
-how these things work and to read the source code.  The source code has a lot of comments to
-explain what is going on.</p>
-   
-</subsection>
-   
-      
-<subsection id="GUI2.3.4" title="Toolbars">
-   
-<p>It has become increasingly common for programs to have a row of small buttons
-along the top or side of the program window that offer access to some of the
-commonly used features of the program.  The row of buttons is known as a
-<newword>tool bar</newword>.  Typically, the buttons in a tool bar are presented
-as small icons, with no text.  Tool bars can also contain other components,
-such as <classname>JTextFields</classname> and <classname>JLabels</classname>.</p>
-   
-<p>In Swing, tool bars are represented by the class <classname>JToolBar</classname>.
-A <classname>JToolBar</classname> is a container that can hold other components.
-It is also itself a component, and so can be added to other containers.  In general,
-the parent component of the tool bar should use a <classname>BorderLayout</classname>.
-The tool bar should occupy one of the edge positions&mdash;<code>NORTH</code>,
-<code>SOUTH</code>, <code>EAST</code>, or <code>WEST</code>&mdash;in the
-<classname>BorderLayout</classname>.  Furthermore, the other three edge positions
-should be empty.  The reason for this is that it might be possible (depending
-on the platform and configuration) for the user to drag the tool bar from one edge position in
-the parent container to another.  It might even be possible for the user to drag the
-tool bar off its parent entirely, so that it becomes a separate window.</p>
-
-<p>Here is a picture of a toolbar.  This
-is from the sample program <sourceref href="ToolBarDemo.java"/>, which I
-discuss below:</p>
-
-<img src="toolbar.png" width="304" height="50" alt="a free-floating toolbar"
-    tex="toolbar.eps" texscale="0.75"/>
-   
-
-<p>In the demo program, the user can draw colored curves in a large drawing area.  
-The first three buttons in the tool bar are a set
-of radio buttons that control the drawing color.  The fourth
-button is a push button that the user can click to clear the drawing.
-</p>
-   
-<p>Tool bars are easy to use.  You just have to create the <classname>JToolBar</classname>
-object, add it to a container, and add some buttons and possibly other components to
-the tool bar.  One fine point is adding space to a tool bar, such as the gap between
-the radio buttons and the push button in the above picture.  You can leave
-a gap by adding a separator to the tool bar.  For example:</p>
-   
-<pre>toolbar.addSeparator(new Dimension(20,20));</pre>
-   
-<np>This adds an invisible 20-by-20 pixel block to the tool bar.  This will appear
-as a 20 pixel gap between components.</np>
-   
-<p>Here is the constructor from the <code>ToolBarDemo</code> program. 
-It shows how to create the tool bar and place it in a container.  Note that
-class <classname>ToolBarDemo</classname> is a subclass of <classname>JPanel</classname>,
-and the tool bar and display are added to the panel object that is being constructed:</p>
-   
-<pre>public ToolBarDemo() {
-   
-   setLayout(new BorderLayout(2,2));
-   setBackground(Color.GRAY);
-   setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
-   
-   display = new Display();  // the area where the user draws.
-   add(display, BorderLayout.CENTER);
-   
-   JToolBar toolbar = new JToolBar();
-   add(toolbar, BorderLayout.NORTH);
-   
-   ButtonGroup group = new ButtonGroup();
-   toolbar.add( makeColorRadioButton(Color.RED,group,true) );
-   toolbar.add( makeColorRadioButton(Color.GREEN,group,false) );
-   toolbar.add( makeColorRadioButton(Color.BLUE,group,false) );
-   
-   toolbar.addSeparator(new Dimension(20,20));
-   
-   toolbar.add( makeClearButton() );
-   
-}</pre>
-   
-<p>If you want a vertical tool bar that can be placed in the <code>EAST</code>
-or <code>WEST</code> position of a <classname>BorderLayout</classname>,
-you should specify the orientation in the tool bar's constructor:</p>
-   
-<pre>JToolBar toolbar = new JToolBar( JToolBar.VERTICAL );</pre>
-   
-<np>The default orientation is <code>JToolBar.HORIZONTAL</code>.  The
-orientation is adjusted automatically when the user drags the tool bar
-into a new position.  If you want to prevent the user from dragging
-the tool bar, just say <code>toolbar.setFloatable(false)</code>.</np>
-
-</subsection>
-   
-   
-<subsection id="GUI2.3.5" title="Keyboard Accelerators">
-   
-<p>In most programs, commonly used menu commands have keyboard equivalents.
-The user can type the keyboard equivalent instead of selecting the command
-from the menu, and the result will be exactly the same.  Typically, for
-example, the "Save" command has keyboard equivalent <code>CONTROL-S</code>,
-and the "Undo" command corresponds to <code>CONTROL-Z</code>.  (Under
-Mac OS, the keyboard equivalents for these commands would probably
-be <code>META-S</code> and <code>META-Z</code>, where <code>META</code>
-refers to holding down the "apple" key.)  The keyboard equivalents
-for menu commands are referred to as <newword>accelerators</newword>.</p>
-   
-<p>The class <code>javax.swing.KeyStroke</code> is used to represent
-key strokes that the user can type on the keyboard.  Keystrokes can
-refer to pressing a key, releasing a key, or typing a character,
-possibly while holding down one or more of the
-modifier keys <code>control</code>, <code>shift</code>, <code>alt</code>,
-and <code>meta</code>. The <classname>KeyStroke</classname> class has
-a convenient static method, <code>getKeyStroke(String)</code>, that makes it easy to 
-create key stroke objects representing key pressed events.  For example,</p>
-
-<pre>KeyStroke.getKeyStroke( "ctrl S" )</pre>
-   
-<np>returns a <classname>KeyStroke</classname> that represents the action
-of pressing the "S" key while holding down the control key.  In addition
-to "ctrl", you can use the modifiers "shift", "alt", and "meta" in the
-string that describes the key stroke.  You can even combine several modifiers,
-so that</np>
-   
-<pre>KeyStroke.getKeyStroke( "ctrl shift Z" )</pre>
-   
-<np>represents the action of pressing the "Z" key while holding down both
-the control and the shift keys.  When the key stroke involves pressing a
-character key, the character must appear in the string in upper case
-form.  You can also have key strokes that correspond to non-character
-keys.  The number keys can be referred to as "1", "2", etc., while
-certain special keys have names such as "F1", "ENTER", and "LEFT"
-(for the left arrow key).  The class <classname>KeyEvent</classname>
-defines many constants such as <code>VK_ENTER</code>, <code>VK_LEFT</code>,
-and <code>VK_S</code>.  The names that are used for keys in the
-keystroke description are just these constants with the leading
-"<code>VK_</code>" removed.</np>
-
-<p>There are at least two ways to associate a keyboard accelerator with
-a menu item.  One is to use the <code>setAccelerator()</code> method
-of the menu item object:</p>
-   
-<pre>JMenuItem saveCommand = new JMenuItem( "Save..." );
-saveCommand.setAccelerator( KeyStroke.getKeyStroke("ctrl S") );</pre>
-   
-<np>The other technique can be used if the menu item is created from 
-an <classname>Action</classname>.  The action property
-<code>Action.ACCELERATOR_KEY</code> can be used to associate a
-<classname>KeyStroke</classname> with an <classname>Action</classname>.
-When a menu item is created from the action, the keyboard accelerator
-for the menu item is taken from the value of this property.  For
-example, if <code>redoAction</code> is an <classname>Action</classname>
-representing a "Redo" action, then you might say:</np>
-   
-<pre>redoAction.putValue( Action.ACCELERATOR_KEY, 
-                              KeyStroke.getKeyStroke("ctrl shift Z") );
-JMenuItem redoCommand = new JMenuItem( redoAction );</pre>
-   
-<np>or, alternatively, you could simply add the action to a <classname>JMenu</classname>,
-<code>editMenu</code>, with <code>editMenu.add(redoAction)</code>.
-(Note, by the way, that accelerators apply only to menu items, not to
-push buttons.  When you create a <classname>JButton</classname> from an
-action, the <code>ACCELERATOR_KEY</code> property of the action is ignored.)</np>
-   
-<p>Note that you can use accelerators for <classname>JCheckBoxMenuItems</classname>
-and <classname>JRadioButtonMenuItems</classname>, as well as for simple
-<classname>JMenuItems</classname>.</p>
-   
-<p>For examples of using keyboard accelerators, see <sourceref href="ChoiceDemo.java"/>
-and the solution to <localref href="GUI2.ex.2"/>.</p>
-   
-<break/>
-   
-<p>By the way, as noted above, in the Mac&nbsp;OS operating system, the
-meta (or apple) key is usually used for keyboard accelerators instead of
-the control key.  Java has a way of determining the correct modifier
-for the computer on which it is running.  However, it requires the
-use of a different method for constructing the <classname>KeyStroke</classname>.  The 
-function call</p>
-
-<pre>int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()</pre>
-
-<np>returns a "mask" that can be used to represent the correct modifier key when
-the keystroke is created by the function</np>
-
-<pre>KeyStroke stoke = KeyStroke( keyCode, shortcutMask );</pre>
-
-<np>The first parameter, <code>keyCode</code>, is one of the constants
-such as <code>KeyEvent.VK_Z</code> that represent keys on the keyboard.
-For example, <code>KeyStroke.getKeyStroke(KeyEvent.VK_Z,shortcutMask)</code>
-represents the action of pressing the Z key while holding down the
-meta key on a Mac or the control key on Windows or Linux.  It is possible
-to add other modifiers to the <code>shortcutMask</code> to account for
-holding down the shift or alt keys; see the documentation.</np>
-
-<p>As an example, here is a
-code segment that is used in <sourceref href="ChoiceDemo.java"/> to make
-a "Quit" menu item that will have the appropriate modifier key for
-the computer on which the program is running</p>
-
-<pre>int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-KeyStroke quitKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Q, shortcutMask);
-JMenuItem quit = new JMenuItem("Quit");
-quit.setAccelerator(quitKeyStroke);
-quit.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent evt) {
-        System.exit(0);
+    /**
+     * Constructor sets initial text on the label to
+     * "Click to start timer." and sets up a mouse event
+     * handler so the label can respond to clicks.
+     */
+    public StopWatchLabel() {
+        super("  Click to start timer.  ");
+        setOnMousePressed( e -> setRunning( !running ) );
     }
-});
-controlMenu.add(quit);</pre>
-   
+
+
+    /**
+     * Tells whether the timer is currently running.
+     */
+    public boolean isRunning() {
+        return running;
+    }
+
+
+    /**
+     * Sets the timer to be running or stopped, and changes the text that
+     * is shown on the label.  (This method should be called on the JavaFX
+     * application thread.)
+     * @param running says whether the timer should be running; if this
+     *    is equal to the current state, nothing is done.
+     */
+    public void setRunning( boolean running ) {
+        if (this.running == running)
+            return;
+        this.running = running;
+        if (running == true) {
+                // Record the time and start the timer.
+            startTime = System.currentTimeMillis();  
+            setText("Timing....");
+        }
+        else {
+                // Stop the timer.  Compute the elapsed time since the
+                // timer was started and display it.
+            running = false;
+            long endTime = System.currentTimeMillis();
+            double seconds = (endTime - startTime) / 1000.0;
+            setText( String.format("Time: %1.3f seconds", seconds) );
+        }
+    }
+
+} // end StopWatchLabel</pre>
+
+<p>Don't forget that since <classname>StopWatchLabel</classname> is a subclass of <classname>Label</classname>,
+you can do anything with a <classname>StopWatchLabel</classname> that you can do with a
+<classname>Label</classname>. You can add it to a container. You can set its font,
+text color, max and preferred size, and CSS style. You can set the text that it displays
+(although this would interfere with its stopwatch function).</p>
+
+<p><sourceref href="StopWatchLabel.java"/> 
+is not an application and cannot be run on its own. The very short program <sourceref href="TestStopWatch.java"/>
+shows a <classname>StopWatchLabel</classname>, and it sets several of the label's properties to
+improve the appearance.</p>
+
 </subsection>
+
+<subsection title="The MVC Pattern" id="GUI2.3.2">
+
+<p>One of the principles of object-oriented design is division of responsibilities.
+Ideally, an object should have a single, clearly defined role, with a limited
+realm of responsibility.  One application of this principle to the design of
+graphical user interfaces is the <newword>MVC pattern</newword>.  "MVC" stands
+for "Model-View-Controller" and refers to three different realms of responsibility
+in the design of a graphical user interface.</p>
    
+<p>When the MVC pattern is applied to a component, the <newword>model</newword>
+consists of the data that represents the current state of the component.
+The <newword>view</newword> is simply the visual presentation of the
+component on the screen.  And the <newword>controller</newword> is the
+aspect of the component that carries out actions in response to events
+generated by the user (or by other sources such as timers).  The idea is to assign responsibility for the
+model, the view, and the controller to different objects.</p>
    
-<subsection id="GUI2.3.6" title="HTML on Buttons">
+<p>The view is the easiest part of the MVC pattern to understand.  It is
+often represented by the component object itself, and its responsibility
+is to draw the component on the screen.  In doing this, of course, it
+has to consult the model, since the model represents the state of the
+component, and that state can determine what appears on the screen.
+To get at the model data&mdash;which is stored in a separate object
+according to the MVC pattern&mdash;the component object needs to keep
+a reference to the model object. Furthermore, when the model changes,
+the view often needs to be redrawn to reflect the changed state.
+The component needs some way of knowing when changes in the model
+occur.  Typically, in Java, this is done with events and listeners.  The
+model object is set up to generate events when its data changes.
+The view object registers itself as a listener for those events. When the model
+changes, an event is generated, the view is notified of that event, and the
+view responds by updating its appearance on the screen.</p>
    
-<p>As a final stop in this brief tour of ways to spiff up your buttons,
-I'll mention the fact that the text that is displayed on a button can
-be specified in HTML format.  HTML is the markup language that is used to
-write web pages.  I don't cover it in this book, but I will explain a
-few things that you can do with it.  HTML allows you to apply color or italics
-or other styles to just part of the text on your buttons.  It also makes
-it possible to have buttons that display multiple lines of text.
-(You can also use HTML on <classname>JLabels</classname>,
-which can be even more useful.)   
-Here's a picture of a button with HTML text (along with a "Java" icon):</p>
+<p>When MVC is
+used for JavaFX components, the controller is generally not so well defined
+as the model and view, and its responsibilities are often split
+among several objects.  The controller might include mouse
+and keyboard listeners that respond to user events on the view, as well as
+listeners for other high-level events, such as those from a button or slider,
+that affect the state of the component.  Usually, the controller
+responds to events by making modifications to the model, and
+the view is changed only indirectly, in response to the changes
+in the model.</p>
    
-<img src="java-button.png" width="226" height="100" alt="button with HTML text"
-   tex="java-button.eps" texscale="0.75"/>
-   
-<p>If the string of text that is applied to a button starts with "<code>&lt;html&gt;</code>",
-then the string is interpreted as HTML.  The string does not have to use strict
-HTML format; for example, you don't need a closing <code>&lt;/html&gt;</code> at the end of
-the string.  To get multi-line text, use <code>&lt;br&gt;</code> in the string
-to represent line breaks.  If you would like the lines of text to be center
-justified, include the entire text (except for the <code>&lt;html&gt;</code>) between
-<code>&lt;center&gt;</code> and <code>&lt;/center&gt;</code>.  For example,</p>
-   
-<pre>JButton button = new JButton(
-               "&lt;html&gt;&lt;center&gt;This button has&lt;br&gt;two lines of text&lt;/center&gt;" );</pre>
-   
-<np>creates a button that displays two centered lines of text.  You can apply italics
-to part of the string by enclosing that part between <code>&lt;i&gt;</code> and
-<code>&lt;/i&gt;</code>.  Similarly, use <code>&lt;b&gt;...&lt;/b&gt;</code>
-for bold text and <code>&lt;u&gt;...&lt;/u&gt;</code> for underlined text.
-For green text, enclose the text between <code>&lt;font&nbsp;color=green&gt;</code>
-and <code>&lt;/font&gt;</code>.  You can, of course, use other colors
-in place of "green."  The "Java" button that is shown above was created using:</np>
-   
-<pre>JButton javaButton = new JButton( "&lt;html&gt;&lt;u&gt;Now&lt;/u&gt; is the time for&lt;br&gt;" +
-                           "a nice cup of &lt;font color=red&gt;coffee&lt;/font&gt;." );</pre>
-   
-<np>and then adding the Java image as an icon for the button.</np>
-   
-   
+<p>The MVC pattern is used in many places in the design of JavaFX,
+even when the terms "model" and "view" are not used.  The whole
+idea of observable properties (<localref href="GUI2.1.1"/>) is a way
+of implementing the idea of a model that is separate from the view,
+although when properties are used, the model can be spread over
+many different objects.
+For the list and table controls that we will look at
+next, the model and view are somewhat more explicit.</p>
+
 </subsection>
+
+<subsection title="ListView and ComboBox" id="GUI2.3.3">
+
+<p>A <classname>ListView</classname> is a control that represents a list
+of items that can be selected by the user.  It is also possible to let the
+user edit items in the list.  The sample program
+<sourceref href="SillyStamper.java"/> allows the user to select
+an icon (that is, a small image) in a <classname>ListView</classname> of icons.
+The user selects an icon in the list by clicking on it.
+The selected icon can be "stamped" onto a canvas by clicking on
+the canvas. Shift-clicking adds a larger version of the image to the canvas.
+(The icons in this program are from the KDE desktop project.)
+Here is a picture of the program with several icons already stamped onto the
+drawing area and with the "star" icon selected:</p>
+
+<img src="silly-stamper.png" width="394" height="286" alt="screenshot from SillyStamper.java"
+   tex="silly-stamper.eps" texscale="0.7"/>   
    
+<p><classname>ListView</classname> is defined in package <code>javafx.scene.control</code>. It is a parameterized
+type, where the type parameter indicates what type of object can be displayed in the list.
+The most common type is probably <atype>ListView&lt;String&gt;</atype>, but in the sample program,
+it's <atype>ListView&lt;ImageView&gt;</atype>.  A <classname>ListView</classname>
+can display <classname>Strings</classname> and <classname>Nodes</classname> directly.
+When used with objects of other types, the default is to display the string representation
+of the object, as returned by the <code>toString()</code> method.</p>
+
+<p>The items in a <atype>ListView&lt;T&gt;</atype> are stored in an
+<atype>ObservableList&lt;T&gt;</atype>.  The list of items is part of the model
+for the <classname>ListView</classname>.  The list for a <code>listView</code>
+can be accessed as <code>listView.getItems()</code>.  When items are added to
+this list or deleted from the list, the list view is automatically updated
+to reflect the change.</p>
+
+<p>In the <code>SillyStamper</code> program, the list is static.  That is, no changes
+are made to the list after it has been created, and the user cannot edit the list.
+The images for the icons are read from resource files, and each <classname>Image</classname> 
+is wrapped in an  <classname>ImageView</classname> (<localref href="GUI1.4.1"/>),
+which is added to the list of items in the <classname>ListView</classname>.
+The list is constructed in the following method, which is called in the program's
+<code>start()</code> method:</p>
+
+<pre>private ListView&lt;ImageView> createIconList() {
+    String[] iconNames = new String[] { 
+               // names of image resource file, in directory stamper_icons
+            "icon5.png", "icon7.png", "icon8.png", "icon9.png", "icon10.png",
+            "icon11.png", "icon24.png", "icon25.png", "icon26.png", 
+            "icon31.png", "icon33.png", "icon34.png"
+    };
+
+    iconImages = new Image[iconNames.length];  // Used for drawing the icons.
+
+    ListView&lt;ImageView> list = new ListView&lt;>();
+
+    list.setPrefWidth(80);
+    list.setPrefHeight(100);
+
+    for (int i = 0; i &lt; iconNames.length; i++) {
+        Image icon = new Image("stamper_icons/" + iconNames[i]);
+        iconImages[i] = icon;
+        list.getItems().add( new ImageView(icon) );
+    }
+
+    list.getSelectionModel().select(0);  // Select the first item in the list.
+
+    return list;
+}</pre>
+
+<np>This method sets a preferred width and height for the list.  The default preferred
+size for a list seems to be about 200-by-400, no matter what it contains.  The icon
+list needs a much smaller width.  The preferred height is set to a small value, but
+in this program it will grow to fill the available space.  The default preferred height
+would have forced the container to be bigger than I wanted.</np>
+
+<p>The other point of interest is the use of the "selection model" of the list.
+The selection model is the part of the model that records which items are selected
+in the list.  By default, at most one item can be selected in a list, which is
+good for this program.  However, it would be possible to allow multiple items to be
+selected at the same time by calling</p>
+
+<pre>list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);</pre>
+   
+<np>With the default single selection mode, when the user selects an item, the previously
+selected item, if any, is deselected.  The user can select an item by clicking it,
+and the program can set the selection by calling 
+<code>list.getSelectionModel().select(index)</code>.  The parameter is the index
+of the item in the list, with numbering starting from zero as usual.
+If <code>index</code> is -1, than no item in the list is selected.  The selected
+item in the list is highlighted in the list view.  The list view listens for
+changes in the selection model.  When the user clicks an item, a mouse
+listener (which is part of the controller) changes the selection model.
+When that happens, the list view is notified of the change and
+updates its appearance to reflect the fact that a different item is now selected..
+A program can find out which item is currently selected by calling</np>
+   
+<pre>list.getSelectionModel().getSelectedIndex()</pre>
+
+<np>In <sourceref href="SillyStamper.java"/>, this method is used when the
+user clicks on the canvas, to find out which icon should be stamped
+into the picture.</np>
+
+<break/>
+
+<p>The sample program <sourceref href="EditListDemo.java"/> shows two lists
+that can be edited by the user.  One is a list of strings and one is a list
+of numbers.  The user can initiate editing of an item by double-clicking it,
+or simply by clicking it if it is already selected.  The user finishes the edit
+by pressing return or by hitting the escape key to cancel the edit.
+Selecting another item in the list will also cancel the edit.</p>
+
+<img src="edit-list-demo.png" width="540" height="320" tex="edit-list-demo.eps" texscale="0.6" alt="Screenshot of EditListDemo.java"/>
+
+<p>There are a few things that you need to do if you want the user 
+to be able to edit the items in a <classname>ListView</classname>.
+The <code>list</code> must be made editable by calling
+</p>
+
+<pre>list.setEditable(true);</pre>
+
+<np>However, that by itself is not enough.  The individual cells in the list
+must also be editable.  The term "cell" refers to an area in a list that
+displays one item.  A list cell is an object that is responsible for
+displaying the item and, optionally, implementing user editing of the
+item.  Default list cells are not editable.</np>
+
+<p>A <classname>ListView</classname> uses a <newword>cell factory</newword>
+to create list cell objects.  The cell factory is another object that
+is responsible for creating cells.  To get a different kind of cell,
+you have to provide a different cell factory for the list.
+(This follows something called the "factory pattern."  By using a
+a factory object to create cells, the cells can be customized without
+changing the <classname>ListView</classname> source code.  You simply
+have to install a new cell factory.)</p>
+
+<p>Writing cell factories is not a trivial task, but JavaFX has
+several standard cell factories.  If <code>listView</code> is
+of type <atype>ListView&lt;String&gt;</atype>, you can install
+a cell factory that makes editable cells simply by calling</p>
+
+<pre>listView.setCellFactory( TextFieldListCell.forListView() );</pre>
+
+<p>The method <code>TextFieldListCell.forListView()</code> returns
+a cell factory that creates cells that can display and edit strings.
+When the cell is simply displaying the string, it actually uses
+a <classname>Label</classname> for the display.  When the item
+is being edited, it is displayed as a <classname>TextField</classname>.</p>
+
+<p>That's all you need to know to make an editable list of strings.
+There are other item types for which it is natural to display the
+item as a string and to use a <classname>TextField</classname> for
+editing the item.  That includes numbers, single character values,
+dates and times.  However, when the items are not strings, there
+has to be some way to convert between items and their string
+representations.  Again, JavaFX makes things reasonably easy in
+the common cases: It provides standard converters for all of the
+types mentioned above.  For example, if <code>intList</code>
+is an editable <atype>ListType&lt;Integer&gt;</atype>, you can
+install an appropriate cell factory with</p>
+
+<pre>intView.setCellFactory( 
+           TextFieldListCell.forListView( new IntegerStringConverter() ) );</pre>
+           
+<np>The parameter to <code>forListView</code> is an object that can convert
+between integers and their string representations.  As it happens I was not
+completely satisfied with the standard converter, since it didn't handle
+illegal inputs in the text field very well, so for the list of integers in
+the sample program <sourceref href="EditListDemo.java"/>, I wrote my own
+converter and used it create the cell factory for the list:</np>
+
+<pre>StringConverter&lt;Integer> myConverter = new StringConverter&lt;Integer>() {
+        // This custom string converter will convert a bad input string to
+        // null, instead of just failing.  And it will display a null value
+        // as "Bad Value" and an empty string value as 0.
+        
+    public Integer fromString(String s) {
+            // Convert a string to an integer.
+        if (s == null || s.trim().length() == 0)
+            return 0;
+        try {
+            return Integer.parseInt(s);
+        }
+        catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    
+    public String toString(Integer n) {
+            // Convert an integer to a String.
+        if (n == null)
+            return "Bad Value";
+        return n.toString();
+    }
+};
+
+listView.setCellFactory( TextFieldListCell.forListView( myConverter ) );</pre>
+
+<np>As you can see, a <classname>StringConverter</classname> just has
+to  define two functions, <code>fromString()</code> and <code>toString()</code>.</np>
+
+<p>Standard string converters can be found in package <code>javafx.util.converters</code>, and
+the factory class <code>TextFieldListCell</code> is in package <code>javafx.scene.control.cell</code>.
+There are also similar classes for use with cells in tables, which we will need below.</p>
+
+<break/>
+           
+<p>In addition to the lists themselves in the sample program, a few interesting things are
+done with labels and buttons, by using observable properties of the <classname>ListView's</classname> model,
+as discussed in <localref href="GUI2.1.2"/>.
+For example, there are labels that show the selected item and the selected value in the list.
+This is coded by binding the text property of the label with a property of the
+list's selection model:</p>
+
+<pre>Label selectedIndexLabel = new Label();
+selectedIndexLabel.textProperty().bind(
+                    listView.getSelectionModel()
+                            .selectedIndexProperty()
+                            .asString("Selected Index: %d") );
+
+Label selectedNumberLabel = new Label();
+selectedNumberLabel.textProperty().bind(
+                    listView.getSelectionModel()
+                            .selectedItemProperty()
+                            .asString("SelectedItem: %s") );</pre>
+                          
+<np>And the button for deleting the selected item from the list should be enabled
+only when there is actually a selected item.  This is coded by binding the
+disable property of the button:</np>
+
+<pre>deleteNumberButton.disableProperty().bind( 
+                    listView.getSelectionModel()
+                            .selectedIndexProperty()
+                            .isEqualTo(-1) );</pre>
+                          
+<np>In effect, the labels and button are being used an alternative views of the
+same selection model that is used by the list.  This is a major feature of the
+MVC pattern:  There can be multiple views of the same model object.  The views listen
+for changes in the model.  When the model changes, the views are are notified of
+the change and update themselves to reflect the new state of the model.</np>
+
+<p>There is also an "Add" button that adds an item to the list.  This uses another
+part of the <classname>ListView</classname> model.  The item is actually added
+to the <classname>ObservableList</classname> that holds the items.  Since the
+<classname>ListView</classname> listens for changes in that list, it will be notified of the change and
+will update itself to show the new item in the visible on-screen view of the list.</p>
+
+<break/>
+
+<p>We can look briefly at another control, <classname>ComboBox</classname>,
+that bears a lot of similarities to <classname>ListView</classname>.  In fact,
+a <classname>ComboBox</classname> is basically a list view in which only the
+selected item is normally visible.  When the user clicks on a combo box, the
+full list of items pops up, and the user can select an item from the list.
+In fact, a <classname>ComboBox</classname> actually uses a <classname>ListView</classname>
+to show the items in the pop-up list.
+You have seen combo boxes used as pop-up menus in some examples, starting 
+with <sourceref chapter="1" href="GUIDemo.java"/> all the way back in
+<localref href="overview.6"/>.  Like <classname>ListView</classname>, <classname>ComboBox</classname>
+is a parameterized type.  Although other items types are supported
+(using cell factories and string converters), <classname>String</classname>
+is the most common type for the items.  Creating a combo box and managing
+the selection is similar to working with <classname>ListView</classname>.
+For example,</p>
+
+<pre>ComboBox&lt;String> flavors = new ComboBox&lt;>();
+flavors.getItems().addAll("Vanilla", "Chocolate", "Strawberry", "Pistachio");
+flavors.getSelectionModel().select(0);</pre>
+
+<p>It is possible to set a combo box to be editable (and no special cell factory
+is needed for that, as long as the items are strings).  An editable combo
+box is like a strange combination of text field and list view.  Instead of
+using a lable to show the selected item, the combo box uses a text field.
+The user can edit the value in the text field, and the modified value becomes
+the selected value in the combo box.  However, original value of the modified item
+is not removed from the list; the new item is just added.  And the new
+item does not become a permanent part of the list.  In the above
+example, the effect of saying <code>flavors.setEditable(true)</code>
+is to let the user type in "Rum Raison," or anything else, as the selected
+flavor, but doing so won't replace "Vanilla", "Chocolate", "Strawberry", 
+or "Pistachio" in the list.</p>
+
+<p>Unlike a <classname>ListView</classname>, a <classname>ComboBox</classname> emits
+an <classname>ActionEvent</classname> when the user selects a new item, either
+by selecting it from the pop-up menu or by typing a new value into an
+editable combo box and pressing return.</p>
+
+</subsection>
+
+<subsection title="TableView" id="GUI2.3.4">
+
+<p>Like a <classname>ListView</classname>, a <classname>TableView</classname> control displays
+a collection of items to the user.  However, tables are more complicated
+than lists.  Table items are arranged in a grid
+of rows and columns.  Each grid position is a cell of
+the table.  Each column has a column header at the top, which
+contains a name for the column.  A column contains a sequence of items,
+and working with one of the columns
+in a <classname>TableView</classname> is in many ways similar to
+working with a <classname>ListView</classname>.</p>
+
+<p><atype>TableView&lt;T&gt;</atype> is a parameterized type.  An object of the 
+type parameter, <classname>T</classname>, contains all of the data for one
+row of the table.  (It can contain additional data as well; the table can be
+a view of just some of the available data.)  The data model for a <code>table</code>
+of type <atype>TableView&lt;T&gt;</atype> is an <atype>ObservableList&lt;T&gt;</atype>,
+and it can be accessed as <code>table.getItems()</code>.  You can add and delete rows
+of the table by adding and deleting elements of this list.</p>
+
+<p>To define a table, it's not enough to provide the class that represents the
+rows of the table; you also have to say what data goes in each column of the
+table.  A table column is described by an object of type <atype>TableColumn&lt;T,S&gt;</atype>,
+where the first type parameter, <classname>T</classname>, is the same as the type
+parameter of the table, and the second type parameter, <classname>S</classname>,
+is the data type for the items that appear in the cells of that column.  A table
+column object does not contain the items that appear in the column; they are contained
+in the objects of type <classname>T</classname> that represent the rows.
+But the table column object needs to specify how to <b>get</b> the item that appears
+in the column from the object that represents the row.  That is specified
+by something called a "cell value factory."  It is possible to write a cell value factory that
+computes any function of a row object, but the most common option is to use
+a <classname>PropertyValueFactory</classname> that simply picks out one of the
+properties of the row object.</p>
+
+<p>Let's turn to an example.  The sample program <sourceref href="SimpleTableDemo.java"/>
+shows an uneditable table that contains the fifty states of the United States with their capital cities
+and population:</p>
+
+<img src="table-demo.png" width="354" height="161" tex="table-demo.eps" texscale="0.7" alt="an example TableView"/>
+
+<np>The data for the rows of the table are in objects of type <classname>StateData</classname>,
+which is defined in the program as a public static nested class.  (The class must be public for
+use with a <classname>PropertyValueFactory</classname>; it does not need to be static or nested.)
+The data values for a row are properties of the class, in the sense that there is a
+getter method for each value.  Properties defined by getter methods are sufficient for
+uneditable table values (though as we shall see, you need something different for editable table columns).  
+Here is the class definition:</np>
+
+<pre>public static class StateData {
+    private String state;
+    private String capital;
+    private int population;
+    public String getState() {
+        return state;
+    }
+    public String getCapital() {
+        return capital;
+    }
+    public int getPopulation() {
+        return population;
+    }
+    public StateData(String s, String c, int p) {
+        state = s;
+        capital = c;
+        population = p;
+    }
+}</pre>
+
+<np>The table that displays the state data is created with</np>
+
+<pre>TableView&lt;StateData> table = new TableView&lt;>();</pre>
+
+<np>and an item for each of the fifty states is added to the table data model, which is stored in <code>table.getItems()</code>.
+Then the table column objects are created and configured and added to the table column model, which is stored in
+<code>table.getColumns()</code>:</np>
+
+<pre>TableColumn&lt;StateData, String> stateCol = new TableColumn&lt;>("State");
+stateCol.setCellValueFactory(
+                new PropertyValueFactory&lt;StateData, String>("state") );
+table.getColumns().add(stateCol);
+
+TableColumn&lt;StateData, String> capitalCol = new TableColumn&lt;>("Capital City");
+capitalCol.setCellValueFactory(
+                  new PropertyValueFactory&lt;StateData, String>("capital") );
+table.getColumns().add(capitalCol);
+
+TableColumn&lt;StateData, Integer> populationCol = new TableColumn&lt;>("Population");
+populationCol.setCellValueFactory(
+                 new PropertyValueFactory&lt;StateData, Integer>("population") );
+table.getColumns().add(populationCol);</pre>
+
+<np>The parameter to the <classname>TableColumn</classname> constructor is the
+text that appears in the header at the top of the column.  As for the cell value
+factories, remember that a cell value factory needs to pull the value for a cell
+out of a row object of type <classname>StateData</classname>.
+For the first column, the type of data is <classname>String</classname>,
+so property value factory takes an
+input of type <classname>StateData</classname> and outputs a property value
+of a type <classname>String</classname>.  The output value is the property
+named "state" in the <classname>StateData</classname> object.  More simply,
+the constructor</np>
+
+<pre>new PropertyValueFactory&lt;StateData, String>("state")</pre>
+
+<np>creates a cell value factory that gets the value to be displayed in a
+cell by calling <code>obj.getState()</code>, where <code>obj</code> is the
+object that represents the row of the table which contains the cell.
+The other two columns are specified similarly.</np>
+
+<p>That's about all you need to know to create a table in which the user cannot
+edit the contents of the cells.  By default, the user will be able to
+change the column width by dragging a separator between two column
+headers.  And the user can click a column header to sort the rows of the
+table into increasing or decreasing order according to the values in
+that column.  Both capabilities can be turned off by setting properties
+of the <classname>TableColumn</classname> object, as we will do for the
+next example.  The user can also rearrange the columns by dragging a
+table header to the left or right.</p>
+
+<break/>
+
+<p>The sample program <sourceref href="ScatterPlotTableDemo.java"/> includes
+an example of a user-editable table.  Each row in the table represents a point
+in the plane, and the two columns contain the x-coordinates and the y-coordinates
+of the points.  To add some interest, the program also shows the points on
+a canvas; the canvas is a "scatter plot" with a small crosshair at the location
+of each point.  In the picture, one of the x-coordinates is being edited:</p>
+
+<img src="scatter-plot.png" width="500" height="320" tex="scatter-plot.eps" texscale="0.6" alt="editable list of points, with scatter plot"/>
+
+<p>We need a data type to represent the rows of the table.  It can be a simple
+class, with two properties <code>x</code> and <code>y</code> that hold the
+coordinates of a point.  However, for an editable table column, we can't use
+simple properties defined by getters and setters.  The problem is that 
+an editable column expects the property for that column to be an
+<i>observable property</i> (see <localref href="GUI2.1"/>).
+More exactly, the class should follow the JavaFX pattern for observable properties:
+The values for the properties named <code>x</code> and <code>y</code> should be stored in
+observable property objects, and a point object, <code>pt</code>, should have
+instance methods <code>pt.xProperty()</code> and <code>pt.yProperty()</code>.  These methods
+return the observable property objects so that they can be used to get and set
+the property value.  Since the properties store <ptype>double</ptype>
+values, they can be of type <classname>DoubleProperty</classname>.
+The data class for the table is defined as:</p>
+
+<pre>public static class Point {
+    private DoubleProperty x, y;
+    public Point(double xVal, double yVal) {
+        x = new SimpleDoubleProperty(this,"x",xVal);
+        y = new SimpleDoubleProperty(this,"y",yVal);
+    }
+    public DoubleProperty xProperty() {
+        return x;
+    }
+    public DoubleProperty yProperty() {
+        return y;
+    }
+}</pre>
+
+<np>The class <classname>DoubleProperty</classname> itself is an abstract class.
+<classname>SimpleDoubleProperty</classname> is concrete subclass. whose
+constructor requres the object that contains the property, the name of the
+property, and the initial value of the property.  Support for adding
+change and invalidation listeners to the property is already implemented
+in this class.</np>
+
+<p>With the <classname>Point</classname> class in hand, we can create the table
+and add a few random points to it:</p>
+
+<pre>table = new TableView&lt;Point>();
+points = table.getItems();
+
+for (int i = 0; i &lt; 5; i++) { // add 5 random points to the table
+    points.add( new Point(500*Math.random()/100, 500*Math.random()/100) );
+}</pre>
+
+<np>When a point is added to or deleted from the table, the canvas has
+to be redrawn.  To implement that, we can add a listener to the list, <code>points</code>,
+that serves as the data model for the table:</np>
+
+<pre>points.addListener( (Observable e) -> redrawDisplay() );</pre>
+
+<np>(The type for the parameter, <code>e</code>, in the lambda expression is
+given as <classname>Observable</classname> because an observable list
+has two <code>addListener()</code> methods that require a one-parameter
+lamda expression.  The explicit type for <code>e</code> makes it possible
+for the compiler to tell which one is meant here: We are adding
+an <classname>InvalidationListener</classname> rather than a
+<classname>ListChangeListener</classname>.)</np>
+
+<p>We have arranged for the canvas to be redrawn whenever a point is
+added to or deleted from the table.  However, it will not be redrawn
+when the user edits one of the points in the table.  That is not a change
+in the list structure; it's a change inside one of the objects in the list.
+To respond to such changes, we could add listeners to both of the 
+observable properties in each <classname>Point</classname> object.
+In fact, that's what the table does so that it can respond to any changes
+in a point that might be made from outside the table. Since that seems a little extreme to
+me, the program actually listens for a different kind of event to handle cell edits. 
+A table has an observable property named
+<code>editingCell</code> whose value is the cell that is currently being
+edited, if any, or is <code>null</code> if no cell is being edited.
+When the value of this property changes to <code>null</code>, it 
+means that an editing operation has been completed.  We can arrange for
+the canvas to be redrawn after every editing operation by adding a
+change listener to the <code>editingCell</code> property:</p>
+
+<pre>table.editingCellProperty().addListener( (o,oldVal,newVal) -> {
+    if (newVal == null) {
+        redrawDisplay();
+    }
+});</pre>
+
+<p>To complete the definition of the table, we have to define the columns.
+As in any table, we need a cell value factory for each column, which can
+be created using a property value factory; this follows the same pattern
+as the previous example.  But for an editable column, we also need a
+cell factory, just as we did for the editable list example above.
+Similarly to that example, the cell factory can be created using</p>
+
+<pre>TextFieldTableCell.forTableColumn(myConverter)</pre>
+
+<np>where <code>myConverter</code> is a <atype>StringConverter&lt;Double&gt;</atype>.
+Furthermore, for this program, it makes sense to stop the user
+from resizing the columns or sorting them.  Here is the complete
+code for setting up one of the columns:</np>
+
+<pre>TableColumn&lt;Point, Double> xColumn = new TableColumn&lt;>("X Coord");
+xColumn.setCellValueFactory( new PropertyValueFactory&lt;Point, Double>("x") );
+xColumn.setCellFactory( TextFieldTableCell.forTableColumn(myConverter) );
+xColumn.setSortable(false);
+xColumn.setResizable(false);
+xColumn.setPrefWidth(100);  // (Default size is too small)
+table.getColumns().add(xColumn);</pre>
+
+<p>The only other thing that is needed to make the table work is to set it
+to be editable by calling <code>table.setEditable(true)</code>.
+As you can see, you need to do quite a lot to make a table work, especially
+if it's an editable table.  However, tables are complex, and the code that
+JavaFX makes you write to set up a table is much less than you would need to
+implement a table directly.</p>
+
+<p>By the way, you should pay attention to the way that we have exploited
+the MVC pattern in this program.  The scatter plot is an alternative view
+of the same data model that is shown in the table.  The data from the model
+is used when the canvas is redrawn, and that happens in response to events
+generated by changes in the model. It actually takes surprisingly <i>little</i>
+thought and work to make sure that scatter plot is always a correct view of
+the data.</p>
+
+<p>I urge you to study the <sourceref href="ScatterPlotTableDemo.java">source code</sourceref>,
+which is well-commented.  In addition to seeing the full details of the
+<classname>TableView</classname>, you might be interested in looking at how
+transforms (<localref href="GUI2.2.3"/>) are used when drawing the scatter plot.</p>
+
+</subsection>
    
 </section>

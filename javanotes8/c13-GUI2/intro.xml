@@ -5,12 +5,13 @@
 <p><start><big>I</big>t's possible to program</start> a wide variety of GUI
 applications using only the techniques covered in <localref href="GUI1"/>. In many
 cases, the basic events, components, layouts, and graphics routines covered in
-that chapter suffice. But the Swing graphical user interface library is far
+that chapter suffice. But the JavaFX graphical user interface library is far
 richer than what we have seen so far, and it can be used to build highly
-sophisticated applications. This chapter is a further introduction to Swing
-and other aspects of GUI programming.
-Although the title of the chapter is "Advanced GUI Programming," it is still
-just an introduction. Full coverage of this topic would require at least another
-complete book.</p>
+sophisticated applications. This chapter continues the study of JavaFX,
+but still does not cover it fully.  Some advanced topics, such as support
+for video and three-dimensional graphics, are not even mentioned.
+Full coverage of JavaFX would require at least another
+complete book.  However, this chapter should deepen your understanding
+of JavaFX and GUI programming.</p>
    
 </intro>

@@ -251,20 +251,18 @@ buildpackagejar chapter12 netgame.chat.ChatRoomServer netgame TextIO netgame/cha
 buildpackagejar chapter12 netgame.chat.ChatRoomWindow netgame netgame/chat netgame/common
 buildpackagejar chapter12 netgame.tictactoe.Main netgame netgame/tictactoe netgame/common
 buildpackagejar chapter12 netgame.fivecarddraw.Main netgame netgame/fivecarddraw netgame/common
-buildjar chapter13 HighLowWithImages cards.png Card.java Hand.java Deck.java
-buildjar chapter13 PaintWithOffScreenCanvas
-buildjar chapter13 SoundAndCursorDemo snc_resources
-buildjar chapter13 TransparencyDemo
+buildjar chapter13 BoundPropertyDemo
+buildjar chapter13 CanvasResizeDemo
 buildjar chapter13 StrokeDemo
-buildjar chapter13 PaintDemo QueenOfHearts.png TinySmiley.png
-buildjar chapter13 ChoiceDemo
+buildjar chapter13 PaintDemo tile.png face-smile.png
+buildjar chapter13 TransformDemo face-smile.png
+buildjar chapter13 ToolPaint SimpleDialogs.java
+buildjar chapter13 TestStopWatch StopWatchLabel.java
 buildjar chapter13 SillyStamper stamper_icons
-buildjar chapter13 StatesAndCapitalsTableDemo
+buildjar chapter13 EditListDemo
+buildjar chapter13 SimpleTableDemo
 buildjar chapter13 ScatterPlotTableDemo
-buildjar chapter13 SimpleWebBrowserWithThread
-buildjar chapter13 SimpleWebBrowser
-buildjar chapter13 SimpleRTFEdit
-buildjar chapter13 CustomComponentTest StopWatchLabel.java MirrorText.java
+
 buildpackagejar chapter13 edu.hws.eck.mdb.Main edu/hws/eck edu/hws/eck/mdb
 
 

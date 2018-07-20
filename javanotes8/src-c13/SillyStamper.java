@@ -1,230 +1,200 @@
-import java.awt.*;
-import java.awt.event.*;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.geometry.Pos;
 
-import javax.swing.*;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * An SillyStamper panel contains a JList of icons, a drawing area where 
+ * An SillyStamper panel contains a List of icons, a canvas where 
  * the user can "stamp" images of the icons, and a few control buttons.
- * The user clicks an icon in the list to select it, then clicks on the drawing
- * area to place copies of the selected image.  This class can be run as a
- * main program.
+ * The user clicks an icon in the list to select it, then clicks on the 
+ * canvas to place copies of the selected image.
  * 
- * This program requires the icon image files from the stamper_icons directory.
+ * This program *requires* the icon image files from the stamper_icons directory.
+ * These icons are 32-by-32 pixels.
  * (The images were taken from a KDE desktop icon collection.)
  */
-public class SillyStamper extends JPanel {
+public class SillyStamper extends Application {
 
-	/**
-	 * The main routine simply opens a window that shows a SillyStamper panel.
-	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Silly Stamper");
-		SillyStamper content = new SillyStamper();
-		window.setContentPane(content);
-		window.pack(); 
-		window.setResizable(false); 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		window.setLocation( (screenSize.width - window.getWidth())/2,
-				(screenSize.height - window.getHeight())/2 );
-		window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		window.setVisible(true);
+		launch(args);
 	}
-
+	//--------------------------------------------------------------
 
 
 	/**
 	 * An object of type IconInfo stores the information needed to draw
-	 * one icon image on the display area.
+	 * one icon image on the canvas.
 	 */
 	private static class IconInfo {
 		int iconNumber;  // an index into the iconImages array.
-		int x, y;        // coords of the upper left corner of the image
+		int x, y;        // coords of the upper left corner of the image.
+		boolean big;     // should icon be scaled up to a larger (48-by48) size.
 	}
 
 	/**
 	 * Contains info for all the icons that have been placed on the
-	 * display area.  Might contain more than have actually been shown,
+	 * canvas.  Might contain more than have actually been shown,
 	 * because of the Undo command.  An icon that is removed from the
-	 * display area by an undo is not removed from this list.
+	 * canvas by an undo is not removed from this list.
 	 */
 	private ArrayList<IconInfo> icons = new ArrayList<IconInfo>();
 
 	private int iconsShown;  // Number of icons shown in the display area.
 	private int iconsPlaced; // Number of icons that have been placed.  Can be
-							 //  greater than iconsShown, because of undo/redo.
+							 //    greater than iconsShown, because of undo/redo.
 
-	private JList<Icon> iconList;  // The JList from which the user selects the icon for stamping.
+	private ListView<ImageView> iconList;  // The ListView from which the user selects icons.
 
-	private JButton undoButton;  // A button for removing the most recently added image.
-	private JButton redoButton;  // A button for restoring the most recently removed image.
+	private Button undoButton;  // A button for removing the most recently added image.
+	private Button redoButton;  // A button for restoring the most recently removed image.
 
-	private IconDisplayPanel displayPanel;  // The display panel.  The IconDisplayPanel class is
-											// a nested class, and is defined below.
+	private Canvas canvas;      // The canvas where the icons are displayed.
 
 	private Image[] iconImages;  // The little images that can be "stamped".
 
 
-
-
-	/**
-	 * This class represents the drawing area where the user can stamp images.
-	 */
-	private class IconDisplayPanel extends JPanel implements MouseListener {
-
-		/**
-		 * Draws the display panel, based on the data about what icons are
-		 * to be displayed there and what their coordinates are.
-		 */
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g); 
-			if (iconImages == null) {
-				g.drawString("Can't load icons.", 10, 30);
-				return;
+	public void start(Stage stage) {
+		
+		canvas = new Canvas(400,300);
+		canvas.setOnMousePressed( this::mousePressed );
+		
+		undoButton = new Button("Undo");
+		undoButton.setOnAction( e -> {
+			if (iconsShown > 0) {
+				   // Decrement iconsShown, so one less icon will be drawn;
+				   // the icon is still in the array, for the Redo command.
+				iconsShown--;
+				redoButton.setDisable(false);
+				redraw();
 			}
-			for (int i = 0; i < iconsShown; i++) {
-				IconInfo info = icons.get(i);
-				g.drawImage(iconImages[info.iconNumber], info.x, info.y, this);
+		});
+		undoButton.setDisable(true);
+		
+		redoButton = new Button("Redo");
+		redoButton.setOnAction( e -> {
+			if (iconsShown < iconsPlaced) {
+				   // Decrement iconsShown, so one more icon will be shown.
+				iconsShown++;
+				if (iconsShown == iconsPlaced)
+					redoButton.setDisable(true);
+				undoButton.setDisable(false);
+				redraw();
 			}
-		}
-
-		/**
-		 * When the user clicks the display panel, place a copy of the currently selected
-		 * icon image at the point where the user clicked.
-		 */
-		public void mousePressed(MouseEvent e) { 
-			IconInfo info  = new IconInfo();
-			info.iconNumber = iconList.getSelectedIndex();
-			info.x = e.getX() - 16;  // Offset x-coord, so center of icon is at the point that was clicked.
-			info.y = e.getY() - 16;  // Offset y-coord too.
-			if (iconsShown == icons.size())
-				icons.add(info);
-			else
-				icons.set(iconsShown, info);
-			iconsShown++;
-			iconsPlaced = iconsShown;
-			redoButton.setEnabled(false);
-			undoButton.setEnabled(true);
-			repaint();  // Tell system to redraw the image, with the new data
-		}
-
-		public void mouseClicked(MouseEvent e) { }   // Not used, but required by MouseListener interface.
-		public void mouseEntered(MouseEvent e) { }
-		public void mouseExited(MouseEvent e) { }
-		public void mouseReleased(MouseEvent e) { }
-
-	} // end nested class IconDisplayPanel
-
-
-	/**
-	 * The constructor sets up a BorderLayout on the panel with a display panel
-	 * in the CENTER position, a list of icon images in the EAST position, and 
-	 * a JPanel in the SOUTH position that contains two control buttons.
-	 */
-	public SillyStamper() {
-
-		setLayout(new BorderLayout(2,2));   // Set basic properties of this panel.
-		setBackground(Color.GRAY);
-		setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
-
-		displayPanel = new IconDisplayPanel();   // Create and configure the display panel
-		displayPanel.setPreferredSize(new Dimension(400,300));
-		displayPanel.setBackground( new Color(220,220,255) );  // Very light blue.
-		displayPanel.addMouseListener(displayPanel);
-		add(displayPanel,BorderLayout.CENTER);  
+		});
+		redoButton.setDisable(true);
 
 		iconList = createIconList();  // Create the scrolling list of icons.
-		if (iconList == null)
-			return;
-		add( new JScrollPane(iconList), BorderLayout.EAST );  
+		iconList.setStyle("-fx-border-color:#009; -fx-border-width: 0 0 0 6px");
+		
+		HBox bottom = new HBox(15,undoButton,redoButton);
+		bottom.setStyle("-fx-padding:7px; -fx-border-color:#009; -fx-border-width:6px 0 0 0");
+		bottom.setAlignment(Pos.CENTER);
+		
+		BorderPane root = new BorderPane(canvas);
+		root.setStyle("-fx-border-color:#009; -fx-border-width:6px");
+		root.setRight(iconList);
+		root.setBottom(bottom);
+		
+		stage.setScene( new Scene(root) );
+		stage.setResizable(false);
+		stage.setTitle("Silly Stamper -- Shift-click for big icon");
+		stage.show();
+		redraw();
 
-		Action undoAction = new AbstractAction("Undo") {
-			public void actionPerformed(ActionEvent evt) {
-				if (iconsShown > 0) {
-					iconsShown--;
-					redoButton.setEnabled(true);
-					displayPanel.repaint();
-				}
-			}
-		};
+	} // end start()
 
-		Action redoAction = new AbstractAction("Redo") {
-			public void actionPerformed(ActionEvent evt) {
-				if (iconsShown < iconsPlaced) {
-					iconsShown++;
-					if (iconsShown == iconsPlaced)
-						redoButton.setEnabled(false);
-					undoButton.setEnabled(true);
-					displayPanel.repaint();
-				}
-			}
-		};
+	
+    /**
+     * Draw the entire content of the canvas, with a light blue background
+     * and icons that the user has placed on the canvas.
+     */
+	public void redraw() {
+		GraphicsContext g = canvas.getGraphicsContext2D();
+		g.setFill(Color.color(0.93,0.93,1));
+		g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+		for (int i = 0; i < iconsShown; i++) {
+			IconInfo info = icons.get(i);
+			if (info.big)
+				g.drawImage(iconImages[info.iconNumber], info.x, info.y, 48, 48);
+			else
+				g.drawImage(iconImages[info.iconNumber], info.x, info.y);
+		}
+	}
 
-		undoButton = new JButton(undoAction);
-		redoButton = new JButton(redoAction);
-		undoButton.setEnabled(false);
-		redoButton.setEnabled(false);
-
-		JPanel buttonPanel = new JPanel();  
-		buttonPanel.add(undoButton);
-		buttonPanel.add(redoButton);
-		add(buttonPanel, BorderLayout.SOUTH);  
-
+	/**
+	 * When the user clicks the canvas, place a copy of the currently selected
+	 * icon image at the point where the user clicked.  If the shift key is
+	 * down the icon is "big", i.e. drawn at 48 pixels instead of the usual 32.
+	 * Also, icons in the list that are no longer shown, because of "Undo"
+	 * commands, are effectively discarded.
+	 */
+	public void mousePressed(MouseEvent e) { 
+		IconInfo info  = new IconInfo();
+		info.iconNumber = iconList.getSelectionModel().getSelectedIndex();
+		info.big = e.isShiftDown();
+		if (info.big) {  // icon image will be 48-by-48
+			info.x = (int)(e.getX() - 24);  // Offset coords, so center of icon is at
+			info.y = (int)(e.getY() - 24);  //         the point that was clicked.
+		}
+		else {  // icon image will be 32-by-32
+			info.x = (int)(e.getX() - 16); 
+			info.y = (int)(e.getY() - 16); 
+		}
+		if (iconsShown == icons.size())
+			icons.add(info);
+		else 
+			icons.set(iconsShown, info);
+		iconsShown++;
+		iconsPlaced = iconsShown;
+		redoButton.setDisable(true);
+		undoButton.setDisable(false);
+		redraw();
 	}
 
 
-
 	/**
-	 * Create a JList that contains all of the available icon images.
+	 * Create a ListView that contains all of the available icon images.  initially,
+	 * the first icon is selected.  The user can select a different icon by
+	 * clicking its image in the list.  The items in the ListView are ImageView objects,
+	 * not Image objects, since a List will not display Image objects correctly.
+	 * This list is not editable and will not change after it is created.
 	 */
-	private JList<Icon> createIconList() {
-		String[] iconNames = new String[] {
+	private ListView<ImageView> createIconList() {
+		String[] iconNames = new String[] { // names of image resource file, in directory stamper_icons
 				"icon5.png", "icon7.png", "icon8.png", "icon9.png", "icon10.png", "icon11.png", 
 				"icon24.png", "icon25.png", "icon26.png", "icon31.png", "icon33.png", "icon34.png"
-
 		};
 
 		iconImages = new Image[iconNames.length];
 
-		ClassLoader classLoader = getClass().getClassLoader();
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		try {
-			for (int i = 0; i < iconNames.length; i++) {
-				URL imageURL = classLoader.getResource("stamper_icons/" + iconNames[i]);
-				if (imageURL == null)
-					throw new Exception();
-				iconImages[i] = toolkit.createImage(imageURL);
-			}
-		}
-		catch (Exception e) {
-			iconImages = null;
-			return null;
+		ListView<ImageView> list = new ListView<>();
+
+		list.setPrefWidth(80);    // The default pref width is much too wide,
+		list.setPrefHeight(100);  // The default pref height is 400, which is taller than the canvas,
+		                          //    which would force the height of the BorderPane to be too big.
+
+		for (int i = 0; i < iconNames.length; i++) {
+			Image icon = new Image("stamper_icons/" + iconNames[i]);
+			iconImages[i] = icon;
+			list.getItems().add( new ImageView(icon) );
 		}
 
-		// Create an array of objects of type ImageIcon.  This is required for
-		// creating the JList.  It is easy to create a JList from an array
-		// of ImageIcons -- just pass the array as a parameter to the constructor.
-		// (You could do the same thing with an array of Strings, to get a list
-		// of strings.  But JLists can't use other types so easily.)
-
-		ImageIcon[] icons = new ImageIcon[iconImages.length];
-		for (int i = 0; i < iconImages.length; i++)
-			icons[i] = new ImageIcon(iconImages[i]);
-
-		JList<Icon> list = new JList<Icon>(icons); // Makes a list containing the image icons from the array.
-
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			// (Note:  With the default selection mode, it would be possible for the user
-			// to select several list items at the same time or to select no item at all.)
-
-		list.setSelectedIndex(0);  // The first item in the list is currently selected.
+		list.getSelectionModel().select(0);  // The first item in the list is currently selected.
 
 		return list;
 	}
-
-
 
 } // end class SillyStamper
 

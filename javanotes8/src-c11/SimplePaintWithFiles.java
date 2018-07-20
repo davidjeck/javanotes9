@@ -274,7 +274,7 @@ public class SimplePaintWithFiles extends Application {
 		fileMenu.getItems().add(openText);
 		openText.setOnAction( e -> doOpen() );
 		fileMenu.getItems().add( new SeparatorMenuItem() );
-		MenuItem saveImage = new MenuItem("Save Image...");
+		MenuItem saveImage = new MenuItem("Save PNG Image...");
 		fileMenu.getItems().add(saveImage);
 		saveImage.setOnAction( e -> doSaveImage() );
 		fileMenu.getItems().add( new SeparatorMenuItem() );
@@ -542,21 +542,26 @@ public class SimplePaintWithFiles extends Application {
 		FileChooser fileDialog = new FileChooser(); 
 		fileDialog.setInitialFileName("imagefile.png");
 		if (editFile == null) {
-			fileDialog.setInitialDirectory( new File( System.getProperty("user.home")));
+			fileDialog.setInitialDirectory(new File(System.getProperty("user.home")));
 		}
 		else {
 			fileDialog.setInitialDirectory(editFile.getParentFile());
 		}
-		fileDialog.setTitle("Select File to be Saved");
+		fileDialog.setTitle("Select File to Save. Name MUST end with .png!");
 		File selectedFile = fileDialog.showSaveDialog(window);
 		if ( selectedFile == null )
 			return;  // User did not select a file.
 		try {
 			Image canvasImage = canvas.snapshot(null,null);
 			BufferedImage image = SwingFXUtils.fromFXImage(canvasImage,null);
-			boolean hasPNG = ImageIO.write(image,"PNG",selectedFile);
-			if ( ! hasPNG )
-				throw new Exception("PNG format not available.");
+		    String filename = selectedFile.getName().toLowerCase();
+		    if ( ! filename.endsWith(".png")) {
+		    	throw new Exception("The file name must end with \".png\".");
+		    }
+			boolean hasFormat = ImageIO.write(image,"PNG",selectedFile);
+			if ( ! hasFormat ) { // (this should never happen)
+				throw new Exception( "PNG format not available.");
+			}
 		}
 		catch (Exception e) {
 			Alert errorAlert = new Alert(Alert.AlertType.ERROR,
