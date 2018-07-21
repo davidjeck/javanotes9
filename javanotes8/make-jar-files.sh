@@ -262,7 +262,8 @@ buildjar chapter13 SillyStamper stamper_icons
 buildjar chapter13 EditListDemo
 buildjar chapter13 SimpleTableDemo
 buildjar chapter13 ScatterPlotTableDemo
-
+buildjar chapter13 TestDialogs SimpleDialogs.java
+buildjar chapter13 WebBrowser BrowserWindow.java SimpleDialogs.java
 buildpackagejar chapter13 edu.hws.eck.mdb.Main edu/hws/eck edu/hws/eck/mdb
 
 
@@ -272,11 +273,11 @@ echo
 echo "Note: No jar files were created for the following sample programs:"
 echo
 echo Examples for which no jar files are made:
-echo chapter2 CreateProfile -- can overwrite a file in the current directory without warning
-echo chapter2 SeparateEnumDemo -- duplicates functionality of EnumDemo
-echo chapter4 CopyTextFile -- requires command-line arguments
-echo chapter4 RandomMosaicWalk2 -- duplicates functionality of RandomMosaicWalk
-echo chapter8 LengthConverter3 -- duplicates functionality of LenghtConverter2
+echo chapter2  CreateProfile -- can overwrite a file in the current directory without warning
+echo chapter2  SeparateEnumDemo -- duplicates functionality of EnumDemo
+echo chapter4  CopyTextFile -- requires command-line arguments
+echo chapter4  RandomMosaicWalk2 -- duplicates functionality of RandomMosaicWalk
+echo chapter8  LengthConverter3 -- duplicates functionality of LenghtConverter2
 echo chapter11 ReverseFile -- requires a file named data.dat in the current directory
 echo chapter11 ReverseFileWithScanner -- requires a file named data.dat in the current directory
 echo chapter11 ReverseFileWithResources -- requires a file named data.dat in the current directory

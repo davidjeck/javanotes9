@@ -2,19 +2,209 @@
 <!DOCTYPE exercises SYSTEM "../javanotes8.dtd" >
 
 <exercises>
+
+<exercise>
+<exercise-question><p>The folder <sourceref href="nature-images"/> contains several pictures of
+animals.  Write a "scratch off" program that could be used by a small child that works as follows:
+The program window starts by showing a large uniformly colored rectangle, with one of the
+animal pictures hidden behind it.  As the user drags the mouse over the image, part of the
+colored overlay is scratched off, revealing the picture underneath.  Here is what it should
+look like after part of the overlay has been removed:</p>
+<img src="scratch-off.jpg" width="450" height="322" tex="scratch-off.png" texscale="0.6" alt="a partly revealed bluebird"/>
+<np>You can implement this by using one canvas, containing the colored overlay, stacked on top of another
+canvas that contains the animal picture.  (Stacked canvases were used in the sample
+program <sourceref href="ToolPaint.java"/> from <localref href="GUI2.2.4"/>.)
+To implement scratching off part of the overlay, just clear a small rect in the overlay 
+canvas around the mouse location.  The program should have some way to move on to the next
+picture.  Another idea is to have several different sizes of scratchers, so that when the
+child gets impatient, she can use a giant one that will remove large swatches of color.</np>
+</exercise-question>
+<exercise-discuss><p>The pictures have to be read into the program as objects of type
+<classname>Image</classname>.  I store the pictures into an <atype>ArrayList&lt;Image&gt;</atype>, <code>pictures</code>.
+I shuffle them into a random order using the standard function <code>Collections.shuffle()</code>,
+so that the pictures will be used in a different order each time the program is run.
+An instance variable, <code>nextPicIndex</code>, is used to keep track of which picture is
+going to be shown next.</p>
+
+<p>The basic stacked canvas idea is easy to implement.  The two canvases are
+placed into a <classname>StackPane</classname>.  An animal picture is drawn in the bottom 
+canvas.  The animal pictures are not all the same size, so I picked an arbitrary canvas
+size of 800-by-600 and stretched the pictures to fit the canvas, using a <code>drawImage()</code>
+method that includes the width and height of the rectangle into which the image is drawn.  At
+the same time, I fill the overlay canvas with a random color:</p>
+
+<pre>overlayGraphics.setFill( Color.hsb(360*Math.random(), 0.5, 0.5) );
+overlayGraphics.fillRect( 0,0, width,height );
+picGraphics.drawImage( pictures.get(nextPicIndex), 0,0, width,height );</pre>
+
+<p>I added some controls at the bottom of the program window: a button that loads the next
+picture, a <classname>ComboBox</classname> for selecting the size of the "scratcher,"
+and (for the really impatient), a button that will clear the entire overlay canvas.</p>
+</exercise-discuss>
+<exercise-code>
+<pre><prog name="ScratchOff">
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+
+/**
+ * A program that lets the user "scratch off" a mask that is covering an
+ * image, by dragging the mouse.  This program requires that some specific
+ * image files be available as resource files in a folder named "nature-images".
+ */
+public class ScratchOff extends Application {
+
+    public static void main(String[] args) {
+        launch();
+    }
+    //-------------------------------------------------------------------
+    
+    private final static String[] picFileNames = {
+                // These are the names of the resource image files that contain
+                // the pictures used by this program.  The must be in folder
+                // named nature-images.
+            "bluejay.jpg", "chipmunk.jpg", "collie.jpg", "elephants.jpg", 
+            "faun.jpg", "lion.jpg", "polar-bear.jpg", "stork.jpg"
+    };
+    
+    private Canvas picCanvas;                // canvas where picture is drawn
+    private GraphicsContext picGraphics;     // graphics context for picCanvas
+    private Canvas overlayCanvas;            // canvas that hides the picture
+    private GraphicsContext overlayGraphics; // graphics context for overlayCanvas
+    
+    private ArrayList&lt;Image> pictures;  // An arraylist containing the images
+    private int nextPicIndex;  // The index of the array list of the next picture
+                               // that will be drawn.  To avoid repeating a picture
+                               // until all of the pictures have been used,
+                               // the array list is shuffled and the pictures are
+                               // shown in the reverse order that they occur in the
+                               // list.  If all the pictures are used, the list is
+                               // reshuffled and the pictures are reused.
+    
+    private final int[] sizes = { 10, 20, 35, 60 };  // sizes for the square that
+                                                     // is revealed when the user
+                                                     // drags the mouse
+    private double scratcherSize; // current size of the rectangle; one of the
+                                  // items from the previous array, depeding on
+                                  // the current setting of a ComboBox
+    
+    private final static int width = 800;    // canvas size
+    private final static int height = 600;
+    
+    /**
+     * Set up the GUI.  The overlay canvas, which hides the picture is
+     * stacked on top of the canvas that displays the image.  There are
+     * some buttons and a combo box at the bottom of the window.
+     */
+    public void start(Stage stage) {
+                
+        picCanvas = new Canvas(width,height);
+        picGraphics = picCanvas.getGraphicsContext2D();
+        overlayCanvas = new Canvas(width,height);
+        overlayGraphics = overlayCanvas.getGraphicsContext2D();
+        
+        pictures = new ArrayList&lt;Image>();
+        for (int i = 0; i &lt; picFileNames.length; i++) {
+            pictures.add( new Image("nature-images/" + picFileNames[i]) );
+        }
+        Collections.shuffle(pictures);  // put pictures in a random order
+        nextPicIndex = picFileNames.length - 1;  // index for the first picture
+        newPic();  // Set up the first picture.
+        
+        overlayCanvas.setOnMousePressed( this::scratch );
+        overlayCanvas.setOnMouseDragged( this::scratch );
+        
+        StackPane canvasHolder = new StackPane(picCanvas,overlayCanvas);
+        canvasHolder.setStyle("-fx-border-color: #444; -fx-border-width:5px");
+        
+        Button newPicBtn = new Button("New ScratchOff!");
+        newPicBtn.setOnAction( e -> newPic() );
+        Button showAllBtn = new Button("Show the Whole Picture!");
+        showAllBtn.setOnAction( e -> overlayGraphics.clearRect(0,0,width,height) );
+        
+        ComboBox&lt;String> sizeSelect = new ComboBox&lt;>();
+        sizeSelect.getItems().addAll("Small", "Normal", "Big", "Giant");
+        sizeSelect.getSelectionModel().select(1);
+        scratcherSize = sizes[1];
+        sizeSelect.setOnAction( 
+                e -> scratcherSize = sizes[ sizeSelect.getSelectionModel().getSelectedIndex() ] );
+        
+        HBox bottom = new HBox(10,newPicBtn,showAllBtn,    new Label("  Scratcher Size:"), sizeSelect);
+        bottom.setAlignment(Pos.CENTER);
+        bottom.setPadding( new Insets(10) );
+        
+        BorderPane root = new BorderPane(canvasHolder);
+        root.setBottom(bottom);
+        
+        stage.setScene( new Scene(root) );
+        stage.setResizable(false);
+        stage.setTitle("Scratc Off to Reveal a Picture!");
+        stage.show();
+        
+    }
+    
+    /**
+     * Show the next picture in the picCanvas, and fill the overlay canvas
+     * with a random dull color to hide the picture.  Set up nextPicIndex
+     * for the next picture.
+     */
+    private void newPic() {
+        overlayGraphics.setFill( Color.hsb(360*Math.random(), 0.5, 0.5) );
+        overlayGraphics.fillRect(0,0,width,height);
+        picGraphics.drawImage(pictures.get(nextPicIndex),0,0,width,height);
+        if (nextPicIndex == 0) {
+            Image item0 = pictures.get(0);
+            do { // Avoid having the item that is showing now be put
+                 // at the end of the list where it will be shown next.
+                Collections.shuffle(pictures);
+            } while (pictures.get(pictures.size()-1) == item0);
+            nextPicIndex = pictures.size() - 1;
+        }
+        else {
+            nextPicIndex--;
+        }
+    }
+    
+    /**
+     * When the user pressed or drags the mouse, clear a rect in the
+     * overlay canvas, with a size given by scratcherSize.
+     */
+    private void scratch(MouseEvent evt) {
+        overlayGraphics.clearRect( evt.getX() - scratcherSize/2, 
+                evt.getY() - scratcherSize/2, scratcherSize, scratcherSize );
+    }
+    
+} // end ScratchOff
+</prog></pre>
+</exercise-code>
+</exercise>
    
 <exercise id="GUI2.ex.1">
-<exercise-question><p>The sample program <sourceref href="PaintWithOffScreenCanvas.java"/>
-from <localref href="GUI2.1"/> is a simple paint program.  Make two improvements
-to this program: First, add a "File" menu that lets the user open an image file
-and save the current image in either PNG or JPEG format.  Second, add a basic
+<exercise-question><p>The sample program <sourceref href="ToolPaint"/>
+from <localref href="GUI2.2"/> is a simple paint program. Improve the
+program by adding a basic
 one-level "Undo" command that lets the user undo the most recent operation
-that was applied to the image.  (Do not try to make a multilevel Undo, which would
+that was applied to the image.  When the user follows an Undo command
+with another Undo command, the effect is to reverse the previous Undo. 
+(Do not try to make a multilevel Undo, which would
 allow the user to undo several operations.)</p>
-<p>When you read a file into the program, you should copy the image that you
-read into the program's off-screen canvas.  Since the canvas in the program
-has a fixed size, you should scale the image that you read so that it exactly
-fills the canvas.</p>
 </exercise-question>
 <exercise-discuss><p>The new menu commands must be added to the menu bar in the
 <code>getMenuBar()</code> method, and they must be implemented in the
@@ -820,7 +1010,7 @@ public class PaintWithFiles extends JPanel {
 <exercise id="GUI2.ex.2">
 <exercise-question><p>For this exercise, you should continue to work on the
 program from the <localref href="GUI2.ex.1">previous exercise</localref>.
-Add a "StrokeWidth" menu that allows the user to draw lines of varying
+Add a "LineWidth" menu that allows the user to draw lines of varying
 thicknesses.  Make it possible to use different colors for the interior
 of a filled shape and for the outline of that shape.  To do this, change
 the "Color" menu to "StrokeColor" and add a "FillColor" menu.  (My solution
@@ -1966,10 +2156,10 @@ public class PaintWithOSCFinal extends JPanel {
 
 <exercise>
 <exercise-question><p>The <classname>StopWatchLabel</classname>
-component from <localref href="GUI2.4.5"/> displays the text "Timing&dots;"
+component from <localref href="GUI2.3.1"/> displays the text "Timing&dots;"
 when the stop watch is running. It would be nice if it displayed the elapsed
-time since the stop watch was started. For that, you need to create a
-<classname>Timer</classname>. (See <localref href="GUI1.5.1"/>.)
+time since the stop watch was started. For that, you need to create an
+<classname>AnimationTimer</classname>. (See <localref href="GUI1.3.5"/>.)
 Add a <classname>Timer</classname> to the original source code, 
 <sourceref href="StopWatchLabel.java"/>, to drive the display of the elapsed time in
 seconds. Create the timer in the <code>mousePressed()</code> routine when the stop
@@ -2131,140 +2321,6 @@ public class TestStopWatch2 {
   
       JFrame window = new JFrame("Stop Watch");
       window.setContentPane(watch);
-      window.pack();
-      window.setResizable(false);
-      window.setLocation(100,80);
-      window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      window.setVisible(true);
-
-   }
-
-}
-</prog></pre>
-</exercise-code>
-</exercise>
-
-   
-<exercise>
-<exercise-question><p>The custom component example <sourceref href="MirrorText.java"/>,
-from <localref href="GUI2.4.5"/>, uses an off-screen canvas to show mirror-reversed text in
-a <classname>JPanel</classname>.  An alternative approach would be to draw the text
-after applying a transform to the graphics context that is used for drawing.
-(See <localref href="GUI2.2.5"/>.)  With this approach, the custom component can be defined
-as a subclass of <classname>JLabel</classname> in which the <code>paintComponent()</code>
-method is overridden.  Write a version of the <code>MirrorText</code> component that
-takes this approach.  The solution is very short, but tricky.  Note that the scale
-transform <code>g2.scale(-1,1)</code> does a left-right reflection through the
-left edge of the component.</p>
-</exercise-question>
-<exercise-discuss><p>The original version of <classname>MirrorText</classname> was
-defined as a subclass of <classname>JPanel</classname>, so it inherited only the
-methods defined in that class.  Since <classname>JPanel</classname> has no
-<code>setText()</code> or <code>getText()</code> method, I had to define them
-myself.  To make the custom component behave like a normal component, I had
-to define a <code>getPreferredSize()</code> method, and I had to call
-<code>revalidate()</code> in the <code>setText()</code> method.  And my component
-still does not behave exactly like a standard component.  For example, a
-<classname>JLabel</classname> generates an event when its text is changed.</p>
-<p>By defining the new version of <classname>MirrorText</classname> as a
-subclass of <classname>JLabel</classname>, we avoid these problems, since
-the custom component will automatically have all the methods and behaviors
-of a <classname>JLabel</classname>.  The main thing that has to be changed
-is the <code>paintComponent()</code> method.  I also defined a constructor
-that sets the default alignment of the text in the label to centered rather
-than left-justified. In the <code>paintComponent()</code> method, I used</p>
-<pre>Graphics2D g2 = (Graphics2D)g.create();</pre>
-<np>to get a <classname>Graphics2D</classname> graphics context for drawing on
-the label.  This is required since transforms are only defined in <classname>Graphics2D</classname>
-class.  I used <code>(Graphics2D)g.create()</code> rather than simply
-<code>(Graphics2D)g</code> because I wanted to avoid changing the original graphics
-context, which might be used for further drawing after the <code>paintComponent()</code>
-method finishes.  (See <localref href="GUI2.2"/>).  To apply a mirror reversal to
-the label, I used  <code>g2.scale(-1,1)</code>, as suggested in the exercise.
-However, this reflects the contents of the label through the left edge of the label.
-If that were the only thing that I did, the text would end up on the other side of
-the left edge, and that means it wouldn't appear on the label at all.  To fix this,
-<b>before</b> scaling, I translate the text to the left by an amount equal to the width of the
-label, with the command <code>g2.translate(getWidth(),0)</code>.
-This puts the text to the left of the label, and then the scale transform reflects
-it back onto the label.  Finally, I call <code>super.paintComponent(g2)</code> to
-call the paint method from the <classname>JLabel</classname> class.  This will
-draw the text of the label, but the drawing will be subject to the transforms
-that have been applied to&nbsp;<code>g2</code>.</np>
-<p>The way I did it is not the only way to apply the transforms.  One alternative is
-to use <code>g.scale(-1,1)</code> followed by <code>g.translate(-getWidth(),0)</code>.
-After the scale, the text lies to the left of the label.  To translate it back onto
-the label, it must be moved to the right by <code>getWidth()</code> pixels.  However,
-that direction is now the direction of the <b>negative</b> x-axis, so the translation
-is actually <code>-getWidth()</code>, with a minus sign to indicate that the motion is
-in the negative direction.  (As I said before, it takes a fair amount of study to fully
-understand transforms.)</p>
-</exercise-discuss>
-<exercise-code>
-<pre>
-<prog name="MirrorText2">import java.awt.*;
-import javax.swing.*;
-
-/**
- * A component for displaying a mirror-reversed line of text.
- * The text will be centered in the available space.  This component
- * is defined as a subclass of JLabel.
- * 
- * This version uses a transform in a Graphics2D graphics context
- * to achieve the mirror-reversal, and is defined as a simple
- * subclass of JLabel.
- */
-public class MirrorText2 extends JLabel {
-   
-   /**
-    * Define the constructor so that the default alignment of
-    * the text will be centered, instead of left-justified.
-    * @param text The string that is to be shown on the label.
-    */
-   public MirrorText2(String text) {
-      super(text,JLabel.CENTER);
-   }
-
-   /**
-    * The paintComponent method calls super.paintComponent() after
-    * applying a left/right mirror transform.
-    */
-   public void paintComponent(Graphics g) {
-      Graphics2D g2 = (Graphics2D)g.create();
-      g2.translate(getWidth(),0);
-      g2.scale(-1,1);
-      super.paintComponent(g2);
-      g2.dispose();
-   }
-
-
-}  // end MirrorText2
-
-</prog></pre>
-<p>Here is a little program for testing the component:</p>
-<pre>
-<prog name="TestMirrorText2">
-import java.awt.*;
-import javax.swing.*;
-
-/**
- * A trivial program that tests the StopWatchLabel2 component.
- * The program just creates a window to show a StopWatchLabel2.
- */
-
-public class TestMirrorText2 {
-
-   public static void main(String[] args) {
-
-      MirrorText2 mtext = new MirrorText2("Let me out of here!");
-      mtext.setFont( new Font("SansSerif", Font.BOLD, 48) );
-      mtext.setBackground(Color.BLACK);
-      mtext.setForeground(Color.RED);
-      mtext.setOpaque(true);
-      mtext.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-  
-      JFrame window = new JFrame("Stop Watch");
-      window.setContentPane(mtext);
       window.pack();
       window.setResizable(false);
       window.setLocation(100,80);

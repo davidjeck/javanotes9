@@ -420,6 +420,16 @@ as the GUI toolbox.</p>
    from <localref href="GUI2.3"/>, demonstrates an editable <classname>TableView</classname>.   The table
    holds (x,y) coordinates of points, and the user can edit the coords.  A scatter plot of
    points is displayed.</li>
+   <li><sourceref href="chapter13/SimpleDialogs.java">SimpleDialogs.java</sourceref>, from
+   <localref href="GUI2.4"/>, contains static methods for
+   showing several kinds of dialog box.  The program <sourceref href="chapter13/TestDialogs.java">TestDialogs.java</sourceref>
+   tests the dialog methods by letting the user click buttons to open the different kinds of dialog.</li>
+   <li><sourceref href="chapter13/WebBrowser.java">WebBrowser.java</sourceref>, from
+   <localref href="GUI2.4"/>, is a simple web browser
+   based on JavaFX's <classname>WebView</classname> control. This program shows how to manage multiple
+   windows in a JavaFX application. It requires <sourceref href="BrowserWindow.java">BrowserWindow.java</sourceref>,
+   a subclass of <classname>Stage </classname> that does most of the work, and on 
+   <sourceref href="chapter13/SimpleDialogs.java">SimpleDialogs.java</sourceref>.</li>
    
    <li>The Mandelbrot program from <localref href="GUI2.5"/>, which computes and
    displays visualizations of the Mandelbrot set, is defined by several classes in the
@@ -492,6 +502,9 @@ along with the programs that use them.</p>
    All of these classes are part of the package <sourceref href="chapter12/netgame/fivecarddraw/">netgame.fivecarddraw</sourceref>,
    which is discussed in <localref href="threads.5.4"/>, but these classes can be used independently
    of the netgame framework.</li>
+   <li><sourceref href="chapter13/SimpleDialogs.java">SimpleDialogs.java</sourceref> contains easy-to-use
+   static methods for showing several kinds of JavaFX dialog box and getting back the results of user
+   interaction when appropriate.</li>
 </ul>
 
 </subsection>

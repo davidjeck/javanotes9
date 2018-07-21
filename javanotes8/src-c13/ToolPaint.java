@@ -246,7 +246,7 @@ public class ToolPaint extends Application {
 			   // Custom Drawing Color when it is already selected.  (In that case,
 			   // the selected toggle does not change.
 			customColor.setSelected(true);
-			Color c = SimpleDialogs.showColorDialog(currentColor, "Select a Color to Use For Drawing");
+			Color c = SimpleDialogs.colorChooser(currentColor, "Select a Color to Use For Drawing");
 			if (c != null)  // c is null if user cancels the dialog
 				currentColor = c;
 		});
@@ -286,7 +286,7 @@ public class ToolPaint extends Application {
 			     // User can select a new background color from a dialog box.  If the
 			     // dialog box is not canceled, the selected color becomes the background
 			     // color, and the canvas is filled with that background color.
-			Color c = SimpleDialogs.showColorDialog(backgroundColor, "Select a Background Color");
+			Color c = SimpleDialogs.colorChooser(backgroundColor, "Select a Background Color");
 			if (c != null) {
 				backgroundColor = c;
 				canvasGraphics.setFill(c);
