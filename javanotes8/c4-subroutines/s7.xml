@@ -200,7 +200,7 @@ safety is one of the major advantages of enumerated types.</np>
    
 <break/>
 
-<p>Curiously enough, one of the major reasons to use named constants is that
+<p>Curiously enough, one of the main reasons to use named constants is that
 it's easy to change the value of a named constant. Of course, the value can't
 change while the program is running. But between runs of the program, it's easy
 to change the value in the source code and recompile the program. Consider the
@@ -243,7 +243,7 @@ cases.</np>
 modifications from the previous version shown in &newcodestyle;.
 Note in particular how the constants <code>ROWS</code> and <code>COLUMNS</code> are 
 used in <code>randomMove</code>() when moving the disturbance from one
-edge of the mosaic to the opposite edge.  I've left out some of the comments to save space.
+edge of the mosaic to the opposite edge.  I've left out most of the comments to save space.
 </p>
 
 <pre>public class RandomMosaicWalk2 {

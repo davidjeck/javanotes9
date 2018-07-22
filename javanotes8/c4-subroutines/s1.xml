@@ -33,7 +33,7 @@ well-defined, and easy to understand.</b>
 <p>Are there any examples of black boxes in the real world? Yes; in fact, you
 are surrounded by them. Your television, your car, your mobile phone, your
 refrigerator&dots;. You can turn your television on and off, change channels, and
-set the volume by using elements of the television's interface&mdash;dials, remote
+set the volume by using elements of the television's interface&mdash;on/off switch, remote
 control, don't forget to plug in the power&mdash;without understanding anything
 about how the thing actually works. The same goes for a mobile phone, although
 the interface in that case is a lot more complicated.</p>
@@ -54,7 +54,7 @@ implementation, as long as the behavior of the box, as seen from the outside,
 remains unchanged. For example, when the insides of TV sets went from using
 vacuum tubes to using transistors, the users of the sets didn't need to
 know about it&mdash;or even know what it means. Similarly, it should be possible
-to rewrite the inside of a subroutine, to use more efficient code, for example,
+to rewrite the inside of a subroutine, to use more efficient code for example,
 without affecting the programs that use that subroutine.</p>
 
 <p>Of course, to have a black box, someone must have designed and built the

@@ -43,13 +43,13 @@ the Greek letter instead of the the word "lambda").  This notation is a kind of 
 that represents a value of type "function" in the same way that 42 is an integer literal 
 that represents a value of type <ptype>int</ptype>.</np>
 
-<np>Having function literals is the starting point for thinking of a function as just
+<p>Having function literals is the starting point for thinking of a function as just
 another kind of data value. Once we do that, we should be able to so the same things
-with function that we do with other values, such as assign a function to a variable,
+with functions that we can do with other values, such as assign a function to a variable,
 pass a function as a parameter to a subroutine, return a function as the value of
 subroutine, or even make an array of functions.  A programming language that allows
 you to do all those things with function is said to have "first-class functions" or
-"functions as first-class objects."</np>
+"functions as first-class objects."</p>
 
 <p>In fact, you can do all of those things with Java lambda expressions.  Java's notation
 is different from the one used by Alonzo Church, and in spite of the name "lambda expression"
@@ -136,8 +136,9 @@ empty, or it can be a list of parameter declarations, separated by commas,
 where each declaration consists of a type followed by a parameter name.
 However, the syntax can often be simplified.  First of all, the parameter
 types can be omitted, as long as they can be deduced from the context.
-For example, if the lambda expression is of type <classname>FunctionR2R</classname>,
-then the parameter type is <ptype>double</ptype>.  Then, if there is exactly
+For example, if the lambda expression is known to be of type <classname>FunctionR2R</classname>,
+then the parameter type must be <ptype>double</ptype>, so it is unnecessary to specify
+the parameter type in the lambda expression. Next, if there is exactly
 one parameter and if its type is not specified, then the parentheses around
 the parameter list can be omitted.  On the right-hand side of the <code>-&gt;</code>,
 if the only thing between the braces, <code>{</code>&nbsp;and <code>}</code>, is a 
@@ -162,16 +163,17 @@ sqr = (z) -> z*z;</pre>
 <np>The last two statements are there to emphasize that the parameter names in a lambda expression
 are dummy parameters; their names are irrelevant.  The six lambda expressions in these statements
 all define exactly the same function.  Note that the parameter type <ptype>double</ptype> can be
-omitted because the compiler knows that <code>sqr</code> is of type <classname>FunctionR2R</classname>
+omitted because the compiler knows that <code>sqr</code> is of type <classname>FunctionR2R</classname>,
 and a <classname>FunctionR2R</classname> requires a parameter of type <ptype>double</ptype>.
-Lambda expressions can only be used in contexts where such deductions are possible.
-</np>
+A lambda expression can only be used in a context where the compiler can deduce its type,
+and the parameter type has to be included only in a case where leaving it out would make
+the type of the lambda expression ambiguous.</np>
 
 <p>Now, in Java, the variable <i>sqr</i> as defined here is not quite a function.
 It is a value of type <classname>FunctionR2R</classname>, which means that it <b>contains</b>
 a function named <i>valueAt</i>, as specified in the definition of interface
 <classname>FunctionR2R</classname>.  The full name of that function is <i>sqr.valueAt</i>,
-and we must use that name to call the function.  For example:  <i>sqr.valueAt</i>(42)
+and we must use that name to call the function.  For example:  <code>sqr.valueAt</code>(42)
 or <code>sqr.valueAt(x)&nbsp;+ sqr.valueAt(y)</code>.</p>
 
 <p>When a lambda expression has two parameters, the parentheses are not optional.
@@ -185,7 +187,8 @@ concat = (A,n) -&gt; { // parentheses around (A,n) are required!
     for (int i = 0; i &lt; n; i++)
         str += A[i];
     System.out.println(str);
-};  // The semicolon marks the end of the assignment statement.
+};  // The semicolon marks the end of the assignment statement;
+    //      it is not part of the lambda expression.
 
 String[] nums;
 nums = new String[4];
@@ -208,7 +211,8 @@ OneTwoThreeFour</pre>
 is the most common use in practice.  For example,
 suppose that the following function is defined:</p>
 
-<pre>/** For a function f, compute f(start) + f(start+1) + ... + f(end).
+<pre>/** 
+ *  For a function f, compute f(start) + f(start+1) + ... + f(end).
  *  The value of end should be &gt;= the value of start.
  */
 static double sum( FunctionR2R f, int start, int end ) {
@@ -294,10 +298,10 @@ can be used wherever that lambda expression could be used, such as in the
 <pre>System.out.print("The sum of the square root of n for n from 1 to 100 is ");
 System.out.println( sum( <newcode>Math::sqrt</newcode>, 1, 100 ) );</pre>
 
-<np>It would be nice if we could simply use the name <i>Math.sqr</i> here
+<np>It would be nice if we could simply use the name <i>Math.sqrt</i> here
 instead of introducing a new notation with&nbsp;<code>::</code>, 
-but the notation <i>Math.sqr</i> was already defined to mean a <b>variable</b>
-named <i>sqr</i> in the <classname>Math</classname> class.</np>
+but the notation <i>Math.sqrt</i> was already defined to mean a <b>variable</b>
+named <i>sqrt</i> in the <classname>Math</classname> class.</np>
 
 <p>More generally, a lambda expression that simply calls an existing
 static method can be written as a method reference of the form</p>

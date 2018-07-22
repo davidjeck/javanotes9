@@ -54,9 +54,11 @@ possible to take the square root of a negative number. In terms of a contract,
 a precondition represents an obligation of the <i>caller</i> of the subroutine.
 If you call a subroutine without meeting its precondition, then there is no
 reason to expect it to work properly. The program might crash or give incorrect
-results, but you can only blame yourself, not the subroutine.</p>
+results, but you can only blame yourself, not the subroutine, because you
+haven't lived up to your side of the deal.</p>
 
 <p>A postcondition of a subroutine represents the other side of the contract.
+It represents an obligation of the subroutine.
 It is something that will be true after the subroutine has run (assuming that
 its preconditions were met&mdash;and that there are no bugs in the subroutine).
 The postcondition of the function <code>Math.sqrt()</code> is that the square of

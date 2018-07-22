@@ -31,8 +31,8 @@ chapter</localref>.</p>
 
 <p>A subroutine that is in a class or object is often called a <newword>method</newword>, 
 and "method" is the term that most people prefer for
-subroutines in Java. I will start using the term "method" occasionally;
-however, I will continue to prefer the more general term "subroutine" 
+subroutines in Java. I will start using the term "method" occasionally,
+but I will continue to prefer the more general term "subroutine" 
 in this chapter, at least for static subroutines.  However, you should start
 thinking of the terms "method" and "subroutine" as being essentially
 synonymous as far as Java is concerned.  Other terms that you might see used to 
@@ -457,8 +457,7 @@ and <code>gamesWon</code> automatically get zero as their initial value. This
 happens to be the correct initial value for a variable that is being used as a
 counter. You can, of course, assign a value to a variable at the
 beginning of the <code>main()</code> routine if you are not satisfied with the
-default initial value, or if you want to emphasize that you are depending on
-the default.</p>
+default initial value, or if you want to make the initial value more explicit.</p>
 
 <p>Here's the revised version of <code>GuessingGame.java</code>. 
 The changes from the above version are shown in &newcodestyle;:</p>

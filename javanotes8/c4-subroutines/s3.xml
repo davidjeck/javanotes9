@@ -175,10 +175,10 @@ idea of providing information to the subroutine in a parameter is clear enough.
 Writing the subroutine definition is another matter. A common beginner's mistake is to
 assign values to the formal parameters at the beginning of the subroutine, or
 to ask the user to input their values. <b>This represents a fundamental
-misunderstanding.</b> When the statements in the subroutine are executed, the
-formal parameters have already been assigned initial values!  The computer automatically 
-assigns values to the parameters before it starts executing the code inside the
-subroutine. The values come from the subroutine
+misunderstanding.</b> By the time the computer starts executing the statements in the subroutine, the
+formal parameters have <b>already</b> been assigned initial values!  The computer automatically 
+assigns values to the formal parameters before it starts executing the code inside the
+subroutine. The values come from the actual parameters in the subroutine
 call statement. Remember that a subroutine is not independent. It is called by
 some other routine, and it is the subroutine call statement's responsibility to provide
 appropriate values for the parameters.</p>
@@ -328,7 +328,7 @@ private static void printRow( char ch, int N ) {
 
 <np>Note that in this case, the contract makes no assumption about <code>N</code>,
 but it makes it clear what will happen in all cases, including the unexpected
-case that <code>N &lt; 0</code>.</np>
+case that <code>N&nbsp;&lt;=&nbsp;0</code>.</np>
 
 <p>Finally, let's do an example that shows how one subroutine can build on
 another. Let's write a subroutine that takes a <classname>String</classname> as a parameter.
@@ -472,7 +472,7 @@ is <code>true</code> if the end of the file has been reached.</p>
 
 /**
  *  Requires two command line arguments, which must be file names.  The
- *  the first must be the name of an existing file.  The second is the name
+ *  first must be the name of an existing file.  The second is the name
  *  of a file to be created by the program.  The contents of the first file
  *  are copied into the second.  WARNING:  If the second file already 
  *  exists when the program is run, its previous contents will be lost!

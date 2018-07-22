@@ -16,9 +16,9 @@ other purposes.</p>
    
 <subsection id="subroutines.5.1" title="Toolboxes">
 
-<p>Someone who wanted to program for Macintosh computers&mdash;and to produce
-programs that look and behave the way users expect them to&mdash;had to deal with
-the "Macintosh Toolbox,"" a collection of well over a thousand different
+<p>Someone who wanted to program for the original Macintosh computers&mdash;and to produce
+programs that look and behave the way users expected them to&mdash;had to deal with
+the "Macintosh Toolbox," a collection of well over a thousand different
 subroutines. There were routines for opening and closing windows, for drawing
 geometric figures and text to windows, for adding buttons to windows, and for
 responding to mouse clicks on the window. There were other routines for creating
@@ -95,9 +95,9 @@ grouped into <newword>packages</newword>, which were introduced briefly in
 levels of grouping, since packages can also contain other packages. In fact,
 the entire standard Java API is implemented in several packages. One of these,
 which is named "<code>java</code>", contains several non-GUI packages as well as the
-original AWT graphics user interface classes. Another package,
+original AWT graphical user interface classes. Another package,
 "<code>javax</code>", contains the classes used by the Swing graphical user interface
-as well as many other classes (but we will not be using any part of <code>javax</code>).
+as well as many other classes.
 And "<code>javafx</code>" contains the JavaFX API that is used for GUI programming
 in this textbook.</p>
 
@@ -207,7 +207,7 @@ use wildcards to import all the classes from the most relevant packages, and use
 individual imports when I am using just one or two classes from a given package.</p>
 
    
-<np>A program that works with networking might include the line
+<p>A program that works with networking might include the line
 "<code>import java.net.*;</code>", while one that reads or writes files might
 use "<code>import java.io.*;</code>".  But when you start importing lots
 of packages in this way, you have to be careful about one thing: It's possible
@@ -219,7 +219,7 @@ try to declare a variable of type <code>List</code>, you will get a compiler err
 message about an ambiguous class name.  You can still use both classes in your program: Use the full
 name of the class, either <code>java.awt.List</code> or <code>java.util.List</code>.
 Another solution, of course, is to use <code>import</code> to import the individual classes you
-need, instead of importing entire packages.</np>
+need, instead of importing entire packages.</p>
 
 <p>Because the package <code>java.lang</code> is so fundamental, all the classes in
 <code>java.lang</code> are <b>automatically</b> imported into every
@@ -242,7 +242,7 @@ And a class that is in a subpackage must be in a subfolder.  For example, a clas
 a package named <code>utilities.net</code> would be in folder named "net" inside a
 folder named "utilities".  A class that is
 in a package automatically has access to other classes in the same package; that is,
-a class doesn't have to import the package in which it is defined.</np>
+a class doesn't have to import classes from the package in which it is defined.</np>
    
 <p>In projects that define large numbers of classes, it makes sense to organize
 those classes into packages. It also makes sense for programmers to
@@ -255,7 +255,7 @@ programmers who use their tools.)</p>
 in package <code>textio</code>, the classes written for this book are not in packages. For the purposes of this
 book, you need to know about packages mainly so that you will be able to import <classname>TextIO</classname>
 and classes from the standard
-packages. These packages are always available to the programs that you write.
+packages. The standard packages are always available to the programs that you write.
 You might wonder where the standard classes are actually located.  Again, that can
 depend to some extent on the version of Java that you are using.  In Java&nbsp;8
 they are stored in <newword>jar files</newword> in a subdirectory named <i>lib</i>
@@ -308,7 +308,7 @@ This is <b>syntactic</b> information.  To add information about semantics and pr
 you have to write a Javadoc comment.</p>
    
 <p>As an example, you can look at the documentation Web page for <classname>TextIO</classname><web> by
-following this link: <a href="../TextIO_Javadoc/TextIO.html">TextIO&nbsp;Javadoc&nbsp;documentation</a></web>.
+following this link: <a href="../TextIO_Javadoc/index.html">TextIO&nbsp;Javadoc&nbsp;documentation</a></web>.
 The documentation page was created by applying the <code>javadoc</code> tool
 to the source code file, <sourceref href="TextIO.java"/>.  If you have downloaded the on-line
 version of this book, the documentation can be found in the <code>TextIO_Javadoc</code>
@@ -378,7 +378,7 @@ familiar with.</p>
 
 <p>If you do want to create Web-page documentation, you need to run the
 <code>javadoc</code> tool.  This tool is available as a command in the Java Development
-Kit that was discussed in <localref href="basics.6"/>.  You can use <code>javadoc</code>
+Kit that was discussed in <localref href="basics.6"/>.  You can use the <code>javadoc</code> tool
 in a command line interface similarly to the way that the <code>javac</code> and
 <code>java</code> commands are used.  Javadoc can also be applied in the
 integrated development environments that were also discussed in 
@@ -392,7 +392,7 @@ documentation for your programming environment.</p>
 
 <p>Before ending this section, I will mention an extension of the <code>import</code> directive.
 We have seen that <code>import</code> makes it possible to refer to a class
-such as <code>java.utl.Scanner</code> using its simple name, <classname>Scanner</classname>.
+such as <code>java.util.Scanner</code> using its simple name, <classname>Scanner</classname>.
 But you still have to use compound names to refer to static member variables such
 as <code>System.out</code> and to static methods such as <code>Math.sqrt</code>.</p>
    
