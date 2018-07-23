@@ -133,9 +133,8 @@ subclass of the class <code>java.awt.Component</code>.</gitem>
 <gitem term="constructor">A special kind of subroutine in a class whose purpose is
 to construct objects belonging to that class.  A constructor is called using
 the <code>new</code> operator, and is not considered to be a "method."</gitem>
-<gitem term="container">A component, such as a <classname>JPanel</classname>, that
-can contain other GUI components.  Containers have <code>add()</code> methods that
-can be used to add components.</gitem>
+<gitem term="container">A component, such as a <classname>BorderPane</classname>, that
+can contain other GUI components.</gitem>
 <gitem term="contract of a method">The semantic component of the method's interface.
 The contract specifies the responsibilities of the method and of the caller of the
 method.  It says how to use the method correctly and specifies the task that the method
@@ -170,10 +169,9 @@ assigns a value to that variable.</gitem>
 compatibility.  A deprecated Java class or method is still part of the Java language,
 but it is not advisable to use it in new code.  Deprecated items might be removed in
 future versions of Java.</gitem>
-<gitem term="dialog box">A window that is dependent on another window, called its parent.
+<gitem term="dialog box">A window that is dependent on another window, called its parent owner.
 Dialog boxes are usually popped up to get information from the user or to display a
-message to the user.  Dialog boxes in the Swing API are represented by objects of type
-<classname>JDialog</classname>.</gitem>
+message to the user.</gitem>
 <gitem term="distributed computing">A kind of parallel processing in which several
 computers, connected by a network, work together to solve a problem.</gitem>
 <gitem term="dummy parameter">Identifier that is used in a subroutine definition
@@ -398,7 +396,7 @@ are defined in the same class can have the same name, as long as they have diffe
 of a method that is inherited from a superclass, the new definition is said to override the 
 original definition.</gitem>
 <gitem term="package">In Java, a named collection of related classes and sub-packages, such as
-<code>java.awt</code> and <code>javax.swing</code>.</gitem>
+<code>java.awt</code> and <code>javafx.scene.control</code>.</gitem>
 <gitem term="parallel processing">When several tasks are being performed simultaneously, either
 by multiple processors or by one processor that switches back and forth among
 the tasks.</gitem>

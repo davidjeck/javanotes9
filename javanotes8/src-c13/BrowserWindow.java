@@ -1,4 +1,4 @@
-
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -63,8 +63,8 @@ class BrowserWindow extends Stage {
 		TextField urlInput = new TextField();  // Where the user inputs a URL to load.
 		urlInput.setMaxWidth(600);
 		Button loadButton = new Button("Load"); // For loading the URL in the textfield.
-		loadButton.disableProperty().bind( urlInput.focusedProperty() );
 		loadButton.setOnAction( e -> doLoad(urlInput.getText()) );
+		loadButton.defaultButtonProperty().bind( urlInput.focusedProperty() );
 		Button cancelButton = new Button("Cancel");  // For canceling a load.
 		cancelButton.setDisable(true);  // will be enabled only when a load is in progress.
 		
@@ -211,22 +211,34 @@ class BrowserWindow extends Stage {
 	 * items that were added in makeMenuBar(), and it replaces them with
 	 * an item corresponding to each item in the window lists.  A window
 	 * item can be used to bring the corresponding window to the front.
+	 * If there is more than one window, the menu also includes a 
+	 * Close All option.
 	 */
 	private void populateWindowMenu() {
 		ArrayList<BrowserWindow> windows = owner.getOpenWindowList();
 		while (windowMenu.getItems().size() > 4) {
-			   // Remove any items corresponing to open windows, left over
-			   // from the previous time the menu was shown.
+		       // The menu contains 4 permanent items.  Remove the other
+		       // items, which correspond to open windows and are left 
+		       // over from the previous time the menu was shown.
 			windowMenu.getItems().remove(windowMenu.getItems().size() - 1);
 		}
+		if (windows.size() > 1) {
+		       // Add a "Close All" command only if this is not the only window. 
+			MenuItem item = new MenuItem("Close All and Exit");
+			item.setOnAction( e -> Platform.exit() );
+			windowMenu.getItems().add(item);
+			windowMenu.getItems().add( new SeparatorMenuItem() );
+		}
 		for (BrowserWindow window : windows) {
-			String title = window.getTitle(); // The window title is the menu item text.
+			String title = window.getTitle(); // Menu item text is the window title.
 			if (title.length() > 60) {
 				    // Let's not use absurdly long menu item texts.
 				title = title.substring(0,57) + ". . .";
 			}
 			MenuItem item = new MenuItem(title);
-			final BrowserWindow win = window; // (for use in the lambda expression)
+			final BrowserWindow win = window; // (for use in a lambda expression)
+		        // The event handler for this menu item will bring the corresponding
+		        // window to the front by calling its requestFocus() method.
 			item.setOnAction( e -> win.requestFocus() );
 			windowMenu.getItems().add(item);
 			if (window == this) {

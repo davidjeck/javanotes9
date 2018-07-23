@@ -538,6 +538,7 @@ error message to the user and has an "OK" button for dismissing
 the dialog.  Dialog boxes were not covered in <localref href="GUI1"/>,
 but some common simple dialog boxes can be shown using objects of type
 <classname>Alert</classname>, from package <code>javafx.scene.control</code>.
+(See <localref href="GUI2.4.1"/> for more about alerts.)
 Here is how to show an error message to the user:</p>
 
 <pre>Alert errorAlert = new Alert( Alert.AlertType.ERROR, message );

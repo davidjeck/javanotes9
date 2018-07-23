@@ -1,6 +1,5 @@
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.stage.Screen;
 import javafx.geometry.Rectangle2D;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 /**
  * A basic multi-window web browser.  This class is responsible for
  * creating new windows and for maintaining a list of currently open
- * windows.  When all windows, have been closed, it ends the program.
+ * windows.  The program ends when all windows have been closed.
  * The Windows are of type BrowserWindow.  The program also requires
  * the class SimpleDialogs.  The first window, which opens when the
  * program starts, goes to http://math.hws.edu/javanotes8/index.html.
@@ -34,16 +33,32 @@ public class WebBrowser extends Application {
 	 * Note that the Stage parameter to this method is never used.
 	 */
 	public void start(Stage stage) {
-		openWindows = new ArrayList<BrowserWindow>();
+		
+		openWindows = new ArrayList<BrowserWindow>();  // List of open windows.
+		
 		screenRect = Screen.getPrimary().getVisualBounds();
+		
+		   // (locationX,locationY) will be the location of the upper left
+		   // corner of the next window to be opened.  For the first window,
+		   // the window is moved a little down and over from the top-left
+		   // corner of the primary screen's visible bounds.
 		locationX = screenRect.getMinX() + 30;
 		locationY = screenRect.getMinY() + 20;
+		
+		   // The window size depends on the height and width of the screen's
+		   // visual bounds, allowing some extra space so that it will be
+		   // possible to stack several windows, each displaced from the
+		   // previous one.  (For aesthetic reasons, limit the width to be
+		   // at most 1.6 times the height.)
 		windowHeight = screenRect.getHeight() - 160;
 		windowWidth = screenRect.getWidth() - 130;
 		if (windowWidth > windowHeight*1.6)
 			windowWidth = windowHeight*1.6;
+		
+		   // Open the first window, showing the front page of this textbook.
 		newBrowserWindow("http://math.hws.edu/javanotes8/index.html");
-	}
+		
+	} // end start()
 	
 	/**
 	 * Get the list of currently open window.  The browser windows use this
@@ -76,21 +91,15 @@ public class WebBrowser extends Application {
 	 */
 	void newBrowserWindow(String url) {
 		BrowserWindow window = new BrowserWindow(this,url);
-		window.setOnShown( e -> {
-			    // Called just after the window has opened on the screen.
-			    // Add the window to the list of open windows.
-			openWindows.add( window );
-			System.out.println("Number of open windows is " + openWindows.size());
-		});
+		openWindows.add(window);   // Add new window to open window list.
 		window.setOnHidden( e -> {
 			    // Called when the window has closed.  Remove the window
-			    // from the list of open windows.  If the list is empty,
-			    // end the program by calling Platform.exit().
+			    // from the list of open windows.
 			openWindows.remove( window );
 			System.out.println("Number of open windows is " + openWindows.size());
 			if (openWindows.size() == 0) {
-				Platform.exit();
-				System.out.println("Exiting because all windows have been closed");
+				// Program ends automatically when all windows have been closed.
+				System.out.println("Program will end because all windows have been closed");
 			}
 		});
 		if (url == null) {
@@ -101,12 +110,19 @@ public class WebBrowser extends Application {
 		window.setWidth(windowWidth);
 		window.setHeight(windowHeight);
 		window.show();
-		locationX += 30;    // set up location of next window
+		locationX += 30;    // set up location of NEXT window
 		locationY += 20;
-		if (locationX + windowWidth + 10 > screenRect.getMaxX())
+		if (locationX + windowWidth + 10 > screenRect.getMaxX()) {
+			    // Window would extend past the right edge of the screen,
+			    // so reset locationX to its original value.
 			locationX = screenRect.getMinX() + 30;
-		if (locationY + windowHeight + 10 > screenRect.getMaxY())
+		}
+		if (locationY + windowHeight + 10 > screenRect.getMaxY()) {
+			    // Window would extend past the bottom edge of the screen,
+			    // so reset locationY to its original value.
 			locationY = screenRect.getMinY() + 20;
+		}
 	}
+	
 	
 } // end WebBrowser

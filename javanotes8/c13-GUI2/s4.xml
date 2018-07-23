@@ -2,6 +2,493 @@
 <!DOCTYPE section SYSTEM "../javanotes8.dtd" >
 
 <section id="GUI2.4" title="Mostly Windows and Dialogs">
+
+<p><start><big>A</big>ll of the sample GUI programs</start> that we have looked
+at have used a single window.  However, many real programs use multiple windows.
+In this section, we look at how to manage a multi-window application.
+We will also discuss dialog boxes&mdash;small popup windows that are mainly
+used for getting input from the user.  As a bonus, you get to learn about
+<classname>WebView</classname>, a JavaFX control that implements much of the
+functionality of a web browser window.</p>
    
+<subsection title="Dialog Boxes" id="GUI2.4.1">
+
+<p>A <newword>dialog</newword>, or dialog box, is a window that is dependent
+on another window.  That window is the "parent" or "owner" of the dialog 
+box.  If the parent window is closed, the dialog box is automatically
+closed as well.</p>
+
+<p>A dialog box can be <newword>modal</newword> or <newword>modeless</newword>.
+When a modal dialog box is opened, its parent window is blocked.  That is,
+the user cannot interact with the parent window until the dialog box is
+closed.  Modal dialog boxes are often poped up during program execution
+to get input from the user or sometimes just to show a message to the
+user.  Modeless dialog boxes do not block interaction with their 
+parent windows, but they will be closed automatically when the parent
+window closes.  A modeless dialog box might be used to show an alternative
+view of data from the parent window, or to hold some controls that
+affect the window.</p>
+
+<p>It is possible to make a <classname>Stage</classname> work as a dialog box,
+but many dialog boxes in JavaFX programs are created as
+objects belonging to the class <classname>Dialog</classname>, from
+package <code>javafx.scene.control</code>, or to one of its subclasses.
+A <classname>Dialog</classname>, <code>dlg</code>, has two instance methods for showing
+the dialog: <code>dlg.show()</code> and <code>dlg.showAndWait()</code>.
+If the dialog is shown using <code>dlg.showAndWait()</code>, then it is
+modal.  (A dialog opened using <code>showAndWait()</code> is not just
+modal; it is "application modal", which means it will block all windows
+in the application, not just the parent window.)
+The <code>showAndWait()</code> method does not return until
+the dialog box has been closed, so that any input from the dialog box
+will be available to the program immediately after the call to
+<code>showAndWait()</code>.  If the dialog is shown using <code>dlg.show()</code>,
+on the other hand, the dialog is modeless.  The <code>show()</code> method
+returns immediately, and the user can then use both the parent window and
+the dialog box, and can switch back and forth between them.  Using a
+modeless dialog box is a little like parallel programming&mdash;you 
+have to understand that two things are going on at the same time.
+We will consider only modal dialog boxes here.</p>
+
+<break/>
+
+<p><atype>Dialog&lt;T&gt;</atype> is a parameterized type.  The type
+parameter represents the type of value that will be returned by the
+<code>showAndWait()</code> method.  The return type is actually
+<atype>Optional&lt;T&gt;</atype>, representing a value of type
+<classname>T</classname> that might or might not be present.
+<classname>Optional</classname> is defined in package <code>java.util</code>.
+An <classname>Optional</classname> has a <ptype>boolean</ptype> method
+<code>isPresent()</code> to test whether the value is present, and
+a method <code>get()</code> that returns the value if one is present.
+An exception occurs if <code>get()</code> is called when no value is
+present.  This just means that if you want to use the return value
+from <code>showAndWait()</code>, you should first use <code>isPresent()</code>
+to test whether a value was actually returned.</p>
+
+<p>A dialog box will ordinarily contain 
+one or more buttons for closing the dialog.  Typical button names include
+"OK", "Cancel", "Yes", and "No".  The most common buttons are
+represented by the enumerated type <classname>ButtonType</classname>,
+which has values including <code>ButtonType.OK</code>, 
+<code>ButtonType.CANCEL</code>, <code>ButtonType.YES</code>,
+and <code>ButtonType.NO</code>.  <classname>ButtonType</classname>
+is a common return type for a <classname>Dialog</classname>, 
+representing the button that the user clicked to close the dialog.
+In that case, the dialog box is of type <atype>Dialog&lt;ButtonType&gt;</atype>.</p>
+
+<p>The class <classname>Alert</classname> is a subclass of <atype>Dialog&lt;ButtonType&gt;</atype>
+that makes it easy to create dialogs that show a text message to the user, along
+with one or two buttons.  This class
+was already used in <localref href="IO.2.3"/>, without much explanation, 
+to show error messages to the user.  An alert can be created with</p>
+
+<pre>Alert alert = new Alert( alertType, message );</pre>
+
+<np>The first parameter is of type <classname>Alert.AlertType</classname> which
+is a nested enumerated type with values including <code>Alert.AlertType.INFORMATION</code>,
+<code>Alert.AlertType.WARNING</code>, <code>Alert.AlertType.ERROR</code>, and
+<code>Alert.AlertType.CONFIRMATION</code>.  Alerts of the first three types
+will have a single "OK" button and do nothing but show the message to the user;
+for these alerts, there is no reason to check return value of <code>alert.showAndWait()</code>.
+A confirmation alert has an "OK" button and a "Cancel" button and is typically used
+to ask whether the user would like to continue with some potentially dangerous operation
+such as deleting a file; in this case, checking the return value is important.
+Here is a typical use:</np>
+
+<pre>Alert confirm = new Alert( Alert.AlertType.CONFIRMATION,
+                         "Do you really want to delete " + file.getName() );
+Optional&lt;ButtonType&gt; response = confirm.showAndWait();
+if ( response.isPresent() &amp;&amp; response.get() == ButtonType.OK ) {
+    file.delete();
+}</pre>
+
+<p>In addition to buttons, a <classname>Dialog</classname> can have
+a content area; 
+header text that appears above the content area; a graphic
+that appears next to the header text, if there is any, or next to the
+content; and of course a title in the title bar of the dialog window.
+Usually the graphic, if any, would be a small icon image.
+For an <classname>Alert</classname>, the message goes in the content area.
+The other properties are set automatically, depending on the alert type,
+but they can be changed by calling methods from the <classname>Dialog</classname> 
+class before showing the alert:</p>
+
+<pre>alert.setTitle( windowTitle );
+alert.setGraphic( node );
+alert.setHeaderText( headerText );</pre>
+
+<np>Any of the values can be null.  The content can be set to an arbitrary 
+scene graph node, replacing the text of the message, by calling</np>
+
+<pre>alert.getDialogPane().setContent( node );</pre>
+
+<np>but it would be more common to do that for a plain <classname>Dialog</classname>
+than for an <classname>Alert</classname>.  Here are a couple of confirmation
+alerts, showing the various components of the dialog window.  For the
+dialog box on the right, the header text is null.  Note, by the way, that to
+get multiline text in an alert, you have to include line feed ("\n") characters
+in the text.</np>
+
+<img src="alerts.png" width="607" height="212" tex="alerts.eps" texscale="0.6" alt="confirmation dialog boxes"/>
+
+<p>For an example of a dialog that gets input from the user,
+the class <classname>TextInputDialog</classname> is a subclass
+of <atype>Dialog&lt;String&gt;</atype>, meaning that the return 
+value of <code>showAndWait()</code> will be <atype>Optional&lt;String&gt;</atype>.
+A <classname>TextInputDialog</classname>
+contains a <classname>TextField</classname> where the user can enter a line
+of text, and it has an "OK" button and a "Cancel" button.  The constructor
+has a parameter of type <classname>String</classname> that represents the
+initial content of the text input box.  If you want to ask a question or
+show some message to the user, you can put it into the dialog header text.
+The return value, if present, will be the content of the input box.
+Note that the return value can be the empty string.
+If the user clicks "Cancel" or simply closes the dialog box, then the
+return value is not present.  Here is a typical usage:</p>
+
+<pre>TextInputDialog getNameDialog = new TextInputBox("Fred");
+getNameDialog.setHeaderText("Please enter your name.");
+Optional&lt;String&gt; response = getNameDialog.showAndWait();
+if (response.isPresent() &amp;&amp; response.get().trim().length() > 0) {
+    name = response.get().trim();
+}
+else {
+    Alert error = new Alert( Alert.AlertType.ERROR,
+                               "Anonymous users are not allowed!" );
+    error.showAndWait();
+    System.exit(1):
+}</pre>
+
+<break/>
+
+<p>Since I find <classname>Alert</classname> and <classname>TextInputDialog</classname>
+a little cumbersome to use (especially since I tend to prefer dialogs without icons),
+I wrote a utility class, <sourceref href="SimpleDialogs.java"/>, that defines several more
+convenient static methods for showing some common kinds of dialog.  In particular,
+</p>
+
+<ul>
+<li><codedef>SimpleDialogs.message(text)</codedef> &mdash; shows the text and
+an OK button.  There is no return value.  The text will be automatically wrapped,
+so that line feed characters are not needed in long messages.  An optional
+second parameter can be included to specify the title for the dialog window.</li>
+<li><codedef>SimpleDialogs.prompt(text)</codedef> &mdash; shows the text and
+a text input box, with an OK button and a Cancel button.  Returns a 
+<classname>String</classname>, which will be the content of the input box
+if the user clicks OK, or will be null if the user cancels the dialog.
+The window title can be given as an optional second parameter, and the
+initial content of the text input box as an optional third parameter.</li>
+<li><codedef>SimpleDialogs.confirm(text)</codedef> &mdash; shows the text
+along with "Yes", "No", and "Cancel" buttons. The return value is a
+<classname>String</classname> which will always be one of "yes", "no",
+or "cancel".  Again, the widow title can be given as an optional
+second parameter.</li>
+</ul>
+
+<np>There are some other options, including a basic color chooser dialog,
+which you can learn about by reading the <sourceref href="SimpleDialogs.java">source code</sourceref>.
+The program <sourceref href="TestDialogs.java"/> lets the user test the
+dialogs that are defined in <classname>SimpleDialogs</classname>.</np>
+
+</subsection>
+
+
+<subsection title="WebView and WebEngine" id="GUI2.4.2">
+
+<p>In the rest of this section, we will look at a multi-window web browser
+program.  Writing a web browser sounds complicated, and it is, but
+JavaFX makes it pretty easy.  The <classname>WebView</classname> class,
+in package <code>javafx.scene.control</code>, represents a control
+that can load and display a web page.  It handles most web pages
+pretty well, including running JavaScript code. (JavaScript is
+the programming language that is used to program active web pages;
+it is not closely related to Java.)  A <classname>WebView</classname>
+is basically the "view" part of the Model-View-Controller pattern
+(<localref href="GUI2.3.2"/>).
+The actual work of loading and managing the web page is done by
+an object of type <classname>WebEngine</classname> that is part
+of the "controller."  The "model" would be a data structure
+containing the content that is displayed in the web page.
+The model is created by the <classname>WebEngine</classname>
+when a page is loaded, and the <classname>WebView</classname>
+then displays the content.</p>
+
+<p>A <classname>WebView</classname> must be placed into a window.
+The sample class <sourceref href="BrowserWindow.java"/> is
+a subclass of the standard window class, <classname>Stage</classname>, that represents a
+complete web browser window.  A <classname>BrowserWindow</classname> contains
+a <classname>WebView</classname> along with a menu bar
+and some other controls.  In particular, there is a text-input
+box where the user can type the URL for a web page and a "Load"
+button that the user can click to load the web page from that
+URL into the <classname>WebView</classname>.  In addition,
+the <classname>BrowserWindow</classname> constructor can specify
+an initial URL to be loaded when the window is first opened.</p>
+
+<p>A <classname>WebView</classname> has an associated <classname>WebEngine</classname>
+that can be obtained by calling <code>webEngine = webview.getEngine()</code>.  Then, to
+load a web page, you can simply call</p>
+
+<pre>webEngine.load( urlString );</pre>
+
+<np>where <code>urlString</code> is a string containing the URL.  (URLs were
+discussed in <localref href="IO.4.1"/>.)  The <code>urlString</code> must start
+with a "protocol" such as "http:" or "https:"; in my program, I add "http://"
+to the front of the URL string, if the string does not already specify a
+protocol.</np>
+
+<p>A new web page will also be loaded automatically if the user clicks a link
+on the page that is currently being displayed.</p>
+
+<p>Web page loading is asynchronous.  That is, <code>webEngine.load()</code> returns
+immediately, and the web page is loaded in a background thread.  When the
+loading has completed, the web page is shown in the <classname>WebView</classname>.
+If the load fails for some reason, there is no automatic notification.  However,
+you can get some information about what is going on by adding listeners to 
+two observable <classname>String</classname> properties of the web engine:  
+the <i>location</i> and the <i>title</i>.  The <code>location</code> is the URL of the
+web page that is currently being displayed or loaded, while the <code>title</code> is the
+title of the current web page, which usually appears in the title bar of the window
+that displays the web page.  For example, the <classname>BrowserWindow</classname> class
+monitors the <code>title</code> property and sets its window title to match:</p>
+
+<pre>webEngine.titleProperty().addListener( (o,oldVal,newVal) -> {
+    if (newVal == null)
+        setTitle("Untitled " + owner.getNextUntitledCount());
+    else
+        setTitle(newVal); 
+});</pre>
+
+<np>(I will discuss the "owner" below.)  It also monitors the <code>location</code>
+property and displays its value in a <classname>Label</classname> at the bottom of the
+window.</np>
+
+<p>To monitor the progress of loads, you can also add a listener to the property
+<code>webEngine.getLoadWorker().stateProperty()</code>; see the
+<sourceref href="BrowserWindow.java"/> source code for an example.</p>
+
+<p>I said above that a <classname>WebView</classname> (with its <classname>WebEngine</classname>)
+can run JavaScript code that occurs on web pages.  That is not quite true.  JavaScript
+has subroutines for popping up certain simple dialog boxes:  an "alert" dialog to simply display a message
+to the user; a "prompt" dialog to ask the user a question and get back a response string;
+and a "confirm" dialog that shows a message with an "OK" and a "Cancel" button.
+For a confirm dialog, the return value is a boolean that tells whether the user dismissed
+the dialog by clicking "OK".  By default, requests from JavaScript to show these
+dialogs are ignored by the <classname>WebEngine</classname>.  However, it is possible to add event handlers to the
+web engine to respond to those requests.  In <classname>BrowserWindow</classname>,
+I use dialog boxes from my <classname>SimpleDialogs</classname> class to
+respond to the events.  For example, when JavaScript tries
+to pop up an alert dialog, the web engine generates an event of type
+AlertEvent.  The data in the event object is the message that JavaScript wants
+to display.  The <classname>BrowserWindow</classname> class responds by
+using <code>SimpleDialogs.message()</code> to display the message to the user:</p>
+
+<pre>webEngine.setOnAlert( 
+        evt -> SimpleDialogs.message(evt.getData(), "Alert from web page") );</pre>
+        
+<np>Handling prompt and confirm dialogs is a little different, since they must
+return a value. Here is what's done in the sample program:</np>
+
+<pre>webEngine.setPromptHandler( promptData -> 
+            SimpleDialogs.prompt( promptData.getMessage(), 
+                      "Query from web page", promptData.getDefaultValue() ) );
+webEngine.setConfirmHandler( str -> 
+            SimpleDialogs.confirm(str, "Confirmation Needed").equals("yes") );</pre>
+            
+<p>I haven't yet discussed the menu bar for a <classname>BrowserWindow</classname>.
+The menu bar contains a single menu, named "Window".  That menu contains commands for
+opening new browser windows and for closing the current window.  It also contains
+a list of browser windows that are currently open.  The user can bring a different
+window to the front of the screen by selecting the window from that list.
+To understand how that works, you need to understand how <classname>BrowserWindow</classname>
+is used in a complete, multi-window program.</p>
+
+</subsection>
+
+<subsection title="Managing Multiple Windows" id="GUI2.4.3">
+
+<p>The class <classname>BrowserWindow</classname> is not an <classname>Application</classname>.
+It cannot be run as a program; it represents just one window in a multi-window program.
+The program is defined in <sourceref href="WebBrowser.java"/>.  The class <classname>WebBrowser</classname>,
+like any JavaFX program, is a subclass of <classname>Application</classname>.  It depends on
+<sourceref href="BrowserWinodow.java"/> and <sourceref href="SimpleDialogs.java"/>, so you
+need all three Java files to run the program.</p>
+
+<p>An <classname>Application</classname> has a <code>start()</code> method that is called by
+the system when the application begins.  The method has a parameter of type <classname>Stage</classname>
+that represents the "primary window" for the program, but there is no requirement that the
+program actually use that window.  The constructor in <classname>WebBrowser</classname>
+ignores the primary window and instead creates and shows a window of type <classname>BrowserWindow</classname>.
+That is the first window opened when the program is run.  It is set to load the front page
+of the web version of this very textbook.</p>
+
+<p>That could have been all that the application needs to do &mdash; except for the
+"Window" menu, which contains a list of all open windows.  That list is not part of
+the data for an individual window, so it has to kept somewhere else.  In the web browser
+application, the <classname>WebBrowser</classname> object maintains the list of open
+windows.  (Another possibility would have been to make the window list a <code>static</code>
+member variable in the <classname>BrowserWindow</classname> class, since <code>static</code>
+variables in a class are shared by all instances of the class.)  The <classname>WebBrowser</classname>
+class has a <code>newBrowserWindow()</code> method for opening new windows.  A <classname>BrowserWindow</classname>
+has an instance variable, <code>owner</code>, that refers to the <classname>WebBrowser</classname>
+that opened the window.   When the browser window wants to open a new window, it does so by
+calling <code>owner.newBrowserWindow(url)</code>, where the parameter, <code>url</code>,
+is the URL of the web site to be loaded by the new window, or is <code>null</code> to
+open an empty browser window.</p>
+
+<p>By default in JavaFX, the size of a window is determined by the size of the <classname>Scene</classname>
+that it contains, and the window is centered on the screen.  However, it is possible to set the size
+and location of a window before it is opened.  For a multi-window program, it is not desirable for
+all of the windows to appear in exactly the same location.  And it turns out that the default size 
+for a <classname>BrowserWindow</classname> is probably too small for most computer screens.
+In the <classname>WebBrowser</classname> application, each window that is opened is offset a
+little from the location where the previous window was opened, and the size of the window depends
+on the size of the screen.</p>
+
+<p>The class <classname>Screen</classname>, in package <code>javafx.stage</code>
+has a static method <code>Screen.getPrimary()</code> that returns an object containing information
+about the computer's main screen.  And that object in turn has a method
+<code>Screen.getPrimary().getVisualBounds()</code> that returns a <classname>Rectangle2D</classname>
+representing the usable area of the main screen.  This is used in the program's
+<code>start()</code> method to compute a size and location for the first window:</p>
+
+
+<pre>public void start(Stage stage) {  // (stage is not used)
+    
+    openWindows = new ArrayList&lt;BrowserWindow>();  // List of open windows.
+    
+    screenRect = Screen.getPrimary().getVisualBounds();
+    
+       // (locationX,locationY) will be the location of the upper left
+       // corner of the next window to be opened.  For the first window,
+       // the window is moved a little down and over from the top-left
+       // corner of the primary screen's visible bounds.
+    locationX = screenRect.getMinX() + 30;
+    locationY = screenRect.getMinY() + 20;
+    
+       // The window size depends on the height and width of the screen's
+       // visual bounds, allowing some extra space so that it will be
+       // possible to stack several windows, each displaced from the
+       // previous one.  (For aesthetic reasons, limit the width to be
+       // at most 1.6 times the height.)
+    windowHeight = screenRect.getHeight() - 160;
+    windowWidth = screenRect.getWidth() - 130;
+    if (windowWidth > windowHeight*1.6)
+        windowWidth = windowHeight*1.6;
+    
+       // Open the first window, showing the front page of this textbook.
+    newBrowserWindow("http://math.hws.edu/javanotes8/index.html");
+    
+} // end start()</pre>
+
+
+<p>When a window is opend in the <code>newBrowserWindow()</code> method,
+its size and location are taken from the variables <code>windowWidth</code>,
+<code>windowHeight</code>, <code>locationX</code>, and <code>locationY</code>.
+And the values of <code>locationX</code> and <code>locationY</code> are
+modified so that the next window will be placed at a different location.
+In addition, the new window is added to the open window list.  We also
+have to make sure that the window is removed from that list when it is
+closed.  Fortunately, a window generates an event when it is closed.
+We can add an event handler to listen for that event, and the event
+handler can remove the window from the open window list.  Here is
+the code for <code>newBrowserWindow()</code>:</p>
+
+
+<pre>void newBrowserWindow(String url) {
+    BrowserWindow window = new BrowserWindow(this,url);
+    openWindows.add(window); // Add new window to open window list.
+    window.setOnHidden( e -> {
+            // Called when the window has closed.  Remove the window
+            // from the list of open windows.
+        openWindows.remove( window );
+        System.out.println("Number of open windows is " + openWindows.size());
+        if (openWindows.size() == 0) {
+               // Program ends automatically when all windows have been closed.
+            System.out.println("Program ends because all windows are closed");
+        }
+    });
+    if (url == null) {
+        window.setTitle("Untitled " + getNextUntitledCount());
+    }
+    window.setX(locationX);         // set location and size of the window
+    window.setY(locationY);
+    window.setWidth(windowWidth);
+    window.setHeight(windowHeight);
+    locationX += 30;    // set up location for NEXT window
+    locationY += 20;
+    if (locationX + windowWidth + 10 > screenRect.getMaxX()) {
+            // Window would extend past the right edge of the screen,
+            // so reset locationX to its original value.
+        locationX = screenRect.getMinX() + 30;
+    }
+    if (locationY + windowHeight + 10 > screenRect.getMaxY()) {
+            // Window would extend past the bottom edge of the screen,
+            // so reset locationY to its original value.
+        locationY = screenRect.getMinY() + 20;
+    }
+}</pre>
+
+<p>The <classname>WebBrowser</classname> class has a method
+<code>getOpenWindowList()</code> that returns the open window list.
+This method is used by a <classname>BrowserWindow</classname> when
+it constructs the "Window" menu. This is not done in a very efficient
+way: The menu is rebuilt each time it is shown.  A menu emits an
+event when the user clicks the menu name, just before the menu is
+shown.  The <classname>BrowserWindow</classname> registers a
+handler for that event with the Window menu.  The event handler
+gets the open window list from the <classname>WebBrowser</classname>
+and uses it to rebuild the menu before it appears on the screen.
+Here is the code, from the <classname>BrowserWindow</classname>
+class.</p>
+
+<pre>private void populateWindowMenu() {
+    ArrayList&lt;BrowserWindow> windows = owner.getOpenWindowList();
+    while (windowMenu.getItems().size() > 4) {
+           // The menu contains 4 permanent items.  Remove the other
+           // items, which correspond to open windows and are left 
+           // over from the previous time the menu was shown.
+        windowMenu.getItems().remove(windowMenu.getItems().size() - 1);
+    }
+    if (windows.size() > 1) {
+           // Add a "Close All" command only if this is not the only window. 
+        MenuItem item = new MenuItem("Close All and Exit");
+        item.setOnAction( e -> Platform.exit() );
+        windowMenu.getItems().add(item);
+        windowMenu.getItems().add( new SeparatorMenuItem() );
+    }
+    for (BrowserWindow window : windows) {
+        String title = window.getTitle(); // Menu item text is the window title.
+        if (title.length() > 60) {
+                // Let's not use absurdly long menu item texts.
+            title = title.substring(0,57) + ". . .";
+        }
+        MenuItem item = new MenuItem(title);
+        final BrowserWindow win = window; // (for use in a lambda expression)
+            // The event handler for this menu item will bring the corresponding
+            // window to the front by calling its requestFocus() method.
+        item.setOnAction( e -> win.requestFocus() );
+        windowMenu.getItems().add(item);
+        if (window == this) {
+               // Since this window is already at the front, the item
+               // corresponding to this window is disabled.
+            item.setDisable(true);
+        }
+    }
+}</pre>
+
+
+<break/>
+
+<p>And that just about covers things.  As you can see, it's not very difficult to
+manage a multi-window application.  And it is wonderfully easy to write a reasonably
+functional web browser in JavaFX. This has been a good example of building on existing
+classes.  And we've also seen some nice new examples of working with events.
+With that, we have almost reached the end of this textbook.  The
+<localref href="GUI2.5"/> final section will cover a few odds-and-ends of GUI programming.</p>
+
+</subsection>
+
 
 </section>
