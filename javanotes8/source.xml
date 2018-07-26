@@ -430,11 +430,10 @@ as the GUI toolbox.</p>
    windows in a JavaFX application. It requires <sourceref href="BrowserWindow.java">BrowserWindow.java</sourceref>,
    a subclass of <classname>Stage </classname> that does most of the work, and on 
    <sourceref href="chapter13/SimpleDialogs.java">SimpleDialogs.java</sourceref>.</li>
-   
    <li>The Mandelbrot program from <localref href="GUI2.5"/>, which computes and
    displays visualizations of the Mandelbrot set, is defined by several classes in the
-   package <code>edu.hws.eck.mdb</code>.  The source code files can be found in
-   the directory <sourceref href="chapter13/edu/hws/eck/mdb">edu/hws/eck/mdb</sourceref>.</li>
+   package <code>edu.hws.eck.mdbfx</code>.  The source code files can be found in
+   the directory <sourceref href="chapter13/edu/hws/eck/mdbfx">edu/hws/eck/mdbfx</sourceref>.</li>
 </ul>
 
    

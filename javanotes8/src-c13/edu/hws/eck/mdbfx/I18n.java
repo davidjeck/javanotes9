@@ -1,4 +1,4 @@
-package edu.hws.eck.mdb;
+package edu.hws.eck.mdbfx;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -18,7 +18,7 @@ public class I18n {
 	 * where xx is the code for the locale.  To use this file in another program,
 	 * only the propertyFileName has to be changed.
 	 */
-	private final static String propertyFileName = "edu.hws.eck.mdb.strings";
+	private final static String propertyFileName = "edu.hws.eck.mdbfx.strings";
 	
 	/**
 	 * If locale is null, the default locale is used.  A non-null value can be

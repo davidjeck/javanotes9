@@ -264,7 +264,7 @@ buildjar chapter13 SimpleTableDemo
 buildjar chapter13 ScatterPlotTableDemo
 buildjar chapter13 TestDialogs SimpleDialogs.java
 buildjar chapter13 WebBrowser BrowserWindow.java SimpleDialogs.java
-buildpackagejar chapter13 edu.hws.eck.mdb.Main edu/hws/eck edu/hws/eck/mdb
+buildpackagejar chapter13 edu.hws.eck.mdbfx.Main edu
 
 
 rm -rf temp

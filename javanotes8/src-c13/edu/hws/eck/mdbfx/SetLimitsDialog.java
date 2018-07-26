@@ -1,15 +1,25 @@
-package edu.hws.eck.mdb;
+package edu.hws.eck.mdbfx;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.TilePane;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+import javafx.event.ActionEvent;
+import java.util.Optional;
+
 
 /**
  * This class represents a dialog box where the user can enter new values
  * for xmin, xmax, ymin, and ymax.  These values specify the ranges of
  * x and y values that are shown in the Mandelbrot image.
  */
-public class SetLimitsDialog extends JDialog {
+public class SetLimitsDialog extends Dialog<ButtonType> {
 	
 	/**
 	 * This static convenience method shows a dialog of type SetLimitsDialog,
@@ -17,94 +27,72 @@ public class SetLimitsDialog extends JDialog {
 	 * returns the user's response (or null if the user cancels).  Note that
 	 * if you use this method, then you don't have to do anything else with
 	 * this class.
-	 * @param frame The parent of this dialog, which is blocked while the
-	 *   dialog is on screen.
 	 * @param oldLimitStrings an array of 4 strings that are used as the
 	 *   initial content of the input boxes for xmin, xmax, ymin, ymax (in 
 	 *   that order). (Note that I pass strings rather than doubles because
 	 *   I had nicely formatted strings available in the class that calls this
 	 *   method.)
 	 * @return null, if the user cancels, or an array of four doubles, representing
-	 *   the inputs for xmin, xmax, ymin, and ymax.  It is guaranteed that
+	 *   the new values for xmin, xmax, ymin, and ymax.  It is guaranteed that
 	 *   xmin is strictly less than xmax and ymin is strictly less than ymax.
-	 *   (Actually, the return value will also be null when the user clicks OK
+	 *   (The return value will also be null when the user clicks OK
 	 *   without ever editing the initial values in the input boxes.  Only
 	 *   CHANGED values are returned.)
 	 */
-	static double[] showDialog(JFrame frame, String[] oldLimitStrings) {
-		SetLimitsDialog dialog = new SetLimitsDialog(frame,oldLimitStrings);
-		dialog.setVisible(true);
-		return dialog.getInputsIfChanged();
+	static double[] showDialog(String[] oldLimitStrings) {
+		SetLimitsDialog dialog = new SetLimitsDialog(oldLimitStrings);
+		Optional<ButtonType> response = dialog.showAndWait();
+		double[] values = dialog.getInputsIfChanged();
+		if (response.isPresent())
+			return values;
+		else
+			return null;
 	}
 	
 	private double[] inputValues;  // Will contain the user's input after user clicks OK.
 	boolean changed;  // Will be set to true if the user actually edited the input boxes.
 
-	private JButton cancelButton;
-	private JButton okButton;
-	private JTextField[] inputBoxes;
+	private TextField[] inputBoxes;
 	private String[] oldLimitStrings;
 	
 	private static final String[] names = { "limitsdialog.xmin", "limitsdialog.xmax", 
 		                                    "limitsdialog.ymin", "limitsdialog.ymax" };
 	
 	/**
-	 * Constructor builds the dialog box and adds listeners to the buttons.  This
-	 * does not make the dialog visible on the screen.  Note that the dialog is
-	 * disposed when it is closed, so it cannot be reused.  (For a reusable dialog,
-	 * it should be "hidden" rather than disposed.)
-	 * @param frame The parent of the dialog box, which is blocked while the dialog
-	 *   is on the screen.
-	 * @param oldLimitStrings Initial content of input boxes.  Must be an array of length four.
+	 * Constructor builds the dialog box and adds a listener to the OK button.
+	 * Does not make the dialog visible on the screen. 
+	 * @param oldLimitStrings Initial content of input boxes.  Must be an array 
+	 *     of length (at least) four..
 	 */
-	public SetLimitsDialog(JFrame frame, String[] oldLimitStrings) {
-		super(frame,I18n.tr("limitsdialog.title"),true);  // "true" for a modal dialog.
+	public SetLimitsDialog(String[] oldLimitStrings) {
 		this.oldLimitStrings = oldLimitStrings;
-		JPanel content = new JPanel();
-		content.setLayout(new BorderLayout(10,10));
-		setContentPane(content);
-		content.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		JPanel input = new JPanel();
-		input.setLayout(new GridLayout(4,2,5,5));
-		inputBoxes = new JTextField[4];
+		setTitle(I18n.tr("limitsdialog.title"));
+
+		TilePane input = new TilePane(10,10);
+		input.setPrefColumns(2);
+		inputBoxes = new TextField[4];
 		for (int i = 0; i < 4; i++) {
-			inputBoxes[i] = new JTextField(oldLimitStrings[i]);
-			input.add(new JLabel(I18n.tr(names[i])+":"));
-			input.add(inputBoxes[i]);
+			Label label = new Label(I18n.tr(names[i])+":");
+			inputBoxes[i] = new TextField(oldLimitStrings[i]);
+			input.getChildren().addAll( label, inputBoxes[i]);
 		}
-		cancelButton = new JButton(I18n.tr("button.cancel"));
-		okButton = new JButton(I18n.tr("button.ok"));
-		getRootPane().setDefaultButton(okButton);  // This means that the OK button can be invoked by pressing return.
-		JPanel buttons = new JPanel();
-		buttons.add(cancelButton);
-		buttons.add(okButton);
-		content.add( new JLabel(I18n.tr("limitsdialog.question")), BorderLayout.NORTH );
-		content.add( input, BorderLayout.CENTER );
-		content.add( buttons, BorderLayout.SOUTH );
-		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		pack();
-		setLocation(frame.getX()+50, frame.getY()+75);  // Position near top-left corner of parent frame.
-		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = getX();   // The next six lines ensure that the dialog is actually visible on the screen.
-		int y = getY();
-		if (x + getWidth() > screensize.width)
-			x = screensize.width - getWidth() - 30;
-		if (y + getHeight() > screensize.height)
-			y = screensize.height - getHeight() - 30;
-		setLocation(x,y);
-		cancelButton.addActionListener( new ActionListener() {
-			    // Closes the dialog when the user clicks the cancel button.
-			public void actionPerformed(ActionEvent evt) {
-				dispose();
+		input.setAlignment(Pos.CENTER);
+		VBox content = new VBox(15, 
+				new Label(I18n.tr("limitsdialog.question")),
+				input);
+		content.setPadding(new Insets(15));
+		getDialogPane().setContent(content);
+
+		getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+		Button okButton = (Button)getDialogPane().lookupButton(ButtonType.OK);
+		Button cancelButton = (Button)getDialogPane().lookupButton(ButtonType.CANCEL);
+		okButton.setText(I18n.tr("button.ok"));
+		cancelButton.setText(I18n.tr("button.cancel"));
+		okButton.addEventFilter( ActionEvent.ACTION, e -> {
+			if ( checkInput() == false ) {
+				e.consume();
 			}
-		});
-		okButton.addActionListener( new ActionListener() {
-			    // When the user clicks OK, close the dialog only if the input is legal.
-			public void actionPerformed(ActionEvent evt) {
-				if (checkInput())
-					dispose();
-			}
-		});
+		} );
 	}
 	
 	/**
@@ -118,7 +106,7 @@ public class SetLimitsDialog extends JDialog {
 		inputValues = null;
 		String[] inputStrings = new String[4];
 		for (int i = 0; i < 4; i++) {
-			inputStrings[i] = inputBoxes[i].getText();
+			inputStrings[i] = inputBoxes[i].getText(); 
 			if (!inputStrings[i].equals(oldLimitStrings[i]))
 				changed = true;  // At least one of the input strings has been modified.
 		}
@@ -128,23 +116,20 @@ public class SetLimitsDialog extends JDialog {
 				values[i] = Double.parseDouble(inputStrings[i]);
 			}
 			catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog( this,
-						I18n.tr( "limitsdialog.error.NAN", inputStrings[i], I18n.tr(names[i]) ) );
+				error(I18n.tr( "limitsdialog.error.NAN", inputStrings[i], I18n.tr(names[i]) ) );
 				inputBoxes[i].selectAll();
 				inputBoxes[i].requestFocus();
 				return false;
 			}
 		}
 		if (values[1] <= values[0]) {
-			JOptionPane.showMessageDialog(this,
-					I18n.tr("limitsdialog.error.xValuesOutOfOrder" ));
+			error(I18n.tr("limitsdialog.error.xValuesOutOfOrder" ));
 			inputBoxes[1].selectAll();
 			inputBoxes[1].requestFocus();
 			return false;
 		}
 		if (values[3] <= values[2]) {
-			JOptionPane.showMessageDialog(this,
-					I18n.tr("limitsdialog.error.yValuesOutOfOrder" ));
+			error(I18n.tr("limitsdialog.error.yValuesOutOfOrder" ));
 			inputBoxes[3].selectAll();
 			inputBoxes[3].requestFocus();
 			return false;
@@ -184,5 +169,15 @@ public class SetLimitsDialog extends JDialog {
 			return null;
 	}
 
+	
+	/**
+	 * Utility method to show an error alert.
+	 */
+	private void error(String message) {
+		Alert alert = new Alert(Alert.AlertType.ERROR, message);
+		alert.setTitle(I18n.tr("imagesizedialog.error.title"));
+		alert.setHeaderText(null);
+		alert.showAndWait();
+	}
 
 }
