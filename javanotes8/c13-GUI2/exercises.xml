@@ -10,7 +10,7 @@ The program window starts by showing a large uniformly colored rectangle, with o
 animal pictures hidden behind it.  As the user drags the mouse over the image, part of the
 colored overlay is scratched off, revealing the picture underneath.  Here is what it should
 look like after part of the overlay has been removed:</p>
-<img src="scratch-off.jpg" width="450" height="322" tex="scratch-off.png" texscale="0.6" alt="a partly revealed bluebird"/>
+<img src="scratch-off.jpg" width="450" height="322" tex="scratch-off.eps" texscale="0.6" alt="a partly revealed bluebird"/>
 <np>You can implement this by using one canvas, containing the colored overlay, stacked on top of another
 canvas that contains the animal picture.  (Stacked canvases were used in the sample
 program <sourceref href="ToolPaint.java"/> from <localref href="GUI2.2.4"/>.)

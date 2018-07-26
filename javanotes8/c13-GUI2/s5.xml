@@ -4,20 +4,26 @@
 <section id="GUI2.5" title="Finishing Touches">
    
 <p><start><big>I</big>n this final section</start>, I will present a program
-that is more complex and more polished than those we have looked at previously.
+that is more complex and a little more polished than those we have looked at previously.
 Most of the examples in this book have been "toy" programs that illustrated
 one or two points about programming techniques.  It's time to put it all
 together into a full-scale program that uses many of the techniques that
 we have covered, and a few more besides.  After discussing the program and
 its basic design, I'll use it as an excuse to talk briefly about some of
-the features of Java that didn't fit into the rest of this book.</p>
+the features of Java that didn't fit into the rest of this book, including
+some that apply to all programs, not just GUI programs.</p>
    
 <p>The program that we will look at is a Mandelbrot Viewer that lets the user
 explore the famous Mandelbrot set.  I will begin by explaining what that means.
-Note that an even more capable Mandelbrot program can be found at
-<a href="http://math.hws.edu/xJava/MB">http://math.hws.edu/xJava/MB</a>.</p>
+Note that an even more capable Mandelbrot program can be found at</p>
+
+<p align="center"><a href="http://math.hws.edu/eck/js/mandelbrot/java/MB-java.html">http://math.hws.edu/eck/js/mandelbrot/java/MB-java.html</a>.</p>
    
+<np>And there is a JavaScript version that will run in your web browser at</np>
    
+<p align="center"><a href="http://math.hws.edu/eck/js/mandelbrot/MB.html">http://math.hws.edu/eck/js/mandelbrot/MB.html</a></p>
+
+
 <subsection id="GUI2.5.1" title="The Mandelbrot Set">
 
 <p>The Mandelbrot set is a set of points in the xy-plane that is defined by a computational
@@ -45,7 +51,8 @@ So, if <code>x<sup>2</sup>&nbsp;+&nbsp;y<sup>2</sup></code> ever becomes bigger 
 above loop, we can end the loop and say that <code>(a,b)</code> is definitely not in the Mandelbrot
 set.  For a point <code>(a,b)</code> in the Mandelbrot set, the loop will never end.
 When we do this on a computer, of course, we don't want to have a loop that runs
-forever, so we put a limit on the number of times that the loop is executed:</np>
+forever, so we put a limit on the number of times that the loop is executed.  That limit
+is <code>maxIterations</code>:</np>
    
 <pre>x = a;
 y = b;
@@ -76,27 +83,30 @@ using different colors for different counts.  In some sense, the higher the coun
 closer the point is to the Mandelbrot set, so the colors give some information about
 points outside the set and about the shape of the set.  However, it's important to
 understand that the colors are arbitrary and that colored points are definitely <b>not</b>
-in the set.  Here is a picture that was produced by the Mandelbrot Viewer program
-using this computation.  The black region is the Mandelbrot set (except that not
+in the set.  Here is a screenshot from the Mandelbrot Viewer program that
+uses this computation.  The black region is the Mandelbrot set (except that not
 all black points are known to be definitely in the set):</p>
         
-<img src="mandelbrot.png" width="253" height="200" alt="The Mandelbrot Set" tex="mandelbrot.eps"/>
+<img src="mandelbrot.png" width="522" height="405" alt="The Mandelbrot Set" tex="mandelbrot.eps" texscale="0.6"/>
 
 <p>When you use the program, you can "zoom in" on small regions of the plane.  To do so,
-just click-and-drag the mouse on the picture.  This will draw a rectangle around part of the picture.
+just click-and-drag the mouse on the image.  This will draw a rectangular "zoom box" around part of the image,
+as shown in the illustration.
 When you release the mouse, the part of the picture inside the rectangle will be zoomed
 to fill the entire display.  If you simply click a point in the picture, you will zoom
 in on the point where you click by a magnification factor of two.  (Shift-click or
 use the right mouse button to zoom out instead of zooming in.)  The interesting points
 are along the boundary of the Mandelbrot set.  In fact, the boundary is infinitely
 complex.  (Note that if you zoom in too far, you will exceed the capabilities of
-the <ptype>double</ptype> data type; nothing is done in the program to prevent this.)</p>
+the <ptype>double</ptype> data type; nothing is done in the program to prevent this.
+The image will first become "blocky" and then meaningless.)</p>
    
 <p>Use the "MaxIterations" menu to increase
 the maximum number of iterations in the loop.  Remember that black pixels might or might
 not be in the set; when you increase "MaxIterations," you might find that a black region
 becomes filled with color.  The "Palette" menu determines the set of colors that are
-used.  Different palettes give very different visualizations of the set.  The
+used.  Different palettes give very different visualizations of the set, but it's just
+the arbitrary colors that are different.  The
 "PaletteLength" menu determines how many different colors are used.  In the default
 setting, a different color is used for each possible value of <code>count</code> in
 the algorithm.  Sometimes, you can get a much better picture by using a different
@@ -122,7 +132,7 @@ and beauty can arise out of such a simple algorithm.</p>
 <subsection id="GUI2.5.2" title="Design of the Program">
 
 <p>Most classes in Java are defined in packages.  While we have used
-standard packages such as <code>javax.swing</code> and <code>java.io</code>
+standard packages such as <code>javafx.scene.control</code> and <code>java.io</code>
 extensively, almost all of my programming examples have been in the
 "default package," which means that they are not declared to belong
 to any named package.  However, when doing more serious programming, 
@@ -134,7 +144,7 @@ and no other computer in the world should have the same name.
 According to Oracle, this allows me to use the package name
 <code>edu.hws.eck</code>, with the elements of the domain name
 in reverse order.  I can also use sub-packages of this package,
-such as <code>edu.hws.eck.mdb</code>, which is the package name
+such as <code>edu.hws.eck.mdbfx</code>, which is the package name
 that I decided to use for my Mandelbrot Viewer application.
 No one else&mdash;or at least no one else who uses the same naming
 convention&mdash;will ever use the same package name, so this
@@ -143,89 +153,124 @@ package name uniquely identifies my program.</p>
 <p>I briefly discussed using packages in <localref href="basics.6.6"/>
 and in the context of the programming examples in <localref href="threads.5"/>.
 Here's what you need to know for the Mandelbrot Viewer program:
-The program is defined in eight Java source code files.  They can be
-found in the directory <sourceref href="edu/hws/eck/mdb"/> inside
+The program is defined in seven Java source code files.  They can be
+found in the directory <sourceref href="edu/hws/eck/mdbfx"/> inside
 the <code>source</code> directory of the web site.  (That is, they
-are in a directory named <code>mdb</code>, which is inside a
+are in a directory named <code>mdbfx</code>, which is inside a
 directory named <code>eck</code>, which is inside <code>hws</code>,
 which is inside <code>edu</code>.  The directory structure must follow
 the package name in this way.)  The same directory also contains a
-file named <sourceref href="edu/hws/eck/mdb/strings.properties">strings.properties</sourceref>
-that is used by the program and that will be discussed below.
-And there is an <code>examples</code> folder that contains resource files used for an "Examples" menu.
+file named <sourceref href="edu/hws/eck/mdbfx/strings.properties">strings.properties</sourceref>;
+this file is used by the program and will be discussed below.
+And there is an <code>examples</code> folder that contains resource files that are used with an "Examples" menu.
 For an Integrated Development Environment
 such as Eclipse, you should just have to add the <code>edu</code> directory
 to your project.  To compile the files on the command line, you must be
 working in the directory that contains the <code>edu</code> directory.
-Use the command</p>
+To compile the source code, use the command</p>
    
-<pre>javac  edu/hws/eck/mdb/*.java</pre>
+<pre>javac  edu/hws/eck/mdbfx/*.java</pre>
    
 <np>or, if you use Windows,</np>
    
-<pre>javac  edu\hws\eck\mdb\*.java</pre>
+<pre>javac  edu\hws\eck\mdbfx\*.java</pre>
    
-<np>to compile the source code.  The main routine for the 
-program is defined by a class named <classname>Main</classname>.  To run this
-class, use the command:</np>
+<np>The main application class for the 
+program is defined by a class named <classname>Main</classname>.  To run the
+program, use the command:</np>
    
-<pre>java  edu.hws.eck.mdb.Main</pre>
+<pre>java  edu.hws.eck.mdbfx.Main</pre>
    
 <np>This command must also be given in the directory that contains the <code>edu</code> directory.</np>
    
 <break/>
    
 <p>The work of computing and displaying images of the Mandelbrot set is done
-in <sourceref href="edu/hws/eck/mdb/MandelbrotDisplay.java">MandelbrotDisplay.java</sourceref>.  The
-<classname>MandelbrotDisplay</classname> class is a subclass of <classname>JPanel</classname>.
-It uses an off-screen canvas to hold a copy of the image.  (See <localref href="GUI2.1.1"/>.)
-The <code>paintComponent()</code> method copies this image onto the panel.  Then, if the user
-is drawing a "zoom box" with the mouse, the zoom box is drawn on top of the image.
-In addition to the image, the class uses a two-dimensional array to store the
-iteration count for each pixel in the image.
-If the range of xy-values changes, or if the size of the window changes, all the
-counts must be recomputed.  Since the computation can take quite a while,
+in <sourceref href="edu/hws/eck/mdbfx/MandelbrotCanvas.java">MandelbrotCanvas.java</sourceref>.  The
+<classname>MandelbrotCanvas</classname> class is a subclass of <classname>Canvas</classname>
+that can compute and display visualizations of the Mandelbrot set, as discussed above.
+The image that is shown is determined by the ranges of x and y values that are visible, the
+maximum number of iterations for the Mandelbrot algorithm, and the palette that is
+used to color the pixels.  All of those things are properties of the <classname>MandelbrotCanvas</classname>.</p>
+
+<p>In addition to coloring the pixels of the image, the <classname>MandelbrotCanvas</classname>
+class uses a two-dimensional array to store the
+iteration count for each pixel in the image. As discussed above, the iteration count for
+a pixel is used, along with the palette, to determine the color to use for that pixel.
+If the palette is changed, the iteration counts are used to reset the color of each pixel
+without doing the whole Mandelbrot computation again.
+However, if the range of xy-values changes, or if the size of the window changes, all of the
+iteration counts must be recomputed.  Since the computation can take a while,
 it would not be acceptable to block the user interface while the computation is
 being performed.  The solution is to do the computation in separate "worker" threads,
-as discussed in <localref href="threads"/>.  The program uses one worker thread
-for each available processor.  When the computation begins, the image is filled
-with gray.  Every so often, about twice a second, the data that has been computed by
-the computation threads is gathered and applied to the off-screen canvas, and the part
-of the canvas that has been modified is copied to the screen.  A <classname>Timer</classname>
-is used to control this process&mdash;each time the timer fires, the image is updated with any
-new data that has been computed by the threads.  The user can continue
+as discussed in <localref href="threads.2.3"/>.  The program uses one worker thread
+for each available processor. When the computation begins, the image is transparent
+and you see the gray background of the window.  The full computation is broken
+into tasks, where each tasks computes one row of the image.  After finishing the
+computation, the task will apply the appropriate colors to the pixels in
+the assigned row.  Since the canvas can only be modified in the JavaFX application
+thread, the task uses <code>Platform.runLater()</code> to make the changes.
+(See <localref href="threads.2.1"/>.)  The user can continue
 to use the menus and even the mouse while the image is being computed.</p>
-   
-<p>The file <sourceref href="edu/hws/eck/mdb/MandelbrotPanel.java">MandelbrotPanel.java</sourceref> defines the
-main panel of the Mandelbrot Viewer window.  <classname>MandelbrotPanel</classname>
-is another subclass of <classname>JPanel</classname>.  A <classname>MandelbrotPanel</classname>
-is mostly filled with a <classname>MandelbrotDisplay</classname>.  It also adds
-a <classname>JLabel</classname> beneath the display.  The <classname>JLabel</classname>
-is used as a "status bar" that shows some information that might be interesting to
-the user.  The <classname>MandelbrotPanel</classname> also defines the program's
-mouse listener.  In addition to handling zooming, the mouse listener puts the
-x and y coordinates of the current mouse location in the status bar as the user
-moves or drags the mouse.  Also, when the mouse exits the drawing area, the text
-in the status bar is set to read "Idle".  This is the first time that we have seen
-an actual use for <code>mouseMoved</code> and <code>mouseExited</code> events.
-(See <localref href="GUI1.4.2"/> and <localref href="GUI1.4.4"/>.)</p>
-   
-<p>The menu bar for the program is defined in <sourceref href="edu/hws/eck/mdb/Menus.java">Menus.java</sourceref>.
-Commands in the "File" and "Control" menu are defined as <classname>Actions</classname>.
-(See <localref href="GUI2.3.1"/>.)  Note that among the actions are file manipulation
+
+<p>The file <sourceref href="edu/hws/eck/mdbfx/MandelbrotPane.java">MandelbrotPane.java</sourceref> represents the
+entire content of the Mandelbrot Viewer window.  <classname>MandelbrotPane</classname>
+is a subclass of <classname>BorderPane</classname>.  The center position
+of a <classname>MandelbrotPane</classname> holds a <classname>MandelbrotCanvas</classname>.
+In fact, a second, transparent, "overlay" canvas is stacked on top of
+the canvas that contains the image.  When the the user
+draws a "zoom box" with the mouse, the zoom box is actually drawn in the top
+canvas so that drawing it does not damage the image. (See <localref href="GUI2.2.4"/>.
+The bottom position in the <classname>MandelbrotPane</classname> contains a
+<classname>Label</classname>, which serves as
+"status bar" showing some information that might be interesting to
+the user.  Finally, there is a menu bar at the top of the pane.</p>
+
+<p>The menu bar for the program is defined in <sourceref href="edu/hws/eck/mdbfx/Menus.java">Menus.java</sourceref>,
+which is a subclass of <classname>MenuBar</classname>. (See <localref href="GUI1.6.2"/> for a discussion of
+menus and menu items.)
+All of the menu items in the <classname>Menus</classname> class, and the commands that
+they represent are implemented by methods and nested subclasses in that class.
+Among the commands are file manipulation
 commands that use techniques from <localref href="IO.2.3"/>, <localref href="IO.5.2"/>,
-and <localref href="GUI2.1.5"/>.  The "MaxIterations," "Palette," and "PaletteLength"
-menus each contain a group of <classname>JRadioButtonMenuItems</classname>.
-(See <localref href="GUI2.3.3"/>.)  I have tried several approaches for handling such
-groups, and none of them have satisfied me completely.  In this program, I have
+and <localref href="GUI2.2.6"/>.  The "MaxIterations," "Palette," and "PaletteLength"
+menus each contain a group of <classname>RadioMenuItems</classname>. In this program, I have
 defined a nested class inside <classname>Menus</classname> to represent each group.
 For example, the <classname>PaletteManager</classname> class contains the
 menu items in the "Palette" menu as instance variables.  It registers an action
-listener with each item, and it defines a few utility routines for operating on
+event handler with each item, and it defines a few utility routines for operating on
 the menu.  The classes for the three menus are very similar and should probably
 have been defined as subclasses of some more general class.  There is an
 "Examples" menu that contains settings for several sample views of pieces of the
 Mandelbrot set.</p>
+
+
+<p>Much of the work of the program is done in <classname>MandelbrotPane</classname>.
+It installs MousePressed, MouseDragged, and MouseReleased event handlers on the
+overlay canvas to implement zooming the image.  It also installs a MouseMoved
+event handler that updates the status bar to display the xy-coordinates in the
+image that correspond to the mouse location.  A MouseMoved event is generated
+when the user simply moves the mouse without holding down a mouse button.
+And a MouseExited event handler on the canvas is used to reset the status bar
+to read "Idle" when the mouse moves out of the canvas.</p>
+
+<p>Furthermore, many menu commands are implemented by calling methods in the 
+<classname>MandebrotPane</classname> class.  The <classname>Menus</classname>
+class has an instance variable named <code>owner</code> that refers to the
+<classname>MandelbrotPane</classname> that contains the menu bar,
+and that variable can be used to call methods from the <classname>MandelbrotPane</classname>.
+For example, there is a
+<code>setLimits()</code> method that can be called to set the range of 
+xy-values that are shown in the image, and there are methods for setting
+the palette, the palette length, and the value of <code>maxIterations</code>.
+Whenever one of these properties is changed, the Mandelbrot image has to be
+modified.  When the palette or palette length is changed, <classname>MandelbrotPane</classname>
+computes a new palette of colors, and calls a method in <classname>MandelbrotCanvas</classname>
+to tell it to use the new palette. When the limits or maxIterations is changed,
+the image will have to be entirely recomputed.  <classname>MandelbrotPane</classname>
+calls a <code>startJob()</code> method in <classname>MandelbrotCanvas</classname>
+to tell it to start a new job.  All of the work of setting up and managing the job
+is done in <classname>MandelbrotCanvas</classname>.</p>
 
 <p>The <classname>MandelbrotPanel</classname> that
 is being used in the program is a parameter to the <classname>Menus</classname> constructor.
@@ -235,28 +280,272 @@ carry out these commands, the <classname>Menus</classname> object needs a refere
 to the <classname>MandelbrotPanel</classname>.  As for the <classname>MandelbrotDisplay</classname>,
 the panel has a method <code>getDisplay()</code> that returns a reference to
 the display that it contains. So as long as the menu bar has a reference to the
-panel, it can obtain a reference to the display.  In previous examples, everything
+panel, it can obtain a reference to the display.  In previous examples in this book, everything
 was written as one large class file, so all the objects were directly available to
 all the code.  When a program is made up of multiple interacting files,
 getting access to the necessary objects can be more of a problem.</p>
    
-<p><classname>MandelbrotPanel</classname>, <classname>MandelbrotDisplay</classname>,
-and <classname>Menus</classname> are the main classes that make up the
-Mandelbrot Viewer program.  <sourceref href="edu/hws/eck/mdb/MandelbrotFrame.java">MandelbrotFrame.java</sourceref>
-defines a simple subclass of <classname>JFrame</classname> that  shows a
-MandelbrotPanel and its menu bar.  And
-<sourceref href="edu/hws/eck/mdb/Main.java">Main.java</sourceref>
-contains the <code>main()</code> routine that actually runs the program.
-There are a few other classes that I will discuss below.</p>
+<p><classname>MandelbrotPane</classname>, <classname>MandelbrotCanvas</classname>,
+and <classname>Menus</classname> are the major classes in the
+Mandelbrot Viewer program.  <sourceref href="edu/hws/eck/mdbfx/Main.java">Main.java</sourceref>
+is the subclass of <classname>Application</classname> that must be executed to run the
+program.  Its <code>start()</code> method just places a <classname>MandelbrotPane</classname>
+into the program's primary <classname>stage</classname>.  (See <localref href="GUI1.6.3"/>)
+It also has one other task, which is discussed below. The program also contains three other classes.
+Two of them, <sourceref href="edu/hws/eck/mdbfx/SetImageSizeDialog.java">SetImageSizeDialog.java</sourceref>
+and <sourceref href="edu/hws/eck/mdbfx/SetLimitsDialog.java">SetLimitsDialog.java</sourceref>,
+define custom dialog boxes.  I will not discuss them further; see <localref href="GUI2.4.1"/>.
+The final class is <classname>I18n</classname>, which I will discuss below.</p>
    
 <p>This brief discussion of the design of the Mandelbrot Viewer has shown that it
 uses a wide variety of techniques that were covered earlier in this book.
-In the rest of this section, we'll look at a few new features of Java
-that were used in the program.</p>
+In the rest of this section, we'll look at a few new features
+that are used in the program.</p>
    
 </subsection>   
    
-<subsection id="GUI2.5.3" title="Internationalization">
+
+
+<subsection id="GUI2.5.3" title="Events, Listeners, and Bindings">
+   
+<p>We have worked extensively with events and event listeners, and to a lesser
+extent with binding of observable properties.  But it is interesting
+to look at how they are used in the Mandelbrot Viewer program, where
+there are several classes involved.</p>
+   
+<p>Let's start from the following fact:  The <classname>MandelbrotCanvas</classname>
+class knows nothing about the <classname>Menus</classname> class, yet the menu bar
+contains menu items that seem to know what's happening in the canvas class.
+In particular, some of the menu items are disabled when a computation is in progress.
+Since the canvas does not call methods or use variables from the menu class, how
+can the menus know whether or not a computation is in progress in the canvas?
+The answer, of course, is events&mdash;or more exactly, a binding (<localref href="GUI2.1.2"/>).
+A <classname>MandelbrotCanvas</classname> has an observable boolean property named
+<code>working</code> that is true exactly when a computation is in progress.
+The menu items should be disabled when the value of that property is true.
+That can be set up in one line by binding the <code>disableProperty</code>
+of the menu item to the <code>workingProperty</code> of the canvas.
+For example, this is done in the <code>Menus</code> constructor for the <code>saveImage</code> 
+menu item with the command
+</p>
+
+<pre>saveImage.disableProperty().bind(owner.getDisplay().workingProperty());</pre>
+
+<np>Here, <code>owner</code> refers to the <classname>MandelbrotPane</classname>,
+and <code>owner.getDisplay()</code> is the <classname>MandelbrotCanvas</classname>
+that it contains.</np>
+
+<p>Similarly, there is a "Restore Previous Limits" menu command that will reset the
+range of the xy-values in the image to their values before the most recent change.
+The <classname>Menus</classname> class uses an instance variable, <code>previousLimits</code>,
+of type <atype>double[]</atype>, to remember the previous limits.  But how does it
+get that information?  When the user zooms in or out on the image, the change takes
+place entirely in the <classname>MandelbrotPanel</classname> class.  There has to be
+a way for the menus to be notified of the change.  Again, the solution is an
+observable property this time of type <atype>ObjectProperty&lt;double[]&gt;</atype>.
+The <classname>Menus</classname> constructor adds a <classname>ChangeListener</classname>
+to the <code>limitsProperty</code> from the <classname>MandelbrotPane</classname> class:</p>
+ 
+<pre>owner.limitsProperty().addListener( (o,oldVal,newVal) -> {
+       // save old value of limitsProperty for use in "Restore Previous Limits"
+    previousLimits = oldVal;
+    undoChangeOfLimits.setDisable( previousLimits == null );
+});</pre>
+   
+<p>The point is that because events are used for communication, the <classname>MandelbrotCanvas</classname>
+and <classname>MandelbrotPane</classname> classes are
+not strongly coupled to the <classname>Menus</classname> class.  In fact, they could be used 
+without any modification in other programs that don't even use the same <classname>Menus</classname> class.
+The alternative to using events and binding would be
+to have the canvas and display classes call methods such as <code>limitsChanged()</code>
+or <code>computationStarted()</code> in the <classname>Menus</classname> class.
+This would be strong coupling: Any programmer who wanted to use <classname>MandelbrotCanvas</classname>
+would also have to use <classname>Menus</classname> as well, or would have to modify the canvas class so
+that it no longer refers to the <classname>Menus</classname>.  Of course, not everything can be done with 
+events and not all strong coupling is bad: The <classname>MandelbrotPane</classname> class
+refers directly to the <classname>MandelbrotCanvas</classname> class and cannot be used
+without it&mdash;but since the whole purpose of a <classname>MandelbrotPane</classname>
+is to hold a <classname>MandelbrotCanvas</classname>, the coupling is not a problem.
+(<classname>MandelbrotCanvas</classname>, on the other hand, could be used independently
+of <classname>MandelbrotPane</classname>.)
+</p>
+   
+<break/>
+   
+<p>There is another interesting use of events in <classname>MandelbrotPane</classname>
+The image canvas and overlay canvas are contained in a <classname>StackPane</classname>
+named <code>displayHolder</code>.  When the user changes the size of the window,
+the size of the <code>displayHolder</code> is changed to match.  When that happens
+the canvasses should be resized to fit the new display size, and a new computation
+should be started to compute a new image.  The <classname>MandelbrotPane</classname>
+class installs listeners on the height and width properties of <code>displayHolder</code>
+to respond to changes in size. (See the discussion of canvas resizing 
+in <localref href="GUI2.1.2"/>.)  However when the user dynamically changes the size of the window, 
+the size of <code>displayHolder</code> can change many times each second.  
+It is a fairly big deal to set up and start a new image computation,
+not something I want to do many times in a second.  If you try resizing
+the program's window, you'll notice that the canvas doesn't change size dynamically
+as the window size changes.  The same image is shown as long as
+the size is changing.  Only about one-third of a second after the size has stopped
+changing will a new, resized image be computed.  Here is how this works.</p>
+
+<p>The listeners that handle changes in the size of <code>displayHolder</code>
+are set up to call a method named <code>startDelayedJob()</code>:</p>
+
+<pre>displayHolder.widthProperty().addListener( e -> startDelayedJob(300,true) );
+displayHolder.heightProperty().addListener( e -> startDelayedJob(300,true) );</pre>
+
+<np>The first parameter to <code>startDelayedJob()</code> is the number of milliseconds
+to wait before resizing the canvas and starting a new computation.  (The second parameter
+merely says that the canvas does need to be resized before the computation is started.)
+To implement the delay, <code>startDelayedJob()</code> uses an object of type
+<classname>Timer</classname>, from package <code>java.util</code>.
+A <classname>TimerTask</classname> can be submitted to a <classname>Timer</classname>
+to be executed after a specified delay.  Until the time when it is executed, it is
+possible to cancel a task.  So, <code>startDelayedJob()</code> submits a task
+to the timer that will resize the canvas after 300 milliseconds.  If <code>startDelayedJob()</code>
+is called again before that delay has expired, it cancels the previous task and submits
+a new one to the timer.  The result is that no task actually gets executed until
+300 milliseconds pass before the next call to <code>startDelayedJob()</code>.</np>
+
+<p>(There is an option in the program to give a fixed size to the image.  In that case,
+the size of the <code>displayHolder</code> should not change.
+It is possible that the image might not fill the window, leaving some of the gray
+background of the window visible.  It is also possible that the image might be too
+big for the window.  In that case, scroll bars will appear that can be used to 
+scroll the image.  This is done by a <classname>ScrollPane</classname>, a container
+that contains one component and provides scroll bars for it if necessary.
+When the image size is fixed, the <code>displayHolder</code> is removed from
+the <classname>MandelbrotPane</classname> and placed into a <classname>ScrollPane</classname>,
+and the <classname>ScrollPane</classname> is then placed in the center position of the
+<classname>MandelbrotPane</classname>.)</p>
+
+   
+</subsection>
+
+
+<subsection id="GUI2.5.4" title="A Few More Details">
+   
+<p>To finish this textbook's look at GUI programming, I would like to mention
+a couple details that haven't quite fit into previous sections.</p>
+
+<p>We have seen that resource files are files that are part of a program
+but do not contain program code.  It is very easy to use image resource
+files with the <classname>Image</classname> class (<localref href="GUI1.2.3"/>).
+But any kind of data can be stored in resource files.  For example,
+the Mandelbrot Viewer program has an "Examples" menu.  When the user chooses
+a command from that menu, the parameters for some particular view of the
+Mandelbrot set are loaded into the program.  Those parameters are stored
+in a resource file, which uses a simple XML text format.  The question is,
+how does the program get access to the file?  Unfortunately, it's not 
+quite as easy as creating an <classname>Image</classname> from an
+image resource file.</p>
+   
+<p>Resources are stored in files that are in the same locations
+as the compiled class files for the program.  Class files are located
+and loaded by something called a <newword>class loader</newword>, which
+is represented in Java by an object of type <classname>ClassLoader</classname>.
+A class loader has a list of locations where it will look for class files.
+This list is called the <newword>class path</newword>.  It includes the
+location where Java's standard classes are stored.  It generally includes
+the current directory.  If the program is stored in a jar file, the jar
+file is included on the class path.  In addition to class files, a
+<classname>ClassLoader</classname> is capable of finding resource files
+that are located on the class path or in subdirectories of locations that
+are on the class path.</p>
+   
+<p>The first step in using a general resource is to obtain a <classname>ClassLoader</classname>.
+That class loader can then be used to locate the resource file.   Every object has an instance method
+<code>getClass()</code>, which returns an object that represents the class of that
+object.  The class object, in turn, has a method <code>getClassLoader()</code>
+that returns the <classname>ClassLoader</classname> that loaded the class.
+So, in an instance method of an object, you can say</p>
+   
+<pre>ClassLoader classLoader = getClass().getClassLoader();</pre>
+
+<np>to get the class loader that you need.   Another way to get a reference to
+a class object is to use <code>ClassName.class</code>, where <classname>ClassName</classname>
+is the name of any class.  For example, in the Mandelbrot Viewer program, I could have used
+<classname>Menus.class.getClassLoader()</classname> to get the class loader for the program.</np>
+
+<p>Once you have a class loader, you can use it to look up a resource file.
+The class loader will actually return a URL for a file, and you can read the
+data in the file from that URL.  (URLs, and reading the data that they refer to,
+were discussed in <localref href="IO.4"/>.)  To find the resource file, the class
+loader requires the path to the file, just as for an image resource file.  The path
+includes the file name as well as any directories that you need to traverse
+to get to the file.  The resource files that contain the Mandelbrot examples are
+inside a chain of directories:  <code>edu/hws/eck/mdbfx/examples</code>, and
+the full path for one of the files whose named is "settings1.mdb" is
+<code>edu/hws/eck/mdbfx/examples/settings1.mdb</code>.  Here's a command
+that gets a URL for that file:</p>
+
+<pre>URL resourceURL = 
+         classLoader.getResource("edu/hws/eck/mdbfx/examples/settings1.mdb");</pre>
+         
+<np>Once you have the URL, you can open an <classname>InputStream</classname> to
+read the data from the file:</np>
+
+<pre>InputStream stream = resourceURL.openStream();</pre>
+
+<np>and that's exactly what's done to implement the "Examples" menu in the
+Mandelbrot Viewer program.  By using an input stream, you can read any type
+of data from a resource file, and you can do anything you want with it.
+But remember that for some kinds of data, such as images, Java has more
+convenient ways to load the data into a program.</np>
+
+<break/>
+
+<p>My second, short topic is <newword>accelerators</newword> for menu items.
+An accelerator is a key or combination of keys on the keyboard that can be
+used to invoke the menu item, as an alternative to selecting the menu item
+with a mouse.  A typical example is Control-S for saving a file.
+The class <classname>KeyCombination</classname>, from package 
+<code>javafx.scene.input</code>, represents combinations of keys
+that can be used for accelerators.  A <classname>KeyCombination</classname>
+can be created from a string such as "ctrl+S".  The string contains items
+separated by plus signs.  Each item except for the last represents a
+modifier key: "ctrl", "alt", "meta", "shift" and "shortcut".  (The modfiers can use
+upper or lower case.)  The "shortcut" modifier is special:  On a Mac, it is equivalent
+to the command key, "meta"; on Windows and Linux, it is equivalent to the control key, "ctrl".
+So, by using "shortcut", you get the appropriate modifier for menu commands on the
+system where the program is running.  The last item in a key combination string
+is one of the enumerated type constants from the <classname>KeyCode</classname> type.
+This will generally be an upper case letter, which represents one of the letter keys (it must be
+upper case), but it can also be a function key such as F9.  (Not all keys will work.)
+For example, the string "ctrl+shift+N" represents holding down the control and shift keys
+and pressing the "N" key; the string "shortcut+S" represents holding down the appropriate
+modifier for the computer you are using and pressing the "S" key.
+The string that describes a key combination can be passed to the static method
+<code>KeyCombination.valueOf()</code> to make a key combination object that can
+be used to install an accelerator for a menu item.  Here, for example,
+is the code from the Mandebrot Viewr program that adds an accelerator to the
+<classname>MenuItem</classname>, <code>saveImage</code>, for the "Save Image" command:</p>
+
+<pre>saveImage.setAccelerator( KeyCombination.valueOf("shortcut+shift+S") );</pre>
+
+<p>Accelerators can be used with any kind of menu items, including
+<classname>RadioMenuItems</classname> and <classname>CheckMenuItem</classname>.
+In all cases when the user types the the accelerator key combination, it
+has the same effect as selecting the item with the mouse.  The accelerator
+for a menu item is ordinarily shown in the menu item, along with the
+text of the menu item. In
+the Mandelbrot Viewer program, all of the commands in the "File" and
+"Control" menus have accelerators.</p>
+
+<p>
+</p>
+
+
+</subsection>
+
+
+<subsection id="GUI2.5.5" title="Internationalization">
+
+<p>In the remainder of this section, we look at two topics the apply to
+all programs, not to GUI programming in particular.  These are things
+that you are not likely to use in a small program written for your
+own use, but they are important for large applications.</p>
    
 <p><newword>Internationalization</newword> refers to writing a program that
 is easy to adapt for running in different parts of the world.  Internationalization
@@ -273,7 +562,7 @@ not be coded into the program source code.  If they were, then a translator
 would have to search through the entire source code, replacing every string
 with its translation.  Then the program would have to be recompiled.  In
 a properly internationalized program, all the strings are stored together
-in one or more files that are separate from the source code, where they
+in one or more files that are separate from the Java source code, where they
 can easily be found and translated.  And since the source code doesn't have
 to be modified to do the translation, no recompilation is necessary.</p>
    
@@ -328,16 +617,16 @@ For the file error example, the properties file might contain:</np>
 <np>The program would fetch the value string for the key <code>error.cantLoad</code>.  It would
 then substitute the actual file name for the placeholder, "<code>{0}</code>".  Note that when
 the string is translated, the word order might be completely different.  By using a placeholder for
-the file name, you can be sure that the file name will be put in the correct grammatical
+the file name, the translator can make sure that the file name is put in the correct grammatical
 position for the language that is being used.  Placeholder substitution is not handled
 by the <classname>ResourceBundle</classname> class, but Java has another class,
 <classname>MessageFormat</classname>, that makes such substitutions easy.</np>
    
 <p>For the Mandelbrot Viewer program, the properties file is 
-<sourceref href="edu/hws/eck/mdb/strings.properties">strings.properties</sourceref>.  (Any properties
+<sourceref href="edu/hws/eck/mdbfx/strings.properties">strings.properties</sourceref>.  (Any properties
 file should have a name that ends in "<code>.properties</code>".)  Any string that you see when
-you run the program comes from this file.  For handling value string lookup, I wrote
-<sourceref href="edu/hws/eck/mdb/I18n.java">I18n.java</sourceref>.  The <classname>I18n</classname>
+you run the program comes from this file.  For handling value string lookup, I wrote the class
+<sourceref href="edu/hws/eck/mdbfx/I18n.java">I18n.java</sourceref>.  The <classname>I18n</classname>
 class has a static method</p>
    
 <pre>public static tr( String key, Object... args )</pre>
@@ -376,201 +665,6 @@ Japanese locale; and in any other locale it will use the default properties file
 </subsection>
 
 
-<subsection id="GUI2.5.4" title="Events, Events, Events">
-   
-<p>We have worked extensively with mouse events, key events, and action events, but
-these are only a few of the event types that are used in Java.  The Mandelbrot Viewer
-program makes use of several other types of events.  It also serves as an example of
-the benefits of event-oriented programming.</p>
-   
-<p>Let's start from the following fact:  The <classname>MandelbrotDisplay</classname>
-class knows nothing about any of the other classes that make up the program (with the
-single exception of one call to the internationalization method <code>I18n.tr</code>).
-Yet other classes are aware of things that are going on in the <classname>MandelbrotDisplay</classname>
-class.  For example, when the size of the display is changed, the new size is reported
-in the status bar that is part of the <classname>MandelbrotPanel</classname> class.
-In the <classname>Menus</classname> class, certain menus are disabled when the
-display begins the computation of an image and are re-enabled when the computation
-completes.  The display doesn't call methods in the <classname>MandelbrotPanel</classname>
-or <classname>Menus</classname> classes, so how do these classes get their information
-about what is going on in the display?  The answer, of course, is events.  The
-<classname>MandelbrotDisplay</classname> object emits events of various types when various
-things happen.  The <classname>MandelbrotPanel</classname> and <classname>Menus</classname>
-objects set up listeners that hear those events and respond to them.</p>
-   
-<p>The point is that because events are used for communication, the <classname>MandelbrotDisplay</classname>
-class is not strongly coupled to the other classes.  In fact, it can be used in other
-programs without any modification and without access to the other classes.  The alternative to using events would be
-to have the display object call methods such as <code>displaySizeChanged()</code>
-or <code>computationStarted()</code> in the <classname>MandelbrotPanel</classname> and 
-<classname>MandelbrotFrame</classname> objects to tell them what is going on in the display.
-This would be strong coupling: Any programmer who wanted to use <classname>MandelbrotDisplay</classname>
-would also have to use the other two classes or would have to modify the display class so
-that it no longer refers to the other classes.  Of course, not everything can be done with 
-events and not all strong coupling is bad: The <classname>MandelbrotPanel</classname> class
-refers directly to the <classname>MandelbrotDisplay</classname> class and cannot be used
-without it&mdash;but since the whole purpose of a <classname>MandelbrotPanel</classname>
-is to hold a <classname>MandelbrotDisplay</classname>, the coupling is not a problem.</p>
-   
-<break/>
-   
-<p>The Mandelbrot Viewer program responds to mouse events on the display.  These
-events are generated by the display object, but the display class itself doesn't care
-about mouse events and doesn't do anything in response to them.  Mouse events are handled
-by a listener in the <classname>MandelbrotPanel</classname>, which responds to them by
-zooming the display and by showing mouse coordinates in the status bar.</p>
-   
-<p>The status bar also shows the new size of the display whenever that size is changed.
-To handle this, events of type <classname>ComponentEvent</classname> are used.
-When the size of a component is changed, a <classname>ComponentEvent</classname>
-is generated.  In the Mandelbrot Viewer program, a <classname>ComponentListener</classname>
-in the <classname>MandelbrotPanel</classname> class listens for size-change events
-in the display.  When one occurs, the listener responds by showing the new size in the
-status bar; the display knows nothing about the status bar that shows the display's size.</p>
-
-<p>Component events are also used internally in the <classname>MandelbrotDisplay</classname> 
-class in an interesting way.  When the user dynamically changes the size of the display,
-its size can change several times each second.  Normally, a change of display size
-would trigger the creation of a new off-screen canvas and the start of a new
-asynchronous computation of the image.  However, doing this is
-a big deal, not something I want to do several times in a second.  If you try resizing
-the program's window, you'll notice that the image doesn't change size dynamically
-as the window size changes.  The same image and off-screen canvas are used as long as
-the size is changing.  Only about one-third of a second after the size has stopped
-changing will a new, resized image be produced.  Here is how this works:
-The display sets up a <classname>ComponentListener</classname> to listen for
-resize events on itself.  When a resize occurs, the listener starts a <classname>Timer</classname>
-that has a delay of 1/3 second.  (See <localref href="GUI1.5.1"/>.)
-While this timer is running, the <code>paintComponent()</code>
-method does not resize the image; instead, it reuses the image that already exists.
-If the timer fires 1/3 second later, the image will be resized at that time. However, if
-another resize event occurs while the first timer is running, then the first timer will
-be stopped before it has a chance to fire, and a new timer will be started with a
-delay of 1/3 second.  The result is that the image does not get resized until 1/3
-second after the size of the window stops changing.</p>
-   
-<p>The Mandelbrot Viewer program also uses events of type <classname>WindowEvent</classname>,
-which are generated by a window when it opens or closes (among other things).
-Window events are used by <sourceref href="edu/hws/eck/mdb/Main.java">Main.java</sourceref>
-to trigger an action that has to be taken when the program is ending; this will be discussed
-below.</p>
-
-<p>Perhaps the most interesting use of events in the Mandelbrot Viewer program is to
-enable and disable menu commands based on the status of the display.  For this,
-events of type <classname>PropertyChangeEvent</classname> are used.  This event
-class is part of a "bean" framework that Java uses for some advanced work with objects,
-and class <classname>PropertyChangeEvent</classname> and related classes are
-defined in the package <code>java.beans</code>.  The idea is that bean objects are
-defined by their "properties" (which are just aspects of the state of the bean).
-When a bean property changes, the bean can emit a <classname>PropertyChangeEvent</classname>
-to notify other objects of the change.  Properties for which property change
-events are emitted are known technically as <newword>bound properties</newword>.
-A bound property has a <b>name</b> that identifies that particular property 
-among all the properties of the bean.  When a property change event is generated,
-the event object includes the name of the property that has changed, the previous
-value of the property, and the new value of the property.</p>
-   
-<p>The <classname>MandelbrotDisplay</classname> class has a bound property whose
-name is given by the constant <code>MandelbrotDisplay.STATUS_PROPERTY</code>.
-A display emits a property change event when its status changes.
-The possible values of the status property are given by other constants, such as
-<code>MandelbrotDisplay.STATUS_READY</code>.  The <code>READY</code> status
-indicates that the display is not currently running a computation and is ready
-to do another one.  There are several menu commands that should be enabled only when the status
-of the display is <code>READY</code>.  To implement this, the <classname>Menus</classname>
-class defines a <classname>PropertyChangeListener</classname> to listen
-for property change events from the display.  When this listener hears an
-event, it responds by enabling or disabling menu commands according to the
-new value of the status property.</p>
-   
-<p>All of Java's GUI components are beans and are capable of emitting property change
-events.  In any subclass of <classname>Component</classname>, this can be done simply by calling
-the method</p>
-   
-<pre>public void firePropertyChange(String propertyName, 
-                                           Object oldValue, Object newValue)</pre>
-
-<np>For example, the <classname>MandelbrotDisplay</classname> class uses the following
-method for setting its current status:</np>
-   
-<pre>private void setStatus(String status) {
-   if (status == this.status) {
-           // Note: Event should be fired only if status actually changes.
-      return;
-   }
-   String oldStatus = this.status;
-   this.status = status;
-   firePropertyChange(STATUS_PROPERTY, oldStatus, status);
-}</pre>
-   
-<np>When writing bean classes from scratch, you have to add support for
-property change events, if you need them.  To make this easier, the <code>java.beans</code> package
-provides the <classname>PropertyChangeSupport</classname> class.</np>
-
-   
-</subsection>
-
-
-<subsection id="GUI2.5.5" title="Custom Dialogs">
-   
-<p>Java has several standard dialog boxes that are defined in the classes
-<classname>JOptionPane</classname>, <classname>JColorChooser</classname>,
-and <classname>JFileChooser</classname>.  These were introduced in
-<localref href="GUI1.8.2"/> and <localref href="IO.2.3"/>.  Dialogs of
-all these types are used in the Mandelbrot Viewer program.  However, sometimes
-other types of dialog are needed.  In such cases, you can build a custom
-dialog box.</p>
-   
-<p>Dialog boxes are defined by subclasses of the class <classname>JDialog</classname>.
-Like frames, dialog boxes are separate windows on the screen, and the <classname>JDialog</classname>
-class is very similar to the <classname>JFrame</classname> class.  The big difference is
-that a dialog box has a <newword>parent</newword>, which is a frame or another dialog
-box that "owns" the dialog box.   If the parent of a dialog box closes, the dialog box
-closes automatically.  Furthermore, the dialog box might "float" on top of
-its parent, even when its parent is the active window.</p>
-   
-<p>Dialog boxes can be either <newword>modal</newword> or <newword>modeless</newword>.
-When a modal dialog is put up on the screen, the rest of the application is blocked
-until the dialog box is dismissed.  This is the most common case, and all the standard
-dialog boxes are modal.  Modeless dialog boxes are more like independent windows,
-since they can stay on the screen while the user interacts with other windows.
-There are no modeless dialogs in the Mandelbrot Viewer program.</p>
-   
-<p>The Mandelbrot Viewer program uses two custom dialog boxes.  They are used to
-implement the "Set Image Size" and "Set Limits" commands and are defined by the
-files <sourceref href="edu/hws/eck/mdb/SetImageSizeDialog.java">SetImageSizeDialog.java</sourceref>
-and <sourceref href="edu/hws/eck/mdb/SetLimitsDialog.java">SetLimitsDialog.java</sourceref>.
-The "set image size" dialog lets the user enter a new width and height for the Mandelbrot image.
-The "set limits" dialog lets the user input the minimum and maximum values for x and y
-that are shown in the image.  The two dialog classes are very similar.  In both classes,
-several <classname>JTextFields</classname> are used for user input.  Two buttons named
-"OK" and "Cancel" are added to the window, and listeners are set up for these buttons.
-If the user clicks "OK", the listener checks whether the inputs in the text fields
-are legal; if not, an error message is displayed to the user and the dialog stays
-on the screen.  If the input is legal when the user clicks "OK", the dialog is disposed.
-The dialog is also disposed if the user clicks "Cancel" or clicks the dialog box's
-close box.  The net effect is that the dialog box stays on the screen until the
-user either cancels the dialog or enters legal values for the inputs and clicks "OK".
-The program can find out which of these occurred by calling a method named
-<code>getInput()</code> in the dialog object after showing the dialog.  This method returns <code>null</code>
-if the dialog was canceled; otherwise it returns the user input.</p>
-   
-<p>To make my custom dialog boxes easy to use, I added a <code>static</code>
-<code>showDialog()</code> method to each dialog class.  When this function is called,
-it shows the dialog, waits for it to be dismissed, and then returns the value
-of the <code>getInput()</code> method.  This makes it possible to use my
-custom dialog boxes in much the same way as Java's standard dialog boxes are
-used.</p>
-   
-<p>Custom dialog boxes are not difficult to create and to use, if you already
-know about frames.  I will not discuss them further here, but you can look
-at the source code file <sourceref href="edu/hws/eck/mdb/SetImageSizeDialog.java">SetImageSizeDialog.java</sourceref>
-as a model.</p>
-   
-   
-</subsection>
-
-
 <subsection id="GUI2.5.6" title="Preferences">
 <p>Most serious programs allow the user to set <newword>preferences</newword>.
 A preference is really just a piece of the program's state that is saved between
@@ -587,23 +681,19 @@ preferences.  It is defined by the package <code>java.util.prefs</code>.
 In general, the only thing that you need from this package is the class
 named <classname>Preferences</classname>.</p>
 
-<p>In the Mandelbrot Viewer program, the file <sourceref href="edu/hws/eck/mdb/Main.java">Main.java</sourceref>
-has an example of using <classname>Preferences</classname>.  <code>Main.java</code> contains
-the <code>main()</code> routine for the program.</p>
-   
-<p>In most programs, the user sets preferences in a custom dialog box. However,
+<p>In the Mandelbrot Viewer program, the file <sourceref href="edu/hws/eck/mdbfx/Main.java">Main.java</sourceref>
+has an example of using <classname>Preferences</classname>.
+In most programs, the user sets preferences in a custom dialog box. However,
 the Mandelbrot program doesn't have any preferences that are appropriate for that
 type of treatment.  Instead, as an example, I automatically save a few aspects of the
 program's state as preferences.  Every time the program starts up, it reads the
 preferences, if any are available.  Every time the program terminates, it saves
 the preferences.  (Saving the preferences poses an interesting problem because
-the program ends when the <classname>MandelbrotFrame</classname> window closes,
-not when the <code>main()</code> routine ends.  In fact, the <code>main()</code> routine
-ends as soon as the window appears on the screen.  So, it isn't possible to save
-the preferences at the end of the main program.  The solution is to use events:
-A listener listens for <classname>WindowEvents</classname> from the frame.  When
-a window-closed event is received, indicating that the program is ending,
-the listener saves the preferences.)</p>
+the program ends when the application window closes, and we need way to arrange
+for preferences to be saved whenever that happens.  The solution is to use events:
+The <code>start()</code> method in <classname>Main</classname> registers an
+event handler with the window to listen for the event that is generated when
+the window closes.  The handler for that event saves the preferences.)</p>
    
 <p>Preferences for Java programs are stored in some platform-dependent form in some
 platform-dependent location.  As a Java programmer, you don't have to worry about it;
@@ -613,8 +703,8 @@ that might be running on a computer.  Java solves this problem in the same way
 that it solves the package naming problem.  In fact, by convention, the preferences
 for a program are identified by the package name of the program, with a slight
 change in notation.  For example, the Mandelbrot Viewer program is defined in the
-package <code>edu.hws.eck.mdb</code>, and its preferences are identified
-by the string "/edu/hws/eck/mdb".  (The periods have been changed to "<code>/</code>",
+package <code>edu.hws.eck.mdbfx</code>, and its preferences are identified
+by the string "/edu/hws/eck/mdbfx".  (The periods have been changed to "<code>/</code>",
 and an extra "<code>/</code>" has been added at the beginning.)</p>
    
 <p>The preferences for a program are stored in something called a "node."  The user
@@ -623,7 +713,7 @@ preferences node for a given program identifier can be accessed as follows:</p>
 <pre>Preferences root = Preferences.userRoot();
 Preferences node = root.node(pathName);</pre>
    
-<np>where <code>pathname</code> is the string, such as "/edu/hws/eck/mdb", that
+<np>where <code>pathname</code> is the string, such as "/edu/hws/eck/mdbfx", that
 identifies the node.  The node itself consists of a simple list of
 key/value pairs, where both the key and the value are strings.  You can
 store any strings you want in preferences nodes&mdash;they are really just
@@ -638,13 +728,13 @@ setting the value string for a given key.</np>
 the program's window.  This makes the size and shape of the window persistent
 between runs of the program; when you run the program, the window will be right
 where you left it the last time you ran it.  I also store the name of the directory
-that is currently selected in the file dialog box that is used by the program for the Save and
-Open commands.  This is particularly satisfying, since the default behavior
-for a file dialog box is to start in the user's home directory, which is hardly
+that contained the file most recently opened or saved by the user of the program.
+This is particularly satisfying, since the default behavior
+for a file dialog box is to start in the working directory, which is hardly
 ever the place where the user wants to keep a program's files.  With the preferences
 feature, I can switch to the right directory the first time I use the program,
 and from then on I'll automatically be back in that directory when I use the program again.
-You can look at the source code in <sourceref href="edu/hws/eck/mdb/Main.java">Main.java</sourceref>
+You can look at the source code in <sourceref href="edu/hws/eck/mdbfx/Main.java">Main.java</sourceref>
 for the details.</p>
   
 <break/>

@@ -15,19 +15,19 @@ div.page {
    border: thin solid black;
 }
 
-a:link {
+a[href]:link {
    color: #0000CC;
    text-decoration: underline;
 }
-a:visited {
+a[href]:visited {
    color: #553377;
    text-decoration: underline;
 }
-a:active {
+a[href]:active {
    color: #CC2222;
    text-decoration: underline;
 }
-a:hover {
+a[href]:hover {
    color: #6666FF;
    text-decoration: underline;
    cursor: pointer;

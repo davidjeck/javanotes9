@@ -811,7 +811,7 @@ public class Menus extends MenuBar {
 	 */
 	private class MaxIterationsManager{
 		int[] standardValues = { 50, 100, 250, 500, 1000, 2000, 5000, 20000, 50000, 100000 };
-		int selectedItem = 4;
+		int selectedItem = 2;
 		RadioMenuItem[] items;
 		MaxIterationsManager() {
 			items = new RadioMenuItem[ 1 + standardValues.length ];
