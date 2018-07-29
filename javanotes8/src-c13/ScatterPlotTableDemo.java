@@ -58,6 +58,7 @@ public class ScatterPlotTableDemo extends Application {
 		 * The listener for the list redraws the canvas whenever a point is added
 		 * to the list or deleted from the list (but it's not called if a point
 		 * that is already in the list is modified. */
+		
 		table = new TableView<Point>();
 		points = table.getItems();
 		

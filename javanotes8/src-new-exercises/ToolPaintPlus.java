@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
@@ -22,6 +23,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.shape.StrokeLineCap;
 
 import javafx.scene.image.WritableImage;
 import javafx.scene.image.Image;
@@ -37,7 +40,7 @@ import javafx.geometry.Rectangle2D;
  * using a transparent "overlay" canvas to implement some of the
  * tools.  The window for this program is not resizable.
  */
-public class ToolPaint extends Application {
+public class ToolPaintPlus extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
@@ -58,19 +61,38 @@ public class ToolPaint extends Application {
 	 * between two points.  The SMUDGE tool lets the user "spread paint around"
 	 * with the mouse.  The ERASE tool erases with a 10-by-10 pixel rectangle.)
 	 */
-	private enum Tool { LINE, RECT, OVAL, FILLED_RECT, FILLED_OVAL, CURVE, SMUDGE, ERASE }
+	private enum Tool { LINE, RECT, OVAL, FILLED_RECT, FILLED_OVAL, 
+		                   STROKED_FILLED_RECT, STROKED_FILLED_OVAL, CURVE, SMUDGE, ERASE }
+	
 
 	private Tool currentTool = Tool.CURVE;  // The current drawing tool.
 
-	private Color currentColor = Color.BLACK;  // The current drawing color.
+	private Color currentColor = Color.BLACK; // The current fill color.  This color
+	                                          // is fully opaque.
+	private boolean translucentFill;  // When this is true, the fill color that is
+	                                  //   used takes its RGB components from the
+	                                  //   currntColor, but its alpha component is 0.4.
+	
+	private Color currentStrokeColor = Color.BLACK;   // The current stroke color.
 
 	private Color backgroundColor = Color.WHITE;  // The current background color.
+	
+	private double currentLineWidth = 2;  // The line width used for all strokes.
+	
+	private MenuItem undoItem;   // The "Undo" menu item.  This is needed so that
+	                             // it can be enabled when an undo becomes available.
+	private Image imageForUndo;  // Stores a snapshot of the canvas before the
+	                             // most recent change to the image.  This is used
+	                             // to implement the "Undo" command.  Note that
+	                             // using Undo twice in a row will "undo the undo."
 
 	/* Some variables that are used during dragging. */
 	private boolean dragging;     // is a drag in progress?
 	private int startX, startY;   // start point of drag
 	private int prevX, prevY;     // previous mouse location during a drag
 	private int currentX, currentY;  // current mouse position during a drag
+	private boolean firstMove;    // used in mouseDragged to tell whether this
+	                              //    is the first time the mouse has moved.
 
 	/* Some variables used to implement the smudge tool. */
 	private double[][] smudgeRed, smudgeGreen, smudgeBlue;
@@ -101,8 +123,10 @@ public class ToolPaint extends Application {
 		overlay.setOnMousePressed( e -> mousePressed(e) );
 		overlay.setOnMouseDragged( e -> mouseDragged(e) );
 		overlay.setOnMouseReleased( e -> mouseReleased(e) );
-		canvasGraphics.setLineWidth(2);
-		overlayGraphics.setLineWidth(2);
+		// canvasGraphics.setLineWidth(2);  // line width is now set in mousePressed
+		// overlayGraphics.setLineWidth(2);
+		canvasGraphics.setLineCap(StrokeLineCap.ROUND);  // will look better for thick strokes
+		overlayGraphics.setLineCap(StrokeLineCap.ROUND);
 		
 		StackPane canvasHolder = new StackPane(canvas,overlay);
 		BorderPane root = new BorderPane(canvasHolder);
@@ -130,7 +154,8 @@ public class ToolPaint extends Application {
 	private void putCurrentShape(GraphicsContext g) {
 		switch (currentTool) {
 		case LINE:
-			g.strokeLine(startX, startY, currentX, currentY);
+			if (startX != currentX || startY != currentY)
+				g.strokeLine(startX, startY, currentX, currentY);
 			break;
 		case OVAL:
 			putOval(g,false,startX, startY, currentX, currentY);
@@ -143,6 +168,14 @@ public class ToolPaint extends Application {
 			break;
 		case FILLED_RECT:
 			putRect(g,true,startX, startY, currentX, currentY);
+			break;
+		case STROKED_FILLED_OVAL:
+			putOval(g,true,startX, startY, currentX, currentY);
+			putOval(g,false,startX, startY, currentX, currentY);
+			break;
+		case STROKED_FILLED_RECT:
+			putRect(g,true,startX, startY, currentX, currentY);
+			putRect(g,false,startX, startY, currentX, currentY);
 			break;
 		default:  // not called in other cases
 			break;
@@ -199,27 +232,82 @@ public class ToolPaint extends Application {
 	private MenuBar makeMenuBar() {
 		MenuBar menubar = new MenuBar();
 		Menu fileMenu = new Menu("File");
-		Menu colorMenu = new Menu("Color");
+		Menu editMenu = new Menu("Edit");
+		Menu colorMenu = new Menu("Fill Color");
+		Menu strokeColorMenu = new Menu("Stroke Color");
+		Menu lineWidthMenu = new Menu("Stroke Width");
 		Menu toolMenu = new Menu("Tool");
 		menubar.getMenus().add(fileMenu);
-		menubar.getMenus().add(colorMenu);
+		menubar.getMenus().add(editMenu);
 		menubar.getMenus().add(toolMenu);
+		menubar.getMenus().add(colorMenu);
+		menubar.getMenus().add(strokeColorMenu);
+		menubar.getMenus().add(lineWidthMenu);
+		
+		/* Add items to the File menu. */
 		
 		MenuItem openImage = new MenuItem("Load Image...");
 		openImage.setOnAction( e -> doOpenImage() );
+		openImage.setAccelerator( KeyCombination.valueOf("shortcut+O"));
 		fileMenu.getItems().add(openImage);
 		MenuItem saveImage = new MenuItem("Save PNG Image...");
 		saveImage.setOnAction( e -> doSaveImage() );
+		saveImage.setAccelerator( KeyCombination.valueOf("shortcut+S"));
 		fileMenu.getItems().add(saveImage);
 		fileMenu.getItems().add( new SeparatorMenuItem() );
 		MenuItem quit = new MenuItem("Quit");
 		quit.setOnAction( e -> System.exit(0) );
+		quit.setAccelerator( KeyCombination.valueOf("shortcut+Q"));
 		fileMenu.getItems().add(quit);
+		
+		/* Add items to the Edit menu.  (All items except "Undo" were in the
+		 * "Color" menu in the previous version.) */
+		
+		undoItem = new MenuItem("Undo");
+		undoItem.setDisable(true); // will be enabled when some change is made
+		undoItem.setOnAction( e -> doUndo() );
+		undoItem.setAccelerator( KeyCombination.valueOf("shortcut+Z"));
+		editMenu.getItems().add(undoItem);
+		editMenu.getItems().add( new SeparatorMenuItem() );
+		MenuItem clear = new MenuItem("Clear to Background Color");
+		clear.setOnAction( e -> {  // Fill main canvas with current background color.
+			saveImageForUndo();
+			canvasGraphics.setFill(backgroundColor);
+			canvasGraphics.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+		});
+		clear.setAccelerator( KeyCombination.valueOf("shortcut+K") );
+		editMenu.getItems().add(clear);
+		MenuItem fill = new MenuItem("Fill with Drawing Color");
+		fill.setOnAction( e -> {  // Fill main canvas with current drawing color, but
+			                      // don't change the background color.  (The erase
+			                      // tool will still erase to the (old) background color.)
+			saveImageForUndo();
+			canvasGraphics.setFill(currentColor);
+			canvasGraphics.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+		});
+		editMenu.getItems().add(fill);
+		editMenu.getItems().add(new SeparatorMenuItem());
+		MenuItem setBG = new MenuItem("Fill and Set Background...");
+		setBG.setOnAction( e -> {
+			     // User can select a new background color from a dialog box.  If the
+			     // dialog box is not canceled, the selected color becomes the background
+			     // color, and the canvas is filled with that background color.
+			Color c = SimpleDialogs.colorChooser(backgroundColor, "Select a Background Color");
+			if (c != null) {
+				saveImageForUndo();
+				backgroundColor = c;
+				canvasGraphics.setFill(c);
+				canvasGraphics.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+			}
+		});
+		setBG.setAccelerator( KeyCombination.valueOf("shortcut+B") );
+		editMenu.getItems().add(setBG);
 		
 		/* Color choices are given by RadioMenuItems, controlled by
 		 * a ToggleGroup.  Each choice corresponds to a standard color,
 		 * except for a "Custom Drawing Color" item that calls up
-		 * a colo choice dialog box. */
+		 * a color choice dialog box.  The same set of colors is used
+		 * in the "Fill Color" menu and in the "Stroke Color" menu.*/
 		
 		Color[] colors = { // Standard colors available in the menu.
 				Color.BLACK, Color.WHITE, Color.RED, Color.GREEN, 
@@ -228,16 +316,18 @@ public class ToolPaint extends Application {
 				"Black", "White", "Red", "Green", 
 				"Blue", "Yellow", "Cyan", "Purple", "Gray"};
 		
+		/* First, set up the "Fill Color menu. */
+		
 		ToggleGroup colorGroup = new ToggleGroup();
 		for (int i = 0; i < colors.length; i++) {
-			RadioMenuItem item = new RadioMenuItem("Draw with " + colorNames[i]);
+			RadioMenuItem item = new RadioMenuItem("Fill with " + colorNames[i]);
 			item.setUserData(colors[i]); // Stash the actual color in the menu item's UserData
 			item.setToggleGroup(colorGroup);
 			colorMenu.getItems().add(item);
 			if (i == 0)
 				item.setSelected(true);  // Initially selected color is black.
 		}
-		RadioMenuItem customColor = new RadioMenuItem("Custom Drawing Color...");
+		RadioMenuItem customColor = new RadioMenuItem("Custom Fill Color...");
 		customColor.setToggleGroup(colorGroup);
 		customColor.setOnAction( e -> {
 			   // For the custom color selection, use a dialog box to get an 
@@ -246,7 +336,7 @@ public class ToolPaint extends Application {
 			   // Custom Drawing Color when it is already selected.  (In that case,
 			   // the selected toggle does not change.
 			customColor.setSelected(true);
-			Color c = SimpleDialogs.colorChooser(currentColor, "Select a Color to Use For Drawing");
+			Color c = SimpleDialogs.colorChooser(currentColor, "Select a Color to Use For Filling Shapes");
 			if (c != null)  // c is null if user cancels the dialog
 				currentColor = c;
 		});
@@ -265,51 +355,81 @@ public class ToolPaint extends Application {
 			}
 		});
 		colorMenu.getItems().add( new SeparatorMenuItem() );
-		MenuItem clear = new MenuItem("Clear to Background Color");
-		clear.setOnAction( e -> {  // Fill main canvas with current background color.
-			canvasGraphics.setFill(backgroundColor);
-			canvasGraphics.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+		CheckMenuItem translucent = new CheckMenuItem("Use Translucent Fill");
+		translucent.setOnAction( e -> translucentFill = translucent.isSelected() );
+		colorMenu.getItems().add(translucent);
+		
+		/* Second, set up the "Stroke Color" menu in a similar way,
+		 * but without the extra commands. */
+		
+		ToggleGroup strokeColorGroup = new ToggleGroup();
+		for (int i = 0; i < colors.length; i++) {
+			RadioMenuItem item = new RadioMenuItem("Stroke with " + colorNames[i]);
+			item.setUserData(colors[i]); 
+			item.setToggleGroup(strokeColorGroup);
+			strokeColorMenu.getItems().add(item);
+			if (i == 0)
+				item.setSelected(true);  // Initially selected color is black.
+		}
+		RadioMenuItem customStrokeColor = new RadioMenuItem("Custom Stroke Color...");
+		customStrokeColor.setToggleGroup(strokeColorGroup);
+		customStrokeColor.setOnAction( e -> {
+			customStrokeColor.setSelected(true);
+			Color c = SimpleDialogs.colorChooser(currentStrokeColor, "Select a Color to Use For Strokes");
+			if (c != null)
+				currentStrokeColor = c;
 		});
-		colorMenu.getItems().add(clear);
-		MenuItem fill = new MenuItem("Fill with Drawing Color");
-		fill.setOnAction( e -> {  // Fill main canvas with current drawing color, but
-			                      // don't change the background color.  (The erase
-			                      // tool will still erase to the (old) background color.)
-			canvasGraphics.setFill(currentColor);
-			canvasGraphics.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
-		});
-		colorMenu.getItems().add(fill);
-		colorMenu.getItems().add(new SeparatorMenuItem());
-		MenuItem setBG = new MenuItem("Fill and Set Background...");
-		setBG.setOnAction( e -> {
-			     // User can select a new background color from a dialog box.  If the
-			     // dialog box is not canceled, the selected color becomes the background
-			     // color, and the canvas is filled with that background color.
-			Color c = SimpleDialogs.colorChooser(backgroundColor, "Select a Background Color");
-			if (c != null) {
-				backgroundColor = c;
-				canvasGraphics.setFill(c);
-				canvasGraphics.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+		strokeColorMenu.getItems().add(customStrokeColor);
+		strokeColorGroup.selectedToggleProperty().addListener( e -> {
+			Toggle t = strokeColorGroup.getSelectedToggle();
+			if (t != null && t != customStrokeColor) {
+				currentStrokeColor = (Color)t.getUserData();
 			}
 		});
-		colorMenu.getItems().add(setBG);
 		
+		/* Set up the "Stroke Width" menu. */
+		
+		int[] lineWidths = { 1, 2, 3, 4, 5, 7, 10, 12, 15, 20 };
+		ToggleGroup lineWidthGroup = new ToggleGroup();
+		for (int i = 0; i < lineWidths.length; i++) {
+			RadioMenuItem item = new RadioMenuItem("Width = " + lineWidths[i]);
+			item.setUserData(lineWidths[i]);
+			item.setToggleGroup(lineWidthGroup);
+			lineWidthMenu.getItems().add(item);
+			if (i == 2)
+			item.setSelected(true);
+		}
+		lineWidthGroup.selectedToggleProperty().addListener( e -> {
+			Toggle t = lineWidthGroup.getSelectedToggle();
+			if (t != null) {
+				int width = (Integer)t.getUserData();
+				currentLineWidth = width;
+			}
+		});
+
 		/* The User selects a drawing tool from the tool menu.  The menu contains
 		 * an entry for each available tool.  Tools are represented by RadioMenuItems,
 		 * controlled by a ToggleGroup. */
 		
 		Tool[] tools = { // The available tools in the order they appear in the menu.
 				Tool.CURVE, Tool.LINE, Tool.RECT, Tool.OVAL, Tool.FILLED_RECT, 
-				Tool.FILLED_OVAL, Tool.SMUDGE, Tool.ERASE };
+				Tool.FILLED_OVAL, Tool.STROKED_FILLED_RECT, Tool.STROKED_FILLED_OVAL,
+				Tool.SMUDGE, Tool.ERASE };
 		String[] toolNames = { // Names for the tools, used as text in the menu items.
 				"Curve", "Line", "Rectangle", "Oval", "Filled Rectangle", 
-				"Filled Oval", "Smudge", "Erase", };
+				"Filled Oval", "Stroked Filled Rect", "Stroked Filled Oval",
+				"Smudge", "Erase" };
+		String[] toolAccelerators = { // accelerators for tool command; will be added to "shortcut+"
+				"C", "L", "R", "V", "alt+R",
+				"alt+V", "shift+R", "shift+V",
+				"M", "E" };
 		
 		ToggleGroup toolGroup = new ToggleGroup();
 		for (int i = 0; i < tools.length; i++) {
 			RadioMenuItem item = new RadioMenuItem(toolNames[i]);
 			item.setUserData(tools[i]);  // Stash the actual tool in the menu items' UserData
 			item.setToggleGroup(toolGroup);
+			item.setAccelerator( KeyCombination.valueOf("shortcut+" + toolAccelerators[i]) );
 			toolMenu.getItems().add(item);
 			if (i == 0)
 				item.setSelected(true);  // Curve tool is initially selected
@@ -386,10 +506,22 @@ public class ToolPaint extends Application {
 		startX = prevX = currentX = (int)evt.getX();
 		startY = prevY = currentY = (int)evt.getY();
 		dragging = true;
-		canvasGraphics.setStroke(currentColor);  // make sure we are drawing with the right color.
-		canvasGraphics.setFill(currentColor);
-		overlayGraphics.setStroke(currentColor);
-		overlayGraphics.setFill(currentColor);
+		firstMove = true;
+		
+		// make sure we are drawing with the right properties
+		
+		Color fill; // currentColor, possibly with alpha set to 0.4 for a translucent fill.
+		if (translucentFill)
+			fill = Color.color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue(), 0.4);
+		else
+			fill = currentColor;
+		canvasGraphics.setFill(fill);  
+		canvasGraphics.setStroke(currentStrokeColor);
+		canvasGraphics.setLineWidth(currentLineWidth);
+		overlayGraphics.setFill(fill);
+		overlayGraphics.setStroke(currentStrokeColor);
+		overlayGraphics.setLineWidth(currentLineWidth);
+		
 		if (currentTool == Tool.ERASE) {
 				// Erase a 10-by-10 block around the starting mouse position.
 			canvasGraphics.setFill(backgroundColor);  // change the color when using erase
@@ -452,9 +584,13 @@ public class ToolPaint extends Application {
 		currentX = (int)evt.getX();
 		currentY = (int)evt.getY();
 		if (currentTool == Tool.CURVE) {
+			if (firstMove)
+				saveImageForUndo();
 			canvasGraphics.strokeLine(prevX,prevY,currentX,currentY);
 		}
 		else if (currentTool == Tool.ERASE || currentTool == Tool.SMUDGE) {
+			if (firstMove)
+				saveImageForUndo();
 			applyToolAlongLine(prevX,prevY,currentX,currentY);
 		}
 		else  {  // tool is a shape that has to be drawn to overlay canvas
@@ -463,6 +599,7 @@ public class ToolPaint extends Application {
 		}
 		prevX = currentX;
 		prevY = currentY;
+		firstMove = false;
 	}
 
 	
@@ -477,11 +614,43 @@ public class ToolPaint extends Application {
 		dragging = false;
 		if (currentTool != Tool.CURVE && 
 				currentTool != Tool.ERASE && currentTool != Tool.SMUDGE) {
+			if (currentTool == Tool.LINE) {
+				if (currentX == startX && currentY == startY) {
+					// mouse is at starting position; there is no line to draw.
+					return;
+				}
+			}
+			else if (currentX == startX || currentY == startY) {
+				// The shape has width=0 or height=0 and so should not be drawn.
+				return;
+			}
+			saveImageForUndo();
 			putCurrentShape(canvasGraphics);
 			overlayGraphics.clearRect(0,0,overlay.getWidth(),overlay.getHeight());
 		}
 	}
 	
+	
+	/**
+	 * Save a copy of the current image for the Undo operation. This is
+	 * called before making any change to the image.
+	 */
+	private void saveImageForUndo() {
+		imageForUndo = canvas.snapshot(null,null);
+		undoItem.setDisable(false);
+	}
+	
+	
+	/**
+	 * Implements the "Undo" command.
+	 */
+	private void doUndo() {
+		if (imageForUndo == null)
+			return;
+		Image previousUndoImage = imageForUndo;
+		saveImageForUndo();  // Save image that is about to be replaced, for "undoing the undo".
+		canvasGraphics.drawImage(previousUndoImage, 0, 0);  // Replace image with previous image.
+	}
 	
 	/**
 	 * Reads an image from a file and draws it to the canvas,
@@ -504,6 +673,7 @@ public class ToolPaint extends Application {
 			errorAlert.showAndWait();
 			return;
 		}
+		saveImageForUndo();
 		canvasGraphics.drawImage(image,0,0,canvas.getWidth(),canvas.getHeight());
 	}
 
@@ -542,5 +712,5 @@ public class ToolPaint extends Application {
 	
 
 
-} // end class ToolPaint
+} // end class ToolPaintPlus
 

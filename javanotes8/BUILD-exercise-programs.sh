@@ -44,6 +44,7 @@ if  $XALAN_COMMAND -xsl convert-exercise-progs.xsl -in javanotes8.xml ; then
    cp -r src-c12/netgame/common exercise-programs/chapter12/netgame
    mkdir exercise-programs/chapter12/netgame/newchat
    mv exercise-programs/chapter12/*Message*.java exercise-programs/chapter12/*Chat*.java exercise-programs/chapter12/netgame/newchat
+   cp src-c13/SimpleDialogs.java exercise-programs/chapter13
    rm -r exercise-programs/chapter6/textio
    rm -r exercise-programs/chapter11/textio
    rm -r exercise-programs/chapter12/textio

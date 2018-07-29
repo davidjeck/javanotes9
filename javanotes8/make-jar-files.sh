@@ -205,7 +205,7 @@ buildjar chapter7 RandomStringsWithArray
 buildTextIOjar chapter7 ReverseWithDynamicArray DynamicArrayOfInt.java
 buildjar chapter7 SimplePaint2
 buildTextIOjar chapter7 TestSymmetricMatrix SymmetricMatrix.java
-buildjar chapter7 Life MosaicPanel.java
+buildjar chapter7 Life MosaicCanvas.java
 buildjar chapter7 Checkers
 buildTextIOjar chapter8 LengthConverter2
 buildTextIOjar chapter8 TryStatementDemo
@@ -264,7 +264,7 @@ buildjar chapter13 SimpleTableDemo
 buildjar chapter13 ScatterPlotTableDemo
 buildjar chapter13 TestDialogs SimpleDialogs.java
 buildjar chapter13 WebBrowser BrowserWindow.java SimpleDialogs.java
-buildpackagejar chapter13 edu.hws.eck.mdbfx.Main edu
+buildpackagejar chapter13 edu.hws.eck.mdbfx.Main edu edu/hws
 
 
 rm -rf temp
