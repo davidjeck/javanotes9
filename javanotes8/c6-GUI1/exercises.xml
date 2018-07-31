@@ -127,8 +127,7 @@ So, <code>mouseDragged()</code> starts off like this:</p>
 
 </exercise-discuss>
 <exercise-code><pre>
-<prog name="SimpleStamperWithDrag">import java.awt.*;
-
+<prog name="SimpleStamperWithDrag">
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -725,7 +724,7 @@ top-left position are all the values greater than 1. The algorithm leads to my
  * 35 by 35 pixels in size.  The val parameter gives the
  * value showing on the die (that is, the number of dots).
  */
-private void drawDie(Graphics g, int val, int x, int y) {
+private void drawDie(GraphicsContext g, int val, int x, int y) {
     g.setFill(Color.WHITE);
     g.fillRect(x, y, 35, 35);
     g.setStroke(Color.BLACK);

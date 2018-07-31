@@ -415,8 +415,7 @@ and the user makes another prediction. This continues until the user makes an
 incorrect prediction. The number of correct predictions is the user's
 score.</p>
 
-<p>My program has a static method that plays one game of HighLow. This method
-has a return value that represents the user's score in the game. The
+<p>My program has a static method that plays one game of HighLow. The
 <code>main()</code> routine lets the user play several games of HighLow. At the
 end, it reports the user's average score.</p>
 

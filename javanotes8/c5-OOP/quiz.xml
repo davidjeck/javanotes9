@@ -186,7 +186,7 @@ program crashes for lack of memory.</p></ans>
 
 
 <question>
-<ques><p>What is an <i>abstract class</i>, and how can you recognize an abstract class in Java.</p>
+<ques><p>What is an <i>abstract class</i>, and how can you recognize an abstract class in Java?</p>
 </ques>
 <ans><p>An abstract class is one that cannot be used to create objects.  It exists only as a basis
 for making subclasses, and it expresses all the properties and behaviors that those subclasses

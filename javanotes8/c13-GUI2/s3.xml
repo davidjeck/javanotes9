@@ -19,7 +19,7 @@ many GUI components.  That pattern is discussed later in this section.</p>
 
 <p>There are a number of JavaFX controls that are not covered in this book.  Some useful
 ones that you might want to look into include:  <classname>TabbedPane</classname>,
-<classname>SplitPane</classname>, <classname>Tree</classname>, <classname>JProgressBar</classname>, and
+<classname>SplitPane</classname>, <classname>Tree</classname>, <classname>ProgressBar</classname>, and
 various specialized input controls such as <classname>ColorPicker</classname>,
 <classname>DatePicker</classname>, <classname>PasswordField</classname>,
 and <classname>Spinner</classname>.</p>

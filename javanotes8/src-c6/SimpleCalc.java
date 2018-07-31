@@ -29,7 +29,7 @@ public class SimpleCalc extends Application {
 
 	private TextField xInput, yInput;  // Input boxes for the numbers.
 
-	private Label answer;  // JLabel for displaying the answer, or an 
+	private Label answer;  // Label for displaying the answer, or an 
 						   //    error message if appropriate.
 
 

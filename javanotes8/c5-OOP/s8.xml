@@ -67,8 +67,6 @@ in outline, like this:</p>
 } // end WireFrameModel</pre>
 
 <np>The full name of the nested class is <classname>WireFrameModel.Line</classname>.
-Of course, this just follows the normal naming
-convention for static members of a class.
 That name can be used, for example, to declare variables.
 Inside the <classname>WireFrameModel</classname> class, a <classname>Line</classname> object would be
 created with the constructor "<code>new&nbsp;Line()</code>". Outside the class, 
@@ -187,8 +185,8 @@ created with a variation of the <code>new</code> operator that has the form</p>
               }
 </pre>
 
-<p>This constructor defines a new class, without giving it a name, and it
-simultaneously creates an object that belongs to that class. This form of the
+<p>This constructor defines a new class, without giving it a name. At run time, it
+creates an object that belongs to that class. This form of the
 <code>new</code> operator can be used in any statement where a regular
 "<code>new</code>" could be used. The intention of this expression is to create: "a
 new object belonging to a class that is the same as <bnf>superclass-or-interface</bnf> 
@@ -303,7 +301,7 @@ in any subroutine and therefore is not local.</p>
 subroutine where it is defined.  It can also use parameters to
 that subroutine.  However, there is a restriction on the use of such
 variables and parameters in a local class:  The local variable or parameter must be
-declared to be <code>final</code> or, if it is not declared <code>final</code>,
+declared to be <code>final</code> or, if it is not explicitly declared <code>final</code>,
 then it must be "effectively final."  A parameter is effectively final
 if its value is not changed inside the subroutine (including in any
 local class that references the parameter).  A local variable is

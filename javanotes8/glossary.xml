@@ -128,8 +128,7 @@ are for human readers, to help them understand the program.</gitem>
 computer language (generally a high-level language) into programs written in machine
 language.</gitem>
 <gitem term="component">General term for a visual element of a GUI, such as a window,
-button, or menu.  A component is represented in Java by an object belonging to a
-subclass of the class <code>java.awt.Component</code>.</gitem>
+button, or menu.</gitem>
 <gitem term="constructor">A special kind of subroutine in a class whose purpose is
 to construct objects belonging to that class.  A constructor is called using
 the <code>new</code> operator, and is not considered to be a "method."</gitem>
@@ -217,8 +216,8 @@ instance variable.  By convention, a getter is named <code>getXyz()</code> where
 <gitem term="global variable">Another name for member variable, emphasizing the fact
 that a member variable in a class exists outside the methods of that class.</gitem>
 <gitem term="graphics context">The data and methods necessary for
-drawing to some particular destination.  A graphics context in Java is an object
-belonging to the <classname>Graphics</classname> class.</gitem>
+drawing to some particular destination.  A graphics context in JavaFX is an object
+belonging to the <classname>GraphicsContext</classname> class.</gitem>
 <gitem term="GUI">Graphical User Interface.  The modern way of interacting with a computer,
 in which the computer displays interface components such as buttons and menus on a screen
 and the user interacts with them&mdash;for example by clicking on them with a mouse.</gitem>
@@ -396,7 +395,7 @@ are defined in the same class can have the same name, as long as they have diffe
 of a method that is inherited from a superclass, the new definition is said to override the 
 original definition.</gitem>
 <gitem term="package">In Java, a named collection of related classes and sub-packages, such as
-<code>java.awt</code> and <code>javafx.scene.control</code>.</gitem>
+<code>java.io</code> and <code>javafx.scene.control</code>.</gitem>
 <gitem term="parallel processing">When several tasks are being performed simultaneously, either
 by multiple processors or by one processor that switches back and forth among
 the tasks.</gitem>

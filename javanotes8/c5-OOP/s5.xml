@@ -395,7 +395,7 @@ instance variable, and then redrawing the shape in its new color:</p>
 
 <pre>class Shape {
 
-    Color color; // (must be imported from package java.awt)
+    Color color; // (must be imported from package javafx.scene.paint)
                    
     void setColor(Color newColor) {
           // Method to change the color of the shape.

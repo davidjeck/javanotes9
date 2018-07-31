@@ -93,9 +93,9 @@ that is part of the entity itself.  Calling an instance method such as
 a formal parameter that is also called "name." 
 However, the instance variable can still be referred to by
 its full name, which is <code>this.name</code>. In the assignment statement 
-"<code>this.name&nbsp;=&nbsp;name</code>", that "name" on the right is the
+"<code>this.name&nbsp;=&nbsp;name</code>", the "name" on the right is the
 formal parameter, and the value of
-that formal parameter is assigned to the instance variable,
+that formal parameter is being assigned to the instance variable,
 <code>this.name</code>. This is considered to be acceptable style: There is no need
 to dream up cute new names for formal parameters that are just used to
 initialize instance variables. You can use the same name for the parameter as
@@ -246,7 +246,7 @@ in <localref href="subroutines.6"/>.  A <classname>MosaicCanvas</classname>
 represents a grid of colored rectangles.  It has a constructor with four 
 parameters:</p>
 
-<pre>public MosaicPanel(int rows, int columns, 
+<pre>public MosaicCanvas(int rows, int columns, 
                  int preferredBlockWidth, int preferredBlockHeight)</pre>   
 
 <np>This constructor provides several options and does a lot of initialization.
@@ -254,11 +254,11 @@ I wanted to provide easier-to-use
 constructors with fewer options, but all the initialization still has
 to be done.  The class also contains these constructors:</np>
 
-<pre>public MosaicPanel() {
+<pre>public MosaicCanvas() {
     this(42,42);
 }
 
-public MosaicPanel(int rows, int columns) {
+public MosaicCanvas(int rows, int columns) {
     this(rows,columns,16,16);
 }</pre>
 

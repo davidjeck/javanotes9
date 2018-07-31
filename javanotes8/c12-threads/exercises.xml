@@ -2028,7 +2028,7 @@ import javafx.geometry.Insets;
  * 
  * The program shows the estimate produced by this procedure, along
  * with the number of trials that have been done and, for comparison,
- * the actual value of pi.  These values are shown in three JLabels.
+ * the actual value of pi.  These values are shown in three Labels.
  * The computation is done by a separate thread that updates the
  * contents of the labels after every millionth trial.
  * 
@@ -3358,7 +3358,7 @@ public class NewChatRoomWindow extends Application {
     <newcode>/**
      * This method is called when a ClientConnectedMessage or ClientDisconnectedMessage
      * is received from the hub.  Its job is to save the nameMap that is part of the
-     * message and use it to rebuild the contents of the JComboBox, clientList, where
+     * message and use it to rebuild the contents of the ComboBox, clientList, where
      * the user selects the recipient of a private message.  It also enables or
      * disables the private message input box and send button, depending on whether
      * there are any possible message recipients.

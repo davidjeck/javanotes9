@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
  * 
  * The program shows the estimate produced by this procedure, along
  * with the number of trials that have been done and, for comparison,
- * the actual value of pi.  These values are shown in three JLabels.
+ * the actual value of pi.  These values are shown in three Labels.
  * The computation is done by a separate thread that updates the
  * contents of the labels after every millionth trial.
  * 

@@ -35,7 +35,7 @@ means that the button must respond to keyboard and focus events as well.</p>
 <p>Fortunately, you don't have to program <b>any</b> of this, provided you
 use an object belonging to the standard class <code>javafx.scene.control.Button</code>. A
 <classname>Button</classname> object draws itself and processes mouse, keyboard, and focus
-events on its own. You only hear from the <classname>JButton</classname> when the user
+events on its own. You only hear from the <classname>Button</classname> when the user
 triggers it by clicking on it or pressing the space bar while the button has
 the input focus. When this happens, the <classname>Button</classname> object creates an
 event object belonging to the class <code>javafx.event.ActionEvent</code>. The
@@ -486,7 +486,7 @@ three sliders with different decorations and with different ranges of values:</p
 is decorated with labels. It's possible for a single slider to have both types
 of decorations.</np>
 
-<p>The most commonly used constructor for <classname>JSliders</classname> specifies the start
+<p>The most commonly used constructor for <classname>Sliders</classname> specifies the start
 and end of the range of values for the slider and its initial value when it
 first appears on the screen:</p>
 

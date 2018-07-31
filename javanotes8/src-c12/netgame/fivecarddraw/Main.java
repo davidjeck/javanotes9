@@ -54,8 +54,6 @@ public class Main extends Application {
 		
 		window = stage;
 		
-		// First, construct a panel that will be placed into a JOptionPane confirm dialog.
-		
 		Button okButton = new Button("OK");
 		okButton.setDefaultButton(true);
 		Button cancelButton = new Button("Cancel");

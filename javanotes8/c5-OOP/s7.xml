@@ -50,7 +50,7 @@ for each of the methods specified by the interface. Here is an example of a
 very simple Java <code>interface</code>:</p>
 
 <pre>public interface Strokeable {
-   public void stroke(Graphics g);
+   public void stroke(GraphicsContext g);
 }</pre>
 
 <np>This looks much like a class definition, except that the implementation of
@@ -191,7 +191,7 @@ Here is an example:</p>
 
 <np>A concrete class that implements this interface must provide an implementation for
 <code>readChar()</code>.  It will inherit a definition for <code>readLine()</code> from the interface,
-but can provide a new definition if necessary.  When a class includes a implementation
+but can provide a new definition if necessary.  When a class includes an implementation
 for a <code>default</code> method, the implementation given in the class overrides the
 default method from the <code>interface</code>.</np>
 

@@ -220,7 +220,7 @@ is that we need to be able to draw it, so we can include an instance method
 <code>draw(g)</code>, where <code>g</code> is a graphics context that will be used to
 do the drawing.  The class can also include one or more constructors.  A constructor
 initializes the object.  It's not always clear what data should be provided as parameters
-to the constructors.  In this case, as an example,
+to the constructor.  In this case, as an example,
 the constructor's parameters specify the location and size for
 the circle, but the constructor makes up a color using random values for the red, green,
 and blue components.  Here's the complete class:</np>
@@ -273,7 +273,7 @@ instance variables, but to keep things simple, I made them public.</np>
 <p>The main program for my animation is a class <classname>GrowingCircleAnimation</classname>.
 The program uses 100 disks, each one represented by an object of type
 <classname>CircleInfo</classname>.  To make that manageable, the program uses
-an array of objects.  The array variable is a member variable in the class:
+an array of objects.  The array variable is an instance variable in the class:
 </p>
 
 <pre>private CircleInfo[] circleData; // holds the data for all 100 circles</pre>
@@ -375,7 +375,7 @@ quizzes or papers, it's useless. If there are two people in the class who have
 the same name, we are in trouble (one reason why numerical student ID's are
 often used). Admittedly, it's much more difficult to develop a general-purpose
 student class than a general-purpose pair-of-dice class. But this particular
-<classname>Student</classname> class is good mostly as an example in a programming
+<classname>Student</classname> class is good only as an example in a programming
 textbook.</p>
 
 <break/>
