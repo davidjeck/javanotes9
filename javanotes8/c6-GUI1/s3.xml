@@ -131,7 +131,7 @@ but for more information, see the documentation for the <code>addEventFilter()</
 and <code>addEventHandler()</code> methods in the <classname>Scene</classname>
 and <code>Node</code> classes.)</p>
 
-<p>The rest of this section covers mouse and key events.  It is important to understand
+<p>Most of this section is concerned with mouse and key events.  It is important to understand
 that many GUI programs do not need to deal with such events directly.  Instead, you
 work with GUI components that are already programmed to handle mouse and key events on
 their own.  For example, when the user clicks a <classname>Button</classname>, it is
@@ -165,7 +165,7 @@ for example, that <code>canvas</code> is a component of type <classname>canvas</
 and that you would like a method, <code>redraw()</code>, to be called when the user
 clicks the canvas.  You can make that happen by saying</p>
 
-<pre>canvas.setOnMousePressed( e -&gt; redraw() );</pre>
+<pre>canvas.setOnMousePressed( evt -&gt; redraw() );</pre>
 
 <np>Generally, you would put this statement in the <code>start()</code> method of
 an <classname>Application</classname>, while setting up the GUI for the program.
@@ -182,7 +182,7 @@ a mouse event to handle the event.</np>
 <code>MouseDragged</code>, generated when the use moves the mouse while holding down a mouse button; and
 <code>MouseMoved</code>, generated when the user moves the mouse without holding down a button.</p>
 
-<p>The target of a <code>MouseDragged</code>, <code>MouseReleased</code>, or <code>mousePressed</code>
+<p>The target of a <code>MouseDragged</code>, <code>MouseReleased</code>, or <code>MouseClicked</code>
 event is the same component where the mouse button was pressed, even if the mouse has moved outside
 of that component.  The target of a <code>MousePressed</code> or <code>MouseMoved</code> event is
 the component that contains the mouse cursor when the event occurs.  And for <code>MouseEntered</code>
@@ -236,11 +236,11 @@ An event handler to do that can be defined as:</p>
     GraphicsContext g = canvas.getGraphicsContext2D();
     if ( evt.isShiftDown() ) {
         g.setFill( Color.BLUE );
-        fillRect( evt.getX() - 30, evt.getY() - 15, 60, 30 )
+        g.fillOval( evt.getX() - 30, evt.getY() - 15, 60, 30 )
     }
     else {
-        g.setFill( Color.BLUE );
-        fillOval( evt.getX() - 30, evt.getY() - 15, 60, 30 );
+        g.setFill( Color.REd );
+        g.fillRect( evt.getX() - 30, evt.getY() - 15, 60, 30 );
     }
 } );</pre>
 
@@ -274,8 +274,11 @@ be useful to save the starting coordinates, where the original <code>MousePresse
 occurred, in instance variables.   And I suggest having a
 <ptype>boolean</ptype> variable, <code>dragging</code>, which is set to <code>true</code>
 while a dragging gesture is being processed. This is necessary because in many applications, not
-every <code>MousePressed</code> event starts a dragging operation to which you want to respond. The
-<code>MouseDragged</code> and <code>MouseReleased</code> methods can use the value of
+every <code>MousePressed</code> event starts a dragging operation to which you want to respond.
+Also, if the user presses a second mouse button without releasing the first, there will be
+two <code>MousePressed</code> events before the <code>MouseReleased</code> event; usually,
+you don't want the second <code>MousePressed</code> to start a new drag operation. The
+event-handling methods can use the value of
 <code>dragging</code> to check whether a drag operation is actually in progress.
 Often, I will write instance methods to handle the events, which in outline
 look something like this:</p>
@@ -286,6 +289,11 @@ private boolean dragging;      // Set to true when dragging is in progress.
 . . . // other instance variables for use in dragging
 
 public void mousePressed(MouseEvent evt) {
+   if (dragging) {
+         // The user pressed a second mouse button before releasing the first.
+         // Ignore the second button press.
+       return;
+   }
    if ( <bnf>we-want-to-start-dragging</bnf> ) {
        dragging = true;
        startX = evt.getX();  // Remember starting position.
@@ -325,6 +333,19 @@ call these methods:</np>
 <pre>c.setOnMousePressed( e -&gt; mousePressed(e) );
 c.setOnMouseDragged( e -&gt; mouseDragged(e) );
 c.setOnMouseReleased( e -&gt; mouseReleased(e) );</pre>
+
+<np>Note that the event handlers in these statements simply call another method in
+the same class, and that method has the same parameter as the event handler.
+That means its possible to write the lambda expressions as method 
+references (<localref href="subroutines.4a.4"/>).  The methods that are called are instance
+methods in the object "<code>this</code>", so the method references would
+have named like <code>this::mousePressed</code>, and the event handlers
+could be installed using
+</np>
+
+<pre>c.setOnMousePressed( this::mousePressed );
+c.setOnMouseDragged( this::mouseDragged );
+c.setOnMouseReleased( this::mouseReleased );</pre>
 
 <break/>
 
@@ -496,18 +517,18 @@ moved, when I held down the Shift key. You can do something like that in Java
 by highlighting the cards when the Shift key is pressed and removing the highlight
 when the Shift key is released.</p>
 
-<p>There is one more complication. Usually, when you hold down a key on the
-keyboard, that key will <newword>auto-repeat</newword>. This means
-that it will generate multiple <code>keyPressed</code> events with just one
-<code>keyReleased</code> at the end of the sequence. 
-It can also generate multiple <code>keyTyped</code> events. For the most
+<p>There is one more complication. When you hold down a key on the
+keyboard, that key might <newword>auto-repeat</newword>. This means
+that it will generate multiple <code>KeyPressed</code> events with just one
+<code>KeyReleased</code> at the end of the sequence. 
+It can also generate multiple <code>KeyTyped</code> events. For the most
 part, this will not affect your programming, but you should not expect every
-<code>keyPressed</code> event to have a corresponding <code>keyReleased</code>
+<code>KeyPressed</code> event to have a corresponding <code>KeyReleased</code>
 event.</p>
 
 <p>Each key on the keyboard has a code that identifies it.  In JavaFX, 
 key codes are represented by enumerated type constants from the enum <classname>KeyCode</classname>.
-When an event handler for a <code>KeyPressed</code> of <code>KeyReleased</code>
+When an event handler for a <code>KeyPressed</code> or <code>KeyReleased</code>
 event is called, the parameter, <code>evt</code>, contains the code of the key
 that was pressed or released. The code can be obtained by calling the function
 <code>evt.getCode()</code>.  For example, when the user presses the shift key,
@@ -695,7 +716,7 @@ to change on their own:  For example, as the sub moves left and right, the state
 that specify its position change.  Of course, these variables are changing
 because of an animation, and that animation is driven by an <classname>AnimationTimer</classname>.  Each time 
 the animator's <code>handle()</code> method is called, some of the state variables have to change to
-get ready to draw next frame of the animation.  The changes are made by the
+get ready to draw next frame of the animation.  The changes are made
 in the <code>handle</code>() method before redrawing the canvas.  The <code>boat</code>,
 <code>bomb</code>, and <code>sub</code> objects each contain an
 <code>updateForNextFrame()</code> method that updates the state variables of
@@ -800,7 +821,7 @@ even when the <code>SubKiller</code> window was not the focused window, which I 
 annoying when I was trying to work in another window.  I decided to pause the animation
 when the window loses the input focus and to restart it when the window regains focus.
 When the window loses or gains focus, the value of the observable boolean property
-<code>stage.getFocusedProperty()</code> changes.  To react to that change, I added a change listener
+<code>stage.focusedProperty()</code> changes.  To react to that change, I added a change listener
 to the property, which stops the animation when the value of the property changes to <code>false</code>
 and starts the animation when the value changes to <code>true</code>.  So, I added this
 code to the <code>start()</code> method:</p>

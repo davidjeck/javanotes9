@@ -842,7 +842,7 @@ Print out all the cards in the hand, and then print out the value computed for
 the hand by <code>getBlackjackValue()</code>. Repeat this as long as the user wants
 to continue.</p>
 
-<p>In addition to <sourceref href="TextIO.java"/>, your program will depend on 
+<p>In addition to <sourceref href="textio/TextIO.java">TextIO.java</sourceref>, your program will depend on 
 <sourceref href="Card.java"/>, <sourceref href="Deck.java"/>, 
 <sourceref href="Hand.java"/>, and <sourceref href="BlackjackHand.java"/>.</p>
 </exercise-question>

@@ -15,11 +15,11 @@ a blue oval:</p>
     GraphicsContext g = canvas.getGraphicsContext2D();
     if ( evt.isShiftDown() ) {
         g.setFill( Color.BLUE );
-        fillRect( evt.getX() - 30, evt.getY() - 15, 60, 30 )
+        g.fillOval( evt.getX() - 30, evt.getY() - 15, 60, 30 )
     }
     else {
-        g.setFill( Color.BLUE );
-        fillOval( evt.getX() - 30, evt.getY() - 15, 60, 30 );
+        g.setFill( Color.RED );
+        g.fillRect( evt.getX() - 30, evt.getY() - 15, 60, 30 );
     }
 } );</pre>
 <np>Write a complete program that does the same, but in addition, the program
@@ -34,8 +34,8 @@ Here is a picture of my solution:</np>
 <np>Note that a black border has been added around each shape to make them more distinct.</np>
 <p>To make the problem a little more challenging, when drawing shapes
 during a drag operation, make sure that the shapes that are drawn are at least, say,
-5 pixels apart.  To implement this, you have to keep track of the position of the
-last shape that was drawn.</p>
+5 pixels apart.  To implement this, you have to keep track of the position where the
+previous shape was drawn.</p>
 </exercise-question>
 <exercise-discuss><p>In order to implement dragging, we need to add a handler
 for <code>MouseDragged</code> events, in addition to the handler for <code>MousePressed</code> events.
@@ -3150,7 +3150,7 @@ places might be more money than the user has, or the bet might be &lt;= 0. You
 should detect these errors and show an error message instead of starting the
 game. The user's bet should be an integral number of dollars.</p>
 
-<p>It would be a good idea to make the <classname>JextField</classname> uneditable while the
+<p>It would be a good idea to make the <classname>TextField</classname> uneditable while the
 game is in progress. If <code>betInput</code> is the <classname>TextField</classname>, you can
 make it editable and uneditable by the user with the commands
 <code>betInput.setEditable(true)</code> and <code>betInput.setEditable(false)</code>.</p>
@@ -3166,7 +3166,7 @@ as "Welcome to Blackjack" before the first game starts.</p>
    
 <p>Here is a picture of my program:</p>
 <img src="blackjack-gui.png" width="417" height="373" alt="a blackjack game in progress"
-       tex="blackjack-gui.eps" texscale="0.8"/>
+       tex="blackjack-gui.eps" texscale="0.65"/>
 </exercise-question>
 <exercise-discuss>
 <p>First, I want to briefly discuss the changes that I made to the appearance of

@@ -61,7 +61,7 @@ The method <code>mapToInt()</code> applies a <newword>map</newword>
 operation to the stream of strings.  That is, it takes each string from
 the stream and applies a function to it; in this case, the function
 computes the length of the string, giving a value
-an <ptype>int</ptype>.  The result of the map operation is to produce
+of type <ptype>int</ptype>.  The result of the map operation is to produce
 a new stream, this time a stream of integers, consisting of all
 the outputs from the function.  The final operation, <code>sum()</code>,
 adds up all the numbers in the stream of integers and returns the
@@ -333,7 +333,7 @@ we have a whole new way to print all the strings in a list of strings:</p>
 
 <np>The consumer function is not guaranteed to be applied to the
 values from the stream in the same order that they occur in the
-stream. Of you want that guarantee, you can use <code>forEachOrdered(c)</code>
+stream. If you want that guarantee, you can use <code>forEachOrdered(c)</code>
 instead of <code>forEach(c)</code>.</np>
 
 <p>If we want to print out only some of the strings, say those that
@@ -343,7 +343,7 @@ some filters:</p>
 <pre>stringList.stream()
           .filter( s -> (s.length() >= 5) )
           .sorted()
-          .forEach( s -> System.out.println(s) )</pre>
+          .forEachOrdered( s -> System.out.println(s) )</pre>
 
 <p>Some terminal operations output a single value.  For example,
 <code>S.count()</code> returns the number of values in the stream <code>S</code>.
@@ -353,7 +353,7 @@ and <classname>DoubleStreams</classname>, <code>sum()</code>,
 compute the total, minimum, and maximum of all the values 
 in the stream.  Suppose, for example, that you would like to
 test the random number generator by generating 10000 random
-numbers and counting how many of them asre less than&nbsp;0.5:</p>
+numbers and counting how many of them are less than&nbsp;0.5:</p>
 
 <pre>long half = DoubleStream.generate( Math::random )
                        .limit(10000)
@@ -463,7 +463,7 @@ private static double riemannSumWithForLoop(
     return sum * dx;
 }</pre>
 
-<np>The first parameter is a functional interface, so we could call this method,
+<np>The type for the first parameter is a functional interface, so we could call this method,
 for example, with</np>
 
 <pre>reimannSumWithForLoop( x -> Math.sin(x), 0, Math.PI, 10000 )</pre>

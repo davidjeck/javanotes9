@@ -17,7 +17,7 @@ the way, we will also encounter a few new ideas.</p>
    
 
 <p>The first program that we will consider is a GUI version 
-of the command-line card game <sourceref href="chapter5/HighLow.java"/>
+of the command-line card game <sourceref chapter="5" href="HighLow.java"/>
 from <localref href="OOP.4.3"/>.  In the new version,
 <sourceref href="HighLowGUI.java"/>, you look at a playing card and try to
 predict whether the next card will be higher or lower in value. (Aces have the
@@ -29,10 +29,10 @@ to start another game. Here is
 what the program looks like in the middle of a game:</p>
 
 <img src="high-low-gui.png" width="334" height="205" alt="GUI version of the HighLow card game"
-      tex="high-low-gui.eps" texscale="0.7"/>
+      tex="high-low-gui.eps" texscale="0.6"/>
 
 
-<np>The complete source code for the panel can be found in the file
+<np>The complete source code for the program can be found in the file
 <sourceref href="HighLowGUI.java"/>.  I encourage you to compile and run it.
 Note that the program also requires <sourceref href="Card.java"/>, <sourceref href="Deck.java"/>, 
 and <sourceref href="Hand.java"/>, from <localref href="OOP.4"/>,
@@ -480,9 +480,7 @@ limits apply only to what the user can do by dragging the borders or corners of 
 instance methods <code>stage.setX(x)</code> and <code>stage.setY(y)</code>.
 The x and y coordinates specify the position of the top left corner of the window,
 in the coordinate system of the screen.  Typically, you would do this before showing
-the stage.  (If you would like the size and position of a stage to depend on the
-size of the computer's screen, see the class <classname>Screen</classname>,
-in package <code>javafx.stage</code>, which includes methods for checking screen size.)</p>
+the stage.</p>
 
 <p>Finally, for now, remember that a stage is not visible on the screen until you
 show it by calling the instance method <code>stage.show()</code>.  Showing the
@@ -510,7 +508,7 @@ programming environment you are using.  The two basic types of programming envir
 and IDE&mdash;were discussed in <localref href="basics.6"/>.  Any IDE (Integrated Programming Environment)
 for Java should have a command for creating jar files.  In the Eclipse IDE, for example,
 it can be done as follows:  In the Package Explorer pane, select the programming project (or just
-all the individual source code files that you need).  Right-click on the selection, and
+all the individual source files that you need).  Right-click on the selection, and
 choose "Export" from the menu that pops up.  In the window that appears, select "JAR file"
 and click "Next".  In the window that appears next, enter a name for the jar file in
 the box labeled "JAR file".  (Click the "Browse" button next to this box to select the

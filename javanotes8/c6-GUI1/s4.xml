@@ -58,14 +58,14 @@ three methods that can be used with any <classname>Control</classname>
 disable the control.  The control can be re-enabled with <codedef>node.setDisable(false)</codedef>.
 When a node is disabled, its appearance
 might change, and it cannot be the target of mouse or key events.
-This function can actually be called with any scene graph node, not just controls,
-when you disable a node, any node contained inside that node are also disabled.
+This function can actually be called with any scene graph node, not just controls;
+when you disable a node, any nodes contained inside that node are also disabled.
 There is a boolean-valued function, <codedef>control.isDisabled()</codedef> 
 that you can call to discover whether the control is disabled, either because
 it was explicitly disabled or because it is inside a container node
 that was explicitly disabled.</li>
 <li><codedef>control.setToolTipText(string)</codedef> sets the
-specified string as a "tool tip" for the component. The tool tip is displayed
+specified string as a "tool tip" for the control. The tool tip is displayed
 if the mouse cursor is inside the control and the mouse is not moved for a few
 seconds. The tool tip should give some information about the meaning of the
 control or how to use it.</li>
@@ -128,7 +128,7 @@ In fact, all four types of controls inherit their behavior from a common
 superclass named <classname>Labeled</classname>.  In <localref href="GUI1.6.2"/>,
 we look at menu items, which also inherit from <classname>Labeled</classname>.
 That class defines a number of instance methods that can be used with
-labels, buttons, and other labeled controls, including:</p>
+labels, buttons, and other labeled controls. Those methods include:</p>
 
 <ul>
 <li><codedef>setText(string)</codedef> for
@@ -137,16 +137,16 @@ can be multi-line.  The new line character, "\n", in the <code>string</code>
 represents a line break.</li>
 <li><codedef>setGraphic(node)</codedef> for setting the control's graphical element.
 </li>
-<li><codedef>setFont(font)</codedef> for getting the font that is used for the text.
+<li><codedef>setFont(font)</codedef> for setting the font that is used for the text.
 </li>
-<li><codedef>setTextFill(color)</codedef> for getting the paint that is used for drawing the text. 
+<li><codedef>setTextFill(color)</codedef> for setting the paint that is used for drawing the text. 
 </li>
 <li><codedef>setGraphicTextGap(size)</codedef> for setting the amount of space that is put
 between the text and the graphic.  The parameter is of type <ptype>double</ptype>.
 </li>
 <li><codedef>setContentDisplay(displayCode)</codedef> for setting where the graphic
 should be placed with respect to the text.  The parameter is a constant
-from the enum <classname>ContentDisplay</classname> such as 
+from an enum, <classname>ContentDisplay</classname>, such as 
 <code>ContentDisplay.LEFT</code>, <code>ContentDisplay.RIGHT</code>, <code>ContentDisplay.TOP</code>
 or <code>ContentDisplay.BOTTOM</code>.
 </li>
@@ -177,7 +177,7 @@ a graphic for the label.  For example, assuming that <code>tuxIcon</code>
 is the <classname>ImageView</classname> object from the previous subsection,</p>
 
 <pre>Label message = new Label("Hello World");
-Label linuxAdd = new Label("Choose Linux First!", tuxIcon);</pre>
+Label linuxAd = new Label("Choose Linux First!", tuxIcon);</pre>
 
 <p>The default background of a label is completely transparent, and the label
 has no border or padding by default.  Often I would like to add at least
@@ -222,19 +222,21 @@ startButton.setOnAction( e -&gt; {
     animator.start();
     startButton.setDisable(true);
     stopButton.setDisable(false);
-};
+} );
 stopButton.setOnAction( e -&gt; {
     animator.stop();
     startButton.setDisable(false);
     stopButton.setDisable(true);
-};</pre>
+} );</pre>
 
 <np>This ensures that the user can't try to start the animation when it is already
 started or stop it when it is already stopped.</np>   
 
 <p>Often, there is a button that triggers some default action in a program.
 For example, the user might enter data into some text input boxes and then click
-a "Compute" button to process the data.  In JavaFX, you can make a <classname>Button</classname>, <code>button</code>,
+a "Compute" button to process the data.  It would be nice if the user could just
+press Return when done typing, instead of having to click the button.
+In JavaFX, you can make a <classname>Button</classname>, <code>button</code>,
 into the default button for the window that contains it by calling</p>
 
 <pre>button.setDefaultButton(true);</pre>
@@ -251,7 +253,8 @@ can be very convenient for the user.</np>
 <subsection id="GUI1.4.3" title="CheckBox and RadioButton">
    
 <p>A <classname>CheckBox</classname> is a component that has two states: selected or
-unselected. The user can change the state of a check box by clicking on it. The
+unselected. (Being "selected" means that the checkbox is checked.)
+The user can change the state of a check box by clicking on it. The
 state of a checkbox is represented by a <ptype>boolean</ptype> value that is
 <code>true</code> if the box is selected and is <code>false</code> if the box is
 unselected. A checkbox has a label, which is specified when the box is
@@ -394,8 +397,9 @@ displayed in an input component.  The contents of the component can be retrieved
 <code>getText()</code> instance method, which returns a value of type <classname>String</classname>.
 You can add a <classname>String</classname> of text onto the end of the text that is already
 in the component by calling the instance method <code>appendText(text)</code>.  The text
-in this method can include "\n" characters to represent line breaks; in a 
-<classname>TextField</classname>they will be ignored.  The instance method
+in the <code>setText()</code> and <code>appendText()</code> methods
+can include "\n" characters to represent line breaks; in a 
+<classname>TextField</classname> they will be ignored.  The instance method
 <code>setFont(font)</code> can be used to change the font that is used in the text component.</p>
 
 <p>If you want to stop the user from modifying the text, you can
@@ -418,7 +422,7 @@ which selects the entire string of text in the text component.
 
 <p>For example, when I discover an error
 in the user's input in a <classname>TextField</classname>, <code>input</code>, I&nbsp;usually call both
-<code>input.requestFocus()</code> and input.selectAll().  This helps the user see where the error occurred
+<code>input.requestFocus()</code> and <code>input.selectAll()</code>.  This helps the user see where the error occurred
 and lets the user start typing the correction immediately.  If the user starts typing, the old text in the input
 box, which is highlighted, will automatically be deleted.</p>
       
@@ -430,7 +434,7 @@ initially empty text input box.  The second constructor takes a parameter of typ
 specifying the initial content of the box.</p>
 
 <p>A <classname>TextField</classname> has a preferred number of columns, which by default is 12.
-This determines the preferred width of the text field, that is the size that is used if the
+This determines the preferred width of the text field, that is, the size that is used if the
 size is not reset by the program or when the text field is laid out by a container.  The preferred
 number of columns for a <classname>TextField</classname>, <code>input</code>, can be changed by calling
 <code>input.setPrefColumnCount(n)</code>, where <code>n</code> is a positive integer.</p>
@@ -558,7 +562,7 @@ slider3.setShowTickLabels(true)</pre>
 <p>The value of a slider is of type <ptype>double</ptype>.  You might want
 to restrict the value to be an integer, or to be some multiple of a given
 value.  What you can do is call <code>slider.setSnapToTicks(true)</code>.
-After the use finishes dragging the slider's knob, the value will be
+After the user finishes dragging the slider's knob, the value will be
 moved to the value at the nearest major or minor tick mark, even if the
 tick marks are not visible.  The value will <b>not</b> be restricted
 while the user is dragging the knob; the value is just adjusted at

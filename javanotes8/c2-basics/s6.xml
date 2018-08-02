@@ -53,7 +53,7 @@ as a package. As of summer 2018, the official Oracle versions are available at</
 for this textbook have been compiled with Java 8 and with Java 10.</np>
    
 <p><b>About JavaFX:</b>  The Graphical User Interface programs in this book use the
-JavaFX GUI toolkit.  JavaFX is included in the JDK for Java 8, 9, or 10 from Oracle Corporation, 
+JavaFX GUI toolkit.  JavaFX is included in the JDKs for Java 8, 9, and 10 from Oracle Corporation, 
 but Oracle has announced that it will not be included in Java 11 and later; instead,
 it will be available as a separate download. For the alternative OpenJDK, JavaFX has never
 been included as a standard component, but is available separately as OpenJFX.
@@ -105,7 +105,7 @@ press return.</p>
 <p>You should create a directory (that is, a folder) to hold your Java work.  For example,
 create a directory named <code>javawork</code> in your home directory.  You can do this using
 your computer's GUI; another way to do it is to open a command 
-window, cd to the directory that you want to contain the new dirctory,
+window, cd to the directory that you want to contain the new directory,
 and enter the command <code>mkdir&nbsp;javawork</code>.
 When you want to work on programming, open a command window and use
 the cd command to change into your work directory.
@@ -306,19 +306,19 @@ computer, you can copy-and-paste it into the Eclipse window.  (Right-click the f
 or control-click on Mac&nbsp;OS, select "Copy" 
 from the pop-up menu, then right-click the project's src folder in the Eclipse window, and select
 "Paste". Be sure to paste it into the src folder, not into the project itself; files outside
-the source folder are not treated as Java source code files.) Alternatively, you can try dragging
+the <code>src</code> folder are not treated as Java source code files.) Alternatively, you can try dragging
 the file icon onto the src folder in the Eclipse project.</p>
 
 
 <p>To use the <classname>TextIO</classname> based examples from this textbook, you must add the
-source code file <sourceref href="TextIO.java"/> to your project.  This file has to be in
+source code file <sourceref href="textio/TextIO.java">TextIO.java</sourceref> to your project.  This file has to be in
 a "package" named <code>textio</code>.  If you have downloaded <code>TextIO.java</code>
 and placed it into a folder named "textio," as described above, then you can simply copy-and-paste 
 the <code>textio</code> folder
 into the "src" folder of your project.  
 Alternatively, you can create the <code>textio</code>
 package using the "New/Package" command from the "File" menu.  This will make a
-folder named "textio" in your project, and you can then then copy-and-paste <code>TextIO.java</code>
+folder named "textio" in your project, and you can then copy-and-paste <code>TextIO.java</code>
 into that folder. In any case, package <classname>textio</classname> should
 appear under "src" in your project, with <code>TextIO.java</code> inside it.</p> 
 
@@ -339,7 +339,8 @@ no separate compilation step.
    
 <p>You can have more than one program in the same Eclipse project, or you
 can create additional projects to organize your work better.  Remember to
-place a copy of <sourceref href="TextIO.java"/> in any project that requires it.</p>
+place a copy of <sourceref href="textio/TextIO.java">TextIO.java</sourceref>, inside
+a folder named <code>textio</code>, in any project that requires it.</p>
 
 <break/>
 

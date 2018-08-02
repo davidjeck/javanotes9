@@ -170,7 +170,7 @@ a region in the window that can contain other components, including other contai
 So, a window contains GUI components, inside containers, which can be inside bigger
 containers, each represented by an object.  All of these objects make up something called
 the <newword>scene graph</newword> for the window.  The scene graph shows the
-containment relationships among all the components in the screen.  For the sample program,
+containment relationships among all the components in the scene.  For the sample program,
 the scene graph looks like this:</p>
 
 <img src="scene-graph.png" width="448" height="209" 
@@ -294,8 +294,8 @@ is executed in response to the event.  This diagram summarizes how it all works:
 <img src="event-handling.png" width="561" height="172" tex="event-handling.eps" texscale="0.6" 
       bordered="true" alt="How ActionEvents on a button are handled"/>
 
-<np>About all that still remains to be explained is the response to a click on the
-"Quit" button: <code>Platform.exit</code>.  The static <code>exit()</code> method in
+<np>About all that still remains to be explained in the sample program is the response to a click on the
+"Quit" button: <code>Platform.exit()</code>.  The static <code>exit()</code> method in
 the <classname>Platform</classname> class is the preferred way to programmatically
 end a JavaFX program.  It is preferred to <code>System.exit()</code> because it
 cleanly shuts down the application thread and gives it an opportunity to clean

@@ -64,7 +64,7 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    <sourceref href="chapter2/Day.java">Day.java</sourceref> and <sourceref href="chapter2/Month.java">Month.java</sourceref></li>
    <li><sourceref href="chapter2/PrintSquare.java">PrintSquare.java</sourceref>, from <localref href="basics.4"/>, reads an integer 
    typed in by the user and prints the square of that integer. <b>This program depends on 
-   <sourceref href="chapter2/texto/TextIO.java">TextIO.java</sourceref>.  The same is true for almost all of the programs in the
+   <sourceref href="chapter2/textio/TextIO.java">TextIO.java</sourceref>.  The same is true for almost all of the programs in the
    rest of this list.</b></li>
    <li><sourceref href="chapter2/Interest2.java">Interest2.java</sourceref>, from <localref href="basics.4"/>, calculates
    interest on an investment for one year, based on user input.  Uses <classname>TextIO</classname> for user input.</li>
@@ -350,8 +350,7 @@ as the GUI toolbox.</p>
    Model representation of the document.  The user enters the XML to be parsed in
    a text area.</li>
    <li><sourceref href="chapter12/RandomArtWithThreads.java">RandomArtWithThreads.java</sourceref>, from <localref href="threads.2"/>,
-   uses a thread to drive a very simple animation.  Compare to <sourceref href="chapter6/RandomArt.java">RandomArt.java</sourceref>,
-   which does the same thing with a timer.</li>
+   uses a thread to drive a very simple animation.</li>
    <li><sourceref href="chapter12/QuicksortThreadDemo.java">QuicksortThreadDemo.java</sourceref>, from <localref href="threads.2"/>,
    demonstrates using a separate thread to perform a computation, with simple inter-thread
    communication.</li>
@@ -424,7 +423,7 @@ as the GUI toolbox.</p>
    <li><sourceref href="chapter13/WebBrowser.java">WebBrowser.java</sourceref>, from
    <localref href="GUI2.4"/>, is a simple web browser
    based on JavaFX's <classname>WebView</classname> control. This program shows how to manage multiple
-   windows in a JavaFX application. It requires <sourceref href="BrowserWindow.java">BrowserWindow.java</sourceref>,
+   windows in a JavaFX application. It requires <sourceref href="chapter13/BrowserWindow.java">BrowserWindow.java</sourceref>,
    a subclass of <classname>Stage </classname> that does most of the work, and on 
    <sourceref href="chapter13/SimpleDialogs.java">SimpleDialogs.java</sourceref>.</li>
    <li>The Mandelbrot program from <localref href="GUI2.5"/>, which computes and
@@ -465,7 +464,7 @@ along with the programs that use them.</p>
    executable jar files for my text-oriented examples that run in a window instead of
    on the command line.  See the comments in the source code files for more information.
    (Note that this GUI version of TextIO uses the Swing GUI toolkit rather than JavaFX.)</li>
-   <li><sourceref href="chapter4/SimpleGraphicsStarter.java">SimpleGraphicsStarter.java</sourceref> and
+   <li><sourceref href="chapter3/SimpleGraphicsStarter.java">SimpleGraphicsStarter.java</sourceref> and
    <sourceref href="chapter3/SimpleAnimationStarter.java">SimpleAnimationStarter.java</sourceref> are
    small programs that you can edit to make very simple pictures and animations
    These programs were used in <localref href="control.8"/> and in some of the exercises for <localref href="control"/>.</li>

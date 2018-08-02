@@ -1019,7 +1019,7 @@ public class RandomBrighten {
 <exercise>
 <exercise-question><p>For this exercise, you will do something even more interesting
 with the <classname>Mosaic</classname> class that was discussed in <localref href="subroutines.6"/>.
-(Again, don't forget that you will need <sourceref href="Mosaic.java"/> and <sourceref href="MosaicCanvsas.java"/>
+(Again, don't forget that you will need <sourceref href="Mosaic.java"/> and <sourceref href="MosaicCanvas.java"/>
 to compile and run your program.)
 </p>
 <p>The program that you write for this exercise should start by filling a mosaic with

@@ -6,7 +6,7 @@
 <p><start><big>C</big>omponents</start> are the fundamental building blocks
 of a graphical user interface.  But you have to do more with components besides create them.
 Another aspect of GUI programming is <newword>laying out</newword> components on the screen,
-that is, deciding where they are drawn and how big they are. You have probably
+that is, deciding where they are placed and how big they are. You have probably
 noticed that computing coordinates can be a difficult problem, especially if
 you don't assume a fixed size for the drawing area. Java has a solution for this, as
 well.</p>
@@ -59,7 +59,7 @@ where the parameter is of type <ptype>double</ptype>, with similar instance meth
 the height.  You can also set width and height values simultaneously with method such as
 <code>setMaxSize(w,h)</code> and <code>setPrefSize(w,h)</code>.
 For a container, the values set by these methods will override the values
-that the would have been computed by the container based the children
+that would have been computed by the container based the children
 that it contains.</p>
 
 
@@ -91,9 +91,9 @@ node.  For a resizable node,</np>
 <pre>node.resize( width, height )</pre>
 
 <np>will set its size.  This method has no effect on a non-resizable node.
-(However, some non-resizable nodes, such as <classname>Canvas</classname>,
-have a <code>setWidth(w)</code> and a <code>setHeight(h)</code> method for
-setting their size.)</np>
+(However, some nodes that are non-resizable in this sense, such as <classname>Canvas</classname>,
+nevertheless have a <code>setWidth(w)</code> and a <code>setHeight(h)</code> method for
+changing their size.)</np>
 
 <p>If the node is in a container that does all layout then, by default, neither
 <code>relocate()</code> nor <code>resize()</code> will have any effect.
@@ -129,8 +129,8 @@ method.  (Without that, they will all appear with their top left corners at the 
 location, (0,0)!)  After looking at the result, I decided that I wanted the two buttons
 to have the same size and to be larger than their preferred sizes.  For that to work,
 the buttons had to be made unmanaged.  (Otherwise, calling their <code>resize()</code> method
-would have no effect becasue the pane would set them back to their preferred size.)
-Here is the code from the start method that creates the four components and configures
+would have no effect because the pane would set them back to their preferred size.)
+Here is the code from the application's <code>start()</code> method that creates the four components and configures
 them, including setting their locations and sizes:</p>
 
 <pre>/* Create the child nodes. */
@@ -256,7 +256,7 @@ occupied by the top and bottom components.  Finally, the center component
 takes up any remaining space.</p>
  
 <p>The default preferred size of <classname>BorderPane</classname> is set just
-big enough to accommodate the preferred size of its (managed) children.
+big enough to accommodate the preferred sizes of its (managed) children.
 The minimum size is computed in a similar way.  The default maximum size of a 
 <classname>BorderPane</classname> is unlimited.</p>
 
@@ -345,13 +345,15 @@ which can be set by calling</p>
 way as for <classname>Pane</classname>, that is, by calling
 <code>hbox.getChildren().add(child)</code> or
 <code>hbox.getChildren().addAll(child1,child2,&dots;)</code>.
-The <classname>HBox</classname> class also includes constructors that can set the
-spacing and add children, as well as a constructor with no parameters.
-</np>
+The <classname>HBox</classname> class has a constructor with no parameters, as well
+as one that takes the size of the gap as its first parameter, optionally
+followed by child nodes to be added to the box.</np>
 
 <p>By default, an <classname>HBox</classname> will resize its children to their
-preferred widths, possibly leaving some blank extra space on the right.  
-If using the children's preferred widths would make the total width greater than the width
+preferred widths, possibly leaving some blank extra space on the right.  (The blank
+space would be there because the width of the <classname>HBox</classname> has been
+set to be larger than its preferred width.)
+If using the children's preferred widths would make the total width greater than the actual width
 of the <classname>HBox</classname>, it will shrink the children, within the 
 limit of their minimum widths. The height of the children will be set to the
 full available height in the <classname>HBox</classname>, but, as always, within
@@ -408,8 +410,8 @@ hbox by calling <code>hbox.setFillHeight(false)</code>.  You can say
 where in the hbox the children are placed, when they do not fill the
 entire hbox by calling <code>hbox.setAlignment(position)</code>;
 the parameter is of type <classname>POS</classname> with a
-default of <code>POS.TOP_LEFT.  And, of course, you can apply
-CSS style properties.</code></p>
+default of <code>POS.TOP_LEFT</code>.  And, of course, you can apply
+CSS style properties.</p>
 
 <break/>
 
@@ -570,7 +572,7 @@ If <code>grid</code> is the <classname>GridPane</classname>, set the
 size of the gaps by calling</p>
 
 <pre>grid.setHGap( gapSize );  // gap between columns
-gris.setVGap( gapSize );  gap between rows</pre>
+gris.setVGap( gapSize );  // gap between rows</pre>
 
 <p>You can specify the row and column where a child is to be placed
 when you add the child to the <classname>GridPane</classname>:</p>
@@ -658,8 +660,8 @@ The children will be laid out in order, filling the first row from left to right
 second row, and so on.  It is not required that the last row be completely filled.
 (All of this is true if the "orientation" of the <classname>TilePane</classname> is
 horizontal.  It is possible to change the orientation to vertical. In that case, the number
-of preferred rows is specified instead of the number of columns.  However, I have found little no
-real reason to do that.)</np>
+of preferred rows is specified instead of the number of columns.  However, I have found little
+reason to do that.)</np>
 
 <p>It's very common to have a <classname>TilePane</classname> in which the number of 
 preferred columns is one.  In that case, it is similar to a <classname>VBox</classname>.

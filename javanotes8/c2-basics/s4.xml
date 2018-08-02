@@ -194,7 +194,7 @@ Java's standard classes are defined in packages and are imported into programs i
 available to your program. What this means depends on the Java programming
 environment that you are using.  In general, you just have to
 add the folder <sourceref href="textio"/> to the same folder that contains
-your main program.  This folder contains the file <sourceref href="TextIO.java"/>.
+your main program.  This folder contains the file <sourceref href="textio/TextIO.java">TextIO.java</sourceref>.
 See <localref href="basics.6"/> for information about how to use <classname>TextIO</classname>.</p>
 
 <p>The input routines in the <classname>TextIO</classname> class are static member functions.
@@ -582,7 +582,7 @@ there.</p>
 
 <p>The <classname>TextIO</classname> class provides a number of other functions.  To
 learn more about them, you can look at the comments in the source code file,
-<sourceref href="TextIO.java"/>.</p>
+<sourceref href="textio/TextIO.java">TextIO.java</sourceref>.</p>
 
 <p>Clearly, the semantics of input is much more complicated than the semantics of output!
 Fortunately, for the majority of applications, it's pretty straightforward in practice.

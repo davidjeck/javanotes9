@@ -34,12 +34,12 @@ the Internet that data is supposed to go. Think of a packet as an envelope with
 an address on the outside and a message on the inside. (The message is the
 data.) The packet also includes a "return address," that is, the address of the
 sender. A packet can hold only a limited amount of data; longer messages must
-be divided among several packets, which are then sent individually over the net
+be divided among several packets, which are then sent individually over the Net
 and reassembled at their destination.</p>
 
 <p>Every computer on the Internet has an <newword>IP address</newword>, 
 a number that identifies it uniquely among all the computers on
-the net. (Actually, the claim about uniqueness is not quite true, but
+the Net. (Actually, the claim about uniqueness is not quite true, but
 the basic idea is valid, and the full truth is complicated.)
 The IP address is used for addressing packets. A computer can only
 send data to another computer on the Internet if it knows that computer's IP
@@ -55,7 +55,7 @@ rather than the domain name, to communicate with the other computer.)</p>
 
 <p>The Internet provides a number of services to the computers connected to it
 (and, of course, to the users of those computers). These services use TCP/IP to
-send various types of data over the net. Among the most popular services are
+send various types of data over the Net. Among the most popular services are
 instant messaging, file sharing, electronic mail, and the World-Wide Web.
 Each service has its own protocols, which are used to control transmission of
 data over the network.  Each service also has some sort of user interface,

@@ -312,7 +312,7 @@ is used in a complete, multi-window program.</p>
 It cannot be run as a program; it represents just one window in a multi-window program.
 The program is defined in <sourceref href="WebBrowser.java"/>.  The class <classname>WebBrowser</classname>,
 like any JavaFX program, is a subclass of <classname>Application</classname>.  It depends on
-<sourceref href="BrowserWinodow.java"/> and <sourceref href="SimpleDialogs.java"/>, so you
+<sourceref href="BrowserWindow.java"/> and <sourceref href="SimpleDialogs.java"/>, so you
 need all three Java files to run the program.</p>
 
 <p>An <classname>Application</classname> has a <code>start()</code> method that is called by

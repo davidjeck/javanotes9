@@ -34,7 +34,7 @@ the root of the window's scene.</p>
 </question>   
    
 <question>
-<ques><p>JavaFX has a standard classes called <classname>Canvas</classname>
+<ques><p>JavaFX has standard classes called <classname>Canvas</classname>
 and <classname>GraphicsContext</classname>.  Explain the purposed of
 these classes.</p></ques>
 <ans><p>A <classname>Canvas</classname> is a scene graph node that represents a
@@ -49,7 +49,7 @@ the colors that are used for stroking and filling shapes.</p></ans>
 
 <question>
 <ques><p>Suppose that <code>canvas</code> is a variable of type <classname>Canvas</classname>.
-Suppose you would to draw a green square inside a red circle on the canvas, as illustrated.</p>
+Write a code segment that will draw a green square centered inside a red circle on the canvas, as illustrated.</p>
 <img src="square-in-circle.png" width="100" height="100" alt="(Picture of Circle in Square)"
    tex="square-in-circle.eps" texscale="0.8"/></ques>
 <ans><p>Note: The size of the square and
@@ -76,7 +76,7 @@ g.fillRect(30,30,40,40);
 <question>
 <ques><p>Draw the picture that will
 be produced by the following <code>for</code> loop, where
-<code>g</code> is a <classname>GraphicsContext</classname>:</p>
+<code>g</code> is a variable of type <classname>GraphicsContext</classname>:</p>
 <pre>for (int i=10; i &lt;= 210; i = i + 50) {
    for (int j = 10; j &lt;= 210; j = j + 50) {
       g.strokeLine(i,10,j,60);

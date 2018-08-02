@@ -310,7 +310,7 @@ you have to write a Javadoc comment.</p>
 <p>As an example, you can look at the documentation Web page for <classname>TextIO</classname><web> by
 following this link: <a href="../TextIO_Javadoc/index.html">TextIO&nbsp;Javadoc&nbsp;documentation</a></web>.
 The documentation page was created by applying the <code>javadoc</code> tool
-to the source code file, <sourceref href="TextIO.java"/>.  If you have downloaded the on-line
+to the source code file, <sourceref href="textio/TextIO.java">TextIO.java</sourceref>.  If you have downloaded the on-line
 version of this book, the documentation can be found in the <code>TextIO_Javadoc</code>
 directory<tex>, or you can find a link to it in the on-line version of this section</tex>.</p>
 

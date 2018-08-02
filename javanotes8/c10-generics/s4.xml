@@ -529,7 +529,7 @@ for ( WordData data : wordsByFrequency )
    
 <p>You can find the complete word-counting program in the file
 <sourceref href="WordCount.java"/>.  Note that for reading and writing
-files, it uses the file I/O capabilities of <sourceref href="TextIO.java"/>,
+files, it uses the file I/O capabilities of <sourceref href="textio/TextIO.java">TextIO.java</sourceref>,
 which were discussed in <localref href="basics.4.4"/>.</p>
    
 <p>By the way, if you run the WordCount program on a reasonably large file

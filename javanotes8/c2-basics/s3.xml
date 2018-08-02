@@ -46,7 +46,7 @@ the standard class named <classname>System</classname> contains a subroutine nam
 <code>exit</code>.  To use that subroutine in your program, you must refer to it as
 <code>System.exit</code>.  This full name consists of the name of the class that contains
 the subroutine, followed by a period, followed by the name of the subroutine.
-This subroutine requires an integer as parameter, so you would actually use it with
+This subroutine requires an integer as its parameter, so you would actually use it with
 a subroutine call statement such as</p>
 
 <pre>System.exit(0);</pre>
@@ -165,8 +165,8 @@ computer to perform a task. Just record the time at which the task is begun and
 the time at which it is finished and take the difference.  For more accurate timing,
 you can use <code>System.nanoTime()</code> instead. <code>System.nanoTime()</code>
 returns the number of nanoseconds since some arbitrary starting time, where one
-nanosecond is one-billionth of a second.  However, you should note expect the
-time to be truly accurate to the nanonsecond.</p>
+nanosecond is one-billionth of a second.  However, you should not expect the
+time to be truly accurate to the nanosecond.</p>
 
 <p>Here is a sample program that performs a few mathematical tasks and reports
 the time that it takes for the program to run.</p>
