@@ -5,7 +5,9 @@
 
 <exercise>
 <exercise-question><p>The folder <sourceref href="nature-images"/> contains several pictures of
-animals.  Write a "scratch off" program that could be used by a small child that works as follows:
+animals.  (In the web site download, you can find that folder in the <code>chapter13</code> directory
+inside the <code>source</code> directory.)
+Write a "scratch off" program that could be used by a small child that works as follows:
 The program window starts by showing a large uniformly colored rectangle, with one of the
 animal pictures hidden behind it.  As the user drags the mouse over the image, part of the
 colored overlay is scratched off, revealing the picture underneath.  Here is what it should

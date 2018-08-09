@@ -138,7 +138,7 @@ but might in practice be equal to the size of a pixel.  The most general functio
 making fonts can specify all of these options:
 </p>
 
-<pre>font myFont = Font.font( family, weight, posture, size );</pre>
+<pre>Font myFont = Font.font( family, weight, posture, size );</pre>
 
 <np>If the system can't match the requested font properties exactly, it will return the
 font that it thinks best matches the parameters.

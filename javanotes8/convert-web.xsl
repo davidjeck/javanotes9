@@ -18,7 +18,7 @@
         <h2 class="chapter_title">Version 8.0, Summer 2018</h2>
         <p style="text-align:center">(<b>Under Construction!</b><br/>
                           Status: The entire textbook has been updated<br/>
-                          but Chapters 5 to 13 still need proofreading.<br/>
+                          but Chapters 7 to 12 still need proofreading.<br/>
                           Consider this a "beta" release.)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        

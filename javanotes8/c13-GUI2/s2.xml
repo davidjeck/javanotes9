@@ -13,7 +13,7 @@ managing the state of a graphics context.</p>
 fill color and line width, that affect any drawing done with <code>g</code>.  It's important to
 remember that a canvas has only one graphics context, and any changes made to a property
 of the graphics context will carry over to all future drawing, until the value of the 
-property is changed again.  Changes are not restricted to the subroutine in which they
+property is changed again.  In particular, changes are <b>not</b> restricted to the subroutine in which they
 are made.  It often happens that a programmer wants to change the value of some
 properties temporarily and then restore them to their previous values.  The graphics
 API includes methods <code>g.save()</code> and <code>g.restore()</code> that makes
@@ -51,7 +51,7 @@ This illustration shows the available options:</p>
 <img src="line-attributes.png" width="581" height="173" tex="line-attributes.eps"
        texscale="0.6" bordered="true" alt="wide lines with dashes and with various caps and joins"/>
 
-<p>The endpoints of the three line segments the left show the three possible style of line "cap."
+<p>The endpoints of the three line segments on the left show the three possible styles of line "cap."
 The stroke is shown in black, and the geometric line is indicated by a yellow line down the center of the stroke.
 In the <code>BUTT</code> cap style, the stroke is simply cut off at the end of the
 geometric line.  For the <code>ROUND</code> cap, a disk is added at the endpoint, with a diameter
@@ -107,7 +107,7 @@ rectangles with a variety of line styles.  See the source code for details.</p>
 <subsection id="GUI2.2.2" title="Fancier Paints">
   
    
-<p>So now we can draw fancier strokes.  But all of our drawing operations have been
+<p>So now we can draw fancier strokes.  But all of our individual drawing operations have been
 restricted to drawing with a single color.  We can get around that restriction
 by using <classname>Paint</classname>.  An object of type <classname>Paint</classname>
 is used to assign color to each pixel that is "hit" by a drawing operation.
@@ -137,7 +137,7 @@ for filling them.  These pictures were made by the sample program
 different paints, and you can control certain properties of the paints.</p>
 
 <img src="paint-demo.png" width="477" height="206" alt="two types of paint, gradient fill and texture fill"
-      tex="paint-demo.eps" texscale="0.7" bordered="true"/>
+      tex="paint-demo.eps" texscale="0.6" bordered="true"/>
       
 <p>To create an <classname>ImagePattern</classname>, you first need an image.
 The <classname>Image</classname> class was introduced in <localref href="GUI1.2.3"/>.
@@ -177,7 +177,7 @@ you would use</np>
 along the line segment.  The points and their associated colors are called <newword>color stops</newword>.
 Colors are interpolated between the color stops to give a color to each point on the line.  The colors
 are then extended perpendicularly to the line segment to give an infinite colored strip.  You also have
-to specify what happens outside that strip of color.  In JavaFX, this is called the "cycle method," and the
+to specify what happens outside that strip of color.  In JavaFX, this is done by specifying a "cycle method." The
 possibilities are <code>CycleMethod.REPEAT</code>, meaning that the color strip is repeated to cover the
 entire plane; <code>CycleMethod.MIRROR</code>, meaning that the color strip is repeated, but every other copy
 is reversed so that the colors match up at the boundaries; and <code>CycleMethod.NO_REPEAT</code>, meaning
@@ -218,10 +218,10 @@ the first gradient in the above illustration was constructed as</np>
 <break/>
                                   
 <p>For a linear gradient, the color is constant along certain lines.  For a radial gradient,
-color is constant along circles.  For a basic radial gradient, color stops are specified along
+color is constant along certain circles.  For a basic radial gradient, color stops are specified along
 the radius of a circle, and color is constant along circles that have the same center as that
 circle.  Colors outside the circle are determined based on the cycle method.  Things are a
-little more complicated because a radial gradient can have a "focal point" inside the circle.
+little more complicated than that because a radial gradient can have a "focal point" inside the circle.
 For a basic radial gradient, the focal point is the center of the circle but the focal point
 can be any point inside the circle.  The color of the
 gradient at the focal point is given by the color stop at position&nbsp;0.  The color along the
@@ -289,7 +289,7 @@ give you an idea of what transforms can do.</p>
 <p>The current overall transform is a property of the graphics context.  It is part of the
 state that is saved by the <code>save()</code> method and restored by the <code>restore()</code>
 method.  It is especially important to use <code>save()</code> and <code>restore()</code> when
-working with transforms to prevent the effect of a transform from carrying over from one subroutine
+working with transforms, to prevent the effect of a transform from carrying over from one subroutine
 call to another.</p>
   
 <p>You should also remember that, like other properties of a graphics context, a transform
@@ -571,7 +571,7 @@ outside of the canvas, and I don't want to try to use color data for those non-e
 pixels.  Here is the code:</p>
 
 <pre>pixels = new WritableImage(9,9);        // a 9-by-9 writable image
-pixelReader = pixels.getPixelReader();  // a PixelReader for the image
+pixelReader = pixels.getPixelReader();  // a PixelReader for the writable image
 snapshotParams = new SnapshotParameters();</pre>
 
 <np>When the uses presses the mouse, I need to take a snapshot of the
@@ -581,8 +581,8 @@ data from the snapshot into  the color component arrays, <code>smudgeRed</code>,
 <code>smudgeGreen</code>, and
 <code>smudgeBlue</code>:</np>
 
-<pre>snapshotParams.setViewport( new Rectangle2D(startX-4,startY-4,9,9) );
-    // (The SnapshotParameters "viewport" is the rectangle in the canvas
+<pre>snapshotParams.setViewport( new Rectangle2D(startX - 4, startY - 4, 9, 9) );
+    // (The SnapshotParameter's "viewport" is the rectangle in the canvas
     //  that will be included in the snapshot.)
 canvas.snapshot(snapshotParams, pixels);
 int h = (int)canvas.getHeight();
@@ -592,7 +592,7 @@ for (int j = 0; j &lt; 9; j++) {  // row in the snapshot
     for (int i = 0; i &lt; 9; i++) {  // column in the snapshot
         int c = startX + i - 4;  // the corresponding column in canvas
         if (r &lt; 0 || r >= h || c &lt; 0 || c >= w) {
-                // The point (i,j) is outside the canvas.
+                // The point (c,r) is outside the canvas.
                 // A -1 in the smudgeRed array indicates that the
                 // corresponding pixel was outside the canvas.
             smudgeRed[j][i] = -1;
@@ -611,10 +611,10 @@ for (int j = 0; j &lt; 9; j++) {  // row in the snapshot
 around another point <code>(x,y)</code>, I need to take a new snapshot, this time
 of the 9-by-9 square of pixels surrounding <code>(x,y)</code>.  Once we have
 that snapshot, we can do the blending calculations and write the new color back
-the canvas, using a <classname>PixelWriter</classname> that writes to the
+the canvas, using the <classname>PixelWriter</classname> that writes to the
 canvas:</np>
 
-<pre>snapshotParams.setViewport( new Rectangle2D(x-4,y-4,9,9) );
+<pre>snapshotParams.setViewport( new Rectangle2D(x - 4, y - 4, 9, 9) );
 canvas.snapshot(snapshotParams, pixels);
 for (int j = 0; j &lt; 9; j++) { // row in the snapshot
     int c = x - 4 + j;  // corresponding row in the canvas
@@ -629,7 +629,7 @@ for (int j = 0; j &lt; 9; j++) { // row in the snapshot
                // with the color components from the arrays:
            double newRed = (oldColor.getRed()*0.8 + smudgeRed[i][j]*0.2);
            double newGreen = (oldColor.getGreen()*0.8 + smudgeGreen[i][j]*0.2);
-           double newBlue = (oldColor.getBlue()
+           double newBlue = (oldColor.getBlue()*0.8 + smudgeBlue[i][j]*0.2);
 
               // PixelWriter writes new pixel color to the canvas:
            pixelWriter.setColor( c, r, Color.color(newRed,newGreen,newBlue) );
@@ -647,7 +647,7 @@ to work with pixels.  Remember that you can write pixel colors to a canvas
 using a <classname>PixelWriter</classname>, but to read pixels from the
 canvas, you need to take a <classname>Snapshot</classname> of the canvas,
 and use a <classname>PixelReader</classname> to read pixel colors from
-the <classname>WritableImget</classname> that contains the snapshot..</p>
+the <classname>WritableImage</classname> that contains the snapshot.</p>
 
 </subsection>
 

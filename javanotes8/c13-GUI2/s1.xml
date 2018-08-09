@@ -28,7 +28,7 @@ property can be bound to another property of the same type.  Properties that
 are bound in this way are forced to have the same value.  Bindable
 properties are used throughout the JavaFX API.  This section explores how
 and why they are used. </p>
-	
+    
 <p>The classes discussed in this section are defined in package <code>javafx.beans</code>
 and its subpackages.  However, you will rarely need to import classes from those packages
 into your JavaFX programs, since you will mostly be using objects that already exist.</p>
@@ -64,11 +64,11 @@ which is emitted when the current value becomes invalid for some reason.  An inv
 will never be seen by another object; any attempt to read the value will cause the value to
 be recomputed and become valid again.  An invalidation event is a notice that the value needs
 to be recomputed, but the value won't actually be recomputed until it is needed.   This is 
-something called "lazy evaluation" of the value: the work of recomputing the value is not done
+something called "lazy evaluation" of the value: The work of recomputing the value is not done
 until the new value is actually needed for something.  Lazy evaluation can be more efficient
-than recomputing the value every as soon as it becomes invalid.  Let's say a dozen things happen
+than recomputing the value every time it is invalidated.  Let's say a dozen things happen
 that invalidate the value before the value is needed&mdash;with lazy evaluation, the value will
-only be recomputed once, when it is needed, rather than a dozen times, each time it is invalidated.
+only be recomputed once, when it is needed, rather than a dozen times.
 More important for us, the observable would only emit one invalidation event, not a dozen.
 This avoids multiple redundant calls to invalidation listeners.  In most cases in JavaFX,
 invalidation listeners should be used in preference to change listeners.</p>
@@ -114,11 +114,12 @@ in the value.</p>
   
   
    
-	
+    
 <subsection id="GUI2.1.2" title="Bindable Properties">
 
-<p>Many JavaFX observable property can be bound to another property of the same type
-(The exceptions are "read-only properties," which are not bindable.)
+<p>Many JavaFX observable properties can be bound to another property of the same type.
+(The exceptions are "read-only properties"; you can't bind a read-only property to another
+property, although you <b>can</b> bind a property <b>to</b> a read-only property.)
 As a basic example, suppose that we want the text in a label to always be the same as
 the text in a text field.  That can be implemented simply by binding the <code>textProperty</code>
 of the label to the <code>textProperty</code> of the text field:</p>
@@ -128,7 +129,7 @@ TextField input = new TextField("Type Here!");
 message.textProperty().bind( input.textProperty() );</pre>
   
 <np>The <code>bind()</code> method forces the value of <code>message.textProperty()</code>
-to be the same as the value of <code>input.textProperty()</code>.  As soon as <code>bind()</code>]
+to be the same as the value of <code>input.textProperty()</code>.  As soon as <code>bind()</code>
 is executed, the text from the text field is copied into the label, so that the initial
 text in the label&mdash;"Never&nbsp;Seen" in the example&mdash;is never seen by the user.  
 As the program runs, any change to the text in the
@@ -178,7 +179,7 @@ is bound by saying:</np>
 <pre>sliderVal.textProperty().bind( 
                    slider.valueProperty().asString("Slider Value: %1.2f") );</pre>
                    
-<np>(Actually, <code>slide.valueProperty().asString</code> is of type <classname>StringBinding</classname>
+<np>(Actually, <code>slider.valueProperty().asString</code> is of type <classname>StringBinding</classname>
 rather than <classname>StringProperty</classname>, but the distinction is not important here,
 and I will ignore it.)</np>
 
@@ -206,7 +207,7 @@ example,</np>
 
 <p>The class <classname>When</classname>, from package <code>javafx.beans.binding</code>,
 can be used to apply something like the ternary operator, "?:" (see <localref href="basics.5.5"/>),
-to boolean properties, with a rather strange syntax.  If <code>boolrop</code> is a boolean
+to boolean properties, with a rather strange syntax.  If <code>boolProp</code> is a boolean
 property, and if <code>trueVal</code> and <code>falseVal</code> are any values that both have
 the same type, then</p>
 
@@ -277,7 +278,8 @@ or height.</p>
   
 <subsection id="GUI2.1.3" title="Bidirectional Bindings">
 
-<p>Bindings created using the <code>bind()</code> method are one way.  One-way 
+<p>Bindings created using the <code>bind()</code> method are one-way bindings: They
+only work in one direction.  One-way 
 bindings are not always appropriate.  Suppose for example that <code>cb1</code>
 and <code>cb2</code> are of type <classname>CheckBox</classname>, and that we
 would like the two checkboxes to always be in the same state.  That can't be
@@ -287,7 +289,7 @@ done with a one-way binding.  If we do</p>
 
 <np>that will make <code>cb2</code> match its state to <code>cb1</code>.
 But changing the selected state of <code>cb2</code> will not change the state of
-<code>cb1</code>; in fact, it will cause an exception, since it is illegal
+<code>cb1</code>; instead, it will cause an exception, since it is illegal
 to try to change the value of a property that has been bound using
 <code>bind()</code>.  In fact, if the user just clicks <code>cb2</code>,
 there will be an exception as the checkbox tries to change state.</np>
@@ -328,37 +330,37 @@ ToggleGroup colorGroup = new ToggleGroup();
 for (int i = 0; i &lt; colors.length; i++) {
 
         // Make a menu item and corresponding radio button.
-	RadioButton button = new RadioButton(colorNames[i]);
-	RadioMenuItem menuItem = new RadioMenuItem(colorNames[i]);
-	
-	button.selectedProperty().bindBidirectional( menuItem.selectedProperty() );
-	
-	menuItem.setToggleGroup(colorGroup);
-	
-	    // Note how UserData is used to store the color object
-	    // associated with the menu item, for later use.  
-	menuItem.setUserData(colors[i]);
-	
-	right.getChildren().add(button);    // add button to a container
-	colorMenu.getItems().add(menuItem); // add menu item to a menu
-	if (i == 0)
-		menuItem.setSelected(true);
+    RadioButton button = new RadioButton(colorNames[i]);
+    RadioMenuItem menuItem = new RadioMenuItem(colorNames[i]);
+    
+    button.selectedProperty().bindBidirectional( menuItem.selectedProperty() );
+    
+    menuItem.setToggleGroup(colorGroup);
+    
+        // Note how UserData is used to store the color object
+        // associated with the menu item, for later use.  
+    menuItem.setUserData(colors[i]);
+    
+    right.getChildren().add(button);    // add button to a container
+    colorMenu.getItems().add(menuItem); // add menu item to a menu
+    if (i == 0)
+        menuItem.setSelected(true);
 }
 
 colorGroup.selectedToggleProperty().addListener( e -> {
-	        // Listen for changes to the selectedToggleProperty
-	        // of the ToggleGroup, so that the color of the
-	        // label can be set to match the selected menu item.
-	Toggle t = colorGroup.getSelectedToggle();
-	if (t != null) {
-		    // t is the selected RadioMenuItem.  Get the color
-		    // from its UserData, and use it to set the color
-		    // of the text.  The value of the selectedToggleProperty()
-		    // can momentarily be null as one toggle is unselected
-		    // and another is selected.
-		Color c = (Color)t.getUserData();
-		message.setTextFill(c);
-	}
+            // Listen for changes to the selectedToggleProperty
+            // of the ToggleGroup, so that the color of the
+            // label can be set to match the selected menu item.
+    Toggle t = colorGroup.getSelectedToggle();
+    if (t != null) {
+            // t is the selected RadioMenuItem.  Get the color
+            // from its UserData, and use it to set the color
+            // of the text.  The value of the selectedToggleProperty()
+            // can momentarily be null as one toggle is unselected
+            // and another is selected.
+        Color c = (Color)t.getUserData();
+        message.setTextFill(c);
+    }
 });</pre>
 
 <np>Note that the menu items are added to a <classname>ToggleGroup</classname>

@@ -4,9 +4,9 @@
 <section id="GUI2.3" title="Complex Components and MVC">
    
 <p><start><big>T</big>here is a lot more complexity</start> than we have
-see so far lurking in the JavaFX API.  However, a lot of that
+seen so far lurking in the JavaFX API.  However, a lot of that
 complexity works to your benefit as a programmer, since a lot of it is hidden in
-typical uses of JavaFX components.  You don't have to know about all the most
+typical uses of JavaFX components.  You don't have to know about the most
 complex details of controls in order to use them effectively in most programs.</p>
    
 <p>JavaFX defines several component classes that are much more complex than those
@@ -62,7 +62,7 @@ variable to record the time when the user starts the stopwatch.
 In the mouse event handling method that responds to mouse clicks on the stopwatch, I need
 to know whether the timer is being started or stopped, so I need a <ptype>boolean</ptype>
 instance variable, <code>running</code>, to keep track of this aspect of the component's state. 
-We can use he method <code>System.currentTimeMillis()</code> to get the current time,
+We can use the method <code>System.currentTimeMillis()</code> to get the current time,
 in milliseconds, as a value of type <ptype>long</ptype>.   When the timer is started,
 we can store the current time in an instance variable, <code>startTime</code>.  
 When the timer is stopped, we can use the current time and the start time to compute
@@ -212,7 +212,7 @@ The selected icon can be "stamped" onto a canvas by clicking on
 the canvas. Shift-clicking adds a larger version of the image to the canvas.
 (The icons in this program are from the KDE desktop project.)
 Here is a picture of the program with several icons already stamped onto the
-drawing area and with the "star" icon selected:</p>
+drawing area and with the "star" icon selected in the list:</p>
 
 <img src="silly-stamper.png" width="394" height="286" alt="screenshot from SillyStamper.java"
    tex="silly-stamper.eps" texscale="0.7"/>   
@@ -223,7 +223,8 @@ The most common type is probably <atype>ListView&lt;String&gt;</atype>, but in t
 it's <atype>ListView&lt;ImageView&gt;</atype>.  A <classname>ListView</classname>
 can display <classname>Strings</classname> and <classname>Nodes</classname> directly.
 When used with objects of other types, the default is to display the string representation
-of the object, as returned by the <code>toString()</code> method.</p>
+of the object, as returned by the <code>toString()</code> method (which is often not very
+useful).</p>
 
 <p>The items in a <atype>ListView&lt;T&gt;</atype> are stored in an
 <atype>ObservableList&lt;T&gt;</atype>.  The list of items is part of the model
@@ -275,7 +276,7 @@ would have forced the container to be bigger than I wanted.</np>
 <p>The other point of interest is the use of the "selection model" of the list.
 The selection model is the part of the model that records which items are selected
 in the list.  By default, at most one item can be selected in a list, which is
-good for this program.  However, it would be possible to allow multiple items to be
+the correct behavior for this program.  However, it would be possible to allow multiple items to be
 selected at the same time by calling</p>
 
 <pre>list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);</pre>
@@ -290,7 +291,7 @@ item in the list is highlighted in the list view.  The list view listens for
 changes in the selection model.  When the user clicks an item, a mouse
 listener (which is part of the controller) changes the selection model.
 When that happens, the list view is notified of the change and
-updates its appearance to reflect the fact that a different item is now selected..
+updates its appearance to reflect the fact that a different item is now selected.
 A program can find out which item is currently selected by calling</np>
    
 <pre>list.getSelectionModel().getSelectedIndex()</pre>
@@ -301,7 +302,8 @@ into the picture.</np>
 
 <break/>
 
-<p>The sample program <sourceref href="EditListDemo.java"/> shows two lists
+<p>The list in <code>SillStamper.java</code> is not editable. Our second
+sample program, <sourceref href="EditListDemo.java"/>, shows two lists
 that can be edited by the user.  One is a list of strings and one is a list
 of numbers.  The user can initiate editing of an item by double-clicking it,
 or simply by clicking it if it is already selected.  The user finishes the edit
@@ -349,7 +351,7 @@ is being edited, it is displayed as a <classname>TextField</classname>.</p>
 There are other item types for which it is natural to display the
 item as a string and to use a <classname>TextField</classname> for
 editing the item.  That includes numbers, single character values,
-dates and times.  However, when the items are not strings, there
+dates, and times.  However, when the items are not strings, there
 has to be some way to convert between items and their string
 representations.  Again, JavaFX makes things reasonably easy in
 the common cases: It provides standard converters for all of the
@@ -406,7 +408,7 @@ There are also similar classes for use with cells in tables, which we will need 
 <p>In addition to the lists themselves in the sample program, a few interesting things are
 done with labels and buttons, by using observable properties of the <classname>ListView's</classname> model,
 as discussed in <localref href="GUI2.1.2"/>.
-For example, there are labels that show the selected item and the selected value in the list.
+For example, there are labels that show the selected index and the selected item in the list.
 This is coded by binding the text property of the label with a property of the
 list's selection model:</p>
 
@@ -441,7 +443,9 @@ the change and update themselves to reflect the new state of the model.</np>
 part of the <classname>ListView</classname> model.  The item is actually added
 to the <classname>ObservableList</classname> that holds the items.  Since the
 <classname>ListView</classname> listens for changes in that list, it will be notified of the change and
-will update itself to show the new item in the visible on-screen view of the list.</p>
+will update itself to show the new item in the visible on-screen view of the list.
+Beyond adding the item to the observable list, no other action is needed in the program
+to get the item to appear on the screen.</p>
 
 <break/>
 
@@ -468,9 +472,9 @@ flavors.getSelectionModel().select(0);</pre>
 <p>It is possible to set a combo box to be editable (and no special cell factory
 is needed for that, as long as the items are strings).  An editable combo
 box is like a strange combination of text field and list view.  Instead of
-using a lable to show the selected item, the combo box uses a text field.
+using a label to show the selected item, the combo box uses a text field.
 The user can edit the value in the text field, and the modified value becomes
-the selected value in the combo box.  However, original value of the modified item
+the selected value in the combo box.  However, the original value of the modified item
 is not removed from the list; the new item is just added.  And the new
 item does not become a permanent part of the list.  In the above
 example, the effect of saying <code>flavors.setEditable(true)</code>
@@ -510,7 +514,9 @@ rows of the table; you also have to say what data goes in each column of the
 table.  A table column is described by an object of type <atype>TableColumn&lt;T,S&gt;</atype>,
 where the first type parameter, <classname>T</classname>, is the same as the type
 parameter of the table, and the second type parameter, <classname>S</classname>,
-is the data type for the items that appear in the cells of that column.  A table
+is the data type for the items that appear in the cells of that column.  The type
+<atype>TableColumn&lt;T,S&gt;</atype> indicates that the column displays items of
+type <classname>S</classname> derived from rows of type&nbsp;<classname>T</classname>. A table
 column object does not contain the items that appear in the column; they are contained
 in the objects of type <classname>T</classname> that represent the rows.
 But the table column object needs to specify how to <b>get</b> the item that appears
@@ -582,7 +588,7 @@ text that appears in the header at the top of the column.  As for the cell value
 factories, remember that a cell value factory needs to pull the value for a cell
 out of a row object of type <classname>StateData</classname>.
 For the first column, the type of data is <classname>String</classname>,
-so property value factory takes an
+so the property value factory takes an
 input of type <classname>StateData</classname> and outputs a property value
 of a type <classname>String</classname>.  The output value is the property
 named "state" in the <classname>StateData</classname> object.  More simply,
@@ -647,7 +653,7 @@ The data class for the table is defined as:</p>
 
 <np>The class <classname>DoubleProperty</classname> itself is an abstract class.
 <classname>SimpleDoubleProperty</classname> is concrete subclass. whose
-constructor requres the object that contains the property, the name of the
+constructor requires the object that contains the property, the name of the
 property, and the initial value of the property.  Support for adding
 change and invalidation listeners to the property is already implemented
 in this class.</np>

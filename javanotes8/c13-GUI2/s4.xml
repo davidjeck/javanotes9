@@ -21,9 +21,14 @@ closed as well.</p>
 <p>A dialog box can be <newword>modal</newword> or <newword>modeless</newword>.
 When a modal dialog box is opened, its parent window is blocked.  That is,
 the user cannot interact with the parent window until the dialog box is
-closed.  Modal dialog boxes are often poped up during program execution
+closed.  There are also <newword>application modal</newword> dialog boxes,
+which block the entire application, not just one parent window.  Many 
+dialog boxes in JavaFX are application modal.
+Modal dialog boxes are often poped up during program execution
 to get input from the user or sometimes just to show a message to the
-user.  Modeless dialog boxes do not block interaction with their 
+user.</p>
+
+<p>Modeless dialog boxes do not block interaction with their 
 parent windows, but they will be closed automatically when the parent
 window closes.  A modeless dialog box might be used to show an alternative
 view of data from the parent window, or to hold some controls that
@@ -37,14 +42,13 @@ A <classname>Dialog</classname>, <code>dlg</code>, has two instance methods for 
 the dialog: <code>dlg.show()</code> and <code>dlg.showAndWait()</code>.
 If the dialog is shown using <code>dlg.showAndWait()</code>, then it is
 modal.  (A dialog opened using <code>showAndWait()</code> is not just
-modal; it is "application modal", which means it will block all windows
-in the application, not just the parent window.)
+modal; it is application modal.)
 The <code>showAndWait()</code> method does not return until
 the dialog box has been closed, so that any input from the dialog box
 will be available to the program immediately after the call to
 <code>showAndWait()</code>.  If the dialog is shown using <code>dlg.show()</code>,
 on the other hand, the dialog is modeless.  The <code>show()</code> method
-returns immediately, and the user can then use both the parent window and
+returns immediately, and the user can then use both regular windows and
 the dialog box, and can switch back and forth between them.  Using a
 modeless dialog box is a little like parallel programming&mdash;you 
 have to understand that two things are going on at the same time.
@@ -103,7 +107,7 @@ if ( response.isPresent() &amp;&amp; response.get() == ButtonType.OK ) {
     file.delete();
 }</pre>
 
-<p>In addition to buttons, a <classname>Dialog</classname> can have
+<p>In addition to buttons, a <classname>Dialog</classname> can have:
 a content area; 
 header text that appears above the content area; a graphic
 that appears next to the header text, if there is any, or next to the
@@ -130,7 +134,7 @@ dialog box on the right, the header text is null.  Note, by the way, that to
 get multiline text in an alert, you have to include line feed ("\n") characters
 in the text.</np>
 
-<img src="alerts.png" width="607" height="212" tex="alerts.eps" texscale="0.6" alt="confirmation dialog boxes"/>
+<img src="alerts.png" width="607" height="212" tex="alerts.eps" texscale="0.7" alt="confirmation dialog boxes"/>
 
 <p>For an example of a dialog that gets input from the user,
 the class <classname>TextInputDialog</classname> is a subclass
@@ -188,7 +192,7 @@ second parameter.</li>
 
 <np>There are some other options, including a basic color chooser dialog,
 which you can learn about by reading the <sourceref href="SimpleDialogs.java">source code</sourceref>.
-The program <sourceref href="TestDialogs.java"/> lets the user test the
+The program <sourceref href="TestDialogs.java"/> lets the user try out the
 dialogs that are defined in <classname>SimpleDialogs</classname>.</np>
 
 </subsection>
@@ -198,7 +202,8 @@ dialogs that are defined in <classname>SimpleDialogs</classname>.</np>
 
 <p>In the rest of this section, we will look at a multi-window web browser
 program.  Writing a web browser sounds complicated, and it is, but
-JavaFX makes it pretty easy.  The <classname>WebView</classname> class,
+JavaFX makes it pretty easy, by doing most of the work in a couple of
+standard classes.  The <classname>WebView</classname> class,
 in package <code>javafx.scene.control</code>, represents a control
 that can load and display a web page.  It handles most web pages
 pretty well, including running JavaScript code. (JavaScript is
@@ -310,7 +315,8 @@ is used in a complete, multi-window program.</p>
 
 <p>The class <classname>BrowserWindow</classname> is not an <classname>Application</classname>.
 It cannot be run as a program; it represents just one window in a multi-window program.
-The program is defined in <sourceref href="WebBrowser.java"/>.  The class <classname>WebBrowser</classname>,
+The executable class for the program is defined in <sourceref href="WebBrowser.java"/>.  
+The class <classname>WebBrowser</classname>,
 like any JavaFX program, is a subclass of <classname>Application</classname>.  It depends on
 <sourceref href="BrowserWindow.java"/> and <sourceref href="SimpleDialogs.java"/>, so you
 need all three Java files to run the program.</p>
@@ -318,12 +324,12 @@ need all three Java files to run the program.</p>
 <p>An <classname>Application</classname> has a <code>start()</code> method that is called by
 the system when the application begins.  The method has a parameter of type <classname>Stage</classname>
 that represents the "primary window" for the program, but there is no requirement that the
-program actually use that window.  The constructor in <classname>WebBrowser</classname>
+program actually use that window.  The <code>start()</code> method in <classname>WebBrowser</classname>
 ignores the primary window and instead creates and shows a window of type <classname>BrowserWindow</classname>.
 That is the first window opened when the program is run.  It is set to load the front page
 of the web version of this very textbook.</p>
 
-<p>That could have been all that the application needs to do &mdash; except for the
+<p>That could have been everything that <code>WebBrowser.java</code> needs to do &mdash; except for the
 "Window" menu, which contains a list of all open windows.  That list is not part of
 the data for an individual window, so it has to kept somewhere else.  In the web browser
 application, the <classname>WebBrowser</classname> object maintains the list of open
@@ -383,7 +389,7 @@ representing the usable area of the main screen.  This is used in the program's
 } // end start()</pre>
 
 
-<p>When a window is opend in the <code>newBrowserWindow()</code> method,
+<p>When a window is opened in the <code>newBrowserWindow()</code> method,
 its size and location are taken from the variables <code>windowWidth</code>,
 <code>windowHeight</code>, <code>locationX</code>, and <code>locationY</code>.
 And the values of <code>locationX</code> and <code>locationY</code> are
@@ -438,7 +444,7 @@ way: The menu is rebuilt each time it is shown.  A menu emits an
 event when the user clicks the menu name, just before the menu is
 shown.  The <classname>BrowserWindow</classname> registers a
 handler for that event with the Window menu.  The event handler
-gets the open window list from the <classname>WebBrowser</classname>
+gets the open window list by calling <code>owner.getOpenWindowList()</code>
 and uses it to rebuild the menu before it appears on the screen.
 Here is the code, from the <classname>BrowserWindow</classname>
 class.</p>
@@ -486,7 +492,7 @@ manage a multi-window application.  And it is wonderfully easy to write a reason
 functional web browser in JavaFX. This has been a good example of building on existing
 classes.  And we've also seen some nice new examples of working with events.
 With that, we have almost reached the end of this textbook.  The
-<localref href="GUI2.5"/> final section will cover a few odds-and-ends of GUI programming.</p>
+<localref href="GUI2.5">final section</localref> will cover a few odds-and-ends of GUI programming.</p>
 
 </subsection>
 
