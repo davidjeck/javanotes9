@@ -188,8 +188,8 @@ variable name and the associated value is the address of that variable in
 memory. Another example would be a mailing list, if we think of it as
 associating an address to each name on the list. As a related example, consider
 a phone directory that associates a phone number to each name.  We'll look
-at a highly simplified version of this example.  (This is not meant to be
-a realistic way to implement a phone directory.)</p>
+at a highly simplified version of this example.  (This is <b>not</b> meant to be
+a realistic way to implement a phone directory!)</p>
 
 <p>The items in the phone directory's association list could be objects belonging to the class:</p>
 
@@ -310,7 +310,7 @@ hard to keep the list of entries in sorted order, as you'll see in the
 next subsection.</p>
 
 <p>I will mention that association lists are also called "maps," and Java has
-a standard parameterized type name <classname>Map</classname> that implements
+a standard parameterized type named <classname>Map</classname> that implements
 association lists for keys and values of any type.  The implementation is <b>much</b>
 more efficient than anything you can do with basic arrays. You will encounter this
 class in <localref href="generics"/>.</p>

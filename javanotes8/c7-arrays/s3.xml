@@ -93,7 +93,7 @@ the end of the list, increasing the size by&nbsp;1. The parameter,
 or it can be <code>null</code>.</li>
 <li><codedef>list.get(N)</codedef> &mdash; This function returns
 the value stored at position <code>N</code> in the list.  The return type of
-this function is&nbsp;<classname>T</classname>. <code>N</code>
+this function is&nbsp;<classname>T</classname>.&nbsp; <code>N</code>
 must be an integer in the range <code>0</code> to <code>list.size()-1</code>. If
 <code>N</code> is outside this range, an error of type <classname>IndexOutOfBoundsException</classname>
 occurs. Calling this function is
@@ -111,11 +111,11 @@ to zero.</li>
 <li><codedef>list.remove(N)</codedef> &mdash; For an integer,
 <code>N</code>, this removes the <code>N-th</code> item in the <classname>ArrayList</classname>.
 <code>N</code> must be in the range <code>0</code> to <code>list.size()-1</code>. Any items
-in the list that come after the removed item are moved down one position. The
+in the list that come after the removed item are moved up one position. The
 size of the list decreases by 1.</li>
 <li><codedef>list.remove(obj)</codedef> &mdash; If the specified
 object occurs somewhere in the list, it is removed from the list.
-Any items in the list that come after the removed item are moved down one
+Any items in the list that come after the removed item are moved up one
 position. The size of the <classname>ArrayList</classname> decreases by 1. If <code>obj</code>
 occurs more than once in the list, only the first copy is removed.  If <code>obj</code>
 does not occur in the list, nothing happens; this is not an error.</li>
@@ -161,7 +161,7 @@ and <classname>Character</classname>.</p>
 <classname>Integer</classname> in <localref href="basics.5"/>.  These classes
 contain the <code>static</code> methods <code>Double.parseDouble()</code>
 and <code>Integer.parseInteger()</code> that are used to convert strings to
-numerical values, and constants such as <code>Integer.MAX_VALUE</code> and <code>Double.NaN</code>.
+numerical values, and they contain constants such as <code>Integer.MAX_VALUE</code> and <code>Double.NaN</code>.
 We have also encountered the <classname>Character</classname>
 class in some examples, with the static method <code>Character.isLetter()</code>,
 that can be used to test whether a given value of type <code>char</code> is a
@@ -170,7 +170,7 @@ letter.  There is a similar class for each of the other primitive types,
 <classname>Float</classname>, and <classname>Boolean</classname>.
 These classes are wrapper classes.  Although they
 contain useful <code>static</code> members, they have another use as
-well:  They are used representing primitive type
+well:  They are used for representing primitive type
 values as objects.</p>
    
 <p>Remember that the primitive types are not classes, and values of primitive type
@@ -220,7 +220,7 @@ wrapped in an <classname>Integer</classname> object. If you say</p>
    
 <pre>Integer answer = 42;</pre>
    
-<np>and the computer will silently read this as if it were</np>
+<np>the computer will silently read this as if it were</np>
    
 <pre>Integer answer = Integer.valueOf(42);</pre>
    
@@ -381,7 +381,7 @@ and then redrawing the entire picture using the remaining data.</p>
 <p>The data structure that we need is implemented using <classname>ArrayLists</classname>.
 The main data for a curve consists of a list of the points on the curve.  This
 data is stored in an object of type <atype>ArrayList&lt;Point2D&gt;</atype>.
-(<classname>Point2D</classname> is standard class in package <code>javafx.geometry</code>
+(<classname>Point2D</classname> is standard class in package <code>javafx.geometry</code>.
 A <classname>Point2D</classname> can be constructed from two <ptype>double</ptype>
 values, giving the (x,y) coordinates of a point.  A <classname>Point2D</classname>
 object, <code>pt</code>, has getter methods <code>pt.getX()</code> and <code>pt.getY()</code>
@@ -425,10 +425,10 @@ currentCurve.symmetric = useSymmetry; // The "symmetric" property of the curve
                                       // is also copied from the current value
                                       // of an instance variable, useSymmetry.
 
-currentCurve.points = new ArrayList&lt;Point&gt;();  // A new point list object.</pre>
+currentCurve.points = new ArrayList&lt;Point2D&gt;();  // A new point list object.</pre>
 
 <np>As the user drags the mouse, new points are added to <code>currentCurve</code>,
-and line segments of the curve are drawn between point are added.  When the
+and line segments of the curve are drawn between points as they are added.  When the
 user releases the mouse, the curve is complete, and it is added to
 the list of curves by calling</np>
 
@@ -462,12 +462,12 @@ that specifies a path to a desired piece of data: Go to the object, <code>curve<
 Inside <code>curve</code>, go to <code>points</code>.  Inside <code>points</code>,
 get the <code>i-th</code> item.  And from that item, get the x coordinate
 by calling its <code>getX()</code> method.  Here is the complete definition of the
-<code>paintComponent()</code> method:</np>
+method that redraws the picture:</np>
    
 <pre>private void redraw() {
     g.setFill(backgroundColor);
     g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
-    for ( CurveData curve : curves) {
+    for ( CurveData curve : curves ) {
         g.setStroke(curve.color);
         for (int i = 1; i &lt; curve.points.size(); i++) {
                 // Draw a line segment from point number i-1 to point number i.

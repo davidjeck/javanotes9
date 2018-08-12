@@ -193,7 +193,7 @@ cell in the next step is determined by the rules:</p>
 <li>If the cell is alive in the current time step:  If the cell has 2 or 3 living neighbors,
 then the cell remains alive in the next time step; otherwise, it dies. (A living cell dies of
 loneliness if it has 0 or 1 living neighbor, and of overcrowding if it has more than 3 living neighbors.)</li>
-<li>If the cell is dead the current time step:  If the cell has 3 living neighbors,
+<li>If the cell is dead in the current time step:  If the cell has 3 living neighbors,
 then the cell becomes alive in the next time step; otherwise, it remains dead.  (Three living cells
 give birth to a new living cell.)</li>
 </ul>

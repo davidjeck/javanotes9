@@ -25,8 +25,8 @@ An attempt to refer to an array element with an index outside the range
 from zero to <code>A.length-1</code> causes an <classname>ArrayIndexOutOfBoundsException</classname>.
 </p>
 
-<p>Arrays in Java are objects, so an array variable can only refer to an array,
-it does not contain the array.  The value of an array variable can also be <code>null</code>.
+<p>Arrays in Java are objects, so an array variable can only <b>refer</b> to an array;
+it does <b>not</b> contain the array.  The value of an array variable can also be <code>null</code>.
 In that case, it does not refer to any array, and an attempt to refer to an
 array element such as <code>A[i]</code> will cause a <classname>NullPointerException</classname>.
 Arrays are created using a special form of the <code>new</code> operator. For
@@ -107,14 +107,12 @@ value.  Thus, the above loop is exactly equivalent to:</np>
 <p>For example, if <code>A</code> is an array of type <atype>int[]</atype>, then
 we could print all the values from <code>A</code> with the for-each loop:</p>
    
-<pre>
-for ( int item : A )
-   System.out.println( item );
-</pre>
+<pre>for ( int item : A )
+   System.out.println( item );</pre>
 
 <np>and we could add up all the positive integers in <code>A</code> with:</np>
    
-<pre>int sum = 0;   // This will be the sum of all the positive numbers in A
+<pre>int sum = 0;   // This will be the sum of all the positive numbers in A.
 for ( int item : A ) {
    if (item &gt; 0)
       sum = sum + item;
@@ -260,7 +258,7 @@ loop to process the array:</p>
    return buffer.toString(); // return the contents of the buffer
 }</pre>
 
-<np>Given this method definition, <code>concat("Hello", "World")</code>
+<np>Given this method definition, the method call <code>concat("Hello", "World")</code>
 would return the string "HelloWorld", and <code>concat()</code> would
 return an empty string. Since a variable arity method can also accept an
 array as actual parameter, we could also call <code>concat(lines)</code>
@@ -335,7 +333,7 @@ public static Menu createMenu( String menuName, String[] itemNames ) {
 }
 </pre>
 
-<np>The third parameter in a call to <code>createMenu</code> is an array of 
+<np>The second parameter in a call to <code>createMenu</code> is an array of 
 strings.  The array that is passed as an actual parameter could be created
 in place, using the <code>new</code> operator.  For example, 
 we can use the following statement to create an entire File menu:</np>

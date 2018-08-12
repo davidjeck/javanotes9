@@ -556,7 +556,7 @@ while ( ! pq.isEmpty() ) {
 }</pre>
 
 <np>(Note, by the way, that we can't use an iterator or a for-each loop to print the
-items in this example, since interators and for-each loops do not traverse a
+items in this example, since iterators and for-each loops do not traverse a
 priority queue in ascending order.)</np>
 
 <p>The sample program <sourceref href="WordListWithPriorityQueue.java"/> makes a sorted list of

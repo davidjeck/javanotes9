@@ -131,7 +131,7 @@ playerCt--;</pre>
 array.  Here, player "C" is being deleted:</p>
 
 <img src="delete-from-array.png" width="536" height="251" alt="how a partially full array changes when an item is deleted"
-    bordered="true" tex="delete-from-array.eps" texscale="0.6"/>
+    bordered="true" tex="delete-from-array.eps" texscale="0.7"/>
     
 <break/>
 
@@ -242,8 +242,8 @@ objects are not copied.  This is the usual rule for assignment of pointers.</p>
 
 <p>If what you want is a simple copy of an array,  with the same
 size as the original, there is an even easier way to do it.  Every array has
-an instance method named <code>clone()</code> that makes a copy of the array,
-to get a copy of an <ptype>int</ptype> array, <code>A</code>, for example,
+an instance method named <code>clone()</code> that makes a copy of the array.
+To get a copy of an <ptype>int</ptype> array, <code>A</code>, for example,
 you can simply say</p>
 
 <pre>int[] B  =  A.clone();</pre>
@@ -297,8 +297,8 @@ When the user clicks the program window, the positions, colors, and fonts are
 changed to new random values.  But suppose that we want the message strings
 to move.  That is, we want to run an animation where the strings drift
 around in the window.  In that case, we need to store the properties of
-each string, since it will be needed to redraw the strings in each frame
-of the animation.  A new of the program that does that is <sourceref href="RandomStringsWithArray.java"/>.</p>
+each string, since they will be needed to redraw the strings in each frame
+of the animation.  A new version of the program that does that is <sourceref href="RandomStringsWithArray.java"/>.</p>
 
 <p>There are 25 strings.  We need to store the (x,y) coordinates where each string is drawn,
 the color of each string, and the font that is used for each string.  To make the
@@ -321,20 +321,19 @@ drawn at the point <code>(x[i],y[i])</code>. Its color would be given by
 <code>color[i]</code>. And it would be drawn in the font <code>font[i]</code>.
 (The <code>dx</code> and <code>dy</code> would not be used in <code>draw()</code>;
 they are used when updating the data for the next frame.)  This
-would be accomplished by the <code>draw()</code> method such as:</np>
+would be accomplished by a <code>draw()</code> method such as:</np>
 
 <pre>public void draw() {
     GraphicsContext g = canvas.getGraphicsContext2D();
-    g.setFill(Color.WHITE);
+    g.setFill(Color.WHITE); // (Fill with white, erasing previous picture.)
     g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
-   super.paintComponent(); // (Fill with white.)
-   for (int i = 0; i &lt; 25; i++) {
-      g.setFill( color[i] );
-      g.setFont( font[i] );
-      g.fill( MESSAGE, x[i], y[i] );
-      g.setStroke(Color.BLACK);
-      g.strokeText( MESSAGE, x[i], y[i] );
-   }
+    for (int i = 0; i &lt; 25; i++) {
+       g.setFill( color[i] );
+       g.setFont( font[i] );
+       g.fill( MESSAGE, x[i], y[i] );
+       g.setStroke(Color.BLACK);
+       g.strokeText( MESSAGE, x[i], y[i] );
+    }
 }</pre>
 
 <np>This approach is said to use <newword>parallel arrays</newword>.
@@ -379,7 +378,7 @@ creates the array and fills it with random data:</np>
         if (Math.random() &lt; 0.5) // 50% chance that dx is negative
             stringData[i].dx = -stringData[i].dx;
         stringData[i].dy = 1 + 3*Math.random();
-        if (Math.random() &lt; 0.5) // 50% chance that dx is negative
+        if (Math.random() &lt; 0.5) // 50% chance that dy is negative
             stringData[i].dy = -stringData[i].dy;
         stringData[i].color = Color.hsb( 360*Math.random(), 1.0, 1.0 );
         stringData[i].font = fonts[ (int)(5*Math.random()) ];
@@ -402,11 +401,13 @@ now be drawn using a for loop such as:</p>
 <np>But in fact, in my program, I used an equivalent for-each loop, which might be easier
 to understand:</np>
    
-<pre>g.setFill( data.color );
-g.setFont( data.font);
-g.fillText(MESSAGE, data.x, data.y);
-g.setStroke(Color.BLACK);
-g.strokeText(MESSAGE, data.x, data.y);</pre>
+<pre>for ( StringData data : stringData ) {
+    g.setFill( data.color );
+    g.setFont( data.font);
+    g.fillText( MESSAGE, data.x, data.y );
+    g.setStroke( Color.BLACK );
+    g.strokeText( MESSAGE, data.x, data.y );
+}</pre>
    
 <np>In this loop, the loop control variable, <code>data</code>, holds a copy of one
 of the values from the array.  That value is a reference to an object of type
@@ -476,8 +477,8 @@ int fontIndex;    // A random number in the range 0 to 4.
 fontIndex = (int)(Math.random() * 5);
 randomFont = fonts[ fontIndex ];</pre>
 
-<np>The <code>switch</code> statement has been replaced by a single line of code.
-In fact, the preceding four lines can be replaced by the single line:</np>
+<np>The <code>switch</code> statement has been replaced by a few lines of code.
+In fact, the preceding four lines can be replaced by the single line</np>
    
 <pre>Font randomFont = fonts[ (int)(Math.random() * 5) ];</pre>
    

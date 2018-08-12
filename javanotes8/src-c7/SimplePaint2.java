@@ -72,7 +72,7 @@ public class SimplePaint2 extends Application {
 		
 		currentColor = Color.BLACK;
 		backgroundColor = Color.WHITE;
-		curves = new ArrayList<>();
+		curves = new ArrayList<CurveData>();
 		
 		canvas = new Canvas(600,600);
 		g = canvas.getGraphicsContext2D();
@@ -164,7 +164,7 @@ public class SimplePaint2 extends Application {
 		currentCurve = new CurveData();
 		currentCurve.color = currentColor;
 		currentCurve.symmetric = useSymmetry;
-		currentCurve.points = new ArrayList<>();
+		currentCurve.points = new ArrayList<Point2D>();
 		currentCurve.points.add( new Point2D(evt.getX()+0.5, evt.getY()+0.5) );
 		g.setStroke(currentColor); // set currentColor to be used for drawing this curve
 	}

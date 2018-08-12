@@ -1232,7 +1232,7 @@ c = col + dirY;
 while ( r &gt;= 0 &amp;&amp; r &lt; 13 &amp;&amp; c &gt;= 0 &amp;&amp; c &lt; 13 
                                   &amp;&amp; board[r][c] == player ) {
         // Square is on the board, and it 
-        // contains one of the players' pieces.
+        // contains one of the player's pieces.
    ct++;
    r += dirX;  // Go on to next square in this direction.
    c += dirY;

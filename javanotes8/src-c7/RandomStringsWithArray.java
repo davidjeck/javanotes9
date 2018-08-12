@@ -101,7 +101,7 @@ public class RandomStringsWithArray extends Application {
 			if (Math.random() < 0.5) // 50% chance that dx is negative
 				stringData[i].dx = -stringData[i].dx;
 			stringData[i].dy = 1 + 3*Math.random();
-			if (Math.random() < 0.5) // 50% chance that dx is negative
+			if (Math.random() < 0.5) // 50% chance that dy is negative
 				stringData[i].dy = -stringData[i].dy;
 			stringData[i].color = Color.hsb( 360*Math.random(), 1.0, 1.0 );
 			stringData[i].font = fonts[ (int)(5*Math.random()) ];
