@@ -1085,7 +1085,7 @@ double b  =  ( (5 - y)/10 * height );</pre>
 
 <np>where <code>a</code> and <code>b</code> are the horizontal and vertical coordinates
 that you can use for drawing on the canvas.  The values of <code>width</code> and <code>height</code> 
-should be the width and height of the canvas.</np>
+give the size of the canvas.</np>
 
 </exercise-question>
 <exercise-discuss>

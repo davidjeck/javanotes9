@@ -229,7 +229,7 @@ the subroutine will throw a <code>NullPointerException</code>.)</np>
 
 <p>How can we be sure that this subroutine works?  We need to prove
 that when the <code>return</code> statement is executed, the value
-of <code>total</code> is the sum of all the elements in&nbsp;<code>A</code>  One way
+of <code>total</code> is the sum of all the elements in&nbsp;<code>A</code>.  One way
 to think about this problem is in terms of <newword>loop invariants</newword>.</p>
 
 <p>A loop invariant is, roughly, a statement that remains true as the
@@ -241,15 +241,14 @@ a loop invariant is both a precondition and a postcondition of
 the body of the loop.</p>
 
 <p>A loop invariant for the loop in the above subroutine is,
-"<code>total</code> is equal to the sum of the first <code>i</code>" 
+"<code>total</code> is equal to the sum of the first <code>i</code>
 elements of&nbsp;<code>A</code>."  Suppose this is
-true at the beginning of the <code>while</code> loop, just before
-the <code>if</code> statement.  Before the statement
+true at the beginning of the <code>while</code> loop.  That is, before the statement
 "<code>total = total + A[i]</code>" is executed, <code>total</code>
 is the sum of the first <code>i</code> elements of the
 array (namely <code>A[0]</code> through <code>A[i-1]</code>).
 After <code>A[i]</code> is added to <code>total</code>,
-<code>total</code> is the sum of the first <code>i+1</code>
+<code>total</code> is now the sum of the first <code>i+1</code>
 elements of the array.  At this point, the loop invariant
 is <b>not</b> true.  However, as soon as the next statement,
 "<code>i = i + 1</code>" is executed, replacing
@@ -282,7 +281,7 @@ is false, and the loop ends.</p>
 
 <p>After the loop ends, we know that <code>i</code> equals
 <code>A.length</code>, and we know that the loop invariant
-is true.  At that point, the loop invariant says,
+is true.  At that point, since <code>i</code> is <code>A.length</code>, the loop invariant says,
 "<code>total</code> is the sum of the first <code>A.length</code>"
 elements of&nbsp;A."  But that includes <b>all</b> of the
 elements of <code>A</code>.  So, the loop invariant gives us
@@ -568,6 +567,7 @@ while TextIO.peek() is not '\n':
 
     if the next character is not a digit:
        report an error and return -1
+       
     Let measurement = TextIO.getDouble();
 
     skipBlanks()    // Precondition for the next test!!

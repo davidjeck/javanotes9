@@ -258,7 +258,7 @@ the same task.  One has average-case run time that is &Theta;(n<sup>2</sup>) whi
 of the second algorithm has an average-case run time that is &Theta;(n*log(n)).  Suppose that
 you need to process an input of size n&nbsp;=&nbsp;100.  Which algorithm would
 you choose?  Can you be certain that you are choosing the fastest algorithm for the
-input that you intend to process.
+input that you intend to process?
 </p></ques>
 <ans><p>In the absence of other information, the second algorithm, with run time
 &Theta;(n*log(n)), is the better choice, since n*log(n) is much smaller than n<sup>2</sup>,

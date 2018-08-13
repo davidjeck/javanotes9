@@ -134,7 +134,7 @@ exception-handling is "mandatory" in a sense that I'll discuss below.</p>
 <code>Throwable</code> and just a few of its subclasses. Classes that require
 mandatory exception-handling are shown in red:</p>
 
-<img src="exception-hierarchy.png" width="561" height="347" tex="exception-hierarchy.eps" texscale="0.6"
+<img src="exception-hierarchy.png" width="561" height="347" tex="exception-hierarchy.eps" texscale="0.7"
    alt="Partial class hierarchy for Throwable objects" bordered="true" />
    
 <p>The class <classname>Throwable</classname> includes several instance methods that can
@@ -324,21 +324,21 @@ finally {
 <np>The <code>finally</code> clause
 ensures that the network connection will definitely be closed, whether or
 not an error occurs during the communication.  The pseudocode in this
-example follows a general pattern that can be used to robustly obtain a , 
-use the , and then release the .</np>
+example follows a general pattern that can be used to robustly obtain a resource, 
+use the resource, and then release the resource.</np>
 
 <break/>
 
-<p>The pattern of obtaining a , then using the , and then releasing
-the  is very common.  Note that the  can only be released if no error occurred
+<p>The pattern of obtaining a resource, then using the resource, and then releasing
+the resource is very common.  Note that the  can only be released if no error occurred
 while obtaining it.  And, if it was successfully obtained, then it should be
 closed whether or not an error occurs while using it.  This pattern is so common
 that it leads to one last option in the <code>try</code> statement syntax.
-With this option, you only need code to obtain the , and you don't need
+With this option, you only need code to obtain the resource, and you don't need
 to worry about releasing it.  That will happen automatically at the end of the
 <code>try</code> statement.</p>
 
-<p>In order for this to work, the  must be represented by an object that
+<p>In order for this to work, the resource must be represented by an object that
 implements an interface named <classname>AutoCloseable</classname>, which defines
 a single method named <code>close()</code>, with no parameters.  Standard Java
 classes that represent things like files and network connections already implement

@@ -127,7 +127,7 @@ method using assertions instead of exceptions:</p>
    
 <pre>/**
  * Returns the larger of the two roots of the quadratic equation
- * A*x*x + B*x + C = 0, provided it has any roots.  
+ *     A*x*x + B*x + C = 0.  
  * Precondition: A != 0 and B*B - 4*A*C &gt;= 0.
  */
 static public double root( double A, double B, double C )  {
