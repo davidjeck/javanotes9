@@ -12,16 +12,16 @@ public class TestPredicates {
     */
    static Collection<Integer> makeSet() {
       Collection<Integer> set = new TreeSet<Integer>();
-      set.add(new Integer(32));
-      set.add(new Integer(17));
-      set.add(new Integer(142));
-      set.add(new Integer(56));
-      set.add(new Integer(1899));
-      set.add(new Integer(57));
-      set.add(new Integer(999));
-      set.add(new Integer(86));
-      set.add(new Integer(83));
-      set.add(new Integer(100));
+      set.add(Integer.valueOf(32));
+      set.add(Integer.valueOf(17));
+      set.add(Integer.valueOf(142));
+      set.add(Integer.valueOf(56));
+      set.add(Integer.valueOf(1899));
+      set.add(Integer.valueOf(57));
+      set.add(Integer.valueOf(999));
+      set.add(Integer.valueOf(86));
+      set.add(Integer.valueOf(83));
+      set.add(Integer.valueOf(100));
       return set;
    } // end makeSet()
 

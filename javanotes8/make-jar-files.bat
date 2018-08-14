@@ -14,8 +14,8 @@ REM THE SCRIPT NEEDS THE COMMANDS javac AND jar TO BE DEFINED, or alternative co
 REM CAN BE SET IN THE NEXT TWO LINES, FOR EXAMPLE GIVING FULL PATHS TO THE COMMANDS
 
 
-set JAVAC=javac
-set JAR=jar
+set JAVAC="C:\Program Files\Java\jdk1.8.0_181\bin\javac"
+set JAR="C:\Program Files\Java\jdk1.8.0_181\bin\jar"
 
 echo.
 
@@ -43,37 +43,46 @@ call :buildtio chapter3 ComputeAverage2
 call :buildtio chapter3 AverageNumbersFromFile
 call :buildtio chapter3 BirthdayProblem
 call :buildtio chapter3 ReverseInputNumbers
+call :buildjar chapter3 SimpleGraphicsStarter
 call :buildjar chapter3 MovingRects
 call :buildjar chapter3 RandomCircles
 call :buildtio chapter4 GuessingGame
 call :buildtio chapter4 GuessingGame2
 call :buildtio chapter4 RowsOfChars
 call :buildtio chapter4 ThreeN2
-call :buildjar chapter4 RandomMosaicWalk Mosaic.java MosaicPanel.java
+call :buildjar chapter4 RandomMosaicWalk Mosaic.java MosaicCanvas.java
 call :buildtio chapter5 RollTwoPairs PairOfDice.java
 call :buildjar chapter5 GrowingCircleAnimation CircleInfo.java
 call :buildtio chapter5 HighLow Deck.java Card.java
 call :buildjar chapter5 ShapeDraw
-call :buildjar chapter6 HelloWorldGUI1
-call :buildjar chapter6 HelloWorldGUI2
+call :buildjar chapter6 HelloWorldFX
 call :buildjar chapter6 SimpleColorChooser
-call :buildjar chapter6 RandomStrings RandomStringsPanel.java
-call :buildjar chapter6 ClickableRandomStrings RandomStringsPanel.java
-call :buildjar chapter6 SimpleStamper
+call :buildjar chapter6 RandomStrings
+
+call :cpfiles chapter6 RandomCards RandomCards.java Card.java Deck.java cards.png
+cd temp
+%JAVAC% RandomCards.java
+%JAR% -cmf manifest RandomCards.jar *.class cards.png
+move RandomCards.jar ..\compiled-jar-files\chapter6 > nul
+cd ..
+
 call :buildjar chapter6 SimpleTrackMouse
 call :buildjar chapter6 SimplePaint
-call :buildjar chapter6 RandomArt
-call :buildjar chapter6 KeyboardAndFocusDemo
+call :buildjar chapter6 KeyboardEventDemo
 call :buildjar chapter6 SubKiller
-call :buildjar chapter6 TextAreaDemo
+call :buildjar chapter6 TextInputDemo
 call :buildjar chapter6 SliderDemo
-call :buildjar chapter6 BorderDemo
-call :buildjar chapter6 SliderAndButtonDemo
+call :buildjar chapter6 OwnLayoutDemo
 call :buildjar chapter6 SimpleCalc
-call :buildjar chapter6 NullLayoutDemo
-call :buildjar chapter6 HighLowGUI Card.java Hand.java Deck.java
-call :buildjar chapter6 MosaicDraw MosaicDrawController.java MosaicPanel.java
-call :buildjar chapter6 SimpleDialogDemo
+
+call :cpfiles chapter6 HighLowGUI HighLowGUI.java cards.png Card.java Hand.java Deck.java
+cd temp
+%JAVAC% HighLowGUI.java
+%JAR% -cmf manifest HighLowGUI.jar *.class cards.png
+move HighLowGUI.jar ..\compiled-jar-files\chapter6 > nul
+cd ..
+
+call :buildjar chapter6 MosaicDraw MosaicCanvas.java
 call :buildjar chapter7 RandomStringsWithArray
 call :buildtio chapter7 ReverseWithDynamicArray DynamicArrayOfInt.java
 call :buildjar chapter7 SimplePaint2
@@ -84,7 +93,7 @@ call :buildtio chapter8 LengthConverter2
 call :buildtio chapter8 TryStatementDemo
 call :buildtio chapter9 TowersOfHanoi
 call :buildjar chapter9 Maze
-call :buildjar chapter9 LittlePentominos MosaicPanel.java
+call :buildjar chapter9 LittlePentominos MosaicCanvas.java
 call :buildjar chapter9 Blobs
 call :buildtio chapter9 ListDemo StringList.java
 call :buildtio chapter9 PostfixEval StackOfDouble.java
@@ -97,6 +106,7 @@ call :buildtio chapter10 WordListWithTreeSet
 call :buildtio chapter10 WordListWithPriorityQueue
 call :buildtio chapter10 SimpleInterpreter
 call :buildtio chapter10 WordCount
+call :buildtio chapter10 RiemannSumStreamExperiment
 call :buildtio chapter11 DirectoryList
 call :buildtio chapter11 PhoneDirectoryFileDemo
 call :buildjar chapter11 TrivialEdit
@@ -116,6 +126,7 @@ call :buildjar chapter12 BackgroundComputationDemo
 call :buildjar chapter12 MultiprocessingDemo1
 call :buildjar chapter12 MultiprocessingDemo2
 call :buildjar chapter12 MultiprocessingDemo3
+call :buildtio chapter12 ThreadTest4
 call :buildjar chapter12 TowersOfHanoiGUI
 call :buildjar chapter12 GUIChat
 
@@ -146,17 +157,24 @@ cd temp
 move netgame.chat.fivecarddraw.Main.jar ..\compiled-jar-files\chapter12 > nul
 cd ..
 
-
-call :buildjar chapter13 PaintWithOffScreenCanvas
-call :buildjar chapter13 TransparencyDemo
+call :buildjar chapter13 BoundPropertyDemo
+call :buildjar chapter13 CanvasResizeDemo
 call :buildjar chapter13 StrokeDemo
-call :buildjar chapter13 ChoiceDemo
-call :buildjar chapter13 StatesAndCapitalsTableDemo
+call :buildjar chapter13 TransformDemo face-smile.png
+call :buildjar chapter13 ToolPaint SimpleDialogs.java
+call :buildjar chapter13 TestStopWatch StopWatchLabel.java
+call :buildjar chapter13 EditListDemo
+call :buildjar chapter13 SimpleTableDemo
 call :buildjar chapter13 ScatterPlotTableDemo
-call :buildjar chapter13 SimpleWebBrowserWithThread
-call :buildjar chapter13 SimpleWebBrowser
-call :buildjar chapter13 SimpleRTFEdit
-call :buildjar chapter13 CustomComponentTest StopWatchLabel.java MirrorText.java
+call :buildjar chapter13 TestDialogs SimpleDialogs.java
+call :buildjar chapter13 WebBrowser BrowserWindow.java SimpleDialogs.java
+
+call :cpfiles chapter13 TransformDemo TransformDemo.java face-smile.png
+cd temp
+%JAVAC% TransformDemo.java
+%JAR% -cmf manifest TransformDemo.jar *.class *.png
+move TransformDemo.jar ..\compiled-jar-files\chapter13 > nul
+cd ..
 
 call :cpfiles chapter13 SillyStamper SillyStamper.java 
 mkdir temp\stamper_icons
@@ -167,60 +185,47 @@ cd temp
 move SillyStamper.jar ..\compiled-jar-files\chapter13 > nul
 cd ..
 
-call :cpfiles chapter13 HighLowWithImages HighLowWithImages.java cards.png Card.java Hand.java Deck.java
-cd temp
-%JAVAC% HighLowWithImages.java
-%JAR% -cmf manifest HighLowWithImages.jar *.class cards.png
-move HighLowWithImages.jar ..\compiled-jar-files\chapter13 > nul
-cd ..
 
-call :cpfiles chapter13 PaintDemo PaintDemo.java QueenOfHearts.png TinySmiley.png
+call :cpfiles chapter13 PaintDemo PaintDemo.java tile.png face-smile.png
 cd temp
 %JAVAC% PaintDemo.java
 %JAR% -cmf manifest PaintDemo.jar *.class *.png
 move PaintDemo.jar ..\compiled-jar-files\chapter13 > nul
 cd ..
 
-call :cpfiles chapter13 SoundAndCursorDemo SoundAndCursorDemo.java 
-mkdir temp\snc_resources
-xcopy /S /Q chapter13\snc_resources temp\snc_resources > nul
-cd temp
-%JAVAC% SoundAndCursorDemo.java
-%JAR% -cmf manifest SoundAndCursorDemo.jar *.class snc_resources\*
-move SoundAndCursorDemo.jar ..\compiled-jar-files\chapter13 > nul
-cd ..
 
-call :cpfiles chapter13 edu.hws.eck.mdb.Main 
+call :cpfiles chapter13 edu.hws.eck.mdbfx.Main 
 mkdir temp\edu
 xcopy /S /Q chapter13\edu temp\edu > nul
 cd temp
-%JAVAC% edu\hws\eck\mdb\*.java
-%JAR% -cmf manifest edu.hws.eck.mdb.Main.jar edu\hws\eck\mdb\* edu\hws\eck\mdb\examples\* 
-move edu.hws.eck.mdb.Main.jar ..\compiled-jar-files\chapter13 > nul
+%JAVAC% edu\hws\eck\mdbfx\*.java
+%JAR% -cmf manifest edu.hws.eck.mdbfx.Main.jar edu\hws\eck\mdbfx\* edu\hws\eck\mdbfx\examples\* 
+move edu.hws.eck.mdbfx.Main.jar ..\compiled-jar-files\chapter13 > nul
 cd ..
 
 
 rmdir /q /s temp
 
 echo.
-echo.
-echo Note: No jar files were created for the following sample programs:
+echo "Note: No jar files were created for the following sample programs:"
 echo.
 echo Examples for which no jar files are made:
-echo chapter2 CreateProfile -- can overwrite a file without warning
-echo chapter4 CopyTextFile -- requires command-line arguments
-echo chapter4 RandomMosaicWalk2 -- duplicates functionality of RandomMosaicWalk
-echo chapter8 LengthConverter3 -- duplicates functionality of LenghtConverter2
+echo chapter2  CreateProfile -- can overwrite a file in the current directory without warning
+echo chapter2  SeparateEnumDemo -- duplicates functionality of EnumDemo
+echo chapter4  CopyTextFile -- requires command-line arguments
+echo chapter4  RandomMosaicWalk2 -- duplicates functionality of RandomMosaicWalk
+echo chapter8  LengthConverter3 -- duplicates functionality of LenghtConverter2
 echo chapter11 ReverseFile -- requires a file named data.dat in the current directory
-echo chapter11 ReverseFileWithScanner -- requires a file named data.dat 
-echo chapter11 ReverseFileWithResources -- requires a file named data.dat 
+echo chapter11 ReverseFileWithScanner -- requires a file named data.dat in the current directory
+echo chapter11 ReverseFileWithResources -- requires a file named data.dat in the current directory
 echo chapter11 CopyFile -- requires command-line parameters
 echo chapter11 CopyFileAsResource -- requires command-line parameters
-echo chapter12 BackgroundCompWithInvoke -- duplicates BackgroundComputationDemo
+echo chapter12 ThreadTest3 -- duplicates the functionality of ThreadTest2
+echo chapter12 MultiprocessorDemo4 -- duplicates the functionality of MultiprocessorDemo3 
 echo chapter12 CLDateServerWithThreads -- duplicates functionality of DateServer
 echo chapter12 CLDateServerWithThreadPool -- duplicates functionality of DateServer
 echo chapter12 CLMandelbrotMaster -- needs command line arguments
-echo chapter12 CLMandelbrotWorker -- needs to run on several machines
+echo chapter12 CLMandelbrotWorker -- needs to run on several machines, or needs command-line arguments
 echo.
 echo Note: Before running chapter13\netgame.chat.ChatRoomWindow.jar, 
 echo       you have to run ChatRoomServer on the command line.
@@ -289,10 +294,9 @@ REM %3,%4,... are other files/directories to be included
        echo Cannot find file %1\%2.java !  Aborting build.
        goto :EOF
    )
-   mkdir temp\textiogui
-   xcopy textiogui\* temp\textiogui > nul
-   echo import textiogui.TextIO; > temp\%2.java
-   echo import textiogui.System; >> temp\%2.java
+   mkdir temp\textio
+   xcopy textio-for-windows-jar-files\* temp\textio > nul
+   echo import textio.System; >> temp\%2.java
    type %1\%2.java >> temp\%2.java
    set CHPT=%1
    set NAME=%2
@@ -310,13 +314,13 @@ REM %3,%4,... are other files/directories to be included
    :pol
    echo Main-Class: %NAME%> temp\manifest
    cd temp
-   %JAVAC% *.java textiogui\*.java
+   %JAVAC% *.java textio\*.java
    if not exist %NAME%.class (
       cd ..
       echo Error during compilation!  Build aborted.
       goto :EOF
    )
-   %JAR% mfc manifest %NAME%.jar *.class textiogui\*.class
+   %JAR% mfc manifest %NAME%.jar *.class textio\*.class
    cd ..
    if not exist compiled-jar-files\%CHPT% (
       mkdir compiled-jar-files\%CHPT%

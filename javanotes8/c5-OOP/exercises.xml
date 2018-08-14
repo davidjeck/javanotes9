@@ -1181,7 +1181,7 @@ here on. I encourage you to read the entire program below and make sure that
 you understand it.</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="Blackjack">textio.TextIO;
+<pre><prog name="Blackjack">import textio.TextIO;
 
 /**
  * This program lets the user play Blackjack.  The computer

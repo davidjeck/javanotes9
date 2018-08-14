@@ -51,6 +51,7 @@ if  $XALAN_COMMAND -xsl convert-web.xsl -in javanotes8.xml ; then
    cp news-for-web.html web
    cp README.txt web/README-full-source.txt
    cp -r src-textio/textiogui web/source/textiogui
+   cp -r textio-for-windows-jar-files web/source/
    cp make-jar-files.sh web/source
    cp make-jar-files.bat web/source
    chmod +x web/source/make-jar-files.sh

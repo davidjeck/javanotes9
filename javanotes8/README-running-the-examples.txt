@@ -1,9 +1,9 @@
 
 This README file explains how to use the example programs for
-"Introduction to Programming Using Java, Version 7", which is freely
-available on the web at http://math.hws.edu/javanotes
+"Introduction to Programming Using Java, Version 8", which is freely
+available on the web at http://math.hws.edu/javanotes8
 
-The web site for "Introduction to Programming Using Java, Version 7" includes
+The web site for "Introduction to Programming Using Java, Version 8" includes
 Java source code files for the examples in the book.  If you download the
 web site, you can find the files in a folder named "sources."  The example
 programs are also available as a separate download.  The files are
@@ -51,8 +51,9 @@ the textbook in the relevant sections.
                   
 ---- MAKE EXECUTABLE JAR FILES -----
                   
-If you find it easier to run programs by double-clicking, you can can
-use executable jar files to run the examples, but you need to create them.
+If you find it easier to run programs by double-clicking, you can 
+use executable jar files to run the examples, but you need to create
+the jar files.
 
 If you are running Mac or Linux, just open a Terminal window and change 
 into the "sources" directory.  Run the script named "make-jar-files.sh."  
@@ -74,7 +75,7 @@ examples.
 
 You should be able to run an executable jar file just by double-clicking it.
 (On Linux, you might have to right-click it and select a command such as
-"Open with... JDK 7".)
+"Open with... JDK 8".)
 
 Note that programs that are meant to be run on the command line, such as
 those that use TextIO, will be packaged in their jar files with a special
@@ -83,7 +84,11 @@ you execute the jar file.  You will have to close the window, by clicking
 its close button, when the program ends.  The GUI version of TextIO can
 be found in the package "textiogui" inside the "sources" folder.  See
 the classes in that package for information about how to use it, if you
-are interested in using it for your own programs.
+are interested in using it for your own programs.  (For windows, the files
+for TextIO that are used in the .jar files can be found in the folder
+"textio-for-windows-jar-files" inside the sources folder. Those files
+should not be used for other purposes.  They are, basically, a kludge
+that I had to use when writing the .bat script for Windows.)
 
 There are several examples for which jar files are not made.  There are
 several reasons for leaving them out.  For example, some require command-line

@@ -1,7 +1,7 @@
 
 This README explains how to use the solutions to the programming
-exercises for "Introduction to Programming Using Java, Version 7", 
-which is freely available on the web at http://math.hws.edu/javanotes
+exercises for "Introduction to Programming Using Java, Version 8", 
+which is freely available on the web at http://math.hws.edu/javanotes8
 
 Each end-of-chapter exercise has a web page that contains a discussion
 of the solution and the source code for a sample solution.  The
@@ -44,7 +44,7 @@ of the chapter directories inside "sources" and use the command
                   javac *.java
                   
 to compile all the programs from that chapter.  As long as your compiler supports 
-Java 7 or higher, there should be no errors.  (You might see some warnings, especially
+Java 8 or higher, there should be no errors.  (You might see some warnings, especially
 if you use a newer version of java, but warnings do not stop a program from being
 compiled or executed.)  You can then run individual programs using the java command.  
 For example:

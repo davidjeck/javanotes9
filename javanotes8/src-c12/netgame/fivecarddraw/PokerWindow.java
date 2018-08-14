@@ -365,7 +365,7 @@ public class PokerWindow extends Stage {
 				callButton.setDisable(true);
 				betInput.setEditable(false);
 				betInput.setText("");
-				connection.send(new Integer(0));
+				connection.send(Integer.valueOf(0));
 			}
 			else if (src == callButton) { 
 				   // send an integer equal to the minimum possible bet as a message to the hub;
@@ -377,7 +377,7 @@ public class PokerWindow extends Stage {
 				callButton.setDisable(true);
 				betInput.setEditable(false);
 				betInput.setText("");
-				connection.send(new Integer(state.amountToSee));
+				connection.send(Integer.valueOf(state.amountToSee));
 			}
 			else if (src == drawButton) {
 				   // Send the list of cards that the user wants to discard as a message to
@@ -433,7 +433,7 @@ public class PokerWindow extends Stage {
 				}
 				betInput.setEditable(false);
 				betInput.setText("");
-				connection.send(new Integer(amount));
+				connection.send(Integer.valueOf(amount));
 			}
 		}
 	
