@@ -44,9 +44,9 @@ public class HighLowGUI extends Application {
 
 	
 	/**
-	 * The start() method sets up the GUI and event handling. The root
-	 * pane is a BorderPane. A canvas where occupies the center position 
-	 * of the BorderPane.  On the bottom is a HBox that holds three buttons.  
+	 * The start() method sets up the GUI and event handling. The root pane is
+	 * is a BorderPane. A canvas where cards are displayed occupies the center 
+	 * position of the BorderPane.  On the bottom is a HBox that holds three buttons.  
 	 * ActionEvent handlers are set up to call methods defined elsewhere
 	 * in this class when the user clicks a button.
 	 */
@@ -177,7 +177,7 @@ public class HighLowGUI extends Application {
 
 	/**
 	 * Called by the start() method, and called by an event handler if
-	 * the use clicks the "New Game" button.  Start a new game.
+	 * the user clicks the "New Game" button.  Start a new game.
 	 */
 	private void doNewGame() {
 		if (gameInProgress) {
@@ -220,7 +220,7 @@ public class HighLowGUI extends Application {
 
 	/**
 	 * Draws a card with top-left corner at (x,y).  If card is null,
-	 * then a face-down card is drawn.  The cards images are from 
+	 * then a face-down card is drawn.  The card images are from 
 	 * the file cards.png; this program will fail without it.
 	 */
 	private void drawCard(GraphicsContext g, Card card, int x, int y) {

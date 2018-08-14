@@ -27,7 +27,7 @@ public class TextInputDemo extends Application {
 	private TextField titleInput;
 
 	/**
-	 * Start method build the GUI and shows the window.
+	 * Start method builds the GUI and shows the window.
 	 */
 	public void start(Stage stage) {
 		
@@ -81,7 +81,7 @@ public class TextInputDemo extends Application {
 		BorderPane.setMargin(contentInput, new Insets(2));  // Set margins around components
 		BorderPane.setMargin(titleInput, new Insets(2,2,0,2));
 		
-		/* And the scene to the window and make it visible. */
+		/* Add the scene to the window and make it visible. */
 		
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -96,4 +96,4 @@ public class TextInputDemo extends Application {
 		launch(args);
 	}
 
-} // end TextInputDemo
+} // end class TextInputDemo

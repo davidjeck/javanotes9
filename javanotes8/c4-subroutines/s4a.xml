@@ -39,16 +39,16 @@ with <i>x</i> as a dummy parameter:</p>
 a permanent part of the program&mdash;which is overkill if we just want to use the
 function once.  Alonzo Church introduced the notation <i>lambda</i>(<i>x</i>).<i>x</i><sup>2</sup>
 to represent "the function of <i>x</i> that is given by <i>x</i><sup>2</sup>" (except using
-the Greek letter instead of the the word "lambda").  This notation is a kind of function literal
+the Greek letter instead of the word "lambda").  This notation is a kind of function literal
 that represents a value of type "function" in the same way that 42 is an integer literal 
 that represents a value of type <ptype>int</ptype>.</np>
 
 <p>Having function literals is the starting point for thinking of a function as just
-another kind of data value. Once we do that, we should be able to so the same things
+another kind of data value. Once we do that, we should be able to do the same things
 with functions that we can do with other values, such as assign a function to a variable,
 pass a function as a parameter to a subroutine, return a function as the value of
 subroutine, or even make an array of functions.  A programming language that allows
-you to do all those things with function is said to have "first-class functions" or
+you to do all those things with functions is said to have "first-class functions" or
 "functions as first-class objects."</p>
 
 <p>In fact, you can do all of those things with Java lambda expressions.  Java's notation

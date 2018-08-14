@@ -69,7 +69,7 @@ loop invariant is implicit in the discussion of the method in
 then <code>N</code>  is in at one of the indices in the range
 <code>lowestPossibleLoc</code> and <code>highestPossibleLoc</code>."</p>
 <p>This statement is true before the loop is started, since at that
-point, the the range of indices from <code>lowestPossibleLoc</code> to 
+point, the range of indices from <code>lowestPossibleLoc</code> to 
 <code>highestPossibleLoc</code> includes the entire array.  In the loop,
 when <code>A[mid]</code> is compared to <code>N</code>, the fact that
 <code>A</code> is sorted means that half of the range of possible

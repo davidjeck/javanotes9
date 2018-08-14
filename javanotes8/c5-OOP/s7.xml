@@ -148,7 +148,7 @@ directly in the <classname>Drawable</classname> interface.</np>
 name must match the name of the <code>interface</code>.  For example, 
 <classname>Strokeable</classname> would be defined in a file named
 <code>Strokeable.java</code>.  Just like a <code>class</code>, an
-<code>interace</code> can be in a package and can <code>import</code>
+<code>interface</code> can be in a package and can <code>import</code>
 things from other packages.</p>
 
 </subsection>

@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
  * This program displays 25 copies of a message.  The color and 
  * position of each message is selected at random.  The font
  * of each message is randomly chosen from among five possible
- * fonts.  The messages are displayed on a black background.
+ * fonts.  The messages are displayed on a white background.
  * There is a button that the user can click to redraw the
  * image using new random values.
  */
@@ -33,10 +33,10 @@ public class RandomStrings extends Application {
 	public void start( Stage stage ) {
 
 		font1 = Font.font("Times New Roman", FontWeight.BOLD, 20);
-		font2 = Font.font("Arial", FontWeight.BOLD, FontPosture .ITALIC, 28);
+		font2 = Font.font("Arial", FontWeight.BOLD, FontPosture.ITALIC, 28);
 		font3 = Font.font("Verdana", 32);
 		font4 = Font.font(40);
-		font5 = Font.font("Times New Roman", FontWeight.BOLD, FontPosture .ITALIC, 60);
+		font5 = Font.font("Times New Roman", FontWeight.BOLD, FontPosture.ITALIC, 60);
 		
 		canvas = new Canvas(500,300);
 		draw();  // draw content of canvas the first time.

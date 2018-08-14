@@ -124,10 +124,10 @@ public class SimpleTrackMouse extends Application {
 		eventInfo.append( (int)evt.getX() + "," + (int)evt.getY() + ")\n");
 		if (eventType.equals("Mouse Pressed") || eventType.equals("Mouse Released") 
 				|| eventType.equals("Mouse Clicked")) {
-			eventInfo.append( "Mouse Button pressed or released: " + evt.getButton() + "\n");
+			eventInfo.append( "Mouse button pressed or released: " + evt.getButton() + "\n");
 		}
 		if (eventType.equals("Mouse Clicked")) {
-			eventInfo.append( "Click Count: " + evt.getClickCount() + "\n" );
+			eventInfo.append( "Click count: " + evt.getClickCount() + "\n" );
 		}
 		eventInfo.append("Modifier keys held down:  ");
 		if (evt.isShiftDown())
@@ -139,7 +139,7 @@ public class SimpleTrackMouse extends Application {
 		if (evt.isAltDown())
 			eventInfo.append("Alt");
 		eventInfo.append("\n");
-		eventInfo.append("Mouse Buttons held down:  ");
+		eventInfo.append("Mouse buttons held down:  ");
 		if (evt.isPrimaryButtonDown())
 			eventInfo.append("Primary  ");
 		if (evt.isMiddleButtonDown())
@@ -156,5 +156,5 @@ public class SimpleTrackMouse extends Application {
 	}
 
 
-}  // end class SimpleMouseTracker
+}  // end class SimpleTrackMouse
 

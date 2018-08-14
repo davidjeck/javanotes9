@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 public class MovingRects extends Application {
 
 	/**
-	 * Draws a set of nested rectangles. This subroutine is called 50 times per
+	 * Draws a set of nested rectangles. This subroutine is called 60 times per
 	 * second and is responsible for redrawing the entire drawing area.  The
 	 * parameter g is used for drawing. The frameNumber starts at zero and
 	 * increases by 1 each time this subroutine is called.  The parameters width

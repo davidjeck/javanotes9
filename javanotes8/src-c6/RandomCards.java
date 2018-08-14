@@ -19,7 +19,7 @@ public class RandomCards extends Application {
 	private Canvas canvas;  // The canvas on which the strings are drawn.
 	
 	private Image cardImages;  // Contains images of all of the cards.
-	                           // Cards are arranged in 13 rows and 5 columns.
+	                           // Cards are arranged in 5 rows and 13 columns.
 	                           // Each of the first four rows contains the cards
 	                           // from one suit, in numerical order.  The first
 	                           // four rows contain clubs, diamonds, hearts, and

@@ -63,7 +63,7 @@ different interfaces.  In most cases, the interface is a functional interface,
 defining a single event handler method; in that case, the listener can be given
 by a lambda expression.</p>
 
-<p>For many kinds of event in JavaFX, listeners are defined by a functional interface
+<p>For many kinds of events in JavaFX, listeners are defined by a functional interface
 named <classname>EventHandler</classname>, which defines the method <code>handle(event)</code>.
 The parameter to this method, <code>event</code>, is the event object that contains
 information about the event.  When you provide a definition for <code>handle()</code>,
@@ -124,12 +124,12 @@ so that the scene doesn't get a chance to handle them.</p>
 <p>(Actually, it's more complicated than that.  For key events and some kinds of mouse
 events, the event first travels down through the scene and then through scene graph nodes that contain
 the event target; this is called the "event filtering" or "bubble down" phase of event processing.
-After reaching the target, the event travels back up through the the scene graph and finally to the scene;
+After reaching the target, the event travels back up through the scene graph and finally to the scene;
 this is the "event handling" or "bubble up" phase.  The event can be consumed at any point
 along the way, and if that happens, the process stops. None of this is used in this chapter,
 but for more information, see the documentation for the <code>addEventFilter()</code>
 and <code>addEventHandler()</code> methods in the <classname>Scene</classname>
-and <code>Node</code> classes.)</p>
+and <classname>Node</classname> classes.)</p>
 
 <p>Most of this section is concerned with mouse and key events.  It is important to understand
 that many GUI programs do not need to deal with such events directly.  Instead, you
@@ -179,7 +179,7 @@ a mouse event to handle the event.</np>
 <code>MousePressed</code>, generated when the user presses one of the buttons on the mouse;
 <code>MouseReleased</code>, generated when the user releases one of the buttons on the mouse;
 <code>MouseClicked</code>, generated after a mouse released event if the user pressed and released the mouse button on the same component;
-<code>MouseDragged</code>, generated when the use moves the mouse while holding down a mouse button; and
+<code>MouseDragged</code>, generated when the user moves the mouse while holding down a mouse button; and
 <code>MouseMoved</code>, generated when the user moves the mouse without holding down a button.</p>
 
 <p>The target of a <code>MouseDragged</code>, <code>MouseReleased</code>, or <code>MouseClicked</code>
@@ -239,7 +239,7 @@ An event handler to do that can be defined as:</p>
         g.fillOval( evt.getX() - 30, evt.getY() - 15, 60, 30 )
     }
     else {
-        g.setFill( Color.REd );
+        g.setFill( Color.RED );
         g.fillRect( evt.getX() - 30, evt.getY() - 15, 60, 30 );
     }
 } );</pre>
@@ -336,10 +336,10 @@ c.setOnMouseReleased( e -&gt; mouseReleased(e) );</pre>
 
 <np>Note that the event handlers in these statements simply call another method in
 the same class, and that method has the same parameter as the event handler.
-That means its possible to write the lambda expressions as method 
+That means that it's possible to write the lambda expressions as method 
 references (<localref href="subroutines.4a.4"/>).  The methods that are called are instance
 methods in the object "<code>this</code>", so the method references would
-have named like <code>this::mousePressed</code>, and the event handlers
+have names like <code>this::mousePressed</code>, and the event handlers
 could be installed using
 </np>
 
@@ -782,7 +782,7 @@ since this canvas shows an animation that is constantly being redrawn
 anyway. Any changes in the state will become visible to the user as soon as the
 next frame is drawn. At some point in the program, I have to make sure that the
 user does not move the boat off the screen. I could have done this in the key
-event handler, but I choose to check for this in another routine, in
+event handler, but I chose to check for this in another routine, in
 the boat object.</np>
 
 <p>I encourage you to read the source code in <sourceref href="SubKiller.java"/>.

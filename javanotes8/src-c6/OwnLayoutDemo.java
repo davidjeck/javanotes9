@@ -171,7 +171,7 @@ public class OwnLayoutDemo extends Application {
 	} // end nested class Checkerboard
 
 
-} // end class NullLayoutDemo
+} // end class OwnLayoutDemo
 
 
 

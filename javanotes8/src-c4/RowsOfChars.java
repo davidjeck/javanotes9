@@ -39,7 +39,7 @@ public class RowsOfChars {
 
 	/**
 	 * Write one line of output containing N copies of the
-	 * character ch.  If N &lt;= 0, an empty line is output.
+	 * character ch.  If N is less than or equal to 0, an empty line is output.
 	 */
 	private static void printRow( char ch, int N ) {
 		int i;  // Loop-control variable for counting off the copies.

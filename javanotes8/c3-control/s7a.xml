@@ -34,7 +34,7 @@ You will need a way to deal with all that data.  Before you knew about arrays,
 you might have thought that the program would need a thousand variables to hold
 the thousand names, and if you wanted to print out all the names, you would need
 a thousand print statements.  Clearly, that would be ridiculous!  In reality,
-you can put all the names into an array.  The array is a represented by a single
+you can put all the names into an array.  The array is represented by a single
 variable, but it holds the entire list of names.  The length of the array would
 be 1000, since there are 1000 individual names.  The base type of the array
 would be <classname>String</classname> since the items in the array are
@@ -60,7 +60,7 @@ array&mdash;are more often referred to as the <newword>elements</newword>
 of the array.</p>
 
 <p>As I mentioned above, when you use an array in a program, you can use a variable
-to refer to array as a whole.  But you often need to refer to the individual elements
+to refer to the array as a whole.  But you often need to refer to the individual elements
 of the array.  The name for an element of an array is based on the name for the array
 and the index number of the element.  The syntax for referring to an element
 looks, for example, like this:  <code>namelist[7]</code>.  Here, <code>namelist</code>
@@ -68,7 +68,7 @@ is the variable that names the array as a whole, and <code>namelist[7]</code> re
 element at index 7 in that array.   That is, to refer to an element of an array,
 you use the array name, followed by element index enclosed in square brackets.
 An element name of this form can be used like any other variable: You can assign
-a value to it, print it out, use it in an expression.</p>
+a value to it, print it out, use it in an expression, and so on.</p>
 
 <p>An array also contains a kind of variable representing its length.  For example,
 you can refer to the length of the array <code>namelist</code> as <code>namelist.length</code>.

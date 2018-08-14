@@ -130,7 +130,7 @@ public class SubKiller extends Application {
 		g.fillRect(0,0,width,height);
 
 		if (stage.isFocused()) {
-			    // draw a CYAN border on the window when when window has focus.
+			    // draw a CYAN border on the window when the window has focus.
 			g.setStroke(Color.CYAN);
 		}
 		else {
@@ -233,7 +233,7 @@ public class SubKiller extends Application {
 		void updateForNewFrame() { // Move sub or increase explosionFrameNumber.
 			if (isExploding) {
 					// If the sub is exploding, add 1 to explosionFrameNumber.
-					// When the number reaches 15, the explosion ends and the
+					// When the number reaches 25, the explosion ends and the
 					// sub reappears in a random position.
 				explosionFrameNumber++;
 				if (explosionFrameNumber == 25) { 

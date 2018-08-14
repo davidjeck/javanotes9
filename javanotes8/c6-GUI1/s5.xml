@@ -16,7 +16,7 @@ well.</p>
 a container is a scene graph node that can contain other scene graph nodes
 as "children."  The children of a container must be "laid out," which means setting their
 sizes and positions.  It is possible for you to program the layout yourself, but
-layout is usually done automatically by the container.  Different kinds of container
+layout is usually done automatically by the container.  Different kinds of containers
 implement different policies for laying out their child nodes.  
 In this section, we will cover some common types of JavaFX containers and
 their layout policies.  In this section and
@@ -41,7 +41,7 @@ are not resizable, meaning not meant to be resized by a container during layout;
 the minimum, maximum, and preferred width and height are effectively equal to the component's actual size.
 <classname>Canvas</classname> and <classname>ImageView</classname> are examples of non-resizable components.)
 In general, a container will compute its own preferred size
-based on the components that it contain.  The container's preferred size will allow each
+based on the components that it contains.  The container's preferred size will allow each
 component that it contains to have at least its preferred size.  The container will compute its own minimum
 and maximum sizes in a similar way, based on the minimum and maximum sizes of its children.</p>
 
@@ -49,14 +49,14 @@ and maximum sizes in a similar way, based on the minimum and maximum sizes of it
 width of the child to be less than the child's minimum width or greater than the child's maximum width, and the same
 for the child's height.  This will be true even if it means that the child will overlap other
 components or will extend outside the container.  (The part outside the container 
-might or not be shown, depending on the container.)
+might or might not be shown, depending on the container.)
 This can also leave empty space in the container.</p>
    
 <p>Resizable nodes, which includes controls and most containers, have instance methods 
 for setting the minimum, preferred, and maximim width:
 <code>setMinWidth(w)</code>, <code>setPrefWidth(w)</code>, and <code>setMaxWidth(w)</code>,
 where the parameter is of type <ptype>double</ptype>, with similar instance methods for
-the height.  You can also set width and height values simultaneously with method such as
+the height.  You can also set width and height values simultaneously with methods such as
 <code>setMaxSize(w,h)</code> and <code>setPrefSize(w,h)</code>.
 For a container, the values set by these methods will override the values
 that would have been computed by the container based the children
@@ -99,7 +99,7 @@ changing their size.)</np>
 <code>relocate()</code> nor <code>resize()</code> will have any effect.
 If the node is in a container such as <classname>Pane</classname>, then
 <code>resize()</code> will work (on resizable nodes), but <code>relocate()</code>
-will have no effect.  However, this true only for nodes that are <newword>managed</newword>.
+will have no effect.  However, this is true only for nodes that are <newword>managed</newword>.
 A node can be made "unmanaged" by calling</p>
 
 <pre>node.setManaged(false);</pre>
@@ -366,7 +366,7 @@ want to grow, using a static method:</p>
 
 <pre>HBox.setHgrow( child, priority );</pre>
 
-<np>The second parameter a constant of the enumerated type <classname>Priority</classname>, from
+<np>The second parameter is a constant of the enumerated type <classname>Priority</classname>, from
 package <code>javafx.scene.layout</code>.  The value will likely
 be <code>Priority.ALWAYS</code>, which means that the child will always get a share of the
 extra space.  The child's width will still be limited by its maximum width, so you might
@@ -409,8 +409,8 @@ of its children, instead of stretching them to fit the height of the
 hbox by calling <code>hbox.setFillHeight(false)</code>.  You can say
 where in the hbox the children are placed, when they do not fill the
 entire hbox by calling <code>hbox.setAlignment(position)</code>;
-the parameter is of type <classname>POS</classname> with a
-default of <code>POS.TOP_LEFT</code>.  And, of course, you can apply
+the parameter is of type <classname>Pos</classname> with a
+default of <code>Pos.TOP_LEFT</code>.  And, of course, you can apply
 CSS style properties.</p>
 
 <break/>
@@ -440,7 +440,7 @@ Note that the label is simply created with a constructor and added to
 the <classname>HBox</classname>, since there is no need to keep a reference to
 it.</np>
 
-<p>The third <classname>HBox</classname>contains the four buttons.
+<p>The third <classname>HBox</classname> contains the four buttons.
 The buttons' default widths would be rather small.  To make them
 fill the entire <classname>HBox</classname>, I add an hgrow constraint
 to each button and increase its maximum width.  Here is how it's done:</p>
@@ -624,7 +624,7 @@ the available width and to force all columns to have the same size:</p>
 
 <pre>for (int i = 0; i &lt; 5; i++) {
    ColumnConstraints constraints = new ColumnConstraints();
-   constraints.setPercentage(20); // (there is no constructor that does this)
+   constraints.setPercentWidth(20); // (there is no constructor that does this)
    gridpane.getColumnConstraints().add(constraints);
 }</pre>
 

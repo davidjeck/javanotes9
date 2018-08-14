@@ -461,7 +461,7 @@ shape this statement will draw, since it depends on the value that
 true. Suppose the statement is in a loop and gets executed many times. If the
 value of <code>someShape</code> changes as the loop is executed, it is possible that
 the very same statement "<code>someShape.redraw();</code>" will call different
-methods and draw different kinds of shape as it is executed several times. We say that
+methods and draw different kinds of shapes as it is executed several times. We say that
 the <code>redraw()</code> method is <newword>polymorphic</newword>. A
 method is polymorphic if the action performed by the method depends on the
 actual type of the object to which the method is applied at run time. Polymorphism is one

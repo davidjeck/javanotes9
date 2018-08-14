@@ -417,7 +417,7 @@ is used in some other class, it must be referred to with a compound identifier
 of the form <bnf>class-name</bnf>.<bnf>variable-name</bnf>. For example, the <classname>System</classname> class
 contains the public static member variable named <code>out</code>, and you use this
 variable in your own classes by referring to <code>System.out</code>.   Similarly,
-<code>Math.PI</code> is a public static member variable in the <classname>Math</classname>.  If
+<code>Math.PI</code> is a public static member variable in the <classname>Math</classname> class.  If
 <code>numberOfPlayers</code> is a public static member variable in a class named
 <code>Poker</code>, then code in the <code>Poker</code> class would refer to it
 simply as <code>numberOfPlayers</code>, while code in another class would refer to

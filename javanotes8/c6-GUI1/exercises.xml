@@ -165,7 +165,7 @@ public class SimpleStamperWithDrag extends Application {
     private boolean dragging;
     
     /**
-     * While dragging, prevShapeX and prevShapeY are the the coordinates
+     * While dragging, prevShapeX and prevShapeY are the coordinates
      * at which the previous shape was drawn.  They are used to avoid 
      * drawing the next shape until the mouse has moved at least 5 pixels
      * horizontally or vertically.
@@ -653,7 +653,7 @@ When the user clicks on the canvas, the dice should be rolled
 should be drawn as a square showing from 1 to 6 dots. Since you have to draw
 two dice, its a good idea to write a subroutine, such as "<code>void drawDie(GraphicsContext g,
 int val, int x, int y)</code>", to draw a die at the specified <code>(x,y)</code>
-coordinates. The second parameter, <code>val</code>, specifies the the number of dots that are
+coordinates. The second parameter, <code>val</code>, specifies the number of dots that are
 showing on the die. 
 Here is a picture of a canvas displaying two the dice:</p>
 <img src="roll-dice-gui.png" width="100" height="100" alt="a pair of dice" tex="roll-dice-gui.eps" texscale="0.75"/>
@@ -1563,7 +1563,7 @@ public class SubKillerWithScore extends Application {
         g.fillRect(0,0,width,height);
 
         if (stage.isFocused()) {
-                // draw a CYAN border on the window when when window has focus.
+                // draw a CYAN border on the window when the window has focus.
             g.setStroke(Color.CYAN);
         }
         else {
@@ -1672,7 +1672,7 @@ public class SubKillerWithScore extends Application {
         void updateForNewFrame() { // Move sub or increase explosionFrameNumber.
             if (isExploding) {
                     // If the sub is exploding, add 1 to explosionFrameNumber.
-                    // When the number reaches 15, the explosion ends and the
+                    // When the number reaches 25, the explosion ends and the
                     // sub reappears in a random position.
                 explosionFrameNumber++;
                 if (explosionFrameNumber == 25) { 

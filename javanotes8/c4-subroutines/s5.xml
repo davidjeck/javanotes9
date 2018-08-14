@@ -104,7 +104,7 @@ in this textbook.</p>
 <p>A package can contain both classes and other packages. A package that is
 contained in another package is sometimes called a "sub-package." Both the
 <code>java</code> package and the <code>javafx</code> package contain sub-packages. 
-One of the sub-packages of <code>java</code>, for example, is named "<code>util</code>"
+One of the sub-packages of <code>java</code>, for example, is named "<code>util</code>".
 Since <code>util</code> is contained within <code>java</code>, its full name is actually
 <code>java.util</code>.  This package contains a variety of utility classes, including
 the <classname>Scanner</classname> class that was discussed in <localref href="basics.4.6"/>. 

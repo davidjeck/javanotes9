@@ -17,7 +17,7 @@ definition of one class inside another class.</p>
 
 <p>In Java, a <newword>nested class</newword> is any class whose definition is inside the
 definition of another class.  (In fact, a class can even be nested inside a method,
-which must, of course, itself be inside a class).
+which must, of course, itself be inside a class.)
 Nested classes can be either <newword>named</newword> 
 or <newword>anonymous</newword>. I will come
 back to the topic of anonymous classes later in this section.  A named nested

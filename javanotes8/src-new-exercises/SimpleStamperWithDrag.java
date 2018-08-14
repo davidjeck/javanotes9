@@ -35,7 +35,7 @@ public class SimpleStamperWithDrag extends Application {
     private boolean dragging;
     
     /**
-     * While dragging, prevShapeX and prevShapeY are the the coordinates
+     * While dragging, prevShapeX and prevShapeY are the coordinates
      * at which the previous shape was drawn.  They are used to avoid 
      * drawing the next shape until the mouse has moved at least 5 pixels
      * horizontally or vertically.

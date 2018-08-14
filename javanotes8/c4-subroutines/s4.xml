@@ -39,7 +39,7 @@ which has the following syntax:</p>
 <p>Such a <code>return</code> statement can only occur inside the definition of a
 function, and the type of the <bnf>expression</bnf> must
 match the return type that was specified for the function. (More exactly, it
-must an expression that could legally be assigned to a variable whose type is specified by
+must be an expression that could legally be assigned to a variable whose type is specified by
 the return type of the function.) When the computer executes this <code>return</code> statement, it
 evaluates the expression, terminates execution of the function, and uses the
 value of the expression as the returned value of the function.</p>

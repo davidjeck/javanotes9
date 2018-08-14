@@ -328,8 +328,8 @@ this chapter will always be a <classname>Color</classname>); this property can b
 <code>g.setFill(paint)</code>, and you can get its current value by calling <code>g.getFill()</code>.
 Similarly, the <classname>Paint</classname> that is used for stroking can be set and get using
 <code>g.setStroke(paint)</code> and <code>g.getStroke()</code>, and the width of strokes can be
-set and get using <code>g.getLineWidth(w)</code> and <code>g.getLineWidth()</code>, where
-<code>w</code> is of type <ptype>double</ptype>.  And you can get and set the font that will be used
+set and get using <code>g.setLineWidth(w)</code> and <code>g.getLineWidth()</code>, where
+<code>w</code> is of type <ptype>double</ptype>.  And you can set and get the font that will be used
 for drawing text with <code>g.setFont(font)</code> and <code>g.getFont()</code>.
 </p>
 
@@ -539,10 +539,10 @@ available as I write this at</p>
 <p align="center"><a href="https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html">https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html</a></p>
 
 <p>A CSS <newword>style rule</newword> consists of a property and a value for that property.
-For example, CSS can be used to place a border around many kinds of GUI component.
+For example, CSS can be used to place a border around many kinds of GUI components.
 A border has properties with names such as <code>-fx-border-color</code>
 and <code>-fx-border-width</code>.  (All JavaFX CSS properties have names
-that begine with "-fx-" to distinguish them from regular CSS properties.)
+that begin with "-fx-" to distinguish them from regular CSS properties.)
 A value for <code>-fx-border-color</code> can be a color name such as
 <code>red</code> or <code>lightblue</code>, among other formats.
 One color format that I will use takes the form <code>#RRGGBB</code>,
@@ -550,14 +550,14 @@ where R, G, and B stand for hexadecimal digits.  A two-digit hexadecimal
 number can represent numbers from 0 to 255.  The RR, GG, and BB in
 <code>#RRGGBB</code> represent the red, green, and blue components of
 a color, each in the range 0 to 255.  For example, <code>#FF0000</code>
-represents pure red, and <code>#004444</code> represents a dard blue-green.</p>
+represents pure red, and <code>#004444</code> represents a dark blue-green.</p>
 
 <p>For the border width, the value can be a single size, such
 as <code>3px</code> or <code>0.2cm</code>. The syntax is a number followed
 by a unit of measure, with no space between them.  Here, "px" stands for
 "pixels," and <code>3px</code> means 3 pixels.  When a width is given
 by a single size, the size applies to all four sides of the border.
-Alternative, four sizes can be given, separated by spaces, specifying
+Alternatively, four sizes can be given, separated by spaces, specifying
 the border width on the top, right, bottom, and left, in that order.
 For example, a thick, blue border could be specified as</p>
 
@@ -605,7 +605,7 @@ Some examples:</p>
 in quotes. The font families in the last two examples, "serif" and
 "monospace", are so-called generic family names that specify a certain
 style of font.  Other generic names include "sans-serif", "cursive",
-and "fantasy".  The characters in a serif font has short lines as decorations
+and "fantasy".  The characters in a serif font have short lines as decorations
 such as at the top and bottom of an upper case "I".  A "sans-serif" font
 lacks these decorations.  The characters in a "monospace" font all have the
 same width.  Monospace fonts are good for drawing characters that are meant

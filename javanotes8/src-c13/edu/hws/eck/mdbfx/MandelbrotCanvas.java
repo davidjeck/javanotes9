@@ -100,7 +100,7 @@ public class MandelbrotCanvas extends Canvas {
 	/**
 	 * Start a computation to compute colors for pixels in the region bounded by
 	 * xmin, xmax, ymin, and ymax.  The computation does up to maxIterations per
-	 * pixel; if the the computation does not end before that limit is reached,
+	 * pixel; if the computation does not end before that limit is reached,
 	 * the pixel will be black.  The palette is used to color pixels.
 	 */
 	public void startJob(int maxIterations, int[] palette,

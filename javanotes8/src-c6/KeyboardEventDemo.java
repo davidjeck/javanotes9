@@ -122,7 +122,7 @@ public class KeyboardEventDemo extends Application {
 	 * the input focus.  If the key pressed was one of the arrow keys,
 	 * the square is moved (except that it is not allowed to move off the
 	 * edge of the canvas).  If the SHIFT key is pressed, a border is added
-	 * to the canvas.  The space bar restored original settings.
+	 * to the canvas.  The space bar restores the original settings.
 	 */
 	private void keyPressed(KeyEvent evt) { 
 
@@ -137,8 +137,8 @@ public class KeyboardEventDemo extends Application {
 		}
 		else if (key == KeyCode.RIGHT) {  // right arrow key
 			squareLeft += 8;
-			if (squareLeft > canvas.getWidth() - SQUARE_SIZE)
-				squareLeft = canvas.getWidth() - SQUARE_SIZE;
+			if (squareLeft > canvas.getWidth() - SQUARE_SIZE - 3)
+				squareLeft = canvas.getWidth() - SQUARE_SIZE - 3;
 			draw();
 		}
 		else if (key == KeyCode.UP) {  // up arrow key
@@ -149,8 +149,8 @@ public class KeyboardEventDemo extends Application {
 		}
 		else if (key == KeyCode.DOWN) {  // down arrow key
 			squareTop += 8;
-			if (squareTop > canvas.getHeight() - SQUARE_SIZE)
-				squareTop = canvas.getHeight() - SQUARE_SIZE;
+			if (squareTop > canvas.getHeight() - SQUARE_SIZE - 3)
+				squareTop = canvas.getHeight() - SQUARE_SIZE - 3;
 			draw();
 		}
 		else if (key == KeyCode.SHIFT) {

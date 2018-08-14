@@ -85,7 +85,7 @@ public class SimpleCalc extends Application {
 		answer.setAlignment(Pos.CENTER);
 		answer.setMaxWidth(Double.POSITIVE_INFINITY);
 
-		/* Create a VBox to hold all the other components.   There is
+		/* Create a VBox to hold all the other components.  There is
 		 * a 10-pixel gap between components, and padding around the edges. */
 		
 		VBox root = new VBox( 10, xPane, yPane, buttonPane, answer );

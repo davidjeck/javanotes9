@@ -55,8 +55,8 @@ three methods that can be used with any <classname>Control</classname>
 
 <ul>
 <li><codedef>control.setDisable(true)</codedef> can be called to
-disable the control.  The control can be re-enabled with <codedef>node.setDisable(false)</codedef>.
-When a node is disabled, its appearance
+disable the control.  The control can be re-enabled with <codedef>control.setDisable(false)</codedef>.
+When a control is disabled, its appearance
 might change, and it cannot be the target of mouse or key events.
 This function can actually be called with any scene graph node, not just controls;
 when you disable a node, any nodes contained inside that node are also disabled.
@@ -82,7 +82,7 @@ a reference to the component must be saved in an instance variable so that the
 component can be manipulated by the program after it has been created.
 In this section, we will look at a few of the basic standard control components that are
 available in JavaFX.  They are all defined by classes in the package
-<classname>java.scene.control</classname>.  In the <localref href="GUI1.4">next section</localref>
+<classname>javafx.scene.control</classname>.  In the <localref href="GUI1.4">next section</localref>
 we will consider the problem of laying out components in containers.</p>
 
 
@@ -190,7 +190,7 @@ some padding.  Here is an example of setting all three properties using CSS:</p>
 <break/>
 
 <p> You've already seen buttons used in <localref href="GUI1.1"/>.
-A <classname>Button</classname>, like a <classname>Label</classname> displays
+A <classname>Button</classname>, like a <classname>Label</classname>, displays
 some text and/or a graphic to the user, and the <classname>Button</classname>
 class, like the <classname>Label</classname> class, has two constructors:</p>
 
@@ -307,7 +307,7 @@ by an object of type <classname>RadioButton</classname>. When used in isolation,
 and it has the same constructor, methods, and events, including methods inherited from <classname>Labeled</classname>.
 Ordinarily, however, a <classname>RadioButton</classname> is used in a
 group. A group of radio buttons is represented by an object belonging to the
-class <classname>TogleGroup</classname>. A <classname>ToggleGroup</classname> is <b>not</b> a component
+class <classname>ToggleGroup</classname>. A <classname>ToggleGroup</classname> is <b>not</b> a component
 and does not itself have a visible representation on the screen. A
 <classname>ToggleGroup</classname> works behind the scenes to organize a group of radio
 buttons, to ensure that at most one button in the group can be selected at any given
@@ -449,7 +449,7 @@ and <code>setPrefRowCount(n)</code>.</p>
 from <classname>TextInputControl</classname>, including some methods for getting and
 setting the amount by which the text has been scrolled.  Most important is
 <code>setWrapText(wrap)</code>, where <code>wrap</code> is of type <ptype>boolean</ptype>.
-This methods says what should happen when a line of text is too long to be displayed in the
+This method says what should happen when a line of text is too long to be displayed in the
 text area.  If <code>wrap</code> is true, then any line that is too long will be
 "wrapped" onto the next line, with the line break occurring between words if possible; 
 if <code>wrap</code> is false, the line will simply extend outside the text area, and 

@@ -220,7 +220,7 @@ entire content of the Mandelbrot Viewer window.  <classname>MandelbrotPane</clas
 is a subclass of <classname>BorderPane</classname>.  The center position
 of a <classname>MandelbrotPane</classname> holds a <classname>MandelbrotCanvas</classname>.
 In fact, a second, transparent, "overlay" canvas is stacked on top of
-the canvas that contains the image.  When the the user
+the canvas that contains the image.  When the user
 draws a "zoom box" with the mouse, the zoom box is actually drawn in the top
 canvas so that drawing it does not damage the image. (See <localref href="GUI2.2.4"/>.)
 The bottom position in the <classname>MandelbrotPane</classname> contains a
@@ -529,7 +529,7 @@ is the code from the Mandebrot Viewer program that adds an accelerator to the
 
 <p>Accelerators can be used with any kind of menu items, including
 <classname>RadioMenuItem</classname> and <classname>CheckMenuItem</classname>.
-In all cases when the user types the the accelerator key combination, it
+In all cases when the user types the accelerator key combination, it
 has the same effect as selecting the item with the mouse.  The accelerator
 for a menu item is ordinarily shown in the menu item, along with the
 text of the menu item. In

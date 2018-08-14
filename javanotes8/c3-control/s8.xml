@@ -358,7 +358,7 @@ Set the stroke color to black
 while the width and height are both greater than zero:
     draw a rectangle (using the g.strokeRect subroutine)
     increase the inset (to move the next rectangle over and down)
-    decrease width the height (the make the next rectangle smaller)</pre>
+    decrease the width and height (to make the next rectangle smaller)</pre>
 
 <np>In my program, each rectangle is 15 pixels away from the rectangle that
 surrounds it, so the <code>inset</code> is increased by 15 each time through the

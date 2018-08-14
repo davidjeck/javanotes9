@@ -32,7 +32,7 @@ public class SimpleColorChooser extends Application {
 
 		hueSlider = new Slider(0,360,0);
 		saturationSlider = new Slider(0,1,1);
-		brightnessSlider = new Slider(0,1,2);
+		brightnessSlider = new Slider(0,1,1);
 		redSlider = new Slider(0,1,1);
 		greenSlider = new Slider(0,1,0);
 		blueSlider = new Slider(0,1,0);
@@ -52,8 +52,8 @@ public class SimpleColorChooser extends Application {
 		saturationLabel = makeText(String.format(" Saturation = %1.3f", 1.0));
 		brightnessLabel = makeText(String.format(" Brightness = %1.3f", 1.0));
 		redLabel = makeText(String.format(" Red = %1.3f", 1.0));
-		greenLabel = makeText(String.format(" Green = %1.3f", 1.0));
-		blueLabel = makeText(String.format(" Blue = %1.3f", 1.0));
+		greenLabel = makeText(String.format(" Green = %1.3f", 0.0));
+		blueLabel = makeText(String.format(" Blue = %1.3f", 0.0));
 
 		/* Create an object to show the currently selected color. */
 		
@@ -101,7 +101,7 @@ public class SimpleColorChooser extends Application {
 		   // Make a label to show a given message shown in bold, with some padding
 		   // between the text and the border of the label.
 		Label text = new Label(message);
-		text.setStyle(" -fx-padding: 6px 10px 6px 10px; -fx-font-weight:bold");
+		text.setStyle("-fx-padding: 6px 10px 6px 10px; -fx-font-weight:bold");
 		return text;
 	}
 	

@@ -226,7 +226,7 @@ is to use only immutable objects for communication.)</li>
 should read the source code file <sourceref href="netgame/common/Hub.java">Hub.java</sourceref>.
 With some effort and study, you should be able to understand everything in that file.
 (However, you only need to understand the public and protected interface of
-<classname>Hub</classname> and other classes in the the netgame framework
+<classname>Hub</classname> and other classes in the netgame framework
 to write applications based on it.)</np>
 
 <break/>

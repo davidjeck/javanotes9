@@ -73,11 +73,11 @@ public class MosaicCanvas extends Canvas {
 	 *  size of the panel.
 	 *  @param rows the mosaic will have this many rows of rectangles.  This must be a positive number.
 	 *  @param columns the mosaic will have this many columns of rectangles.  This must be a positive number.
-	 *  @param preferredBlockHeight the preferred height of the mosaic will be set this value times the number of
+	 *  @param preferredBlockHeight the preferred height of the mosaic will be set to this value times the number of
 	 *  rows.  The actual height is set by the component that contains the mosaic, and so might not be
-	 *  equal to the preferred height.   Size is measured in pixels.  The value should not be less than about 5,
+	 *  equal to the preferred height.  Size is measured in pixels.  The value should not be less than about 5,
 	 *  and any smaller value will be increased to 5.
-	 *  @param preferredBlockWidth the preferred width of the mosaic will be set this value times the number of
+	 *  @param preferredBlockWidth the preferred width of the mosaic will be set to this value times the number of
 	 *  columns.  The actual width is set by the component that contains the mosaic, and so might not be
 	 *  equal to the preferred width.  Size is measured in pixels.  The value should not be less than about 5,
 	 *  and any smaller value will be increased to 5.
@@ -333,7 +333,7 @@ public class MosaicCanvas extends Canvas {
 	 *  The color is specified by giving hue, saturation, and brightness
 	 *  components of the color.  The hue should be in the range 0.0 to 360.0,
 	 *  and the saturation and brightness should be in the range 0.0. to 1.0.
-	 *  Their values  are clamped to lie in tohse ranges.
+	 *  Their values are clamped to lie in those ranges.
 	 *  If the rectangle lies outside the grid, this is simply ignored.
 	 */
 	public void setHSBColor(int row, int col, 
@@ -429,7 +429,7 @@ public class MosaicCanvas extends Canvas {
 
 	/**
 	 * This method can be called to force redrawing of the entire mosaic.  The only
-	 * time it might be necessary for users of this class to recall this method is
+	 * time it might be necessary for users of this class to call this method is
 	 * while the autopaint property is set to false, and it is desired to show
 	 * all the changes that have been made to the mosaic, without resetting
 	 * the autopaint property to true.

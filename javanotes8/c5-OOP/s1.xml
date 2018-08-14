@@ -103,7 +103,7 @@ be used to create objects.   There can be many objects created using the class, 
 one will have its <b>own</b> variables called <code>name</code> and <code>age</code>.  
 This is what it means for the non-static parts of the class to be a template for objects: 
 Every object gets its own copy of the non-static part of the class.  We can visualize
-the situation in the computer's memory after several object have been created like this:</np>
+the situation in the computer's memory after several objects have been created like this:</np>
 
 
 <img src="instance-of-PlayerData.png" width="573" height="358" alt="the PlayerData class and three objects in memory"
@@ -591,7 +591,7 @@ For example, suppose <classname>Student</classname> is the class defined earlier
 this section.  Then we can have arrays of type <atype>Student[]</atype>.  For an array
 of type <atype>Student[]</atype>, each element of the array is a variable of type
 <classname>Student</classname>.  To store information about 30 students,
-we could use an array</p>
+we could use an array:</p>
 
 <pre>Student[] classlist;  // Declare a variable of type Student[].
 classlist = new Student[30];  // The variable now points to an array.</pre>

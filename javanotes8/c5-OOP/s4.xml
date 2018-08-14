@@ -245,7 +245,8 @@ Thus, the statement</p>
 <np>If the card is the queen of hearts, either of these will print out "Your
 card is the Queen of Hearts".</np>
 
-<p>Here is the complete <classname>Card</classname> class. It is general enough to be highly
+<p>Here is the complete <classname>Card</classname> class, which can also
+be found in <sourceref href="Card.java"/>.  This class is general enough to be highly
 reusable, so the work that went into designing, writing, and testing it pays
 off handsomely in the long run.</p>
 

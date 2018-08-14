@@ -112,7 +112,7 @@ public class MosaicDraw extends Application {
 		useRandomness.setSelected(true);
 		useSymmetry = new CheckMenuItem("Use Symmetry");
 		CheckMenuItem useGrouting = new CheckMenuItem("Use Grouting");
-		mosaic.setGroutingColor(null);  // turn off grouting to match stage of menu item
+		mosaic.setGroutingColor(null);  // turn off grouting to match state of menu item
 		useGrouting.setOnAction( e -> doUseGrouting(useGrouting.isSelected()));
 		controlMenu.getItems().addAll(useRandomness, useSymmetry, useGrouting);
 		
@@ -295,7 +295,7 @@ public class MosaicDraw extends Application {
 	
 	
 	/**
-	 * Changes the current drawing color when the user click one of the
+	 * Changes the current drawing color when the user clicks one of the
 	 * colors in the Color menu.  A handler to call this method is added
 	 * to each color menu item in the createMenuBar() method.  (Note that
 	 * this method will be called even if the user picks the color that

@@ -175,16 +175,16 @@ public class SimplePaint extends Application {
 	 */
 	public void mousePressed(MouseEvent evt) {
 
+		if (dragging == true)  // Ignore mouse presses that occur
+			return;            //    when user is already drawing a curve.
+							   //    (This can happen if the user presses
+							   //    two mouse buttons at the same time.)
+
 		int x = (int)evt.getX();   // x-coordinate where the user clicked.
 		int y = (int)evt.getY();   // y-coordinate where the user clicked.
 
 		int width = (int)canvas.getWidth();    // Width of the canvas.
 		int height = (int)canvas.getHeight();  // Height of the canvas.
-
-		if (dragging == true)  // Ignore mouse presses that occur
-			return;            //    when user is already drawing a curve.
-							   //    (This can happen if the user presses
-							   //    two mouse buttons at the same time.)
 
 		if (x > width - 53) {
 			// User clicked to the right of the drawing area.

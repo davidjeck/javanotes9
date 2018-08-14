@@ -259,7 +259,7 @@ case, the computer then continues with whatever follows the <code>if</code> stat
 <code>if</code> statements (with no <code>else</code> part), although their meanings are
 quite different.  The <bnf>statement</bnf> in an <code>if</code> is executed at most once,
 while the <bnf>statement</bnf> in a <code>while</code> can be executed any number of times.
-It can be helpful to look at diagrams of the the flow of control for <code>while</code> and
+It can be helpful to look at diagrams of the flow of control for <code>while</code> and
 simple <code>if</code> statements:</p>
 
 <img src="while-and-if-flow-control.png" alt="Control flow diagrams for while and simple if"

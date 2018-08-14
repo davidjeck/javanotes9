@@ -100,9 +100,9 @@ example, when declaring an integer member variable, <code>count</code>,
 just a single value.  To initialize an array variable, you can provide a list of
 values, separated by commas, and enclosed between a pair of braces.  For example:</p>
 
-<pre>int[] smallPrimes = { 2, 3, 5, 7, 11, 13, 17, 23, 29 };</pre>
+<pre>int[] smallPrimes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };</pre>
 
-<np>In this statement, an array of <ptype>int</ptype> of length 9 is created
+<np>In this statement, an array of <ptype>int</ptype> of length 10 is created
 and filled with the values in the list.  The length of the array is determined
 by the number of items in the list.</np>
 

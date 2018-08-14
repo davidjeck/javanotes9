@@ -287,15 +287,15 @@ to be added to the menu bar.  The instance method <code>getMenus()</code>
 returns a list of menus, with methods <code>add()</code> and <code>addAll()</code>
 for adding menus to the menu bar.  For example,
 the <code>MosaicDraw</code> program uses three menus, <code>controlMenu</code>, <code>colorMenu</code>,
-and <code>toolsMenu</code>.  We could create a menu bar and add the menus to it with
+and <code>toolMenu</code>.  We could create a menu bar and add the menus to it with
 the statements:</np>
    
 <pre>MenuBar menuBar = new MenuBar();
-menuBar.getMenus().addAll(controlMenu, colorMenu, toolsMenu);</pre>
+menuBar.getMenus().addAll(controlMenu, colorMenu, toolMenu);</pre>
 
 <np>Or we could list the menus in the menu bar constructor:</np>
 
-<pre>MenuBar menuBar = new MenuBar(controlMenu, colorMenu, toolsMenu);</pre>
+<pre>MenuBar menuBar = new MenuBar(controlMenu, colorMenu, toolMenu);</pre>
 
 <p>The final step in using menus is to add the menu bar to the program's
 scene graph.  The menu bar could actually appear anywhere, but typically,
@@ -344,7 +344,7 @@ controlMenu.getMenus().add(useRandomness);   // Add menu item to the menu.</pre>
 the program simply checks its state by calling <code>useRandomness.isSelected()</code>
 whenever it is coloring a square, to decide whether to
 add some random variation to the color.  On the other hand, when the user selects the
-"Show&nbsp;Grouting" check box from the menu, the canvas must immediately be redrawn to
+"Use&nbsp;Grouting" check box from the menu, the canvas must immediately be redrawn to
 reflect the new state.  A handler is added to the <classname>CheckMenuItem</classname>
 to take care of that by calling an appropriate method:</np>
 
@@ -430,7 +430,7 @@ specified size, the group is not resized to match the size of the scene;
 instead, it is "clipped"; that is, any part of the group that lies outside
 the scene is simply not shown.)  It is not possible for a program to set the width or
 height of a <classname>Scene</classname>, but if the size of the stage that 
-contains a scene is changed, then the size of the scene is changed to match
+contains a scene is changed, then the size of the scene is changed 
 to match the new size of the stage's content area, and the root node of the
 scene (if it is a <classname>Pane</classname>) will be resized as well.</p>
 
@@ -460,7 +460,7 @@ by the operating system, not by Java, and its style is set by the operating syst
 The instance method <code>stage.setTitle(string)</code> sets the text that is shown in
 the title bar.  The title can be changed at any time.</p>
 
-<p>By default a stage is resizable.  That is, the size of the window can be changed by
+<p>By default a stage is resizable.  That is, the size of the window can be changed by the
 user, by dragging its borders or corners.  To prevent the user from changing the
 window size, you can call <code>stage.setResizable(false)</code>.  However, a program
 can change the size of a stage with the instance methods <code>stage.setWidth(w)</code>
@@ -505,7 +505,7 @@ Java is installed, at least on Windows and Mac OS.)</p>
    
 <p>The question, then, is how to create a jar file.  The answer depends on what
 programming environment you are using.  The two basic types of programming environment&mdash;command line
-and IDE&mdash;were discussed in <localref href="basics.6"/>.  Any IDE (Integrated Programming Environment)
+and IDE&mdash;were discussed in <localref href="basics.6"/>.  Any IDE (Integrated Development Environment)
 for Java should have a command for creating jar files.  In the Eclipse IDE, for example,
 it can be done as follows:  In the Package Explorer pane, select the programming project (or just
 all the individual source files that you need).  Right-click on the selection, and

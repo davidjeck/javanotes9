@@ -102,7 +102,7 @@ is defined in two classes that I have written, <sourceref href="Mosaic.java"/>, 
 <sourceref href="MosaicCanvas.java"/>.  To compile and run a program that uses the
 API, the classes <classname>Mosaic</classname> and <classname>MosaicCanvas</classname>
 must be available.  That is, the files <code>Mosaic.java</code> and
-<code>MosaicCanvas.java</code>, or the the corresponding compiled class files,
+<code>MosaicCanvas.java</code>, or the corresponding compiled class files,
 must be in the same folder as the class that defines the program.<tex>  (You can download
 them from this textbooks's web site.)</tex></p>
 
@@ -116,7 +116,7 @@ available routines in the API, with Javadoc-style comments. (Remember that
 a Javadoc comment comes before the thing that it is commenting on.)</p>
    
 <pre>/**
- * Opens a "mosaic" window on the screen.  This subroutines should be called
+ * Opens a "mosaic" window on the screen.  This subroutine should be called
  * before any of the other Mosaic subroutines are used.  The program will end
  * when the user closes the window.
  *
@@ -200,7 +200,7 @@ the exception, and it would be good to document it with a <code>@throws</code>
 doc tag in the Javadoc comment.
 Other questions remain about the behavior of the subroutines.
 For example, what happens if you call <code>Mosaic.open()</code> and there
-is already a mosaic window open on the screen?  (In fact, second call will
+is already a mosaic window open on the screen?  (In fact, the second call will
 simply be ignored.)  It's difficult to fully document
 the behavior of a piece of software&mdash;sometimes, you just have to 
 experiment or look at the full source code.</p>

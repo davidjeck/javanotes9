@@ -124,7 +124,7 @@ add other methods to our application classes, to be called by <code>start()</cod
 in <classname>Application</classname> that can be overridden.  In particular, there is an
 <code>init()</code>, that will be called by the system before <code>start()</code>, and a <code>stop()</code>
 method that is called by the system when the application is shutting down.  These two methods are
-defined class <classname>Application</classname> to do nothing.  A programmer can redefine <code>init()</code>
+defined in class <classname>Application</classname> to do nothing.  A programmer can redefine <code>init()</code>
 to do some initialization and <code>stop()</code> to do cleanup.  However, we will rarely if ever need them.
 Any initialization that we need can be done in <code>start()</code>.</p>
 
@@ -156,9 +156,11 @@ for the content and for the window itself.  For example, the line</p>
 
 <p>A stage shows a <newword>scene</newword>, which fills its content area and serves
 as a container for the GUI components in the window.  A scene is represented by an
-object of type <classname>Scene</classname>.  In the sample program, the statement
-<code>stage.setScene(scene)</code> sets the scene that will be displayed in
-the content area of the stage.</p>
+object of type <classname>Scene</classname>.  In the sample program, the statement</p>
+
+<pre>stage.setScene(scene);</pre> 
+
+<np>sets the scene that will be displayed in the content area of the stage.</np>
 
 <p>A scene can be filled with things called GUI <newword>components</newword>,
 such as buttons and menu bars.  Each component is represented by an object belonging to a JavaFX class.  
