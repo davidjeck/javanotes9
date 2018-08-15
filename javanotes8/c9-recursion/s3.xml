@@ -10,7 +10,7 @@ of <classname>Strings</classname>, and we implemented <code>insert</code>, <code
 list of <classname>Strings</classname> in an array or <classname>ArrayList</classname>, instead of in a
 linked list. We could still have implemented the same operations on the list. 
 The implementations of these
-operations would have been different, but their interfaces and logical behavior
+operations would be different, but their interfaces and logical behavior
 would still be the same.</p>
 
 <p>The term <newword>abstract data type</newword>, or <newword>ADT</newword>, 
@@ -49,7 +49,7 @@ stack of any type of items. If, for example, the items are values of type
 methods</p>
 
 <ul>
-<li><codedef>void push (int newItem)</codedef> &mdash; Add newItem to top of stack.</li>
+<li><codedef>void push(int newItem)</codedef> &mdash; Add newItem to top of stack.</li>
 <li><codedef>int pop()</codedef> &mdash; Remove the top int from the stack and return it.</li>
 </ul>
    
@@ -61,7 +61,7 @@ do the test, implemented as an instance method</np>
 <li><codedef>boolean isEmpty()</codedef> &mdash; Returns true if the stack is empty.</li>
 </ul>
 
-<np>This defines a "stack of ints" as an abstract data type. This ADT can be
+<np>This defines "stack of ints" as an abstract data type. This ADT can be
 implemented in several ways, but however it is implemented, its behavior must
 correspond to the abstract mental image of a stack.</np>
 
@@ -363,7 +363,7 @@ it is added to the back of the queue. A thread is removed from the front of the
 queue, it is given some processing time, and then&mdash;if it has not terminated&mdash;is
 sent to the back of the queue to wait for another turn.</li>
 <li>Events such as keystrokes and mouse clicks are stored in a queue called the
-"event queue". A program removes events from the event queue and processes
+"event queue." A program removes events from the event queue and processes
 them. It's possible for several more events to occur while one event is being
 processed, but since the events are stored in a queue, they will always be
 processed in the order in which they occurred.</li>

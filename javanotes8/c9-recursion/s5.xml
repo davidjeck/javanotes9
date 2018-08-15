@@ -170,7 +170,8 @@ at will. To allow for this, I'll always call the routine <code>TextIO.skipBlanks
 before trying to look ahead to see what's coming up next in input.
 <code>TextIO.skipBlanks()</code> skips past any whitespace, such as spaces and tabs, in the input,
 and stops when the next character in the input is either a non-blank character or the
-end-of-line character.</p>
+end-of-line character.  (For a discussion of robust handling of <classname>TextIO</classname> input, see
+<localref href="robustness.2.4"/>.)</p>
 
 <p>Let's start with a very simple example. A "fully parenthesized expression"
 can be specified in BNF by the rules</p>
@@ -338,7 +339,7 @@ private static double expressionValue() throws ParseError {
       negative = true;
    }
    double val;  // Value of the expression.
-   val = termValue();
+   val = termValue();  // Read and evaluate the first term.
    if (negative)
       val = -val;
    TextIO.skipBlanks();
@@ -346,7 +347,7 @@ private static double expressionValue() throws ParseError {
           // Read the next term and add it to or subtract it from
           // the value of previous terms in the expression.
       char op = TextIO.getAnyChar();  // Read the operator.
-      double nextVal = termValue(); 
+      double nextVal = termValue();    // Read and evaluate the next term.
       if (op == '+')
          val += nextVal;
       else
@@ -387,7 +388,8 @@ expression tree, as discussed in <localref href="recursion.4.3"/>, to
 represent the expression. The expression tree is then used to find the value
 and to generate the stack operations. The tree is made up of nodes belonging to
 classes <classname>ConstNode</classname> and <classname>BinOpNode</classname> that are similar to those
-given in <localref href="recursion.4.3"/>. Another class, <classname>UnaryMinusNode</classname>, has been
+given in <localref href="recursion.4.3"/>. Another subclass of <classname>ExpNote</classname>, 
+<classname>UnaryMinusNode</classname>, has been
 introduced to represent the unary minus operation. I've added a method,
 <code>printStackCommands()</code>, to each class. This method is responsible for
 printing out the stack operations that are necessary to evaluate an expression.

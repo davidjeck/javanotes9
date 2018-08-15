@@ -182,9 +182,9 @@ becomes more efficient because binary search can be used.
 However, inserting a new item into the array
 is still inefficient since it means moving, on average, half of the items in
 the array to make a space for the new item. A binary tree can be used to store
-an ordered in a way that makes both searching
+an ordered list in a way that makes both searching
 and insertion efficient. A binary tree used in this way is called a
-<newword>binary sort tree</newword> or <newword>BST</newword></p>
+<newword>binary sort tree</newword> or <newword>BST</newword>.</p>
 
 <p>A binary sort tree is a binary tree with the following property: For every
 node in the tree, the item in that node is greater than or equal to every item in the left
@@ -266,7 +266,7 @@ traversal, searching, and insertion. We'll look at the latter two subroutines
 below. The <code>main()</code> routine tests the subroutines by letting you type in
 strings to be inserted into the tree.</p>
 
-<p>In SortTreeDemo, nodes in the binary tree are represented using the
+<p>In <classname>SortTreeDemo</classname>, nodes in the binary tree are represented using the
 following static nested class, including a simple constructor that makes creating nodes
 easier:</p>
 
@@ -341,7 +341,7 @@ a <code>while</code> loop. Here is a non-recursive version of the search routine
          return true;
       }
       else if ( item.compareTo(runner.item) &lt; 0 ) {
-            // If the item occurs, it must be in the left subtree,
+            // If the item occurs, it must be in the left subtree.
             // So, advance the runner down one level to the left.
          runner = runner.left;
       }
@@ -365,7 +365,7 @@ new item:</p>
 the subroutine, because it is impossible for a subroutine to change the value
 stored in an actual parameter. (I should note that this is something that
 <b>is</b> possible in other languages.) Recursion uses parameters in an
-essential way. There are ways to work around the problem, but the easiest thing
+essential way. There are ugly ways to work around the problem, but the easiest thing
 is just to use a non-recursive insertion routine that accesses the static
 member variable <code>root</code> directly. One difference between inserting an
 item and searching for an item is that we have to be careful not to fall off
@@ -509,7 +509,7 @@ value of an expression tree:</np>
 
 <p>Although this approach works, a more object-oriented approach is to note
 that since there are two types of nodes, there should be two classes to
-represent them, <classname>ConstNode</classname> and <classname>BinOpNode</classname>. To represent the
+represent them, perhaps named <classname>ConstNode</classname> and <classname>BinOpNode</classname>. To represent the
 general idea of a node in an expression tree, we need another class,
 <classname>ExpNode</classname>. Both <classname>ConstNode</classname> and <classname>BinOpNode</classname> will be
 subclasses of <classname>ExpNode</classname>. Since any actual node will be either a

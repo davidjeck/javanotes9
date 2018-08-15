@@ -87,8 +87,8 @@ in part of an array of integers:</p>
 
 <pre>/**
  * Search in the array A in positions numbered loIndex to hiIndex,
- * inclusive, for the specified value.   If the value is found, return 
- * the index in the array where it occurs. If the value is not found, 
+ * inclusive, for the specified value.  If the value is found, return 
+ * the index in the array where it occurs.  If the value is not found, 
  * return -1.  Precondition:  The array must be sorted into increasing 
  * order.
  */
@@ -232,10 +232,9 @@ static void towersOfHanoi(int disks, int from, int to, int spare) {
 works because each recursive call involves a smaller number of disks, and the
 problem is trivial to solve in the base case, when there is only one disk. To
 solve the "top level" problem of moving <code>N</code> disks from Stack 0 to Stack
-1, it should be called with the command <code>TowersOfHanoi(N,0,1,2)</code>. The
-subroutine is demonstrated by the sample program <sourceref href="TowersOfHanoi.java"/>.</p>
-
- <p>Here, for example, is the output from the program when it is run
+1, the subroutine should be called with the command <code>TowersOfHanoi(N,0,1,2)</code>. The
+subroutine is used in the sample program <sourceref href="TowersOfHanoi.java"/>.
+Here, for example, is the output from the program when it is run
 with the number of disks set equal to&nbsp;4:</p>
 
 <pre>Move disk 1 from stack 0 to stack 2
@@ -368,6 +367,9 @@ comment.</p>
     
     while (hi &gt; lo) {
     
+       // Loop invariant (See Subsection <localref href="robustness.2.3"/>):  A[i] &lt;= pivot
+       // for i &lt; lo, and A[i] >= pivot for i > hi.
+    
        while (hi &gt; lo &amp;&amp; A[hi] &gt;= pivot) {
              // Move hi down past numbers greater than pivot.
              // These numbers do not have to be moved.
@@ -474,9 +476,17 @@ worst case, there are n levels of subproblems, and the worst-case run
 time is &Theta;(n<sup>2</sup>). The worst case is very rare&mdash;it
 depends on the items in the array being arranged in a very special way,
 so the average performance of Quicksort can be very good even though
-it is not so good in certain rare cases.  There are sorting algorithms
-that have both an average case and a worst case run time of &Theta;(n*log(n)).
-One example is MergeSort, which you can look up if you are interested.</p>
+it is not so good in certain rare cases.  (One of these "rare" cases is
+when the original array is already sorted or almost sorted, which is
+really not all that rare in practice.  Applying the Quicksort
+algorithm as given above to a large sorted array will take a long time.
+One way to avoid that&mdash;with high probablility&mdash;is to pick the pivot for QuickSort step at random,
+rather than always using the first item.)</p>
+
+<p>There are sorting algorithms that have both an average case and a worst case 
+run time of &Theta;(n*log(n)).
+One example that is fairly easy to understand is MergeSort, which you can 
+look up if you are interested.</p>
 
 </subsection>
 
@@ -486,7 +496,7 @@ One example is MergeSort, which you can look up if you are interested.</p>
 connected squares.  I call a group of connected squares a "blob," and the sample program
 that we will consider is <sourceref href="Blobs.java"/>.
 The  program displays a grid of small white, gray,
-and reds squares.  Here is a screenshot from the program, showing the
+and red squares.  Here is a screenshot from the program, showing the
 grid of squares along with some controls:</p>
 
 <img src="blobs.png" width="363" height="320" alt="screenshot from Blobs.java"
