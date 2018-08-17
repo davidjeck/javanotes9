@@ -6,7 +6,7 @@
 <p><start><big>A</big>mong its new features, </start>Java 8 introduced
 a <newword>stream API</newword>, which represents a new way of
 expressing operations on collections of data.  A major motivation
-for the new approach is to make it possible for Java compiler to
+for the new approach is to make it possible for the Java compiler to
 "parallelize" a computation, that is, to break it into pieces that
 can be run simultaneously on several processors.  Doing so can
 significantly speed up the computation.  <localref href="threads"/>
@@ -96,7 +96,7 @@ something like</p>
     public int applyAsInt( T x );
 }</pre>
 
-<np><atype>Stream&lt;T&gt;</atype> is also a parameterized interface.  In the
+<np><atype>Stream&lt;T&gt;</atype> is also a parameterized interface.  In the above
 example, <code>stringList</code> is of type <atype>ArrayList&lt;String&gt;</atype>,
 and the stream that is created by <code>stringList.parallelStream()</code> is
 of type <atype>Steam&lt;String&gt;</atype>.  When the <code>mapToInt()</code>
@@ -324,7 +324,7 @@ infinite stream, such as a stream generated from a <classname>Supplier</classnam
 <p>To actually get anything done with a stream, you need to apply
 a terminal operation at the end.  The operator <code>forEach(c)</code>
 applies a <classname>Consumer</classname>, <code>c</code>, to each element
-of stream.  The result is not a stream, since consumers do not produce
+of the stream.  The result is not a stream, since consumers do not produce
 values.  The effect of <code>S.forEach(c)</code> on a stream <code>S</code>
 is simply to do something with each value in the stream. For example,
 we have a whole new way to print all the strings in a list of strings:</p>
@@ -356,9 +356,9 @@ test the random number generator by generating 10000 random
 numbers and counting how many of them are less than&nbsp;0.5:</p>
 
 <pre>long half = DoubleStream.generate( Math::random )
-                       .limit(10000)
-                       .filter( x -> (x &lt; 0.5) )
-                       .count();</pre>
+                        .limit(10000)
+                        .filter( x -> (x &lt; 0.5) )
+                        .count();</pre>
 
 <np>Note that <code>count()</code> returns a <ptype>long</ptype> rather
 than an <ptype>int</ptype>.  Also note that I've used the method reference <code>Math::random</code> here
@@ -398,12 +398,12 @@ non-zero elements in&nbsp;<code>A</code>:</p>
 <pre>double multiply = Arrays.stream(A).filter( x -> (x != 0) )
                                   .reduce( 1, (x,y) -> x*y );</pre>
                                   
-<np>The binary operator here maps a pair of number <code>(x,y)</code> to
+<np>The binary operator here maps a pair of numbers <code>(x,y)</code> to
 their product <code>x*y</code>.  The first parameter to <code>reduce()</code>
 is an "identity" for the binary operation.  That is, it is a value that
 <code>1*x = x</code> for any <code>x</code>. The maximum of a stream
 of <ptype>double</ptype> could be computed with <code>reduce()</code> by
-using <code>reduce(Double.NEGATIVE_INFINITY, (x,y) -> Math.max(x,y))</code>.</np>
+using <code>reduce(Double.NEGATIVE_INFINITY, Math::max)</code>.</np>
 
 <p>The last major terminal operation is <code>collect(c)</code>, a very general operation
 which collects all of the values in the stream into a data structure or a single
@@ -420,8 +420,8 @@ we want a list of all the strings in <code>A</code> that begin with
 the substring "Fred":</p>
 
 <pre>List&lt;String&gt; freds = Arrays.stream(A)
-                            .filter( s -> s.startsWith("Fred") )
-                            .collect( Collectors.toList() );</pre>
+                           .filter( s -> s.startsWith("Fred") )
+                           .collect( Collectors.toList() );</pre>
 
 <np>That's actually pretty easy!</np>
 

@@ -231,7 +231,7 @@ actual parameters in the method call.  Since <code>wordlist</code> is
 of type <atype>String[]</atype>, the compiler can tell that in
 "<code>countOccurrences(wordlist, word)</code>", the type that replaces
 <classname>T</classname> is <classname>String</classname>.  This contrasts
-with the use of generic classes, as in "<code>new&nbsp;Queue&lt;String&gt;()</code>",
+with the use of generic classes, as in "<code>Queue&lt;String&gt;</code>",
 where the type parameter is specified explicitly.</p>
    
 <p>The <code>countOccurrences</code> method operates on an array.
@@ -325,8 +325,8 @@ replace the type parameter "<code>Shape</code>" in the declaration of
 
 <np>The wildcard type "<code>?&nbsp;extends&nbsp;Shape</code>" means roughly
 "any type that is either equal to <classname>Shape</classname> or 
-that is a subclass of <classname>Shape</classname>".  When the
-parameter <code>shapes</code> is declared to be of type
+that is a subclass of <classname>Shape</classname>".  When the formal
+parameter, <code>shapes</code>, is declared to be of type
 <classname>Collection&lt;?&nbsp;extends&nbsp;Shape&gt;</classname>, it
 becomes possible to call the <code>drawAll</code> method with an actual
 parameter of type <classname>Collection&lt;Rect&gt;</classname> since 
@@ -404,7 +404,7 @@ Inside the generic class definition, "<code>T</code>" is used as if it is a spec
 The wildcard type "<code>?&nbsp;extends&nbsp;T</code>" means some type that is equal to or extends that specific type.
 When we create a queue of type <classname>Queue&lt;Shape&gt;</classname>, "<code>T</code>" refers to "Shape",
 and the wildcard type "<code>?&nbsp;extends&nbsp;T</code>" in the class definition means
-"<code>?&nbsp;extends&nbsp;Shape</code>", meaning that the <code>addAll</code> method of the queue 
+"<code>?&nbsp;extends&nbsp;Shape</code>". This ensures that the <code>addAll</code> method of the queue 
 can be applied to collections of <classname>Rects</classname> and <classname>Ovals</classname>
 as well as to collections of <classname>Shapes</classname>.</p>
    
@@ -420,7 +420,7 @@ on the wildcard type makes everything work nicely.</p>
    
 <p>The <code>addAll</code> method adds all the items from a collection to the queue.
 Suppose that we wanted to do the opposite: Add all the items that are currently
-on the queue to a given collection.  An instance method defined as</p>
+in the queue to a given collection.  An instance method defined as</p>
    
 <pre>public void addAllTo(Collection&lt;T&gt; collection)</pre>
    
@@ -543,7 +543,7 @@ For example, there will be an instance method of the form</p>
    
 <pre>public void disableAll() {
    .
-   .  // Call c.setDisable(true) for every component,c, in the group.
+   .  // Call c.setDisable(true) for every control, c, in the group.
    .
 }</pre>
    
@@ -589,7 +589,7 @@ illegal to create the parameterized types <classname>ControlGroup&lt;String&gt;<
 that replaces "<code>T</code>" is required to be either <classname>Control</classname> itself
 or a subclass of <classname>Control</classname>.
 With this restriction, we know&mdash;and, more important, the compiler knows&mdash;that
-the objects in the group are of type <classname>Control</classname> and the
+the objects in the group are of type <classname>Control</classname>, so that the
 operation <code>c.setDisable()</code> is defined for any <code>c</code> in the group.</p>
   
 <p>In general, a bounded type parameter "<code>T&nbsp;extends&nbsp;SomeType</code>" means roughly

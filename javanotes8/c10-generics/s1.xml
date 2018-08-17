@@ -238,7 +238,7 @@ with little difficulty.</p>
 
 <p>It's worth noting that if the type parameter in a parameterized type can be
 deduced by the compiler, then the name of the type parameter can be omitted.  For
-example, the word "String" is optional in the constructor in this statement,
+example, the word "String" is optional in the constructor in the following statement,
 because the <classname>ArrayList</classname> that is created must be an
 <atype>ArrayList&lt;String&gt;</atype> to match the type of the variable:</p>
 
@@ -567,7 +567,7 @@ two objects are to be considered the same. In the <classname>Object</classname> 
 However, for many sub-classes of <code>Object</code>, this definition is not
 reasonable, and it should be overridden. The <classname>String</classname> class, for
 example, overrides <code>equals()</code> so that for a <classname>String</classname>
-<code>str</code>, <code>str.equals(obj)</code> if <code>obj</code> is also a
+<code>str</code>, the value of <code>str.equals(obj)</code> is <code>true</code> when <code>obj</code> is also a
 <classname>String</classname> and <code>obj</code> contains the same sequence of characters as
 <code>str</code>.</p>
 
@@ -724,7 +724,8 @@ or is considered to be the same as <code>obj2</code> for the purposes of this co
 Comparators are useful for comparing objects that do not implement the
 <classname>Comparable</classname> interface and for defining several different orderings on
 the same collection of objects.  Since <classname>Comparator</classname> is 
-a function interface, comparators are often defined by lambda expressions.</np>
+a functional interface, comparators are often defined by lambda expressions
+(see <localref href="subroutines.4a"/>).</np>
    
 <p>In the next two sections, we'll see how <classname>Comparable</classname> and
 <classname>Comparator</classname> are used in the context of collections and maps.</p>
@@ -734,8 +735,8 @@ a function interface, comparators are often defined by lambda expressions.</np>
 <subsection id="generics.1.7" title="Generics and Wrapper Classes">
 
 <p>As noted in <localref href="arrays.3"/>
-the case of <classname>ArrayList</classname>, Java's generic programming does not apply to the primitive
-types, since generic data structures can only hold objects, while values of
+about <classname>ArrayLists</classname>, Java's generic programming does not apply to the primitive
+types. This is because generic data structures can only hold objects, and values of
 primitive type are not objects.  However, the "wrapper classes" that were
 introduced in <localref href="arrays.3.2"/> make it possible to get around
 this restriction to a great extent.</p>

@@ -210,21 +210,21 @@ equal, compare the days.</p>
 <code>syllabus</code> is a variable of type <classname>TreeMap&lt;Date,String&gt;</classname>,
 where <classname>Date</classname> is the class from the preceding exercise.
 Write a code segment that will write
-out the value string for every key that is in the month of December, 2014.</p>
+out the value string for every key that is in the month of December, 2018.</p>
 </ques>
 <ans><p>I will give two solutions. One
-of them simply looks up each date in December, 2010 in the map and prints the
+of them simply looks up each date in December, 2018 in the map and prints the
 corresponding value, if there is one. The other iterates though a submap that
 contains all the entries for dates in that month.</p>
 <pre>
 A solution using the map's get() method:
 
       for (int day = 1; day &lt;= 31; day++) {
-           // Get the info for one day in December, 2014
-         Date date = new Date(12,day,2014); // The key.
-         String info = syllabus.get(date); // Get the value for that key.
-                                           // (Can be null if there is no
-                                           // entry in the map for this date.)
+           // Get the info for one day in December, 2018
+         Date date = new Date(12,day,2018); // The key.
+         String info = syllabus.get(date);  // Get the value for that key.
+                                            // (Can be null if there is no
+                                            // entry in the map for this date.)
          if (info != null)
             System.out.println("December " + day + ": " + info);
       }
@@ -232,8 +232,8 @@ A solution using the map's get() method:
 
 A solution using a submap (harder, but more efficient):
 
-      Date startDate = new Date(12,1,2014); // Starting date for submap.
-      Date endDate = new Date(1,1,2015);    // Ending date for submap.
+      Date startDate = new Date(12,1,2018); // Starting date for submap.
+      Date endDate = new Date(1,1,2019);    // Ending date for submap.
                                             // (Remember that the end date
                                             // is not included.)
       Map&lt;Date,String&gt; decemberData = syllabus.subMap(startDate, endDate);
@@ -320,10 +320,10 @@ as a static method in class <classname>Collections</classname>.)</p>
 <ques><p>Suppose that <code>words</code> is an array of <classname>Strings</classname>.
 Explain what is done by the following code:</p>
 <pre>long n = Arrays.stream(words)
-              .filter( w -> (w != null) )
-              .map( w -> w.toLowerCase() )
-              .distinct()
-              .count();</pre>
+               .filter( w -> (w != null) )
+               .map( w -> w.toLowerCase() )
+               .distinct()
+               .count();</pre>
 </ques>
 <ans><p>This code counts the number of different strings in the array, ignoring
 case.  It starts with a stream containing all the strings from the array.

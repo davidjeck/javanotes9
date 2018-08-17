@@ -83,7 +83,7 @@ At the beginning of the program, the symbol table object is created with the com
 To execute a "let" command, the program uses the symbol table's <code>put()</code> method to
 associate a value with the variable name. Suppose that the name of the variable
 is given by a <classname>String</classname>, <code>varName</code>, and the value
-of the variable is stored in a variable <code>val</code> of type <ptype>double</ptype>.
+of the variable is stored in a variable, <code>val</code>, of type <ptype>double</ptype>.
 The following command would then set the value associated with the variable
 in the symbol table:</np>
 
@@ -98,11 +98,11 @@ an automatic conversion of type <ptype>double</ptype> to <classname>Double</clas
 when necessary.</np>
 
 
-<np>Just for fun, I decided to pre-define two
+<p>Just for fun, I decided to pre-define two
 variables named "pi" and "e" whose values are the usual mathematical constants
 &pi; and <i>e</i>. In Java, the values of these constants are given by
 <code>Math.PI</code> and <code>Math.E</code>. To make these variables available to the
-user of the program, they are added to the symbol table with the commands:</np>
+user of the program, they are added to the symbol table with the commands:</p>
 
 <pre>symbolTable.put( "pi", Math.PI );
 symbolTable.put( "e", Math.E );</pre>
@@ -179,12 +179,11 @@ the key type is <classname>String</classname> and the value type is
 <np>This is just the usual <classname>TreeMap&lt;K,V&gt;</classname> with
 <code>K=String</code> and <code>V=TreeSet&lt;Integer&gt;</code>.  A type name
 as complicated as this one can look intimidating, but if you think about
-the data structure that we want to represent, it makes sense.  Given a
-little time and practice, you can get used to types like this one.</np>
+the data structure that we want to represent, it makes sense.</np>
 
-<p>To make an index, we need to start with an empty <classname>TreeMap</classname> and look
-through the book, inserting every reference that we want to be in the index
-into the map.  We then need to print out the data from the
+<p>To make an index, we need to start with an empty <classname>TreeMap</classname>. We then work
+through the book, and we insert into the map every reference that we want to be in the index.
+We then need to print out the data from the
 map. Let's leave aside the question of how we find the references
 to put in the index, and just look at how the <classname>TreeMap</classname> is used. 
 It can be created with the commands:</p>
@@ -229,7 +228,7 @@ void addReference(String term, int pageNum) {
          // that we have found previously for the term.
          // Add the new page number to that set.  This
          // set is already associated to term in the index.
-      references.add( pageNum ); // pageNum is "autoboxed" to give an Integer!
+      references.add( pageNum );
    }
 }</pre>
 
@@ -365,12 +364,12 @@ we need an object of type <classname>Comparator&lt;String&gt;</classname>. Since
 <classname>Comparator</classname> is a functional interface, an easy
 way to specify the comparator is to use lambda expression:</np>
 
-<pre>(a,b) -&gt; a.compareToIgnoreCase()</pre>
+<pre>(a,b) -&gt; a.compareToIgnoreCase(b)</pre>
 
 <np>To solve our indexing problem, we just need to pass this comparator as
 a parameter to the <classname>TreeMap</classname> constructor:</np>
 
-<pre>index = new TreeMap&lt;&gt;( (a,b) -&gt; a.compareToIgnoreCase() );</pre>
+<pre>index = new TreeMap&lt;&gt;( (a,b) -&gt; a.compareToIgnoreCase(b) );</pre>
 
 <np>In fact, since the lambda expression is just calling a method that already
 exists in the <classname>String</classname> class, it could actually be

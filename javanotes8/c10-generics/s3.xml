@@ -311,7 +311,7 @@ for example, that <code>phoneBook</code> is a map of type
 are names and the values are phone numbers. We can print out all the entries
 from <code>blackBook</code> where the name begins with "M" as follows:</p>
 
-<pre>Map&lt;String,String&gt; ems = phonekBook.subMap("M","N");
+<pre>Map&lt;String,String&gt; ems = phoneBook.subMap("M","N");
      // This submap contains entries for which the key is greater
      // than or equal to "M" and strictly less than "N".
      

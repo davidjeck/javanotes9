@@ -148,7 +148,7 @@ but that difference is not relevant to this exercise.)</p>
 
 <p>For this exercise, you should write a program that can be used as a "set
 calculator" for simple operations on sets of non-negative integers. (Negative
-integers are not allowed.) A set of such integers will be represented as a list
+integers are not allowed.) For input and output, a set of such integers will be written as a list
 of integers, separated by commas and, optionally, spaces and enclosed in square
 brackets. For example: <code>[1,2,3]</code> or
 <code>[17,&nbsp;42,&nbsp;9,&nbsp;53,&nbsp;108]</code>. The characters <code>+</code>,
@@ -170,7 +170,7 @@ to perform the requested operation on the two sets. Your program should be able
 to read and process any number of lines of input. If a line contains a syntax
 error, your program should not crash. It should report the error and move on to
 the next line of input. (Note: To print out a <classname>Set</classname>, <code>A</code>, of
-<classname>Integers</classname>, you can just say <code>System.out.println(A)</code>. I've chosen
+<classname>Integers</classname>, you can just say <code>System.out.print(A)</code>. I've chosen
 the syntax for sets to be the same as that used by the system for outputting a
 set.)</p>
 </exercise-question>
@@ -410,7 +410,7 @@ that can be used for computing a hash code for the object,
 so at least you don't have to define your own hash function. 
 Do not use <b>any</b> of Java's built-in generic types; create your own linked
 lists using nodes as covered in <localref href="recursion.2.2"/>.  However,
-you are <b>not</b> have to increase the size of the table when
+you are <b>not</b> required to increase the size of the table when
 it becomes too full.</p>
 <p>You should also write a short program to test your solution.</p>
 </exercise-question>
@@ -832,7 +832,8 @@ public class TestHashTable {
 
 <exercise>
 <exercise-question><p>A <newword>predicate</newword> is a boolean-valued function with one parameter.
-Java has the parameterized functional interface <atype>Predicate&lt;T&gt;</atype>
+Java has the parameterized functional interface <atype>Predicate&lt;T&gt;</atype>,
+from package <code>java.util.function</code>,
 to represent predicates.  The definition of <atype>Predicate&lt;T&gt;</atype> could be:</p>
 
 <pre>public interface Predicate&lt;T&gt; {
@@ -853,7 +854,7 @@ with the standard class <classname>Collections</classname> that provides various
 
 <pre>public static &lt;T&gt; void remove(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred)
    // Remove every object, obj, from coll for which pred.test(obj) 
-   // is true.  (This does the same thing as coll.removeIf(pref).)
+   // is true.  (This does the same thing as coll.removeIf(pred).)
    
 public static &lt;T&gt; void retain(Collection&lt;T&gt; coll, Predicate&lt;T&gt; pred)
    // Remove every object, obj, from coll for which
@@ -1153,7 +1154,7 @@ public class TestPredicates {
 Suppose that the class <classname>Score</classname> is defined as</p>
 
 <pre>class ScoreInfo {
-String firstName;
+    String firstName;
     String lastName;
     int score;
     Score( String lName, String fName, int s ) {
@@ -1734,8 +1735,7 @@ whether it's a variable or a standard function. Look up the word in the symbol
 table. If the associated object is non-null and is of type <classname>Double</classname>, then
 the word is a variable. If it is of type <classname>StandardFunction</classname>, then the
 word is a function. Remember that you can test the type of an object using the
-<code>instanceof</code> operator. For example: <code>if (obj instanceof
-Double)</code></p>
+<code>instanceof</code> operator. For example: <code>if (obj instanceof Double)</code>.</p>
 </exercise-question>
 <exercise-discuss><p>The changes that must be made to <sourceref href="SimpleInterpreter.java"/> 
 are remarkably small,

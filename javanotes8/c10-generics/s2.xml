@@ -119,7 +119,7 @@ more than once in the list, the index of the first occurrence is returned.</li>
 </ul>
 
 <p>These methods are defined both in class <classname>ArrayList&lt;T&gt;</classname> and in class
-<classname>LinkedList&lt;T&gt;</classname>, although some of them&mdash;<code>get</code>
+<classname>LinkedList&lt;T&gt;</classname>, although some of them&mdash;such as <code>get</code>
 and <code>set</code>&mdash;are only efficient for
 <classname>ArrayLists</classname>. The class <classname>LinkedList&lt;T&gt;</classname> adds a few additional
 methods, which are not defined for an <classname>ArrayList</classname>. If
@@ -454,7 +454,7 @@ particular order, and so do not need to implement the <classname>Comparable</cla
 a <classname>HashSet</classname> are to be considered the same.
 An <classname>Iterator</classname> for a <classname>HashSet</classname> will visit its
 elements in what seems to be a completely arbitrary order, and it's even possible
-for the order to change completely when a new element is added. 
+for the order to change when a new element is added. 
 Use a <classname>HashSet</classname> instead of a
 <classname>TreeSet</classname> when the elements it contains are not comparable, or when the
 order is not important, or when the small advantage in efficiency is important.</p>
@@ -541,7 +541,7 @@ In that case, the Comparator's <code>compare</code> method will be used to compa
 <classname>Date</classname> that implement <classname>Comparable</classname> can be used
 in a priority queue.  For example, a <classname>PriorityQueue&lt;String&gt;</classname> can be
 used to sort strings into lexicographic order: Just <i>add</i> all the strings to the
-priority queue, then <i>remove</i> them one-by-one.  Since items are removed from a queue
+priority queue, then <i>remove</i> them one-by-one.  Since items are removed from the queue
 in order of priority, they will be removed in lexicographic order.  Earlier, I showed how to
 use a <classname>TreeSet</classname> to sort and remove duplicates from a collection.
 A <classname>PriorityQueue</classname> can be used in a similar way to sort a collection
