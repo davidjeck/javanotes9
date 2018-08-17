@@ -78,7 +78,7 @@ lets you easily read lines of text from the file, and the buffering can make the
 more efficient.</np>
 
 <p>To use a <classname>Scanner</classname> to read from the file, you can construct the
-scanner in a similar way.  However, it is more common to construct it from an object
+scanner in a similar way.  However, it is more common to construct it more directly from an object
 of type <classname>File</classname> (to be covered <localref href="IO.2.2">below</localref>):</p>
 
 <pre>Scanner in;
@@ -155,7 +155,9 @@ throw an <classname>IOException</classname>, which must be handled; however,
 override this method so that it cannot throw such exceptions.)
 If you forget to close a file, the file will ordinarily be
 closed automatically when the program terminates or when the file object
-is garbage collected, but it is better not to depend on this.</p>
+is garbage collected, but it is better not to depend on this.  Note that
+calling <code>close()</code> should automatically call <code>flush()</code>
+before the file is closed. (I have seen that fail, but not recently.)</p>
 
 <p>As a complete example, here is a program that will read numbers from a file
 named <code>data.dat</code>, and will then write out the same numbers in reverse
@@ -173,13 +175,13 @@ import java.util.Scanner;
 /**
  * Reads numbers from a file named data.dat and writes them to a file
  * named result.dat in reverse order.  The input file should contain
- * exactly one real number per line.
+ * only real numbers.
  */
 public class ReverseFileWithScanner {
 
     public static void main(String[] args) {
 
-        Scanner data;     // Character input stream for reading data.
+        Scanner data;        // For reading the data.
         PrintWriter result;  // Character output stream for writing data.
 
         ArrayList&lt;Double> numbers;  // An ArrayList for holding the data.
@@ -307,7 +309,7 @@ It refers to a file named data.dat in a directory
 named examples, which is in turn in a directory named java,&nbsp;&dots;.</li>
 <li><code>C:\eck\java\examples\data.dat</code> &mdash; An absolute path name on a 
 Windows computer.</li>
-<li><code>examples/data.dat</code> &mdash; a relative path name under UNIX. "examples"
+<li><code>examples/data.dat</code> &mdash; a relative path name under UNIX; "examples"
 is the name of a directory that is contained within the current directory, and
 data.dat is a file in that directory. The corresponding relative path name
 for Windows would be <code>examples\data.dat</code>.</li>
@@ -327,9 +329,7 @@ path names altogether.</np>
    
 <p>It is possible for a Java program to find out the absolute path names
 for two important directories, the current directory and the user's home
-directory.  You can then use the path name, for example, in a constructor for 
-a <classname>File</classname> or a <classname>PrintWriter</classname>.
-The names of these directories are <newword>system properties</newword>,
+directory. The names of these directories are <newword>system properties</newword>,
 and they can be read using the function calls:
 </p>
    
@@ -494,10 +494,10 @@ file dialog box on the screen.  The parameter specifies the owner of the
 dialog box.  This method does not return until the user has selected a
 file or canceled the dialog without selecting a file.  The method returns
 a value of type <classname>File</classname>.  The return value is
-<code>null</code> if the user canceled the file.  Otherwise, it returns
+<code>null</code> if the user canceled the dialog box.  Otherwise, it returns
 a <classname>File</classname> object representing the selected file.</li>
 <li><codedef>fileDialog.showSaveDialog(window)</codedef> &mdash; shows a
-save file dialog box, with owner equal to <code>parent</code>.  The 
+save file dialog box, with owner equal to <code>window</code>.  The 
 parameter and return value are the same as for <code>showOpenDialog()</code>.
 If the user selects a file that already exists, the system will automatically
 ask whether the user wants to replace that file.  So, you can safely go
@@ -524,7 +524,7 @@ user selects a file for saving or opening, it can be a good idea to store the
 selected <classname>File</classname> object in an instance variable.  Later, 
 that file can be used to initialize the directory and possibly the file name
 the next time a file dialog box is created.  If <code>editFile</code> is
-the instance variable that recoreds the selected file, and if it is 
+the instance variable that records the selected file, and if it is 
 non-null, then <code>editFile.getName()</code> is a <classname>String</classname>
 giving the name of the file, and <code>editFile.getParent()</code> is
 a <classname>File</classname> representing the directory that contains the
@@ -550,55 +550,55 @@ In this example, the data is written in text form, using a
 <classname>PrintWriter</classname>:</p>
 
 <pre>private void doSave() {
-	FileChooser fileDialog = new FileChooser(); 
-	if (editFile == null) {
-		   // No file is being edited.  Set file name to "filename.txt"
-		   // and set the directory to the user's home directory.
-		fileDialog.setInitialFileName("filename.txt");
-		fileDialog.setInitialDirectory( 
-		        new File( System.getProperty("user.home")) );
-	}
-	else {
-		   // Get the file name and directory for the dialog from
-		   //       the file that is currently being edited.
-		fileDialog.setInitialFileName(editFile.getName());
-		fileDialog.setInitialDirectory(editFile.getParentFile());
-	}
-	fileDialog.setTitle("Select File to be Saved");
-	File selectedFile = fileDialog.showSaveDialog(mainWindow);
-	if ( selectedFile == null )
-		return;  // User did not select a file.
-	// Note: User has selected a file AND, if the file exists, has
-	//    confirmed that it is OK to erase the exiting file.
-	PrintWriter out; 
-	try {
-		FileWriter stream = new FileWriter(selectedFile); 
-		out = new PrintWriter( stream );
-	}
-	catch (Exception e) {
-		   // Most likely, user doesn't have permission to read the file.
-		Alert errorAlert = new Alert(Alert.AlertType.ERROR,
-				"Sorry, but an error occurred while\n" +
-				trying to open the file for output.");
-		errorAlert.showAndWait();
-		return;
-	}
-	try {
-	       .
-	       .   // WRITE TEXT TO THE FILE, using the PrintWriter
-	       .
-		out.flush(); // (not needed?; it's probably done by out.close();
-		out.close();
-		if (out.checkError())   // (need to check for errors in PrintWriter)
-			throw new IOException("Error check failed.");
-		editFile = selectedFile;
-	}
-	catch (Exception e) {
-		Alert errorAlert = new Alert(Alert.AlertType.ERROR,
-				"Sorry, but an error occurred while\n" +
-				"trying to write data to the file.");
-		errorAlert.showAndWait();
-	}	
+    FileChooser fileDialog = new FileChooser(); 
+    if (editFile == null) {
+           // No file is being edited.  Set file name to "filename.txt"
+           // and set the directory to the user's home directory.
+        fileDialog.setInitialFileName("filename.txt");
+        fileDialog.setInitialDirectory( 
+                new File( System.getProperty("user.home")) );
+    }
+    else {
+           // Get the file name and directory for the dialog from
+           //       the file that is currently being edited.
+        fileDialog.setInitialFileName(editFile.getName());
+        fileDialog.setInitialDirectory(editFile.getParentFile());
+    }
+    fileDialog.setTitle("Select File to be Saved");
+    File selectedFile = fileDialog.showSaveDialog(mainWindow);
+    if ( selectedFile == null )
+        return;  // User did not select a file.
+    // Note: User has selected a file AND, if the file exists, has
+    //    confirmed that it is OK to erase the exiting file.
+    PrintWriter out; 
+    try {
+        FileWriter stream = new FileWriter(selectedFile); 
+        out = new PrintWriter( stream );
+    }
+    catch (Exception e) {
+           // Most likely, user doesn't have permission to read the file.
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR,
+                "Sorry, but an error occurred while\n" +
+                trying to open the file for output.");
+        errorAlert.showAndWait();
+        return;
+    }
+    try {
+           .
+           .   // WRITE TEXT TO THE FILE, using the PrintWriter
+           .
+        out.flush(); // (not needed?; it's probably done by out.close();
+        out.close();
+        if (out.checkError())   // (need to check for errors in PrintWriter)
+            throw new IOException("Error check failed.");
+        editFile = selectedFile;
+    }
+    catch (Exception e) {
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR,
+                "Sorry, but an error occurred while\n" +
+                "trying to write data to the file.");
+        errorAlert.showAndWait();
+    }    
 }</pre>
 
 <np>This general outline can easily be adapted to non-text files by using 

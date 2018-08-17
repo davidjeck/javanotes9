@@ -373,8 +373,6 @@ public class Checkers extends Application {
 		 */
 		public void drawBoard() {
 			
-			/* Turn on antialiasing to get nicer ovals. */
-			
 			GraphicsContext g = getGraphicsContext2D();
 			g.setFont( Font.font(18) );
 

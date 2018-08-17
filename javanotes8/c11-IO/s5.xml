@@ -149,7 +149,7 @@ XML documents to represent data structures used in Java programs.</p>
 <subsection id="IO.5.2" title="Working With the DOM">
   
 <p>The sample XML file shown above was designed to store information
-about simple drawings made by the user.  The drawings are ones that
+about simple drawings made by the user.  The drawings in question are ones that
 could be made using the sample program <sourceref chapter="7" href="SimplePaint2.java"/> 
 from <localref href="arrays.3.3"/>.
 We'll look at another version of that program that can save
@@ -280,7 +280,7 @@ return value is always a <classname>String</classname>, even if the attribute
 is supposed to represent a numerical value.  If the element has no attribute with
 the specified name, then the return value is an empty string.</li>
 <li><codedef>element.getTextContent()</codedef> &mdash; returns a <classname>String</classname>
-containing all the textual content that is contained in the element.  Note that this
+containing all of the textual content that is contained in the element.  Note that this
 includes text that is contained inside other elements that are nested inside the element.</li>
 <li><codedef>element.getChildNodes()</codedef> &mdash; returns a value of type
 <classname>NodeList</classname> that contains all the <classname>Nodes</classname> that

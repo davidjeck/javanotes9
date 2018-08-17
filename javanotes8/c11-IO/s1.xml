@@ -81,14 +81,14 @@ as self-evident as possible.  We'll look at one way this is done in <localref hr
 streams, and that for ASCII-encoded character data, byte streams are largely
 interchangeable with character streams. In fact, the standard input and output
 streams, <code>System.in</code> and <code>System.out</code>, are byte streams rather
-than character streams. However, you should use
+than character streams. However, you should prefer
 <classname>Readers</classname> and <classname>Writers</classname> rather than 
 <classname>InputStreams</classname> and
 <classname>OutputStreams</classname> when working with character data,
 even when working with the standard ASCII character set.
 </p>
 
-<p>The standard stream classes discussed in this section are defined in the
+<p>The standard I/O stream classes discussed in this section are defined in the
 package <code>java.io</code>, along with several supporting classes. You must
 <code>import</code> the classes from this package if you want to use them in your
 program. That means either importing individual classes or
@@ -244,8 +244,8 @@ exceptions. On the other hand, to write a fully robust program, you should call
 <p>When you use a <classname>PrintWriter</classname> to output data to a stream, the
 data is converted into the sequence of characters that represents the data in
 human-readable form. Suppose you want to output the data in byte-oriented,
-machine-formatted form? The <code>java.io</code> package includes a byte-stream
-class, <classname>DataOutputStream</classname> that can be used for writing data values to
+machine-formatted form. The <code>java.io</code> package includes a byte-stream
+class, <classname>DataOutputStream</classname>, that can be used for writing data values to
 streams in internal, binary-number format. <classname>DataOutputStream</classname> bears the
 same relationship to <classname>OutputStream</classname> that <classname>PrintWriter</classname> bears to
 <classname>Writer</classname>. That is, whereas <classname>OutputStream</classname> only has methods for
@@ -279,7 +279,7 @@ Java's platform independence.</p>
 like all data, are ultimately represented as binary numbers.  However, for character data,
 it is convenient to use <classname>Reader</classname> and <classname>Writer</classname>
 instead of <classname>InputStream</classname> and <classname>OutputStream</classname>.
-To make this possible, you can <b>wrap</b> a byte stream in a character stream.
+To make this possible, you can wrap a byte stream in a character stream.
 If <code>byteSource</code> is a variable of type <classname>InputStream</classname>
 and <code>byteSink</code> is of type <classname>OutputStream</classname>, then
 the statements</p>
@@ -338,7 +338,7 @@ is reasonably symmetrical with the character output capabilities of
 introduced briefly in <localref href="basics.4.6"/> and covered
 in more detail <localref href="IO.1.5">below</localref>, comes pretty close,
 but <classname>Scanner</classname> is not a subclass of any I/O stream class,
-which means that it doesnt' fit neatly into the I/O stream framework.
+which means that it doesn't fit neatly into the I/O stream framework.
 There is one basic case that is easily
 handled by the standard class <classname>BufferedReader</classname>, which
 has a method</p>
@@ -361,7 +361,7 @@ which returns a value of type <atype>Stream&lt;String&gt;</atype> that can be us
 the stream API (<localref href="generics.6"/>).  A convenient way to process all the lines
 from a <classname>BufferedReader</classname>, <code>reader</code> is
 to use the <code>forEach()</code> operator on the stream of lines:
-<code>reader.forEach(action)</code>, where <code>action</code> is a consumer of
+<code>reader.lines().forEachOrdered(action)</code>, where <code>action</code> is a consumer of
 strings, usually given as a lambda expression.</p>
    
 <p>Line-by-line processing is very common.  Any <classname>Reader</classname>
@@ -479,7 +479,7 @@ type <ptype>int</ptype>, <ptype>double</ptype>, and so on.  There are methods fo
 values of any of the primitive types.
 </li>
 <li><codedef>scanner.nextLine()</codedef> &mdash; reads an entire line from the input
-source, up to the next end-of-line and returns the line as a value of type <classname>String</classname>.
+source, up to the next end-of-line, and returns the line as a value of type <classname>String</classname>.
 The end-of-line marker is read but is not part of the return value.   Note that this
 method is <b>not</b> based on tokens.  An entire line is read and returned, including
 any whitespace characters in the line.  The return value can be the empty string.

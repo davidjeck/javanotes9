@@ -1162,7 +1162,7 @@ if (currentPlayer == CheckersData.RED)
    message.setText("Game loaded -- it's RED's move.");
 else
    message.setText("Game loaded -- it's BLACK's move.");
-repaint();</pre>
+drawBoard();</pre>
 </exercise-question>
 <exercise-discuss><p>Many different formats could be used to represent the data
 for a checkers game in text form.  In the program, the board data is an 8-by-8
@@ -1851,8 +1851,6 @@ public class CheckersWithFiles extends Application {
          * checkers.  If a game is in progress, highlight the legal moves.
          */
         public void drawBoard() {
-            
-            /* Turn on antialiasing to get nicer ovals. */
             
             GraphicsContext g = getGraphicsContext2D();
             g.setFont( Font.font(18) );

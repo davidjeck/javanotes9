@@ -17,7 +17,7 @@ be a problem. But the fundamentals are the same as for other forms of I/O.</p>
 <p>One of the standard Java packages is called <code>java.net</code>. This package
 includes several classes that can be used for networking. Two different styles
 of network I/O are supported. One of these, which is fairly high-level, is
-based on the World-Wide Web, and provides the sort of network communication
+based on the World Wide Web, and provides the sort of network communication
 capability that is used by a Web browser when it downloads pages for you to
 view. The main classes for this style of networking are <code>java.net.URL</code>
 and <code>java.net.URLConnection</code>. An object of type <classname>URL</classname> is an
@@ -48,7 +48,7 @@ and shows how they relate to input and output streams.</p>
 
 <subsection id="IO.4.1" title="URLs and URLConnections">
 
-<p>The <classname>URL</classname> class is used to represent resources on the World-Wide Web.
+<p>The <classname>URL</classname> class is used to represent resources on the World Wide Web.
 Every resource has an address, which identifies it uniquely and contains enough
 information for a Web browser to find the resource on the network and retrieve
 it. The address is called a "url" or "universal resource locator."
@@ -138,11 +138,9 @@ program to decide what to do when an error occurs.</p>
      URLConnection connection = url.openConnection();
      InputStream urlData = connection.getInputStream();
 
-     /* Check that the content is some type of text.  Note: If 
-        getContentType() method were called before getting the input 
-        stream, it is possible for contentType to be null only because 
-        no connection can be made.  The getInputStream() method will 
-        throw an error if no connection can be made. */
+     /* Check that the content is some type of text.  Note: 
+        connection.getContentType() method should be called 
+        after getInputStream(). */
 
      String contentType = connection.getContentType();
      System.out.println("Stream opened with content type: " + contentType);
@@ -176,7 +174,7 @@ a resource on the web, with "file://" for a URL that refers to a file on
 your computer, or with "ftp://" for a URL that uses the "File Transfer Protocol."
 If it does not start with any of these, then "http://" is added to the start
 of the URL.  Try the program with URL <code>math.hws.edu/javanotes</code> to 
-fetch the front page of this textbook on the web.  Try it with some bad inputs
+fetch the front page of this textbook from its website.  Try it with some bad inputs
 to see the various errors that can occur.</np>
    
 </subsection>
@@ -224,7 +222,7 @@ service, and the client gets access to that service by connecting to the
 server. This is called the <newword>client/server model</newword> of
 network communication. In many actual applications, a server program can
 provide connections to several clients at the same time. When a client connects
-to a server's listening socket in server of that type, that socket does not stop listening. Instead,
+to the listening socket in a server of that type, that socket does not stop listening. Instead,
 it continues listening for additional client connections at the same time that
 the first client is being serviced. To do that, it is necessary to use
 threads. We'll look at how it works in the <localref href="threads">next chapter</localref>.</p>
@@ -524,6 +522,8 @@ and the IP number <code>127.0.0.1</code> as referring to "this
 computer." This means that the command "<code>java DateClient localhost</code>" will tell
 the <classname>DateClient</classname> program to connect to a server running on the same
 computer.  If that command doesn't work, try "<code>java DateClient 127.0.0.1</code>".</p>
+
+<break/>
 
 <p>The server program that corresponds to the <classname>DateClient</classname> client
 program is called <classname>DateServer</classname>. The <classname>DateServer</classname> program creates a
@@ -856,7 +856,7 @@ can use two command-line windows. In one, give the command "<code>java CLChatSer
 to start the server. Then, in the other, use the command "<code>java CLChatClient
 localhost</code>" to connect to the server that is running on the same machine.
 If the server is not listening on the default port, you can add the port number
-as a second command line option to the program.  If you don not specify the
+as a second command line option to the program.  If you do not specify the
 connection information on the command line, you will will be asked to enter it.</p>
    
 

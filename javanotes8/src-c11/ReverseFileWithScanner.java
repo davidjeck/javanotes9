@@ -5,13 +5,13 @@ import java.util.Scanner;
 /**
  * Reads numbers from a file named data.dat and writes them to a file
  * named result.dat in reverse order.  The input file should contain
- * exactly one real number per line.
+ * only real numbers.
  */
 public class ReverseFileWithScanner {
 
 	public static void main(String[] args) {
 
-		Scanner data;     // Character input stream for reading data.
+		Scanner data;        // For reading the data.
 		PrintWriter result;  // Character output stream for writing data.
 
 		ArrayList<Double> numbers;  // An ArrayList for holding the data.

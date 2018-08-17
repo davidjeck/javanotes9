@@ -62,11 +62,9 @@ public class FetchURL {
 		URLConnection connection = url.openConnection();
 		InputStream urlData = connection.getInputStream();
 
-		/* Check that the content is some type of text.  Note: If 
-		   getContentType() method were called before getting the input 
-		   stream, it is possible for contentType to be null only because 
-		   no connection can be made.  The getInputStream() method will 
-		   throw an error if no connection can be made. */
+		/* Check that the content is some type of text.  Note: 
+		   connection.getContentType() should be called after
+		   connction.getInputStream(). */
 
 		String contentType = connection.getContentType();
 		System.out.println("Stream opened with content type: " + contentType);

@@ -188,9 +188,8 @@ be improved by using alternative versions of the <code>read()</code> and
 <code>write()</code> methods that read and write multiple bytes (see the
 API for details).  Alternatively, the input and output streams could
 be wrapped in objects of type <classname>BufferedInputStream</classname>
-and <classname>BufferedOutputStream</classname>which automatically read
-from and write data to files in larger blocks, which is more efficient
-than reading and writing individual bytes.  This would require changing only
+and <classname>BufferedOutputStream</classname> which automatically read
+data from and write data to files in larger blocks.  This would require changing only
 the two lines in the program that create the streams.  For example, the
 input stream could be created using</np>
 
@@ -199,10 +198,10 @@ input stream could be created using</np>
 <np>The buffered stream would then be used in exactly the same way as the
 unbuffered stream.</np>
 
-<p>(There is also a sample program <sourceref href="CopyFileAsResources.java"/> that
+<p>There is also a sample program <sourceref href="CopyFileAsResources.java"/> that
 does the same thing as <code>CopyFile</code> but uses the resource pattern in a 
 <code>try..catch</code> statement to make sure that the streams are closed in
-all cases.  See the discussion at the end of <localref href="robustness.3.2"/>))</p>
+all cases.  See the discussion at the end of <localref href="robustness.3.2"/>)</p>
 
 </subsection>
    
@@ -228,13 +227,13 @@ that are made should be preserved after the program ends.</p>
 <p>The sample program <sourceref href="PhoneDirectoryFileDemo.java"/> is
 a very simple implementation of this idea.  It is meant only as an
 example of file use; the phone book that it implements is a "toy" version
-that is not meant to be taken seriously.  This program stores the phone
+that is <b>not</b> meant to be taken seriously.  This program stores the phone
 book data in a file named "<code>.phone_book_demo</code>" in the user's
 home directory.  To find the user's home directory, it uses the
 <code>System.getProperty()</code> method that was mentioned in
 <localref href="IO.2.2"/>.  When the program starts, it checks whether
 the file already exists.  If it does, it should contain the user's
-phone book, which was saved in a previous run of the program, so
+phone book, which was saved in a previous run of the program; in that case,
 the data from the file is read and entered into a <classname>TreeMap</classname>
 named <code>phoneBook</code>
 that represents the phone book while the program is running.
@@ -338,7 +337,7 @@ exactly restored when the file is read by the program.</p>
 file <sourceref href="SimplePaintWithFiles.java"/>.  A "File" menu
 has been added to the new version.  It implements "Save" and
 "Open" commands for writing program data to a file and reading
-saved data back into the program</p>
+saved data back into the program.</p>
    
 <p>The data for a sketch consists of the background color of the picture
 and a list of the curves that were drawn by the user.  A curve consists of
@@ -393,9 +392,9 @@ for ( CurveData curve : curves ) {  // For each curve, write...
    out.println( curve.color.getBlue() );
    out.println( curve.symmetric ? 0 : 1 );   // the curve's symmetry property
    out.println( curve.points.size() );       // the number of points on curve
-   for ( Point2D pt : curve.points ) {         // the coordinates of each point
-      out.println( pt.x );
-      out.println( pt.y );
+   for ( Point2D pt : curve.points ) {       // the coordinates of each point
+      out.println( pt.getX() );
+      out.println( pt.getY() );
    }
 }</pre>
    
@@ -424,8 +423,8 @@ for (int i = 0; i &lt; curveCount; i++) {
    curveData.points = new ArrayList&lt;&gt;();
    int pointCount = scanner.nextInt();  // The number of points on this curve.
    for (int j = 0; j &lt; pointCount; j++) {
-      int x = scanner.nextInt();        // Read the coordinates of the point.
-      int y = scanner.nextInt();
+      int x = scanner.nextDouble();        // Read the coordinates of the point.
+      int y = scanner.nextDouble();
       curveData.points.add(new Point2D(x,y));
    }
    newCurves.add(curve);
@@ -479,7 +478,7 @@ program can explain to the user that a newer version of the program is
 needed to read the data file.</p>
    
 <p>The second line of the file specifies the background color of the
-picture.  The three integers specify the red, green, and blue components
+picture.  The three numbers specify the red, green, and blue components
 of the color.  The word "background" at the beginning of the line makes
 the meaning clear.  The remainder of the file consists of data for the
 curves that appear in the picture.  The data for each curve is clearly
@@ -490,9 +489,8 @@ can easily be created or edited by hand.  In fact, the data file shown
 above was actually created in a text editor rather than by the program.
 Furthermore, it's easy to extend the format to allow for additional options.
 Future versions of the program could add a "thickness" property to the
-curves to make it possible to have curves that are more than one
-pixel wide.  Shapes such as rectangles and ovals could easily be
-added.</p>
+curves to make it possible to have curves with differing line widths.
+Shapes such as rectangles and ovals could easily be added.</p>
    
 <p>Outputting data in this format is easy.  Suppose that <code>out</code>
 is a <classname>PrintWriter</classname> that is being used to write
@@ -578,7 +576,7 @@ that reads data files created by the <code>doSave()</code> method.  It uses a
                         double r = scanner.nextDouble();
                         double g = scanner.nextDouble();
                         double b = scanner.nextDouble();
-                        curve.color =Color.color(r,g,b);
+                        curve.color = Color.color(r,g,b);
                     }
                     else if (itemName.equalsIgnoreCase("symmetry")) {
                         curve.symmetric = scanner.nextBoolean();
@@ -628,7 +626,7 @@ representation problem that has become increasingly common.</p>
 <code>SimplePaintWithFiles</code> can also save the
 picture itself as an image file that could be, for example, printed
 or put on a web page.  This is a preview of image-handling techniques
-that will be covered in <localref href="GUI2"/>, and it uses
+that will be covered in <localref href="GUI2.2.6"/>, and it uses
 techniques that I have not yet covered.</p>
 
 </subsection>
