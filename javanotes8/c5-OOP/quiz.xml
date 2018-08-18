@@ -304,4 +304,16 @@ System.out.println(("There were " + <newcode>tailCount.getValue()</newcode> + " 
 </ans>
 </question>
 
+<question>
+<ques><p>Explain why it can <b>never</b> make sense to test "<code>if (obj.equals(null))</code>".</p>
+</ques>
+<ans><p>If the value of <code>obj</code> is <b>not</b> null, then the test correctly returns
+<code>false</code>.  However, if the value of <code>obj</code> <b>is</b> null, then
+there is no such thing as <code>obj.equals</code>, and the attempt to evaluate
+<code>obj.equals(null)</code> will cause a <classname>NullPointerException</classname>
+that will crash the program!  The correct way to test if the value of <code>obj</code>
+is null is "<code>if&nbsp;(obj&nbsp;==&nbsp;null)</code>".</p>
+</ans>
+</question>
+
 </quiz>

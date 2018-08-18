@@ -56,7 +56,7 @@ for example, you can use the following command in Mac OS or Linux:</p>
 
 <pre>javac netgame/common/*.java</pre>
 
-<np>For windows, you should use backslashes instead of forward slashes:</np>
+<np>For Windows, you should use backslashes instead of forward slashes:</np>
 
 <pre>javac netgame\common\*.java</pre>
 
@@ -83,7 +83,7 @@ goes through the server; a client cannot send messages directly to another
 client.  In this section, I will refer to the server as a <newword>hub</newword>,
 in the sense of "communications hub":</p>
 
-<img src="hub-and-clients.png" width="385" height="251" tex="hub-and-clients.eps" texscale="0.6"
+<img src="hub-and-clients.png" width="385" height="251" tex="hub-and-clients.eps" texscale="0.7"
       alt="a central hub communicating with several clients"/>
       
 <p>The main things that you need to understand are that:  The hub must be running
@@ -219,7 +219,7 @@ that has to be done if an object is written to the stream, modified, and then
 written to the stream again.  If the stream is not reset before writing the
 modified object, then the old, unmodified value is sent to the stream instead of the new value.
 See <localref href="IO.1.6"/> for a discussion of this technicality.  The preferred solution
-is to use only immutable objects for communication.)</li>
+is to use only immutable objects for communication; in that case, no resetting is necessary.)</li>
 </ul>
 
 <np>For more information&mdash;and to see how all this is implemented&mdash;you
@@ -377,7 +377,7 @@ of the client class for the chat room application:</p>
 private class ChatClient extends Client {
 
     /**
-     * Opens a connection the chat room server on a specified computer.
+     * Opens a connection to the chat room server on a specified computer.
      */
     ChatClient(String host) throws IOException {
         super(host, PORT);
@@ -404,10 +404,10 @@ private class ChatClient extends Client {
     protected void connectionClosedByError(String message) {
         addToTranscript(
            "Sorry, communication has shut down due to an error:\n     " 
-           + message );
+                                     + message );
         Platform.runLater( () -> {
             sendButton.setDisable(true);
-            messageInput.setDisable(true);
+            messageInput.setEditable(false);
             messageInput.setDisable(true);
             messageInput.setText("");
         });
@@ -490,7 +490,7 @@ just to send the entire state as the message in this case.)
 </p>
 
 <p>Networked TicTacToe is defined in several classes in the
-package <sourceref href="netgame/tictactoe/">netgame.tictactoe</sourceref>.
+package <sourceref href="netgame/tictactoe/">netgame.tictactoe</sourceref>. The class
 <sourceref href="netgame/tictactoe/TicTacToeGameState.java">TicTacToeGameState</sourceref>
 represents the state of a game.  It includes a method
 </p>
@@ -647,7 +647,7 @@ game of five card draw poker.
 
 <p>In general outline, the Poker game is similar to the TicTacToe game.
 There is a <sourceref href="netgame/fivecarddraw/Main.java">Main</sourceref>
-class that is one by both players. The first player starts a new game; the second
+class that is run by both players. The first player starts a new game; the second
 must join that existing game.  There is a class 
 <sourceref href="netgame/fivecarddraw/PokerGameState.java">PokerGameState</sourceref>
 to represent the state of a game.  And there is a subclass,
@@ -669,7 +669,7 @@ game from the point of view of one player only.  When the state of the game
 changes, the <classname>PokerHub</classname> creates two different
 <classname>PokerGameState</classname> objects, representing the state of the
 game from each player's point of view, and it sends the appropriate game state
-objects to each player.  You can see the <sourceref href="netgame/fivecarddraw/">source&nbsp;code</sourceref>
+object to each player.  You can see the <sourceref href="netgame/fivecarddraw/">source&nbsp;code</sourceref>
 for details.</p>
 
 <p>(One of the hard parts in poker is to implement some way to compare

@@ -143,7 +143,7 @@ be useful in parallel programming are defined in the package <code>java.util.con
 It is a parameterized class so that to create a queue that can hold objects
 of type <classname>Runnable</classname>, you can say</p>
 
-<pre>ConcurrentLinkedQueue&lt;Runnable&gt; queue = new ConcurrentLinkedQueue&lt;Runnable&gt;();</pre>
+<pre>ConcurrentLinkedQueue&lt;Runnable&gt; queue = new ConcurrentLinkedQueue&lt;&gt;();</pre>
 
 <np>This class represents a queue, implemented as a linked list, in which operations
 on the queue are properly synchronized.  The operations on a <classname>ConcurrentLinkedQueue</classname>
@@ -173,11 +173,11 @@ method returns <code>null</code>, the queue is empty and the thread can terminat
 all the tasks have been assigned to threads.</p>
 
 <p>The sample program <sourceref href="MultiprocessingDemo2.java"/> implements this idea.
-It uses a queue <code>taskQueue</code> of type <classname>ConcurrentLinkedQueue&lt;Runnable&gt;</classname>
+It uses a queue, <code>taskQueue</code>, of type <classname>ConcurrentLinkedQueue&lt;Runnable&gt;</classname>
 to hold the tasks.  In addition, in order to allow the user to abort the computation before it
 finishes, it uses the <code>volatile</code> <ptype>boolean</ptype> variable <code>running</code>
 to signal the thread when the user aborts the computation.  The thread should terminate
-when this variable is set to <code>false</code>, even when there are still tasks
+when this variable is set to <code>false</code>, even if there are still tasks
 remaining in the queue.  The threads are defined by a nested
 class named <classname>WorkerThread</classname>.  It is quite short and simple to write:</p>
 
@@ -336,7 +336,7 @@ is specified when it is constructed.  For example, to create a blocking
 queue that can hold up to 25  objects of type <classname>ItemType</classname>,
 you could say:</p>
 
-<pre>ArrayBlockingQueue&lt;ItemType&gt; bqueue = new ArrayBlockingQueue&lt;ItemType&gt;(25);</pre>
+<pre>ArrayBlockingQueue&lt;ItemType&gt; bqueue = new ArrayBlockingQueue&lt;&gt;(25);</pre>
 
 <np>With this declaration, <code>bqueue.put(item)</code> will block if <code>bqueue</code>
 already contains 25 items, while <code>bqueue.add(item)</code> will throw an exception
@@ -344,7 +344,7 @@ in that case.  Recall that this ensures that items are not produced indefinitely
 at a rate faster than they can be consumed.  A <classname>LinkedBlockingQueue</classname>
 is meant for creating blocking queues with unlimited capacity.  For example,</np>
 
-<pre>LinkedBlockingQueue&lt;ItemType&gt; bqueue = new LinkedBlockingQueue&lt;ItemType&gt;();</pre>
+<pre>LinkedBlockingQueue&lt;ItemType&gt; bqueue = new LinkedBlockingQueue&lt;&gt;();</pre>
 
 <np>creates a queue with no upper limit on the number of items that it can contain.
 In this case, <code>bqueue.put(item)</code> will never block and <code>bqueue.add(item)</code>
@@ -523,7 +523,7 @@ particular, <code>Executors.newFixedThreadPool(n)</code>, where <code>n</code>
 is an <ptype>int</ptype>, creates a thread pool with <code>n</code> threads.
 To get a thread pool with one thread per available processor, you can say</p>
 
-<pre>int processors =  Runtime.getRuntime().availableProcessors();
+<pre>int processors = Runtime.getRuntime().availableProcessors();
 ExecutorService executor = Executors.newFixedThreadPool(processors);</pre>
 
 <np>The method <code>executor.execute(task)</code> can be used to
@@ -594,7 +594,7 @@ of primes in a certain range of integers.  (This is the same
 rather useless computation that was done by <sourceref href="ThreadTest2.java"/>
 it <localref href="threads.1.3"/>.)  In this program, a subtask
 counts the primes in a subrange of integers. The subtasks
-are represented by objects of type <atype>Callabel&lt;Integer&gt;</atype>,
+are represented by objects of type <atype>Callable&lt;Integer&gt;</atype>,
 defined by this nested class:</p>
 
 <pre>/**
@@ -673,7 +673,7 @@ when the result is ready, so that it can wake up and continue its computation.</
 <p>Java, of course, has a way to do this kind of "waiting" and "notifying":  It has
 <code>wait()</code> and <code>notify()</code> methods that are defined as
 instance methods in class <classname>Object</classname> and so can be used
-with any object.  These methods can used internally in blocking queues.
+with any object.  These methods can be used internally in blocking queues.
 They are fairly low-level, tricky, and error-prone, and you should use
 higher-level control strategies such as blocking queues when possible.
 However, it's nice to know about <code>wait()</code> and <code>notify()</code>
@@ -927,27 +927,27 @@ changes the value of <code>status</code> and calls <code>notify()</code>
 to wake up the solution thread:</p>
 
 <pre>synchronized private void doStopGo() {
-	if (status == GO) {  // Animation is running.  Pause it.
-		status = PAUSE;
-		nextStepButton.setDisable(false);
-		runPauseButton.setText("Run");
-	}
-	else {  // Animation is paused.  Start it running.
-		status = GO;
-		nextStepButton.setDisable(true);  // Disabled when animation is running
-		runPauseButton.setText("Pause");
-	}
-	notify();  // Wake up the thread so it can see the new status value!
+    if (status == GO) {  // Animation is running.  Pause it.
+        status = PAUSE;
+        nextStepButton.setDisable(false);
+        runPauseButton.setText("Run");
+    }
+    else {  // Animation is paused.  Start it running.
+        status = GO;
+        nextStepButton.setDisable(true);  // Disabled when animation is running
+        runPauseButton.setText("Pause");
+    }
+    notify();  // Wake up the thread so it can see the new status value!
 }
 
 synchronized private void doNextStep() {
-	status = STEP;
-	notify();
+    status = STEP;
+    notify();
 }
 
 synchronized private void doRestart() {
-	status = RESTART;
-	notify();
+    status = RESTART;
+    notify();
 }</pre>
 
 <np>These methods are synchronized to allow the calls to <code>notify()</code>.
@@ -984,7 +984,7 @@ an <classname>IllegalStateException</classname>:</p>
 <p>The <code>run()</code> method for the solution thread 
 sets up the initial state of the puzzle and then calls a 
 <code>solve()</code> method to solve the puzzle.  It runs
-in an infinite loop so that it can solve teh puzzle multiple
+in an infinite loop so that it can solve the puzzle multiple
 times.  To implement the wait/notify control strategy,
 <code>run()</code> calls <code>checkStatus()</code> before starting
 the solution, and <code>solve()</code> calls <code>checkStatus()</code>

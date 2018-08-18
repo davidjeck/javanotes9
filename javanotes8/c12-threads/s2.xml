@@ -15,8 +15,8 @@ to come as the chapter progresses.</p>
 <p>One of the most basic uses of threads is to perform some periodic
 task at set intervals.  In fact, this is so basic that there is
 are specialized classes for performing this task&mdash;and you've
-already worked with one of them.  The <classname>AnimationTimer</classname> class,
-in package <code>javafx.animation</code>, which were introduced in 
+already worked with one of them: the <classname>AnimationTimer</classname> class,
+in package <code>javafx.animation</code>, which was introduced in 
 <localref href="GUI1.3.5"/>.   An AnimationTimer calls its
 <code>handle()</code> method periodically, about 60 times per second.
 Before timers were introduced, threads had to be used to 
@@ -71,10 +71,10 @@ need to use a separate thread, you might be able to use <code>Platform.runLater(
 
 <p><code>Platform.runLater(r)</code> is a static method in class
 <classname>Platform</classname>, from package <code>javafx.application</code>.
-Teh parameter is an object of type <classname>Runnable</classname>, the same
+The parameter is an object of type <classname>Runnable</classname>, the same
 interface that is used when creating threads.  <code>Platform.runLater(r)</code>
 can be called from any thread.  Its purpose is to submit <code>r</code> to be
-run, on the JavaFX application thread.  <code>Platform.runLater(r)</code>
+run on the JavaFX application thread.  <code>Platform.runLater(r)</code>
 returns immediately, without waiting for <code>r</code> to be run;
 <code>r.run()</code> will be called by the application thread at some future time
 (which means with a fraction of a second, and perhaps almost immediately, unless the computer
@@ -83,11 +83,8 @@ order in which they are submitted.
 Since the <classname>Runnable</classname> is called on the application thread, 
 it can safely operate on the GUI, without synchronization.  It is often convenient to specify the
 parameter to <code>Platform.runLater()</code> as a lambda expression of
-type <classname>Runnable</classname>.</p>
-
-<p>I will use <code>Platform.runLater()</code> in several examples in this chapter.
-In then <localref href="GUI2">next&nbsp;chapter</localref>, we will see that
-JavaFX also has some higher-level features for working with threads.</p>
+type <classname>Runnable</classname>.
+I will use <code>Platform.runLater()</code> in several examples in this chapter and the next.</p>
 
 <p>As an example, the sample program <sourceref href="RandomArtWithThreads.java"/> uses a thread
 to drive a very simple animation.  In this example, the thread does nothing except to call 
@@ -119,7 +116,7 @@ The thread is defined by the following class:</p>
 <subsection id="threads.2.2" title="Recursion in a Thread">
 
 <p>One reason to use a separate thread to drive an animation is when the thread is running a
-recursive algorithm, and you want to repaint the display many times over the
+recursive algorithm, and you want to redraw the display many times over the
 course of the recursion.  (Recursion is covered in <localref href="recursion.1"/>.)
 It's difficult to break up a recursive algorithm into a series of method calls in a timer;
 it's much more natural to use a single recursive method call to do the recursion, and
@@ -139,7 +136,7 @@ even help you to understand QuickSort better, so you should try running it.)</p>
 the algorithm makes a change to the array.  The array is changed in the animation thread,
 but the corresponding change to the canvas has to be made in the JavaFX application thread,
 using <code>Platform.runLater()</code>, as discussed above.
-Whenever <code>Platform.runLater()</code> is called, the thread sleeps
+Each time it calls <code>Platform.runLater()</code>, the thread sleeps
 for 100 milliseconds to allow time for the application thread to run the <code>Runnable</code> 
 and for the user to see the change.  There is also a longer delay, one full second, just after the 
 array is randomized, before the sorting starts.  Since these delays occur at several

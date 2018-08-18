@@ -120,7 +120,7 @@ This means that all the work of the <code>run()</code> method will be done befor
 computer moves on to the statements that follow the call to <code>greetings.run()</code>.
 There is no parallelism and no indeterminacy.</p>
 
-<img src="threads-vs-subroutines.png" width="600" height="357" tex="threads-vs-subroutines.eps" texscale="0.6"/>
+<img src="threads-vs-subroutines.png" width="600" height="357" tex="threads-vs-subroutines.eps" texscale="0.7"/>
 
 <p>This discussion has assumed that the computer on which the program is running
 has more than one processing unit, so that it is possible for the original thread
@@ -417,7 +417,8 @@ where <classname>InterruptedExceptions</classname> are possible, you would have 
 <p>Another version of the <code>join()</code> method takes an integer parameter that
 specifies the maximum number of milliseconds to wait.  A call to <codedef>thrd.join(m)</codedef>
 will wait until either <code>thrd</code> has terminated or until <code>m</code> milliseconds
-have elapsed.  This can be used to allow a thread to wake up occasionally to perform some task
+have elapsed (or until the waiting thread is interrupted).
+This can be used to allow a thread to wake up occasionally to perform some task
 while it is waiting.  Here, for example, is a code segment that will
 start a thread, <code>thrd</code>, and then will
 output a period every two seconds as long as <code>thrd</code> continues to run:</p>
@@ -586,8 +587,8 @@ to the definition of the method:</p>
 any thread can call <code>tsc.increment()</code> to add 1 to the counter in a completely
 safe way.  The fact that <code>tsc.increment()</code> is <code>synchronized</code> means
 that only one thread can be in this method at a time; once a thread starts executing
-this method, it is guaranteed that it will finish executing it without having
-another thread change the value of <code>tsc.count</code> in the meantime.  There is
+this method, it is guaranteed that it will finish executing it before another
+thread is allowed to access <code>count</code>.  There is
 no possibility of a race condition.
 Note that the guarantee depends on the fact that <code>count</code> is a <code>private</code>
 variable.  This forces <b>all</b> access to <code>tsc.count</code> to occur in the

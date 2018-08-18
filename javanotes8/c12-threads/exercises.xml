@@ -19,7 +19,7 @@ your program:</p>
         return count;
     }
 }</pre>
-<np>Write a thread class that will call the <code>inc()</code> method in an
+<np>Write a thread class that will repeatedly call the <code>inc()</code> method in an
 object of type <classname>Counter</classname>.  The object should be a shared
 global variable. Create several threads, start them all, and wait for all
 the threads to terminate.  Print the final value of the counter, and see whether it
@@ -1645,7 +1645,7 @@ that does the computation should be started at the beginning of the program, but
 immediately go into the paused state until the "Run" button is pressed.  Use the
 <code>wait()</code> method in the thread to make it wait until "Run" is pressed.  Use
 the <code>notify()</code> method when the "Run" button is pressed to wake up the thread.
-Use a <ptype>boolean</ptype> signal variable <code>running</code> to control whether
+Use a <ptype>boolean</ptype> signal variable, <code>running</code>, to control whether
 the computation thread is paused. (The <code>wait()</code> and <code>notify()</code>
 methods are covered in <localref href="threads.3.4"/>.)</p>
 
@@ -1670,8 +1670,10 @@ of trials and updates the display labels:</p>
         inCircleCount++;                        
 }
 double estimateForPi = 4 * ((double)inCircleCount / trialCount);
-countLabel.setText(      " Number of Trials:   " + trialCount);
-piEstimateLabel.setText( " Current Estimate:   " + estimateForPi);</pre>
+Platform.runLater( () -> {
+    countLabel.setText(      " Number of Trials:   " + trialCount);
+    piEstimateLabel.setText( " Current Estimate:   " + estimateForPi);
+} );</pre>
 
 <np>The variables <code>trialCount</code> and <code>inCircleCount</code> are of
 type <ptype>long</ptype> in order to allow the number of trials to be more
@@ -2450,7 +2452,7 @@ the hub, you can override the <code>extraHandshake()</code> method both in
 the <classname>Hub</classname> subclass and in the <classname>Client</classname> subclass.
 The <code>extraHandshake()</code> method is called as part of setting up the connection
 between the client and the hub.  It is called after the client has been assigned
-an ID number but before the connection is considered to be fully connected.  It should
+an ID number but before the connection is considered to be fully established.  It should
 throw an <classname>IOException</classname> if some error occurs during the setup process.
 Note that any messages that are sent by the hub as part of the handshake
 must be read by the client and vice versa.

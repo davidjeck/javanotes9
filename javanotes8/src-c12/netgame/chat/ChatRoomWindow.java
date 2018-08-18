@@ -180,7 +180,7 @@ public class ChatRoomWindow extends Application {
 			addToTranscript("Sorry, communication has shut down due to an error:\n     " + message);
 			Platform.runLater( () -> {
 				sendButton.setDisable(true);
-				messageInput.setDisable(true);
+				messageInput.setEditable(false);
 				messageInput.setDisable(true);
 				messageInput.setText("");
 			});

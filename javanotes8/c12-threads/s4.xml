@@ -14,7 +14,7 @@ the arrival of a message is an <i>event</i> that is not under the
 control of the program that is receiving the message. Perhaps an
 event-oriented networking API would be a good approach to dealing
 with the asynchronous nature of network communication, but that is
-not the approach that is taken in Java (or, typically, in other languages).
+not the approach that is taken in Java.
 Instead, network programming in Java typically uses <b>threads</b>.</p>
 
 
@@ -45,8 +45,8 @@ the network.  (It's a little complicated:  a socket uses a
 the network.  A buffer is just a block of memory that is
 used like a queue.  The output method drops its data
 into the buffer; lower-level software removes data from
-the buffer and transmits it over the network.  The output
-method will block if the buffer fills up.  Note that when
+the buffer and transmits it over the network.  If the buffer fills up,
+the output method will block until space becomes available in the buffer.  Note that when
 the output method returns, it doesn't mean that the data
 has gone out over the network&mdash;it just means that the
 data has gone into the buffer and is scheduled for later
@@ -148,7 +148,7 @@ contains a large transcript area that displays both incoming and outgoing
 messages, along with other information about the network connection.</p>
 
 <p>I urge you to compile the source code, <sourceref href="GUIChat.java"/>, and
-try the program.  To try it on singal computer,
+try the program.  To try it on single computer,
 you can run two copies of the program on  that computer, and
 make a connection between one program window and the other program window,
 using "localhost" or "127.0.0.1" as the name of the computer. I also urge you to read the source code.
@@ -168,7 +168,7 @@ when it acts as a client.  The thread is created
 when the user clicks either the "Listen" button or the "Connect" button.  The "Listen" button
 makes the thread act as a server, while "Connect" makes it act as
 a client.  To distinguish these two cases, the <classname>ConnectionHandler</classname>
-class has two constructors. Note that the <code>postMessage()</code> method posts
+class has the two constructors that are shown below. Note that the <code>postMessage()</code> method posts
 a message to the transcript area of the window, where it will be visible
 to the user:</p>
    
@@ -406,7 +406,7 @@ public class DateServerWithThreads {
             listener = new ServerSocket(LISTENING_PORT);
             System.out.println("Listening on port " + LISTENING_PORT);
             while (true) {
-                // Accept next connection request and <newcode>create thread to</newcode> handle it.
+                // Accept next connection request and <newcode>create a thread to</newcode> handle it.
                 connection = listener.accept(); 
                 <newcode>ConnectionHandler handler = new ConnectionHandler(connection);
                 handler.start();</newcode>
@@ -650,7 +650,7 @@ This program uses <classname>CLMandelbrotTask</classname>,
 so both class files, <code>CLMandelbrotWorker.class</code> 
 and <code>CLMandelbrotTask.class</code>, must be present on the worker
 computers.  You can then run <code>CLMandelbrotMaster</code> on
-the master computer.  Note that this program also requires the
+the master computer.  Note that the master program also requires the
 class <classname>CLMandelbrotTask</classname>.
 You must specify the host name or IP address
 of each of the worker computers as command line arguments for
@@ -730,7 +730,7 @@ the problem has been solved.</p>
    
 <p>A worker receives
 not just one task, but a sequence of tasks.  Each time it finishes a task and
-sends back the result, it is assigned a new task.  After all tasks are complete,
+sends back the result, it is assigned a new task.  After all tasks are completed,
 the worker receives a "close" command that tells it to close the connection.
 In <sourceref href="CLMandelbrotWorker.java"/>, all this is done in 
 a method named <code>handleConnection()</code> that is called to handle
@@ -794,17 +794,16 @@ the master program is multi-threaded, with one thread to manage communication
 with each worker.  A pseudocode outline of the <code>main()</code> routine
 is quite simple:</p>
    
-<pre>create a list of all tasks that must be performed
+<pre>create the tasks that must be performed and add them to a queue
 if there are no command line arguments {
       // The master program does all the tasks itself.
-   Perform each task.
+   Remove each task from the queue and perform it.
 }
 else {
       // The tasks will be performed by worker programs.
    for each command line argument:
       Get information about a worker from command line argument.
-      Create and start a thread to communicate with the worker.
-      // The threads do all the work...
+      Create and start a thread to send tasks to workers.
    Wait for all threads to terminate.
 }
 // All tasks are now complete (assuming no error occurred).</pre>
