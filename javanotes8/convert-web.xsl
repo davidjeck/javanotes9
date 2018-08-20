@@ -17,9 +17,11 @@
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
         <h2 class="chapter_title">Version 8.0, Summer 2018</h2>
         <p style="text-align:center">(<b>Under Construction!</b><br/>
-                          Status: The entire textbook has been updated<br/>
-                          but Chapters 7 to 12 still need proofreading.<br/>
-                          Consider this a "beta" release.)</p>
+                          Status: The new version is essentially finished, but<br/>
+                          needs a little more testing.  Also, I would like to<br/>
+                          to know the status of JavaFX in Java 11 before the<br/>
+                          official release.  Web site and PDF downloads are<br/>
+                          available.  Consider this a final "beta" release.)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
@@ -38,10 +40,10 @@
          Earlier editions of the book are still available; 
          see the <a href="preface.html">preface</a> for links.
          </p>
- <!--
          <p>You can the download this
          web site for use on your own computer. 
-         PDF, <span style="white-space:pre">e-book</span>, and print versions of the textbook are also available.
+         PDF<!-- , <span style="white-space:pre">e-book</span>, and print-->
+         versions of the textbook are also available.
          The PDF that includes links might be the best way to read it on your computer.
          <b>Links to the downloads can be found at the bottom of this page.</b>
          </p>
@@ -49,6 +51,7 @@
          the book!  You can download the source code separately or as part of the web site using the links below.
          See <a href="README-running-the-examples.txt">README&#160;file</a>
          for information about how to compile and run the examples.</b></p>
+<!-- 
          <form method="post" action="http://math.hws.edu/cgi-bin/htsearch">
          <p><big><b>Search this Text:</b></big> Although this book does not have a
          conventional index, you can search it for terms that interest you. Note that
@@ -95,7 +98,7 @@
             charge, for downloading and for on-line use at the Web address:
             <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a></small></i>
           </blockquote>
- <!--       <hr/>
+        <hr/>
         <h3>Downloading And Other Links</h3>
         <ul>
         <li>
@@ -104,7 +107,7 @@
           <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8.zip</a></b> &#8212;
           This "zip" archive contains a complete copy of the web site.  It should be usable on almost
           any computer. 
-          Size:&#160;4.3&#160;Megabytes.
+          Size:&#160;5.6&#160;Megabytes.
           </li>
           </ul>
         </li>
@@ -114,12 +117,12 @@
           <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-example-programs.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8-example-programs.zip</a></b>  &#8212;
           A zip archive of the "source" directory from the web site, which includes source code for sample programs from the text.
           Note that if you download the complete web site, then you <b>already have</b> a copy of the same source directory.
-          See the <a href="README-running-the-examples.txt">README&#160;file</a>. Size: 773&#160;Kilobytes.
+          See the <a href="README-running-the-examples.txt">README&#160;file</a>. Size: 1.4&#160;Megabytes.
           </li>
           <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-exercise-solutions.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8-exercise-solutions.zip</a></b>  &#8212;
           A zip archive containing source code for all the end-of-chapter exercises.  These have been extracted from the
           web pages that contain the solutions as a convenience.  They are <b>not</b> included in the web site download.
-          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 322&#160;Kilobytes.
+          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 368&#160;Kilobytes.
           </li>
           </ul>
         </li>
@@ -131,17 +134,18 @@
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
-          Size:&#160;6.3&#160;Megabytes; 755 pages.
+          Size:&#160;6.6&#160;Megabytes; 749 pages.
           </li>
           <li>
           <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf">http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf</a></b> &#8212;
-          a PDF version without links, more suitable for printing.  This PDF is in the format that is used for the printed version of the text,
+          a PDF version without links, more suitable for printing.  <!-- This PDF is in the format that is used for the printed version of the text,
           except that it also includes an appendix listing example programs and a glossary (since they would have
-          exceeded the lulu.com page limit).
-          Size:&#160;5.9&#160;Megabytes; 762 pages.
+          exceeded the lulu.com page limit). -->
+          Size:&#160;6.1&#160;Megabytes; 757 pages.
           </li>
           </ul>
         </li>
+<!-- 
         <li>
            <b>E-book Downloads.</b> 
            <ul>
@@ -186,11 +190,11 @@
           audience.  See the end of the <a href="preface.html">preface</a> for more information and a link.</li>
           </ul>
         </li>
-        </ul>
 -->
+        </ul>
         </td></tr></table>
         <hr/>
-        <div align="right"><small><i>(Summer 2018, Version 8 under construction)
+        <div align="right"><small><i>(20 August 2018, Version 8 Beta Released)
                            </i></small></div>
         </div>
         </div></body>
@@ -273,7 +277,7 @@
         </xsl:if>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2014</small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2018</small></div>
      </div>
      </div></body>
      </html>
@@ -372,13 +376,13 @@
      </head>
      <body><div class="page">
      <div class="content">
-        <h3 align="center">Introduction to Programming Using Java, Seventh Edition</h3>
+        <h3 align="center">Introduction to Programming Using Java, Eighth Edition</h3>
         <h2 align="center">Source Code</h2>
         <hr class="break"/>
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2014</small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2018</small></div>
      </div></body>
      </html>
    </redirect:write>
@@ -393,13 +397,13 @@
      </head>
      <body><div class="page">
      <div class="content">
-        <h3 align="center">Introduction to Programming Using Java, Seventh Edition</h3>
+        <h3 align="center">Introduction to Programming Using Java, Eighth Edition</h3>
         <h2 align="center">Glossary</h2>
         <hr class="break"/>
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2014</small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2018</small></div>
      </div></body>
      </html>
     </redirect:write>

@@ -26,8 +26,8 @@ listed <web>on this page</web><tex>in this appendix</tex>. Each end-of-chapter
 exercise has its own Web page, which
 discusses its solution. The source code of a sample solution of each exercise
 is given on the solution page for that exercise. If you want to compile
-the solution, you should be able to cut-and-paste the solution out of a Web
-browser window and into a text editing program. (You can't cut-and-paste from
+the solution, you should be able to copy-and-paste the solution out of a Web
+browser window and into a text editing program. (You can't copy-and-paste from
 the HTML source of the solution page, since it contains extra HTML markup
 commands that the Java compiler won't understand; the HTML markup does
 not appear when the page is displayed in a Web browser.)
@@ -39,13 +39,15 @@ from the download has more information.</p>
 
 <p>Many of the sample programs in the text are based on console-style
 input/output, where the computer and the user type lines of text back and forth
-to each other. Some of these programs use the standard output object,
+to each other. Almost all of these programs use the standard output object,
 <code>System.out</code>, for output. Many of them use my non-standard class,
 <classname>TextIO</classname>, for input. For the programs that use <classname>TextIO</classname>,
 one of the files <sourceref href="chapter2/textio/TextIO.java">TextIO.java</sourceref> or TextIO.class must
 be available when you compile the program, and TextIO.class must be available
-when you run the program.  TextIO.java and/or TextIO.class must be in a directory named textio,
-which must be in the same directory as the program.  There is also a GUI version of TextIO;
+when you run the program.  Since <classname>TextIO</classname> is defined in a package
+named <code>textio</code>, this means that
+TextIO.java and/or TextIO.class must be in a directory named textio,
+which must be in the same directory as the program.  There is also a GUI version of <classname>TextIO</classname>;
 you can find information about it at the end of <web>this web page</web><tex>Part&nbsp;3, below</tex>.</p>
 
 <ul>
@@ -448,8 +450,9 @@ along with the programs that use them.</p>
 <ul>
    <li><sourceref href="chapter2/textio/TextIO.java">TextIO.java</sourceref> defines a class containing some
    static methods for doing input/output. These methods make it easier to use the
-   standard input and output streams, <code>System.in</code> and <code>System.out</code>.
-   <classname>TextIO</classname> also supports other input sources and output destinations,
+   standard input stream, <code>System.in</code>.  <classname>TextIO</classname> also has
+   methods for printing to <code>System.out</code>.
+   It also supports other input sources and output destinations,
    such as files.  <classname>TextIO</classname> is in a package named <classname>textio</classname>.
    The <classname>TextIO</classname> class is only useful in a command-line
    environment, and it might be inconvenient to use in integrated development environments such
@@ -463,7 +466,7 @@ along with the programs that use them.</p>
    of <classname>System</classname> in the same window.  I use these classes to build
    executable jar files for my text-oriented examples that run in a window instead of
    on the command line.  See the comments in the source code files for more information.
-   (Note that this GUI version of TextIO uses the Swing GUI toolkit rather than JavaFX.)</li>
+   (Note that this GUI version of <classname>TextIO</classname> uses the Swing GUI toolkit rather than JavaFX.)</li>
    <li><sourceref href="chapter3/SimpleGraphicsStarter.java">SimpleGraphicsStarter.java</sourceref> and
    <sourceref href="chapter3/SimpleAnimationStarter.java">SimpleAnimationStarter.java</sourceref> are
    small programs that you can edit to make very simple pictures and animations
@@ -482,8 +485,8 @@ along with the programs that use them.</p>
    <li><sourceref href="chapter8/Expr.java">Expr.java</sourceref> defines a class <classname>Expr</classname> that
    represent mathematical expressions involving the variable <code>x</code>.  It is used only
    in a couple of the exercises in <localref href="robustness"/>.</li>
-   <li><sourceref href="chapter11/TextReader.java">TextReader.java</sourceref> The <classname>TextReader</classname>
-   class is not used in this textbook, but it might be useful to some readers.
+   <li><sourceref href="chapter11/TextReader.java">TextReader.java</sourceref> 
+   is not used in this textbook, but it might be useful to some readers.
    A <classname>TextReader</classname> reads character data from input streams.  Input methods
    in an object of type <classname>TextReader</classname> are similar to the static input
    methods in <classname>TextIO</classname>.</li>

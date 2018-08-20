@@ -12,14 +12,14 @@ programming.  Chapters 1 through 7 can be used as a textbook in a one-semester
 college-level course or in a year-long high school course.  The remaining
 chapters can be covered in a second course.</p>
 
-<p>The Eighth Edition of the book covers "Java&nbsp;8," and it uses
+<p>The Eighth Edition of the book covers Java&nbsp;8, and it uses
 JavaFX&nbsp;8 for GUI programming.  Although later
 versions of Java have been released, I have no plans to cover them
 in this textbook.  (However, all sample programs and exercise solutions
 have been compiled using Java&nbsp;10 as well as Java&nbsp;8.)</p>
    
 <p>The home web site for this book is
-<a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.
+<a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes8/</a>.
 The page at that address contains links for downloading a copy of
 the web site and for downloading PDF versions of the book.
 The web site&mdash;and the web site download&mdash;includes source code for the sample programs that are
@@ -62,7 +62,7 @@ Chapters&nbsp;9 and 10 cover recursion and data structures, including generic pr
 Framework.  Chapter&nbsp;11 is about files and networking.  Chapter&nbsp;12
 covers threads and parallel processing.  Finally,
 Chapter&nbsp;13 returns to the topic of graphical user interface programming
-to cover some of Java's more advanced capabilities.</p>
+to cover some of JavaFX's more advanced capabilities.</p>
 
 <break/>
 
@@ -78,13 +78,18 @@ in Java&nbsp;8: lambda expressions and the stream API.  Lambda expressions are
 covered fairly early, as part of the material on subroutines in Chapter&nbsp;4.
 They are used extensively with JavaFX in Chapter&nbsp;6 and Chapter&nbsp;13, as
 well as with the stream API, which is introduced in Section&nbsp;10.6.
-Aside from these major changes, there are small improvements throughout.</p>
+Aside from these major changes, there are small improvements throughout,
+such as a short discussion of loop invariants and class invariants in
+Section&nbsp;8.2, increased coverage of Java's higher level concurrency
+support in Chapter&nbsp;12, and the consistent use of factory methods like
+<code>Integer.valueOf(n)</code> in preference to constructors.</p>
 
 <break/>
    
 
-<p>The latest complete edition of <i>Introduction to Programming using Java</i> is available on line at
-<a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.
+<p>The seventh edition of <i>Introduction to Programming using Java</i> is available on line at
+<a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.  (Once a final version
+of the eighth edition is released, it will replace the seventh edition at that address.)
 The first version of the book was written in 1996, and there have
 been several editions since then.  All editions are archived (at least until my retirement) 
 at the following Web addresses:</p>
@@ -103,7 +108,7 @@ at the following Web addresses:</p>
 <li>Sixth edition: <a href=
 "http://math.hws.edu/eck/cs124/javanotes6/">http://math.hws.edu/eck/cs124/javanotes6/</a> (Covers Java 5.0, with a bit of 6.0.)</li>
 <li>Seventh edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes7/</a> (Covers Java 7.)</li>
+"http://math.hws.edu/eck/cs124/javanotes7/">http://math.hws.edu/eck/cs124/javanotes7/</a> (Covers Java 7.)</li>
 <li>Eighth edition: <a href=
 "http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 8.)</li>
 </ul>
@@ -151,10 +156,15 @@ image files, a TeX macro file, and a couple of scripts that are used in processi
 The scripts work on Linux and on Mac&nbsp;OS.
 </p>
 
+<!-- 
 <p><b>I have made the complete source files available for download at
 the following address:</b></p>
 
 <p align="center"><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-full-source.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8-full-source.zip</a></p>
+-->
+
+<p>I will make the complete source files available on request, and will post a link to
+them on the book's web site once the final version of the eighth edition is released.</p>
 
 <p>These files were not originally meant for publication, and therefore are not very
 cleanly written.  Furthermore, it requires a fair amount of expertise to use them.

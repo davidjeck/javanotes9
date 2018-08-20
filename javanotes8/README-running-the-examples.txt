@@ -35,7 +35,7 @@ the command
                   javac *.java
                   
 to compile all the examples from that chapter.  As long as your compiler supports 
-Java 7 or higher, there should be no errors.  (You might see some warnings, especially
+Java 8 or higher, there should be no errors.  (You might see some warnings, especially
 if you use a newer version of java, but warnings do not stop a program from being
 compiled or executed.)  You can then run individual programs using the java command.  
 For example:
