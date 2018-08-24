@@ -436,7 +436,7 @@ disable property of the button:</np>
 <np>In effect, the labels and button are being used an alternative views of the
 same selection model that is used by the list.  This is a major feature of the
 MVC pattern:  There can be multiple views of the same model object.  The views listen
-for changes in the model.  When the model changes, the views are are notified of
+for changes in the model.  When the model changes, the views are notified of
 the change and update themselves to reflect the new state of the model.</np>
 
 <p>There is also an "Add" button that adds an item to the list.  This uses another

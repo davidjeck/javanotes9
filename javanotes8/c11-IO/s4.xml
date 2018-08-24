@@ -857,7 +857,7 @@ to start the server. Then, in the other, use the command "<code>java CLChatClien
 localhost</code>" to connect to the server that is running on the same machine.
 If the server is not listening on the default port, you can add the port number
 as a second command line option to the program.  If you do not specify the
-connection information on the command line, you will will be asked to enter it.</p>
+connection information on the command line, you will be asked to enter it.</p>
    
 
 </subsection>

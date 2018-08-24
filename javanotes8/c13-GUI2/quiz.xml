@@ -12,7 +12,7 @@ its value is changed.  It is possible to add listeners to the object,
 and the listeners will be notified when its value changes.</p>
 <p>An observable property is a property (that is, an instance variable) in
 an object that is an observable value.  Furthermore, the use of the term
-"observable property" usually implies that is is possible to "bind" other properties
+"observable property" usually implies that it is possible to "bind" other properties
 of the same type to this one, so that the value of the bound property will
 track the value of the property to which it is bound.</p>
 </ans>

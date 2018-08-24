@@ -373,7 +373,7 @@ any square that the current player can legally click at a given time
 is highlighted with a brightly colored border. 
 The square containing a piece that has been selected to be moved, if any, 
 is surrounded by a yellow border. Other pieces that can legally be moved are surrounded by a
-cyan-colored border. If a piece has has already been selected to be moved, each empty square that it
+cyan-colored border. If a piece has already been selected to be moved, each empty square that it
 can legally move to is highlighted with a green border. The game enforces the rule
 that if the current player can jump one of the opponent's pieces, then the
 player must jump. When a player's piece becomes a king, by reaching the

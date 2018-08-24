@@ -29,7 +29,7 @@ which are used to translate the XML files into a web site and LaTeX
 files; image files for both the web and PDF versions; Java source 
 code files for examples in the textbook; scripts for building the
 web site and PDF versions; and other miscellaneous files.  Build
-scripts (.sh files) are provided for for Linux / Mac OS.  The scripts 
+scripts (.sh files) are provided for Linux / Mac OS.  The scripts 
 have been tested on at least one machine, but are not guaranteed to 
 work for you.
 

@@ -257,7 +257,7 @@ of the component has coordinates <code>(0,0)</code>, and the
 coordinates <code>(x,y)</code> refer to the point that is <code>x</code> pixels
 over from the left edge of the component and <code>y</code> pixels down from
 the top.  However, you are not
-restricted to using these coordinates.  In fact, you can can set up
+restricted to using these coordinates.  In fact, you can set up
 a graphics context to use other coordinate systems, with different units of
 length and different coordinate axes.  You can use this capability to select the
 coordinate system that is most appropriate for the things that you want to

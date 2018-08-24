@@ -406,7 +406,7 @@ would have to check that a legal value is being assigned.</p>
 <p>In general, we can say that a class invariant is a postcondition
 of every constructor and is both a precondition and a postcondition
 of every method in the class.  When you are writing a class, a
-class invariant is something that you <i>want be be true</i> at
+class invariant is something that you <i>want to be true</i> at
 all times.  When you write a method, you need to make sure that
 the code in that method respects the invariant:  Assuming that
 the class invariant is true when the method in called, you need to

@@ -55,7 +55,7 @@ make an animation.</p>
 
 <p>For an event to have any effect, a program must detect the event and react
 to it. In order to detect an event, the program must "listen" for it.  
-Listening for events is something that is done by an an <newword>event listener</newword>,
+Listening for events is something that is done by an <newword>event listener</newword>,
 which contains an event handler method that can respond to the event.
 An event listener is defined by an interface that specifies the event handling
 methods that it contains.  Listeners for different kinds of events are defined by
