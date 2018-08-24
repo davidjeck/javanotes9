@@ -88,7 +88,7 @@ public class Checkers extends Application {
 		newGameButton.setManaged(false);
 		newGameButton.resize(100,30);
 		
-		/* Create the Pane and give it a preferred size.   If the
+		/* Create the Pane and give it a preferred size.  If the
 		 * preferred size were not set, the unmanaged buttons would 
 		 * not be included in the Pane's computed preferred size. */
 		
@@ -674,7 +674,7 @@ public class Checkers extends Application {
 					moveArray[i] = moves.get(i);
 				return moveArray;
 			}
-		}  // end getLegalMovesFrom()
+		}  // end getLegalJumpsFrom()
 
 		/**
 		 * This is called by the two previous methods to check whether the

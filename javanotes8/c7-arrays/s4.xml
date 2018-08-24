@@ -444,7 +444,7 @@ write:</p>
 <p>A variation of selection sort is used in the <classname>Hand</classname> class that was
 introduced in <localref href="OOP.4.1"/>. (By the way, you are
 finally in a position to fully understand the source code for
-<classname>Hand</classname> class class from that section; note that
+the <classname>Hand</classname> class from that section; note that
 it uses <classname>ArrayList</classname>.
 The source file is <sourceref chapter="5" href="Hand.java"/>.)</p>
 

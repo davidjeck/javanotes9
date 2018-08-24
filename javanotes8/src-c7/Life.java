@@ -242,7 +242,7 @@ public class Life extends Application {
 		}
 		else {  // If the game is not currently running, start it.
 			frameNumber = 0;
-			timer.start();  // This starts the game by turning the timee that will drive the game.
+			timer.start();  // This starts the game by turning the timer that will drive the game.
 			clearButton.setDisable(true);  // Buttons that modify the board are disabled while the game is running.
 			randomButton.setDisable(true);
 			nextButton.setDisable(true);

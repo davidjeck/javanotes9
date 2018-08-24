@@ -46,9 +46,9 @@ public class TryStatementDemo {
 	
 	public static void main(String[] args) {
 		
-		System.out.println("This program demonstrates a try..catch statement wtih");
+		System.out.println("This program demonstrates a try..catch statement with");
 		System.out.println("several optional features.  Three resources are created");
-		System.out.println("as part of the try, and they will be closed automatically");
+		System.out.println("as part of the try, and they will be closed automatically.");
 		System.out.println("The program will ask you for an integer.  Try running the");
 		System.out.println("program several times with both valid and invalid responses");
 		System.out.println("to see the flow of control in both the normal and in the");

@@ -15,7 +15,7 @@ A = new int[3][4];</pre>
 
 <np>This creates a 2D array of <ptype>int</ptype> that has 12 elements arranged in 3 rows
 and 4 columns.  Although I haven't mentioned it, there are initializers for 2D arrays.
-For example, this statement creates the 4-by-3 array that is shown in the picture below:</np>
+For example, this statement creates the 3-by-4 array that is shown in the picture below:</np>
 
 <pre>int[][]  A  =  {  {  1,  0, 12, -1 },
                   {  7, -3,  2,  5 },
@@ -51,7 +51,7 @@ And remember that a variable of type <atype>int[]</atype> can only hold a pointe
 to an array of <ptype>int</ptype>.  So, a 2D array is really an array of pointers,
 where each pointer can refer to a one-dimensional array.  Those one-dimensional
 arrays are the rows of the 2D array.  A picture will help to explain this.
-Consider the 4-by-3 array <code>A</code> defined above.
+Consider the 3-by-4 array <code>A</code> defined above.
 </p>
 
 <img src="two-dimensional-array.png" width="437" height="360" 
@@ -126,7 +126,7 @@ public class SymmetricMatrix {
     }
     
     /**
-     * Returns the matrix entry at position (row,col).  (If col &lt; row
+     * Returns the matrix entry at position (row,col).  (If row &lt; col,
      * the value is actually stored at position (col,row).)
      */
     public double get( int row, int col ) {
@@ -137,7 +137,7 @@ public class SymmetricMatrix {
     }
     
     /**
-     * Sets the value of the matrix entry at (row,col).  (If col &lt; row,
+     * Sets the value of the matrix entry at (row,col).  (If row &lt; col,
      * the value is actually stored at position (col,row).)
      */
     public void set( int row, int col, double value ) {

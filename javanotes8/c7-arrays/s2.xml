@@ -303,7 +303,7 @@ of the animation.  A new version of the program that does that is <sourceref hre
 <p>There are 25 strings.  We need to store the (x,y) coordinates where each string is drawn,
 the color of each string, and the font that is used for each string.  To make the
 strings move, I also store a velocity for each string, represented as two numbers
-<code>dx</code> and <code>dx</code>.  In each frame, the <code>dx</code> for each string
+<code>dx</code> and <code>dy</code>.  In each frame, the <code>dx</code> for each string
 is added to the <code>x</code> coordinate of the string, and <code>dy</code> is
 added to the <code>y</code> coordinate.  Now the data for the string could be
 stored in six arrays</p>
@@ -330,7 +330,7 @@ would be accomplished by a <code>draw()</code> method such as:</np>
     for (int i = 0; i &lt; 25; i++) {
        g.setFill( color[i] );
        g.setFont( font[i] );
-       g.fill( MESSAGE, x[i], y[i] );
+       g.fillText( MESSAGE, x[i], y[i] );
        g.setStroke(Color.BLACK);
        g.strokeText( MESSAGE, x[i], y[i] );
     }
@@ -353,7 +353,7 @@ all the data that is needed for one copy of the message:</np>
     double x,y;       // location of the string;
     double dx,dy;     // velocity of the string;
     Color color;      // color of the string;
-    int fontNumber;   // the font number of the string
+    Font font;        // the font that is used to draw the string
 }</pre>
 
 <np>To store the data for multiple copies of the message, I use an array of

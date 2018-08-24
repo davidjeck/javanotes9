@@ -3,7 +3,7 @@ import textio.TextIO;
 /**
  * Reads a list of non-zero numbers from the user, then prints
  * out the input numbers in the reverse of the order in which
- * the were entered.  There is no limit on the number of inputs.
+ * they were entered.  There is no limit on the number of inputs.
  */
 public class ReverseWithDynamicArray {
 	

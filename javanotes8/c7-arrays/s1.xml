@@ -276,7 +276,7 @@ For example,</p>
 <pre>int[] squares = { 1, 4, 9, 16, 25, 36, 49 };</pre>
 
 <np>This initializes <code>squares</code> to refer to a newly created array
-that contains the seven values in the list</np>
+that contains the seven values in the list.</np>
 
 
 <p>A list initializer of this form can be used <b>only</b> in a declaration

@@ -230,7 +230,7 @@ that is, text written <i>about</i> the main text rather than as
 are ignored by the compiler, they have no effect on the meaning of
 the program.  They are there to explain that meaning to a human
 reader.  It is possible, of course, for another computer program
-(not the compiler) to process comments.  That's what done in the
+(not the compiler) to process comments.  That's what is done in the
 case of Javadoc comments, which are processed by a program that
 uses them to create API documentation.  But comments are only
 one type of metadata that might be added to programs.</p>

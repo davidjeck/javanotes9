@@ -29,9 +29,10 @@ public class TestSymmetricMatrix {
 	    	System.out.println();
 	    }
 	    
-	    // Fill M with random values; all non-diagonal entries will be written twice.
+	    // Fill M with random values; only elements on and below the diagonal are set.
+	    // When the matrix is printed, all elements have a value.
 	    for (int i = 0; i < n; i++) {
-	    	for (int j = 0; j < n; j++)
+	    	for (int j = 0; j <= i; j++)
 	    		M.set(i,j,10*Math.random());
 	    }
 	    System.out.println();
@@ -45,7 +46,7 @@ public class TestSymmetricMatrix {
 	    	System.out.println();
 	    }
 	    
-	    // Fill every entry with its row number
+	    // Fill every entry with its row number.
 	    for (int i = 0; i < n; i++) {
 	    	for (int j = 0; j < n; j++)
 	    		M.set(i,j,i);

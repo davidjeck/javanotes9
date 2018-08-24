@@ -11,7 +11,7 @@ import javafx.animation.AnimationTimer;
 
 /**
  * This program displays 25 copies of a message, and it runs
- * an animation in which the stings move around on the screen.
+ * an animation in which the strings move around on the screen.
  * The color, position, and velocity of each message is selected 
  * at random when the program first starts, and there is a button that
  * the user can click to reinitialize all the random values.
@@ -58,7 +58,7 @@ public class RandomStringsWithArray extends Application {
 		Button redraw = new Button("Restart!");
 		redraw.setOnAction( e -> createStringData() );
 		     // When the button is clicked, the string data is re-initialized.
-		     // There is no need to all draw() because the animation that
+		     // There is no need to call draw() because the animation that
 		     // runs continually will redraw the canvas in the next frame.
 
 		StackPane bottom = new StackPane(redraw);
@@ -113,7 +113,7 @@ public class RandomStringsWithArray extends Application {
 	 * Update the data for the 25 strings by moving each string, where the
 	 * distance moved depends on the velocity.  If a string moves too far
 	 * off the canvas, move it to the opposite side of the canvas.
-	 * (To make sure a string has move all the way off the canvas to the
+	 * (To make sure a string has moved all the way off the canvas to the
 	 * left, wait until data.x reaches -400 before moving it to the
 	 * right of the canvas. 
 	 */
@@ -163,4 +163,4 @@ public class RandomStringsWithArray extends Application {
 	} // end draw()
 
 
-}  // end class RandomStringsWith Array
+}  // end class RandomStringsWithArray

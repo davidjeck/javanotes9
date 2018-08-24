@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * Reads a list of non-zero numbers for the user, then prints
  * out the input numbers in the reverse of the order in which
- * the were entered.  there is no limit on the number of inputs.
+ * they were entered.  there is no limit on the number of inputs.
  */
 public class ReverseWithArrayList {
 	

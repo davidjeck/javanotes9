@@ -181,7 +181,7 @@ in the following method:</p>
 <pre>/**
  * Sorts the n array elements A[0], A[1], ..., A[n-1] into increasing order.
  */
-public static simpleBubbleSort( int[] A, int n ) {
+public static void simpleBubbleSort( int[] A, int n ) {
    for (int i = 0; i &lt; n; i++) {
          // Do n passes through the array...
       for (int j = 0; j &lt; n-1; j++) {
@@ -306,7 +306,7 @@ in this book.)  The logarithm function grows very slowly.  The growth
 rate of log(n) is much smaller than the growth rate of n.  The growth rate
 of n*log(n) is a little larger than the growth rate of n, but much smaller
 than the growth rate of n<sup>2</sup>.  The following table should help you
-understand the differences among the rates of grows of various functions:</p>
+understand the differences among the rates of growth of various functions:</p>
 
 <img src="rates-of-growth.png" alt="Table of Rates of Growth of Various Functions"
    width="555" height="156" tex="rates-of-growth.eps" texscale="0.6"/>

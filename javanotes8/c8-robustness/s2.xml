@@ -301,7 +301,7 @@ where we assume that the array has length at least one:</p>
 
 <pre>static int maxInArray( int[] A ) {
     int max = A[0];
-    int i = 0;
+    int i = 1;
     while ( i &lt; A.length ) {
         if ( A[i] > max )
             max = A[i];
@@ -324,7 +324,8 @@ and you get that <code>max</code> is the largest value
 among the first <code>i+1</code> elements of <code>A</code>.
 When <code>i</code> is replaced by <code>i+1</code> in the
 next statement, the loop invariant becomes true again.
-After the loop ends, the loop invariant tells us exactly
+After the loop ends, <code>i</code> is <code>A.length</code>,
+and the loop invariant tells us exactly
 what we need to know:  <code>max</code> is the largest
 value in the whole array.</np>
 
@@ -371,12 +372,12 @@ leave you to think about that.</np>
 
 <p>There is another kind of invariant that is useful for thinking
 about programs: <newword>class invariants</newword>.
-A class invariant is, roughly, a statement that is always true about
+A class invariant is, roughly, a statement that is always true
 about the state of a class, or about objects created from that class.
 For example, suppose we have a <classname>PairOfDice</classname> class
 in which the values shown on the dice are stored in instance
 variables <code>die1</code> and <code>die2</code>.
-(See <localref href="OOP.2"/> or a variety of such classes.)
+(See <localref href="OOP.2"/> for a variety of such classes.)
 We might like to have a class invariant that says, "the values of
 <code>die1</code> and <code>die2</code> are in the range 1 through&nbsp;6."
 (This would be a statement about any object created from the
@@ -388,7 +389,7 @@ any pair of dice.
 <p>But in order to be a class invariant, the statement has to be
 guaranteed true at all times.  If <code>die1</code> and <code>die2</code>
 are <code>public</code> instance variables, then no such guarantee is
-possible, since there is no way control what values a program that uses
+possible, since there is no way to control what values a program that uses
 the class might assign to them.
 So, we are led to make <code>die1</code> and <code>die2</code>
 <code>private</code>.  Then we just have to make sure that all of the
@@ -432,7 +433,7 @@ incrementing <code>itemCount</code> makes it equal to <code>items.length</code>,
 then you will need to do something to avoid violating the invariant.  (Since <code>itemCount</code>
 has to be incremented, the invariant means that you will have to make the array bigger.)</np>
 
-<p>In future chapters, I will occasionally point out how how it can be useful to
+<p>In future chapters, I will occasionally point out how it can be useful to
 think in terms of preconditions, postconditions, and invariants.</p>
 
 <p>I should note that reasoning about invariants becomes much more complicated in parallel
@@ -532,7 +533,7 @@ return inches</pre>
 
 <np>We can test whether there is more input on the line by checking whether the
 next non-blank character is the end-of-line character. But this test has a
-precondition: We have to make sure that the next character in input is
+precondition: We have to make sure that the next character in the input is
 in fact either an end-of-line or is a non-blank.  To ensure that, we
 need to skip over any blank characters. So, the algorithm becomes</np>
 
