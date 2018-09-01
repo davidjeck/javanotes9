@@ -13,7 +13,7 @@ public class I18n {
 	
 	/**
 	 * The base name for the properties files for this program.  The default
-	 * properties file name is strings.properties in the directory edu/hws/eck/mdb.
+	 * properties file name is strings.properties in the directory edu/hws/eck/mdbfx.
 	 * Property files for other locales would have the form strings_xx.properties
 	 * where xx is the code for the locale.  To use this file in another program,
 	 * only the propertyFileName has to be changed.

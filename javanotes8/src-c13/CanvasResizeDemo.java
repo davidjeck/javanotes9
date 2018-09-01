@@ -42,7 +42,7 @@ public class CanvasResizeDemo extends Application {
 			balls[i] = new BouncingBall();
 		
 		/* When the user clicks or drags the mouse on the canvas,
-		 * the velocities of all of the balls are changes so that
+		 * the velocities of all of the balls are changed so that
 		 * they head towards the mouse position. */
 		
 		canvas.setOnMousePressed( e -> {
@@ -75,7 +75,7 @@ public class CanvasResizeDemo extends Application {
 		
 		
 		/* Start a timer that will continually update the positions
-		 * of the balls and redraw the canvas.  (There is not need
+		 * of the balls and redraw the canvas.  (There is no need
 		 * to redraw the canvas when it changes size, since it
 		 * will be redrawn by the timer in any case. */
 		
@@ -130,7 +130,7 @@ public class CanvasResizeDemo extends Application {
 		}
 		void move(double canvasWidth, double canvasHeight) {
 			    // Move the ball by an amount equal to its velocity.
-			    // If it crosses an edge of the canvas, it moved
+			    // If it crosses an edge of the canvas, it is moved
 			    // back into the canvas and its velocity is reversed.
 			    // If it is outside the canvas because the canvas has
 			    // shrunk, rather than because it crosses an edge,
@@ -151,7 +151,7 @@ public class CanvasResizeDemo extends Application {
 				dx = -Math.abs(dx);
 			}
 			else if (x > w - radius) { 
-					// disk is outside the right edge but didn't move there.
+					// Disk is outside the right edge but didn't move there.
 					// Presumably this happened because canvas got smaller.
 				dx = -Math.abs(dx);  // head back towards canvas.
 			}
@@ -168,7 +168,7 @@ public class CanvasResizeDemo extends Application {
 			}
 		}
 		void headTowards( double a, double b ) {
-			    // reset the direction in which the ball is moving so
+			    // Reset the direction in which the ball is moving so
 			    // that its new velocity vector points in the direction
 			    // from its current location to (a,b).  The speed is
 			    // not changed, only the direction,

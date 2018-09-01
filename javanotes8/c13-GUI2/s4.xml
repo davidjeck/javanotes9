@@ -24,7 +24,7 @@ the user cannot interact with the parent window until the dialog box is
 closed.  There are also <newword>application modal</newword> dialog boxes,
 which block the entire application, not just one parent window.  Many 
 dialog boxes in JavaFX are application modal.
-Modal dialog boxes are often poped up during program execution
+Modal dialog boxes are often popped up during program execution
 to get input from the user or sometimes just to show a message to the
 user.</p>
 
@@ -94,7 +94,7 @@ is a nested enumerated type with values including <code>Alert.AlertType.INFORMAT
 <code>Alert.AlertType.WARNING</code>, <code>Alert.AlertType.ERROR</code>, and
 <code>Alert.AlertType.CONFIRMATION</code>.  Alerts of the first three types
 will have a single "OK" button and do nothing but show the message to the user;
-for these alerts, there is no reason to check return value of <code>alert.showAndWait()</code>.
+for these alerts, there is no reason to check the return value of <code>alert.showAndWait()</code>.
 A confirmation alert has an "OK" button and a "Cancel" button and is typically used
 to ask whether the user would like to continue with some potentially dangerous operation
 such as deleting a file; in this case, checking the return value is important.
@@ -178,7 +178,7 @@ an OK button.  There is no return value.  The text will be automatically wrapped
 so that line feed characters are not needed in long messages.  An optional
 second parameter can be included to specify the title for the dialog window.</li>
 <li><codedef>SimpleDialogs.prompt(text)</codedef> &mdash; shows the text and
-a text input box, with an OK button and a Cancel button.  Returns a 
+a text input box, with an OK button and a Cancel button.  This method returns a 
 <classname>String</classname>, which will be the content of the input box
 if the user clicks OK, or will be null if the user cancels the dialog.
 The window title can be given as an optional second parameter, and the
@@ -186,7 +186,7 @@ initial content of the text input box as an optional third parameter.</li>
 <li><codedef>SimpleDialogs.confirm(text)</codedef> &mdash; shows the text
 along with "Yes", "No", and "Cancel" buttons. The return value is a
 <classname>String</classname> which will always be one of "yes", "no",
-or "cancel".  Again, the widow title can be given as an optional
+or "cancel".  Again, the window title can be given as an optional
 second parameter.</li>
 </ul>
 
@@ -422,6 +422,7 @@ the code for <code>newBrowserWindow()</code>:</p>
     window.setY(locationY);
     window.setWidth(windowWidth);
     window.setHeight(windowHeight);
+    window.show();
     locationX += 30;    // set up location for NEXT window
     locationY += 20;
     if (locationX + windowWidth + 10 > screenRect.getMaxX()) {

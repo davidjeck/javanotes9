@@ -208,7 +208,7 @@ being performed.  The solution is to do the computation in separate "worker" thr
 as discussed in <localref href="threads.2.3"/>.  The program uses one worker thread
 for each available processor. When the computation begins, the image is transparent
 and you see the gray background of the window.  The full computation is broken
-into tasks, where each tasks computes one row of the image.  After finishing the
+into tasks, where each task computes one row of the image.  After finishing the
 computation, the task will apply the appropriate colors to the pixels in
 the assigned row.  Since the canvas can only be modified in the JavaFX application
 thread, the task uses <code>Platform.runLater()</code> to make the changes.
@@ -224,7 +224,7 @@ the canvas that contains the image.  When the user
 draws a "zoom box" with the mouse, the zoom box is actually drawn in the top
 canvas so that drawing it does not damage the image. (See <localref href="GUI2.2.4"/>.)
 The bottom position in the <classname>MandelbrotPane</classname> contains a
-<classname>Label</classname>, which serves as
+<classname>Label</classname>, which serves as a
 "status bar" showing some information that might be interesting to
 the user.  Finally, there is a menu bar at the top of the pane.</p>
 
@@ -293,9 +293,9 @@ and <classname>Menus</classname> are the major classes in the
 Mandelbrot Viewer program.  <sourceref href="edu/hws/eck/mdbfx/Main.java">Main.java</sourceref>
 defines the subclass of <classname>Application</classname> that must be executed to run the
 program.  Its <code>start()</code> method just places a <classname>MandelbrotPane</classname>
-into the program's primary <classname>stage</classname>.  (See <localref href="GUI1.6.3"/>)
+into the program's primary <classname>stage</classname>.  (See <localref href="GUI1.6.3"/>.)
 It also has one other task, which is discussed below. The program also contains three other classes.
-Two of them, <sourceref href="edu/hws/eck/mdbfx/SetImageSizeDialog.java">SetImageSizeDialog.java</sourceref>
+Two of them, from <sourceref href="edu/hws/eck/mdbfx/SetImageSizeDialog.java">SetImageSizeDialog.java</sourceref>
 and <sourceref href="edu/hws/eck/mdbfx/SetLimitsDialog.java">SetLimitsDialog.java</sourceref>,
 define custom dialog boxes.  I will not discuss them further; see <localref href="GUI2.4.1"/>.
 The final class is <classname>I18n</classname>, which I will discuss below.</p>
@@ -409,7 +409,7 @@ possible to cancel a task.  So, <code>startDelayedJob()</code> submits a task
 to the timer that will resize the canvas after 300 milliseconds.  If <code>startDelayedJob()</code>
 is called again before that delay has expired, it cancels the previous task and submits
 a new one to the timer.  The result is that no task actually gets executed until
-300 milliseconds pass before the next call to <code>startDelayedJob()</code>.</np>
+300 milliseconds pass with no call to <code>startDelayedJob()</code> in that time.</np>
 
 <p>(There is an option in the program to give a fixed size to the image.  In that case,
 the size of the <code>displayHolder</code> should not change.
@@ -692,7 +692,7 @@ type of treatment.  Instead, as an example, I automatically save a few aspects o
 program's state as preferences.  Every time the program starts up, it reads the
 preferences, if any are available.  Every time the program terminates, it saves
 the preferences.  (Saving the preferences poses an interesting problem because
-the program ends when the application window closes, and we need way to arrange
+the program ends when the application window closes, and we need a way to arrange
 for preferences to be saved whenever that happens.  The solution is to use events:
 The <code>start()</code> method in <classname>Main</classname> registers an
 event handler with the window to listen for the event that is generated when

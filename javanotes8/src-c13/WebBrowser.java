@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * A basic multi-window web browser.  This class is responsible for
  * creating new windows and for maintaining a list of currently open
  * windows.  The program ends when all windows have been closed.
- * The Windows are of type BrowserWindow.  The program also requires
+ * The windows are of type BrowserWindow.  The program also requires
  * the class SimpleDialogs.  The first window, which opens when the
  * program starts, goes to http://math.hws.edu/javanotes8/index.html.
  */
@@ -61,7 +61,7 @@ public class WebBrowser extends Application {
 	} // end start()
 	
 	/**
-	 * Get the list of currently open window.  The browser windows use this
+	 * Get the list of currently open windows.  The browser windows use this
 	 * list to construct their Window menus.
 	 * A package-private method that is meant for use only in BrowserWindow.java.
 	 */

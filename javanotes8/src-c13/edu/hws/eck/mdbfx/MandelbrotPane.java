@@ -20,7 +20,7 @@ import java.util.TimerTask;
 
 
 /**
- * A MandelbrotPanel contains a menu bar, a MandelbrotCanvas and a status bar.  The 
+ * A MandelbrotPane contains a menu bar, a MandelbrotCanvas and a status bar.  The 
  * canvas computes and displays a visualization of the Mandelbrot Set.  The status bar
  * is a Label that is used to display information that the user might be interested
  * in.  A mouse listener is installed on the display that enables the user to
@@ -62,7 +62,7 @@ public class MandelbrotPane extends BorderPane {
 
 	private MandelbrotCanvas display;        // The canvas where the image is drawn.
 	private Canvas overlayCanvas;            // A mostly transparent overlay where zoom box is drawn.
-	private GraphicsContext overlayGraphics; // Graphics context for drawing on the overlay canvas
+	private GraphicsContext overlayGraphics; // Graphics context for drawing on the overlay canvas.
 	private Label statusBar;                 // For displaying info; placed at the bottom of the window.
 	private StackPane displayHolder;         // Holds the display and the overlay canvas.
 	private ScrollPane scroller;             // Holds the displayHolder, but only when image size is fixed.
@@ -119,7 +119,7 @@ public class MandelbrotPane extends BorderPane {
 		menubar = new Menus(this);
 		setTop(menubar);
 		
-		overlayCanvas.setOnMousePressed( this::mousePressed );   // mouse interaction is with overlaycanvs
+		overlayCanvas.setOnMousePressed( this::mousePressed );   // mouse interaction is with overlayCanvas
 		overlayCanvas.setOnMouseDragged( this::mouseDragged );
 		overlayCanvas.setOnMouseReleased( this::mouseReleased );
 		overlayCanvas.setOnMouseMoved( this::mouseMoved );
@@ -133,7 +133,7 @@ public class MandelbrotPane extends BorderPane {
 		limits.setValue(getLimits());
 		
 		/* Listen for changes to the size of displayHolder (which will be resized by this
-		 * BorderPane when the window size changes.  In response, schedule a new compute
+		 * BorderPane when the window size changes).  In response, schedule a new compute
 		 * job to occur in 300 milliseconds. */
 		
 		displayHolder.widthProperty().addListener( e -> startDelayedJob(300,true) );
@@ -143,7 +143,7 @@ public class MandelbrotPane extends BorderPane {
 	
 	
 	/* ---------------------------------------------------------------------------------
-	 * When image size changes, the image has to be recomputed.  As user resizes the
+	 * When image size changes, the image has to be recomputed.  As the user resizes the
 	 * window, the width and height of the canvas can change many times. Rather than
 	 * start a new computation each time their values change, there is a delay of
 	 * 300 milliseconds before the new computation is started.  startDelayedJob()
@@ -336,7 +336,7 @@ public class MandelbrotPane extends BorderPane {
 	}
 	
 	/**
-	 * Change the limists on the xy-region shown in the image, possibly
+	 * Change the limits on the xy-region shown in the image, possibly
 	 * readjusting them to match the aspect ratio of the display, and
 	 * start a new computation.
 	 */
@@ -369,7 +369,7 @@ public class MandelbrotPane extends BorderPane {
 		return display;
 	}
 
-	//---------------------------- The rest of the file is privat implementation detail ----------
+	//---------------------------- The rest of the file is private implementation detail ----------
 
 	/**
 	 * Adjusts the xy limits to fit the aspect ratio of the display.  If the shape of
@@ -503,7 +503,7 @@ public class MandelbrotPane extends BorderPane {
 
 	/**
 	 * Used to draw a rectangle around a portion of the image.  If the parameter is null,
-	 * then nothing is drawn (and the rect that was there before, if any is removed).
+	 * then nothing is drawn (and the rectangle that was there before, if any is removed).
 	 * Otherwise, the specified rectangle will be drawn on top of the image.
 	 */
 	private void setZoomBox(Rectangle2D rect) {
@@ -641,7 +641,7 @@ public class MandelbrotPane extends BorderPane {
 
 
 	private void mouseReleased(MouseEvent evt) {
-		    // apply the zoom box to zoom in or out, if there is one,
+		    //Apply the zoom box to zoom in or out, if there is one,
 		    // or, if the mouse has not moved, just zoom in or out by
 		    // a factor of 2, with the current mouse location as center
 		    // of scaling.
@@ -673,7 +673,7 @@ public class MandelbrotPane extends BorderPane {
 		moved = true;   // Mouse has moved more than 2 pixels away from start position.
 						// During a draw operation, a zoom box is drawn with one corner at the
 						// mouse's starting position.  When the mouse is released, the image
-						// is zoomed out form this box or into this box.
+						// is zoomed out from this box or into this box.
 						// The next 6 lines adjust the shape of the zoom box so that it matches
 						// the shape of the window.  This is so that zooming will use the same
 						// magnification factor in both directions.
@@ -713,4 +713,4 @@ public class MandelbrotPane extends BorderPane {
 
 
 
-} // end class MandelbrotPanel
+} // end class MandelbrotPane

@@ -22,7 +22,7 @@ import javafx.util.converter.IntegerStringConverter;
 
 /**
  * This program shows two editable ListViews.  One contains strings
- * and one contains integers.  There user can edit list entries,
+ * and one contains integers.  The user can edit list entries,
  * delete entries, and add new entries.  There are labels that
  * display the selected index and the selected item in each list.
  */
@@ -57,7 +57,7 @@ public class EditListDemo extends Application {
 	 */
 	private BorderPane makeNamePane() {
 		
-		/* The items in a ListView<String> are stored in an ObservableList<String>
+		/* The items in a ListView<String> are stored in an ObservableList<String>.
 		 * One way to add items is to make an observable list and pass it as
 		 * a parameter to the ListView constructor. */
 		
@@ -66,7 +66,7 @@ public class EditListDemo extends Application {
 		ListView<String> listView = new ListView<String>(names);
 		
 		/* For the items to be editable, listView must be made editable, and a 
-		 * "cell factory" must be installed that will make editalbe cells for
+		 * "cell factory" must be installed that will make editable cells for
 		 * display in the list.  For editing strings, the cell factory can
 		 * be created by the factory method TextFieldListCell.forListView(). */
 		
@@ -89,7 +89,7 @@ public class EditListDemo extends Application {
 		 * text property is taken from properties of the ListView's SelectionModel.
 		 * It contains a Button that can be used to delete the selected item; this
 		 * button's disable property is bound to a boolean property derived from
-		 * the selection model.  And It contains a TextField where the user can
+		 * the selection model.  And it contains a TextField where the user can
 		 * enter a new item for the list.  When the text field has focus, an
 		 * associated "Add" button becomes the default button for the window, so
 		 * the user can add the item to the list just by pressing return while
@@ -138,7 +138,7 @@ public class EditListDemo extends Application {
 	
 	
 	/**
-	 * Make the pane for the left side of the window.  It contains a ListView<Integer>,
+	 * Make the pane for the right side of the window.  It contains a ListView<Integer>,
 	 * with labels that show the selected index and selected item, a button for
 	 * deleting the selected item, and a button and text input box that can be
 	 * used to add an item at the end of the list.

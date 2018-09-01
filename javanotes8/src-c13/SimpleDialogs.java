@@ -30,7 +30,7 @@ public class SimpleDialogs {
 	 * For showing a dialog that contains an arbitrary node, with an
 	 * "OK" and a "Cancel" button.  There is no header text in the dialog,
 	 * only the content node and buttons.
-	 * @param content the node the appears above the buttons in the dialog.
+	 * @param content the node that appears above the buttons in the dialog.
 	 * @param title text to appear in the title bar of the dialog window.
 	 *    The title text can be null.
 	 * @return true if the user dismisses the dialog with OK, false if
@@ -48,7 +48,7 @@ public class SimpleDialogs {
 	/**
 	 * Shows a dialog containing an arbitrary node as content.  The node is
 	 * assumed to do some sort of input.  The dialog has "Cancel" and "OK buttons.
-	 * The title of the dialog is "Input is Requested"
+	 * The title of the dialog is "Input is Requested".
 	 * @param inputNode  the content node for the dialog.
 	 * @param headerText text that appears above the content node in the dialog;
 	 *          can be null.
@@ -60,7 +60,7 @@ public class SimpleDialogs {
 	 *     to the user, and the dialog does not close.  Cannot be null!
 	 * @return true if the user dismisses the dialog with OK, and false otherwise.
 	 *    If the value is true, then the input in the content node has passed
-	 *    the error check
+	 *    the error check.
 	 */
 	public static boolean vetoableInput(
 			Node inputNode, String headerText, Supplier<String> testForErrorString) {
@@ -129,7 +129,7 @@ public class SimpleDialogs {
 	/**
 	 * Shows an input dialog box where the user can enter one line of text.
 	 * The dialog box has an "OK" button and a "Cancel" button.
-	 * @param promptText The prompt (such as a question) that is displayed
+	 * @param promptText the prompt (such as a question) that is displayed
 	 *     in the dialog box above the text input box.  This is the
 	 *     headerText for the dialog.  If it is to be displayed as more than
 	 *     one line, it should contain \n characters to separate the lines.
@@ -162,14 +162,14 @@ public class SimpleDialogs {
 	
 	/**
 	 * Shows a dialog box with a message and three buttons: "yes", "no", and
-	 * "cancel".  The only thing the user can click one of the buttons.
-	 * @param message The prompt (such as a question) that is displayed
+	 * "cancel".  The only thing the user can do is click one of the buttons.
+	 * @param message the prompt (such as a question) that is displayed
 	 *     in the dialog box above the buttons.  This is the
 	 *     contentText for the dialog.  (The headerText is null.)
 	 *     If it is to be displayed as more than one line, it should 
 	 *     contain \n characters to separate the lines.  Should not be null.
-	 * @param title  text to appear in the title of the dialog box; can be null
-	 * @return "yes", "no", or "cancel".  The return value is always on of these
+	 * @param title  text to appear in the title of the dialog box; can be null.
+	 * @return "yes", "no", or "cancel".  The return value is always one of these
 	 *     three strings, depending on which button the user clicks to dismiss
 	 *     the dialog box.  If the user closes the dialog box in some other
 	 *     way than clicking a button, the return value is "cancel".
@@ -200,11 +200,11 @@ public class SimpleDialogs {
 
 	/**
 	 * Shows a dialog box containing a simple color chooser pane that the user
-	 * can manipulate to select a color.  The dialob box has an OK button and
+	 * can manipulate to select a color.  The dialog box has an OK button and
 	 * a "Cancel" button.
 	 * @param initialColor the color that is initially selected in the dialog.
 	 *     If the value is null, the initial color is black.
-	 * @param headerText Text to be shown in the dialog above the color chooser
+	 * @param headerText text to be shown in the dialog above the color chooser
 	 *     pane.  Can be null.  For multi-line text, the \n character should
 	 *     be included in the string to separate the lines.
 	 * @return null if the user cancels the dialog, or the color that is selected
@@ -294,7 +294,7 @@ public class SimpleDialogs {
 			colorPatch = new Pane();
 			colorPatch.setStyle("-fx-background-color:red; -fx-border-color:black; -fx-border-width:2px");
 			
-			/* Lay out the components */
+			/* Lay out the components. */
 
 			GridPane root = this;
 			ColumnConstraints c1 = new ColumnConstraints();
@@ -363,7 +363,7 @@ public class SimpleDialogs {
 			    // Adjust the GUI to a new color value, when one of the sliders has changed.
 			if ( ! whichSlider.isValueChanging() ) {
 				return; // Don't respond to change if it was set programmatically;
-				        // Only respond if it was set by user dragging the slider.
+				        // only respond if it was set by user dragging the slider.
 			}
 			Color color;
 			if (whichSlider == redSlider || whichSlider == greenSlider || whichSlider == blueSlider) {

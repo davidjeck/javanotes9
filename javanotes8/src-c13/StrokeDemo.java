@@ -74,11 +74,11 @@ public class StrokeDemo extends Application {
 				g.strokeRect(x,y,w,h);
 			}
 		}
-	} // end class display
+	} // end class Display
 
 
 	/**
-	 * The start method creates and lays out the 20 display canvasses in a TilePane
+	 * The start method creates and lays out the 15 display canvasses in a TilePane
 	 * with 3 rows and 5 columns.  Each canvas is created using different stroke properties.
 	 */
 	public void start(Stage stage) {
@@ -144,8 +144,8 @@ public class StrokeDemo extends Application {
 	
 
 	/**
-	 * Called when the user drags the mouse on any of the 15 canvases.  Draws
-	 * a line or rectangle on all canvases, using the start point of the drag
+	 * Called when the user drags the mouse on any of the 15 canvasses.  Draws
+	 * a line or rectangle on all canvasses, using the start point of the drag
 	 * and the current position of the mouse.
 	 */
 	public void mouseDragged(MouseEvent e) {

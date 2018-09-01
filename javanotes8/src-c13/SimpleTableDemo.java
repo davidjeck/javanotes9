@@ -10,7 +10,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  * Shows a Table that contains a list of the states of the United States
- * and their capitals.  The entries in the table are not editable.
+ * with their capital cities and population.  The entries in the table are 
+ * not editable.
  */
 public class SimpleTableDemo extends Application  {
 
@@ -54,9 +55,9 @@ public class SimpleTableDemo extends Application  {
 		populationCol.setCellValueFactory(new PropertyValueFactory<StateData, Integer>("population"));
 		table.getColumns().add(populationCol);
 		
-		table.setPrefWidth(350);  // table does not calculate a useful preferred width!
+		table.setPrefWidth(350);  // Table does not calculate a useful preferred width!
 		
-		StackPane root = new StackPane(table);  // (wrap table in a StackPane so I can have a border)
+		StackPane root = new StackPane(table);  // Wrap table in a StackPane so I can have a border.
 		root.setStyle("-fx-border-color:black; -fx-border-width:2");
 		
 		stage.setScene(new Scene(root));

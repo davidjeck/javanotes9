@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * This class is part of a part of a demonstration of distributed computing.
  * It is to be used with CLMandelbrotTask.java on the worker computer.
- * CLMandelbortWorker should be run as a command-line program on each
+ * CLMandelbrotWorker should be run as a command-line program on each
  * worker computer involved in the distributed computation.  When it is
  * running, it listens for a connection from the master computer.  The 
  * listening port number can be specified on the command line; if none is 

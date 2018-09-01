@@ -36,7 +36,7 @@ public class TransformDemo extends Application {
 	//----------------------------------------------------------------------------
 
 
-	private Canvas canvas;  // The canvas where the polygon is drawn.
+	private Canvas canvas;  // The canvas where the figures are drawn.
 
 	private Slider scaleXSlider;  // Controls scaling in horizontal direction.
 	private Slider scaleYSlider;  // Controls scaling in vertical direction.

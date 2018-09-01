@@ -75,7 +75,7 @@ invalidation listeners should be used in preference to change listeners.</p>
 
 <p>An <classname>InvalidationListener</classname> defines the single method <code>invalidated(obv)</code>,
 where the parameter is the observable that has been invalidated.  Consider this code,
-where <code>sayGoodbye</code> is a <classname>CheckBox</classname>:</p>
+where <code>sayHello</code> is a <classname>CheckBox</classname>:</p>
 
 <pre>sayHello.selectedProperty().addListener( e -&gt; {
     if (sayHello.isSelected())
@@ -297,7 +297,7 @@ there will be an exception as the checkbox tries to change state.</np>
 <p>The solution that we need here is something called a <newword>bidirectional
 binding</newword>.  When two properties are bound bidirectionally, then
 the value of either property can be changed, and
-the other property will automatically changed to the same value.
+the other property will automatically be changed to the same value.
 Bidirectional bindings are set up with the method
 <code>bindBidirectional()</code>.  For our two checkboxes,
 we can say:</p>
@@ -313,7 +313,7 @@ Similar redundant interface elements are common in menus and toolbars.</np>
 
 <p>The sample program <sourceref href="BoundPropertyDemo.java"/> does
 something similar with <classname>RadioButtons</classname> and 
-<code>RadioMenuItems</code>.  The color of the label in the program
+<classname>RadioMenuItems</classname>.  The color of the label in the program
 can be controlled using either a "Color" menu or a set of
 radio buttons.  The state of each <classname>RadioButton</classname>
 is bidirectionally bound to the state of a corresponding 
@@ -367,7 +367,7 @@ colorGroup.selectedToggleProperty().addListener( e -> {
 (see <localref href="GUI1.4.3"/>), but the buttons are not.  Suppose that the user clicks on
 a currently unselected radio button.  The state of the button changes to
 "selected."  Because of the bidirectional binding, the state of the
-corresponding radio menu item has must also be changed to "selected."
+corresponding radio menu item must also be changed to "selected."
 Before that can happen, however, the <classname>ToggleGroup</classname>
 will change the state of the currently selected radio menu item to "unselected,"
 which will in turn cause the state of its associated radio button to change
@@ -377,7 +377,7 @@ radio menu items are changed.</np>
 <p>(Although it is not relevant to property binding, you should also check out
 how this code uses the <code>userData</code> property of the radio buttons.
 Every scene graph node has user data of type <classname>Object</classname>,
-which is not used by the system.  The user data property of a node can be
+which is not used by the system.  The <code>userData</code> property of a node can be
 a convenient place for a programmer to store data of any type that the
 programmer wants to associate with the node.  In this case, the user
 data for a radio menu item is a value of type <classname>Color</classname>,

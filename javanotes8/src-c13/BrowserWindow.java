@@ -66,7 +66,7 @@ class BrowserWindow extends Stage {
 		loadButton.setOnAction( e -> doLoad(urlInput.getText()) );
 		loadButton.defaultButtonProperty().bind( urlInput.focusedProperty() );
 		Button cancelButton = new Button("Cancel");  // For canceling a load.
-		cancelButton.setDisable(true);  // will be enabled only when a load is in progress.
+		cancelButton.setDisable(true);  // Will be enabled only when a load is in progress.
 		
 		/* Put together the GUI */
 		
@@ -102,7 +102,7 @@ class BrowserWindow extends Stage {
 		/* The "state" of the worker that loads pages is reported in the 
 		 * status label.   When the worker is "running", it means that
 		 * a web page is being loaded; the "Cancel" button is only enabled
-		 * when that is true.*/
+		 * when that is true. */
 		
 		webEngine.getLoadWorker().stateProperty().addListener( (o,oldVal,newVal) -> {
 			status.setText("Status: " + newVal);
@@ -157,7 +157,7 @@ class BrowserWindow extends Stage {
 	 * Loads a specified URL, but nothing is done if the
 	 * url string is null or empty.  The string should be
 	 * a valid URL, meaning it should start with one or
-	 * more letters followed by a color.  If that is not
+	 * more letters followed by a colon.  If that is not
 	 * the case, then "http://" is prepended to the string.
 	 * Thus, it will accept a string such as "google.com"
 	 * but will transform that to "http://google.com".
@@ -206,7 +206,7 @@ class BrowserWindow extends Stage {
 	
 
 	/**
-	 * This method is called when the user clicks the WindowMenu, but before the
+	 * This method is called when the user clicks the window menu, but before the
 	 * menu actually pops up.  It removes any items beyond the four permanent
 	 * items that were added in makeMenuBar(), and it replaces them with
 	 * an item corresponding to each item in the window lists.  A window

@@ -33,11 +33,11 @@ public class MandelbrotCanvas extends Canvas {
 	private int[][] iterationCounts;     // The iteration counts for any rows that have been computed;
 	                                     // iterationCounts[i] contains the counts for row number i.
 	                                     // All rows are empty at the start of a computation.
-	                                     // These are saved so that new paletts can be applied
+	                                     // These are saved so that new palettes can be applied
 	                                     // without recomputing the iteration counts.
 	                         
-	private volatile int currentJobNum;  // This is incremented when a job is stopped.  Tasks from
-	                                     // that are completed after the job is stopped are discarded.
+	private volatile int currentJobNum;  // This is incremented when a job is stopped.  Results from tasks in
+	                                     // a job that are completed after the job is stopped are discarded.
 	
 	private int tasksRemainingInJob;     // This is decremented by a MandelbrotTask when it completes.
 	                                     // When it reaches 0, stopJob() is called.
@@ -66,7 +66,7 @@ public class MandelbrotCanvas extends Canvas {
 	
 	/**
 	 * Returns an observable boolean property whose value is true when a
-	 * computatin is in progress in this canvas.
+	 * computation is in progress in this canvas.
 	 */
 	public BooleanProperty workingProperty() {
 		return working;
@@ -118,7 +118,7 @@ public class MandelbrotCanvas extends Canvas {
 		double x = xmin + dx/2;
 		double y = ymax - dy/2;
 		for (int i = 0; i < tasksRemainingInJob; i++) {
-			    // create one task for each row of the image,
+			    // Create one task for each row of the image,
 			    // and add the tasks to the task queue.
 			MandelbrotTask task = new MandelbrotTask();
 			task.count = count;
@@ -146,16 +146,16 @@ public class MandelbrotCanvas extends Canvas {
 	
 	/**
 	 * A MandelbrotTask will compute the iteration counts for one
-	 * row of pixels in the mandelbrot image,and it will apply the
+	 * row of pixels in the mandelbrot image, and it will apply the
 	 * corresponding colors to pixels in that row.  (But if the
 	 * jobNumber recorded in this task is not equal to the
 	 * currentJobNumber in the canvas, results are just discarded.)
 	 */
 	private class MandelbrotTask implements Runnable {
 		double xmin; // x-value at left edge of canvas
-		double dx;   // x-increment going from on pixel to the next
+		double dx;   // x-increment going from one pixel to the next
 		double y;    // y-value for this row of pixels
-		int count;   // number of pixels in this row.
+		int count;   // number of pixels in this row
 		int maxIterations;  // maximum number of iterations to compute
 		int rowNumber;  // which row of pixels does this task work on
 		int jobNumber;  // which job is this task a part of

@@ -77,7 +77,7 @@ public class TestDialogs extends Application {
 					+ "in the text input box below.", 
 					"Using a TextInputDialog", "default value");
 			if (input == null)
-				message.setText("You canceled the prompty dialog.");
+				message.setText("You canceled the prompt dialog.");
 			else
 				message.setText("You replied \"" + input + "\".");
 		} ) );
@@ -132,7 +132,7 @@ public class TestDialogs extends Application {
 		return btn;
 	}
 	
-	/* The remaining items are used for the "vetoable input" dialog
+	/* The remaining items are used for the "vetoable input" dialog.
 	 * The dialog shows a pair of input boxes where the user enters
 	 * two numbers, min and max.  The dialog will only accept legal
 	 * numbers where max is greater than min.  

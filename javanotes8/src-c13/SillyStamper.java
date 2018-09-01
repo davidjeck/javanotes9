@@ -16,7 +16,7 @@ import javafx.geometry.Pos;
 import java.util.ArrayList;
 
 /**
- * An SillyStamper panel contains a List of icons, a canvas where 
+ * A SillyStamper panel contains a List of icons, a canvas where 
  * the user can "stamp" images of the icons, and a few control buttons.
  * The user clicks an icon in the list to select it, then clicks on the 
  * canvas to place copies of the selected image.
@@ -38,9 +38,9 @@ public class SillyStamper extends Application {
 	 * one icon image on the canvas.
 	 */
 	private static class IconInfo {
-		int iconNumber;  // an index into the iconImages array.
-		int x, y;        // coords of the upper left corner of the image.
-		boolean big;     // should icon be scaled up to a larger (48-by48) size.
+		int iconNumber;  // an index into the iconImages array
+		int x, y;        // coords of the upper left corner of the image
+		boolean big;     // should icon be scaled up to a larger (48-by48) size
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class SillyStamper extends Application {
 		redoButton = new Button("Redo");
 		redoButton.setOnAction( e -> {
 			if (iconsShown < iconsPlaced) {
-				   // Decrement iconsShown, so one more icon will be shown.
+				   // Increment iconsShown, so one more icon will be shown.
 				iconsShown++;
 				if (iconsShown == iconsPlaced)
 					redoButton.setDisable(true);
@@ -165,7 +165,7 @@ public class SillyStamper extends Application {
 
 
 	/**
-	 * Create a ListView that contains all of the available icon images.  initially,
+	 * Create a ListView that contains all of the available icon images.  Initially,
 	 * the first icon is selected.  The user can select a different icon by
 	 * clicking its image in the list.  The items in the ListView are ImageView objects,
 	 * not Image objects, since a List will not display Image objects correctly.

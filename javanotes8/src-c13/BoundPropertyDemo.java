@@ -77,7 +77,7 @@ public class BoundPropertyDemo extends Application {
 		message.backgroundProperty().bind( 
 				new When(bgCheck.selectedProperty()).then(colorBG).otherwise(whiteBG));
 		
-		/* Define a slider and a Label that will display the slider's value.  The
+		/* Define a slider and a label that will display the slider's value.  The
 		 * label's textProperty is bound to a string property that is derived from
 		 * the valueProperty of the slider using the asString(format) method. */
 		
@@ -94,7 +94,7 @@ public class BoundPropertyDemo extends Application {
 		/* Make a menubar with a Color menu containing a radiogroup for setting the color
 		 * of the text in the label.  Make a corresponding group of radio buttons and put
 		 * them in a VBox at the right of the BorderPane.  Bidirectionally bind the radio
-		 * buttons to the radio menu items, the keep the selection in the menu in synch
+		 * buttons to the radio menu items, to keep the selection in the menu in synch
 		 * with the selection in the group of buttons.  Only the menu items are added
 		 * to a ToggleGroup, to ensure that only one color is selected. */
 		

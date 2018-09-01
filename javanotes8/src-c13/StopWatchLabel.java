@@ -53,7 +53,6 @@ public class StopWatchLabel extends Label {
 		else {
 				// Stop the timer.  Compute the elapsed time since the
 				// timer was started and display it.
-			running = false;
 			long endTime = System.currentTimeMillis();
 			double seconds = (endTime - startTime) / 1000.0;
 			setText( String.format("Time: %1.3f seconds", seconds) );

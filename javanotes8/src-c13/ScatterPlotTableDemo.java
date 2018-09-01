@@ -47,7 +47,7 @@ public class ScatterPlotTableDemo extends Application {
 	private Affine canvasTransform;  // The transform from pixel coords to the coords
 	                                 //   that were used for drawing the canvas;  this
 	                                 //   is computed in redrawDisplay() and is used 
-	                                 //   in canvasClickde() to transform the mouse coords.
+	                                 //   in canvasClicked() to transform the mouse coords.
 	
 	/**
 	 * Set up the GUI and events.
@@ -57,20 +57,20 @@ public class ScatterPlotTableDemo extends Application {
 		/* Create the table, and get the ObservableList of rows from the table.
 		 * The listener for the list redraws the canvas whenever a point is added
 		 * to the list or deleted from the list (but it's not called if a point
-		 * that is already in the list is modified. */
+		 * that is already in the list is modified). */
 		
 		table = new TableView<Point>();
 		points = table.getItems();
 		
 		for (int i = 0; i < 5; i++) { // add 5 random points to the table
-			points.add( new Point(500*Math.random()/100, 500*Math.random()/100) );
+			points.add( new Point(5*Math.random(), 5*Math.random()) );
 		}
 		points.addListener( (Observable e) -> redrawDisplay() );
 		
 		/* Configure the table and set up a listener on the editingCellProperty of
-		 * the table. This property is the cell that is currently being edited,
+		 * the table.  This property is the cell that is currently being edited,
 		 * or is null when no cell is being edited.  When the value changes to
-		 * null, it means that the user has just finished editing a cell. Since
+		 * null, it means that the user has just finished editing a cell.  Since
 		 * the value in the cell might have been changed, the canvas should be
 		 * redrawn. */
 		
@@ -141,7 +141,7 @@ public class ScatterPlotTableDemo extends Application {
 				table.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
 		Button addButton = new Button("Add Random Point");
 		addButton.setOnAction( e -> {  // add another random point to the table
-			points.add( new Point(500*Math.random()/100, 500*Math.random()/100) );
+			points.add( new Point(5*Math.random(), 5*Math.random()) );
 			table.scrollTo(points.size()-1); // make sure new point is visible
 			table.getSelectionModel().select(points.size()-1);
 		});
@@ -306,7 +306,7 @@ public class ScatterPlotTableDemo extends Application {
 		g.setLineWidth(4);
 		g.strokeRect(2,2,canvas.getWidth()-4,canvas.getHeight()-4);
 
-	} // end redrawCanvas()
+	} // end redrawDisplay()
 
 	
 } // end ScatterPlotTableDemo

@@ -61,8 +61,8 @@ public class SetLimitsDialog extends Dialog<ButtonType> {
 	/**
 	 * Constructor builds the dialog box and adds a listener to the OK button.
 	 * Does not make the dialog visible on the screen. 
-	 * @param oldLimitStrings Initial content of input boxes.  Must be an array 
-	 *     of length (at least) four..
+	 * @param oldLimitStrings initial content of input boxes.  Must be an array 
+	 *     of length (at least) four.
 	 */
 	public SetLimitsDialog(String[] oldLimitStrings) {
 		this.oldLimitStrings = oldLimitStrings;
@@ -116,20 +116,20 @@ public class SetLimitsDialog extends Dialog<ButtonType> {
 				values[i] = Double.parseDouble(inputStrings[i]);
 			}
 			catch (NumberFormatException e) {
-				error(I18n.tr( "limitsdialog.error.NAN", inputStrings[i], I18n.tr(names[i]) ) );
+				error( I18n.tr( "limitsdialog.error.NAN", inputStrings[i], I18n.tr(names[i]) ) );
 				inputBoxes[i].selectAll();
 				inputBoxes[i].requestFocus();
 				return false;
 			}
 		}
 		if (values[1] <= values[0]) {
-			error(I18n.tr("limitsdialog.error.xValuesOutOfOrder" ));
+			error(I18n.tr("limitsdialog.error.xValuesOutOfOrder"));
 			inputBoxes[1].selectAll();
 			inputBoxes[1].requestFocus();
 			return false;
 		}
 		if (values[3] <= values[2]) {
-			error(I18n.tr("limitsdialog.error.yValuesOutOfOrder" ));
+			error(I18n.tr("limitsdialog.error.yValuesOutOfOrder"));
 			inputBoxes[3].selectAll();
 			inputBoxes[3].requestFocus();
 			return false;
@@ -180,4 +180,4 @@ public class SetLimitsDialog extends Dialog<ButtonType> {
 		alert.showAndWait();
 	}
 
-}
+}  // end class SetLimitsDialog

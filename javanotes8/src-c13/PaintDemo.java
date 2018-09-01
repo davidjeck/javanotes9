@@ -49,7 +49,7 @@ public class PaintDemo extends Application {
 	private double gradientAngle = 45, gradientWidth = 50;  // Settings that affect the paint.
 	private double patternOffset = 0, patternScale = 100;
 
-	private Slider slider1, slider2;  // Sliders that control the settings;  Which 
+	private Slider slider1, slider2;  // Sliders that control the settings; which 
 									  // setting is affected depends on current paint type.
 
 	private Label label1 = new Label("  Gradient Angle:");  // Labels change, depending
@@ -125,7 +125,7 @@ public class PaintDemo extends Application {
 	/**
 	 *  Fill the canvas with white, then draw the polygon filled with the
 	 *  current fillPaint.  Draw small squares at the polygon vertices;
-	 *  the use can drag these squares to move the vertices.
+	 *  the user can drag these squares to move the vertices.
 	 */
 	private void drawCanvas() {
 		GraphicsContext g = canvas.getGraphicsContext2D();
@@ -143,7 +143,7 @@ public class PaintDemo extends Application {
 
 	
 	/**
-	 * Called when the use pressed the mouse on the canvas.  Searches the
+	 * Called when the user presses the mouse on the canvas.  Searches the
 	 * polygon vertices to find one near the mouse position.  If one is
 	 * found, the user can drag it.
 	 */

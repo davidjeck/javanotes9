@@ -43,7 +43,7 @@ public class Menus extends MenuBar {
 	/**
 	 * This is the list of example files for the Examples menu.  The items in the
 	 * menu are the strings from this array.  For a string str in the array,
-	 * a resource file name is constructed as:   "edu/hws/edu/mdbfx/examples" + str + ".mdb"
+	 * a resource file name is constructed as:  "edu/hws/edu/mdbfx/examples" + str + ".mdb".
 	 * The resulting names must be names of resource files that are accessible 
 	 * to the program.  The files should be settings files for the Mandelbrot
 	 * Viewer program.  When the user selects an item from the Examples menu,
@@ -58,8 +58,8 @@ public class Menus extends MenuBar {
 	/**
 	 * Constructor creates the menu bar containing commands that apply to a MandelbrotPane.
 	 * The menu bar contains File, MaxIterations, Palette, PaletteLength, and Example menus.
-	 * @param owner  The MandelbrotPane. that will be managed by this menu bar.  This
-	 *   variable is saved for later access to the MandelbrotPane..
+	 * @param owner  the MandelbrotPane that will be managed by this menu bar.  This
+	 *   variable is saved for later access to the MandelbrotPane.
 	 */
 	public Menus(MandelbrotPane owner) {
 		this.owner = owner;
@@ -138,7 +138,7 @@ public class Menus extends MenuBar {
 		setImageSize.disableProperty().bind(owner.getDisplay().workingProperty());
 
 		owner.limitsProperty().addListener( (o,oldVal,newVal) -> {
-			    // save old value of limits property for use in "Restore Previous Limits".
+			    // Save old value of limitsProperty for use in "Restore Previous Limits".
 			previousLimits = oldVal;
 			undoChangeOfLimits.setDisable( previousLimits == null );
 		});
@@ -284,9 +284,9 @@ public class Menus extends MenuBar {
 
 	/**
 	 * A little utility method that makes strings out of the xy-limits on the display,
-	 * where the lengths of the strings is adjusted depending on the distance between
+	 * where the lengths of the string is adjusted depending on the distance between
 	 * xmax and xmin.  The idea is to try to avoid more digits after the decimal
-	 * points than makes sense.  If it succeeds the coordinates that are shown for xmin
+	 * points than makes sense.  If it succeeds, the coordinates that are shown for xmin
 	 * and xmax should differ only in their last four or five digits and the same should
 	 * also be true for ymin and ymax.
 	 * @return An array of 4 strings representing the values of xmin, xmax, ymin, ymax.
@@ -440,7 +440,7 @@ public class Menus extends MenuBar {
 
 
 	/**
-	 * Restores limits to their default value, showing the entire Mandelbrot Set.
+	 * Restores limits to their default values, showing the entire Mandelbrot Set.
 	 */
 	private void doDefaultLimits() {
 		owner.setLimits(-2.5,1.1,-1.35,1.35);
@@ -472,7 +472,7 @@ public class Menus extends MenuBar {
 
 
 	/**
-	 * Puts up a message alert that contains the current range of xy-value.
+	 * Puts up a message alert that contains the current range of xy-values
 	 * that is shown in the MandelbrotPane.
 	 */
 	private void doShowLimits() {
@@ -489,7 +489,7 @@ public class Menus extends MenuBar {
 	 * Puts up a dialog box of type SetImageSizeDialog (another class defined in
 	 * this package).  The dialog box lets the user enter new values for the
 	 * width and height of the image.  If the user does not cancel, then the
-	 * new width and height are applied to the image.   The dialog box ensures
+	 * new width and height are applied to the image.  The dialog box ensures
 	 * that the returned values, if any, are legal
 	 */
 	private void doSetImageSize() {
@@ -622,7 +622,7 @@ public class Menus extends MenuBar {
 				// Takes a string from an XML file (which originally came from the
 				// previous method when the file was saved) and restores the setting
 				// represented by that string.  This is called by the retrieveSettingsFromXML()
-				// method, which is called in turn by the Open Params command
+				// method, which is called in turn by the Open Params command.
 			for (int i = 0; i < 6; i++) {
 				if (valueStrings[i].equalsIgnoreCase(str)) {
 					switch(i) {
@@ -696,12 +696,12 @@ public class Menus extends MenuBar {
 					c1 = owner.getGradientPaletteColor1();
 					c2 = owner.getGradientPaletteColor2();
 				}
-				c1 = colorChooser(c1, "Select Gradient Start Color");
+				c1 = colorChooser(c1, I18n.tr("dialog.selectGradient1"));
 				if (c1 == null) {
 					items[selectedItem].setSelected(true);  // Restore previous selection in menu.
 					return;                                 // (The menu selection has been changed by the user
 				}                                           // action, but the value of selectedItem has not changed.)
-				c2 = colorChooser(c2, "Select Gradient End Color");
+				c2 = colorChooser(c2, I18n.tr("dialog.selectGradient2"));
 				if (c2 == null) {
 					items[selectedItem].setSelected(true);
 					return;
@@ -909,7 +909,7 @@ public class Menus extends MenuBar {
 
 			hueSlider = new Slider(0,360,0);
 			saturationSlider = new Slider(0,1,1);
-			brightnessSlider = new Slider(0,1,2);
+			brightnessSlider = new Slider(0,1,1);
 			redSlider = new Slider(0,1,1);
 			greenSlider = new Slider(0,1,0);
 			blueSlider = new Slider(0,1,0);
@@ -983,12 +983,12 @@ public class Menus extends MenuBar {
 			String colorString = String.format("#%02x%02x%02x", (int)(255*color.getRed()),
 					(int)(255*color.getGreen()), (int)(255*color.getBlue()) );
 			colorPatch.setStyle("-fx-border-color:black; -fx-border-width:2px; -fx-background-color:" + colorString);
-			hueLabel.setText(String.format(" Hue = %1.3f", color.getHue()));
-			saturationLabel.setText(String.format(" Saturation = %1.3f", color.getSaturation()));
-			brightnessLabel.setText(String.format(" Brightness = %1.3f", color.getBrightness()));
-			redLabel.setText(String.format(" Red = %1.3f", color.getRed()));
-			greenLabel.setText(String.format(" Green = %1.3f", color.getGreen()));
-			blueLabel.setText(String.format(" Blue = %1.3f", color.getBlue()));
+			hueLabel.setText(String.format(I18n.tr("dialog.hue") + " = %1.3f", color.getHue()));
+			saturationLabel.setText(String.format(I18n.tr("dialog.saturation") + " = %1.3f", color.getSaturation()));
+			brightnessLabel.setText(String.format(I18n.tr("dialog.brightness") + " = %1.3f", color.getBrightness()));
+			redLabel.setText(String.format(I18n.tr("dialog.red") + " = %1.3f", color.getRed()));
+			greenLabel.setText(String.format(I18n.tr("dialog.green") + " = %1.3f", color.getGreen()));
+			blueLabel.setText(String.format(I18n.tr("dialog.blue") + " = %1.3f", color.getBlue()));
 			currentColor = color;
 		}
 
@@ -1006,7 +1006,7 @@ public class Menus extends MenuBar {
 				// Adjust the GUI to a new color value, when one of the sliders has changed.
 			if ( ! whichSlider.isValueChanging() ) {
 				return; // Don't respond to change if it was set programmatically;
-						// Only respond if it was set by user dragging the slider.
+						// only respond if it was set by user dragging the slider.
 			}
 			Color color;
 			if (whichSlider == redSlider || whichSlider == greenSlider || whichSlider == blueSlider) {
@@ -1025,12 +1025,12 @@ public class Menus extends MenuBar {
 			String colorString = String.format("#%02x%02x%02x", (int)(255*color.getRed()),
 					(int)(255*color.getGreen()), (int)(255*color.getBlue()) );
 			colorPatch.setStyle("-fx-border-color:black; -fx-border-width:2px; -fx-background-color:" + colorString);
-			hueLabel.setText(String.format(" Hue = %1.3f", color.getHue()));
-			saturationLabel.setText(String.format(" Saturation = %1.3f", color.getSaturation()));
-			brightnessLabel.setText(String.format(" Brightness = %1.3f", color.getBrightness()));
-			redLabel.setText(String.format(" Red = %1.3f", color.getRed()));
-			greenLabel.setText(String.format(" Green = %1.3f", color.getGreen()));
-			blueLabel.setText(String.format(" Blue = %1.3f", color.getBlue()));
+			hueLabel.setText(String.format(I18n.tr("dialog.hue") + " = %1.3f", color.getHue()));
+			saturationLabel.setText(String.format(I18n.tr("dialog.saturation") + " = %1.3f", color.getSaturation()));
+			brightnessLabel.setText(String.format(I18n.tr("dialog.brightness") + " = %1.3f", color.getBrightness()));
+			redLabel.setText(String.format(I18n.tr("dialog.red") + " = %1.3f", color.getRed()));
+			greenLabel.setText(String.format(I18n.tr("dialog.green") + " = %1.3f", color.getGreen()));
+			blueLabel.setText(String.format(I18n.tr("dialog.blue") + " = %1.3f", color.getBlue()));
 		}	
 
 
@@ -1038,7 +1038,7 @@ public class Menus extends MenuBar {
 
 	/**
 	 * Shows a dialog box containing a simple color chooser pane that the user
-	 * can manipulate to select a color.  The dialob box has an OK button and
+	 * can manipulate to select a color.  The dialog box has an OK button and
 	 * a "Cancel" button.
 	 * @param initialColor the color that is initially selected in the dialog.
 	 *     If the value is null, the initial color is black.
@@ -1053,7 +1053,7 @@ public class Menus extends MenuBar {
 		ColorChooserPane chooser = new ColorChooserPane(initialColor);
 
 		Dialog<ButtonType> dialog = new Dialog<>();
-		dialog.setTitle("Color Picker");
+		dialog.setTitle(I18n.tr("dialog.colorpicker"));
 		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 		dialog.getDialogPane().setContent(chooser);
 		dialog.setHeaderText(headerText);

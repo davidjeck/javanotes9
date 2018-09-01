@@ -74,7 +74,7 @@ public class Main extends Application {
 			Menus menus = content.getMenus();
 			String currentDir = menus.getSelectedDirectoryInFileChooser();
 			if (currentDir != null)
-				node.put("mandelbort.filechooser.directory", currentDir); 
+				node.put("mandelbrot.filechooser.directory", currentDir); 
 		}
 		catch (Exception e) {
 		}
@@ -108,8 +108,8 @@ public class Main extends Application {
 					Rectangle2D screen = Screen.getPrimary().getVisualBounds();
 					if (x < screen.getMinX() || x > screen.getMaxX() - 300)
 						x = screen.getMinX() + 20;
-					if (x < screen.getMinY() || x > screen.getMaxY() - 200)
-						x = screen.getMinY() + 20;
+					if (y < screen.getMinY() || y > screen.getMaxY() - 200)
+						y = screen.getMinY() + 20;
 					if (w < 300)
 						w = 300;
 					else if (x + w > screen.getMaxX())
@@ -117,7 +117,7 @@ public class Main extends Application {
 					if (h < 200)
 						h = 200;
 					else if (y + h > screen.getMaxY())
-						y = screen.getMaxY() - h;
+						h = screen.getMaxY() - y;
 					window.setX(x);
 					window.setY(y);
 					window.setWidth(w);
@@ -128,7 +128,7 @@ public class Main extends Application {
 				}
 			}
 			Menus menus = content.getMenus();
-			String directory = node.get("mandelbort.filechooser.directory", null);
+			String directory = node.get("mandelbrot.filechooser.directory", null);
 			if (directory != null) {
 				   // Try to restore the current directory.
 				menus.setSelectedDirectoryInFileChooser(directory);

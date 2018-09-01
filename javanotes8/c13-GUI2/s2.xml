@@ -611,7 +611,7 @@ for (int j = 0; j &lt; 9; j++) {  // row in the snapshot
 around another point <code>(x,y)</code>, I need to take a new snapshot, this time
 of the 9-by-9 square of pixels surrounding <code>(x,y)</code>.  Once we have
 that snapshot, we can do the blending calculations and write the new color back
-the canvas, using the <classname>PixelWriter</classname> that writes to the
+to the canvas, using the <classname>PixelWriter</classname> that writes to the
 canvas:</np>
 
 <pre>snapshotParams.setViewport( new Rectangle2D(x - 4, y - 4, 9, 9) );
@@ -738,7 +738,7 @@ a <classname>BufferedImage</classname>, using a static method in class
 
 <p>Once you have the <classname>BufferedImage</classname>, you can use a
 static method from class <classname>ImageIO</classname>, in package <code>javax.imageio</code>,
-to write it to a file.</p>
+to write it to a file:</p>
 
 <pre>ImageIO.write( bufferedImage, format, file );</pre>
 

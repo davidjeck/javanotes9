@@ -36,6 +36,7 @@ import javafx.geometry.Rectangle2D;
  * sophisticated pixel manipulation.  The program also demonstrates
  * using a transparent "overlay" canvas to implement some of the
  * tools.  The window for this program is not resizable.
+ * The program also requires the file SimpleDialogs.java.
  */
 public class ToolPaint extends Application {
 
@@ -219,7 +220,7 @@ public class ToolPaint extends Application {
 		/* Color choices are given by RadioMenuItems, controlled by
 		 * a ToggleGroup.  Each choice corresponds to a standard color,
 		 * except for a "Custom Drawing Color" item that calls up
-		 * a colo choice dialog box. */
+		 * a color choice dialog box. */
 		
 		Color[] colors = { // Standard colors available in the menu.
 				Color.BLACK, Color.WHITE, Color.RED, Color.GREEN, 
@@ -242,7 +243,7 @@ public class ToolPaint extends Application {
 		customColor.setOnAction( e -> {
 			   // For the custom color selection, use a dialog box to get an 
 			   // arbitrary color from the user.  This has to be done in an
-			   // ActionEvent handler, since it needs to happen even the user selects
+			   // ActionEvent handler, since it needs to happen even if the user selects
 			   // Custom Drawing Color when it is already selected.  (In that case,
 			   // the selected toggle does not change.
 			customColor.setSelected(true);
@@ -353,7 +354,7 @@ public class ToolPaint extends Application {
 			else { 
 					// For the SMUDGE tool, blend some of the color from
 					// the smudgeRed, smudgeGreen, and smudgeBlue arrays
-					// into the pixels in a 7-by-7 block around (x,y), and
+					// into the pixels in a 9-by-9 block around (x,y), and
 					// vice versa.  The effect is to smear out the color
 					// of pixels that are visited by the tool.
 				snapshotParams.setViewport(new Rectangle2D(x-4,y-4,9,9));
@@ -386,17 +387,17 @@ public class ToolPaint extends Application {
 		startX = prevX = currentX = (int)evt.getX();
 		startY = prevY = currentY = (int)evt.getY();
 		dragging = true;
-		canvasGraphics.setStroke(currentColor);  // make sure we are drawing with the right color.
+		canvasGraphics.setStroke(currentColor);  // Make sure we are drawing with the right color.
 		canvasGraphics.setFill(currentColor);
 		overlayGraphics.setStroke(currentColor);
 		overlayGraphics.setFill(currentColor);
 		if (currentTool == Tool.ERASE) {
 				// Erase a 10-by-10 block around the starting mouse position.
-			canvasGraphics.setFill(backgroundColor);  // change the color when using erase
+			canvasGraphics.setFill(backgroundColor);  // Change the color when using erase.
 			canvasGraphics.fillRect(startX-5,startY-5,10,10);
 		}
 		else if (currentTool == Tool.SMUDGE) {
-				// Record the colors in a 7-by-7 block of pixels around the
+				// Record the colors in a 9-by-9 block of pixels around the
 				// starting mouse position into the arrays smudgeRed, 
 				// smudgeGreen, and smudgeBlue.  These arrays hold the
 				// red, green, and blue components of the colors.

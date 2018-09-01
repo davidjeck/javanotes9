@@ -34,7 +34,7 @@ public class SetImageSizeDialog extends Dialog<ButtonType> {
 	 * inputs or to cancel the dialog.  Legal input values are integers
 	 * in the range 10 to 5000.  NOTE:  If you use this method, you
 	 * don't have to worry about anything else in the class.
-	 * @param oldSize If non-null, then the values of oldSize[0] and
+	 * @param oldSize if non-null, then the values of oldSize[0] and
 	 *    oldSize[1] are put in the input boxes.  If null, the initial
 	 *    values in the input boxes are set to 800 and 600.
 	 * @return null, if the user cancels the dialog or clicks OK without changing
@@ -66,7 +66,7 @@ public class SetImageSizeDialog extends Dialog<ButtonType> {
 
 	/**
 	 * This constructor creates the dialog's user interface and sets up
-	 * a listener to detect clicks on the OK button
+	 * a listener to detect clicks on the OK button.
 	 *     When the user clicks OK, the checkbox and input boxes are checked.
 	 * If the input is legal, the dialog box is closed; if not, an error
 	 * message is displayed and the dialog stays up.  Note that this constructor
@@ -128,7 +128,7 @@ public class SetImageSizeDialog extends Dialog<ButtonType> {
 
 	/**
 	 * This method is called when the user clicks OK.  It gets the
-	 * user's input and checks whether it is legal
+	 * user's input and checks whether it is legal.
 	 * @return true if the input is legal, false if not.
 	 */
 	private boolean checkInput() {
@@ -182,4 +182,4 @@ public class SetImageSizeDialog extends Dialog<ButtonType> {
 		alert.showAndWait();
 	}
 
-}
+} // end class SetImageSizeDialog

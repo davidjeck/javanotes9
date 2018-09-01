@@ -37,7 +37,7 @@ import java.awt.image.BufferedImage;
  * math.hws.edu:1501 or 127.0.0.1:18881, that is, the computer name or
  * IP, followed by a colon, followed by the port number, with NO SPACES.
  * 
- * When CLMandlebrotMaster runs, it creates a list of tasks (of type
+ * When CLMandelbrotMaster runs, it creates a list of tasks (of type
  * CLMandelbrotTask) that have to be performed, and it creates a thread
  * for communicating with each copy of CLMandelbrotWorker.  Each thread
  * sends a sequence of tasks to the connected worker, which does the
