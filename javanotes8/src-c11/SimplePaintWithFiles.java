@@ -77,7 +77,7 @@ public class SimplePaintWithFiles extends Application {
 								  // property is copied from this variable.  Its
 								  // value is set by the "Use Symmetry" command in
 								  // the "Control" menu.
-	private CheckMenuItem useSymmetryCheck;  // The checkbox controling useSymmetry
+	private CheckMenuItem useSymmetryCheck;  // The checkbox controlling useSymmetry
 	
 	private File editFile;  // The file that is being edited.  Set when user opens
 	                        // or saves a file.  Value is null if no file is being edited. 
@@ -149,7 +149,7 @@ public class SimplePaintWithFiles extends Application {
 	 * Strokes a line segment, using the current drawing color from (x1,y1) to (x2,y2).
 	 * If symmetric is true, also draws the horizontal and vertical reflections
 	 * of that segment.  This is called by redraw() and also when the mouse moves
-	 * during a drag operation on the canvas
+	 * during a drag operation on the canvas.
 	 */
 	private void drawSegment(boolean symmetric, double x1, double y1, double x2, double y2) {
 		g.strokeLine(x1,y1,x2,y2);
@@ -226,7 +226,7 @@ public class SimplePaintWithFiles extends Application {
 	//------------------------ implement menus -----------------------------
 	
 	private static final String[] colorNames = {  
-		// List of available color names for the Color and BackgroudColor menus .
+		// List of available color names for the Color and BackgroudColor menus.
 			"Black", "White", "Red", "Green", "Blue", 
 			"Cyan", "Magenta", "Yellow", "Gray", "Brown", 
 			"Purple", "Pink", "Orange"
@@ -241,7 +241,7 @@ public class SimplePaintWithFiles extends Application {
 
 	/**
 	 * Creates a menu bar for use with this panel.  It contains
-	 * three menus: "Control", "Color", and "BackgroundColor".
+	 * four menus: "File", "Control", "Color", and "BackgroundColor".
 	 */
 	public MenuBar createMenuBar() {
 

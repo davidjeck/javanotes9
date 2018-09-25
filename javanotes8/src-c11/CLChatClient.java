@@ -103,9 +103,9 @@ class CLChatClient {
 			incoming = new BufferedReader(
 					new InputStreamReader(connection.getInputStream()) );
 			outgoing = new PrintWriter(connection.getOutputStream());
-			outgoing.println(HANDSHAKE);  // Send handshake to client.
+			outgoing.println(HANDSHAKE);  // Send handshake to server.
 			outgoing.flush();
-			messageIn = incoming.readLine();  // Receive handshake from client.
+			messageIn = incoming.readLine();  // Receive handshake from server.
 			if (! messageIn.equals(HANDSHAKE) ) {
 				throw new IOException("Connected program is not CLChat!");
 			}

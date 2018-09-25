@@ -359,7 +359,7 @@ computers can deal correctly with all of these possibilities.)</np>
 <p><classname>BufferedReader</classname> also defines the instance method <code>lines()</code>
 which returns a value of type <atype>Stream&lt;String&gt;</atype> that can be used with
 the stream API (<localref href="generics.6"/>).  A convenient way to process all the lines
-from a <classname>BufferedReader</classname>, <code>reader</code> is
+from a <classname>BufferedReader</classname>, <code>reader</code>, is
 to use the <code>forEach()</code> operator on the stream of lines:
 <code>reader.lines().forEachOrdered(action)</code>, where <code>action</code> is a consumer of
 strings, usually given as a lambda expression.</p>
@@ -548,7 +548,7 @@ object. For complex objects, this can all be a major chore. However, you can
 get Java to do a lot of the work for you by using the classes
 <classname>ObjectInputStream</classname> and <classname>ObjectOutputStream</classname>. These are
 subclasses of <classname>InputStream</classname> and <classname>OutputStream</classname> that can be used
-for writing and reading serialized objects.</p>
+for reading and writing serialized objects.</p>
 
 <p><classname>ObjectInputStream</classname> and <classname>ObjectOutputStream</classname> are wrapper
 classes that can be wrapped around arbitrary <classname>InputStreams</classname> and

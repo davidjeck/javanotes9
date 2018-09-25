@@ -137,7 +137,7 @@ file on a disk that is "write-protected," meaning that it cannot be modified.</p
 
 <p>When you are finished with a <classname>PrintWriter</classname>,
 you should call its <code>flush()</code> method, such as "<code>result.flush()</code>",
-to make sure that all the output has been set to its destination.  If you forget to
+to make sure that all the output has been sent to its destination.  If you forget to
 do this, you might find that some of the data that you have written to a file
 has not actually shown up in the file.</p>
 
@@ -456,7 +456,7 @@ file name, you will just have to assume that the user understands how to work
 with files and directories. But in a graphical user interface, the user expects
 to be able to select files using a <newword>file dialog box</newword>, 
 which is a window that a program can open when it wants the
-user to select a file for input or output. Swing includes a
+user to select a file for input or output. JavaFX includes a
 platform-independent technique for using file dialog boxes in the form of a
 class called <classname>FileChooser</classname>, in package <code>javafx.stage</code>.</p>
 
@@ -507,7 +507,7 @@ in the title bar of the dialog box.  The parameter is a string.  This method
 must be called before showing the dialog box.</li>
 <li><codedef>fileDialog.setInitialFileName(name)</codedef> &mdash; sets the name
 that appears as a default name in the input box for the file name.  The parameter
-is a string. If the parameter it is null, the input box will be empty; that is also the
+is a string. If the parameter is null, the input box will be empty; that is also the
 default.  This method
 must be called before showing the dialog box.</li>
 <li><codedef>fileDialog.setInitialDirectory(directory)</codedef> &mdash; sets the directory
@@ -576,7 +576,7 @@ In this example, the data is written in text form, using a
         out = new PrintWriter( stream );
     }
     catch (Exception e) {
-           // Most likely, user doesn't have permission to read the file.
+           // Most likely, user doesn't have permission to write the file.
         Alert errorAlert = new Alert(Alert.AlertType.ERROR,
                 "Sorry, but an error occurred while\n" +
                 trying to open the file for output.");

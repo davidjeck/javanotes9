@@ -141,9 +141,9 @@ public class TrivialEdit extends Application {
 			out = new PrintWriter( stream );
 		}
 		catch (Exception e) {
-			   // Most likely to occur if the user doesn't have permission to read the file.
+			   // Most likely to occur if the user doesn't have permission to write the file.
 			Alert errorAlert = new Alert(Alert.AlertType.ERROR,
-					"Sorry, but an error occurredwhile\ntrying to open the file for output.");
+					"Sorry, but an error occurred while\ntrying to open the file for output.");
 			errorAlert.showAndWait();
 			return;
 		}

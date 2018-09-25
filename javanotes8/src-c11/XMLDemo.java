@@ -17,7 +17,7 @@ import org.xml.sax.InputSource;
 /**
  * A demonstration of simple XML parsing and processing using the Document Object
  * Model.  XML can be entered into one text area (at the top).  When the user
- * clicks a "Parse XML Input", the input is parsed to give a DOM representation
+ * clicks "Parse XML Input", the input is parsed to give a DOM representation
  * of the XML.  If this succeeds, the DOM representation is traversed and information
  * is output about the nodes that are encountered.  Only Element, Text, and
  * Attribute nodes are understood by this program.  If the input is not well-formed

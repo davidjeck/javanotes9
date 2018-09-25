@@ -26,7 +26,7 @@ the rules of the DTD is said to be a <newword>valid</newword> XML
 document.  The idea is that XML is a general format for data representation,
 and a DTD specifies how to use XML to represent a particular kind of data.
 (There are also alternatives to DTDs, such as <newword>XML schemas</newword>,
-for defining valid XLM documents, but let's ignore them here.)</p>
+for defining valid XML documents, but let's ignore them here.)</p>
    
 <p>There is nothing magical about XML.  It's certainly not perfect.  It's a
 very verbose language, and some people think it's ugly.  On the other hand
@@ -154,7 +154,7 @@ could be made using the sample program <sourceref chapter="7" href="SimplePaint2
 from <localref href="arrays.3.3"/>.
 We'll look at another version of that program that can save
 the user's drawing using an XML format for the data file.
-The new version is <sourceref href="SimplePaintWithXML.java"/>
+The new version is <sourceref href="SimplePaintWithXML.java"/>.
 The sample XML document shown earlier in this section
 can be used with that program.  I designed the format of that document
 to represent all the data needed to reconstruct a picture in
@@ -217,7 +217,8 @@ encounters.  The program uses a few techniques for processing XML that I won't d
 
 <p>In Java, the DOM representation of an XML document file can be created
 with just two statements.  If <code>selectedFile</code> is a variable of
-type <classname>File</classname> that represents the XML file, then</p>
+type <classname>File</classname> that represents the XML file, and
+<code>xmldoc</code> is of type <classname>Document</classname>, then</p>
    
 <pre>DocumentBuilder docReader 
                  = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -350,7 +351,7 @@ else
    symmetric = false;</pre>
    
 <np>Next, consider an example that uses a <classname>NodeList</classname>.
-Suppose we encounter an element that represents a list of <classname>Point2D</classname>:
+Suppose we encounter an element that represents a list of <classname>Point2Ds</classname>:
 </np>
    
 <pre>&lt;pointlist&gt;
