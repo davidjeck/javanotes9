@@ -23,12 +23,12 @@ public class TicTacToeGameState implements Serializable {
 	
 	//-------------- state variables recording the state of the game -------------------
 	
-	public boolean playerDisconnected;  // This is true if one of the two players has left the game
+	public boolean playerDisconnected;  // This is true if one of the two players has left the game.
 	                                    // The new state, with this value set to true, is sent to
 	                                    // the other player as a signal that the game is over.  That
 	                                    // client will respond by ending the program.
 
-	public char[][] board;  // The contents of the board. Values are ' ', 'X', or 'O'
+	public char[][] board;  // The contents of the board. Values are ' ', 'X', or 'O'.
 	                        // This variable is null before the first game starts.
 	
 	public boolean gameInProgress;  // True while a game is being played; 
@@ -89,7 +89,7 @@ public class TicTacToeGameState implements Serializable {
 	
 	/**
 	 * This package private method is called by the hub when the second player
-	 * connects.  It's purpose is to start the first game.
+	 * connects.  Its purpose is to start the first game.
 	 */
 	void startFirstGame() {
 		startGame();

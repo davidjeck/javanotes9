@@ -22,7 +22,7 @@ public class ThreadTest4 {
 
 	/**
 	 * The starting point for the range of integers that are tested for primality.
-	 * The range is from (start+1) to (2*start).  Note the value of start is chosen
+	 * The range is from (START+1) to (2*START).  Note the value of start is chosen
 	 * to be divisible by 2, 3, 4, and 5 to make it easy to divide up the range
 	 * among the threads.
 	 */
@@ -50,7 +50,7 @@ public class ThreadTest4 {
 	 * Counts the primes in the range from (START+1) to (2*START), using an ExecutorService
 	 * thread pool.  The total elapsed time is printed.  The computation is broken up
 	 * into numberOfTasks subtasks, each represented by an object of type CountPrimesTask.
-	 * The tasks are submitted to an ExecutorService for execution.\
+	 * The tasks are submitted to an ExecutorService for execution.
 	 * 
 	 * When a Callable<T> is submitted to the executor, it returns a
 	 * Future<T> representing the result of the task, which will only
@@ -94,8 +94,8 @@ public class ThreadTest4 {
 			min = max + 1;
 		}
 		
-		/* Executor has to be shut down, or its existence will stop the Java Virtua
-		 * Machine from exiting.  (Threads in the executor are not daemon threads. */
+		/* Executor has to be shut down, or its existence will stop the Java Virtual
+		 * Machine from exiting.  (Threads in the executor are not daemon threads.) */
 		
 		executor.shutdown();
 		

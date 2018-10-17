@@ -619,7 +619,7 @@ We can solve the race condition by putting the <code>if</code> statement in a <c
 statement:</np>
    
 <pre>synchronized(tsc) {
-   if ( tsc.getValue() == 0 )
+   if ( tsc.getValue() == 10 )
       doSomething();
 }</pre>
 
@@ -647,7 +647,10 @@ synchronized on the same object at the same time</b>; that is, they cannot simul
 be executing code segments that are synchronized on that object.  If one thread is synchronized
 on an object, and a second thread tries to synchronize on the <b>same</b> object,
 the second thread is forced to wait until the first thread has finished with the
-object.  This is implemented using something called a <newword>synchronization lock</newword>.
+object.  This means that it is not only true that two threads cannot be executing the same
+synchronized method at the same time, but in fact two threads cannot be
+executing two different methods at the same time, if the two methods are synchronized on the same object.
+This is implemented using something called a <newword>synchronization lock</newword>.
 Every object has a synchronization lock, and that lock can be "held" by only one
 thread at a time.  To enter a synchronized statement or synchronized method,
 a thread must obtain the associated object's lock.  If the lock is available,
@@ -754,8 +757,8 @@ changes the value of a shared variable, the local copies in the caches of other 
 are not immediately changed, so the other threads can continue to see the old value,
 at least briefly.</p>
 
-<p>It is safe to use a shared variable in a synchronized method or statement, as long
-all access to that variable is synchronized, using the same syncrhonization object
+<p>It is safe to use a shared variable in a synchronized method or statement, as long as
+all access to that variable is synchronized, using the same synchronization object
 in all cases.  More precisely, any thread that accesses a variable in synchronized
 code is guaranteed to see changes that were made by other threads, as long as the
 changes were made in code that was synchronized on the same object.</p>
@@ -837,7 +840,7 @@ on the machine language level.  An operation can be considered atomic if it
 can never be <b>seen</b> by any thread as partly completed.  For example,
 we can say that the  <classname>ThreadSafeCounter</classname> class that was 
 defined above has an atomic increment operation.  Synchronization can be
-seen as a way of ensuring that operations are, are least effectively, atomic.</p>
+seen as a way of ensuring that operations are, at least effectively, atomic.</p>
 
 <p>Still, it would be nice to have atomic operations that don't require
 synchronization, especially since such operations might be implemented
@@ -864,14 +867,14 @@ is a small variation on <sourceref href="ThreadTest2.java"/> that uses
 an <classname>AtomicInteger</classname> instead of synchronization
 to safely add up values from several threads.</np>
 
-<p><classname>AtomicInteger</classname> had similar methods for adding one to the total and
+<p><classname>AtomicInteger</classname> has similar methods for adding one to the total and
 subtracting one from the total: <code>total.incrementAndGet()</code>
 and <code>total.decrementAndGet()</code>.  The method
 <code>total.getAndSet(x)</code> sets the value of the total to
 <code>x</code> and returns the previous value that <code>x</code>
 is replacing.  All of these operations are done atomically (either because
 they use atomic machine language instructions or because they 
-use syncrhonization internally).</p>
+use synchronization internally).</p>
 
 <p>I should close with my usual warning: Using an atomic variable does not
 automatically solve all race conditions involving that variable.  For example,

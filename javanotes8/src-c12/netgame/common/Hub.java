@@ -41,7 +41,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *  representing the unique ID number that has been assigned to the client.
  *  Clients are assigned the IDs 1, 2, 3, ..., in the order they connect.</li>
  *  <li>The extraHandshake() method is called.  This method does nothing
- *  in this class, but subclasses of Hub can override to do extra setup
+ *  in this class, but subclasses of Hub can override it to do extra setup
  *  or checking before the connection is considered to be created.
  *  Note that if extraHandshake() throws an error, then the client is
  *  never considered connected, but that client's ID will not be reused.</li>
@@ -68,7 +68,7 @@ public class Hub {
 	private TreeMap<Integer, ConnectionToClient> playerConnections;
 	
 	/**
-	 * A queue of messages received from clients.  When a method is received,
+	 * A queue of messages received from clients.  When a message is received,
 	 * it is placed in this queue.  A separate thread takes messages from the
 	 * queue and processes them (in the order in which they were received).
 	 */
@@ -76,12 +76,12 @@ public class Hub {
 	
 	/**
 	 * If the autoreset property is set to true, then the ObjectOutputStreams that are
-	 * used for transmitting messages to clients is reset before each object is sent.
+	 * used for transmitting messages to clients are reset before each object is sent.
 	 */
 	private volatile boolean autoreset;
 	
 	private ServerSocket serverSocket;  // Listens for connections.
-	private Thread serverThread;        // Accepts connections on serverSocket
+	private Thread serverThread;        // Accepts connections on serverSocket.
 	volatile private boolean shutdown;  // Set to true when the Hub is not listening.
 	
 	private int nextClientID = 1;  // The id number that will be assigned to
@@ -166,8 +166,8 @@ public class Hub {
 	 * @param out a stream to which message to the client can be written.  After writing
 	 *    a message to this stream, it is important to call out.flush() to make sure
 	 *    that the message is actually transmitted.
-	 * @throws IOException should be thrown if some error occurs that should
-	 * prevent the connection from being established.
+	 * @throws IOException should be thrown if some error occurs that would
+	 *    prevent the connection from being established.
 	 */
 	protected void extraHandshake(int playerID, ObjectInputStream in, 
 			                            ObjectOutputStream out) throws IOException {
@@ -243,7 +243,7 @@ public class Hub {
 	
 	
 	/**
-	 * Sends a specified non-null Object as a message to all connected client.
+	 * Sends a specified non-null Object as a message to all connected clients.
 	 * @param message the message to be sent to all connected clients.  This object must
 	 * implement the Serializable interface.  Messages must not be null.
 	 */
@@ -259,7 +259,7 @@ public class Hub {
 	
 	/**
 	 * Sends a specified non-null Object as a message to one connected client.
-	 * @param recipientID The ID number of the player to whom the message is
+	 * @param recipientID the ID number of the player to whom the message is
 	 * to be sent.  If there is no such player, then the method returns the 
 	 * value false.
 	 * @param message the message to be sent to all connected clients.  This object must
@@ -293,7 +293,7 @@ public class Hub {
 	public void resetOutput() {
 		ResetSignal rs = new ResetSignal();
 		for (ConnectionToClient pc : playerConnections.values())
-			pc.send(rs); // A ResetSignal in the output stream is seen as a signal to reset
+			pc.send(rs); // A ResetSignal in the output stream is seen as a signal to reset.
 	}
 	
 	
@@ -445,7 +445,7 @@ public class Hub {
 					synchronized(Hub.this) {
 						playerID = nextClientID++; // Get a player ID for this player.
 					}
-					out.writeObject(playerID);  // send playerID to the client.
+					out.writeObject(playerID);  // Send playerID to the client.
 					out.flush();
 					extraHandshake(playerID,in,out);  // Does any extra stuff before connection is fully established.
 					acceptConnection(ConnectionToClient.this);

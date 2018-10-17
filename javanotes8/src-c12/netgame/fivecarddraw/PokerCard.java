@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * An object of type PokerCard represents a playing card from a
  * standard Poker deck, including Jokers.  The card has a suit, which
- * can be spades, hearts, diamonds, clubs, or joker.  A space, heart,
+ * can be spades, hearts, diamonds, clubs, or joker.  A spade, heart,
  * diamond, or club has one of the 13 values: 2, 3, 4, 5, 6, 7,
  * 8, 9, 10, jack, queen, king, or ace.  Note that "ace" is considered to be
  * the largest value.  A joker can also have an associated value; 
@@ -64,7 +64,7 @@ public class PokerCard implements Serializable {
 	 * @param theSuit the suit of the new card.  This must be one of the values
 	 * PokerCard.SPADES, PokerCard.HEARTS, PokerCard.DIAMONDS, PokerCard.CLUBS, or PokerCard.JOKER.
 	 * @throws IllegalArgumentException if the parameter values are not in the
-	 * Permissible ranges
+	 * permissible ranges
 	 */
 	public PokerCard(int theValue, int theSuit) {
 		if (theSuit != SPADES && theSuit != HEARTS && theSuit != DIAMONDS && 
@@ -79,7 +79,7 @@ public class PokerCard implements Serializable {
 	/**
 	 * Returns the suit of this card.
 	 * @returns the suit, which is one of the constants PokerCard.SPADES, 
-	 * PokerCard.HEARTS, PokerCard.DIAMONDS, PokerCard.CLUBS, or PokerCard.JOKER
+	 * PokerCard.HEARTS, PokerCard.DIAMONDS, PokerCard.CLUBS, or PokerCard.JOKER.
 	 */
 	public int getSuit() {
 		return suit;

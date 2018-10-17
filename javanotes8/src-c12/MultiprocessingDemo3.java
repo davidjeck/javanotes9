@@ -38,7 +38,7 @@ public class MultiprocessingDemo3 extends Application {
 	}
 	//-----------------------------------------------------------------------------------
 
-	private LinkedBlockingQueue<Runnable> taskQueue;  // The queue that holds individual tasks;
+	private LinkedBlockingQueue<Runnable> taskQueue;  // The queue that holds individual tasks.
 
 	private boolean jobInProgress; // Set to true when a job starts, false when it ends.
 
@@ -67,7 +67,7 @@ public class MultiprocessingDemo3 extends Application {
 	private Canvas canvas;      // the canvas where the image is displayed
 	private GraphicsContext g;  // the graphics context for drawing on the canvas
 	
-	private Color[] palette;    // The color palette, containing the colors of the spectrum
+	private Color[] palette;    // the color palette, containing the colors of the spectrum
 
 	int width, height;          // the size of the canvas
 
@@ -266,7 +266,7 @@ public class MultiprocessingDemo3 extends Application {
 	 * A WorkerThread runs in a loop in which it retrieves a task from the 
 	 * taskQueue and calls the run() method in that task.  Note that if
 	 * the queue is empty, the thread blocks until a task becomes available
-	 * in the queue.  The thread will run at a priority the is one less
+	 * in the queue.  The thread will run at a priority that is one less
 	 * than the priority of the thread that calls the constructor.
 	 * 
 	 * A WorkerThread is designed to run in an infinite loop.  It will

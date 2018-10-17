@@ -40,7 +40,7 @@ has only a single processing unit.</p>
 language that make it possible to do parallel programming
 without using threads directly.  We have already seen one
 of these: parallel streams in the stream API from 
-<localref href="subroutines.4a"/>.  We will encounter several
+<localref href="generics.6"/>.  We will encounter several
 more in this chapter.  But to use these higher level language
 features safely and efficiently, you still need to know
 something about the hazards and benefits of threads.</p>

@@ -13,7 +13,7 @@ to come as the chapter progresses.</p>
 
 <subsection id="threads.2.1" title="Threads, Timers, and JavaFX">
 <p>One of the most basic uses of threads is to perform some periodic
-task at set intervals.  In fact, this is so basic that there is
+task at set intervals.  In fact, this is so basic that there
 are specialized classes for performing this task&mdash;and you've
 already worked with one of them: the <classname>AnimationTimer</classname> class,
 in package <code>javafx.animation</code>, which was introduced in 
@@ -77,7 +77,7 @@ can be called from any thread.  Its purpose is to submit <code>r</code> to be
 run on the JavaFX application thread.  <code>Platform.runLater(r)</code>
 returns immediately, without waiting for <code>r</code> to be run;
 <code>r.run()</code> will be called by the application thread at some future time
-(which means with a fraction of a second, and perhaps almost immediately, unless the computer
+(which means within a fraction of a second, and perhaps almost immediately, unless the computer
 is excessively busy).  <classname>Runnables</classname> are executed in the
 order in which they are submitted.
 Since the <classname>Runnable</classname> is called on the application thread, 
@@ -177,7 +177,7 @@ thread's <code>run()</code> method:</np>
  * This class defines the thread that runs the recursive
  * QuickSort algorithm.  The thread begins by randomizing the
  * hue array.  It then calls quickSort() to sort the entire array.
- * If quickSort() is aborted by a ThreadTerminationExcpetion,
+ * If quickSort() is aborted by a ThreadTerminationException,
  * which would be caused by the user clicking the Finish button,
  * then the thread will restore the array to sorted order before
  * terminating, so that whether or not the quickSort is aborted,
@@ -416,7 +416,7 @@ wait for the threads to end, as was done in the example in <localref href="threa
 at least, we certainly can't do that in the JavaFX application thread!)
 In this example, I use an instance variable, <code>threadsRunning</code>, 
 to keep track of how many computation threads are still running.  As each thread finishes, it calls
-a method that adds one to the value of this variable.  (The method is called in the
+a method that subtracts one from the value of this variable.  (The method is called in the
 <code>finally</code> clause of a <code>try</code> statement to make absolutely sure
 that it is called when the thread ends.)  When the number of running threads
 drops to zero, the method updates the state of the program appropriately.  Here is the method

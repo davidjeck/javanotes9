@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 
 /**
- * This class is part of a part of a demonstration of distributed computing.
+ * This class is part of a demonstration of distributed computing.
  * It is to be used with CLMandelbrotTask.java on the master computer.
  * Before starting CLMandelbrotMaster on the master computer, 
  * CLMandelbrotWorker should be started as a command-line program on each
@@ -349,7 +349,7 @@ public class CLMandelbrotMaster {
 			Socket socket;  // The socket for the connection.
 			
 			try {
-				socket = new Socket(host,port);  // open the connection.
+				socket = new Socket(host,port);  // Open the connection.
 			}
 			catch (Exception e) {
 				System.out.println("Thread " + id + " could not open connection to " +

@@ -500,7 +500,7 @@ To ensure that that happens, it is necessary to call <code>worker.interrupt()</c
 for each worker thread <code>worker</code>, just after setting
 <code>runner</code> to <code>false</code>.</np>
 
-<p>If a worker thread is executing a task when <code>runner</code> is set to
+<p>If a worker thread is executing a task when <code>running</code> is set to
 <code>false</code>, the thread will not terminate until that task has completed.
 If the tasks are reasonably short, this is not a problem.  If tasks can take longer
 to execute than you are willing to wait for the threads to terminate, then
@@ -592,7 +592,7 @@ a <code>try..catch</code> statement.</p>
 and an <classname>ExecutorService</classname> to count the number
 of primes in a certain range of integers.  (This is the same
 rather useless computation that was done by <sourceref href="ThreadTest2.java"/>
-it <localref href="threads.1.3"/>.)  In this program, a subtask
+in <localref href="threads.1.3"/>.)  In this program, a subtask
 counts the primes in a subrange of integers. The subtasks
 are represented by objects of type <atype>Callable&lt;Integer&gt;</atype>,
 defined by this nested class:</p>

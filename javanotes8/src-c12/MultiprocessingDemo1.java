@@ -49,7 +49,7 @@ public class MultiprocessingDemo1 extends Application {
 	private Canvas canvas;      // the canvas where the image is displayed
 	private GraphicsContext g;  // the graphics context for drawing on the canvas
 	
-	private Color[] palette;    // The color palette, containing the colors of the spectrum
+	private Color[] palette;    // the color palette, containing the colors of the spectrum
 
 	int width, height;          // the size of the canvas
 
@@ -126,12 +126,12 @@ public class MultiprocessingDemo1 extends Application {
 	 * of the image to each thread.  The threads are run at lower
 	 * priority than the event-handling thread, in order to keep the
 	 * GUI responsive.  If a computation is in progress when this
-	 * method is called, running is set to false a signal to stop
+	 * method is called, running is set to false as a signal to stop
 	 * all of the threads.  
 	 */
 	private void doStartOrStop() {
 		if (running) {
-			startButton.setDisable(true); // will be re-enabled when all threads have stopped.
+			startButton.setDisable(true); // will be re-enabled when all threads have stopped
 			   // (prevent user from trying to stop threads that are already stopping)
 			running = false;  // signal the threads to stop
 		}
@@ -180,7 +180,7 @@ public class MultiprocessingDemo1 extends Application {
 		threadsRunning--;
 		if (threadsRunning == 0) { // all threads have finished
 			Platform.runLater( () -> {
-				   // make sure state is correct when threads end.
+				   // Make sure state is correct when threads end.
 				startButton.setText("Start Again");
 				startButton.setDisable(false);
 				threadCountSelect.setDisable(false);
@@ -244,12 +244,12 @@ public class MultiprocessingDemo1 extends Application {
 							return;
 						}
 					}
-					final int rowNum = row; // Need a final variable for the lambda expression
+					final int rowNum = row;
 					Platform.runLater( () -> drawOneRow(rowNum,rgb) );
 				}
 			}
 			finally {
-				threadFinished(); // make sure this is called when the thread finishes for any reason.
+				threadFinished(); // Make sure this is called when the thread finishes for any reason.
 			}
 		}
 	}

@@ -29,7 +29,7 @@ import netgame.common.*;
  * player wants to discard).
  * <p>Programming note:  When a player's hand is sent as part of
  * a message, it is a cloned copy of the array that is sent.  This
- * is make sure that no object is sent more than once, after having
+ * is to make sure that no object is sent more than once, after having
  * been changed in the meantime.  Because of this, it is unnecessary
  * to reset the ObjectOutputStreams that are used to send messages.
  * (See the reset() and setAutoreset() methods in the Hub class for
@@ -47,16 +47,18 @@ public class PokerHub extends Hub {
 	private final static int WAITING_FOR_FIRST_DRAW = 3;  // Hub is waiting for the first player to discard cards.
 	private final static int WAITING_FOR_SECOND_DRAW = 4; // Hub is waiting for the second player to discard cards.
 	
-	private int status; // The basic game status, one of the preceding 6 values, telling what message the hub is expecting.
+	private int status; // The basic game status, one of the preceding 5 values, telling what message the hub is expecting.
 	
-	private int currentPlayer;  // The ID number (1 or 2) player who is to send the next message.
+	private int currentPlayer;  // The ID number (1 or 2) of the player who is to send the next message.
 	                            // Note that the ID number of the opposing player is always 3-currentPlayer.
 
 	private int dealer; // The ID number (1 or 2) of the "dealer" for this game.  Player #1 deals the first hand,
 	                    // then the deal alternates between players.  The dealer's opponent is the first to bet
 	                    // in each betting round.
 	
-	private boolean firstBettingRound;  // If status is  
+	private boolean firstBettingRound;  // There are two rounds of betting, one before discarding
+	                                    // cards and once after discarding cards.  This variable
+	                                    // tells which round is currently in progress.
 	
 	private int amountNeededToSee;  // If status is WAITING_FOR_BET_OR_CALL, this is the amount
 	                                // of money that is needed to "SEE" the previous bet.  It is
@@ -64,7 +66,7 @@ public class PokerHub extends Hub {
 	                                // to this amount, then the current round of betting ends.
 	
 	private boolean previousGameTied = false;  // This is set to true at the end of a game in the
-	                                           // unlikely case that two player's hands are of exactly
+	                                           // unlikely case that the two player's hands are of exactly
 	                                           // the same value.  In that case, the "pot" stays on
 	                                           // the table for the next game.
 
@@ -77,7 +79,7 @@ public class PokerHub extends Hub {
 	                                   // can become negative, and nothing is done about it if they do.
  	
 	private int pot;  // The total amount of money that has been bet in the current game (or in the
-	                  // game that has just finished.
+	                  // game that has just finished).
 	
 
 	/**
@@ -219,7 +221,7 @@ public class PokerHub extends Hub {
 				else {
 					   // The player matches the opponent's bet and raises; the betting round ends.
 					   // The opposing player must match the amount by which the player's bet
-					   // exceeded the minimum that that player had to play to match the previous bet.
+					   // exceeded the minimum that that player had to bet to match the previous bet.
 					amountNeededToSee = bet - amountNeededToSee;
 					sendToOne(currentPlayer, "You see the bet and raise by $" + amountNeededToSee);
 					sendToOne(3-currentPlayer, "Your opponent sees your bet and raises by $" + amountNeededToSee);

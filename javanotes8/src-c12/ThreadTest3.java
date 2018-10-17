@@ -51,7 +51,7 @@ public class ThreadTest3 {
 			int currentTotal = total.addAndGet(count);
 			    // NOTE THAT A RACE CONDITION STILL OCCURS RIGHT HERE.
 			    // The value of total might have increased again before
-			    // currentTotal is output.  However, using an AtomincInteger
+			    // currentTotal is output.  However, using an AtomicInteger
 			    // does ensure that the final total is correct.
 			System.out.println("Number of primes found so far: " + currentTotal);
 		}
@@ -69,7 +69,7 @@ public class ThreadTest3 {
 		long startTime = System.currentTimeMillis();
 		CountPrimesThread[] worker = new CountPrimesThread[numberOfThreads];
 		for (int i = 0; i < numberOfThreads; i++)
-			worker[i] = new CountPrimesThread(  START+i*increment+1, START+(i+1)*increment );
+			worker[i] = new CountPrimesThread( START+i*increment+1, START+(i+1)*increment );
 		for (int i = 0; i < numberOfThreads; i++)
 			worker[i].start();
 		for (int i = 0; i < numberOfThreads; i++) {

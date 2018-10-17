@@ -37,7 +37,7 @@ public class TicTacToeWindow extends Stage {
 	 */
 	private TicTacToeGameState state;
 	
-	private volatile boolean connecting;  // Set to true until connection is established to hub
+	private volatile boolean connecting;  // Set to true until connection is established to hub.
 	
 	private Canvas board;     // A panel that displays the board.  The user
 	                         // makes moves by clicking on this panel.
@@ -82,7 +82,7 @@ public class TicTacToeWindow extends Stage {
 			if (connection != null) {
 				connection.disconnect();  // Send a disconnect message to the hub.
 				try {
-					Thread.sleep(333); // Wait one-half second to allow the message to be sent.
+					Thread.sleep(333); // Wait one-third second to allow the message to be sent.
 				}
 				catch (InterruptedException e) {
 				}
@@ -145,7 +145,7 @@ public class TicTacToeWindow extends Stage {
 	/**
 	 * When the window is created, this method is called in a separate
 	 * thread to make the connection to the server.  If an error
-	 * occurs, the program is terminated
+	 * occurs, the program is terminated.
 	 */
 	private void connect(String hostName, int serverPortNumber) {
 		TicTacToeClient c;

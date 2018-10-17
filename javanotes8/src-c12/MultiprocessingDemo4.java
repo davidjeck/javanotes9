@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutorService;
  * queue.
  * 
  * (The image is a small piece of the famous Mandelbrot set,
- *  which is used just because it takes some time to compute.  
+ * which is used just because it takes some time to compute.  
  * There is no need to understand what the image means.)  
  */
 public class MultiprocessingDemo4 extends Application {
@@ -56,7 +56,7 @@ public class MultiprocessingDemo4 extends Application {
 	private Canvas canvas;      // the canvas where the image is displayed
 	private GraphicsContext g;  // the graphics context for drawing on the canvas
 	
-	private Color[] palette;    // The color palette, containing the colors of the spectrum
+	private Color[] palette;    // the color palette, containing the colors of the spectrum
 
 	int width, height;          // the size of the canvas
 
@@ -132,7 +132,7 @@ public class MultiprocessingDemo4 extends Application {
 			executor = Executors.newFixedThreadPool(processors);
 			
 			startButton.setText("Abort"); // change name while computation is in progress
-			g.setFill(Color.LIGHTGRAY);  // Fill canvas with gray
+			g.setFill(Color.LIGHTGRAY);  // fill canvas with gray
 			g.fillRect(0,0,width,height);
 
 			tasksRemaining = height;

@@ -21,9 +21,9 @@ public class PokerGameState implements Serializable {
 	public final static int DEAL = 0;   // The player must click "DEAL" to start the game.
 	public final static int BET_OR_FOLD = 1;  // The player must make the first bet in a betting round, or fold.
 	public final static int RAISE_SEE_OR_FOLD_ROUND_1 = 2;   // During first round of betting, player must respond
-	                                                         // to pponent's bet by raising or matching the bet, or folding.
+	                                                         // to opponent's bet by raising or matching the bet, or folding.
 	public final static int RAISE_CALL_OR_FOLD_ROUND_2 = 3;  // During second round of betting, player must respond
-	                                                         // to pponent's bet by raising or matching the bet, or folding.
+	                                                         // to opponent's bet by raising or matching the bet, or folding.
 	public final static int DRAW = 4;  // The player must select cards to discard, and click "DRAW".
 	
 	public final static int WAIT_FOR_DEAL = 5;  // Wait for opposing player to start the game.
@@ -45,7 +45,7 @@ public class PokerGameState implements Serializable {
 	                           // this is the opponent's bet amount which must be matched.
 
 	/**
-	 * Create a PokerGameState object with amountToCall equal to 0  and with specified values for 
+	 * Create a PokerGameState object with amountToSee equal to 0 and with specified values for 
 	 * the other public variables in this class.
 	 */
 	public PokerGameState(PokerCard[] hand, int status, int money, int opponentMoney, int pot) {

@@ -94,7 +94,7 @@ public class RandomArtWithThreads extends Application {
 		g.setFill(randomGray);
 		g.fillRect( 0, 0, width, height );
 
-		int artType = (int)(4*Math.random());
+		int artType = (int)(3*Math.random());
 
 		switch (artType) {
 		case 0:
@@ -138,8 +138,8 @@ public class RandomArtWithThreads extends Application {
 
 	/**
 	 * This method is called when the user clicks the Start button,
-	 * If no thread is running, it starts a new thread and
-	 * sets the signaling variable, running, to true;  it also changes
+	 * If no thread is running, it sets the signaling variable, running, 
+	 * to true and starts a new thread; it also changes
 	 * the text on the Start button to "Stop". If the user clicks the button while
 	 * a thread is running, then a signal is sent to the thread to terminate,
 	 * by setting the value of the signaling variable, running, to false;

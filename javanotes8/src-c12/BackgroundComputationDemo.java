@@ -39,7 +39,7 @@ public class BackgroundComputationDemo extends Application {
 	private Canvas canvas;      // the canvas where the image is displayed
 	private GraphicsContext g;  // the graphics context for drawing on the canvas
 	
-	private Color[] palette;    // The color palette, containing the colors of the spectrum
+	private Color[] palette;    // the color palette, containing the colors of the spectrum
 
 	int width, height;          // the size of the canvas
 
@@ -98,9 +98,9 @@ public class BackgroundComputationDemo extends Application {
 
 
 	/**
-	 * This method is called when the user clicks the Start button,
-	 * If no thread is running, it creates and starts a new thread and
-	 * sets the signaling variable, running, to true.  Note that
+	 * This method is called when the user clicks the Start button.
+	 * If no thread is running, it sets the signaling variable, running,
+	 * to true and creates and starts a new thread. Note that
 	 * the thread is responsible for changing the text on the button.
 	 * Note that the priority of the thread is set to be one less
 	 * than the priority of the thread that calls this method, that
@@ -111,8 +111,8 @@ public class BackgroundComputationDemo extends Application {
 	 * to handle the event.
 	 */
 	private void doStartOrStop() {
-		if (running == false) { // create a thread and start it.
-			startButton.setDisable(true);  // will be reenabled by the thread.
+		if (running == false) { // create a thread and start it
+			startButton.setDisable(true);  // will be re-enabled by the thread
 			g.setFill(Color.LIGHTGRAY);
 			g.fillRect(0,0,width,height);
 			runner = new Runner();
@@ -125,7 +125,7 @@ public class BackgroundComputationDemo extends Application {
 			runner.start();
 		}
 		else {  // stop the thread
-			startButton.setDisable(true);  // will be reenabled by the thread.
+			startButton.setDisable(true);  // will be re-enabled by the thread
 			running = false;
 			runner = null;
 		}
@@ -182,7 +182,7 @@ public class BackgroundComputationDemo extends Application {
 							return;
 						}
 					}
-					final int rowNum = row; // Need a final variable for the lambda expression
+					final int rowNum = row;
 					Platform.runLater( () -> drawOneRow(rowNum,rgb) );
 				}
 			}

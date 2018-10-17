@@ -210,10 +210,10 @@ an enumerated type</np>
    
 <np>The values of this <code>enum</code> represent different possible states
 of the network connection.  It is often useful to treat a network connection
-as a state machine (see <localref href="GUI1.5.4"/>), since the response to various
+as a state machine (see <localref href="GUI1.3.6"/>), since the response to various
 events can depend on the state of the connection when the event occurs.
 Setting the <code>state</code> variable to <code>LISTENING</code> or
-<code>CONNECTING</code> tells the thread whether to act as server or as a client
+<code>CONNECTING</code> tells the thread whether to act as a server or as a client
 when setting up the connection.</np>
    
 <p>Once the thread has been started, it executes the following <code>run()</code>
@@ -361,7 +361,11 @@ before it can accept a connection from another client.  Let's see
 how we can turn <code>DateServer</code> into a threaded server.
 (This server is so simple that doing so doesn't make a great deal
 of sense.  However, the same techniques will work for more complicated
-servers.  See, for example, <localref href="threads.ex.4"/>.)</p>
+servers.  See, for example, <localref href="threads.ex.4"/>.  Also note that
+the client program, <sourceref chapter="11" href="DateClient.java"/>,
+which implements a client for the date server, does not need to use threads,
+since the client only uses one connection.  The original client program
+will work with the new versions of the server.)</p>
 
 <p>As a first attempt, consider <sourceref href="DateServerWithThreads.java"/>.
 This sample program creates a new thread every time a connection request
@@ -605,7 +609,7 @@ in this case, a "service" means an object that is available to be called
 over the network).  That is, how can one computer know which computer a service is located
 on and what port it is listening on?  RMI and CORBA solve this problem
 using a "request broker"&mdash;a
-server program running at a known location keeps a list of services that are
+server program running at a known location that keeps a list of services that are
 available on other computers.  Computers that offer services register
 those services with the request broker; computers that need services must know
 the location of the broker, and they contact it

@@ -124,8 +124,8 @@ abstract public class Client {
 	 * @param out a stream to which messages to the hub can be written.  After writing
 	 *    a message to this stream, it is important to call out.flush() to make sure
 	 *    that the message is actually transmitted.
-	 * @throws IOException should be thrown if some error occurs that should
-	 * prevent the connection from being fully established.
+	 * @throws IOException should be thrown if some error occurs that would
+	 *    prevent the connection from being fully established.
 	 */
 	protected void extraHandshake(ObjectInputStream in, ObjectOutputStream out) 
 	                                                         throws IOException {
@@ -188,7 +188,7 @@ abstract public class Client {
 	 * has been reset in the meantime.
 	 */
 	public void resetOutput() {
-		connection.send(new ResetSignal()); // A ResetSignal in the output stream is seen as a signal to reset
+		connection.send(new ResetSignal()); // A ResetSignal in the output stream is seen as a signal to reset.
 	}
 	
 	/**

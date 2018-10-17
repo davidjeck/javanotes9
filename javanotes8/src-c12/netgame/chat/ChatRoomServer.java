@@ -13,7 +13,7 @@ import netgame.common.Hub;
  * ChatRoomServer program is terminated (for example by a 
  * Control-C).
  * <p>Note that the ChatRoom application uses a basic, generic
- * Hub, which simply forwards any message that it received from
+ * Hub, which simply forwards any message that it receives from
  * a client to all connected clients (including the one that
  * sent it), wrapped in an object of type ForwardedMessage.
  */

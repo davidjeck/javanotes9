@@ -107,7 +107,7 @@ public class TowersOfHanoiGUI extends Application {
 		stage.setResizable(false);
 		stage.show();
 
-		new AnimationThread().start();  // create and start the thread that will solve
+		new AnimationThread().start();  // Create and start the thread that will solve
 		                                // the puzzles.  The thread will immediately
                                         // block until user clicks "Run" or "Next Step".
 	} // end start()
@@ -126,7 +126,7 @@ public class TowersOfHanoiGUI extends Application {
 		}
 		else {  // Animation is paused.  Start it running.
 			status = GO;
-			nextStepButton.setDisable(true);  // Disabled when animation is running
+			nextStepButton.setDisable(true);  // disabled when animation is running
 			runPauseButton.setText("Pause");
 		}
 		notify();  // Wake up the thread so it can see the new status value!
@@ -165,7 +165,7 @@ public class TowersOfHanoiGUI extends Application {
 					nextStepButton.setDisable(false);
 					startOverButton.setDisable(true);
 				});
-				setUpProblem();  // Sets up the initial state of the puzzle
+				setUpProblem();  // Sets up the initial state of the puzzle.
 				status = PAUSE;
 				checkStatus(); // Returns only when user has clicked "Run" or "Next Step"
 				Platform.runLater( () -> startOverButton.setDisable(false) );
@@ -174,12 +174,12 @@ public class TowersOfHanoiGUI extends Application {
 						// When solution is done, give the user a chance to see it,
 						// and make them click "Restart" to continue with a new solution.
 					status = PAUSE;
-					Platform.runLater( () -> { // make sure user can only click startOver.
+					Platform.runLater( () -> { // Make sure user can only click startOver.
 						runPauseButton.setDisable(true);
 						nextStepButton.setDisable(true);
 						startOverButton.setDisable(false);
 					} );
-					checkStatus();  // Returns only when use clicks "Start Over"
+					checkStatus();  // Returns only when use clicks "Start Over".
 				}
 				catch (IllegalStateException e) {
 					// Exception was thrown because user clicked "Start Over".
@@ -196,11 +196,6 @@ public class TowersOfHanoiGUI extends Application {
 	 *  an IllegalStateException that will abort the solution.
 	 *  When this method returns, the value of status must be 
 	 *  RUN or STEP.
-	 *     (Note that this method requires synchronization, since
-	 *  otherwise calling wait() would produce an IllegalMonitorStateException.
-	 *  However, in fact, it is only called from other synchronized methods,
-	 *  so it would not be necessary to declare this method synchronized.
-	 *  Any method that calls it already owns the synchronization lock.)
 	 */
 	synchronized private void checkStatus() {
 		while (status == PAUSE) {
@@ -237,8 +232,8 @@ public class TowersOfHanoiGUI extends Application {
 	 * number of disks from one pile to another.
 	 * @param disks the number of disks to be moved
 	 * @param from the number of the pile where the disks are now
-	 * @param to the number of the pile to which the disks are to be moved.
-	 * @param spare the number of the pile that can be used as a spare.
+	 * @param to the number of the pile to which the disks are to be moved
+	 * @param spare the number of the pile that can be used as a spare
 	 */
 	private void solve(int disks, int from, int to, int spare) {
 		if (disks == 1)
@@ -303,9 +298,9 @@ public class TowersOfHanoiGUI extends Application {
 	 * that is being moved.  This method is called from the animation
 	 * thread. It uses Platform.runLater() to apply the drawing to
 	 * the canvas.
-	 * @param color the color of the disk (use background color to erase).
-	 * @param disk the number of the disk that is to be drawn, 1 to 10.
-	 * @param t the number of the pile on top of which the disk is drawn.
+	 * @param color the color of the disk (use background color to erase)
+	 * @param disk the number of the disk that is to be drawn, 1 to 10
+	 * @param t the number of the pile on top of which the disk is drawn
 	 * @param h the height of the tower
 	 */
 	private void putDisk(Color color, int disk, int t, int h) {

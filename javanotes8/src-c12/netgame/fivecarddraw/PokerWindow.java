@@ -41,7 +41,7 @@ import java.util.Optional;
  * player matches the other's bet, the betting round ends and
  * each player has a chance to discard some cards and draw
  * new ones.  Then there is a second round of betting.  When
- * that round end, the players' hands are compared, and the
+ * that round ends, the players' hands are compared, and the
  * winner is announced.  (Players also have the choice of 
  * folding, instead of betting, which will end the game
  * immediately.)  Note that the player's amount of money
@@ -63,14 +63,14 @@ public class PokerWindow extends Stage {
 	                                  //   variable changes only in the newState() method.
 	
 	private boolean[] discard;        // When the player is discarding cards, this array tells which cards the
-	                                  //   player wants to discard.  discard[i] is true if player is discarding 
+	                                  //   player wants to discard.  discard[i] is true if the player is discarding 
 	                                  //   the i-th card in the hand.
 	
-	private PokerCard[] opponentHand; // The opponent's hand.  This variable is dull during the playing of a
+	private PokerCard[] opponentHand; // The opponent's hand.  This variable is null during the playing of a
 	                                  //   hand.  It becomes non-null if the opponent's hand is sent to this
 	                                  //   player at the end of one hand of poker.
 	
-	private Canvas canvas;          // The content pane of the window, defined by the inner class, Display.
+	private Canvas canvas;          // The canvas where the game is displayed, defined by the inner class, Display.
 
 	private Image cardImages;         // An image holding pictures of all the cards.  The Image is loaded
 	                                  // as a resource by the PokerWindow constructor from a resource file
@@ -78,7 +78,7 @@ public class PokerWindow extends Stage {
 	                                  // if that resource file is not there.)
 	
 	
-	private Button dealButton;   // User interface components shown along the right side of the window
+	private Button dealButton;   // User interface components shown along the right side of the window.
 	private Button drawButton;
 	private Button betButton;
 	private Button callButton;
@@ -162,7 +162,7 @@ public class PokerWindow extends Stage {
 	/**
 	 * When the window is created, this method is called in a separate
 	 * thread to make the connection to the server.  If an error
-	 * occurs, the program is terminated
+	 * occurs, the program is terminated.
 	 */
 	private void connect(String hostName, int serverPortNumber) {
 		PokerClient c;
@@ -383,7 +383,7 @@ public class PokerWindow extends Stage {
 				   // Send the list of cards that the user wants to discard as a message to
 				   // the hub.  The cards are recorded in the discard array.
 				int ct = 0;
-				for (int i = 0; i < 5; i++) {  // count the number of discarded cards.
+				for (int i = 0; i < 5; i++) {  // Count the number of discarded cards.
 					if (discard[i])
 						ct++;
 				}
@@ -399,7 +399,7 @@ public class PokerWindow extends Stage {
 				}
 				int[] cardNums = new int[ct];
 				int j = 0;
-				for (int i = 0; i < 5; i++) {  // Put indices of discarded cards into an array to be send to the hub. 
+				for (int i = 0; i < 5; i++) {  // Put indices of discarded cards into an array to be sent to the hub. 
 					if (discard[i])
 						cardNums[j++] = i;
 				}
@@ -472,7 +472,7 @@ public class PokerWindow extends Stage {
 		// When it's time for this player to make a bet, enable the betInput text field,
 		// set its content to be the minimum possible bet plus $10, and select the
 		// text input so that the user can simply type the bet.  The
-		// betInput is not editable except when its time for the user to place a bet.
+		// betInput is not editable except when it's time for the user to place a bet.
 		// Once the user places the bet (or sees, calls, passes, or folds), the
 		// betInput is once again made empty and uneditable.
 		
@@ -579,7 +579,7 @@ public class PokerWindow extends Stage {
 		hide(); // Close the window.
 		if (connection != null) {
 			connection.disconnect();
-			try { // time for the disconnect message to be sent.
+			try { // Time for the disconnect message to be sent.
 				Thread.sleep(500);
 			}
 			catch (InterruptedException e) {

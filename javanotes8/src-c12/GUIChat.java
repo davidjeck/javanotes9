@@ -27,7 +27,7 @@ import java.net.*;
  * The window has an input box where the user can enter
  * messages to be sent over the connection.  A connection
  * can be closed by clicking a button in the window or by
- * closing the window.   To test the program, several
+ * closing the window.  To test the program, several
  * copies of the program can be run on the same computer.
  */
 public class GUIChat extends Application {
@@ -58,7 +58,6 @@ public class GUIChat extends Application {
 
 	/**
 	 * The thread that handles the connection; defined by a nested class.
-	 * (This variable 
 	 */
 	private volatile ConnectionHandler connection;
 
@@ -66,7 +65,7 @@ public class GUIChat extends Application {
 	 * Control buttons that appear in the window.
 	 */
 	private Button listenButton, connectButton, closeButton, 
-									clearButton, quitButton, saveButton, sendButton;
+				   clearButton, quitButton, saveButton, sendButton;
 
 	/**
 	 * Input boxes for connection information (port numbers and host names).
@@ -132,7 +131,7 @@ public class GUIChat extends Application {
 		HBox buttonBar = new HBox(5, quitButton, saveButton, clearButton, closeButton);
 		buttonBar.setAlignment(Pos.CENTER);
 		HBox connectBar = new HBox(5, listenButton, listeningPortInput, connectButton, 
-				                                remoteHostInput, new Label("port:"), remotePortInput);
+				                      remoteHostInput, new Label("port:"), remotePortInput);
 		connectBar.setAlignment(Pos.CENTER);
 		VBox topPane = new VBox(8, connectBar, buttonBar);
 		BorderPane inputBar = new BorderPane(messageInput);
@@ -276,7 +275,7 @@ public class GUIChat extends Application {
 
 	/**
 	 * Add a line of text to the transcript area.
-	 * @param message text to be added; a line feed is added at the end.
+	 * @param message text to be added; a line feed is added at the end
 	 */
 	private void postMessage(String message) {
 		Platform.runLater( () -> transcript.appendText(message + '\n') );

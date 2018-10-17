@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.Scanner;
 
 /**
- * This class is part of a part of a demonstration of distributed computing.
+ * This class is part of a demonstration of distributed computing.
  * It is to be used with CLMandelbrotTask.java on the worker computer.
  * CLMandelbrotWorker should be run as a command-line program on each
  * worker computer involved in the distributed computation.  When it is
@@ -101,7 +101,7 @@ public class CLMandelbrotWorker {
 				System.exit(1);
 			}
 
-			/* Process the connection.   Note that the listener socket is closed as
+			/* Process the connection.  Note that the listener socket is closed as
 			   long as the connection remains open, since this program can only
 			   deal with one connection at a time.  A new listener is created
 			   after the connection closes. */

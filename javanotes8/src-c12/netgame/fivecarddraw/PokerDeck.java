@@ -84,10 +84,10 @@ public class PokerDeck {
 	}
 	
 	/**
-	 * Removes the next card from the deck and return it.  It is illegal
+	 * Removes the next card from the deck and returns it.  It is illegal
 	 * to call this method if there are no more cards in the deck.  You can
 	 * check the number of cards remaining by calling the cardsLeft() function.
-	 * @return the card which is removed from the deck.
+	 * @return the card which is removed from the deck
 	 * @throws IllegalStateException if there are no cards left in the deck
 	 */
 	public PokerCard dealCard() {

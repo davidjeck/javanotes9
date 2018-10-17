@@ -331,7 +331,7 @@ public class PokerRank {
 		
 		try {
 			
-			/* Check if the card is a straight and/or flush.  A partial hand,
+			/* Check if the card ArrayList contains a straight and/or flush.  A partial hand,
 			 * with fewer than five cards, can never be considered to be a
 			 * straight or a flush.
 			 */
@@ -385,8 +385,8 @@ public class PokerRank {
 				return;
 			}
 			
-			/* Check for four-of-a-kind, first one in which the four-of-a-kind
-			 * occurs in the first four cards, then in the case where the first
+			/* Check for four-of-a-kind, first the case in which the four-of-a-kind
+			 * occurs in the first four cards, then the case where the first
 			 * card is not part of the four-of-a-kind.  In the latter case, the
 			 * first card has to be moved to the end.
 			 */

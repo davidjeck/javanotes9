@@ -1,6 +1,6 @@
 
 /**
- * This class is part of a part of a demonstration of distributed computing.
+ * This class is part of a demonstration of distributed computing.
  * It is to be used with CLMandelbrotWorker.java and CLMandelbrotMaster.java.
  * This class must be present on both the master computer (along with
  * CLMandelbrotMaster) and on the worker computers.

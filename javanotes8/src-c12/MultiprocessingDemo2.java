@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * all the tasks have completed, the worker threads terminate.
  * The number of worker threads is specified by the user.
  * (The image is a small piece of the famous Mandelbrot set,
- *  which is used just because it takes some time to compute.  
+ * which is used just because it takes some time to compute.  
  * There is no need to understand what the image means.)  
  */
 public class MultiprocessingDemo2 extends Application {
@@ -38,7 +38,7 @@ public class MultiprocessingDemo2 extends Application {
 
 	private WorkerThread[] workers;  // the threads that compute the image
 
-	private ConcurrentLinkedQueue<Runnable> taskQueue;  // holds individual tasks.
+	private ConcurrentLinkedQueue<Runnable> taskQueue;  // holds individual tasks
 
 	private volatile int threadsRunning; // how many threads are still running?
 	
@@ -51,7 +51,7 @@ public class MultiprocessingDemo2 extends Application {
 	private Canvas canvas;      // the canvas where the image is displayed
 	private GraphicsContext g;  // the graphics context for drawing on the canvas
 	
-	private Color[] palette;    // The color palette, containing the colors of the spectrum
+	private Color[] palette;    // the color palette, containing the colors of the spectrum
 
 	int width, height;          // the size of the canvas
 
@@ -192,7 +192,7 @@ public class MultiprocessingDemo2 extends Application {
 		threadsRunning--;
 		if (threadsRunning == 0) { // all threads have finished
 			Platform.runLater( () -> {
-				   // make sure state is correct when threads end.
+				   // Make sure state is correct when threads end.
 				startButton.setText("Start Again");
 				startButton.setDisable(false);
 				threadCountSelect.setDisable(false);
@@ -225,7 +225,7 @@ public class MultiprocessingDemo2 extends Application {
 			this.width = width;
 		}
 		public void run() {
-			Color[] rgb= new Color[width];     // The colors computed for the pixels.
+			Color[] rgb = new Color[width];     // The colors computed for the pixels.
 			for (int i = 0; i < rgb.length; i++) {
 				double x = xmin + i * dx;
 				int count = 0;

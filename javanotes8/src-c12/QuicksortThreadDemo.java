@@ -39,7 +39,7 @@ public class QuicksortThreadDemo extends Application {
 	//-----------------------------------------------------------------
 
 	private final static int ARRAY_SIZE = 100;  // The number of colored bars;
-	                                            // canvas width will be 6*ARRAY_SICE.
+	                                            // canvas width will be 6*ARRAY_SIZE.
 
 	private int[] hue = new int[ARRAY_SIZE];  // The array that will be sorted.
 	private Color[] palette = new Color[ARRAY_SIZE]; // Colors in spectral order.
@@ -49,7 +49,7 @@ public class QuicksortThreadDemo extends Application {
 
 	private Runner runner; // The thread that runs the recursion.
 	private volatile boolean running;   // Set to true while recursion is running;
-										// This is set to false as a signal to the
+										// this is set to false as a signal to the
 										// thread to abort.
 
 
@@ -91,7 +91,7 @@ public class QuicksortThreadDemo extends Application {
 	 * Redraws the entire canvas, with colors in sorted order.  This method
 	 * is ALWAYS called on the application thread.  It is called in the
 	 * start() method to draw the initial contents of the canvas, and it
-	 * is called when the annimation thread exits, to make sure that
+	 * is called when the animation thread exits, to make sure that
 	 * the colors are shown in sorted order at that time.
 	 */
 	private void drawSorted() {
@@ -139,11 +139,11 @@ public class QuicksortThreadDemo extends Application {
 	/**
 	 * This method is called when the user clicks the Start button,
 	 * If no thread is running, it starts a new thread, after setting
-	 * the signaling variable, running, to true;  it also changes the text
+	 * the signaling variable, running, to true; it also changes the text
 	 * on the Start button to "Finish". If the user clicks the button while
 	 * a thread is running, then a signal is sent to the thread to terminate,
-	 * by setting the value of the signaling variable, running, to false;
-	 * Note that in that the thread changes the text on the button back
+	 * by setting the value of the signaling variable, running, to false.
+	 * Note that the thread changes the text on the button back
 	 * to "Start" before it terminates.
 	 */
 	private void doStartOrStop() {
@@ -263,7 +263,7 @@ public class QuicksortThreadDemo extends Application {
 	 * This class defines the thread that runs the recursive
 	 * QuickSort algorithm.  The thread begins by randomizing the
 	 * hue array.  It then calls quickSort() to sort the entire array.
-	 * If quickSort() is aborted by a ThreadTerminationExcpetion,
+	 * If quickSort() is aborted by a ThreadTerminationException,
 	 * which would be caused by the user clicking the Finish button,
 	 * then the thread will restore the array to sorted order before
 	 * terminating, so that whether or not the quickSort is aborted,

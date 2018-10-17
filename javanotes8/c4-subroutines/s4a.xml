@@ -223,7 +223,7 @@ static double sum( FunctionR2R f, int start, int end ) {
     return total;
 }</pre>
 
-<np>Note that since <i>f</i> is a value of type <classname>Functionr2R</classname>,
+<np>Note that since <i>f</i> is a value of type <classname>FunctionR2R</classname>,
 the value of <i>f</i> at <i>n</i> is actually written as <i>f.valueAt</i>(<i>n</i>).
 When the function <i>sum</i> is called, the first parameter can be given as
 a lambda expression.  For example:</np>

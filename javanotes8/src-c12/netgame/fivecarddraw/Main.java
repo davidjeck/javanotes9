@@ -24,7 +24,7 @@ import netgame.common.*;
 /**
  *  A main class for the network Poker game.  This program
  *  shows a primary window where the user can choose to be a server or
- *  a client.  If the user chooses to be a server, then a TicTacToeHub
+ *  a client.  If the user chooses to be a server, then a PokerHub
  *  is created to manage the game; the game will not start until a
  *  second player has connected as a client.  To act as a client,
  *  the user must know the host name or IP address of the computer
@@ -103,7 +103,7 @@ public class Main extends Application {
 		root.setPadding( new Insets(15,15,10,15) );
 	
 		stage.setScene( new Scene(root) );
-		stage.setTitle("Net TicTacToe");
+		stage.setTitle("Net Poker");
 		stage.setResizable(false);
 		
 		cancelButton.setOnAction( e -> Platform.exit() );

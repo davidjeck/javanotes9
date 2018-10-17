@@ -51,9 +51,9 @@ public class ChatRoomWindow extends Application {
 	                                       // changed here unless the ChatRoomServer
 	                                       // program is also changed.
 
-	private TextField messageInput;   // For entering messages to be sent to the chat room
+	private TextField messageInput;   // For entering messages to be sent to the chat room.
 	private Button sendButton;        // Sends the contents of the messageInput.
-	private Button quitButton;        // Leaves the chat room cleanly, by sending a DisconnectMessage
+	private Button quitButton;        // Leaves the chat room cleanly, by sending a DisconnectMessage.
 	
 	private TextArea transcript;      // Contains all messages sent by chat room participant, as well
 	                                  //    as a few additional status messages, 
@@ -132,10 +132,8 @@ public class ChatRoomWindow extends Application {
 					});
 				}
 				catch (IOException e) {
-					Platform.runLater( () -> {
-						addToTranscript("Connection attempt failed.");
-						addToTranscript("Error: " + e);
-					});
+					addToTranscript("Connection attempt failed.");
+					addToTranscript("Error: " + e);
 				}
 			}
 		}.start();
@@ -153,7 +151,7 @@ public class ChatRoomWindow extends Application {
 	private class ChatClient extends Client {
 
 		/**
-		 * Opens a connection the chat room server on a specified computer.
+		 * Opens a connection to the chat room server on a specified computer.
 		 */
 		ChatClient(String host) throws IOException {
 			super(host, PORT);
