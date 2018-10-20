@@ -20,7 +20,7 @@ public class WordListWithTreeSet {
 		System.out.println("file.  If you select a file, the list of words will");
 		System.out.println("be written to that file; if you cancel, the list will");
 		System.out.println("be written to standard output.  Words are converted to");
-		System.out.println("lower case, and duplicates are elimated from the list.\n\n");
+		System.out.println("lower case, and duplicates are eliminated from the list.\n\n");
 		System.out.print("Press return to begin.");
 		TextIO.getln();  // Wait for user to press return.
 
@@ -75,7 +75,7 @@ public class WordListWithTreeSet {
 		}
 		if (ch == TextIO.EOF) // Encountered end-of-file
 			return null;
-		// At this point, we know that the next character, so read a word.
+		// At this point, we know that the next character is a letter, so read a word.
 		String word = "";  // This will be the word that is read.
 		while (true) {
 			word += TextIO.getAnyChar();  // Append the letter onto word.

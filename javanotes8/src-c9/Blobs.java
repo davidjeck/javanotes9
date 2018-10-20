@@ -69,10 +69,6 @@ public class Blobs extends Application {
 		filled = new boolean[rows][columns];
 		visited = new boolean[rows][columns];
 
-		for (int r = 0; r < rows; r++)
-			for (int c = 0; c < columns; c++)
-				filled[r][c] = (Math.random() < 0.3);
-		
 		canvas = new Canvas( 1+columns*SQUARE_SIZE, 1+rows*SQUARE_SIZE );
 		g = canvas.getGraphicsContext2D();
 		canvas.setOnMousePressed( e -> mousePressed(e) );

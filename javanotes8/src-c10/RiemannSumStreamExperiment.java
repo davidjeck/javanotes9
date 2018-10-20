@@ -28,8 +28,7 @@ public class RiemannSumStreamExperiment {
 		double sum = 0;
 		double dx = (b - a) / n;
 		for (int i = 0; i < n; i++) {
-			double x = a + i*dx;
-			sum = sum + f.applyAsDouble(x);
+			sum = sum + f.applyAsDouble(a + i*dx);
 		}
 		return sum * dx;
 	}
@@ -67,19 +66,19 @@ public class RiemannSumStreamExperiment {
 		long start, end;
 		double ans;
 		System.out.printf("For n = %,d:%n", n);
- 		start = System.nanoTime();
- 		ans = riemannSumWithForLoop(f,a,b,n);
- 		end = System.nanoTime();
- 		System.out.printf("  Got %1.15g using a for loop in          %,d nanoseconds.%n", ans, end - start);
- 		start = System.nanoTime();
- 		ans = riemannSumWithStream(f,a,b,n);
- 		end = System.nanoTime();
- 		System.out.printf("  Got %1.15g using a sequential stream in %,d nanoseconds.%n", ans, end - start);
- 		start = System.nanoTime();
- 		ans = riemannSumWithParallelStream(f,a,b,n);
- 		end = System.nanoTime();
- 		System.out.printf("  Got %1.15g using a parallelStream in    %,d nanoseconds.%n", ans, end - start);
- 		System.out.println();
+		start = System.nanoTime();
+		ans = riemannSumWithForLoop(f,a,b,n);
+		end = System.nanoTime();
+		System.out.printf("  Got %1.15g using a for loop in          %,d nanoseconds.%n", ans, end - start);
+		start = System.nanoTime();
+		ans = riemannSumWithStream(f,a,b,n);
+		end = System.nanoTime();
+		System.out.printf("  Got %1.15g using a sequential stream in %,d nanoseconds.%n", ans, end - start);
+		start = System.nanoTime();
+		ans = riemannSumWithParallelStream(f,a,b,n);
+		end = System.nanoTime();
+		System.out.printf("  Got %1.15g using a parallel stream in   %,d nanoseconds.%n", ans, end - start);
+		System.out.println();
 	}
 	
 	/**
@@ -95,7 +94,7 @@ public class RiemannSumStreamExperiment {
 		 * compiler a chance to optimize the code.  Without this "priming" of
 		 * the compiler, the times for the first experiment would likely be 
 		 * longer as the compiler does its work.  (Try commenting out these lines
-		 * to see the effect.   You might also try running the program with the
+		 * to see the effect.)  You might also try running the program with the
 		 * just-in-time compiler turned off, using the command
 		 *                      java -Xint RiemannSumStreamExperiment */
 		

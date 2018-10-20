@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * This program demonstrates stack and queue operations.  The program shows
  * a grid of squares.  When the user clicks on one of the squares, a computation
- * is begun that visits all the squares of the grid.   As the squares
+ * is begun that visits all the squares of the grid.  As the squares
  * are "encountered", they are colored red.  Red squares have been encountered
  * but not yet processed.  A square is processed by adding its horizontal
  * and vertical neighbors to the set of encountered squares, if they have

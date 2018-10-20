@@ -122,7 +122,7 @@ statement that outputs the root item:</p>
 
 <pre>/**
  * Print all the items in the tree to which root points.
- * <newcode>The item in the left subtree is printed first, followed</newcode>
+ * <newcode>The items in the left subtree are printed first, followed</newcode>
  * <newcode>by the items in the right subtree and then the item</newcode>
  * <newcode>in the root node.</newcode>
  */
@@ -137,7 +137,7 @@ static void postorderPrint( TreeNode root ) {
      
 /**
  * Print all the items in the tree to which root points.
- * <newcode>The item in the left subtree is printed first, followed</newcode>
+ * <newcode>The items in the left subtree are printed first, followed</newcode>
  * <newcode>by the item in the root node and then the items</newcode>
  * <newcode>in the right subtree.</newcode>
  */
@@ -297,7 +297,7 @@ trees that was outlined above:</np>
 
 <pre>/**
  * Return true if item is one of the items in the binary
- * sort tree to which root points.   Return false if not.
+ * sort tree to which root points.  Return false if not.
  */
 static boolean treeContains( TreeNode root, String item ) {
    if ( root == null ) {

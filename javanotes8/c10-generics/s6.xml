@@ -233,7 +233,7 @@ and <ptype>long</ptype>.</np>
 <p>Suppose <code>supplier</code> is of type <atype>Supplier&lt;T&gt;</atype>.
 It should be possible to create a stream of values of type <classname>T</classname>
 by calling <code>supplier.get()</code> over and over.  That stream
-can in fact created using</p>
+can in fact be created using</p>
 
 <pre>Stream.generate( supplier )</pre>
 
@@ -241,7 +241,8 @@ can in fact created using</p>
 produce values forever or until trying to do so produces an error.
 Similarly, <code>IntStream.generate(s)</code> will create the stream of <ptype>int</ptype> values
 from an <classname>IntSupplier</classname>, and <code>DoubleStream.generate(s)</code>
-creates a stream of <ptype>doubles</ptype>.  For example,</np>
+creates a stream of <ptype>doubles</ptype> from a <classname>DoubleSupplier</classname>.  
+For example,</np>
 
 <pre>DoubleStream.generate( () -> Math.random() )</pre>
 
@@ -284,7 +285,7 @@ found the sum of the numbers in the stream of ints.</p>
 and <newword>map</newword>. A filter applies a <classname>Predicate</classname> to a stream, and it creates a
 new stream consisting of the values from the original stream for
 which the predicate is true.  For example, if we had a <ptype>boolean</ptype>-valued function
-<code>isPrime(n)</code> that tests whehter an integer <code>n</code> is prime, then</p>
+<code>isPrime(n)</code> that tests whether an integer <code>n</code> is prime, then</p>
 
 <pre>IntSteam.range(2,1000).filter( n -> isPrime(n) )</pre>
 
@@ -313,7 +314,7 @@ stream containing only the first <code>n</code> values from <code>S</code>.
 <code>S.distinct()</code> creates a stream from the values of <code>S</code>
 by omitting duplicate values, so that all the values in <code>S.distinct()</code>
 are different. And <code>S.sorted()</code> creates a stream containing the same
-values as <code>s</code>, but in sorted order; to sort items that do not
+values as <code>S</code>, but in sorted order; to sort items that do not
 have a natural ordering, you can provide a <classname>Comparator</classname>
 as a parameter to <code>sorted()</code>.  Note that <code>S.limit(n)</code>
 can be especially useful for truncating what would otherwise be an 
@@ -386,7 +387,7 @@ does not match the predicate.</p>
 terms of a more general operation, <newword>reduce</newword>.
 A reduce operation combines the values from a string using a 
 <classname>BinaryOperator</classname>.  For example, a sum is computed
-by a reduce operation in which the binary operations is addition.
+by a reduce operation in which the binary operation is addition.
 The binary operator should be associative, which means that the order
 in which the operator is applied doesn't matter.  There is no
 built-in terminal operator to compute the product of the values
@@ -457,8 +458,7 @@ private static double riemannSumWithForLoop(
     double sum = 0;
     double dx = (b - a) / n;
     for (int i = 0; i &lt; n; i++) {
-        double x = a + i*dx;
-        sum = sum + f.applyAsDouble(x);
+        sum = sum + f.applyAsDouble(a + i*dx);
     }
     return sum * dx;
 }</pre>
@@ -473,11 +473,11 @@ for example, with</np>
 from 0 to <code>n</code> as a stream, using <code>IntStream.range(0,n)</code>.
 This gives a sequential stream.  To enable parallelism, we have to convert
 it to a parallel stream by applying the <code>.parallel()</code>
-operation.  To compute the values that we want to sum up, we can
+operation.  To compute the values that we want to sum up, 
 we can apply a map operation that maps the stream of <ptype>ints</ptype>
 to a stream of <ptype>doubles</ptype> by mapping the integer <code>i</code> to
 <code>f.applyAsDouble(a+i*dx)</code>.  Finally, we can apply <code>sum()</code>
-as the terminal operation.  Here is version of the Riemann sum method that
+as the terminal operation.  Here is a version of the Riemann sum method that
 uses a parallel stream:</np>
 
 <pre>private static double riemannSumWithParallelStream( 
@@ -514,7 +514,7 @@ I encourage you to try out the sample program on your own computer!</p>
 <p>It is even conceivable (or at least this is a goal of the stream API) 
 that you have a machine on which Java can run
 parallel code on your graphics card, making use of the many processors
-that it contains.  In that happens, you might see a very large
+that it contains.  If that happens, you might see a very large
 speedup.</p>
 
 

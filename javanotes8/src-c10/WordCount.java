@@ -84,7 +84,7 @@ public class WordCount {
 
 			// Copy the word data into an array list, and sort the list
 			// into order of decreasing frequency, using a lambda expression
-			// for the Comparator that will be using in sorting.
+			// for the Comparator that will be used in sorting.
 
 			ArrayList<WordData> wordsByFrequency = new ArrayList<>( words.values() );
 			Collections.sort( wordsByFrequency, (a,b) -> b.count - a.count );

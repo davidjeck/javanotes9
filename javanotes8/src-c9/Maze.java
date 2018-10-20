@@ -27,7 +27,7 @@ public class Maze extends Application implements Runnable {
 					// inside createMaze().)
 					//    A maze is made up of walls and corridors.  maze[i][j]
 					// is either part of a wall or part of a corridor.  A cell
-					// cell that is part of a corridor is represented by pathCode
+					// that is part of a corridor is represented by pathCode
 					// if it is part of the current path through the maze, by
 					// visitedCode if it has already been explored without finding
 					// a solution, and by emptyCode if it has not yet been explored.
@@ -108,7 +108,7 @@ public class Maze extends Application implements Runnable {
 	
 	void makeMaze() {
 			// Create a random maze.  The strategy is to start with
-			// a grid of disconnected "rooms" separated by walls.
+			// a grid of disconnected "rooms" separated by walls,
 			// then look at each of the separating walls, in a random
 			// order.  If tearing down a wall would not create a loop
 			// in the maze, then tear it down.  Otherwise, leave it in place.
@@ -171,7 +171,7 @@ public class Maze extends Application implements Runnable {
 			// joins two "rooms" into one "room".  (Rooms begin to look like corridors
 			// as they grow.)  When a wall is torn down, the room codes on one side are
 			// converted to match those on the other side, so all the cells in a room
-			// have the same code.   Note that if the room codes on both sides of a
+			// have the same code.  Note that if the room codes on both sides of a
 			// wall already have the same code, then tearing down that wall would 
 			// create a loop, so the wall is left in place.
 		if (row % 2 == 1 && maze[row][col-1] != maze[row][col+1]) {

@@ -207,6 +207,12 @@ public class SimpleInterpreter {
 
 	/**
 	 * Read a factor from the current line of input and return its value.
+	 * (Note:  This method makes the exponentiation operator, ^, left
+	 * associative.  That is, a^b^c means (a^b)^c.  It should properly
+	 * be right-associative, that is, a^b^c = a^(b^c).  That could be
+	 * implemented simply by changing line 226 to read
+	 * "double nextVal = factorValue()" and replacing the "while"
+	 * on line 222 with "if".)
 	 */
 	private static double factorValue() throws ParseError {
 		TextIO.skipBlanks();
@@ -224,7 +230,7 @@ public class SimpleInterpreter {
 			TextIO.skipBlanks();
 		}
 		return val;
-	} // end termValue()
+	} // end factorValue()
 
 
 	/**
@@ -271,7 +277,7 @@ public class SimpleInterpreter {
 			throw new ParseError("Misplaced operator.");
 		else
 			throw new ParseError("Unexpected character \"" + ch + "\" encountered.");
-	}
+	}  // end primaryValue()
 
 
 	/**

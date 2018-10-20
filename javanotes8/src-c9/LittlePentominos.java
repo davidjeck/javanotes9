@@ -34,7 +34,7 @@ public class LittlePentominos extends Application {
 
 	volatile private int delay = 100;           
 
-	private static final int rows = 8, cols = 8;  // Number of rows and columns in the board.
+	private static final int rows = 8, cols = 8;  // number of rows and columns in the board
 
 	private final static int GO_MESSAGE = 1;      // the values for the message variable   
 	private final static int RESTART_RANDOM_MESSAGE = 6;
@@ -49,10 +49,10 @@ public class LittlePentominos extends Application {
 	 * in the following peculiar way:  One square is assumed to be at position (0,0) in a grid; the square is
 	 * chosen as the "top-left" square in the piece, in the sense that all the other squares are either to the
 	 * right of this square in the same row, or are in lower rows.  The remaining 4 squares in the piece are
-	 * encoded by 8 numbers that give the row and column of each of the remaining squares.   If the eight numbers
+	 * encoded by 8 numbers that give the row and column of each of the remaining squares.  If the eight numbers
 	 * that describe the piece are (a,b,c,d,e,f,g,h) then when the piece is placed on the board with the top-left 
 	 * square at position (r,c), the remaining squares will be at positions (r+a,c+b), (r+c,c+d), (r+e,c+f), and
-	 * (r+g,c+h).  this representation is used in the putPiece() and removePiece() methods. 
+	 * (r+g,c+h).  This representation is used in the putPiece() and removePiece() methods. 
 	 */
 	private  static final int[][] pieces = {
 		{ 1, 0,1,0,2,0,3,0,4 },  // Describes piece 1 (the "I" pentomino) in its horizontal orientation.
@@ -120,7 +120,7 @@ public class LittlePentominos extends Application {
 		{ 12, 0,1,1,0,1,1,2,0 }
 	};
 
-	private Color pieceColor[] = {  // the colors of pieces number 1 through 12; pieceColor[0] is not used.
+	private Color pieceColor[] = {  // the colors of pieces number 1 through 12; pieceColor[0] is not used
 			null,
 			Color.rgb(200,0,0),
 			Color.rgb(150,150,255),
@@ -139,7 +139,7 @@ public class LittlePentominos extends Application {
 
 	/**
 	 * Sets up and shows the window, which holds nothing but a MosaicCanvas.
-	 * Starts a thread that solve pentominos puzzles (slowly, so the backtracking
+	 * Starts a thread that solves pentominos puzzles (slowly, so the backtracking
 	 * process can be seen!).
 	 */
 	public void start(Stage stage) {
@@ -158,7 +158,7 @@ public class LittlePentominos extends Application {
 		stage.setTitle("Pentominos Solver Demo");
 		stage.show();
 		
-		startSolving();  // Creates and starts the thread.
+		startSolving();  // creates and starts the thread
 
 	}
 
@@ -184,7 +184,7 @@ public class LittlePentominos extends Application {
 		boolean aborted;  // used in play() to test whether the solution process has been aborted by a "restart"
 
 		volatile int message = 0;   // "message" is used by user-interface thread to send control messages
-									// to the game-playing thread.  A value of  0 indicates "no message"
+									// to the game-playing thread.  A value of  0 indicates "no message".
 
 		int[][] blockCheck;  // Used for checking for blocking.
 		int blockCheckCt;  // Number of times block check has been run -- used in controlling recursive counting instead of just using a boolean array.
@@ -204,14 +204,14 @@ public class LittlePentominos extends Application {
 			return true;
 		}
 
-		void removePiece(int p, int row, int col) { // Remove piece p from the board, at position (row,col)
+		void removePiece(int p, int row, int col) { // Remove piece p from the board, at position (row,col).
 			board.setColor(row,col,null);
 			for (int i = 1; i < 9; i += 2) {
 				board.setColor(row + pieces[p][i], col + pieces[p][i+1], null);
 			}
 		}
 
-		void play(int row, int col) {   // recursive procedure that tries to solve the puzzle
+		void play(int row, int col) {   // Recursive procedure that tries to solve the puzzle
 										// parameter "square" is the number of the next empty
 										// to be filled.  This is only complicated because all
 										// the details of speed/pause/step are handled here.
@@ -288,7 +288,7 @@ public class LittlePentominos extends Application {
 		}
 
 
-		void setUpRandomBoard() { // Set up a random board, that is, select at random the squares that will be left empty
+		void setUpRandomBoard() { // Set up a random board; that is, select at random the squares that will be left empty.
 			board.clear();
 			int x,y;
 			int placed = 0;

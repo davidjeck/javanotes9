@@ -261,7 +261,7 @@ a <classname>LinkedList</classname> of <classname>Buttons</classname>,&nbsp;&dot
 </subsection>
    
 
-<subsection id="generics.5.3" title="Type Wildcards">
+<subsection id="generics.5.3" title="Wildcard Types">
    
 <p>There is a limitation on the sort of generic classes and methods that we have
 looked at so far:  The type parameter in our examples, usually named <classname>T</classname>,
@@ -514,7 +514,7 @@ statement.</p>
 <p>One final remark: The wildcard type "<code>&lt;?&gt;</code>" is equivalent to
 "<code>&lt;?&nbsp;extends&nbsp;Object&gt;</code>".  That is, it matches any possible
 type.  For example, the <code>removeAll()</code> method in the generic interface
-<classname>Collections&lt;T&gt;</classname> is declared as</p>
+<classname>Collection&lt;T&gt;</classname> is declared as</p>
    
 <pre>public boolean removeAll( Collection&lt;?&gt; c ) { ...</pre>
    
@@ -566,13 +566,13 @@ instead of a plain "<code>T</code>" in the definition of the class:
    public void disableAll( ) {
       for ( Control c : components )
          if (c != null)
-            c.setDisable(false);
+            c.setDisable(true);
       }
    }
    public void enableAll( ) {
       for ( Control c : components )
          if (c != null)
-            c.setDisable(true);
+            c.setDisable(false);
       }
    }
    public void add( T c ) {  // Add a value c, of type T, to the group.
@@ -618,7 +618,7 @@ disable any collection of <classname>Controls</classname> as follows:</p>
 <pre>public static &lt;T extends Control&gt; void disableAll(Collection&lt;T&gt; comps) {
    for ( Control c : comps )
       if (c != null)
-         c.setDisable(false);
+         c.setDisable(true);
 }</pre>
    
 <np>Using "<code>&lt;T extends Control&gt;</code>" as the formal type parameter
@@ -633,7 +633,7 @@ write an equivalent method using a wildcard type:</p>
 <pre>public static void disableAll(Collection&lt;? extends Control&gt; comps) {
    for ( Control c : comps )
       if (c != null)
-         c.setDisable(false);
+         c.setDisable(true);
 }</pre>
 
 <np>In this situation, the version that uses the wildcard type is to be preferred,
@@ -674,7 +674,7 @@ We can't simply use a wildcard type to enforce this restriction.  Suppose we try
 <classname>List&lt;?&nbsp;extends&nbsp;Comparable&gt;</classname>:</p>
 
 <pre>static void sortedInsert(List&lt;? extends Comparable&gt; sortedList, <newcode>????</newcode> newItem) {
-   ListIterator&lt;<newcode>????</newcode>&gt; iter = stringList.listIterator();
+   ListIterator&lt;<newcode>????</newcode>&gt; iter = sortedList.listIterator();
    ...</pre>
    
 <np>We immediately run into a problem, because we have no name for the unknown

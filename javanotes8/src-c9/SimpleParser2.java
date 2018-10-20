@@ -144,7 +144,7 @@ public class SimpleParser2 {
 			throw new ParseError("Misplaced operator.");
 		else
 			throw new ParseError("Unexpected character \"" + ch + "\" encountered.");
-	}
+	} // end factorValue()
 
 
 } // end class SimpleParser2

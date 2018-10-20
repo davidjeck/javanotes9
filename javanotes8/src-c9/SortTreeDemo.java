@@ -117,7 +117,7 @@ public class SortTreeDemo {
 
 	/**
 	 * Return true if item is one of the items in the binary
-	 * sort tree to which root points.   Return false if not.
+	 * sort tree to which root points.  Return false if not.
 	 */
 	static boolean treeContains( TreeNode root, String item ) {
 		if ( root == null ) {
@@ -155,7 +155,7 @@ public class SortTreeDemo {
 	/**
 	 * Count the nodes in the binary tree.
 	 * @param node A pointer to the root of the tree.  A null value indicates
-	 * an empty tree
+	 * an empty tree.
 	 * @return the number of nodes in the tree to which node points.  For an
 	 * empty tree, the value is zero.
 	 */

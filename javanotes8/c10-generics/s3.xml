@@ -309,7 +309,7 @@ and <code>tailSet</code>. Suppose,
 for example, that <code>phoneBook</code> is a map of type
 <classname>TreeMap&lt;String,String&gt;</classname> in which the keys
 are names and the values are phone numbers. We can print out all the entries
-from <code>blackBook</code> where the name begins with "M" as follows:</p>
+from <code>phoneBook</code> where the name begins with "M" as follows:</p>
 
 <pre>Map&lt;String,String&gt; ems = phoneBook.subMap("M","N");
      // This submap contains entries for which the key is greater
@@ -326,14 +326,14 @@ else {
 
 <p>Subsets and submaps are probably best thought of as generalized search
 operations that make it possible to find all the items in a range of values,
-rather than just to find a single value. Suppose, for example that a database
+rather than just to find a single value. For example, suppose that a database
 of scheduled events is stored in a map of type <classname>TreeMap&lt;Date,Event&gt;</classname> 
 in which the keys are the
 times of the events, and suppose you want a listing of all events that are
 scheduled for some time on July 4, 2018. Just make a submap containing all keys
 in the range from 12:00 AM, July 4, 2018 to 12:00 AM, July 5, 2018, and output
 all the entries from that submap. This type of search, which is known as a
-<newword>subrange query</newword> is quite common.</p>
+<newword>subrange query</newword>, is quite common.</p>
 
 </subsection>
 
@@ -444,7 +444,7 @@ classes that you write yourself.</p>
 <p>Writing a good hash function is something of an art.  In order to work well, the hash
 function must spread the possible keys fairly evenly over the hash table.  Otherwise,
 the items in a table can be concentrated in a subset of the available locations, and the
-linked lists at those locations can grow to large size; that would destroy the efficiency
+linked lists at those locations can grow to a large size; that would destroy the efficiency
 that is the major reason for hash tables to exist in the first place.  However, I won't
 cover techniques for creating good hash functions in this book.</p>
    

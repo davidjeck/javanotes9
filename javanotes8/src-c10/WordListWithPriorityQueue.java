@@ -77,7 +77,7 @@ public class WordListWithPriorityQueue {
 		}
 		if (ch == TextIO.EOF) // Encountered end-of-file
 			return null;
-		// At this point, we know that the next character, so read a word.
+		// At this point, we know that the next character is a letter, so read a word.
 		String word = "";  // This will be the word that is read.
 		while (true) {
 			word += TextIO.getAnyChar();  // Append the letter onto word.

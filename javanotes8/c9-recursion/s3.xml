@@ -463,7 +463,7 @@ a stack. It will be removed from the stack and destroyed when the subroutine
 returns. If the subroutine calls another subroutine, the activation record of
 the second subroutine is pushed onto the stack, on top of the activation record
 of the first subroutine. The stack can continue to grow as more subroutines are
-called, and it shrinks as those subroutines return</p>
+called, and it shrinks as those subroutines return.</p>
 
 <p>In the case of a recursive subroutine, which calls itself, there can be
 several activation records on the stack for the same subroutine.  This is
@@ -507,7 +507,7 @@ still waiting there. The next item in the expression is a <code>17</code>, which
 processed by pushing it onto the stack, on top of the <code>3</code>. To process
 the next item, "<code>*</code>", we pop two numbers from the stack. The numbers are
 <code>17</code> and the <code>3</code> that represents the value of "<code>15&nbsp;12&nbsp;-</code>".
-These numbers are multiplied, and the result, <code>51</code> is pushed onto the
+These numbers are multiplied, and the result, <code>51</code>, is pushed onto the
 stack. The next item in the expression is a "<code>+</code>" operator, which is processed by
 popping <code>51</code> and <code>2</code> from the stack, adding them, and pushing the
 result, <code>53</code>, onto the stack. Finally, we've come to the end of the

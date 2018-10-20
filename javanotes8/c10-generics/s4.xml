@@ -358,11 +358,11 @@ that is negative, zero, or positive, depending on whether <code>obj1</code> is l
 than, equal to, or greater than <code>obj2</code>. We want to
 compare two <classname>Strings</classname> ignoring case.
 The <classname>String</classname>
-class already includes a method that does that, <code>compartToIgnoreCase()</code>.
+class already includes a method that does that, <code>compareToIgnoreCase()</code>.
 But to use a non-default comparison in a <classname>TreeMap</classname>,
 we need an object of type <classname>Comparator&lt;String&gt;</classname>. Since
 <classname>Comparator</classname> is a functional interface, an easy
-way to specify the comparator is to use lambda expression:</np>
+way to specify the comparator is to use a lambda expression:</np>
 
 <pre>(a,b) -&gt; a.compareToIgnoreCase(b)</pre>
 
@@ -375,7 +375,7 @@ a parameter to the <classname>TreeMap</classname> constructor:</np>
 exists in the <classname>String</classname> class, it could actually be
 given as a method reference (see <localref href="subroutines.4a.4"/>):</np>
 
-<pre>index = new Treemat&lt;&gt;( String::compareToIgnoreCase );</pre>
+<pre>index = new TreeMap&lt;&gt;( String::compareToIgnoreCase );</pre>
 
 <p>This does work.  However, there one technicality. Suppose, for example,
 that the indexing program calls <code>addReference("aardvark",56)</code> and that it later
