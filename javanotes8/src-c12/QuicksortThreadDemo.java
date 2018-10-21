@@ -271,6 +271,12 @@ public class QuicksortThreadDemo extends Application {
 	 * resets the text on the button to "Start".
 	 */
 	private class Runner extends Thread {
+		Runner() {
+			    // The constructor sets this thread to be a Daemon thread.
+			    // Otherwise, the thread will keep the Java Virtual Machine
+			    // from exiting when the window is closed.
+			setDaemon(true);
+		}
 		public void run() {
 			for (int i = 0; i < hue.length; i++) {
 				   // fill hue array with indices in order
