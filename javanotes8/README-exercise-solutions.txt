@@ -3,6 +3,12 @@ This README explains how to use the solutions to the programming
 exercises for "Introduction to Programming Using Java, Version 8", 
 which is freely available on the web at http://math.hws.edu/javanotes8
 
+Note that the GUI programs require Java 8 or higher, with JavaFX.
+For Java 11 or later, JavaFX must be downloaded separately, and it 
+becomes more complicated to run JavaFX programs.  This README assumes
+that you are using Java 8, but it should also work for Java 9 or
+Java 10.  For using JavaFX with Java 11, see https://openjfx.io/
+
 Each end-of-chapter exercise has a web page that contains a discussion
 of the solution and the source code for a sample solution.  The
 archive javanotes8-exercise-solutions.zip, which can be downloaded

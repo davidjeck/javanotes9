@@ -14,12 +14,12 @@ chapters can be covered in a second course.</p>
 
 <p>The Eighth Edition of the book covers Java&nbsp;8, and it uses
 JavaFX&nbsp;8 for GUI programming.  Although later
-versions of Java have been released, I have no plans to cover them
+versions of Java have been released, I currently have no plans to cover them
 in this textbook.  (However, all sample programs and exercise solutions
-have been compiled using Java&nbsp;10 as well as Java&nbsp;8.)</p>
+have been compiled using Java&nbsp;11 as well as Java&nbsp;8.)</p>
    
 <p>The home web site for this book is
-<a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes8/</a>.
+<a href="http://math.hws.edu/javanotes8/">http://math.hws.edu/javanotes8/</a>.
 The page at that address contains links for downloading a copy of
 the web site and for downloading PDF versions of the book.
 The web site&mdash;and the web site download&mdash;includes source code for the sample programs that are
@@ -70,8 +70,8 @@ to cover some of JavaFX's more advanced capabilities.</p>
 Swing to JavaFX for GUI programming.  With just a few exceptions in code that
 the user is not meant to read, all example code and exercises use JavaFX.
 (Unfortunately, even as I was working on the new edition, the future of JavaFX
-has become unclear as Oracle has announced that it will not be included as
-part of the standard download of JDK&nbsp;11 and later; however, it will
+has become unclear because, as of Java&nbsp;11, JavaFX is no longer
+included as part of the basic Java download.  However, it is
 still be available to be downloaded and installed separately.)
 The eighth edition also incorporates some features that were introduced
 in Java&nbsp;8: lambda expressions and the stream API.  Lambda expressions are
@@ -87,10 +87,7 @@ support in Chapter&nbsp;12, and the consistent use of factory methods like
 <break/>
    
 
-<p>The seventh edition of <i>Introduction to Programming using Java</i> is available on line at
-<a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.  (Once a final version
-of the eighth edition is released, it will replace the seventh edition at that address.)
-The first version of the book was written in 1996, and there have
+<p>The first version of the book was written in 1996, and there have
 been several editions since then.  All editions are archived (at least until my retirement) 
 at the following Web addresses:</p>
    
@@ -156,15 +153,11 @@ image files, a TeX macro file, and a couple of scripts that are used in processi
 The scripts work on Linux and on Mac&nbsp;OS.
 </p>
 
-<!-- 
 <p><b>I have made the complete source files available for download at
 the following address:</b></p>
 
 <p align="center"><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-full-source.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8-full-source.zip</a></p>
--->
 
-<p>I will make the complete source files available on request, and will post a link to
-them on the book's web site once the final version of the eighth edition is released.</p>
 
 <p>These files were not originally meant for publication, and therefore are not very
 cleanly written.  Furthermore, it requires a fair amount of expertise to use them.

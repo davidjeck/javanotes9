@@ -4,8 +4,8 @@ This is the README file for the javanotes source download...
                                                     
 Directory javanotes8-source contains the source files that are used 
 to produce the web site and PDF versions of "Introduction to Programming 
-using Java", Seventh Edition.  This free textbook (or a later edition) can 
-be found on the web at:  http://math.hws.edu/javanotes
+using Java", Eighth Edition.  This free textbook (or a later edition) can 
+be found on the web at:  http://math.hws.edu/javanotes8
 
       Everything in this directory is released under a 
       Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License 
@@ -16,7 +16,7 @@ be found on the web at:  http://math.hws.edu/javanotes
       provided that you include a clear attribution  to the author of 
       the original work and make clear any modifications that you 
       have made.  The attribution should include a reference to the 
-      web site, http://math.hws.edu/javanotes.  ADDITIONALLY, permission
+      web site, http://math.hws.edu/javanotes8.  ADDITIONALLY, permission
       is given to use Java source code from this work in programming 
       projects [but not in educational material] without restriction 
       and without attribution, for commercial or non-commercial

@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# THIS SCRIPT EXECUTES THE THREE BUILD SCRIPTS BUILD-web-site.sh,
-# BUILD-pdf.sh, AND BUILD-linked-pdf.sh.  The shell variables that
+# THIS SCRIPT EXECUTES THE FIVE BUILD SCRIPTS BUILD-web-site.sh,
+# BUILD-pdf.sh, BUILD-linked-pdf.sh, BUILD_exercise_programs.sh
+$ and BUILD_epub.sh.  The shell variables that
 # are used in those scripts can be set in the BUILD-env.sh script;
 # see that file for more information.
 
@@ -47,6 +48,15 @@ if $SCRIPT_DIR/BUILD-linked-pdf.sh > /dev/null 2> /dev/null ; then
    echo "(But check the output!)"
 else
   echo "ERROR while running BUILD-linked-pdf.sh."
+fi
+
+echo
+echo Running BUILD-epub.sh...
+if $SCRIPT_DIR/BUILD-epub.sh > /dev/null 2> /dev/null ; then
+   echo "Ran BUILD-epub.sh with no reported error."
+   echo "(But check the output!)"
+else
+  echo "ERROR while running BUILD-epub.sh."
 fi
 
 echo

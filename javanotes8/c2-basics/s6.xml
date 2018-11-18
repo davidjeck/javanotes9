@@ -17,18 +17,24 @@ in this section, but I will try to give enough information to let you compile
 and run the examples from this textbook.  (Readers are strongly encouraged to read,
 compile, and run the examples.  Source code for sample programs and solutions to
 end-of-chapter exercises can be downloaded from the
-book's web page, <a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a>.)</p>
+book's web page, <a href="http://math.hws.edu/javanotes8">http://math.hws.edu/javanotes8</a>.)</p>
 
 <p>One thing to keep in mind is that you do not have to pay any money
 to do Java programming (aside from buying a computer, of course).  Everything
 that you need can be downloaded for free on the Internet.
 </p>
+
+<p>This textbook covers Java 8, but at the time of its release, the current version of
+Java is Java&nbsp;11.  Significant changes both in the Java language and in the
+Oracle corporation's policies concerning Java have been made.  For a discussion of those
+changes, see the <localref href="basics.6.7">last subsection</localref> of this section.</p>
+
    
 <subsection id="basics.6.1" title="Java Development Kit">
    
 <p>The basic development system for Java programming is usually referred
 to as a <newword>JDK</newword> (Java Development Kit).  It is a part of Java&nbsp;SE,
-the Java "Standard Edition."  Note that Java&nbsp;SE comes in 
+the Java "Standard Edition."  Note that the Java&nbsp;8 Standard Edition comes in 
 two versions, a Development Kit version (the JDK) and a Runtime Environment version
 (the JRE).  The Runtime can be used to run Java programs,
 but it does not allow you to compile your own Java programs.
@@ -41,28 +47,21 @@ to compile and run Java programs. An IDE will also require a JDK, but it might b
 the IDE download.</p>
    
 <p>Java was developed by Sun Microsystems, Inc., which was acquired by the Oracle corporation. 
-Oracle makes the JDK for Windows, Mac&nbsp;OS, and Linux
-available for free download at its Java Web site.  Some computers might come with
+Oracle makes JDK&nbsp;8 for Windows, Mac&nbsp;OS, and Linux
+available for free download at its Java Web site.  (For Linux, a version of the JDK known as
+OpenJDK is often included on the installation media.  Note that when using OpenJDK,
+you will also need to install OpenJFX to get support for programs that use JavaFX.)
+Some computers might come with
 a Java Runtime already installed, but you will probably need to install the JDK in any case.
 For most Linux distributions, a version known as OpenJDK is available for installation 
-as a package. As of summer 2018, the official Oracle versions are available at</p>
+as a package. As of November 2018, the official Oracle version of the Java&nbsp;8 JDK is available at</p>
 
-<pre><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a></pre>
+<pre><a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">https://www.oracle.com/technetwork/java/javase/downloads/index.html</a></pre>
 
-<np>You will need a JDK for Java 8 or later for use with this textbook.  The sample programs
-for this textbook have been compiled with Java 8 and with Java 10.</np>
-   
-<p><b>About JavaFX:</b>  The Graphical User Interface programs in this book use the
-JavaFX GUI toolkit.  JavaFX is included in the JDKs for Java 8, 9, and 10 from Oracle Corporation, 
-but Oracle has announced that it will not be included in Java 11 and later; instead,
-it will be available as a separate download. For the alternative OpenJDK, JavaFX has never
-been included as a standard component, but is available separately as OpenJFX.
-As I write this, it is only available for OpenJDK&nbsp;8, but a version for
-OpenJDK 9 through 11 is under development.
-On my Ubuntu Linux desktop computer using Java&nbsp;8, I had to install an "openjfx"
-package in addition to the "openjdk" package.  All of the examples and exercise
-solutions for this book were developed in that environment, and they were also
-compiled using JDK&nbsp;10 from Oracle.</p>
+<np>You will need a JDK for Java 8 or later for use with this textbook.
+Although a JDK for Java&nbsp;11 is also available at the Oracle site, it is mainly meant
+for commercial use.  See the end of this section for information about downloading and using
+Java&nbsp;11.</np>
    
 </subsection>
    
@@ -126,7 +125,7 @@ such as "Command not found," then Java is not correctly installed.  If the
 "java" command works, but "javac"  does not, it means that a Java Runtime
 is installed rather than a Development Kit.  (On Windows, after installing
 the JDK, you need to modify the Windows PATH environment variable to make this work.
-See the JDK installation instructions on Oracle's download site for information about how to do this.)</p>
+See the JDK&nbsp;8 installation instructions on Oracle's download site for information about how to do this.)</p>
 
 <p>To test the <code>javac</code> command, place a copy of <sourceref href="HelloWorld.java"/>
 into your working directory.  (If you downloaded the Web site of this book,
@@ -182,7 +181,7 @@ command prompt, and you can enter another command. (Note, by the way, that "<cod
 would not make sense, since <code>TextIO</code> does not have a <code>main()</code> routine,
 and so it doesn't make sense to try to execute it as a program.)</np>
 
-<p>You can follow a similar procedure to run any of the examples in this book.  Some examples require
+<p>You can follow a similar procedure to run any of the examples in this book with JDK&nbsp;8.  Some examples require
 additional files, such as <code>TextIO.java</code>, which also need to be in your working directory.</p>
    
 <break/>
@@ -248,8 +247,8 @@ advanced features.</p>
    
 <p>You can download an Eclipse IDE from <a href="http://eclipse.org">eclipse.org</a>.  It is a
 free program.  Eclipse is itself written in Java.  It requires a Java Runtime Environment, 
-but not necessarily a JDK, since it includes its own compiler.
-You should make sure that the JRE or JDK, Version 8 or higher, is installed on your computer, as
+but not necessarily a JDK, since it includes its own compiler.  To use Eclipse with Java&nbsp;8,
+you should make sure that the JRE or JDK, Version 8 or higher, is installed on your computer, as
 described <localref href="basics.6.1">above</localref>, <b>before</b> you install Eclipse.
 There are several versions of the Eclipse IDE; you can use the "Eclipse IDE for Java Developers."
 </p>
@@ -428,11 +427,10 @@ Under "Errors and Warnings" / "Deprecated and restricted API", set
 <subsection id="basics.6.4" title="NetBeans">
    
    
-<p>Another IDE for professional programming is NetBeans. It can be downloaded from
-<a href="http://netbeans.org">netbeans.org</a>.  Alternatively, a bundle containing
-both NetBeans and JDK&nbsp;8 is available on Oracle's Java download page.  As I write this,
-Netbeans only supports Oracle's Java 8, including JavaFX, but support for later versions
-is planned.</p>
+<p>Another IDE for professional programming is NetBeans. Netbeans&nbsp;8.2, whic supports
+Java&nbsp;8 but not later versions, can be downloaded from
+<a href="https://netbeans.org">netbeans.org</a>.  (For later versions of Netbeans,
+see <a href="https://netbeans.apache.org">https://netbeans.apache.org</a>.)</p>
 
 <p>Using NetBeans is very similar to using Eclipse.  Even the layout of its window is
 very similar to the Eclipse window.  Create a project in NetBeans with the "New Project"
@@ -466,7 +464,7 @@ Just press Control-Space as you are typing to get a list of possible completions
 are learning to program.  It is much less complex than Eclipse or NetBeans, but it
 does have some features that make it useful for education.
 BlueJ can be downloaded from <a href="http://bluej.org">bluej.org</a>.  It currently
-supports Java&nbsp;8, and requires that you have a JDK, not just a JRE.</p>
+supports Java&nbsp;8, but not later versions.  It requires that you have a JDK, not just a JRE.</p>
 
 <p>In BlueJ, you can begin a project with the "New Project" command in the "Project" menu.
 A BlueJ project is simply a folder.  When you create a project, you will have to select
@@ -562,6 +560,72 @@ Windows.  The command for executing the program is then
 name from the class name.</p>
    
 </subsection>   
+
+
+<subsection title="About Java 11" id="basics.6.7">
+
+<p>In November 2018, the most recent version of Java is Java&nbsp;11.  (Both Java 8 and Java 11
+are "long-term support" releases, while Java 9 and Java 10 were not.)  With Java&nbsp;11,
+developers who don't need commercial support from Oracle should use OpenJDK, which
+can be downloaded from <a href="https://jdk.java.net/11/">https://jdk.java.net/11/</a>.
+OpenJDK&nbsp;11 has the same functionality as Oracle JDK&nbsp;11.</p>
+
+<p>A major change in
+the language between Java&nbsp;8 and Java&nbsp;11 was the introduction of <newword>modules</newword>.
+A module is a collection of packages, just as a package is a collection of classes.  In Java&nbsp;11,
+all of Java's standard classes have been reorganized into modules, and developers can organize their
+own programs in a similar way.  However, all of the old commands for building and running Java
+programs still work as they always did, and for the most part it is possible to use Java&nbsp;11
+without ever thinking about modules.</p>
+
+<p>Unfortunately, that's not true when using JavaFX.  As of Java&nbsp;11, JavaFX is not
+included in the JDK.  Instead, you need to download and install OpenJFX separately (see
+<a href="https://openjfx.io/">https://openjfx.io/</a>).  OpenJFX can be downloaded from</p>
+
+<p align="center"><a href="https://gluonhq.com/products/javafx/">ttps://gluonhq.com/products/javafx/</a></p>
+
+<np>In order to compile and run applications that use JavaFX, you will need the "JavaFX JDK" for
+your platform (Windows, Mac OS, or Linux). If you just wanted to run JavaFX applications, you
+could use the "JavaFX jmods" instead, but they do not work for compiling.
+After downloading and unzipping the SDK, the files that you need will be in a "lib"
+subdirectory inside a directory with a name like "javafx-sdk-11."  In order for Java to
+find the JavaFX classes, you will need to specify that directory in the "module path" 
+when compiling or running JavaFX applications.  In addition, you will have to specify the
+specific modules that you need.  Using Java&nbsp;11, with the JavaFX SDK in the
+directory <i>/home/eck//javafx-sdk-11/lib</i>, I was able to compile most of the
+JavaFX programs in this book using a command of the form</np>
+
+<pre>javac --module-path=/home/eck/javafx-sdk-11/lib --add-modules=javafx.controls App.java
+</pre>
+
+<np>Of course, you would have to use the correct path to your JavaFX SDK.
+A similar command, using <i>java</i> in place of <i>javac</i>, could then be used to
+run the program. A few of the sample programs require additional modules, namely <i>javafx.web</i>
+or <i>javafx.swing</i>.  When I had just downloaded OpenJDK&nbsp;11 and OpenJFX onto my
+Linux computer, rather
+than installing them properly, I defined commands <i>javac11</i> and <i>java11</i> that
+would work for all examples in this book as follows, but with each <i>alias</i>
+command typed all on one line:</np>
+
+<pre>
+alias javac11='/home/eck/jdk-11.0.1/bin/javac 
+                  --module-path=/home/eck/javafx-sdk-11/lib 
+                  --add-modules=javafx.controls,javafx.web,javafx.swing'
+
+alias java11='/home/eck/jdk-11.0.1/bin/java 
+                  --module-path=/home/eck/javafx-sdk-11/lib 
+                  --add-modules=javafx.controls,javafx.web,javafx.swing'
+</pre>
+
+<np>More information about using JavaFX with Java&nbsp;11, including using them in
+Eclipse and Netbeans, can be found at <a href="https://openjfx.io/openjfx-docs/">https://openjfx.io/openjfx-docs/</a>.
+It's all unpleasantly complicated at the moment.  Hopefully, things will improve with time.
+In particular, I am hoping for better JavaFX support in the next version of Eclipse.
+But for the moment, I am sticking with Java&nbsp;8.  I expect to update this discussion
+after the situation becomes clearer.</np>
+
+</subsection>
+
 
 <endchapter/>
 

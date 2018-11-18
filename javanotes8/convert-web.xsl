@@ -15,13 +15,7 @@
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
-        <h2 class="chapter_title">Version 8.0, Summer 2018</h2>
-        <p style="text-align:center">(<b>Under Construction!</b><br/>
-                          Status: The new version is essentially finished, but<br/>
-                          needs a little more testing.  Also, I would like to<br/>
-                          to know the status of JavaFX in Java 11 before the<br/>
-                          official release.  Web site and PDF downloads are<br/>
-                          available.  Consider this a final "beta" release.)</p>
+        <h2 class="chapter_title">Version 8.0, November 2018</h2>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
@@ -37,9 +31,10 @@
          provide complete coverage of the Java language.
         </p>
         <p>The eighth edition requires Java 8 or higher, including JavaFX. 
-         Earlier editions of the book are still available; 
-         see the <a href="preface.html">preface</a> for links.
-         </p>
+         Earlier editions of the book are still available.  In particular,
+         <a href="http://math.hws.edu/javanotes7">the&#160;seventh&#160;edition</a> uses
+         Swing instead of JavaFX. See the <a href="preface.html">preface</a> for links to
+         all older editions.</p>
          <p>You can the download this
          web site for use on your own computer. 
          PDF<!-- , <span style="white-space:pre">e-book</span>, and print-->
@@ -51,21 +46,6 @@
          the book!  You can download the source code separately or as part of the web site using the links below.
          See <a href="README-running-the-examples.txt">README&#160;file</a>
          for information about how to compile and run the examples.</b></p>
-<!-- 
-         <form method="post" action="http://math.hws.edu/cgi-bin/htsearch">
-         <p><big><b>Search this Text:</b></big> Although this book does not have a
-         conventional index, you can search it for terms that interest you. Note that
-         this feature searches the book at its on-line site, so you must be working
-         on-line to use it.</p>
-         <p>Search <i>Introduction to Programming Using Java</i> for pages...</p>
-         <center><select name="method">
-         <option value="and">Containing all of these words:</option>
-         <option value="or">Containing any of these words:</option></select>
-         <input type="text" size="20" name="words" value="" /> 
-         <input type="hidden" name="config" value="javanotes8" />
-         <input type="submit" value="Search" /></center>
-         </form>
--->
         <h3>Short Table of Contents:</h3>
         <ul class="contents">
         <li><b><a href="contents-with-subsections.html">Full Table of Contents</a></b></li>
@@ -94,9 +74,8 @@
             author for other uses.  See the
             <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">license</a> for full
             details.)<br/><br/>
-            The most recent version of this book is always available, at no
-            charge, for downloading and for on-line use at the Web address:
-            <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a></small></i>
+            This book is available for downloading and for on-line use at the Web address:
+            <a href="http://math.hws.edu/javanotes8">http://math.hws.edu/javanote8s/</a></small></i>
           </blockquote>
         <hr/>
         <h3>Downloading And Other Links</h3>
@@ -122,7 +101,7 @@
           <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-exercise-solutions.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8-exercise-solutions.zip</a></b>  &#8212;
           A zip archive containing source code for all the end-of-chapter exercises.  These have been extracted from the
           web pages that contain the solutions as a convenience.  They are <b>not</b> included in the web site download.
-          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 368&#160;Kilobytes.
+          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 920&#160;Kilobytes.
           </li>
           </ul>
         </li>
@@ -134,18 +113,17 @@
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
-          Size:&#160;6.6&#160;Megabytes; 749 pages.
+          Size:&#160;6.6&#160;Megabytes; 750 pages.
           </li>
           <li>
           <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf">http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf</a></b> &#8212;
           a PDF version without links, more suitable for printing.  <!-- This PDF is in the format that is used for the printed version of the text,
           except that it also includes an appendix listing example programs and a glossary (since they would have
           exceeded the lulu.com page limit). -->
-          Size:&#160;6.1&#160;Megabytes; 757 pages.
+          Size:&#160;6.1&#160;Megabytes; 759 pages.
           </li>
           </ul>
         </li>
-<!-- 
         <li>
            <b>E-book Downloads.</b> 
            <ul>
@@ -160,10 +138,10 @@
            margin is simply dropped.  On some readers, you might be able to scroll horizontally to see the hidden text.
            The ebooks include answers to quizzes
            and exercises but do not include source code for sample programs; the sample programs can be downloaded separately, above.
-           
            </li>
            </ul>
         </li>
+<!-- 
         <li>
           <b>Print Copies Available from Lulu.com:</b>
           <ul>
@@ -176,12 +154,10 @@
           <a href=" http://www.lulu.com/content/612392">http://www.lulu.com/content/612392</a>.
           It is also available in two parts as <a href="http://www.lulu.com/content/559884">http://www.lulu.com/content/559884</a>
           and <a href="http://www.lulu.com/content/822314">http://www.lulu.com/content/822314</a>.
-          Note that these printed books are the original Version 7, and they still contain errors that
-          have been fixed in Version 7.0.3.  See the on-line <a href="http://math.hws.edu/javanotes/news.html">news page</a> for a list of 
-          substantive errors.
           </li>
           </ul>
         </li>
+-->
         <li>
           <b>Source Files for the Book</b>
           <ul>
@@ -190,11 +166,10 @@
           audience.  See the end of the <a href="preface.html">preface</a> for more information and a link.</li>
           </ul>
         </li>
--->
         </ul>
         </td></tr></table>
         <hr/>
-        <div align="right"><small><i>(20 August 2018, Version 8 Beta Released)
+        <div align="right"><small><i>(20 November 2018, Version 8 Released)
                            </i></small></div>
         </div>
         </div></body>
