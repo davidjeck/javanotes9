@@ -15,7 +15,7 @@
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
-        <h2 class="chapter_title">Version 8.0, November 2018</h2>
+        <h2 class="chapter_title">Version 8.0, December 2018</h2>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
@@ -37,7 +37,7 @@
          all older editions.</p>
          <p>You can the download this
          web site for use on your own computer. 
-         PDF<!-- , <span style="white-space:pre">e-book</span>, and print-->
+         PDF, <span style="white-space:pre">e-book</span>, and print
          versions of the textbook are also available.
          The PDF that includes links might be the best way to read it on your computer.
          <b>Links to the downloads can be found at the bottom of this page.</b>
@@ -141,23 +141,22 @@
            </li>
            </ul>
         </li>
-<!-- 
         <li>
-          <b>Print Copies Available from Lulu.com:</b>
+          <b>Print Version Available from Lulu.com:</b>
           <ul>
-          <li><b>Printed versions</b> &#8212; I have made this book available for
-          purchase in printed versions from the print-on-demand publisher
+          <li><b>Printed version</b> &#8212; I have made this book available for
+          purchase in a printed version from the print-on-demand publisher
           <a href="http://www.lulu.com">lulu.com</a>.  This is for convenience only, for those who would
           like to have a bound printout in a nice form.
+          The book is available in a rather thick printed version at
+          <a href="http://www.lulu.com/content/23831534">http://www.lulu.com/content/23831534</a>.
           (Please <b>do not</b> feel obliged to buy the printed version; I do not make any money from it!)
-          The entire book is available in a rather thick printed version at
-          <a href=" http://www.lulu.com/content/612392">http://www.lulu.com/content/612392</a>.
-          It is also available in two parts as <a href="http://www.lulu.com/content/559884">http://www.lulu.com/content/559884</a>
+<!--           It is also available in two parts as <a href="http://www.lulu.com/content/559884">http://www.lulu.com/content/559884</a>
           and <a href="http://www.lulu.com/content/822314">http://www.lulu.com/content/822314</a>.
+-->
           </li>
           </ul>
         </li>
--->
         <li>
           <b>Source Files for the Book</b>
           <ul>
@@ -169,7 +168,7 @@
         </ul>
         </td></tr></table>
         <hr/>
-        <div align="right"><small><i>(20 November 2018, Version 8 Released)
+        <div align="right"><small><i>(5 December 2018, Version 8 Released)
                            </i></small></div>
         </div>
         </div></body>
@@ -252,7 +251,7 @@
         </xsl:if>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2018</small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, December 2018</small></div>
      </div>
      </div></body>
      </html>
@@ -357,7 +356,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2018</small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, December 2018</small></div>
      </div></body>
      </html>
    </redirect:write>
@@ -378,7 +377,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, August 2018</small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, December 2018</small></div>
      </div></body>
      </html>
     </redirect:write>
