@@ -329,7 +329,7 @@
      <body><div class="page">
      <div class="content">
         <h3 align="center">Introduction to Programming Using Java<br/>
-           Version 8.0, Summer 2018<br/></h3>
+           Version 8.0, December 2018<br/></h3>
         <h2 align="center">Preface</h2>
         <hr class="break"/>
         <xsl:apply-templates/>

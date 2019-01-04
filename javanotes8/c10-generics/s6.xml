@@ -68,7 +68,7 @@ adds up all the numbers in the stream of integers and returns the
 result.</np>
 
 <p>The net result is that we've added up the lengths of
-all the streams in the list.  Because of the potential for parallelization,
+all the strings in the list.  Because of the potential for parallelization,
 the stream version might be substantially faster than the for loop version.
 In practice, there is significant overhead involved in setting up and
 manipulating streams, so the list would have to be fairly large before

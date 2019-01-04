@@ -55,7 +55,7 @@ public class BoundPropertyDemo extends Application {
 		message.setStyle("-fx-font: bold 72pt serif");
 		message.setBackground(colorBG);
 		
-		/* The label is the center componant of a BorderPane, which is the scene graph root. */
+		/* The label is the center component of a BorderPane, which is the scene graph root. */
 		
 		BorderPane root = new BorderPane(message);
 		root.setStyle("-fx-border-color:gray; -fx-border-width:5px");
