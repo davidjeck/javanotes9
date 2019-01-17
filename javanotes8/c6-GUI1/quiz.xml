@@ -85,7 +85,7 @@ be produced by the following <code>for</code> loop, where
 <ans><p>The outer loop is executed for
 values of <code>i</code> equal to 10, 60, 110, 160, and 210. For <b>each</b> of
 these values, the inner loop is executed for <code>j</code> equal to 10, 60, 110,
-160, and 210. The <code>drawLine</code> command is therefore executed 25 times&mdash;and
+160, and 210. The <code>strokeLine</code> command is therefore executed 25 times&mdash;and
 so, 25 different lines are drawn. These lines connect the five points
 (10,10), (60,10), (110,10), (160,10), and (210,10) to the five points (10,60),
 (60,60), (110,60), (160,60), and (210,60) in all possible pairings. Here is the

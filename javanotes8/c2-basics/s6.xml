@@ -269,7 +269,7 @@ section.  Each view displays a different type of information.  The whole set of 
 a <newword>perspective</newword>.  Eclipse uses different perspectives, that is, different
 sets of views of different types of information, for different tasks.  For compiling and
 running programs, the only perspective that you will need is the "Java Perspective,"
-which is the default.  As you become more experienced, you might want to the use
+which is the default.  As you become more experienced, you might want to use
 the "Debug Perspective," which has features designed to help you find semantic errors in programs.</p>
 
 <p>The Java Perspective includes a large area in the center of the window

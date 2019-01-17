@@ -140,7 +140,7 @@ like this:</p>
          
 <np>Let's say that the lines are 200 pixels long and that the distance from each line
 to the next is 10 pixels, and let's put the start of the first line at the pixel
-with coordinates (100,50). To draw one line, we just have to call <code>g.drawLine(x1,y1,x2,y2)</code>
+with coordinates (100,50). To draw one line, we just have to call <code>g.strokeLine(x1,y1,x2,y2)</code>
 with appropriate values for the parameters.
 Now, all the lines start at <i>x</i>-coordinate 100, so we can use the constant 100 as the value for 
 <code>x1</code>.  Since the lines are 200 pixels long, we can use the constant 300 as the value
@@ -157,7 +157,7 @@ that counts from 1 to 10:</np>
 int i;   // loop control variable
 y = 50;  // y starts at 50 for the first line
 for ( i = 1; i &lt;= 10; i++ ) {
-    g.drawLine( 100, y, 300, y );
+    g.strokeLine( 100, y, 300, y );
     y = y + 10;  // increase y by 10 before drawing the next line.
 }</pre>
 
@@ -166,7 +166,7 @@ that the value of <code>y</code> for the last line is 140:</np>
 
 <pre>int y;
 for ( y = 50; y &lt;= 140; y = y + 10 )
-    g.drawLine( 100, y, 300, y );</pre>
+    g.strokeLine( 100, y, 300, y );</pre>
 
 <np>If we wanted the lines to be blue, we could do
 that by calling <code>g.setStroke(Color.BLUE)</code> <b>before</b> drawing them.  If we just draw

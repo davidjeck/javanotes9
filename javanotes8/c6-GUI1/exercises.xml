@@ -712,7 +712,7 @@ else if the value has a dot in the bottom-right corner
      draw the bottom-right dot</pre>
 
 <np>Although the first algorithm is more obvious, the second requires much less
-typing. (The first algorithm ends up using 21 <code>drawOval()</code> commands,
+typing. (The first algorithm ends up using 21 <code>fillOval()</code> commands,
 while the second uses only 7.) Furthermore, after drawing the dice on paper, I
 found that the conditions for testing when a given dot needs to be drawn are
 simpler than I expected. For example, the values that need a dot in the
