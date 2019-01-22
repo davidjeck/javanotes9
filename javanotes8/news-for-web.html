@@ -6,10 +6,12 @@
    .error {
        color: #600000;
        font-style: oblique;
+       font-weight: bold;
    }
    .fix {
        color: #005000;
        font-style: oblique;
+       font-weight:bold;
    }
    li {
        margin-top:5px;
@@ -27,7 +29,16 @@
 <h2>News for <a href="index.html"><i>Introduction to Programming Using Java</i></a></h2>
 
 <ul>
-<li><b>November 20, 2018</b> &mdash; The official release of the Eighth Edition.  Once again, I am
+<li><b>January 22, 2019</b> &mdash;  Since this book uses JavaFX, and JavaFX is not included
+in Java&nbsp;11, there is some question how to use the book with Java&nbsp;11 and later.
+I have written a short web page about how to use JavaFX and Java&nbsp;11 in Eclipse
+as painlessly as possible, for the purposes of this textbook.  See
+<pre>
+          <a href="news-addendum-eclipse-javafx.html">http://math.hws.edu/javanotes8/news-addendum-eclipse-javafx.html</a>
+</pre>
+(<a href="http://math.hws.edu/javanotes8/c2/s6.html#basics.6.7">Section&nbsp;2.6.7</a> has some
+information about using Java&nbsp;11 on the command line.)</li>
+<li><b>December 5, 2018</b> &mdash; The official release of the Eighth Edition.  Once again, I am
 indebted to John Ganci, who contributed many corrections to the "beta" version of this edition.</li>
 <li><b>August 19, 2018</b> &mdash; A "final beta" version of the Eighth Edition is available for
 browsing on the web and for download.
@@ -38,14 +49,28 @@ The official release of the Eighth Edition will take place some time after Java 
 
 
 
-<!--
 
 <h2>Errata for Version 8.0.0</h2>
-<li><b></b>, <span class="error"></span> should be <span class="fix"></span></li>
+
+<p>This is a list of substantive errors that have been found in the original Version 8.0, December 2018.
+These errors have been corrected in the online verions, but not in the downloadable or printed versions.</p>
+
+<!-- <li><b></b>, <span class="error"></span> should be <span class="fix"></span></li> -->
+
+<ul>
+<li><b>Section 3.9, Section 1</b>: Three occurrances of <span class="error">g.drawLine</span>
+should be <span class="fix">g.strokeLine</span></li>
+<li><b>Chapter 6 Quiz Answers</b>, in the answer to Question 5, "<span class="error">The drawLine command</span>"
+should be "<span class="fix">The strokeLine command</span>".
+<li><b>Section 10.6</b>, next-to-last paragraph of the introductory material:
+"The net result is that we've added up the lengths of all the
+<span class="error">streams</span> in the list" should be 
+"The net result is that we've added up the lengths of all the
+<span class="fix">strings</span> in the list.</li>
+</ul>
 
 <hr>
 
--->
 
 <h2>Old News</h2>
 
