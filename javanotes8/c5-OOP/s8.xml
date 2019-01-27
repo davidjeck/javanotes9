@@ -213,7 +213,7 @@ statement:</np>
 
 <pre>Drawable redSquare = <newcode>new Drawable() {
        public void draw(GraphicsContext g) {
-          g.setColor(Color.RED);
+          g.setFill(Color.RED);
           g.fillRect(10,10,100,100);
        }
    }</newcode>;</pre>
@@ -256,7 +256,7 @@ The last example could then be written simply</p>
 <np>and <code>redSquare</code> could be defined as</np>
 
 <pre>Drawable redSquare = g -&gt; {
-          g.setColor(Color.RED);
+          g.setFill(Color.RED);
           g.fillRect(10,10,100,100);
        };</pre>
 

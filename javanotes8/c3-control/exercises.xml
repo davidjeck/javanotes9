@@ -1263,7 +1263,7 @@ checkerboard, we can expand the body of the for loop into another for loop:</np>
 with the command <code>g.fillRect(x,y,50,50)</code>, where <code>x</code> and
 <code>y</code> are the coordinates of the top-left corner of the square. Before
 drawing the square, we have to determine whether it should be red or black, and
-we have to set the correct color with <code>g.setColor</code>. So, the algorithm
+we have to set the correct color with <code>g.setFill</code>. So, the algorithm
 becomes</p>
 
 <pre>for each row on the checkerboard:
@@ -1459,7 +1459,7 @@ one with x-coord <code>cyclicFrameNumber</code>.  And it will finish the journey
 150 frames instead of 300, so the length of the cycle should be 150 frames.)  The
 code for the second square is</p>
 <pre>cyclicFrameNum = frameNumber % 150;  // Repeats every 150 frames
-g.setColor(Color.GREEN);
+g.setFill(Color.GREEN);
 g.fillRect( 2*cyclicFrameNum, 20, 20, 20 );</pre>
 <p>The y-coord is 20, since the top square occupies 20 pixels at top of the window.
 The third square moves three times as fast as the first, and its code is similar.</p>

@@ -100,7 +100,7 @@ more exotic color names such as <code>Color.CORNFLOWERBLUE</code>.
 (Later, we will see that it is also possible
 to create new colors.)  For example, if you want to fill shapes with red,
 you would say "<code>g.setFill(Color.RED);</code>". The specified color is
-used for all subsequent fill operations up until the next time <code>g.setColor()</code> is
+used for all subsequent fill operations up until the next time <code>g.setFill()</code> is
 called.  Note that previously drawn shapes are <b>not</b> affected!</li>
 <li><codedef>g.setStroke(c)</codedef> is called to set the color to be used
 for stroking shapes. It works similarly to <code>g.setFill</code>.</li>
