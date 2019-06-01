@@ -52,7 +52,7 @@ public class SimpleDialogs {
 	 * @param inputNode  the content node for the dialog.
 	 * @param headerText text that appears above the content node in the dialog;
 	 *          can be null.
-	 * @param testForErrorString a Supplier<Boolean> that performs an error
+	 * @param testForErrorString a Supplier<String> that performs an error
 	 *     check on the input in the content node.  This is called when the
 	 *     user clicks "OK", before closing the dialog box. It must return a null
 	 *     value if the input is good; otherwise, it must return an error

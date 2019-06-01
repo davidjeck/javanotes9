@@ -634,7 +634,7 @@ have the same effect as setting them all to be 20.
 Things can get more complicated than this, but these are probably the most
 common cases.</np>
 
-<p>For an example of using a <classname>GridLayout</classname> see the
+<p>For an example of using a <classname>GridPane</classname> see the
 source code of <sourceref href="SimpleColorChooser.java"/> from
 <localref href="GUI1.2.1"/>.  You should now be able to read and understand
 the entire program.</p>
