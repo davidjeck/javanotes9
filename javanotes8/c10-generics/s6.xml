@@ -299,7 +299,7 @@ that <code>strList</code> is <atype>ArrayList&lt;String&gt;</atype> and
 we would like a stream consisting of all the non-null strings in the
 list, converted to lower case:</p>
 
-<pre>strList.filter( s -> (s != null) ).map( s -> s.toLowerCase() )</pre>
+<pre>strList.stream().filter( s -> (s != null) ).map( s -> s.toLowerCase() )</pre>
 
 <np>The specializations <code>mapToInt()</code> and <code>mapToDouble()</code>
 exist to map <classname>Streams</classname> into
@@ -332,7 +332,7 @@ we have a whole new way to print all the strings in a list of strings:</p>
 
 <pre>stringList.stream().forEach( s -> System.out.println(s) );</pre>
 
-<np>The consumer function is not guaranteed to be applied to the
+<np>For parallel streams, the consumer function is not guaranteed to be applied to the
 values from the stream in the same order that they occur in the
 stream. If you want that guarantee, you can use <code>forEachOrdered(c)</code>
 instead of <code>forEach(c)</code>.</np>
@@ -401,7 +401,7 @@ non-zero elements in&nbsp;<code>A</code>:</p>
                                   
 <np>The binary operator here maps a pair of numbers <code>(x,y)</code> to
 their product <code>x*y</code>.  The first parameter to <code>reduce()</code>
-is an "identity" for the binary operation.  That is, it is a value that
+is an "identity" for the binary operation.  That is, it is a value such that
 <code>1*x = x</code> for any <code>x</code>. The maximum of a stream
 of <ptype>double</ptype> could be computed with <code>reduce()</code> by
 using <code>reduce(Double.NEGATIVE_INFINITY, Math::max)</code>.</np>
