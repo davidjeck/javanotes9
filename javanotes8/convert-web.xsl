@@ -8,14 +8,14 @@
    <redirect:write file="web/index.html">
         <html>
         <head>
-        <title>Javanotes 8.0 -- Title Page</title>
+        <title>Javanotes 8.1 -- Title Page</title>
         <link href="javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
-        <h2 class="chapter_title">Version 8.0, December 2018</h2>
+        <h2 class="chapter_title">Version 8.1, July 2019</h2>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
@@ -31,10 +31,10 @@
          provide complete coverage of the Java language.
         </p>
         <p>The eighth edition requires Java 8 or higher, including JavaFX. 
-         Earlier editions of the book are still available.  In particular,
-         <a href="http://math.hws.edu/javanotes7">the&#160;seventh&#160;edition</a> uses
-         Swing instead of JavaFX. See the <a href="preface.html">preface</a> for links to
-         all older editions.</p>
+         Version&#160;8.1 is a small update of Version&#160;8.0.  This version briefly covers some of the new
+         features in Java&#160;11 and makes it clearer how to use this book with Java&#160;11 and later.
+         Earlier editions of the book are still available. See the <a href="preface.html">preface</a> for links to
+         older editions.</p>
          <p>You can the download this
          web site for use on your own computer. 
          PDF, <span style="white-space:pre">e-book</span>, and print
@@ -65,7 +65,7 @@
         </ul>
         <hr/>
         <blockquote>
-         <i>&#169;1996--2018, David J. Eck.<br/>
+         <i>&#169;1996--2019, David J. Eck.<br/>
             <small>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License</a>.
             (This license allows you to redistribute this book in unmodified form for non-commercial purposes.  It allows you
             to make and distribute modified versions for non-commercial purposes, as long as you include an attribution to the
@@ -168,8 +168,10 @@
         </ul>
         </td></tr></table>
         <hr/>
-        <div align="right"><small><i>(5 December 2018, Version 8 Released)
-                           </i></small></div>
+        <div align="right"><small><i>
+                 (8 July 2019, Version 8.1 Released)<br/>
+                 (5 December 2018, Version 8 Released)
+              </i></small></div>
         </div>
         </div></body>
         </html>
@@ -192,7 +194,7 @@
    <redirect:write select="$file">
      <html>
      <head>
-     <title>Javanotes 8.0 Table of Contents</title>
+     <title>Javanotes 8.1 Table of Contents</title>
      <link href="javanotes.css" rel="stylesheet" type="text/css"/>
      </head>
      <body><div class="page">
@@ -251,7 +253,7 @@
         </xsl:if>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, December 2018</small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, July 2019</small></div>
      </div>
      </div></body>
      </html>
@@ -262,7 +264,7 @@
    <redirect:write select="concat('web/c',position(),'/index.html')">
         <html>
         <head>
-        <title>Javanotes 8.0, Chapter <xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
+        <title>Javanotes 8.1, Chapter <xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
@@ -323,13 +325,13 @@
    <redirect:write select="'web/preface.html'">
      <html>
      <head>
-     <title>Javanotes 8.0 Preface</title>
+     <title>Javanotes 8.1 Preface</title>
      <link href="javanotes.css" rel="stylesheet" type="text/css"/>
      </head>
      <body><div class="page">
      <div class="content">
         <h3 align="center">Introduction to Programming Using Java<br/>
-           Version 8.0, December 2018<br/></h3>
+           Version 8.1, July 2019<br/></h3>
         <h2 align="center">Preface</h2>
         <hr class="break"/>
         <xsl:apply-templates/>
@@ -356,7 +358,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, December 2018</small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, July 2019</small></div>
      </div></body>
      </html>
    </redirect:write>
@@ -377,7 +379,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, December 2018</small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, July 2019</small></div>
      </div></body>
      </html>
     </redirect:write>
@@ -394,7 +396,7 @@
     <redirect:write select="concat('web/c',$chapternum,'/s',position(),'.html')">
         <html>
         <head>
-        <title>Javanotes 8.0, Section <xsl:value-of select="$chapternum"/>.<xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
+        <title>Javanotes 8.1, Section <xsl:value-of select="$chapternum"/>.<xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
@@ -449,7 +451,7 @@
     <redirect:write select="concat('web/c',$chapternum,'/exercises.html')">
         <html>
         <head>
-        <title>Javanotes 8.0, Exercises for Chapter <xsl:value-of select="$chapternum"/></title>
+        <title>Javanotes 8.1, Exercises for Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
@@ -491,7 +493,7 @@
        <redirect:write select="concat('web/c',$chapternum,'/ex',position(),'-ans.html')">
            <html>
            <head>
-           <title>Javanotes 8.0, Solution to Exercise <xsl:value-of select="position()"/>, Chapter <xsl:value-of select="$chapternum"/></title>
+           <title>Javanotes 8.1, Solution to Exercise <xsl:value-of select="position()"/>, Chapter <xsl:value-of select="$chapternum"/></title>
            <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
            </head>
            <body><div class="page">
@@ -543,7 +545,7 @@
     <redirect:write select="concat('web/c',$chapternum,'/',$filename,'.html')">
         <html>
         <head>
-        <title>Javanotes 8.0, <xsl:if test="$answers">Answers for </xsl:if>Quiz on Chapter <xsl:value-of select="$chapternum"/></title>
+        <title>Javanotes 8.1, <xsl:if test="$answers">Answers for </xsl:if>Quiz on Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">

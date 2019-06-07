@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * This is a GUI version of TextIO, which does I/O in a window rather than
  * on the command line.  It is not meant to work with every program, but will
  * work with all the TextIO examples in "Introduction to Programming Using Java,"
- * Version 7 (http://math.hws.edu/javanotes8).  To use it, add the imports
+ * Version 8 (http://math.hws.edu/javanotes8).  To use it, add the imports
  * 
  *      import textiogui.TextIO;
  *      import textiogui.System;
@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * all the subroutines of the regular System class, and that System.out and System.err
  * are PrintWriters rather than PrintStreams, and that System.in is a BufferedReader.
  *
- * Important note:  You must use two separate import statements; import textiogui.*; won't \
+ * Important note:  You must use two separate import statements; import textiogui.*; won't
  * work, since with that import, Java won't know which System class to use.
  * 
  * Note that after the program ends, you will have to close the window, unless the program

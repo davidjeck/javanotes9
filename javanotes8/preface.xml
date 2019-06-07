@@ -7,16 +7,16 @@ introductory computer programming textbook that uses Java as the language of
 instruction.  It is suitable for use in an introductory programming course
 and for people who are trying to learn programming on their own. There are
 no prerequisites beyond a general familiarity with the ideas of computers and
-programs.  There is enough material for a full year of college-level
+programs.  There is more than enough material for a full year of college-level
 programming.  Chapters 1 through 7 can be used as a textbook in a one-semester
 college-level course or in a year-long high school course.  The remaining
 chapters can be covered in a second course.</p>
 
-<p>The Eighth Edition of the book covers Java&nbsp;8, and it uses
-JavaFX&nbsp;8 for GUI programming.  Although later
-versions of Java have been released, I currently have no plans to cover them
-in this textbook.  (However, all sample programs and exercise solutions
-have been compiled using Java&nbsp;11 as well as Java&nbsp;8.)</p>
+<p>The Eighth Edition of the book uses Java&nbsp;8, with brief coverage
+of features that were added to the language in Java&nbsp;9 and later.
+JavaFX is used for GUI programming.  All sample programs and exercise 
+solutions have been compiled with Java&nbsp;11 and with Java&nbsp;12,
+as well as with Java&nbsp;8.</p>
    
 <p>The home web site for this book is
 <a href="http://math.hws.edu/javanotes8/">http://math.hws.edu/javanotes8/</a>.
@@ -36,7 +36,7 @@ how-to-do-it guides.
 I have tried to use a conversational writing style that
 might be closer to classroom lecture than to a typical textbook. This is
 certainly not a Java reference book, and it is not a
-comprehensive survey of all the features of Java. It is <b>not</b> written as
+comprehensive survey of all the features of Java. It is not written as
 a quick introduction to Java for people who already know another programming
 language. Instead, it is directed mainly towards people who are learning
 programming for the first time, and it is as much about general programming
@@ -46,9 +46,9 @@ published, printed programming textbooks that are available on the market.
 (Well, all right, I'll confess that I think it's better.)</p>
 
 <p>There are several approaches to teaching Java. One approach uses
-graphical user interface programming from the very beginning. Some people
+graphical user interface programming from the very beginning. And some people
 believe that object oriented programming should also be emphasized from the
-very beginning. This is <b>not</b> the approach that I take. The approach that I favor
+very beginning. These are <b>not</b> the approach that I take. The approach that I favor
 starts with the more basic building blocks of programming and builds from
 there. After an introductory chapter,
 I cover procedural programming in Chapters 2, 3, and&nbsp;4.
@@ -72,8 +72,11 @@ the user is not meant to read, all example code and exercises use JavaFX.
 (Unfortunately, even as I was working on the new edition, the future of JavaFX
 has become unclear because, as of Java&nbsp;11, JavaFX is no longer
 included as part of the basic Java download.  However, it is
-still be available to be downloaded and installed separately.)
-The eighth edition also incorporates some features that were introduced
+still be available to be downloaded and installed separately.
+People who are interested in using Swing instead of JavaFX might consider
+using Chapter&nbsp;6 and Chapter&nbsp;13 from Version&nbsp;7 in place of
+the same chapters from Version&nbsp;8.)
+The eighth edition also incorporates two features that were introduced
 in Java&nbsp;8: lambda expressions and the stream API.  Lambda expressions are
 covered fairly early, as part of the material on subroutines in Chapter&nbsp;4.
 They are used extensively with JavaFX in Chapter&nbsp;6 and Chapter&nbsp;13, as
@@ -83,6 +86,16 @@ such as a short discussion of loop invariants and class invariants in
 Section&nbsp;8.2, increased coverage of Java's higher level concurrency
 support in Chapter&nbsp;12, and the consistent use of factory methods like
 <code>Integer.valueOf(n)</code> in preference to constructors.</p>
+
+<p>Version 8.1 is a fairly small update to Version 8.0.  The main motivation
+for the update was to make it clearer how to use the book with Java&nbsp;11
+and later, but I have also taken the opportunity to briefly discuss a few features
+that were introduced after Java&nbsp;8.  The major change to the
+language itself was the introduction of modules in Java&nbsp;9; these were already
+mentioned in Version&nbsp;8.0, but that discussion has been updated.
+Aside from that, there have been few language changes that impact this textbook,
+but I do introduce the use of var for declaring variables, several new methods
+related to the stream API, and the upcoming revisions to the switch statement.</p>
 
 <break/>
    
@@ -125,6 +138,9 @@ the parts that list the author and state the license under which it is distribut
 
 <li>Give away unmodified copies of this book or sell them at cost of production, as long as they
 meet the requirements of the license.</li>
+
+<li>Use the book as a textbook for a course that you are teaching 
+(even though the students are paying to take that course).</li>
 
 <li>Make modified copies of the complete book or parts of it
 and post them on the web or otherwise distribute them non-commercially, provided that attribution

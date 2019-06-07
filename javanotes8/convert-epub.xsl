@@ -13,12 +13,12 @@
 		<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="javanotesID">
 		    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/"
 		          xmlns:opf="http://www.idpf.org/2007/opf">
-		   		<dc:title>Introduction to Programming Using Java, Version 8</dc:title>
+		   		<dc:title>Introduction to Programming Using Java, Version 8.1</dc:title>
 		   		<dc:creator opf:role="aut">David J. Eck</dc:creator>
-		   		<dc:description>A free introductory programming textbook using Java as the programming language, version 8.</dc:description>
-		   		<dc:date>2018-11</dc:date>
+		   		<dc:description>A free introductory programming textbook using Java as the programming language, version 8.1.</dc:description>
+		   		<dc:date>2019-7</dc:date>
 		   		<dc:language>en-US</dc:language>
-		   		<dc:rights>Copyright 1996-2018 by David J. Eck.  Released under the
+		   		<dc:rights>Copyright 1996-2019 by David J. Eck.  Released under the
 		   		    Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.</dc:rights>
 		   		<dc:identifier id="javanotesID">http://math.hws.edu/javanotes8</dc:identifier>
 		    </metadata>
@@ -123,7 +123,7 @@
 	        <meta content="http://math.hws.edu/javanotes8" name="dtb:uid"/>
 	    </head>
 	    <docTitle>
-	        <text>Introduction to Programming Using Java, Version 8</text>
+	        <text>Introduction to Programming Using Java, Version 8.1</text>
 	    </docTitle>
 	    <docAuthor>
 	        <text>David J. Eck</text>
@@ -236,14 +236,14 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.0 -- Title Page</title>
+        <title>Javanotes 8.1 -- Title Page</title>
         <link href="javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
-        <h2 class="chapter_title">Version 8.0, August 2018</h2>
+        <h2 class="chapter_title">Version 8.1, July 2019</h2>
  <!--        <p class="centeralign">
         <i>(Version 7.0.3, with minor corrections, May 2018)</i>
         </p>
@@ -260,7 +260,7 @@
         this ebook but can be accessed on-line at the same link.
         You can email comments to the author.</p>
         <hr/>
-        <p>&#169;1996--2018, David J. Eck.</p>
+        <p>&#169;1996--2019, David J. Eck.</p>
         <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-Noncommercial-ShareAlike 3.0 License</a>.
             (This license allows you to redistribute this book in unmodified form for non-commercial purposes.  It allows you
             to make and distribute modified versions for non-commercial purposes, as long as you include an attribution to the
@@ -352,7 +352,7 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.0, Chapter <xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
+        <title>Javanotes 8.1, Chapter <xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
@@ -399,13 +399,13 @@
 &lt;!DOCTYPE html PUBLIC  "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
 </xsl:text>
      <html xmlns="http://www.w3.org/1999/xhtml">     <head>
-     <title>Javanotes 8.0 Preface</title>
+     <title>Javanotes 8.1 Preface</title>
      <link href="javanotes-epub.css" rel="stylesheet" type="text/css"/>
      </head>
      <body>
      <div class="content">
         <h3 class="centeralign">Introduction to Programming Using Java<br/>
-           Version 8.0, August 2018<br/></h3>
+           Version 8.1, July 2019<br/></h3>
 <!--       <p class="centeralign"><small><i>Version 7.0.3, with minor corrections, December 2018</i></small></p> -->
         <h2 class="centeralign">Preface</h2>
         <hr class="break"/>
@@ -478,7 +478,7 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.0, Section <xsl:value-of select="$chapternum"/>.<xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
+        <title>Javanotes 8.1, Section <xsl:value-of select="$chapternum"/>.<xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
@@ -509,7 +509,7 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.0, Exercises for Chapter <xsl:value-of select="$chapternum"/></title>
+        <title>Javanotes 8.1, Exercises for Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
@@ -538,7 +538,7 @@
 </xsl:text>
            <html xmlns="http://www.w3.org/1999/xhtml">
            <head>
-           <title>Javanotes 8.0, Solution to Exercise <xsl:value-of select="position()"/>, Chapter <xsl:value-of select="$chapternum"/></title>
+           <title>Javanotes 8.1, Solution to Exercise <xsl:value-of select="position()"/>, Chapter <xsl:value-of select="$chapternum"/></title>
            <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
            </head>
            <body>
@@ -580,7 +580,7 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.0, <xsl:if test="$answers">Answers for </xsl:if>Quiz on Chapter <xsl:value-of select="$chapternum"/></title>
+        <title>Javanotes 8.1, <xsl:if test="$answers">Answers for </xsl:if>Quiz on Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>

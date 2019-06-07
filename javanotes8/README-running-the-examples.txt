@@ -1,6 +1,6 @@
 
 This README file explains how to use the example programs for
-"Introduction to Programming Using Java, Version 8", which is freely
+"Introduction to Programming Using Java, Version 8.1", which is freely
 available on the web at http://math.hws.edu/javanotes8
 
 Note that the GUI programs require Java 8 or higher, with JavaFX.
@@ -9,7 +9,7 @@ becomes more complicated to run JavaFX programs.  This README assumes
 that you are using Java 8, but it should also work for Java 9 or
 Java 10.  For using JavaFX with Java 11, see https://openjfx.io/
 
-The web site for "Introduction to Programming Using Java, Version 8" includes
+The web site for "Introduction to Programming Using Java, Version 8.1" includes
 Java source code files for the examples in the book.  If you download the
 web site, you can find the files in a folder named "sources."  The example
 programs are also available as a separate download.  The files are

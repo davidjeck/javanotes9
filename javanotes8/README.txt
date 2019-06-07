@@ -1,27 +1,28 @@
-                                                    Summer, 2014
+                                                     Summer 2019
 
 This is the README file for the javanotes source download...
                                                     
 Directory javanotes8-source contains the source files that are used 
 to produce the web site and PDF versions of "Introduction to Programming 
 using Java", Eighth Edition.  This free textbook (or a later edition) can 
-be found on the web at:  http://math.hws.edu/javanotes8
+be found on the web at:  http://math.hws.edu/javanotes
 
       Everything in this directory is released under a 
-      Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License 
-      (see http://creativecommons.org/licenses/by-nc-sa/3.0/).
+      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 License 
+      (see http://creativecommons.org/licenses/by-nc-sa/4.0/).
       You are given permission by the author and copyright holder,
       David J. Eck, to make and distribute copies of this work 
       or modified versions of this work, for non-commercial purposes,
       provided that you include a clear attribution  to the author of 
       the original work and make clear any modifications that you 
       have made.  The attribution should include a reference to the 
-      web site, http://math.hws.edu/javanotes8.  ADDITIONALLY, permission
-      is given to use Java source code from this work in programming 
-      projects [but not in educational material] without restriction 
-      and without attribution, for commercial or non-commercial
-      purposes.  No claim is made about the suitability or 
-      reliability of any of the source code.
+      web site, http://math.hws.edu/javanotes.  
+      
+      ADDITIONALLY, permission is given to use Java source code from this 
+      work in programming projects [but not in educational material] without 
+      restriction and without attribution, for commercial or non-commercial
+      purposes.  No claim is made about the suitability or reliability of 
+      any of the source code.
 
 The source files for "Introduction to Programming using Java" include
 XML files, which contain most of the text; XSLT transformation files,
@@ -44,7 +45,7 @@ and the Xalan Java XSLT processor (tested with version 2.7.1).  To
 build the PDF versions, you will also need the TeX typesetting 
 system -- in particular the latex and dvipdf commands.  
 
-For information on getting TeX, see http://www.latex-project.org/ftp.html.
+For information on getting TeX, see https://www.latex-project.org/get/.
 The build scripts for the PDF versions assume that the command
 "latex" is available on your system, and also that "dvipdf" is
 available.  Alternative command names, or full paths to the commands, can 
@@ -55,12 +56,12 @@ Xalan can be obtained from http://xml.apache.org/xalan-j/downloads.html
 Two versions are available, xalan-j_2_7_1-bin.zip or
 xalan-j_2_7_1-bin-2jars.zip ; either one will work.
 To make things as easy as possible, you can extract Xalan-J in
-the javanotes-6.0-source directory, and rename the directory from 
+the javanotes-8.1-source directory, and rename the directory from 
 something like "xalan-j_2_7_1" to "xalan".  Alternatively, you can edit 
 the script BUILD-env.sh, and define XALAN_DIR to refer to the correct 
-directory name for Xalan. (Or, you could make a symbolic link from "xalan" 
-to the Xalan directory.)  Note that you really only need the .jar files 
-in the Xalan directory.
+directory name for Xalan. (Or, you could make a symbolic link in the
+source directory from "xalan" to the Xalan directory.)  Note that you 
+really only need the .jar files in the Xalan directory.
 
 The following scripts are provided:
 
@@ -132,7 +133,7 @@ be expected to work with other XSLT processors.
 
 Many of the images used in the book were created using the 
 program Inkscape on Linux.  The Inkscape sources can
-be found in the directory named images-sources-inkscape.
+be found in the directory named image-sources-inkscape.
 (Inkscape files are SVG files, so you can probably open them
 with other programs that understand the SVG graphics format.)
 The images were exported in PNG format for use on the web and
@@ -141,9 +142,9 @@ the directory images-tex.  The PNG images are in the individual
 chapter directories in which they are used.  In some cases,
 the PNG file is the original, and there is no Inkscape file.
 The files used by the PDF versions are EPS files and can be found
-in iamges-tex.
+in images-tex.
 
-You are welcome to write to me for more information, but I can't
+You are welcome to email me for more information, but I can't
 promise to help you through all the difficulties of using the
 source code.
 

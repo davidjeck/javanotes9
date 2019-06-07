@@ -1,6 +1,6 @@
 
 This README explains how to use the solutions to the programming
-exercises for "Introduction to Programming Using Java, Version 8", 
+exercises for "Introduction to Programming Using Java, Version 8.1", 
 which is freely available on the web at http://math.hws.edu/javanotes8
 
 Note that the GUI programs require Java 8 or higher, with JavaFX.
