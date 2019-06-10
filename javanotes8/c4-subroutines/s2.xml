@@ -120,7 +120,7 @@ statements that define what the subroutines do:</p>
 }
 
 int getNextN(int N) {
-    // There are no modifiers; "int" in the return-type;
+    // There are no modifiers; "int" is the return-type;
     // "getNextN" is the subroutine-name; the parameter-list 
     // includes one parameter whose name is "N" and whose 
     // type is "int".

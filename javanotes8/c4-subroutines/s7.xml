@@ -114,10 +114,46 @@ array variable is declared.</p>
 the <code>new</code> operator (which <b>can</b> also be used in assignment 
 statements).  For example:</p>
 
-<pre>String[] namelist = new String[100];</pre>
+<pre>String[] nameList = new String[100];</pre>
 
 <np>but in that case, of course, all the array elements will have their default value.
 </np>
+
+</subsection>
+
+<subsection id="subroutines.7.1a" title="Declaring Variables with var">
+
+<p>Java 10 introduced a new way of declaring variables, using the word
+"var" instead of specifying an explicit type for the variable.
+The new syntax for declarations can only be used for local variables,
+that is for variables that are declared inside subroutines
+(see <localref href="subroutines.2.4"/>).  Furthermore a variable
+that is declared using <code>var</code> must be given an initial
+value.  A&nbsp;variable that is declared with <code>var</code>
+has a defined type, just like any other variable.  The Java compiler
+uses the type of the initial value to define the type for the variable.
+For example, the declaration statement</p>
+
+<pre>var interestRate = 0.05;</pre>
+
+<np>can be used to define a local variable named <code>interestRate</code> with initial value
+0.05.  The variable is of type <ptype>double</ptype>, since 0.05 is
+a value of type <ptype>double</ptype>.   And a local variable named 
+<code>nameList</code> of type <atype>String[]</atype> can be declared as</np>
+
+<pre>var nameList = new String[100];</pre>
+
+<np>In particular, <code>var</code> can be used to declare the loop control
+variable in a <code>for</code> loop.  For example,</np>
+
+<pre>for ( <newcode>var</newcode> i = 0;  i &lt; 10;  i++ ) {
+   System.out.println(i);
+}</pre>
+
+<p>All this might not seem particularly useful, but it becomes more useful for
+the more complicated "parameterized types" that will be covered in 
+<localref href="arrays.3"/> and <localref href="generics"/>.</p>
+
 
 </subsection>
 

@@ -60,6 +60,16 @@ create a list of players with</p>
 <code>playerList.add(plr)</code>.  And we can remove player number <code>k</code>
 with <code>playerList.remove(k)</code>.</np>
 
+<p>Furthermore if <code>playerList</code> is a local variable, then
+its declaration can be abbreviated  (in Java 10 or later) to</p>
+
+<pre>var playlerList = new ArrayList&lt;Player&gt;();</pre>
+
+<np>using the alternative declaration syntax that was covered in
+<localref href="subroutines.7.1a"/>.  The Java compiler uses the
+initial value that is assigned to <code>playerList</code> to deduce that
+its type is <atype>ArrayList&lt;Player&gt;</atype>.</np>
+
 <p>When you use a type such as <atype>ArrayList&lt;T&gt;</atype>, the compiler will
 ensure that only objects of type <classname>T</classname> can be added to the list.
 An attempt to add an object that is not of type <classname>T</classname> will be
