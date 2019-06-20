@@ -2,7 +2,7 @@
 
 # THIS SCRIPT EXECUTES THE FIVE BUILD SCRIPTS BUILD-web-site.sh,
 # BUILD-pdf.sh, BUILD-linked-pdf.sh, BUILD_exercise_programs.sh
-$ and BUILD_epub.sh.  The shell variables that
+# and BUILD_epub.sh.  The shell variables that
 # are used in those scripts can be set in the BUILD-env.sh script;
 # see that file for more information.
 

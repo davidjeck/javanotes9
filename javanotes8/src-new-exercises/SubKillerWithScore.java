@@ -104,17 +104,27 @@ public class SubKillerWithScore extends Application {
             draw(); // Appearance changes depending on focus.
         });
         
-        timer = new AnimationTimer( ) {
-               // The handle method is called once per frame while the
-               // animation is running.  There should be about 60
-               // frames per second.
-            public void handle(long time) {
-                boat.updateForNewFrame();
-                bomb.updateForNewFrame();
-                sub.updateForNewFrame();
-                draw();
-            }
-        };
+		timer = new AnimationTimer( ) {
+			   // The handle method is called once per frame while the
+			   // animation is running.  There should be about 60
+			   // frames per second.
+			long previousFrameTime;
+			public void handle(long time) {
+				if (time - previousFrameTime > 0.95e9/60) {
+					   // The test in the if is to guard against a bug that has shown
+					   // up in some versions of JavaFX on some computers.  The bug allows
+					   // the handle() method to be called many times more than the 60 times
+					   // per second that is specified in the JavaFX documentation.  The
+					   // test throttles the frame rate to 60 per second, in case JavaFX
+					   // is not already doing that.  It should not be necessary.
+					boat.updateForNewFrame();
+					bomb.updateForNewFrame();
+					sub.updateForNewFrame();
+					draw();
+					previousFrameTime = time;
+				}
+			}
+		};
         
         /* Show the window. */
         

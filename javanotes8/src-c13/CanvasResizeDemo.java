@@ -77,17 +77,22 @@ public class CanvasResizeDemo extends Application {
 		/* Start a timer that will continually update the positions
 		 * of the balls and redraw the canvas.  (There is no need
 		 * to redraw the canvas when it changes size, since it
-		 * will be redrawn by the timer in any case. */
+		 * will be redrawn by the timer in any case.) */
 		
 		AnimationTimer timer = new AnimationTimer() {
+			long previousTime = 0;
 			public void handle(long time) {
-				    // Move all the balls and redraw the canvas.
-				double width = canvas.getWidth();
-				double height = canvas.getHeight();
-				for (BouncingBall b: balls) {
-					b.move(width,height);
+				    // Move all the balls, except no motion the
+				    // first time that handle() is called.
+				if (previousTime > 0) {
+					double width = canvas.getWidth();
+					double height = canvas.getHeight();
+					for (BouncingBall b: balls) {
+						b.move(width,height,(time - previousTime)/1.0e9);
+					}
 				}
 				redraw();
+				previousTime = time;
 			}
 		};
 		timer.start();
@@ -97,7 +102,7 @@ public class CanvasResizeDemo extends Application {
 	/**
 	 * Draw the canvas with the balls in their current positions.
 	 */
-	private void redraw() {
+	private void redraw() { 
 		double width = canvas.getWidth();
 		double height = canvas.getHeight();
 		g.setFill(Color.WHITE);
@@ -112,24 +117,24 @@ public class CanvasResizeDemo extends Application {
 	 * Represents a red disk that bounces around in the canvas.  The constructor
 	 * makes a disk with radius 10 and center at the center of the canvas.  Note
 	 * that the canvas must exist before the constructor is called.  The
-	 * new disk is given a random velocity in the range 2 to 7 pixels per frame.
+	 * new disk is given a random velocity in the range 100 to 400 pixels per second.
 	 */
 	private class BouncingBall {
 		double x,y;      // center of the disk
 		double radius;   // radius of the disk
-		double dx,dy;    // velocity in pixels per frame (1 frame = 1/60 second)
-						 // velocity should be less than radius
+		double dx,dy;    // velocity in pixels per second
 		BouncingBall() {
 			x = canvas.getWidth()/2;
 			y = canvas.getHeight()/2;
 			this.radius = 10;
-			double velocity = 2 + 5*Math.random();
+			double velocity = 100 + 300*Math.random();
 			double angle = 2 * Math.PI * Math.random();
 			dx = velocity*Math.cos(angle);
 			dy = velocity*Math.sin(angle);
 		}
-		void move(double canvasWidth, double canvasHeight) {
-			    // Move the ball by an amount equal to its velocity.
+		void move(double canvasWidth, double canvasHeight, double elapsedTimeInSeconds) {
+			    // Move the ball by an amount equal to its velocity,
+			    // multiplied by elapsed time since the previous frame.
 			    // If it crosses an edge of the canvas, it is moved
 			    // back into the canvas and its velocity is reversed.
 			    // If it is outside the canvas because the canvas has
@@ -138,8 +143,8 @@ public class CanvasResizeDemo extends Application {
 			    // the canvas.
 			double w = canvasWidth;
 			double h = canvasHeight;
-			x += dx;
-			y += dy;
+			x += dx * elapsedTimeInSeconds;
+			y += dy * elapsedTimeInSeconds;
 			if (x < radius) { 
 					// bounce off left edge
 				x = 2*radius - x;

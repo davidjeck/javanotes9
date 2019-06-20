@@ -23,7 +23,7 @@ public class SubKiller extends Application {
 	
 	//------------------------------------------------------------------------
 
-	private AnimationTimer timer; // AnimationTimer that drives the animation.
+	private AnimationTimer timer;   // AnimationTimer that drives the animation.
 
 	private final int width = 640, height = 480; // The size of the canvas  
 
@@ -99,11 +99,21 @@ public class SubKiller extends Application {
 			   // The handle method is called once per frame while the
 			   // animation is running.  There should be about 60
 			   // frames per second.
+			long previousFrameTime;
 			public void handle(long time) {
-				boat.updateForNewFrame();
-				bomb.updateForNewFrame();
-				sub.updateForNewFrame();
-				draw();
+				if (time - previousFrameTime > 0.95e9/60) {
+					   // The test in the if is to guard against a bug that has shown
+					   // up in some versions of JavaFX on some computers.  The bug allows
+					   // the handle() method to be called many times more than the 60 times
+					   // per second that is specified in the JavaFX documentation.  The
+					   // test throttles the frame rate to 60 per second, in case JavaFX
+					   // is not already doing that.  It should not be necessary.
+					boat.updateForNewFrame();
+					bomb.updateForNewFrame();
+					sub.updateForNewFrame();
+					draw();
+					previousFrameTime = time;
+				}
 			}
 		};
 		

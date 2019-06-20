@@ -40,7 +40,7 @@ import javafx.animation.AnimationTimer;
  * living cells.  Clicking and dragging while holding down the right mouse button will change
  * living cells back to dead.  There is also a button that will set the state of each cell to
  * be a random value.  When the program first starts, the board contains a simple configuration
- * of five living cells (the 'R pentomino") that will give a long animation before settling
+ * of five living cells (the "R pentomino") that will give a long animation before settling
  * down to static patterns and simple repeaters. 
  * 
  * The board in this program is represented by an object of type MosaicCanvas, which is
@@ -68,15 +68,13 @@ public class Life extends Application {
 	private Button  clearButton;   // Button for clearing the board, that is setting all the cells to "dead".
 	private Button  quitButton;    // Button for ending the program.
 	
-	private CheckBox fastCheckbox; // When checked, the animation runs at a full 60 generations of Life
-	                               //  per second.  When not checked, the animation is slowed by a
-	                               //  factor of 6 to 10 generations per second.
+	private CheckBox fastCheckbox; // When checked, the animation runs at full speed, with a new frame
+	                               // generated in each call to the AnimationTimer's handle() method.
+	                               // (This should be 60 frames per second.)  When not checked, there will
+	                               // be at least 1/10 second between frames, giving about 6 frames per second.
 
 	private boolean animationIsRunning;   // set to true when the timer is started, false when it is paused
 	
-	private int frameNumber;  // How many frames has the animation been running; unless "Fast" is checked,
-	                          // a new frame is shown only when frameNumber is a multiple of 6.
-
 	
 	/**
 	 * Create a life game board, initially empty, and add it and some buttons to
@@ -119,12 +117,14 @@ public class Life extends Application {
 		/* Create, but do not start, the animation timers.  The user has to press "Start" tp start it. */
 		
 		timer = new AnimationTimer() {
+			final double oneTenthSecond = 1e8; // 1e8 nanoseconds = 1/10 second
+			long previousTime;  // Time when a new frame was last generated.
 			public void handle(long time) {
-				if (frameNumber % 6 == 0 || fastCheckbox.isSelected()) {
+				if ( (time-previousTime) > 0.975*oneTenthSecond  || fastCheckbox.isSelected()) {
 					doFrame();
 					showBoard();
+					previousTime = time;
 				}
-				frameNumber++;
 			}
 		};
 		
@@ -228,7 +228,7 @@ public class Life extends Application {
 	 * This method is called for the button that is used to start and stop the array.
 	 * If the animation is running, it is paused.  If it is not running, it is started.
 	 * The text on the Start/Stop button is changed and some buttons are disabled and
-	 * enabled, depending on whehter the animation is running or not.
+	 * enabled, depending on whether the animation is running or not.
 	 */
 	private void doStopGo() {
 
@@ -241,7 +241,6 @@ public class Life extends Application {
 			animationIsRunning = false;
 		}
 		else {  // If the game is not currently running, start it.
-			frameNumber = 0;
 			timer.start();  // This starts the game by turning the timer that will drive the game.
 			clearButton.setDisable(true);  // Buttons that modify the board are disabled while the game is running.
 			randomButton.setDisable(true);

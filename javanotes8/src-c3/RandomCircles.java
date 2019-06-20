@@ -58,9 +58,6 @@ public class RandomCircles extends Application {
 
 	//------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS ------
 
-	private int frameNum;
-	private long startTime;
-
 	public void start(Stage stage) {
 		int width = 800;   // The width of the image.  You can modify this value!
 		int height = 600;  // The height of the image. You can modify this value!
@@ -72,14 +69,25 @@ public class RandomCircles extends Application {
 		stage.setScene(scene);
 		stage.show();
 		AnimationTimer anim = new AnimationTimer() {
+			private int frameNum;
+			private long startTime = -1;
+			private long previousTime;
 			public void handle(long now) {
-				if (startTime < 0)
-					startTime = now;
-				frameNum++;
-				drawFrame(canvas.getGraphicsContext2D(), frameNum, (now-startTime)/1e9, width, height);
+				if (startTime < 0) {
+					startTime = previousTime = now;
+					drawFrame(canvas.getGraphicsContext2D(), 0, 0, width, height);
+				}
+				else if (now - previousTime > 0.95e9/60) {
+					   // The test in the else-if is to guard against a bug that has shown
+					   // up in some versions of JavaFX on some computers.  The bug allows
+					   // the handle() method to be called many times more than the 60 times
+					   // per second that is specified in the JavaFX documentation.
+					frameNum++;
+					drawFrame(canvas.getGraphicsContext2D(), frameNum, (now-startTime)/1e9, width, height);
+					previousTime = now;
+				}
 			}
 		};
-		startTime = -1;
 		anim.start();
 	} 
 

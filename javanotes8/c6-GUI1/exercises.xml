@@ -1004,7 +1004,8 @@ roll the dice again.  So, here is the actual definition of the timer:</np>
     }
 };</pre>
 
-<np>The dice will change for 60 frames or about one second.  It might be that changing the dice
+<np>The dice will change for 60 frames or about one second (if JavaFX animation is working correctly).
+It might be that changing the dice
 every 1/60 second is too fast.  Unfortunately, there is no way to slow down the
 frame rate in an <classname>AnimationTimer</classname>.  However, it is certainly
 possible to do nothing in some of the frames.  For example, if you only want
@@ -1531,11 +1532,21 @@ public class SubKillerWithScore extends Application {
                // The handle method is called once per frame while the
                // animation is running.  There should be about 60
                // frames per second.
+            long previousFrameTime;
             public void handle(long time) {
-                boat.updateForNewFrame();
-                bomb.updateForNewFrame();
-                sub.updateForNewFrame();
-                draw();
+                if (time - previousFrameTime > 0.95e9/60) {
+                       // The test in the if is to guard against a bug that has shown
+                       // up in some versions of JavaFX on some computers.  The bug allows
+                       // the handle() method to be called many times more than the 60 times
+                       // per second that is specified in the JavaFX documentation.  The
+                       // test throttles the frame rate to 60 per second, in case JavaFX
+                       // is not already doing that.  It should not be necessary.
+                    boat.updateForNewFrame();
+                    bomb.updateForNewFrame();
+                    sub.updateForNewFrame();
+                    draw();
+                    previousFrameTime = time;
+                }
             }
         };
         

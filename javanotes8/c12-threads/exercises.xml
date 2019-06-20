@@ -1859,7 +1859,7 @@ transport the results from the computation threads to another thread
 that combines the results and updates the display accordingly.  In fact,
 the role of the other thread is played by the JavaFX application thread.
 There is an <classname>AnimationTimer</classname> that handles the job.
-Its <code>handle()</code>  every 1/60 second.
+Its <code>handle()</code> is called every 1/60 second.
 That method removes all the data that have been collected
 in the queue and uses it to update the display.  (One nice side effect
 of doing things this way is that <code>handle()</code> is called on

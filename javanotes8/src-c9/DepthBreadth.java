@@ -325,13 +325,13 @@ public class DepthBreadth extends Application {
 		methodChoice.setDisable(true);
 		encounter(startRow,startCol);
 		timer = new AnimationTimer() {
-			int frame = 0;
-			public void handle(long now) {
-				if (frame % 3 == 0) { 
-					   // only in every 3rd frame, about 20 times per second.
+			final double oneTwentiethSecond = 1e9/20;  // 1/20 of one billion nanoseconds.
+			long previousTime = 0;  // Time of the previousCall to continueComputation 
+			public void handle(long time) {
+				if ( (time - previousTime) > 0.95*oneTwentiethSecond) { 
 					continueComputation();
+					previousTime = time;
 				}
-				frame++;
 			}
 		};
 		timer.start();

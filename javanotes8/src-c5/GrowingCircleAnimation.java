@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
  * This program shows an animation where 100 semi-transparent disks of
  * various sizes grow continually, disappearing before they get too big.
  * When a disk disappears, it is replaced by a new disk at another location.
+ * This program uses class CircleInfo, defined in CircleInfo.java.
  */
 public class GrowingCircleAnimation extends Application {
 	
@@ -53,7 +54,6 @@ public class GrowingCircleAnimation extends Application {
 	
 	//------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS -----
 
-	private int frameNum;
 	
 	public void start(Stage stage) {
 		int width = 600;
@@ -68,9 +68,18 @@ public class GrowingCircleAnimation extends Application {
 		stage.show();
 		stage.setResizable(false);
 		AnimationTimer anim = new AnimationTimer() {
-			public void handle(long now) {
-				frameNum++;
-				drawFrame(canvas.getGraphicsContext2D(), frameNum,  width, height);
+			private int frameNum;
+			long previousFrameTime;
+			public void handle(long time) {
+				if (time - previousFrameTime > 0.95e9/60) {
+					// The if statement should not be necessary!  It's there because of
+					// a bug that has shown up in some versions of Java on some computers.
+					// The if statement throttles the frame rate to 60 per second, in case
+					// JavaFX incorrectly fails to do that itself.  
+					frameNum++;
+					drawFrame(canvas.getGraphicsContext2D(), frameNum,  width, height);
+					previousFrameTime = time;
+				}
 			}
 		};
 		anim.start();

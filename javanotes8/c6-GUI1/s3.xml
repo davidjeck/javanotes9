@@ -595,7 +595,12 @@ Its job is to do whatever is necessary to implement each frame.</p>
 which means that you can do things like draw on a canvas or manipulate a 
 GUI component.  However, whatever you do should not take very long, since
 JavaFX animations are meant to run at 60 frames per second, which means
-<code>handle()</code> will ideally be called every 1/60 second.  </p>
+<code>handle()</code> will ideally be called every 1/60 second.  (Note: A bug has been reported
+that sometimes allows <code>handle()</code> to be called much more frequently than 60 times per
+second. I have observed this myself in one version of Linux.  To guard against this bug,
+some implementations of <classname>AnimationTimer</classname> in my sample programs
+include some extra code to guard against this bug&mdash;with a comment to make it clear what
+is going on.)</p>
 
 <p><classname>AnimationTimer</classname> itself is
 an abstract class, and <code>handle()</code> is an abstract method.  This means that

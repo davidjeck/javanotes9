@@ -34,9 +34,9 @@ public class RandomStringsWithArray extends Application {
 	                                  // to draw the strings.
 
 	private static class StringData {  // Info needed to draw one string.
-		double x,y;    // location of the string;
-		double dx,dy;  // velocity of the string;
-		Color color;   // color of the string;
+		double x,y;    // location of the string
+		double dx,dy;  // velocity of the string, in pixels per second
+		Color color;   // color of the string
 		Font font;     // the font that is used to draw the string
 	}
 	
@@ -75,10 +75,18 @@ public class RandomStringsWithArray extends Application {
 		
 		AnimationTimer timer = new AnimationTimer() {
 			   // The timer will run continually.  In each frame, all the strings
-			   // will be moved and the canvas will be redrawn.
+			   // will be moved, and the canvas will be redrawn.
+			long previousTime;
 			public void handle(long time) {
-				updateStringData();
+				if (previousTime > 0) {
+					   // Time since previous call to handle is (time - previousTime),
+					   // in nanoseconds.  Dividing by 1e9 converts nanoseconds to seconds.
+					   // The first time handle() is called, previousTime is 0 and the
+					   // update is not done.
+					updateStringData( (time - previousTime)/1e9 );
+				}
 				draw();
+				previousTime = time;
 			}
 		};
 		timer.start();
@@ -97,10 +105,10 @@ public class RandomStringsWithArray extends Application {
 			stringData[i] = new StringData();
 			stringData[i].x = canvas.getWidth() * Math.random();
 			stringData[i].y = canvas.getHeight() * Math.random();
-			stringData[i].dx = 1 + 3*Math.random();
+			stringData[i].dx = 50 + 150*Math.random(); // 50 to 200 pixels per second
 			if (Math.random() < 0.5) // 50% chance that dx is negative
 				stringData[i].dx = -stringData[i].dx;
-			stringData[i].dy = 1 + 3*Math.random();
+			stringData[i].dy = 50 + 150*Math.random();
 			if (Math.random() < 0.5) // 50% chance that dy is negative
 				stringData[i].dy = -stringData[i].dy;
 			stringData[i].color = Color.hsb( 360*Math.random(), 1.0, 1.0 );
@@ -116,11 +124,13 @@ public class RandomStringsWithArray extends Application {
 	 * (To make sure a string has moved all the way off the canvas to the
 	 * left, wait until data.x reaches -400 before moving it to the
 	 * right of the canvas. 
+	 * @param deltaTimeInSeconds time that has elapsed since the previous
+	 *          call to updateStringData, measured in seconds.
 	 */
-	private void updateStringData() {
+	private void updateStringData(double deltaTimeInSeconds) {
 		for ( StringData data : stringData ) {
-			data.x += data.dx;
-			data.y += data.dy;
+			data.x += data.dx * deltaTimeInSeconds;
+			data.y += data.dy * deltaTimeInSeconds;
 			if (data.x < -400)
 				data.x = canvas.getWidth();
 			if (data.x > canvas.getWidth()+10)
