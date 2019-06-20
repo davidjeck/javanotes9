@@ -339,5 +339,49 @@ System.out.println("The computer's move is " + computerMove);  // OK!</pre>
 
 
 </subsection>
+
+<subsection id="control.6.5" title="A New switch Statement Syntax">
+
+<p>A new version of the <code>switch</code> statement is available in
+Java&nbsp;12 as a preview feature.  (If you are using Java&nbsp;12 and
+would like to try it out, add the options "<code>--enable-preview --release=12</code>"
+to the <code>javac</code> command and just "<code>--enable-preview</code>"
+to the <code>java</code> command.)
+This new syntax will presumably be available as a regular language
+feature in the future.</p>
+
+<p>The new version uses <code>-&gt;</code> in place of a colon after
+a <code>case</code>, and the code in a case is a single statement, possibly
+a block statement consisting of several statements enclosed in braces.
+No <code>break</code> statement is required, although one can be used to end a case
+early.  This avoids the common error of having control accidently 
+fall through from one case to the next because of an omitted <code>break</code>.
+Furthermore, instead of allowing just one value per case label, a case
+can take several values separated by commas.  Using the new syntax, the
+first example in this section can be written as follows:
+</p>
+
+
+<pre>switch ( N ) {   // (Assume N is an integer variable.)
+   case 1 -> System.out.println("The number is 1.");
+   case 2, 4, 8 -> {
+      System.out.println("The number is 2, 4, or 8.");
+      System.out.println("(That's a power of 2!)");
+   }
+   case 3, 6, 9 -> {
+      System.out.println("The number is 3, 6, or 9.");
+      System.out.println("(That's a multiple of 3!)");
+   }
+   case 5 -> System.out.println("The number is 5.");
+   default ->
+      System.out.println("The number is 7 or is outside the range 1 to 9.");
+}</pre>
+
+<np>This seems to me to be a big improvement.  But the original <code>switch</code>
+syntax will continue to be available.  (Note that along with the improved <code>switch</code>
+statement, a new "<code>switch</code> expression" is being introduced, but I won't
+cover that here.)</np>
+
+</subsection>
    
 </section>

@@ -16,6 +16,7 @@
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
         <h2 class="chapter_title">Version 8.1, July 2019</h2>
+        <p style="text-align:center">(Minor update of Version 8.0 from December 2018)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
