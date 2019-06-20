@@ -76,7 +76,7 @@
             <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">license</a> for full
             details.)<br/><br/>
             This book is available for downloading and for on-line use at the Web address:
-            <a href="http://math.hws.edu/javanotes8">http://math.hws.edu/javanote8s/</a></small></i>
+            <a href="http://math.hws.edu/javanotes8">http://math.hws.edu/javanote8/</a></small></i>
           </blockquote>
         <hr/>
         <h3>Downloading And Other Links</h3>
@@ -170,7 +170,7 @@
         </td></tr></table>
         <hr/>
         <div align="right"><small><i>
-                 (8 July 2019, Version 8.1 Released)<br/>
+                 (20 July 2019, Version 8.1 Released)<br/>
                  (5 December 2018, Version 8 Released)
               </i></small></div>
         </div>

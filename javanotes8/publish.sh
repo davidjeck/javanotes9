@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION='javanotes8.0.0'
+VERSION='javanotes8.1.0'
 PROJECT='javanotes8'
 
 if [ ! -d build_output ] ; then
