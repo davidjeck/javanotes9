@@ -74,11 +74,11 @@ this section, which are defined in other subpackages of <code>netgame</code>.</n
 
 <p>To run a main program that is defined in a package, you should again be in
 a directory that contains the package as a subdirectory, and you should use the
-full name of the class that you want to run.  For example, the <classname>ChatRoomServer</classname>
+full name of the class that you want to run.  For example, the <classname>ChatRoomWindow</classname>
 class, discussed later in this section, is defined in the package <sourceref href="netgame/chat/">netgame.chat</sourceref>,
 so you would run it with the command</p>
 
-<pre>jfx netgame.chat.ChatRoomServer</pre>
+<pre>jfx netgame.chat.ChatRoomWindow</pre>
 
 
 <break/>
