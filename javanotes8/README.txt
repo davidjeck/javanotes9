@@ -2,9 +2,9 @@
 
 This is the README file for the javanotes source download...
                                                     
-Directory javanotes8-source contains the source files that are used 
+Directory javanotes8.1-source contains the source files that are used 
 to produce the web site and PDF versions of "Introduction to Programming 
-using Java", Eighth Edition.  This free textbook (or a later edition) can 
+using Java", Version 8.1.  This free textbook (or a later edition) can 
 be found on the web at:  http://math.hws.edu/javanotes
 
       Everything in this directory is released under a 

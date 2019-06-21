@@ -163,23 +163,31 @@ the package name in this way.)  The same directory also contains a
 file named <sourceref href="edu/hws/eck/mdbfx/strings.properties">strings.properties</sourceref>;
 this file is used by the program and will be discussed below.
 And there is an <code>examples</code> folder that contains resource files that are used with an "Examples" menu.
-For an Integrated Development Environment
+Since the Mandelbrot Viewer uses JavaFX, you need to make sure that JavaFX is
+available to it when the program is compiled or run, as discussed in
+<localref href="basics.6"/>.  For an Integrated Development Environment
 such as Eclipse, you should just have to add the <code>edu</code> directory
-to your project.  If you want to work on the command line instead, you must be
-working in the directory that contains the <code>edu</code> directory.
-To compile the source code, use the command</p>
+to your project, provided that project has been configured to use JavaFX.
+If you want to work on the command line instead, you must be
+working in the directory that contains the <code>edu</code> directory,
+and, unless you are using an older JDK that has JavaFX built in, 
+you need to add JavaFX options to the <code>javac</code>
+and <code>java</code> commands.  Let's say that you've defined
+<code>jfxc</code> and <code>jfx</code> commands that are equivalent
+to the <code>javac</code> and <code>java</code> with JavaFX options included, as discussed in
+<localref href="basics.6.2a"/>.  Then, to compile the source code, use the command</p>
    
-<pre>javac  edu/hws/eck/mdbfx/*.java</pre>
+<pre>jfxc  edu/hws/eck/mdbfx/*.java</pre>
    
 <np>or, if you use Windows,</np>
    
-<pre>javac  edu\hws\eck\mdbfx\*.java</pre>
+<pre>jfxc  edu\hws\eck\mdbfx\*.java</pre>
    
 <np>The main application class for the 
 program is defined by a class named <classname>Main</classname>.  To run the
 program, use the command:</np>
    
-<pre>java  edu.hws.eck.mdbfx.Main</pre>
+<pre>jfx  edu.hws.eck.mdbfx.Main</pre>
    
 <np>This command must also be given in the directory that contains the <code>edu</code> directory.</np>
    

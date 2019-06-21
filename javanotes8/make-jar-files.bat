@@ -1,6 +1,9 @@
 
 echo off
 
+REM IF YOU WANT THIS SCRIPT TO MAKE JAR FILES FOR JavaFX PROGRAMS, YOU NEED TO EDIT
+REM IT TO SET THE VALUE OF JAVAC_FX.  SEE COMMENTS ABOUT JAVA_FX BELOW.
+
 REM THIS DOS BATCH SCRIPT CREATES JAR FILES FOR EXAMPLE PROGRAMS. 
 REM IT USES SOURCE CODE FILES FROM THE "source" DIRECTORY OF THE WEB SITE.
 REM IT MUST BE RUN IN THAT DIRECTORY.  IT CREATES A TEMP FOLDER IN THE CURRENT 
@@ -10,12 +13,26 @@ REM THE SCRIPT CREATES A DIRECTORY NAMED "compiled-jar-files" INSIDE THE "source
 REM TO HOLD THE JAR FILES.  INISDE THAT DIRECTORY, JAR FILES WILL BE ORGANIZED 
 REM BY CHAPTER.
 
-REM THE SCRIPT NEEDS THE COMMANDS javac AND jar TO BE DEFINED, or alternative commands
+REM THE SCRIPT NEEDS THE COMMANDS javac AND jar TO BE DEFINED, OR ALTERNATIVE COMMANDS
 REM CAN BE SET IN THE NEXT TWO LINES, FOR EXAMPLE GIVING FULL PATHS TO THE COMMANDS
 
+set JAVAC="javac"
+set JAR="jar"
 
-set JAVAC="C:\Program Files\Java\jdk1.8.0_181\bin\javac"
-set JAR="C:\Program Files\Java\jdk1.8.0_181\bin\jar"
+REM TO COMPILE PROGRAMS THAT USE JavaFX, JAVAC_FX MUST BE SET TO A javac COMMAND THAT 
+REM WILL WORK FOR COMPILING JavaFX PROGRAMS.  IF JAVAC_FX IS LEFT EMPTY, NO JavaFX
+REM JAR FILES WILL BE PRODUCED. 
+
+set JAVAC_FX=""
+
+REM IF YOU ARE USING A JDK THAT HAS JavaFX BUILT-IN, YOU CAN JUST SET JAVAC_FX TO
+REM HAVE THE SAME VALUE AS JAVAC BY UNCOMMENTING THE FIRST LINE BELOW.  IF YOU HAVE
+REM A SEPARATE JavaFX SDK, YOU CAN UNCOMMENT THE SECOND LINE BELOW AND EDIT IT TO
+REM USE THE PATH TO THE JavaFX SDK lib DIRECTORY, IN PLACE OF C:\Uses\eck\javafx-sdk-11\lib
+REM (To uncomment a line, remove the REM at the beginning.)
+
+REM set JAVAC_FX="%JAVAC%"
+REM set JAVAC_FX="%JAVAC% --module-path=C:\Uses\eck\javafx-sdk-11\lib --add-modules=ALL-MODULE-PATH"
 
 echo.
 
@@ -26,7 +43,7 @@ if exist compiled-jar-files (
    mkdir compiled-jar-files
 )
 
-call :buildjar chapter1 GUIDemo
+call :buildFXjar chapter1 GUIDemo
 call :buildtio chapter2 HelloWorld
 call :buildtio chapter2 PrintSquare
 call :buildtio chapter2 TimedComputation
@@ -43,61 +60,65 @@ call :buildtio chapter3 ComputeAverage2
 call :buildtio chapter3 AverageNumbersFromFile
 call :buildtio chapter3 BirthdayProblem
 call :buildtio chapter3 ReverseInputNumbers
-call :buildjar chapter3 SimpleGraphicsStarter
-call :buildjar chapter3 MovingRects
-call :buildjar chapter3 RandomCircles
+call :buildFXjar chapter3 SimpleGraphicsStarter
+call :buildFXjar chapter3 MovingRects
+call :buildFXjar chapter3 RandomCircles
 call :buildtio chapter4 GuessingGame
 call :buildtio chapter4 GuessingGame2
 call :buildtio chapter4 RowsOfChars
 call :buildtio chapter4 ThreeN2
-call :buildjar chapter4 RandomMosaicWalk Mosaic.java MosaicCanvas.java
+call :buildFXjar chapter4 RandomMosaicWalk Mosaic.java MosaicCanvas.java
 call :buildtio chapter5 RollTwoPairs PairOfDice.java
-call :buildjar chapter5 GrowingCircleAnimation CircleInfo.java
+call :buildFXjar chapter5 GrowingCircleAnimation CircleInfo.java
 call :buildtio chapter5 HighLow Deck.java Card.java
-call :buildjar chapter5 ShapeDraw
-call :buildjar chapter6 HelloWorldFX
-call :buildjar chapter6 SimpleColorChooser
-call :buildjar chapter6 RandomStrings
+call :buildFXjar chapter5 ShapeDraw
+call :buildFXjar chapter6 HelloWorldFX
+call :buildFXjar chapter6 SimpleColorChooser
+call :buildFXjar chapter6 RandomStrings
 
-call :cpfiles chapter6 RandomCards RandomCards.java Card.java Deck.java cards.png
-cd temp
-%JAVAC% RandomCards.java
-%JAR% -cmf manifest RandomCards.jar *.class cards.png
-move RandomCards.jar ..\compiled-jar-files\chapter6 > nul
-cd ..
+if "%JAVA_FX%" != "" (
+	call :cpfiles chapter6 RandomCards RandomCards.java Card.java Deck.java cards.png
+	cd temp
+	%JAVAC_FX% RandomCards.java
+	%JAR% -cmf manifest RandomCards.jar *.class cards.png
+	move RandomCards.jar ..\compiled-jar-files\chapter6 > nul
+	cd ..
+)
 
-call :buildjar chapter6 SimpleTrackMouse
-call :buildjar chapter6 SimplePaint
-call :buildjar chapter6 KeyboardEventDemo
-call :buildjar chapter6 SubKiller
-call :buildjar chapter6 TextInputDemo
-call :buildjar chapter6 SliderDemo
-call :buildjar chapter6 OwnLayoutDemo
-call :buildjar chapter6 SimpleCalc
+call :buildFXjar chapter6 SimpleTrackMouse
+call :buildFXjar chapter6 SimplePaint
+call :buildFXjar chapter6 KeyboardEventDemo
+call :buildFXjar chapter6 SubKiller
+call :buildFXjar chapter6 TextInputDemo
+call :buildFXjar chapter6 SliderDemo
+call :buildFXjar chapter6 OwnLayoutDemo
+call :buildFXjar chapter6 SimpleCalc
 
-call :cpfiles chapter6 HighLowGUI HighLowGUI.java cards.png Card.java Hand.java Deck.java
-cd temp
-%JAVAC% HighLowGUI.java
-%JAR% -cmf manifest HighLowGUI.jar *.class cards.png
-move HighLowGUI.jar ..\compiled-jar-files\chapter6 > nul
-cd ..
+if "%JAVA_FX%" != "" (
+	call :cpfiles chapter6 HighLowGUI HighLowGUI.java cards.png Card.java Hand.java Deck.java
+	cd temp
+	%JAVAC_FX% HighLowGUI.java
+	%JAR% -cmf manifest HighLowGUI.jar *.class cards.png
+	move HighLowGUI.jar ..\compiled-jar-files\chapter6 > nul
+	cd ..
+)
 
-call :buildjar chapter6 MosaicDraw MosaicCanvas.java
-call :buildjar chapter7 RandomStringsWithArray
+call :buildFXjar chapter6 MosaicDraw MosaicCanvas.java
+call :buildFXjar chapter7 RandomStringsWithArray
 call :buildtio chapter7 ReverseWithDynamicArray DynamicArrayOfInt.java
-call :buildjar chapter7 SimplePaint2
+call :buildFXjar chapter7 SimplePaint2
 call :buildtio chapter7 TestSymmetricMatrix SymmetricMatrix.java
-call :buildjar chapter7 Life MosaicCanvas.java
-call :buildjar chapter7 Checkers
+call :buildFXjar chapter7 Life MosaicCanvas.java
+call :buildFXjar chapter7 Checkers
 call :buildtio chapter8 LengthConverter2
 call :buildtio chapter8 TryStatementDemo
 call :buildtio chapter9 TowersOfHanoi
-call :buildjar chapter9 Maze
-call :buildjar chapter9 LittlePentominos MosaicCanvas.java
-call :buildjar chapter9 Blobs
+call :buildFXjar chapter9 Maze
+call :buildFXjar chapter9 LittlePentominos MosaicCanvas.java
+call :buildFXjar chapter9 Blobs
 call :buildtio chapter9 ListDemo StringList.java
 call :buildtio chapter9 PostfixEval StackOfDouble.java
-call :buildjar chapter9 DepthBreadth
+call :buildFXjar chapter9 DepthBreadth
 call :buildtio chapter9 SortTreeDemo
 call :buildtio chapter9 SimpleParser1
 call :buildtio chapter9 SimpleParser2
@@ -109,100 +130,101 @@ call :buildtio chapter10 WordCount
 call :buildtio chapter10 RiemannSumStreamExperiment
 call :buildtio chapter11 DirectoryList
 call :buildtio chapter11 PhoneDirectoryFileDemo
-call :buildjar chapter11 TrivialEdit
-call :buildjar chapter11 SimplePaintWithFiles
+call :buildFXjar chapter11 TrivialEdit
+call :buildFXjar chapter11 SimplePaintWithFiles
 call :buildtio chapter11 FetchURL
 call :buildtio chapter11 ShowMyNetwork
 call :buildtio chapter11 DateServer
 call :buildtio chapter11 DateClient
 call :buildtio chapter11 CLChatServer
 call :buildtio chapter11 CLChatClient
-call :buildjar chapter11 SimplePaintWithXML
-call :buildjar chapter11 XMLDemo
+call :buildFXjar chapter11 SimplePaintWithXML
+call :buildFXjar chapter11 XMLDemo
 call :buildtio chapter12 ThreadTest1
 call :buildtio chapter12 ThreadTest2
-call :buildjar chapter12 RandomArtWithThreads
-call :buildjar chapter12 BackgroundComputationDemo
-call :buildjar chapter12 MultiprocessingDemo1
-call :buildjar chapter12 MultiprocessingDemo2
-call :buildjar chapter12 MultiprocessingDemo3
+call :buildFXjar chapter12 RandomArtWithThreads
+call :buildFXjar chapter12 BackgroundComputationDemo
+call :buildFXjar chapter12 MultiprocessingDemo1
+call :buildFXjar chapter12 MultiprocessingDemo2
+call :buildFXjar chapter12 MultiprocessingDemo3
 call :buildtio chapter12 ThreadTest4
-call :buildjar chapter12 TowersOfHanoiGUI
-call :buildjar chapter12 GUIChat
+call :buildFXjar chapter12 TowersOfHanoiGUI
+call :buildFXjar chapter12 GUIChat
 
-call :cpfiles chapter12 netgame.chat.ChatRoomWindow
-mkdir temp\netgame
-xcopy /S /Q chapter12\netgame temp\netgame
-cd temp
-%JAVAC% netgame\common\*.java netgame\chat\*.java
-%JAR% -cmf manifest netgame.chat.ChatRoomWindow.jar netgame\common\*.class netgame\chat\*.class
-move netgame.chat.ChatRoomWindow.jar ..\compiled-jar-files\chapter12 > nul
-cd ..
+if "%JAVA_FX%" != "" (
+	call :cpfiles chapter12 netgame.chat.ChatRoomWindow
+	mkdir temp\netgame
+	xcopy /S /Q chapter12\netgame temp\netgame
+	cd temp
+	%JAVAC_FX% netgame\common\*.java netgame\chat\*.java
+	%JAR% -cmf manifest netgame.chat.ChatRoomWindow.jar netgame\common\*.class netgame\chat\*.class
+	move netgame.chat.ChatRoomWindow.jar ..\compiled-jar-files\chapter12 > nul
+	cd ..
+	
+	call :cpfiles chapter12 netgame.tictactoe.Main 
+	mkdir temp\netgame
+	xcopy /S /Q chapter12\netgame temp\netgame
+	cd temp
+	%JAVAC_FX% netgame\common\*.java netgame\tictactoe\*.java
+	%JAR% -cmf manifest netgame.chat.tictactoe.Main.jar netgame\common\*.class netgame\tictactoe\*.class
+	move netgame.chat.tictactoe.Main.jar ..\compiled-jar-files\chapter12 > nul
+	cd ..
+	
+	call :cpfiles chapter12 netgame.fivecarddraw.Main 
+	mkdir temp\netgame
+	xcopy /S /Q chapter12\netgame temp\netgame
+	cd temp
+	%JAVAC_FX% netgame\common\*.java netgame\fivecarddraw\*.java
+	%JAR% -cmf manifest netgame.chat.fivecarddraw.Main.jar netgame\common\*.class netgame\fivecarddraw\*.class netgame\fivecarddraw\cards.png
+	move netgame.chat.fivecarddraw.Main.jar ..\compiled-jar-files\chapter12 > nul
+	cd ..
+)
 
-call :cpfiles chapter12 netgame.tictactoe.Main 
-mkdir temp\netgame
-xcopy /S /Q chapter12\netgame temp\netgame
-cd temp
-%JAVAC% netgame\common\*.java netgame\tictactoe\*.java
-%JAR% -cmf manifest netgame.chat.tictactoe.Main.jar netgame\common\*.class netgame\tictactoe\*.class
-move netgame.chat.tictactoe.Main.jar ..\compiled-jar-files\chapter12 > nul
-cd ..
+call :buildFXjar chapter13 BoundPropertyDemo
+call :buildFXjar chapter13 CanvasResizeDemo
+call :buildFXjar chapter13 StrokeDemo
+call :buildFXjar chapter13 TransformDemo face-smile.png
+call :buildFXjar chapter13 ToolPaint SimpleDialogs.java
+call :buildFXjar chapter13 TestStopWatch StopWatchLabel.java
+call :buildFXjar chapter13 EditListDemo
+call :buildFXjar chapter13 SimpleTableDemo
+call :buildFXjar chapter13 ScatterPlotTableDemo
+call :buildFXjar chapter13 TestDialogs SimpleDialogs.java
+call :buildFXjar chapter13 WebBrowser BrowserWindow.java SimpleDialogs.java
 
-call :cpfiles chapter12 netgame.fivecarddraw.Main 
-mkdir temp\netgame
-xcopy /S /Q chapter12\netgame temp\netgame
-cd temp
-%JAVAC% netgame\common\*.java netgame\fivecarddraw\*.java
-%JAR% -cmf manifest netgame.chat.fivecarddraw.Main.jar netgame\common\*.class netgame\fivecarddraw\*.class netgame\fivecarddraw\cards.png
-move netgame.chat.fivecarddraw.Main.jar ..\compiled-jar-files\chapter12 > nul
-cd ..
-
-call :buildjar chapter13 BoundPropertyDemo
-call :buildjar chapter13 CanvasResizeDemo
-call :buildjar chapter13 StrokeDemo
-call :buildjar chapter13 TransformDemo face-smile.png
-call :buildjar chapter13 ToolPaint SimpleDialogs.java
-call :buildjar chapter13 TestStopWatch StopWatchLabel.java
-call :buildjar chapter13 EditListDemo
-call :buildjar chapter13 SimpleTableDemo
-call :buildjar chapter13 ScatterPlotTableDemo
-call :buildjar chapter13 TestDialogs SimpleDialogs.java
-call :buildjar chapter13 WebBrowser BrowserWindow.java SimpleDialogs.java
-
-call :cpfiles chapter13 TransformDemo TransformDemo.java face-smile.png
-cd temp
-%JAVAC% TransformDemo.java
-%JAR% -cmf manifest TransformDemo.jar *.class *.png
-move TransformDemo.jar ..\compiled-jar-files\chapter13 > nul
-cd ..
-
-call :cpfiles chapter13 SillyStamper SillyStamper.java 
-mkdir temp\stamper_icons
-xcopy /S /Q chapter13\stamper_icons temp\stamper_icons > nul
-cd temp
-%JAVAC% SillyStamper.java
-%JAR% -cmf manifest SillyStamper.jar *.class stamper_icons\*
-move SillyStamper.jar ..\compiled-jar-files\chapter13 > nul
-cd ..
-
-
-call :cpfiles chapter13 PaintDemo PaintDemo.java tile.png face-smile.png
-cd temp
-%JAVAC% PaintDemo.java
-%JAR% -cmf manifest PaintDemo.jar *.class *.png
-move PaintDemo.jar ..\compiled-jar-files\chapter13 > nul
-cd ..
-
-
-call :cpfiles chapter13 edu.hws.eck.mdbfx.Main 
-mkdir temp\edu
-xcopy /S /Q chapter13\edu temp\edu > nul
-cd temp
-%JAVAC% edu\hws\eck\mdbfx\*.java
-%JAR% -cmf manifest edu.hws.eck.mdbfx.Main.jar edu\hws\eck\mdbfx\* edu\hws\eck\mdbfx\examples\* 
-move edu.hws.eck.mdbfx.Main.jar ..\compiled-jar-files\chapter13 > nul
-cd ..
-
+if "%JAVA_FX%" != "" (
+	call :cpfiles chapter13 TransformDemo TransformDemo.java face-smile.png
+	cd temp
+	%JAVAC_FX% TransformDemo.java
+	%JAR% -cmf manifest TransformDemo.jar *.class *.png
+	move TransformDemo.jar ..\compiled-jar-files\chapter13 > nul
+	cd ..
+	
+	call :cpfiles chapter13 SillyStamper SillyStamper.java 
+	mkdir temp\stamper_icons
+	xcopy /S /Q chapter13\stamper_icons temp\stamper_icons > nul
+	cd temp
+	%JAVAC_FX% SillyStamper.java
+	%JAR% -cmf manifest SillyStamper.jar *.class stamper_icons\*
+	move SillyStamper.jar ..\compiled-jar-files\chapter13 > nul
+	cd ..
+	
+	call :cpfiles chapter13 PaintDemo PaintDemo.java tile.png face-smile.png
+	cd temp
+	%JAVAC_FX% PaintDemo.java
+	%JAR% -cmf manifest PaintDemo.jar *.class *.png
+	move PaintDemo.jar ..\compiled-jar-files\chapter13 > nul
+	cd ..
+	
+	call :cpfiles chapter13 edu.hws.eck.mdbfx.Main 
+	mkdir temp\edu
+	xcopy /S /Q chapter13\edu temp\edu > nul
+	cd temp
+	%JAVAC_FX% edu\hws\eck\mdbfx\*.java
+	%JAR% -cmf manifest edu.hws.eck.mdbfx.Main.jar edu\hws\eck\mdbfx\* edu\hws\eck\mdbfx\examples\* 
+	move edu.hws.eck.mdbfx.Main.jar ..\compiled-jar-files\chapter13 > nul
+	cd ..
+)
 
 rmdir /q /s temp
 
@@ -213,7 +235,6 @@ echo Examples for which no jar files are made:
 echo chapter2  CreateProfile -- can overwrite a file in the current directory without warning
 echo chapter2  SeparateEnumDemo -- duplicates functionality of EnumDemo
 echo chapter4  CopyTextFile -- requires command-line arguments
-echo chapter4  RandomMosaicWalk2 -- duplicates functionality of RandomMosaicWalk
 echo chapter8  LengthConverter3 -- duplicates functionality of LenghtConverter2
 echo chapter11 ReverseFile -- requires a file named data.dat in the current directory
 echo chapter11 ReverseFileWithScanner -- requires a file named data.dat in the current directory
@@ -221,14 +242,25 @@ echo chapter11 ReverseFileWithResources -- requires a file named data.dat in the
 echo chapter11 CopyFile -- requires command-line parameters
 echo chapter11 CopyFileAsResource -- requires command-line parameters
 echo chapter12 ThreadTest3 -- duplicates the functionality of ThreadTest2
-echo chapter12 MultiprocessorDemo4 -- duplicates the functionality of MultiprocessorDemo3 
 echo chapter12 CLDateServerWithThreads -- duplicates functionality of DateServer
 echo chapter12 CLDateServerWithThreadPool -- duplicates functionality of DateServer
 echo chapter12 CLMandelbrotMaster -- needs command line arguments
 echo chapter12 CLMandelbrotWorker -- needs to run on several machines, or needs command-line arguments
 echo.
-echo Note: Before running chapter13\netgame.chat.ChatRoomWindow.jar, 
-echo       you have to run ChatRoomServer on the command line.
+if "%JAVA_FX%" == "" (
+   echo In addition, no jar files were created for programs that use JavaFX
+) else (
+   echo chapter4  RandomMosaicWalk2 -- duplicates functionality of RandomMosaicWalk
+   echo chapter12 MultiprocessorDemo4 -- duplicates the functionality of MultiprocessorDemo3 
+   if "%JAVAC%" != "%JAVAC_FX%" (
+      echo.
+      echo Remember that jar files that use JavaFX must be run from the command line,
+      echo using a java command that includes JavaFX options.
+   )
+   echo.
+   echo Note: Before running chapter13\netgame.chat.ChatRoomWindow.jar, 
+   echo       you have to run ChatRoomServer on the command line.
+)
 echo.
 echo JAR FILES CAN BE FOUND IN THE DIRECTORY compiled-jar-files
 echo.
@@ -240,7 +272,10 @@ exit /b 0
 REM %1 is chapter: c1, c2, ...
 REM %2 is main class (without .java)
 REM %3,%4,... are other files/directories to be included
-:buildjar
+:buildFXjar
+   if "%JAVAC_FX%" == "" (
+      goto :EOF
+   )
    if exist temp rmdir /S /Q temp
    mkdir temp
    echo.
@@ -266,7 +301,7 @@ REM %3,%4,... are other files/directories to be included
    :pl
    echo Main-Class: %NAME%> temp\manifest
    cd temp
-   %JAVAC% *.java
+   %JAVAC_FX% *.java
    if not exist %NAME%.class (
       cd ..
       echo Error during compilation!  Build aborted.
