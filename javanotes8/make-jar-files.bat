@@ -16,14 +16,14 @@ REM BY CHAPTER.
 REM THE SCRIPT NEEDS THE COMMANDS javac AND jar TO BE DEFINED, OR ALTERNATIVE COMMANDS
 REM CAN BE SET IN THE NEXT TWO LINES, FOR EXAMPLE GIVING FULL PATHS TO THE COMMANDS
 
-set JAVAC="javac"
-set JAR="jar"
+set JAVAC=javac
+set JAR=jar
 
 REM TO COMPILE PROGRAMS THAT USE JavaFX, JAVAC_FX MUST BE SET TO A javac COMMAND THAT 
-REM WILL WORK FOR COMPILING JavaFX PROGRAMS.  IF JAVAC_FX IS LEFT EMPTY, NO JavaFX
+REM WILL WORK FOR COMPILING JavaFX PROGRAMS.  IF JAVAC_FX IS LEFT EQUAL TO none, NO JavaFX
 REM JAR FILES WILL BE PRODUCED. 
 
-set JAVAC_FX=""
+set JAVAC_FX=none
 
 REM IF YOU ARE USING A JDK THAT HAS JavaFX BUILT-IN, YOU CAN JUST SET JAVAC_FX TO
 REM HAVE THE SAME VALUE AS JAVAC BY UNCOMMENTING THE FIRST LINE BELOW.  IF YOU HAVE
@@ -31,10 +31,18 @@ REM A SEPARATE JavaFX SDK, YOU CAN UNCOMMENT THE SECOND LINE BELOW AND EDIT IT T
 REM USE THE PATH TO THE JavaFX SDK lib DIRECTORY, IN PLACE OF C:\Uses\eck\javafx-sdk-11\lib
 REM (To uncomment a line, remove the REM at the beginning.)
 
-REM set JAVAC_FX="%JAVAC%"
-REM set JAVAC_FX="%JAVAC% --module-path=C:\Uses\eck\javafx-sdk-11\lib --add-modules=ALL-MODULE-PATH"
+REM set JAVAC_FX=%JAVAC%
+REM set JAVAC_FX=%JAVAC% --module-path=C:\Users\eck\javafx-sdk-11\lib --add-modules=ALL-MODULE-PATH
 
 echo.
+
+if exist temp (
+    echo A file or directory named temp already exists.
+    echo It would be deleted when this script is run.
+    echo Please delete temp by hand before running this script.
+    echo.
+    goto :EOF
+)
 
 if exist compiled-jar-files (
    echo Note: compiled-jar-files folder already exists; jar files will be stored in that folder.
@@ -76,7 +84,7 @@ call :buildFXjar chapter6 HelloWorldFX
 call :buildFXjar chapter6 SimpleColorChooser
 call :buildFXjar chapter6 RandomStrings
 
-if "%JAVA_FX%" != "" (
+if not "%JAVAC_FX%" == "none" (
 	call :cpfiles chapter6 RandomCards RandomCards.java Card.java Deck.java cards.png
 	cd temp
 	%JAVAC_FX% RandomCards.java
@@ -94,7 +102,7 @@ call :buildFXjar chapter6 SliderDemo
 call :buildFXjar chapter6 OwnLayoutDemo
 call :buildFXjar chapter6 SimpleCalc
 
-if "%JAVA_FX%" != "" (
+if not "%JAVAC_FX%" == "none" (
 	call :cpfiles chapter6 HighLowGUI HighLowGUI.java cards.png Card.java Hand.java Deck.java
 	cd temp
 	%JAVAC_FX% HighLowGUI.java
@@ -151,7 +159,7 @@ call :buildtio chapter12 ThreadTest4
 call :buildFXjar chapter12 TowersOfHanoiGUI
 call :buildFXjar chapter12 GUIChat
 
-if "%JAVA_FX%" != "" (
+if not "%JAVAC_FX%" == "none" (
 	call :cpfiles chapter12 netgame.chat.ChatRoomWindow
 	mkdir temp\netgame
 	xcopy /S /Q chapter12\netgame temp\netgame
@@ -192,7 +200,7 @@ call :buildFXjar chapter13 ScatterPlotTableDemo
 call :buildFXjar chapter13 TestDialogs SimpleDialogs.java
 call :buildFXjar chapter13 WebBrowser BrowserWindow.java SimpleDialogs.java
 
-if "%JAVA_FX%" != "" (
+if not "%JAVAC_FX%" == "none" (
 	call :cpfiles chapter13 TransformDemo TransformDemo.java face-smile.png
 	cd temp
 	%JAVAC_FX% TransformDemo.java
@@ -247,12 +255,12 @@ echo chapter12 CLDateServerWithThreadPool -- duplicates functionality of DateSer
 echo chapter12 CLMandelbrotMaster -- needs command line arguments
 echo chapter12 CLMandelbrotWorker -- needs to run on several machines, or needs command-line arguments
 echo.
-if "%JAVA_FX%" == "" (
+if "%JAVAC_FX%" == "none" (
    echo In addition, no jar files were created for programs that use JavaFX
 ) else (
    echo chapter4  RandomMosaicWalk2 -- duplicates functionality of RandomMosaicWalk
    echo chapter12 MultiprocessorDemo4 -- duplicates the functionality of MultiprocessorDemo3 
-   if "%JAVAC%" != "%JAVAC_FX%" (
+   if not %JAVAC% == %JAVAC_FX% (
       echo.
       echo Remember that jar files that use JavaFX must be run from the command line,
       echo using a java command that includes JavaFX options.
@@ -273,7 +281,7 @@ REM %1 is chapter: c1, c2, ...
 REM %2 is main class (without .java)
 REM %3,%4,... are other files/directories to be included
 :buildFXjar
-   if "%JAVAC_FX%" == "" (
+   if "%JAVAC_FX%" == "none" (
       goto :EOF
    )
    if exist temp rmdir /S /Q temp
