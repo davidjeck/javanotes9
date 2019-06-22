@@ -648,7 +648,7 @@ and "JRE&nbsp;name" will already be filled in, and there will be an entry under
 "JRE system libraries"; aside from that, the box will be empty.</p>
 
 <img src="eclipse-fx.png" width="630" height="537" tex="eclipse-fx.eps"
-       texscale="0.6" bordered="false" alt="editing a JRE to add support for JavaFX to Eclipse"/>
+       texscale="0.5" bordered="false" alt="editing a JRE to add support for JavaFX to Eclipse"/>
 
 <p>If you are adding a new JRE, you need to specify the "JRE&nbsp;home."  This will be
 the directory that contains the <i>bin</i> directory of the JDK that you want to use.
