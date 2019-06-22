@@ -260,7 +260,7 @@ for ( Map.Entry&lt;String,Double&gt; entry : map.entrySet() ) {
 }</pre>
 
 <p>This is certainly a place where it would be convenient to use <code>var</code>
-to declare the variables (sSee <localref href="subroutines.7.1a"/>).  With <code>var</code>,
+to declare the variables (See <localref href="subroutines.7.1a"/>).  With <code>var</code>,
 the example using an iterator becomes:
 </p>
 

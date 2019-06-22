@@ -357,7 +357,7 @@ substring of <code>s1</code>, then the returned value is the starting position o
 that substring. Otherwise, the returned value is -1. You can also use
 <code>s1.indexOf(ch)</code> to search for a <ptype>char</ptype>, <code>ch</code>, in
 <code>s1</code>. To find the first occurrence of <code>x</code> at or after position
-<code>N</code>, you can use <code>s1.indexOf(x,N)</code>.  To find the last occurance of
+<code>N</code>, you can use <code>s1.indexOf(x,N)</code>.  To find the last occurrence of
 <code>x</code> in <code>s1</code>, use <code>s1.lastIndexOf(x)</code>.</li>
 
 <li><code>s1.compareTo(s2)</code> is an integer-valued function that compares the
@@ -513,7 +513,7 @@ Here is a little example that shows enums being used in a complete program:</p>
 <pre>public class EnumDemo {
  
        // Define two enum types -- remember that the definitions
-       // go OUTSIDE The main() routine!
+       // go OUTSIDE the main() routine!
   
     enum Day { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
       

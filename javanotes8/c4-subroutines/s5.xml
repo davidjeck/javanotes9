@@ -292,7 +292,7 @@ can be used anywhere, from any class in any package, as can its public variables
 and methods.  For a class that is defined in a module, on the other hand, "public" only automatically means
 public within the module where it is defined.  However, a module can explicitly
 <newword>export</newword> a package.  Exporting a package from a module makes the
-public classes in the module accessible from anywhere, including from other
+public classes in the package accessible from anywhere, including from other
 modules and from classes that are not part of any module. (It is even possible
 to export a package just to certain specified modules, providing an even
 finer level of access control.)  The upshot is that it is now possible to have
@@ -319,7 +319,7 @@ runtimes.  Once again, this is really only useful for fairly large applications.
 
 <p>In a JDK for Java&nbsp;9 or later, compiled class files from the standard modules 
 are stored together in a file named <i>modules</i> inside a directory named 
-<i>lib</i> in the main JDK directory.  This is a so-called "jimage file", 
+<i>lib</i> in the main JDK directory.  This is a so-called "jimage file,"
 and there is a command-line tool named <i>jimage</i> for working with such files.
 If you use the <i>jlink</i> tool to create a custom runtime, part of what it does
 is to create a custom <i>modules</i> files containing just the modules that are
