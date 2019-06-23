@@ -76,7 +76,7 @@
             <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">license</a> for full
             details.)<br/><br/>
             This book is available for downloading and for on-line use at the Web address:
-            <a href="http://math.hws.edu/javanotes8">http://math.hws.edu/javanote8/</a></small></i>
+            <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a></small></i>
           </blockquote>
         <hr/>
         <h3>Downloading And Other Links</h3>

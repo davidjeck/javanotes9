@@ -173,7 +173,7 @@ For this program, a URL can begin with "http://" or "https://" for a URL that re
 a resource on the web, with "file://" for a URL that refers to a file on
 your computer, or with "ftp://" for a URL that uses the "File Transfer Protocol."
 If it does not start with any of these, then "http://" is added to the start
-of the URL.  Try the program with URL <code>math.hws.edu/javanotes8</code> to 
+of the URL.  Try the program with URL <code>math.hws.edu/javanotes</code> to 
 fetch the front page of this textbook from its website.  Try it with some bad inputs
 to see the various errors that can occur.</np>
    

@@ -255,7 +255,7 @@
         <p>This is an <b>experimental</b> ebook version of a free Java Programming textbook.  Please excuse any
         irregularities in formatting.  In particular, your reader might have problems with overly wide code segments.
         Note that PDF and web versions
-        are available on-line at <a href="http://math.hws.edu/javanotes8/">http://math.hws.edu/javanotes8/</a>.  
+        are available on-line at <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.  
         Source code for examples is <b>not</b> included in
         this ebook but can be accessed on-line at the same link.
         You can email comments to the author.</p>
@@ -270,7 +270,7 @@
             details.)
             The most recent version of this book is always available, at no
             charge, for downloading and for on-line use at the Web address:
-            <a href="http://math.hws.edu/javanotes8/">http://math.hws.edu/javanotes8/</a></p>
+            <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a></p>
             <hr/>
         </div>
         </div>

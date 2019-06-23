@@ -175,7 +175,7 @@ you need to add JavaFX options to the <code>javac</code>
 and <code>java</code> commands.  Let's say that you've defined
 <code>jfxc</code> and <code>jfx</code> commands that are equivalent
 to the <code>javac</code> and <code>java</code> with JavaFX options included, as discussed in
-<localref href="basics.6.2a"/>.  Then, to compile the source code, use the command</p>
+<localref href="basics.6.2a"/>. Then, to compile the source code, use the command</p>
    
 <pre>jfxc  edu/hws/eck/mdbfx/*.java</pre>
    
@@ -189,7 +189,10 @@ program, use the command:</np>
    
 <pre>jfx  edu.hws.eck.mdbfx.Main</pre>
    
-<np>This command must also be given in the directory that contains the <code>edu</code> directory.</np>
+<np>This command must also be given in the directory that contains the <code>edu</code> directory.
+  (Of course, if your JDK does have built-in JavaFX, then you
+would simply use <code>javac</code> and <code>java</code> instead of <code>jfxc</code>
+and <code>jfx</code>.)</np>
    
 <break/>
    

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * This is a GUI version of TextIO, which does I/O in a window rather than
  * on the command line.  It is not meant to work with every program, but will
  * work with all the TextIO examples in "Introduction to Programming Using Java,"
- * Version 7 (http://math.hws.edu/javanotes8).  To use it, add the imports
+ * Version 8 (http://math.hws.edu/javanotes).  To use it, add the imports
  * 
  *      import textiogui.TextIO;
  *      import textiogui.System;

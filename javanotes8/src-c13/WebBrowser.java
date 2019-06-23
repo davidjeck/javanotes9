@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * windows.  The program ends when all windows have been closed.
  * The windows are of type BrowserWindow.  The program also requires
  * the class SimpleDialogs.  The first window, which opens when the
- * program starts, goes to http://math.hws.edu/javanotes8/index.html.
+ * program starts, goes to http://math.hws.edu/javanotes/index.html.
  */
 public class WebBrowser extends Application {
 
@@ -28,7 +28,7 @@ public class WebBrowser extends Application {
 	private int untitledCount;                     // how many "Untitled" window titles have been used
 	
 	
-	/* Opens a window that will load the URL http://math.hws.edu/javanotes8/index.html
+	/* Opens a window that will load the URL http://math.hws.edu/javanotes/index.html
 	 * (the front page of the textbook in which this program is an example).
 	 * Note that the Stage parameter to this method is never used.
 	 */
@@ -56,7 +56,7 @@ public class WebBrowser extends Application {
 			windowWidth = windowHeight*1.6;
 		
 		   // Open the first window, showing the front page of this textbook.
-		newBrowserWindow("http://math.hws.edu/javanotes8/index.html");
+		newBrowserWindow("http://math.hws.edu/javanotes/index.html");
 		
 	} // end start()
 	

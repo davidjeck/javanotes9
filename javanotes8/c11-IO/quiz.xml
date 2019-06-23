@@ -80,7 +80,7 @@ represent, and how is it used?</p>
 </ques>
 <ans><p>A url is an address for a web
 page (or other information) on the Internet. For example,
-"http://math.hws.edu/javanotes8/index.html" is a url that refers to the main
+"http://math.hws.edu/javanotes/index.html" is a url that refers to the main
 page of the current edition of this on-line textbook. A <classname>URL</classname> object
 represents such an address. Once you have a <classname>URL</classname> object, you can call
 its <code>openConnection()</code> method to access the information at the web

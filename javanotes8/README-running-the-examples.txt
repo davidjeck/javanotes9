@@ -1,7 +1,7 @@
 
 This README file explains how to use the example programs for
 "Introduction to Programming Using Java, Version 8.1", which is freely
-available on the web at http://math.hws.edu/javanotes8 
+available on the web at http://math.hws.edu/javanotes
 
 Note that the GUI programs require Java 8 or higher, with JavaFX.
 Except for the JDK 8, 9, or 10 from Oracle, JavaFX is separate
@@ -16,7 +16,7 @@ web site, you can find the files in a folder named "sources."  The example
 programs are also available as a separate download.  The files are
 arranged by chapter, with a folder inside "sources" for each chapter.
 There are also links to individual files in the index.html file inside
-"sources," or on the web at http://math.hws.edu/javanotes8/sources/index.html
+"sources," or on the web at http://math.hws.edu/javanotes/sources/index.html
 
 You have several options for running the examples...
 

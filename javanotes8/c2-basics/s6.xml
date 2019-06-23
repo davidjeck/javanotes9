@@ -18,7 +18,7 @@ and run the examples from this textbook using the command line, Eclipse, or Blue
 (Readers are strongly encouraged to read,
 compile, and run the examples.  Source code for sample programs and solutions to
 end-of-chapter exercises can be downloaded from the
-book's web page, <a href="http://math.hws.edu/javanotes8">http://math.hws.edu/javanotes8</a>.)</p>
+book's web page, <a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a>.)</p>
 
 <p>One thing to keep in mind is that you do not have to pay any money
 to do Java programming (aside from buying a computer, of course).  Everything
@@ -216,7 +216,7 @@ into your working directory.  (If you downloaded the Web site of this book,
 you can find it in the directory named <code>source</code>; you can use
 your computer's GUI to copy-and-paste this file into your working directory.
 Alternatively, you can navigate to <sourceref href="HelloWorld.java"/> on the
-book's <tex><a href="http://math.hws.edu/javanotes8/source/index.html">Web&nbsp;site</a></tex><web><a href="../source/index.html">Web&nbsp;site</a></web> and use the 
+book's <tex><a href="http://math.hws.edu/javanotes/source/index.html">Web&nbsp;site</a></tex><web><a href="../source/index.html">Web&nbsp;site</a></web> and use the 
 "Save&nbsp;As" command in your Web browser to save a copy of the file into your working directory.)
 Type the command:</p>
    
