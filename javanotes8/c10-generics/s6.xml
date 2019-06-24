@@ -6,7 +6,7 @@
 <p><start><big>A</big>mong its new features, </start>Java 8 introduced
 a <newword>stream API</newword>, which represents a new way of
 expressing operations on collections of data.  A major motivation
-for the new approach is to make it possible for the Java compiler to
+for the new approach was to make it possible for the Java compiler to
 "parallelize" a computation, that is, to break it into pieces that
 can be run simultaneously on several processors.  Doing so can
 significantly speed up the computation.  <localref href="threads"/>
@@ -446,7 +446,7 @@ summary result of some type.  The parameter,
 <code>c</code> is something called a collector.  The collector will
 ordinarily be given by one of the <code>static</code> functions in the
 <classname>Collectors</classname> class.  This can get very complicated, and
-I will only give one basic example.  The function
+I will only give a couple of examples.  The function
 <code>Collectors.toList()</code> returns a <classname>Collector</classname> that can be used
 with <code>collect()</code> to put all of the values from the stream
 into a <classname>List</classname>.  For example, suppose that
@@ -458,7 +458,67 @@ the substring "Fred":</p>
                            .filter( s -> s.startsWith("Fred") )
                            .collect( Collectors.toList() );</pre>
 
-<np>That's actually pretty easy!</np>
+<np>That's actually pretty easy!  Even more useful are collectors that group
+the items from a stream according to some criterion.  The collector
+<code>Collectors.groupingBy(f)</code> takes a parameter, <code>f</code>,
+whose type is specified by the functional 
+interface <classname>Function&lt;T,S&gt;</classname>, representing
+a function from values of type <classname>T</classname> to values
+of type&nbsp;<classname>S</classname>.  When used with <code>collect()</code>,
+<code>Collectors.groupingBy(f)</code>
+operates on a stream of type <classname>Stream&lt;T&gt;</classname>,
+and it separates the items in the stream into groups, based on the
+value of the function <code>f</code> when applied to the items.
+That is, all the items, <code>x</code>, in a given group have
+the same value for <code>f(x)</code>.  The result is a 
+<classname>Map&lt;S,List&lt;T&gt;&gt;</classname>.  In this map,
+a key is one of the function values, <code>f(x)</code>, and
+the associated value for that key is a list containing all the items
+from the stream to which <code>f</code> assigns that function value.
+</np>
+
+<p>An example will clarify things.  Suppose we have an array of
+people, where each person has a first name and a last name.
+And suppose that we want to put the people into groups, where 
+each group consists of all the people with a given last name.
+A person can be represented by an object of type <classname>Person</classname>:
+</p>
+
+<pre>class Person {
+	String firstname;
+	String lastname;
+	  .
+	  .
+	  .
+}</pre>
+
+<np>Let's say that <code>population</code> is a variable of type <atype>Person[]</atype>.
+Then <code>Arrays.stream(population)</code> is a stream of <classname>Persons</classname>,
+and we can group the people in the stream by last name with the following code:</np>
+
+<pre>Map&lt;String, List&lt;Person&gt;&gt; families;
+families = Arrays.stream(population)
+                 .collect(Collectors.groupingBy( person -> person.lastname ));</pre>
+
+<np>Here, the lambda expression, <code>person -> person.lastname</code>, defines the
+grouping function.  The function takes a <classname>Person</classname>
+as input and outputs a <classname>String</classname>.  In the resulting
+<classname>Map</classname>, <code>families</code>, a key is one of the
+last names from the <classname>Persons</classname> in the array, and
+the value associated with that last name is a <classname>List</classname> 
+containing all the <classname>Persons</classname> with that last name.  We could print out the
+groups as follows:</np>
+
+<pre>for ( String lastName : families.keySet() ) {
+    System.out.println("People with last name " + lastName + ":");
+    for ( Person name : families.get(lastName) ) {
+        System.out.println("    " + name.firstname + " " + name.lastname);
+    }
+    System.out.println();
+}</pre>
+
+<np>Although the explanation is a bit long-winded, the result should be reasonably easy
+to understand.</np>
 
 </subsection>
 
@@ -466,8 +526,8 @@ the substring "Fred":</p>
 
 <subsection title="An Experiment" id="generics.6.4">
 
-<p>None of the examples of using streams that I have given so far
-is very practical.  In most cases, a simple for loop would have been
+<p>Most of the examples of using streams that I have given so far
+are not very practical.  In most cases, a simple for loop would have been
 just as easy to write and probably more efficient.  That's especially
 true since I've mostly used sequential streams, and most of the
 examples cannot be efficiently parallelized.  (A notable exception is
