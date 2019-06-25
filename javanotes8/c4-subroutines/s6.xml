@@ -98,7 +98,7 @@ and postconditions, but that has not yet been done.)</p>
 <p>Let's work through an example of program design using subroutines. In this
 example, we will use pre-written subroutines as building blocks and we will also design
 new subroutines that we need to complete the project.  The API that I will use here
-is defined in two classes that I have written, <sourceref href="Mosaic.java"/>, which in turns depends on
+is defined in two classes that I have written, <sourceref href="Mosaic.java"/>, which in turn depends on
 <sourceref href="MosaicCanvas.java"/>.  To compile and run a program that uses the
 API, the classes <classname>Mosaic</classname> and <classname>MosaicCanvas</classname>
 must be available.  That is, the files <code>Mosaic.java</code> and

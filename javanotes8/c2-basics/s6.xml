@@ -813,6 +813,8 @@ name from the class name.</p>
 The <code>jshell</code> command is a standard part of the JDK for Java&nbsp;9 or
 later.  If you have Java&nbsp;9 or later, and if you can use the <code>javac</code>
 and <code>java</code> commands on the command line, then you can also use <code>jshell</code>.
+(On Mac&nbsp;OS&mdash;at least for older versions&mdash;you may need to use the full
+path to the jshell executable in the <i>bin</i> directory of the JDK.)
 The purpose of <code>jshell</code> is to let you type in and execute Java code
 without the bother of creating a .java file and writing a main program.  To start
 <code>jshell</code>, just enter the command on a line by itself.  You will get a
@@ -824,7 +826,7 @@ the user is shown in bold.</web></p>
 
 <pre>
 $ <b>jshell</b>
-|  Welcome to JShell -- Version 12.0.1
+|  Welcome to JShell -- Version 11.0.3
 |  For an introduction type: /help intro
 
 jshell> <b>System.out.println("Hello World")</b>

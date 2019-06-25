@@ -302,7 +302,7 @@ a module is another kind of black box, and a non-exported package is part of
 its hidden implementation.  Of course, modularity on this scale is really only
 important for very large-scale applications.</p>
 
-<p>Another motivation for modules is the shear size of the standard JRE (Java Runtime
+<p>Another motivation for modules is the sheer size of the standard JRE (Java Runtime
 Environment), which includes all of the standard classes.  A given application will
 use only a small part of the standard runtime.  Modularization makes it possible
 to construct smaller, custom JREs that contain only the modules that are required
@@ -322,7 +322,7 @@ are stored together in a file named <i>modules</i> inside a directory named
 <i>lib</i> in the main JDK directory.  This is a so-called "jimage file,"
 and there is a command-line tool named <i>jimage</i> for working with such files.
 If you use the <i>jlink</i> tool to create a custom runtime, part of what it does
-is to create a custom <i>modules</i> files containing just the modules that are
+is to create a custom <i>modules</i> file containing just the modules that are
 needed by the runtime.  In the JDK&nbsp;12 on my Linux computer, <i>modules</i>
 is a 130 megabyte file containing 30199 classes in 1000 packages in 70 modules.
 The JDK directory also has a subdirectory named <i>jmods</i> that contains the
