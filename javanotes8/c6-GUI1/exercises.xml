@@ -1853,7 +1853,7 @@ private Label makeLabel(String text) {
 large.  CSS styling (<localref href="GUI1.2.5"/>) is used to set the background color to be white
 and to use a bold monospace font.  (A monospace font is used since every
 character in a monospace font has the same width, making it easy to
-line up the numbers vertically in the labels.  JavaFX 8 seems to have no
+line up the numbers vertically in the labels.  JavaFX seems to have no
 way to ensure that a font will be monospace, except to use CSS.)</np>
 
 <p>Then in the <code>start()</code> method, the labels can be created with four

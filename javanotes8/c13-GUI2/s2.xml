@@ -722,7 +722,8 @@ canvas by making a snapshot of the  entire canvas.  That can be done with</p>
 
 <pre>Image image = canvas.snapshot(null,null);</pre>
 
-<np>Unfortunately, JavaFX 8 does not itself include any support for saving images to files.  
+<np>Unfortunately, at least in the current version, 
+JavaFX does not itself include any support for saving images to files.  
 For that, it depends on something
 from the older "AWT" GUI toolkit:  the <classname>BufferedImage</classname>
 class from package <code>java.awt.image</code>.  A <classname>BufferedImage</classname>

@@ -19,8 +19,8 @@ be found on the web at:  http://math.hws.edu/javanotes
       web site, http://math.hws.edu/javanotes.  
       
       ADDITIONALLY, permission is given to use Java source code from this 
-      work in programming projects [but not in educational material] without 
-      restriction and without attribution, for commercial or non-commercial
+      work in programming projects [but not in commercial educational material]
+      without restriction and without attribution, for commercial or non-commercial
       purposes.  No claim is made about the suitability or reliability of 
       any of the source code.
 

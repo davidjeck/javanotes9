@@ -47,7 +47,7 @@ for ( String str : stringList ) {
 }
 double average = (double)lengthSum / stringList.size();</pre>
 
-<np>To do the same thing with the steam API, you could use:</np>
+<np>To do the same thing with the stream API, you could use:</np>
 
 <pre>int lengthSum = stringList.parallelStream()
                           .mapToInt( str -> str.length() )
@@ -99,7 +99,7 @@ something like</p>
 <np><atype>Stream&lt;T&gt;</atype> is also a parameterized interface.  In the above
 example, <code>stringList</code> is of type <atype>ArrayList&lt;String&gt;</atype>,
 and the stream that is created by <code>stringList.parallelStream()</code> is
-of type <atype>Steam&lt;String&gt;</atype>.  When the <code>mapToInt()</code>
+of type <atype>Stream&lt;String&gt;</atype>.  When the <code>mapToInt()</code>
 operator is applied to that stream, it expects a parameter of type
 <atype>ToIntFunction&lt;String&gt;</atype>.  The lambda expression
 "<code>str&nbsp;-&gt;&nbsp;str.length()</code>" maps a <classname>String</classname> to an
@@ -481,20 +481,11 @@ from the stream to which <code>f</code> assigns that function value.
 people, where each person has a first name and a last name.
 And suppose that we want to put the people into groups, where 
 each group consists of all the people with a given last name.
-A person can be represented by an object of type <classname>Person</classname>:
-</p>
-
-<pre>class Person {
-	String firstname;
-	String lastname;
-	  .
-	  .
-	  .
-}</pre>
-
-<np>Let's say that <code>population</code> is a variable of type <atype>Person[]</atype>.
+A person can be represented by an object of type <classname>Person</classname> that
+contains instance variables named <i>firstname</i> and <i>lastname</i>.
+Let's say that <code>population</code> is a variable of type <atype>Person[]</atype>.
 Then <code>Arrays.stream(population)</code> is a stream of <classname>Persons</classname>,
-and we can group the people in the stream by last name with the following code:</np>
+and we can group the people in the stream by last name with the following code:</p>
 
 <pre>Map&lt;String, List&lt;Person&gt;&gt; families;
 families = Arrays.stream(population)

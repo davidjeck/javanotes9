@@ -92,7 +92,8 @@ for the update was to make it clearer how to use the book with Java&nbsp;11
 and later, but I have also taken the opportunity to briefly discuss a few features
 that were introduced after Java&nbsp;8.  The major change to the
 language itself was the introduction of modules in Java&nbsp;9; these were already
-mentioned in Version&nbsp;8.0, but that discussion has been updated.
+mentioned in Version&nbsp;8.0, but that discussion has been updated.  (However,
+this book does not explain how to create modules.)
 Aside from that, there have been few language changes that impact this textbook,
 but I do introduce the use of var for declaring variables, several new methods
 related to the stream API, and the upcoming revisions to the switch statement.</p>

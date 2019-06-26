@@ -31,10 +31,14 @@ than JavaFX, you should consult Chapter&nbsp;6 and Chapter&nbsp;13 in
 that version, which is still available at
 <a href="http://math.hws.edu/javanotes7">http://math.hws.edu/javanotes7</a>.</p>
 
-<p>This chapter is just an introduction to JavaFX&nbsp;8, but it covers the
+<p>This chapter is just an introduction to JavaFX, but it covers the
 essential features of GUI programming in enough detail to write some
 interesting programs.  The discussion of JavaFX will continue in <localref href="GUI2"/> 
 with more details and with more advanced techniques, but complete coverage
 of JavaFX would require an entire book of its own.</p>
+
+<p>Note that JavaFX is no longer being distributed as part of the Java
+Development Kit.  For information about how to obtain JavaFX and how to
+compile and run programs that use it, see <localref href="basics.6"/>.</p>
 
 </intro>

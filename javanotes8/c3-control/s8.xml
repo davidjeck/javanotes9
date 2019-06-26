@@ -13,7 +13,8 @@ learned so far can be applied in the context of graphical user interface program
 here, and in the rest of this book, are written using JavaFX, a collection of classes
 that form a "toolkit" for writing GUI programs.  All of the classes mentioned in this
 section are part of JavaFX, and they must be imported into any program that uses them.
-</p>
+See <localref href="basics.6"/> for information about compiling and running programs 
+that use JavaFX.</p>
 
 <p>When you run a GUI program, it opens one or more windows on your computer
 screen.  As a programmer, you can have complete control over what appears in the

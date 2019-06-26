@@ -28,10 +28,10 @@
          a free, on-line textbook on introductory
          programming, which uses Java as the language of instruction.  This book is directed
          mainly towards beginning programmers, although it might also be useful for experienced
-         programmers who want to learn something about Java.  It is certainly not meant to
+         programmers who want to learn something about Java.  It is not meant to
          provide complete coverage of the Java language.
         </p>
-        <p>The eighth edition requires Java 8 or higher, including JavaFX. 
+        <p>The eighth edition requires Java 8 or later, and it uses JavaFX for GUI programming.
          Version&#160;8.1 is a small update of Version&#160;8.0.  This version briefly covers some of the new
          features in Java&#160;11 and makes it clearer how to use this book with Java&#160;11 and later.
          Earlier editions of the book are still available. See the <a href="preface.html">preface</a> for links to
@@ -45,7 +45,7 @@
          </p>
          <p><b>Readers are strongly encouraged to try out the <a href="source/index.html">sample&#160;programs</a> as they read
          the book!  You can download the source code separately or as part of the web site using the links below.
-         See <a href="README-running-the-examples.txt">README&#160;file</a>
+         See the <a href="README-running-the-examples.txt">README&#160;file</a>
          for information about how to compile and run the examples.</b></p>
         <h3>Short Table of Contents:</h3>
         <ul class="contents">
@@ -102,7 +102,7 @@
           <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-exercise-solutions.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8-exercise-solutions.zip</a></b>  &#8212;
           A zip archive containing source code for all the end-of-chapter exercises.  These have been extracted from the
           web pages that contain the solutions as a convenience.  They are <b>not</b> included in the web site download.
-          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 920&#160;Kilobytes.
+          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 922&#160;Kilobytes.
           </li>
           </ul>
         </li>
@@ -114,14 +114,14 @@
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
-          Size:&#160;6.6&#160;Megabytes; 750 pages.
+          Size:&#160;6.7&#160;Megabytes; 757 pages.
           </li>
           <li>
           <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf">http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf</a></b> &#8212;
           a PDF version without links, more suitable for printing.  <!-- This PDF is in the format that is used for the printed version of the text,
           except that it also includes an appendix listing example programs and a glossary (since they would have
           exceeded the lulu.com page limit). -->
-          Size:&#160;6.1&#160;Megabytes; 759 pages.
+          Size:&#160;6.1&#160;Megabytes; 763 pages.
           </li>
           </ul>
         </li>
@@ -145,16 +145,16 @@
         <li>
           <b>Print Version Available from Lulu.com:</b>
           <ul>
-          <li><b>Printed version</b> &#8212; I have made this book available for
-          purchase in a printed version from the print-on-demand publisher
+          <li><b>Printed version</b> &#8212;  I have made this book available for
+          purchase in printed versions from the print-on-demand publisher
           <a href="http://www.lulu.com">lulu.com</a>.  This is for convenience only, for those who would
           like to have a bound printout in a nice form.
-          The book is available in a rather thick printed version at
-          <a href="http://www.lulu.com/content/23831534">http://www.lulu.com/content/23831534</a>.
           (Please <b>do not</b> feel obliged to buy the printed version; I do not make any money from it!)
-<!--           It is also available in two parts as <a href="http://www.lulu.com/content/559884">http://www.lulu.com/content/559884</a>
-          and <a href="http://www.lulu.com/content/822314">http://www.lulu.com/content/822314</a>.
--->
+          The entire book is available in a thick and somewhat unwieldy 740-page printed version at
+          <a href=" http://www.lulu.com/content/612392">http://www.lulu.com/content/612392</a>.
+          It is also available in two parts: Chapters 1 through 7 in 
+          <a href="http://www.lulu.com/content/559884">http://www.lulu.com/content/559884</a>,
+          and Chapters 8 through 13 in <a href="http://www.lulu.com/content/822314">http://www.lulu.com/content/822314</a>.
           </li>
           </ul>
         </li>
@@ -170,7 +170,7 @@
         </td></tr></table>
         <hr/>
         <div align="right"><small><i>
-                 (20 July 2019, Version 8.1 Released)<br/>
+                 (2 July 2019, Version 8.1 Released)<br/>
                  (5 December 2018, Version 8 Released)
               </i></small></div>
         </div>

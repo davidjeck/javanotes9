@@ -98,7 +98,7 @@ of the OpenJDK that you downloaded.  However, earlier versions of JavaFX might a
 (I have had no trouble using JavaFX&nbsp;11.0.2 with JDK&nbsp;11.0.3.)
 </np>
 
-<p>If you downloaded a JDK installer from Oracle or AdoptOpenJDK, you can just double-click the 
+<p>If you downloaded a JDK installer for Windows or Mac&nbsp;OS from Oracle or AdoptOpenJDK, you can just double-click the 
 installer file to start the installation, if it does not start automatically.  Otherwise,
 when you download OpenJDK or the JavaFX SDK, it will be in the form of a compressed archive
 file.  You will need to extract the contents of the archive.  
@@ -333,7 +333,7 @@ JavaFX, you need to tell the command where to find the JavaFX modules.</p>
 
 <p>The modules are specified for the <code>javac</code> and <code>java</code> commands
 using two command options:  <code>--module-path</code> and <code>--add-modules</code>.
-The first command specifies the directory that contains the module .jar files, and the
+The first option specifies the directory that contains the module .jar files, and the
 second says which modules you actually want to use.  For the purposes of this
 textbook, you can set the value of <code>--add-modules</code> to <code>ALL-MODULE-PATH</code>,
 which makes all of JavaFX available to your program.  The value of <code>--module-path</code>
@@ -361,8 +361,8 @@ Use the output for the value of <code>--module-path</code>. On windows, a typica
 
 <pre>java -p C:\Users\eck\openjfx-sdk-11\lib --add-modules=ALL-MODULE-PATH</pre>
 
-<np>(If the path name includes a space, or certain other special characters, it
-should be enclosed in quotation marks.)</np>
+<np>If the path name includes a space, or certain other special characters, it
+must be enclosed in quotation marks.</np>
 
 <p>Of course, this is very verbose, and it would be nice not to have to retype it
 all the time.  On Mac&nbsp;OS or Linux, it is easy to define <newword>aliases</newword>,
@@ -373,13 +373,13 @@ of the JavaFX <i>lib</i> directory.  This allowed me to use a JDK that was not
 officially installed on the computer.  The alias is defined as follows, 
 except that <b>this must all be typed on one line</b>:</p>
 
-<pre>alias jfxc='/home/eck/jdk-11.0.1/bin/javac 
+<pre>alias jfxc='/home/eck/jdk-11.0.3/bin/javac 
                   --module-path=/home/eck/javafx-sdk-11/lib 
                   --add-modules=ALL-MODULE-PATH'</pre>
                   
 <np>Similarly, I defined an alias for running JavaFX programs (again, <b>all on one line</b>):</np>
 
-<pre>alias jfx='/home/eck/jdk-11.0.1/bin/java 
+<pre>alias jfx='/home/eck/jdk-11.0.3/bin/java 
                   --module-path=/home/eck/javafx-sdk-11/lib 
                   --add-modules=ALL-MODULE_PATH'</pre>
 
@@ -458,7 +458,7 @@ Applications folder).</np>
 <p>Eclipse is a free program.  It is itself written in Java.  It requires a JDK for Java&nbsp;8
 or later.  Before trying to run Eclipse, you should first install a JDK.  (Note for Mac&nbsp;OS users:
 As of June 2019, a bug in Eclipse stops it from running on JDK&nbsp;12.  Until that is fixed,
-you should stick to JDK&nbsp;11 as your default version of Java, if you want to use Eclipse.)</p>
+you can stick to JDK&nbsp;11 as your default version of Java, if you want to use Eclipse.)</p>
       
 <p>The first time you start Eclipse, you will be asked to specify a <newword>workspace</newword>,
 which is the directory where your work will be stored.  You can accept the default name, or
@@ -478,7 +478,8 @@ a <newword>perspective</newword>.  Eclipse uses different perspectives, that is,
 sets of views of different types of information, for different tasks.  For compiling and
 running programs, the only perspective that you will need is the "Java Perspective,"
 which is the default.  As you become more experienced, you might want to use
-the "Debug Perspective," which has features designed to help you find semantic errors in programs.</p>
+the "Debug Perspective," which has features designed to help you find semantic errors in programs.
+There are small buttons in the Eclipse toolbar that can be used to switch between perspectives.</p>
 
 <p>The Java Perspective includes a large area in the center of the window
 that contains text editor views.  This is where you will create and edit your programs.
@@ -517,7 +518,7 @@ computer, you can copy-and-paste it into the Eclipse window.  (Right-click the f
 from the pop-up menu; then right-click the project's src folder in the Eclipse window, and select
 "Paste". Be sure to paste it into the src folder, not into the project itself; files outside
 the <code>src</code> folder are not treated as Java source code files.) Alternatively, you can try dragging
-the file icon onto the src folder in the Eclipse window.</p>
+the file icon from a file browser window onto the src folder in the Eclipse window.</p>
 
 <p>To use the <classname>TextIO</classname> based examples from this textbook, you must add the
 source code file <sourceref href="textio/TextIO.java">TextIO.java</sourceref> to your project.  This file has to be in
@@ -629,7 +630,7 @@ easy to go back to the editor, make changes, and run it again.</p>
 <p>You are probably using a JDK that does not include JavaFX, which means that you need to
 configure your Eclipse projects to use it.  There are many ways to do that.  My goal here is
 <b>not</b> to present the most "correct" or general way to do it; I just want to make it
-possible to easily use basic JavaFX programs like the ones that come with this textbook.
+possible to easily work with basic JavaFX programs like the ones that come with this textbook.
 I will discuss a one-time configuration of an Eclipse workspace that seems to work reliably for 
 Java&nbsp;11 in the version of Eclipse released
 in June 2019. It has also worked with older versions of Eclipse
