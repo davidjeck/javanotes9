@@ -379,7 +379,7 @@ instance variable, except inside a constructor.</p>
 of classes:  What happens when you mix static and non-static in the same class?
 In that case, it's legal for an instance method in the class to use static member
 variables or call static member subroutines.  An object knows what class it belongs
-to, and it can refer to static members of that class.  But there it only 
+to, and it can refer to static members of that class.  But there is only 
 one copy of the static member, in the class itself.  Effectively, all the
 objects share one copy of the static member.</p>
 
