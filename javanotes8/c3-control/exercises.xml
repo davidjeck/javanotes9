@@ -462,7 +462,7 @@ coded as</p>
 <np>This prints all the letters in a word on the same line of output. Since
 words in the string are separated by non-letter characters, and the computer
 prints a carriage return when it finds a non-letter, words in the output are
-separated by carriage returns. But there are is a problem with this: If two
+separated by carriage returns. But there is a problem with this: If two
 words in the string are separated by <b>several</b> non-letters, then
 there will be one or more blank lines between the words in the output. We don't
 want to output two carriage returns in a row. To avoid this, we can keep track
