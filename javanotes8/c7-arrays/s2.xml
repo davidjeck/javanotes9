@@ -157,7 +157,7 @@ a copy of <code>A</code>, we need to make an entirely new array and copy all the
 <code>A</code> into <code>B</code>.  Let's say that <code>A</code> and <code>B</code>
 are of type <atype>double[]</atype>.  Then to make a copy of <code>A</code>, we can say</np>
 
-<pre>double B;
+<pre>double[] B;
 B = new double[A.length];  // Make a new array with the same length as A.
 for ( int i = 0; i &lt; A.length; i++ ) {
     B[i] = A[i];
