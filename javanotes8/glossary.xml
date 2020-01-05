@@ -271,7 +271,7 @@ input/output API.</gitem>
 <gitem term="iterator">An object associated with a collection, such a list or a set,
 that can be used to traverse that collection.  The iterator will visit each member of
 the collection in turn.</gitem>
-<gitem term="Java Collection Framework (JCF)">A set of standard classed that implement
+<gitem term="Java Collection Framework (JCF)">A set of standard classes that implement
 generic data structures, including <classname>ArrayList</classname> and <classname>TreeSet</classname>,
 for example.</gitem>
 <gitem term="JavaFX">The new toolkit for GUI applications, which becomes the preferred approach
