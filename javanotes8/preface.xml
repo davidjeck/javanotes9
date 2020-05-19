@@ -15,7 +15,7 @@ chapters can be covered in a second course.</p>
 <p>The Eighth Edition of the book uses Java&nbsp;8, with brief coverage
 of features that were added to the language in Java&nbsp;9 and later.
 JavaFX is used for GUI programming.  All sample programs and exercise 
-solutions have been compiled with Java&nbsp;11 and with Java&nbsp;12,
+solutions have been compiled with Java&nbsp;11 and with Java&nbsp;14,
 as well as with Java&nbsp;8.</p>
    
 <p>The home web site for this book, where you can always find the latest version, is
@@ -87,8 +87,9 @@ Section&nbsp;8.2, increased coverage of Java's higher level concurrency
 support in Chapter&nbsp;12, and the consistent use of factory methods like
 <code>Integer.valueOf(n)</code> in preference to constructors.</p>
 
-<p>Version 8.1 is a fairly small update to Version 8.0.  The main motivation
-for the update was to make it clearer how to use the book with Java&nbsp;11
+<p>Version 8.1 was a fairly small update to Version 8.0, and Version 8.1.1
+makes no substantive changes.   The main motivation
+for the update to 8.1 was to make it clearer how to use the book with Java&nbsp;11
 and later, but I have also taken the opportunity to briefly discuss a few features
 that were introduced after Java&nbsp;8.  The major change to the
 language itself was the introduction of modules in Java&nbsp;9; these were already
@@ -96,7 +97,7 @@ mentioned in Version&nbsp;8.0, but that discussion has been updated.  (However,
 this book does not explain how to create modules.)
 Aside from that, there have been few language changes that impact this textbook,
 but I do introduce the use of var for declaring variables, several new methods
-related to the stream API, and the upcoming revisions to the switch statement.</p>
+related to the stream API, and the revisions made to the switch statement in Java&nbsp;14.</p>
 
 <break/>
    

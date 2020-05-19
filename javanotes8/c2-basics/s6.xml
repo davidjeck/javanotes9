@@ -24,9 +24,8 @@ book's web page, <a href="http://math.hws.edu/javanotes">http://math.hws.edu/jav
 to do Java programming (aside from buying a computer, of course).  Everything
 that you need can be downloaded for free on the Internet.</p>
 
-<p>This textbook covers Java 8, but as of the release of Version&nbsp;8.1 of the book,
-the current version of
-Java is Java&nbsp;12, with Java&nbsp;13 due to arrive soon after.  
+<p>This textbook covers Java 8, but as of the release of Version&nbsp;8.1.1 of the book in May 2020,
+the current version of Java is Java&nbsp;14, with version 15 due to be released in September 2020.  
 Significant changes both in the Java language and in the
 Oracle corporation's policies concerning Java have been made since the release
 of Java&nbsp;8.  Unfortunately, the changes have made it somewhat more difficult
@@ -38,9 +37,9 @@ you enough information to make it possible to install Java and use it with this 
 Java will be released much more frequently than in the past, about twice a year,
 but only some of the releases are "long-term support" (LTS) releases that will continue
 to receive bug fixes and security updates over an extended period of time.
-Java&nbsp;8 and Java&nbsp;11 are long-term support releases, but Java 9, 10, and 12
-are not.  In fact, Java 9 and 10 officially should no longer be used (although for the
-purposes of this textbook, using an older version that is no longer receiving
+Java&nbsp;8 and Java&nbsp;11 are long-term support releases, but Java 9, 10, 12, 13, and 14
+are not.  In fact, only Java 8, 11, and 14 are currently officially supported (although for the
+purposes of this textbook, using another version that is no longer receiving
 support is not a real problem).</p>
    
 <subsection id="basics.6.1" title="Getting JDK and JavaFX">
@@ -78,15 +77,13 @@ also be downloaded from AdoptOpenJDK at this address:</np>
 for Mac&nbsp;OS and Windows that make it easier to set up Java on those platforms.
 It might be your best option for getting a JDK.
 (For Linux, you likely also have the option of installing a JDK from Linux software
-repositories.)  As of July 2019, the current version is Java&nbsp;12.
+repositories.)  As of May 2020, the current version is Java&nbsp;14.
 It is advisable to use either the most recent version or a long-term support release.
 However, the sample programs and exercises in this
 textbook will work with JDK versions as old as Java&nbsp;8.</np>
 
 <p>The GUI programs in this book use a programming library known as <newword>JavaFX</newword>,
-which must be downloaded separately from the OpenJDK.  (There are plans to include JavaFX
-as an option in the JDK installers provided by AdoptOpenJDK at some point in the future.)
-For the Oracle JDKs, JavaFX is
+which must be downloaded separately from the OpenJDK.  For the Oracle JDKs, JavaFX is
 included in versions prior to Java&nbsp;11, but for Java&nbsp;11 and later, JavaFX must be
 downloaded separately.  You can download the JavaFX library from</p>
 
@@ -94,8 +91,7 @@ downloaded separately.  You can download the JavaFX library from</p>
 
 <np>You should get the JavaFX "SDK"&mdash;<b>not</b> the "jmods"&mdash;for your operating system (Linux,
 Mac&nbsp;OS, or Windows).  You should get the version number that matches the version number
-of the OpenJDK that you downloaded.  However, earlier versions of JavaFX might also work.
-(I have had no trouble using JavaFX&nbsp;11.0.2 with JDK&nbsp;11.0.3.)
+of the OpenJDK that you downloaded. 
 </np>
 
 <p>If you downloaded a JDK installer for Windows or Mac&nbsp;OS from Oracle or AdoptOpenJDK, you can just double-click the 
@@ -104,7 +100,7 @@ when you download OpenJDK or the JavaFX SDK, it will be in the form of a compres
 file.  You will need to extract the contents of the archive.  
 Usually, simply double-clicking the icon of the archive file
 will either extract the contents or open a program that you can use to extract the
-contents.  You will get a directory with a name something like <i>jdk-11.0.3</i> or
+contents.  You will get a directory with a name something like <i>jdk-11.0.7</i> or
 or <i>javafx-sdk-11.0.2</i>.  You can put the directories anywhere on your
 computer, but you will need to know where they are located.</p>
 
@@ -117,7 +113,7 @@ the JavaFX SDK directory is located; on my computer, it's /usr/share/openjfx.</p
 
 <p>And if you are using Mac OS and downloaded an OpenJDK as an archive file,
 then when you extract the OpenJDK archive, you will
-get a directory that is named something like <i>jdk-11.0.3.jdk</i>.  It is advisable to move
+get a directory that is named something like <i>jdk-11.0.7.jdk</i>.  It is advisable to move
 that JDK directory into the directory <i>/Library/Java/JavaVirtualMachines/</i>.
 (This will require administrative privileges on your Mac.)  Mac&nbsp;OS should automatically
 use the most recent JDK in <i>/Library/Java/JavaVirtualMachines/</i> as the default version
@@ -279,11 +275,11 @@ documents are not appropriate, unless you can get your word processor to save
 as plain text.  A good text editor can make programming a lot more pleasant.
 Linux comes with several text editors.  On Windows, you can use notepad in a pinch, 
 but you will probably want something better.  For Mac&nbsp;OS, you might download 
-the <a href="http://www.barebones.com/products/bbedit/index.html">BBEdit</a> application, which
+the <a href="https://www.barebones.com/products/bbedit/">BBEdit</a> application, which
 can be used for free.  
 One possibility that will work on any platform is to use <newword>jedit</newword>, 
 a programmer's text editor that is itself written in Java and that can be downloaded 
-for free from <a href="http://jedit.org/">www.jedit.org</a>.
+for free from <a href="http://www.jedit.org/">www.jedit.org</a>.
 Another popular cross-platform programming editor is Atom, available from
 <a href="https://atom.io/">atom.io</a>.</p>
    
@@ -373,13 +369,13 @@ of the JavaFX <i>lib</i> directory.  This allowed me to use a JDK that was not
 officially installed on the computer.  The alias is defined as follows, 
 except that <b>this must all be typed on one line</b>:</p>
 
-<pre>alias jfxc='/home/eck/jdk-11.0.3/bin/javac 
+<pre>alias jfxc='/home/eck/jdk-11.0.7/bin/javac 
                   --module-path=/home/eck/javafx-sdk-11/lib 
                   --add-modules=ALL-MODULE-PATH'</pre>
                   
 <np>Similarly, I defined an alias for running JavaFX programs (again, <b>all on one line</b>):</np>
 
-<pre>alias jfx='/home/eck/jdk-11.0.3/bin/java 
+<pre>alias jfx='/home/eck/jdk-11.0.7/bin/java 
                   --module-path=/home/eck/javafx-sdk-11/lib 
                   --add-modules=ALL-MODULE_PATH'</pre>
 
@@ -644,7 +640,7 @@ Java environments that Eclipse knows about.  You can either add a new JRE by cli
 the "Add" button, or you can select one from the list and click "Edit."
 If you are adding a new JRE, you will see a dialog box that asks you to specify a
 "JRE Type"; choose "Standard&nbsp;VM" and click "Next".  You should see a dialog
-box similar to the following.  If you are editing an exiting JRE, the "JRE&nbsp;home"
+box similar to the following.  If you are editing an existing JRE, the "JRE&nbsp;home"
 and "JRE&nbsp;name" will already be filled in, and there will be an entry under
 "JRE system libraries"; aside from that, the box will be empty.</p>
 
@@ -667,10 +663,11 @@ at compile time and at run time.  To make it available at compile time, you can 
 JavaFX .jar files to the system libraries.  Click the "Add External JARs" button,
 and navigate to the <i>lib</i> directory in the JavaFX&nbsp;SDK that you downloaded
 or installed.  You should see the seven JavaFX .jar files.  Select them all,
-and click "OK".  They should appear in the "JRE system libraries" list. 
-Make sure that they are all selected in that list, and click the "Source Attachment"
-button. Select the file <i>src.zip</i> from the JavaFX <i>lib</i> directory, and click
-"OK".  The last step will allow Eclipse to find the documentation for JavaFX,
+and click "OK".  They should appear in the "JRE system libraries" list.  Optionally,
+make sure that all of the JavaFX jar files are selected in that list, and click the "Source Attachment"
+button.  In the "Source Attachment Configuration" dialog box, select "External Location",
+and click "External File".  Select the file <i>src.zip</i> from the JavaFX <i>lib</i> directory, and click
+"OK".  This optional step will allow Eclipse to find the documentation for JavaFX,
 which can be very useful when you are writing programs.</p>
 
 <p>To make JavaFX available to your programs at run time, you need to fill in the
@@ -827,7 +824,7 @@ the user is shown in bold.</web></p>
 
 <pre>
 $ <b>jshell</b>
-|  Welcome to JShell -- Version 11.0.3
+|  Welcome to JShell -- Version 11.0.7
 |  For an introduction type: /help intro
 
 jshell> <b>System.out.println("Hello World")</b>

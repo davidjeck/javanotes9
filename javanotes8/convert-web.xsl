@@ -8,15 +8,16 @@
    <redirect:write file="web/index.html">
         <html>
         <head>
-        <title>Javanotes 8.1 -- Title Page</title>
+        <title>Javanotes 8.1.1 -- Title Page</title>
         <link href="javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
-        <h2 class="chapter_title">Version 8.1, July 2019</h2>
-        <p style="text-align:center">(Minor update of Version 8.0 from December 2018)</p>
+        <h2 class="chapter_title">Version 8.1.1, May 2020</h2>
+        <p style="text-align:center">(Minor update of Version 8.0 from December 2018;<br/>
+           very minor update of Version 8.1 from July 2019)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
@@ -66,7 +67,7 @@
         </ul>
         <hr/>
         <blockquote>
-         <i>&#169;1996--2019, David J. Eck.<br/>
+         <i>&#169;1996--2020, David J. Eck.<br/>
             <small>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License</a>.
             (This license allows you to redistribute this book in unmodified form for non-commercial purposes.  It allows you
             to make and distribute modified versions for non-commercial purposes, as long as you include an attribution to the
@@ -150,11 +151,12 @@
           <a href="http://www.lulu.com">lulu.com</a>.  This is for convenience only, for those who would
           like to have a bound printout in a nice form.
           (Please <b>do not</b> feel obliged to buy the printed version; I do not make any money from it!)
-          The entire book is available in a thick and somewhat unwieldy 740-page printed version at
-          <a href=" http://www.lulu.com/content/612392">http://www.lulu.com/content/612392</a>.
-          It is also available in two parts: Chapters 1 through 7 in 
-          <a href="http://www.lulu.com/content/559884">http://www.lulu.com/content/559884</a>,
-          and Chapters 8 through 13 in <a href="http://www.lulu.com/content/822314">http://www.lulu.com/content/822314</a>.
+          The entire book is available in a thick and somewhat unwieldy 740-page printed version:
+          <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java/paperback/product-1nwwq5r.html">Introduction to Programming Using Java</a>.
+          It is also available in two parts: 
+          <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java-part-i/paperback/product-1k8pjg9.html">Chapters 1 through 7</a>,
+          and <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java-part-2/paperback/product-1yjjdq2.html">Chapters 8 through 13</a>.
+          (The printed version is 8.1, not 8.1.1.)
           </li>
           </ul>
         </li>
@@ -170,6 +172,7 @@
         </td></tr></table>
         <hr/>
         <div align="right"><small><i>
+                 (19 May 2020, Version 8.1.1 Released)<br/>
                  (2 July 2019, Version 8.1 Released)<br/>
                  (5 December 2018, Version 8 Released)
               </i></small></div>
@@ -332,7 +335,7 @@
      <body><div class="page">
      <div class="content">
         <h3 align="center">Introduction to Programming Using Java<br/>
-           Version 8.1, July 2019<br/></h3>
+           Version 8.1.1, May 2020<br/></h3>
         <h2 align="center">Preface</h2>
         <hr class="break"/>
         <xsl:apply-templates/>

@@ -342,15 +342,8 @@ System.out.println("The computer's move is " + computerMove);  // OK!</pre>
 
 <subsection id="control.6.5" title="A New switch Statement Syntax">
 
-<p>A new version of the <code>switch</code> statement is available in
-Java&nbsp;12 as a preview feature.  (If you are using Java&nbsp;12 and
-would like to try it out, add the options "<code>--enable-preview --release=12</code>"
-to the <code>javac</code> command and just "<code>--enable-preview</code>"
-to the <code>java</code> command.)
-This new syntax will presumably be available as a regular language
-feature in the future.</p>
-
-<p>The new version uses <code>-&gt;</code> in place of a colon after
+<p>A new version of the <code>switch</code> statement has been added to the Java
+language in Java&nbsp;14.  The new version uses <code>-&gt;</code> in place of a colon after
 a <code>case</code>, and the code in a case is a single statement, possibly
 a block statement consisting of several statements enclosed in braces.
 No <code>break</code> statement is required, although one can be used to end a case
@@ -378,9 +371,25 @@ first example in this section can be written as follows:
 }</pre>
 
 <np>This seems to me to be a big improvement.  But the original <code>switch</code>
-syntax will continue to be available.  (Note that along with the improved <code>switch</code>
-statement, a new "<code>switch</code> expression" is being introduced, but I won't
-cover that here.)</np>
+syntax is still available.</np>
+
+<p>Along with the improved <code>switch</code>
+statement, a new "<code>switch</code> expression" has been introduced.  Like any
+expression, a <code>switch</code> expression computes and returns a single value.
+The syntax is similar to a <code>switch</code> statement, but instead of a statement
+in each <code>case</code>, there is an expression.  For example,</p>
+
+<pre>String computerMove = switch ( (int)(3*Math.random()) ) {
+    case 1 -> "Rock";
+    case 2 -> "Paper";
+    default -> "Scissors";
+};</pre>
+
+<np>A <code>switch</code> expression must always compute a value and therefore
+will almost always have a <code>default</code> case.  The expression in a <code>case</code>
+can be replaced by a block containing several statements; the value for that <code>case</code>
+should then be specified by a <code>yield</code> statement (such as "<code>yield&nbsp;42;</code>")
+rather than a <code>return</code> or <code>break</code> statement.</np>
 
 </subsection>
    
