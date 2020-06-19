@@ -790,7 +790,7 @@ in the default package.  I have moved it to package <classname>textio</classname
 for Version&nbsp;8 of the book.)</np>
 
 <p>When packages are used in a command-line environment, some complications
-arise.  For example, if a program is in a package named <classname>text.pkg</classname>, then
+arise.  For example, if a program is in a package named <classname>test.pkg</classname>, then
 the source code file must be in a subdirectory named "pkg" inside a 
 directory named "test" that is in turn inside your main Java working directory.  Nevertheless, when you compile or
 execute the program, you should be working in the main directory, not in the subdirectory.

@@ -92,7 +92,7 @@ and satisfying <code>M[i][j]</code> equals <code>M[j][i]</code> for all <code>i<
 <code>M[i][j]</code> for <code>i&nbsp;&gt;=&nbsp;j</code>.  We can store the data
 in a "triangular matrix":</p>
 
-<img src="symmetric-matrix.png" width="" height="" alt="symmetric matrix as triangular matrix"
+<img src="symmetric-matrix.png" width="560" height="156" alt="symmetric matrix as triangular matrix"
     tex="symmetric-matrix.eps" texscale="0.75" bordered="true"/>
 
 <np>It's easy enough to make a triangular array, if we create each row separately.  To create
