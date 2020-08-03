@@ -75,7 +75,7 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    <li><sourceref href="chapter2/Interest2WithScanner.java">Interest2WithScanner.java</sourceref>, from <localref href="basics.4"/>, is a version
    of <sourceref href="chapter2/Interest2.java">Interest2.java</sourceref> that uses <classname>Scanner</classname> instead of
    <classname>TextIO</classname> to read input from the user.</li>
-   <li><sourceref href="chapter3/Interest3.java">Interest3.java"</sourceref>, from <localref href="control.1"/>, the first
+   <li><sourceref href="chapter3/Interest3.java">Interest3.java</sourceref>, from <localref href="control.1"/>, the first
    example that uses control statements.</li>
    <li><sourceref href="chapter3/ThreeN1.java">ThreeN1.java</sourceref>, from <localref href="control.2"/>, outputs a 3N+1 sequence
    for a given stating value.</li>
