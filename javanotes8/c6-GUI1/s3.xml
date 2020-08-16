@@ -654,7 +654,7 @@ event-oriented programming that is required by graphical user interfaces. When
 designing a GUI program, you can ask yourself: What information about state do I
 need to keep track of? What events can change the state of the program? How will
 my response to a given event depend on the current state? Should the appearance
-of the GUI be changed to reflect a change in state? How should the
+of the GUI be changed to reflect a change in state? How should
 the state be taken into account when drawing the content of a canvas? All this is an
 alternative to the top-down, step-wise-refinement style of program design,
 which does not apply to the overall design of an event-oriented program.</p>

@@ -274,7 +274,7 @@ as the GUI toolbox.</p>
    from <localref href="GUI1.1"/>, displays a the message  in a window, with three buttons
    for changing the message and quitting the program.  One of the messages is "Hello World", and
    this program is used as the first example for learning about JavaFX programming.</li>
-   <li><sourceref href="chapter6/SimpleColorChooser.java">SimpleColorChooser.jav</sourceref>, used in <localref href="GUI1.3"/>
+   <li><sourceref href="chapter6/SimpleColorChooser.java">SimpleColorChooser.java</sourceref>, used in <localref href="GUI1.3"/>
    to demonstrate RGB and HSB colors. This program uses techniques that are not
    covered until later in the text, and it is not presented as a programming
    example.  You can run it to experiment with colors.</li>
