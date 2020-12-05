@@ -262,7 +262,7 @@ presentable. The idea is this: Keep track of how many terms have been printed
 on the current line; when that number gets up to 5, start a new line of output.
 To make the terms line up into neat columns, I use formatted output.</p>
 
-<pre>input textio.TextIO;
+<pre>import textio.TextIO;
 
 /**
  * A program that computes and displays several 3N+1 sequences.  Starting

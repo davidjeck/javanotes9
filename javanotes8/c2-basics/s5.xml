@@ -249,11 +249,12 @@ back to this in a later chapter.) Instead, you should compare strings using subr
 <code>equals()</code>  and <code>compareTo()</code>, which
 were described in <localref href="basics.3.3"/>.</p>
 
-<p>Another place where <code>==</code> and <code>!=</code> don't work as you would expect
+<p>Another place where <code>==</code> and <code>!=</code> don't always work as you would expect
 is with <code>Double.NaN</code>, the constant that represents an undefined value of
-type <ptype>double</ptype>.  The values of <code>x&nbsp;==&nbsp;Double.NaN</code>
-and <code>x&nbsp;!=&nbsp;Double.NaN</code> are both defined to be <code>false</code> in
-all cases, whether or not <code>x</code> is <code>Double.NaN</code>!  To test whether
+type <ptype>double</ptype>.  The value of <code>x&nbsp;==&nbsp;Double.NaN</code>
+is defined to be <code>false</code> for any <code>x</code>,
+and <code>x&nbsp;!=&nbsp;Double.NaN</code> is defined to be <code>true</code> in
+all cases.  Those values hold even when <code>x</code> is <code>Double.NaN</code>!  To test whether
 a real value <code>x</code> is the undefined value <code>Double.NaN</code>,
 use the <ptype>boolean</ptype>-valued function <code>Double.isNaN(x)</code>.</p>
 
@@ -446,14 +447,13 @@ represent a legal <ptype>double</ptype> value.</p>
 Java has several variations on the assignment operator, which exist to save
 typing. For example, "<code>A&nbsp;+=&nbsp;B</code>" is defined 
 to be the same as "<code>A&nbsp;=&nbsp;A&nbsp;+&nbsp;B</code>". 
-Every operator in Java that applies to two operands, except for the relational operators, gives rise to a
-similar assignment operator. For example:</p>
+Many of Java's operators give rise to
+similar assignment operators. For example:</p>
 
 <pre>x -= y;     // same as:   x = x - y;
 x *= y;     // same as:   x = x * y;
 x /= y;     // same as:   x = x / y;
-x %= y;     // same as:   x = x % y;
-q &amp;&amp;= p;    // same as:   q = q &amp;&amp; p;  (for booleans q and p)</pre>
+x %= y;     // same as:   x = x % y;</pre>
 
 <np>The combined assignment operator <code>+=</code> even works with strings. Recall that when the <code>+</code>
 operator is used with a string as one of the operands, it represents

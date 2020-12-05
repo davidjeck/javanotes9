@@ -61,6 +61,24 @@ The official release of the Eighth Edition will take place some time after Java 
 <p>This is a list of substantive errors that have been found in Version 8.1.</p>
 
 <ul>
+<li><b>Section 2.5</b>: A reader wrote to point out some errors in the description of Java
+expressions in Section 2.5.  The statement in Subsection 2.5.3 that said <code>x&nbsp;==&nbsp;Double.NaN</code>
+and <code>x&nbsp;!=&nbsp;Double.NaN</code> are both <code>false</code> in all cases is not correct.
+In fact, <code>x&nbsp;==&nbsp;Double.NaN</code> is defined to be false in all cases, and
+<code>x&nbsp;!=&nbsp;Double.NaN</code> is defined to be <code>true</code> in all cases.
+Also, Subsection 2.5.6 incorrectly said that there is an assignment operator <code>&amp;&amp;=</code>.
+There is no such operator. [Fixed in the online version only of 8.1.1.] </li>
+<li><b>Section 2.6</b>: In the last paragraph of Subsection 2.6.7,
+"For example, if a program is in a package named <span class="error"><code>text.pkg</code></span>"
+should be "For example, if a program is in a package named <span class="fix"><code>test.pkg</code></span>".
+[Fixed in the online version only of 8.1.1.]</li>
+<li><b>Section 4.4</b>: At the start of the sample program <i>ThreeN2</i> in Subsection 4.4.3,
+<span class="error"><code>input&nbsp;textio.TextIO</code></span> should be 
+<span class="fix"><code>import&nbsp;textio.TextIO</code></span>.
+[Fixed in the online version only of 8.1.1.]</li>
+<li><b>Section 7.5</b>: In the illustration of a symmetric matrix in Subsection 7.5.1, two of the
+entries are not symmetric.  <span class="error"><code>M[0][3]</code></span> should be 6, not 13,
+and <span class="error"><code>M[3][6]</code></span> should be -4, not&nbsp;4. [Fixed in the online version only of 8.1.1.]</li>
 <li><b>Section 7.2</b>: In the next-to-last code segment in Subsection 7.2.1,
 <span class="error"><code>double&nbsp;B</code></span> should be <span class="fix"><code>double[]&nbsp;B</code></span>.
 [Corrected in Version 8.1.1.]</li>
