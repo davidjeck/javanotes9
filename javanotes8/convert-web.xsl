@@ -8,14 +8,14 @@
    <redirect:write file="web/index.html">
         <html>
         <head>
-        <title>Javanotes 8.1.1 -- Title Page</title>
+        <title>Javanotes 8.1.2 -- Title Page</title>
         <link href="javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
-        <h2 class="chapter_title">Version 8.1.1, May 2020</h2>
+        <h2 class="chapter_title">Version 8.1.2, December 2020</h2>
         <p style="text-align:center">(Minor update of Version 8.0 from December 2018;<br/>
            very minor update of Version 8.1 from July 2019)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
@@ -115,14 +115,14 @@
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
-          Size:&#160;6.7&#160;Megabytes; 757 pages.
+          Size:&#160;6.7&#160;Megabytes; 759 pages.
           </li>
           <li>
           <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf">http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf</a></b> &#8212;
           a PDF version without links, more suitable for printing.  <!-- This PDF is in the format that is used for the printed version of the text,
           except that it also includes an appendix listing example programs and a glossary (since they would have
           exceeded the lulu.com page limit). -->
-          Size:&#160;6.1&#160;Megabytes; 763 pages.
+          Size:&#160;6.2&#160;Megabytes; 767 pages.
           </li>
           </ul>
         </li>
@@ -156,7 +156,7 @@
           It is also available in two parts: 
           <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java-part-i/paperback/product-1k8pjg9.html">Chapters 1 through 7</a>,
           and <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java-part-2/paperback/product-1yjjdq2.html">Chapters 8 through 13</a>.
-          (The printed version is 8.1, not 8.1.1.)
+          (The printed version is 8.1, not 8.1.2.)
           </li>
           </ul>
         </li>
@@ -172,6 +172,7 @@
         </td></tr></table>
         <hr/>
         <div align="right"><small><i>
+                 (29 December 2020, Version 8.1.2 Released)<br/>
                  (19 May 2020, Version 8.1.1 Released)<br/>
                  (2 July 2019, Version 8.1 Released)<br/>
                  (5 December 2018, Version 8 Released)
@@ -335,7 +336,7 @@
      <body><div class="page">
      <div class="content">
         <h3 align="center">Introduction to Programming Using Java<br/>
-           Version 8.1.1, May 2020<br/></h3>
+           Version 8.1.2, December 2020<br/></h3>
         <h2 align="center">Preface</h2>
         <hr class="break"/>
         <xsl:apply-templates/>

@@ -547,7 +547,44 @@ Here is a little example that shows enums being used in a complete program:</p>
 <sourceref href="SeparateEnumDemo.java"/> is identical to <sourceref href="EnumDemo.java"/>,
 except that the enum types that it uses are defined in files named
 <sourceref href="Month.java"/> and <sourceref href="Day.java"/>.)</np>
+
+</subsection>
    
+<subsection id="basics.3.5" title="Text Blocks: Multiline Strings">
+
+<p>Java 15 introduced a new kind of string literal to represent multiline strings.
+(Recall that a literal is something you type in program to represent a constant
+value.)  The new literals are called <newword>text blocks</newword>.
+A text block starts with a string of three double-quote characters, followed
+by optional white space and then a new line.  The white space and newline are
+not part of the string constant that is represented by the text block.  The text block
+is terminated by another string of three double-quote characters.  A text block
+can be used anywhere an ordinary string literal could be used.  For example,</p>
+
+<pre>String poem = """ 
+    As I was walking down the stair,
+       I met a man who wasn't there.
+    He wasn't there again today.
+       I wish, I wish he'd go away!""";</pre>
+
+<np>This is easier to write and to read than the following equivalent code,
+which builds up the multiline string using concatenation:</np>
+  
+<pre>String poem = "As I was walking down the stair,\n"
+    + "   I met a man who wasn't there.\n"
+    + "He wasn't there again today.\n"
+    + "   I wish, I wish he'd go away!\n";</pre> 
+
+<np>Note that extra white space at the beginning of each line of the text block
+is removed from the string that is represented by the literal, but that
+newlines are preserved. </np>
+
+<p>A textblock can include escaped characters such as \t or \\, but aside
+from the backslash character, '\', nothing in the text block has special
+meaning.  For example, something in the text block that looks like a
+Java comment is not actually a comment; it is just ordinary characters
+that are part of the string.</p>
+
 </subsection>
 
 </section>

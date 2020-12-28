@@ -506,4 +506,30 @@ along with the programs that use them.</p>
 </ul>
 
 </subsection>
+
+<subsection id="source.4" title="Part 4: Some Examples of New Features">
+<p>This section lists a few demo programs that illustrate features that
+were added to Java after version Java&nbsp;8.  These programs cannot be
+compiled with a Java&nbsp;8 JDK.  (These sample programs were added to this
+textbook in version 8.1.2.)</p>
+
+<ul>
+   <li><sourceref href="post-java8/TextBlockDemo.java">TextBlockDemo</sourceref> demonstrates
+   text blocks, a new kind of multiline string literal, new in Java&nbsp;15. They are
+   discussed very briefly in <localref href="basics.3.5"/>.</li>
+   <li><sourceref href="post-java8/NewSwitchDemo.java">NewSwitchDemo.java</sourceref> demonstrates
+   a new syntax for <code>switch</code> statements that was introduced in Java&nbsp;14.
+   The new <code>switch</code> syntax is discussed in <localref href="control.6.5"/>.</li>
+   <li><sourceref href="post-java8/VarDeclarationDemo.java">VarDeclarationDemo</sourceref>
+   demonstrates using <code>var</code> instead of a type name when declaring local variables.
+   This feature was introduced in Java&nbsp;10.
+   The use of <code>var</code> is discussed in <localref href="subroutines.7.1a"/>.</li>
+   <li><sourceref href="post-java8/RecordDemo.java">RecordDemo.java</sourceref> 
+   demonstrates <code>records</code>, a new kind of class
+   that represents a simple aggregate data structure.  Records are available as a preview feature
+   in Java&nbsp;15.  They are briefly introduced in <localref href="arrays.1.4"/>.</li>
+</ul>
+</subsection>
+
+
 </source>

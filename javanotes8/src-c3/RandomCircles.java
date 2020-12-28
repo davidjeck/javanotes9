@@ -11,19 +11,20 @@ import javafx.scene.paint.Color;
 
 /**
  *  When run as a program, this class opens a window on the screen that
- *  shows a large number of colored disks.  The positions of the disks
+ *  shows colored disks.  New disks are continually added until the
+ *  window is closed by the user.  The positions of the disks
  *  are selected at random, and the color is randomly selected from
- *  red, green, or blue.  A black outline is drawn around each disk.
- *  The picture changes every three seconds.
+ *  red, green, blue, or yellow.  A black outline is drawn around each 
+ *  disk to make it more visible.
  */
 public class RandomCircles extends Application {
 
 	/**
-	 * Draws 500 disks with random colors and locations.
-	 * Each disk has a radius of 50 pixels.  This subroutine is
-	 * called every three seconds, giving a new set of disks.
-	 * Since the drawing area is not erased first, the disk drawn by
-	 * this subroutine is added to the image rather than replacing it.
+	 * Each time this subroutine is called, it draws one random disk.
+	 * It is called about 60 times per second.  Since this subroutine
+	 * does not clear the window before drawing a disk, the disk is
+	 * added to what is already in the window.  So, disks are continuously
+	 * added to the window at a rate of about sixty disks per second.
 	 */
 	public void drawFrame(GraphicsContext g, int frameNumber, double elapsedSeconds, int width, int height) {
 

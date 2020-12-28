@@ -87,17 +87,20 @@ Section&nbsp;8.2, increased coverage of Java's higher level concurrency
 support in Chapter&nbsp;12, and the consistent use of factory methods like
 <code>Integer.valueOf(n)</code> in preference to constructors.</p>
 
-<p>Version 8.1 was a fairly small update to Version 8.0, and Version 8.1.1
-makes no substantive changes.   The main motivation
-for the update to 8.1 was to make it clearer how to use the book with Java&nbsp;11
-and later, but I have also taken the opportunity to briefly discuss a few features
+<p>Version 8.1 was a fairly small update to Version 8.0, and Versions 8.1.1 and 8.1.2
+make only very minor changes.   The main motivation
+for the update from 8.0 to 8.1 was to make it clearer how to use the book with Java&nbsp;11
+and later, but I also took the opportunity to briefly discuss a few features
 that were introduced after Java&nbsp;8.  The major change to the
 language itself was the introduction of modules in Java&nbsp;9; these were already
 mentioned in Version&nbsp;8.0, but that discussion has been updated.  (However,
 this book does not explain how to create modules.)
 Aside from that, there have been few language changes that impact this textbook,
-but I do introduce the use of var for declaring variables, several new methods
-related to the stream API, and the revisions made to the switch statement in Java&nbsp;14.</p>
+but Version&nbsp;8.1 does introduce the use of var for declaring variables (Subsection 4.8.2), several new methods
+related to the stream API, and the revisions made to the switch statement in Java&nbsp;14 (Subsection 3.6.5).
+Version 8.1.2 adds brief mentions of two additional new features in Java&nbsp;15: text blocks (Subsection 2.3.5)
+and records (Subsection 7.1.4).  It also updates the information about programming environments in
+Section&nbsp;2.6.</p>
 
 <break/>
    
