@@ -387,10 +387,10 @@ The <i>mv</i> command can be used to rename files.  For example:
 to make a batch script file to run the command.  For compilation, you could 
 create a file named <i>jfxc.bat</i> containing just one line similar to</p>
 
-<pre>javac -p C:\Users\eck\openjfx-sdk-11\lib --add-modules=ALL-MODULES-PATH $*</pre>
+<pre>javac -p C:\Users\eck\javafx-sdk-11\lib --add-modules=ALL-MODULE-PATH %*</pre>
 
 <np>but, of course, using the appropriate JavaFX location for your own computer.
-The "<code>$*</code>" at the end represents the inputs to the <code>javac</code> command.
+The "<code>%*</code>" at the end represents the inputs to the <code>javac</code> command.
 The file can be in the current directory or somewhere on the system path, such
 as the JDK <i>bin</i> directory.  Then you can use <code>jfxc</code> as a 
 command for compiling JavaFX programs:</np>

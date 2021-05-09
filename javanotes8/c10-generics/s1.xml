@@ -251,8 +251,8 @@ because the <classname>ArrayList</classname> that is created must be an
 <p>As I've said, Java comes with a number of parameterized types that
 implement common data structures.  This collection of data structure
 classes and interfaces is referred to as the <newword>Java Collection Framework</newword>,
-or <newword>JFC</newword>.  We will spend the next few sections learning 
-about the JFC.</p>
+or <newword>JCF</newword>.  We will spend the next few sections learning 
+about the JCF.</p>
 
 <p>The generic data structures in the Java Collection Framework
 can be divided into two categories: <newword>collections</newword> and <newword>maps</newword>.
@@ -635,7 +635,7 @@ For example, if the objects are of type <classname>Address</classname>,
 representing mailing addresses, it might be useful to sort the objects by zip code.
 Two <classname>Addresses</classname> are considered the same for the purposes of
 the sort if they have the same zip code&mdash;but clearly that would not mean that
-they are the same address.  (Some classes in the JFC use <code>compareTo()</code> rather
+they are the same address.  (Some classes in the JCF use <code>compareTo()</code> rather
 than <code>equals()</code> to test objects for equality.)</np>
    
 <p>The <classname>String</classname> class implements the

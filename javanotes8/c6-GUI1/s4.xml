@@ -64,7 +64,7 @@ There is a boolean-valued function, <codedef>control.isDisabled()</codedef>
 that you can call to discover whether the control is disabled, either because
 it was explicitly disabled or because it is inside a container node
 that was explicitly disabled.</li>
-<li><codedef>control.setToolTipText(string)</codedef> sets the
+<li><codedef>control.setTooltip(new Tooltip(string))</codedef> sets the
 specified string as a "tool tip" for the control. The tool tip is displayed
 if the mouse cursor is inside the control and the mouse is not moved for a few
 seconds. The tool tip should give some information about the meaning of the

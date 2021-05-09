@@ -29,6 +29,9 @@
 <h2>News for the Eighth Edition of This Book</h2>
 
 <ul>
+<li><b>May 7, 2021</b> &mdash; The lab assignments from my Spring 2021 Introductory Programming
+course, using Chapters 1 through 7 of this book, can be found at
+<a href="http://math.hws.edu/eck/cs124/">http://math.hws.edu/eck/cs124/</a>.</li>
 <li><b>December 29, 2020</b> &mdash; Version 8.1.2 is released.  This small update fixes
 a few errors, adds very short introductions to two new Java features (text blocks and
 records), and updates the information about programming environments in Section&nbsp;2.6.</li>
@@ -71,22 +74,32 @@ In fact, <code>x&nbsp;==&nbsp;Double.NaN</code> is defined to be false in all ca
 <code>x&nbsp;!=&nbsp;Double.NaN</code> is defined to be <code>true</code> in all cases.
 Also, Subsection 2.5.6 incorrectly said that there is an assignment operator <code>&amp;&amp;=</code>.
 There is no such operator. [Fixed in version 8.1.2.] </li>
+<li><b>Section 2.6</b>: Near the end of Subsection 2.6.3, a .bat file for compiling JavaFX programs on the command line in windows is given as <span class="error">javac -p&nbsp;C:\Users\eck\openjfx-sdk-11\lib --add-modules=ALL-MODULES-PATH&nbsp;$*</span>.
+It should be <span class="fix">javac -p&nbsp;C:\Users\eck\openjfx-sdk-11\lib --add-modules=ALL-MODULE-PATH&nbsp;%*</span>.
+Note the use of&nbsp;% at the end instead of&nbsp;$, and the extra "S" that was added to ALL-MODULE-PATH in the incorrect
+version.  [Fixed in the online web site version only.]</li>
 <li><b>Section 2.6</b>: In the last paragraph of Subsection 2.6.7,
 "For example, if a program is in a package named <span class="error"><code>text.pkg</code></span>"
 should be "For example, if a program is in a package named <span class="fix"><code>test.pkg</code></span>".
 [Fixed in version 8.1.2.]</li>
 <li><b>Source file Random.java for Chapter 3</b>: The comments on this file were not updated from
-an earlier version and did not correctly describe the program.  [Comments are corrected in version 8.1.2.]</li> 
+an earlier version and did not correctly describe the program.  [Comments are corrected in version 8.1.2.]</li>
 <li><b>Section 4.4</b>: At the start of the sample program <i>ThreeN2</i> in Subsection 4.4.3,
-<span class="error"><code>input&nbsp;textio.TextIO</code></span> should be 
+<span class="error"><code>input&nbsp;textio.TextIO</code></span> should be
 <span class="fix"><code>import&nbsp;textio.TextIO</code></span>.
 [Fixed in version 8.1.2.]</li>
+<li><b>Section 6.4</b>: The method <span class="error">control.setToolTipText(text)</span> for setting the
+tool tip for a control is incorrect.  This is left over from the Swing GUI.  In JavaFX, a tool tip
+can be set using <span class="fix">control.setTooltip(new&nbsp;Tooltip(string))</span>.
+[Fixed only in the online website version only.]</li>
 <li><b>Section 7.5</b>: In the illustration of a symmetric matrix in Subsection 7.5.1, two of the
 entries are not symmetric.  <span class="error"><code>M[0][3]</code></span> should be 6, not 13,
 and <span class="error"><code>M[3][6]</code></span> should be -4, not&nbsp;4. [Fixed in version 8.1.2.]</li>
 <li><b>Section 7.2</b>: In the next-to-last code segment in Subsection 7.2.1,
 <span class="error"><code>double&nbsp;B</code></span> should be <span class="fix"><code>double[]&nbsp;B</code></span>.
 [Corrected in Version 8.1.1.]</li>
+<li><b>Section 10.1</b>: In several places, <span class="error">JFC</span> is used as the abbreviation for
+the Java Collection Framework.  It should be <span class='fix'>JCF</span>.  [Fixed only in the online web site version only.]</li>
 </ul>
 
 <hr>
