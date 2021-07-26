@@ -1,13 +1,7 @@
 
-/* This class demonstrates Java's new "record" feature, which is available
- * as a preview in Java 15 and should be included in future versions of Java.
- * To use this program with Java 15, it should be compiled with the command
- *
- *      javac --enable-preview --release=15 RecordDemo.java
- *
- * and run with the command
- *
- *      java --enable-preview RecordDemo
+/* This class demonstrates Java's new "record" feature, which was
+ * added to the language in Java 16.  It can be used with Java 16
+ * and later.
  */
  
 public class RecordDemo {

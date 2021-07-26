@@ -386,8 +386,8 @@ members have the same type.  A <newword>record</newword> is another kind
 of simple data structure in which members can have different types and
 are referred to by name instead of by number.  In Java, classes can
 be used to represent records, but the term "record" has not traditionally
-been used.  However, there are plans to introduce records into Java explicitly,
-and they are available in Java&nbsp;15 as a preview feature.  A record
+been used.  However, in Java Version 16, records became an official part
+of the language.  A record
 in Java is a kind of object, and a record type is a special kind of class that is
 defined similarly to an ordinary class.  For example:
 </p>
@@ -423,14 +423,6 @@ defined above, the instance variables would be accessed as <code>fn.firstName()<
 and <code>fn.lastName()</code>.  A record type also provides reasonable default
 definitions for several methods inherited from class <classname>Object</classname>:
 <code>toString()</code>, <code>equals()</code>, and <code>hashCode()</code>.</np>
-
-<p>Because records are a preview feature in Java 15, certain command-line options
-must be added to the <code>javac</code> and <code>java</code> commands when
-compiling and running a program that uses records with a Java&nbsp;15 JDK.
-For example,</p>
-
-<pre>javac --enable-preview --release=15 RecordDemo.java
-java --enable-preview RecordDemo</pre>
 
 </subsection>
 

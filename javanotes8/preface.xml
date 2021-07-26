@@ -14,11 +14,11 @@ chapters can be covered in a second course.</p>
 
 <p>The Eighth Edition of the book uses Java&nbsp;8, with brief coverage
 of features that were added to the language in Java&nbsp;9 and later.
-JavaFX is used for GUI programming.  All sample programs and exercise 
-solutions have been compiled with Java&nbsp;11 and with Java&nbsp;14,
+JavaFX is used for GUI programming.  All sample programs and all exercise 
+solutions have been compiled with Java&nbsp;11 and with Java&nbsp;16,
 as well as with Java&nbsp;8.</p>
    
-<p>The home web site for this book, where you can always find the latest version, is
+<p>The home web site for this book, which is always the latest version, is
 <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.
 The page at that address contains links for downloading a copy of
 the web site and for downloading PDF versions of the book.
@@ -47,7 +47,7 @@ published, printed programming textbooks that are available on the market.
 
 <p>There are several approaches to teaching Java. One approach uses
 graphical user interface programming from the very beginning. And some people
-believe that object oriented programming should also be emphasized from the
+believe that object oriented programming should be emphasized from the
 very beginning. These are <b>not</b> the approach that I take. The approach that I favor
 starts with the more basic building blocks of programming and builds from
 there. After an introductory chapter,
@@ -70,7 +70,7 @@ to cover some of JavaFX's more advanced capabilities.</p>
 Swing to JavaFX for GUI programming.  With just a few exceptions in code that
 the user is not meant to read, all example code and exercises use JavaFX.
 (Unfortunately, even as I was working on the new edition, the future of JavaFX
-has become unclear because, as of Java&nbsp;11, JavaFX is no longer
+became unclear because, as of Java&nbsp;11, JavaFX is no longer
 included as part of the basic Java download.  However, it is
 still available to be downloaded and installed separately.
 People who are interested in using Swing instead of JavaFX might consider
@@ -87,8 +87,8 @@ Section&nbsp;8.2, increased coverage of Java's higher level concurrency
 support in Chapter&nbsp;12, and the consistent use of factory methods like
 <code>Integer.valueOf(n)</code> in preference to constructors.</p>
 
-<p>Version 8.1 was a fairly small update to Version 8.0, and Versions 8.1.1 and 8.1.2
-make only very minor changes.   The main motivation
+<p>Version 8.1 was a fairly small update to Version 8.0, and Versions 8.1.1 through 8.1.3
+made only very minor changes.   The main motivation
 for the update from 8.0 to 8.1 was to make it clearer how to use the book with Java&nbsp;11
 and later, but I also took the opportunity to briefly discuss a few features
 that were introduced after Java&nbsp;8.  The major change to the
@@ -98,15 +98,16 @@ this book does not explain how to create modules.)
 Aside from that, there have been few language changes that impact this textbook,
 but Version&nbsp;8.1 does introduce the use of var for declaring variables (Subsection 4.8.2), several new methods
 related to the stream API, and the revisions made to the switch statement in Java&nbsp;14 (Subsection 3.6.5).
-Version 8.1.2 adds brief mentions of two additional new features in Java&nbsp;15: text blocks (Subsection 2.3.5)
-and records (Subsection 7.1.4).  It also updates the information about programming environments in
-Section&nbsp;2.6.</p>
+Version 8.1.2 added brief mentions of two additional new features in Java&nbsp;15 and &nbsp;16: 
+text blocks (Subsection 2.3.5)
+and records (Subsection 7.1.4).  It also updated the information about programming environments in
+Section&nbsp;2.6.  Version 8.1.3 is primarily a further update of the information in Section&nbsp;2.6.</p>
 
 <break/>
    
 
 <p>The first version of the book was written in 1996, and there have
-been several editions since then.  All editions are archived (at least until my retirement) 
+been several editions since then.  All editions are archived (at least until my retirement in December 2022) 
 at the following Web addresses:</p>
    
 <ul>
@@ -125,7 +126,7 @@ at the following Web addresses:</p>
 <li>Seventh edition: <a href=
 "http://math.hws.edu/eck/cs124/javanotes7/">http://math.hws.edu/eck/cs124/javanotes7/</a> (Covers Java 7.)</li>
 <li>Eighth edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 8.)</li>
+"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 8, plus a bit of 11 and 17.)</li>
 </ul>
    
 

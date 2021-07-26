@@ -245,7 +245,7 @@ as the GUI toolbox.</p>
    GUI components from the JavaFX graphical user interface library.  It appears in
    the text in <localref href="overview.6"/>, but you won't be able to understand
    it until you learn about GUI programming.</li>
-   <li><sourceref href="chapter3/SimpleGraphicsStarter.java">RSimpleGraphicsStarter.java</sourceref>, from <localref href="control.8"/>, 
+   <li><sourceref href="chapter3/SimpleGraphicsStarter.java">SimpleGraphicsStarter.java</sourceref>, from <localref href="control.8"/>, 
    draws a large number of randomly colored, randomly positioned disks.  This simple graphics program is our first
    example of a GUI program. It is meant both as an introduction to graphics and as an example of using
    control structures.</li>
@@ -511,7 +511,7 @@ along with the programs that use them.</p>
 <p>This section lists a few demo programs that illustrate features that
 were added to Java after version Java&nbsp;8.  These programs cannot be
 compiled with a Java&nbsp;8 JDK.  (These sample programs were added to this
-textbook in version 8.1.2.)</p>
+textbook for Version 8.1 or later.)</p>
 
 <ul>
    <li><sourceref href="post-java8/TextBlockDemo.java">TextBlockDemo</sourceref> demonstrates
@@ -526,8 +526,8 @@ textbook in version 8.1.2.)</p>
    The use of <code>var</code> is discussed in <localref href="subroutines.7.1a"/>.</li>
    <li><sourceref href="post-java8/RecordDemo.java">RecordDemo.java</sourceref> 
    demonstrates <code>records</code>, a new kind of class
-   that represents a simple aggregate data structure.  Records are available as a preview feature
-   in Java&nbsp;15.  They are briefly introduced in <localref href="arrays.1.4"/>.</li>
+   that represents a simple aggregate data structure.  Records are a new feature
+   in Java&nbsp;16.  They are briefly introduced in <localref href="arrays.1.4"/>.</li>
 </ul>
 </subsection>
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION='javanotes-8.1.2'
+VERSION='javanotes-8.1.3'
 PROJECT='javanotes8'
 
 SOURCE_DIR='/home/eck/git/javanotes8'

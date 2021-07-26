@@ -1,10 +1,10 @@
-                              Summer 2019 (updated tp 8.1.2, December 2020)
+                              Summer 2019 (updated t0 8.1.3, August 2021)
 
 This is the README file for the javanotes source download...
                                                     
-Directory javanotes8.1.2-source contains the source files that are used 
+Directory javanotes8.1.3-source contains the source files that are used 
 to produce the web site and PDF versions of "Introduction to Programming 
-using Java", Version 8.1.2.  This free textbook (or a later edition) can 
+using Java", Version 8.1.3.  This free textbook (or a later edition) can 
 be found on the web at:  http://math.hws.edu/javanotes
 
       Everything in this directory is released under a 

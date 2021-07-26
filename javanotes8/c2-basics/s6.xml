@@ -24,8 +24,8 @@ book's web page, <a href="http://math.hws.edu/javanotes">http://math.hws.edu/jav
 to do Java programming (aside from buying a computer, of course).  Everything
 that you need can be downloaded for free on the Internet.</p>
 
-<p>This textbook can be used with Java 8 and later.  As of the release of Version&nbsp;8.1.2 
-of the book in December 2020, the current version of Java is Java&nbsp;15.  
+<p>This textbook can be used with Java 8 and later.  As of the release of Version&nbsp;8.1.3
+of the book in August 2021, the current version of Java is Java&nbsp;16.  
 Significant changes both in the Java language and in the
 Oracle corporation's policies concerning Java have been made since the release
 of Java&nbsp;8.  Unfortunately, the changes have made it somewhat more difficult
@@ -37,11 +37,13 @@ you enough information to make it possible to install Java and use it with this 
 Java are now released much more frequently than in the past, about twice a year,
 but only some of the releases are "long-term support" (LTS) releases that will continue
 to receive bug fixes and security updates over an extended period of time.
-Java&nbsp;8 and Java&nbsp;11 are long-term support releases, but other versions after Java&nbsp;8
-are not.  In fact, only Java 8, 11, and 15 are currently officially supported (although for the
+Java&nbsp;8 and Java&nbsp;11 are long-term support releases.  The upcoming Java&nbsp;17,
+due to be released in September 2021, will be another long-term support release.
+In fact, only Java 8, 11, and 16 are currently officially supported (although for the
 purposes of this textbook, using another version that is no longer receiving
-support is not a real problem).  As of December 2020, you are most likely to use
-Java&nbsp;11 or Java&nbsp;15.</p>
+support is not a real problem).  As of August 2021, people are most likely to use
+Java&nbsp;11 or Java&nbsp;16. When Java&nbsp;17 is released, it will be the
+preferred version.</p>
    
 <subsection id="basics.6.1" title="Getting JDK and JavaFX">
 
@@ -57,7 +59,8 @@ harder find a separate JRE download, but you will still see the term used &mdash
 sometimes to refer, in fact, to a JDK.) 
 A&nbsp;JDK will include the command line environment that you need to work with Java
 on the command line.  If you decide to use an IDE, you might still need to download
-a JDK first; note, however, that the Eclipse IDE now includes a JDK.</p>
+a JDK first; note, however, that both the Eclipse IDE and BlueJ now include a JDK,
+so you do not need to download a separate JDK to use them.</p>
    
 <p>Java was developed by Sun Microsystems, Inc., which was acquired by the Oracle corporation.
 It is possible to download a JDK directly from Oracle's web site, but starting with Java&nbsp;11,
@@ -72,9 +75,7 @@ which is also owned by Oracle, I recommend downloading from AdoptOpenJDK at this
 <np>This site has OpenJDKs for a wider range of platforms, and it provides installers
 for Mac&nbsp;OS and Windows that make it easier to set up Java on those platforms.
 (The installer for Mac&nbsp;OS is a .pkg file, and the installer for Windows is a .msi file.)
-As of December 2020, the current Java version is Java&nbsp;15.
-It is advisable to use either the current version or a long-term support release
-such as Java&nbsp;11.  However, the sample programs and exercises in this
+The sample programs and exercises in this
 textbook will work with JDK versions as old as Java&nbsp;8.</np>
 
 <p>If you download a JDK installer for Windows or Mac&nbsp;OS from AdoptOpenJDK, you can just double-click the 
@@ -83,8 +84,9 @@ installation, the installer will set up your computer so that you can use the <c
 and <code>java</code> commands on the command line.</p>
 
 <p>The GUI programs in this book use a programming library known as <newword>JavaFX</newword>,
-which must be downloaded separately from the OpenJDK.  (For the commercial Oracle JDKs, JavaFX is
-included in versions prior to Java&nbsp;11.)  You can download the JavaFX library from</p>
+which must be downloaded separately from the OpenJDK.  You will need to download JavaFX even
+if you use Eclipse for all of your Java work.  (BlueJ comes with JavaFX.)
+You can download the JavaFX library from</p>
 
 <p align="center"><a href="https://gluonhq.com/products/javafx/">https://gluonhq.com/products/javafx/</a></p>
 
@@ -104,9 +106,10 @@ computer, but you will need to know where it is located.</p>
 
 <p>(An OpenJDK can also be downloaded as a compressed archive, which you can decompress and
 place anywhere on your computer.  However, to use the <code>javac</code> and <code>java</code>
-commands, you will either need to put the bin directory from the OpenJDK dirctory on your
+commands, you will either need to put the bin directory from the OpenJDK directory on your
 PATH environment variable, or use full path names for the <code>javac</code> and <code>java</code>
-commands.)</p>
+commands.  The AdoptOpenJDK installers for Windows and for MacOS will take care of this
+detail for you.)</p>
 
 <p>Note that if you are using Linux, then a recent OpenJDK and JavaFX should be available in the
 software repositories for your version of Linux, and all that you need to do is use
@@ -128,7 +131,7 @@ takes only a little practice to learn the basics of the command line
 environment and to become productive using it.  It is useful to know
 how to use the command line, and it is particularly important for
 computer science students, but you can skip this subsection and the next if you plan to
-do all of your programming in an IDE.</p>
+do all of your work with Java in an IDE.</p>
    
 <p>To use a command line programming environment, you will have to open a window
 where you can type in commands.  In Windows, you can open such a command window
@@ -282,7 +285,7 @@ errors, <b>save your changes</b>, and then try the <code>javac</code> command ag
 (It's usually a good idea to just work on the first few errors; sometimes fixing 
 those will make other errors go away.)
 Remember that when the <code>javac</code> command finally succeeds, you will get
-no message at all, or possibly just some "warnings" that do not stop the program
+no message at all, or possibly just some "warnings"; warnings do not stop a program
 from running.  Then you can use the <code>java</code> command to run your
 program, as described above.  Once you've compiled the program, you can run it as
 many times as you like without recompiling it.</p>
@@ -301,8 +304,7 @@ you have to go back to the edit/save/compile loop to try to find and fix the pro
 <p>JavaFX is a collection of Java classes that can be used for making GUI programs.
 In this book, it is first used in <localref href="control.8"/> and is covered extensively
 in <localref href="GUI1"/> and <localref href="GUI2"/>.  It is also used in example
-programs in several other chapters.  JavaFX was a standard part of the Oracle JDK for Java&nbsp;8.  If you
-are using that JDK, you don't need to do anything special to work with JavaFX.  However
+programs in several other chapters.  JavaFX was a standard part of the Oracle JDK for Java&nbsp;8, but
 with OpenJDK and with any JDK for Java&nbsp;11 and later, JavaFX requires some special 
 treatment. This subsection explains how to use JavaFX on the command line with Java&nbsp;11
 or later.  It assumes that you have already downloaded the JavaFX SDK, as described above.
@@ -423,8 +425,8 @@ will require some extra configuration.  The next subsection discusses using Java
 This subsection tells you how to use it for programs that use only standard Java classes.</p>
    
 <p>You can download an Eclipse IDE from <a href="https://www.eclipse.org">eclipse.org</a>.  
-When I install Eclipse, I get the "Eclipse IDE for Java Developers" package from
-this web page:</p>
+When I install Eclipse, I get the "Eclipse IDE for Java Developers" package (<b>not</b> the "installer")
+from this web page:</p>
 
 <p align="center"><a href="https://www.eclipse.org/downloads/packages/">https://www.eclipse.org/downloads/packages/</a></p>
 
@@ -435,10 +437,10 @@ the application icon.  For Mac&nbsp;OS, the download is a .dmg file that contain
 You can open the .dmg file and drag the application to any location that you prefer (probably the
 Applications folder).</np>
 
-<p>Eclipse is a free program.  It is itself written in Java.  As of December, 2020, Eclipse includes
-a copy of the OpenJDK (although it calls it a JRE), so you can use it without downloading a separate JDK.
-For earlier versions of Eclipse, you need to have a separate JDK or JRE installed on your computer
-before you can run Eclipse</p>
+<p>Eclipse is a free program.  It is itself written in Java. Recent versions of Eclipse include
+a copy of an OpenJDK (although Eclipse calls it a JRE), so you can use it without downloading a separate JDK.
+The June 2021 version includes a Java&nbsp;16 SDK.  The upcoming September 2021 version 
+is likely to use Java&nbsp;17.</p>
       
 <p>The first time you start Eclipse, you will be asked to specify a <newword>workspace</newword>,
 which is the directory where your work will be stored.  You can accept the default name, or
@@ -453,7 +455,9 @@ contains one or more <newword>views</newword>.  For example, a view can be a tex
 a program can do I/O, or it can contain a list of your projects.
 If there are several views in one section of the window,
 then there will be tabs at the top of the section to select the view that is displayed in that
-section.  Each view displays a different type of information.  The whole set of views is called
+section.  This will happen, for example, if you have several editor views open at the same time.</p> 
+
+<p>Each view displays a different type of information.  The whole set of views in the window is called
 a <newword>perspective</newword>.  Eclipse uses different perspectives, that is, different
 sets of views of different types of information, for different tasks.  For compiling and
 running programs, the only perspective that you will need is the "Java Perspective,"
@@ -465,10 +469,9 @@ There are small buttons in the Eclipse toolbar that can be used to switch betwee
 that contains text editor views.  This is where you will create and edit your programs.
 To the left of this is the
 Package Explorer view, which will contain a list of your Java projects and source code
-files.  To the right are one or more other views that I don't find very useful; 
-I suggest that you close them by clicking the small "X" next to the name of each one.
-Several other views that <b>will</b>
-be useful appear in a section of the window
+files.  To the right are one or more other views that you might or might not find useful; 
+I usually close them by clicking the small "X" next to the name of each one.
+Several other views that will certainly be useful appear under different tabs in a section of the window
 below the editing area.  If you accidently close one of the important views, such as the
 Package Explorer, you can get it back by selecting it from the "Show View" submenu
 of the "Window" menu.  You can also reset the whole window to its default contents by
@@ -479,19 +482,35 @@ selecting "Reset Perspective" from the "Window" menu.</p>
       
 <p>To do any work in Eclipse, you need a <newword>project</newword>.  To start
 a Java project, go to the "New" submenu in the "File" menu, and select the "Java Project" command.
-In the window that pops up, it is only necessary to fill in a "Project Name" for
-the project and click the "Finish" button.  (In some circumstances, it might be necessary to
-select the JRE that you want to use for the project before clicking "Finish"; see the next 
-subsection for how this applies to using JavaFX.) The project name can be anything you like.
-Eclipse might ask you if you want to create "module-info.java" &mdash; <b>you should click
-"Don't Create"</b>; the programs in this book do not use modules.  (See <localref href="subroutines.5.3a"/>
-for information about modules.  If you do accidently create module-info.java, you can simply delete
-it from the project.)  The project should appear in the
-"Package Explorer" view.  Click on the small triangle or plus sign next to the project name to see the
+In the window that pops up, you will need to fill in a "Project Name," which can be anything you like.
+There are two other sections of the window that you might need to pay attention to:</p>
+
+<img src="eclipse-create-project.png" width="578" height="357" 
+      tex="eclipse-create-project.eps" texscale="0.6"/>
+
+<np>If the project will use JavaFX, and if you have configured the workspace for JavaFX as described
+in the next subsection, then you should make sure that the JRE configuration that you
+have created for JavaFX is selected in the "JRE" section of the dialog box, as shown here.  And for
+any program from this textbook, you should uncheck the option labeled "Create module-info.java file"
+in the "Module" section.    (The "Module" section appears in the June 2021 version of Eclipse but not
+in earlier versions.  For earlier versions, you might be asked whether you want to
+create module-info.java.  For the programs in this book, you should always say no.) 
+This textbook does <b>not</b> use modular programs.  Note that the
+workspace will remember these two settings for the next time that you create a new project
+and that it is harmless to use a JRE with JavaFX support even for a project that does not
+use JavaFX.</np>
+
+<p>After entering a project name, and changing the options if necessary,
+click the "Finish" button.  Remember to say "Don't Create" if Eclipse
+asks you whether you want to create "module-info.java".
+ The project should appear in the
+"Package Explorer" view on the left side of the Eclipse window.  
+Click on the small triangle or plus sign next to the project name to see the
 contents of the project.  Assuming that you use the default settings, there should be
 a directory named "src," which is where your Java source code files will go.  The project also 
-contains the "JRE System Library"; this is the collection of standard built-in classes 
-that come with Java.</p>
+contains the "JRE System Library". This is the collection of standard built-in classes 
+that come with Java; if you have configured the project for JavaFX, it will also include
+the JavaFX classes.</p>
    
 <p>To run any of the sample Java programs from this textbook, you need to copy the source code file into
 your Eclipse Java project.  Assuming that you have downloaded the source code file onto your
@@ -502,7 +521,7 @@ from the pop-up menu; then right-click the project's src folder in the Eclipse w
 the <code>src</code> folder are <b>not</b> treated as Java source code files.) Alternatively, you can try dragging
 the file icon from a file browser window onto the src folder in the Eclipse window.</p>
 
-<p>To use the <classname>TextIO</classname> based examples from this textbook, you must add the
+<p>To use the <classname>TextIO</classname>-based examples from this textbook, you must add the
 source code file <sourceref href="textio/TextIO.java">TextIO.java</sourceref> to your project.  This file has to be in
 a "package" named <code>textio</code>.  If you have downloaded <code>TextIO.java</code>
 and placed it into a folder named "textio," as described above, then you can simply copy-and-paste 
@@ -562,9 +581,9 @@ It will underline any syntax error with a jagged red line, and in some
 cases will place an error marker in the left border of the edit window.
 If you hover the mouse cursor over the error marker or over the error itself, 
 a description of
-the error will appear.  Note that you do not have to get rid of every
-error immediately as you type; some errors will go away as you type
-in more of the program.  If an error marker displays a small "light
+the error will appear.  Note that you do <b>not</b> have to get rid of every
+error immediately as you type; many errors will go away as you type
+in more of the program!  If an error marker displays a small "light
 bulb," Eclipse is offering to try to fix the error for you.  Click
 the light bulb&mdash;or simply hover your mouse over the actual error&mdash;to 
 get a list of possible fixes, then click
@@ -616,71 +635,79 @@ possible to easily work with basic JavaFX programs like the ones that come with 
 I will discuss a one-time configuration of an Eclipse workspace that seems to work reliably for
 all the versions of Eclipse in which I have tried it.</p>
 
+<p>You need to get a JavaFX SDK from 
+<a href="https://gluonhq.com/products/javafx/">the JavaFX download site</a>,
+as discussed above.  You want an SDK whose major version number is the
+same as the JDK version that is included in Eclipse.  For the June 2021 version of
+Eclipse, that would be JavaFX&nbsp;SDK&nbsp;16.</p>
+
 <p>To begin, open the Eclipse preferences, using the "Preferences" command (which is in the
 "Windows" menu on Linux and Windows and in the "Eclipse" menu on Mac&nbsp;OS).
 Expand the Java section in the list on the left, by clicking the small triangle or plus
 sign next to the word "Java."  Click on "Installed JREs."  You will see a list of the
-Java environments that Eclipse knows about.  You can either add a new JRE by clicking
-the "Add" button, or you can select one of the existing JRE's and click "Duplicate" or "Edit".
-I suggest using "Duplicate" to start with a known working configuration, to which you can add the
-necessary JavaFX configuration.</p>
+Java environments that Eclipse knows about.  In a new workspace, there should be just
+one, showing the JRE that is included in Eclipse.  You can click on that JRE to select
+it and click the "Duplicate" button to make a copy.  You can then add JavaFX support to the copy.
+(You could also just "Edit" the original JRE, or "Add" a completely new configuration.
+I recommend using "Duplicate", but if you add a new configuration,
+you would have the freedom to use a different JDK that you have downloaded,
+along with a matching JavaFX.)</p>
 
-<p>If you are adding a new JRE, you will see a dialog box that asks you to specify a
-"JRE Type"; choose "Standard&nbsp;VM" and click "Next".  You should see a dialog
-box similar to the following.  If you duplicate or edit an existing JRE, the "JRE&nbsp;home"
-and "JRE&nbsp;name" will already be filled in, and there will be an entry under
+<p>When you "Duplicate" an existing JRE, you should see a dialog
+box similar to the following.  The "JRE&nbsp;home"
+and "JRE&nbsp;name" will already be filled in, and there will be one entry under
 "JRE system libraries".</p>
 
-<img src="eclipse-fx.png" width="630" height="537" tex="eclipse-fx.eps"
-       texscale="0.5" bordered="false" alt="editing a JRE to add support for JavaFX to Eclipse"/>
-
-<p>If you are adding a new JRE, you need to specify the "JRE&nbsp;home."  This will be
-the directory that contains the <i>bin</i> directory of the JDK that you want to use.
-Click the "Directory" button to open a file browser, and navigate to that directory.
-This can be a JDK that you have simply downloaded and have not installed officially
-on your computer, or it can be an installed JDK.  In the example, the JDK was
-officially installed on Linux.
-(On Windows or Linux, you want the main JDK directory. For Mac&nbsp;OS, you
-need to navigate to the main JDK directory, then go into the "Content" folder and finally
-into the "Home" folder; the JRE&nbsp;home will end with <i>/Content/Home</i>.)
-If you enter a valid JDK directory, Eclipse will fill in a suggested JRE name and the system library.</p>
+<img src="eclipse-fx.png" width="709" height="547" tex="eclipse-fx.eps"
+       texscale="0.5" alt="editing a JRE to add support for JavaFX to Eclipse"/>
+       
+<np>You should change the "JRE name" to something that indicates that it supports
+JavaFX.  This is just so that you will recognize the name when you create a project,
+as discussed in the previous subsection.  But the main thing is to add the
+JavaFX configuration.</np>
 
 <p>Remember that to use JavaFX, you need to make it available to your program both
-at compile time and at run time.  To make it available at compile time, you can add
-JavaFX .jar files to the system libraries.  Click the "Add External JARs" button,
+at compile time and at run time.  The first step in the configuration is to
+make it available at compile time.  To do that, you want to add the 
+JavaFX .jar files to the JRE system libraries:  Click the "Add External JARs" button,
 and navigate to the <i>lib</i> directory in the JavaFX&nbsp;SDK that you downloaded
-or installed.  You should see the seven JavaFX .jar files.  Select them all,
-and click "OK".  They should appear in the "JRE system libraries" list.  
-As an additional optional step, you can configure the JavaFX source files:
-Make sure that all of the JavaFX jar files are selected in the list of .jar files, and click the "Source Attachment"
+or installed.  You should see the JavaFX .jar files.  Select them all,
+and click "OK".  They should appear in the "JRE system libraries" list.</p>
+
+<p>The second step is to configure the JavaFX source files.
+This optional step will allow Eclipse to find the documentation for JavaFX,
+which can be very useful when you are writing programs.
+For this step,
+make sure that all of the JavaFX jar files are selected in the 
+list of .jar files.  Click the "Source Attachment"
 button.  In the "Source Attachment Configuration" dialog box, select "External Location",
 and click "External File".  Select the file <i>src.zip</i> from the JavaFX <i>lib</i> directory, and click
-"OK".  This optional step will allow Eclipse to find the documentation for JavaFX,
-which can be very useful when you are writing programs.</p>
+"OK".  That's all there is to it.</p>
 
-<p>To make JavaFX available to your programs at run time, you need to fill in the
-"Default VM arguments" box.  You should type in the arguments by hand.
-This box contains options that will be added to the
+<p>Finally, you must make JavaFX available to your programs at run time.
+To do that, you need to fill in the
+"Default VM arguments" input box by typing in the JavaFX command line options for
+the <i>java</i> command. The input box contains options that will be added to the
 <i>java</i> command every time you run a program in Eclipse using this JDK.
 You should type the same options that you would use on the <i>java</i> command
 line, as discussed above.  The value of the <code>-p</code> (or <code>--module-path</code>)
-option is the location of the JavaFX <i>lib</i> directory, and the
-value for <code>--add-modules</code> can be <code>ALL-MODULE-PATH</code>,
-as shown in the above illustration.</p>
-
-<p>Make note of the "JRE name," which you will need when you create a project that
-uses JavaFX.  You might want to change the name to something like "JRE with JavaFX".</p>
+option is the location of the JavaFX <i>lib</i> directory.  It should
+be exactly the same as the beginning of the paths for the JavaFX .jar files
+as shown in the "JRE system libraries" list.
+The value for <code>--add-modules</code> can be <code>ALL-MODULE-PATH</code>,
+as shown in the illustration.</p>
 
 <p>When everything is set up, click "Finish" and then click "Apply and Close" in
 the main "Preferences" dialog box. When you create a new Java project in the
 workspace, make sure that the JRE that you set up to use JavaFX is selected in
 the project creation dialog box. Look in the "JRE" section of the dialog box,
 select "Use project-specific JRE," and select the appropriate JRE from the popup menu.
-You should then be able to use JavaFX in that project.  If not, check your JRE configuration.</p>
-
-<p>It is, by the way, harmless to use a JRE that is configured for JavaFX even
-for standard programs that do not use JavaFX.  In particular, you can use the
-same configuration for all the programs in this textbook.</p>
+You should then be able to use JavaFX in that project.  If not, check your JRE configuration.
+You can "Edit" it in the same Java preferences where you set it up in the first place.
+If you can't compile JavaFX programs, make sure that you are using a JavaFX SDK with
+the same major version number as the built-in JDK in Eclipse (JavaFX&nbsp;16 for the
+June 2021 version of Eclipse). If you can compile JavaFX programs but not run them, 
+then the problem is likely to be with the "Default VM arguments".</p>
 
 <break/>
 
@@ -704,13 +731,15 @@ javac and java commands.)</p>
 <p>Finally, I will mention BlueJ, a small IDE that is designed specifically for people who
 are learning to program.  It is much less complex than Eclipse, but it
 does have some features that make it useful for education.
-BlueJ can be downloaded from <a href="https://bluej.org">bluej.org</a>.  The current version
-requires at least Java&nbsp;11 and JavaFX&nbsp;11.  You need to have both before you can
-run BlueJ.  (An earlier version that works with Java&nbsp;8 is also available.)
-The first time you start BlueJ, it will ask you to enter the locations of the JDK and
-of JavaFX.  You will only have to do that once, and once it is done, you will not have
-to take any special actions to compile and run JavaFX programs in the IDE.
-</p>
+BlueJ can be downloaded from <a href="https://bluej.org">bluej.org</a>.  There
+are installers available for Windows, MacOS, and Windows.  As of August 2021,
+the installers include OpenJDK&nbsp;11 as well as JavaFX&nbsp;11, so you
+will not need to do any additional downloading or configuration.
+There is also a generic installer that requires you to download a JDK and JavaFX
+separately.  When you run the generic installer, BlueJ will ask you to input
+the locations of the JDK and JavaFX.  (The current version of the generic installer 
+in July 2021 did not work for me with OpenJDK&nbsp;16 but did work with OpenJDK&nbsp;15.  
+It will certainly work with OpenJDK&nbsp;11.)</p>
 
 <p>In BlueJ, you can begin a project with the "New Project" command in the "Project" menu.
 A BlueJ project is simply a folder.  When you create a project, you will have to select
@@ -720,7 +749,7 @@ You can drag .java files from the file system
 onto that window to add files to the project; they will be copied into the project folder
 as well as shown in the window.  You can also copy files directly into
 the project folder, but BlueJ won't see them until the next time you open the project.
-When you restart BlueJ, it should show the last project you were working on, but
+When you restart BlueJ, it should show the project that you were working on most recently, but
 you can open any project with a command from the "Project" menu.</p>
 
 <p>There is a button in the project window for creating a new class.  An icon for the
@@ -772,7 +801,7 @@ greater detail in <localref href="subroutines.5"/>.   For now, you
 just need to know some basic facts.</p>
 
 <p>Although most of my examples are in the default package,
-in fact, the use of the default package is discouraged, according to official Java
+the use of the default package is in fact discouraged, according to official Java
 style guidelines. Nevertheless, I have
 chosen to use it, since it seems easier for beginning programmers to
 avoid packages as much as possible, at least at first.   If Eclipse 
