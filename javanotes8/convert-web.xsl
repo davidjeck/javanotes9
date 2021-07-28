@@ -42,8 +42,7 @@
          web site for use on your own computer. 
          PDF, <span style="white-space:pre">e-book</span>, and print
          versions of the textbook are also available.
-         The PDF that includes links might be the best way to read it on your computer.
-         <b>Links to the downloads can be found at the bottom of this page.</b>
+         <b>Links can be found at the bottom of this page.</b>
          </p>
          <p><b>Readers are strongly encouraged to try out the <a href="source/index.html">sample&#160;programs</a> as they read
          the book!  You can download the source code separately or as part of the web site using the links below.
@@ -89,7 +88,7 @@
           <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8.zip</a></b> &#8212;
           This "zip" archive contains a complete copy of the web site.  It should be usable on almost
           any computer. 
-          Size:&#160;5.6&#160;Megabytes.
+          Size:&#160;5.7&#160;Megabytes.
           </li>
           </ul>
         </li>
@@ -116,7 +115,7 @@
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
-          Size:&#160;6.7&#160;Megabytes; 759 pages.
+          Size:&#160;6.7&#160;Megabytes; 760 pages.
           </li>
           <li>
           <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf">http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf</a></b> &#8212;
