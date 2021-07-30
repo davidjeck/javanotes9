@@ -172,7 +172,7 @@
         </td></tr></table>
         <hr/>
         <div align="right"><small><i>
-                 (1 August 2021), Version 8.1.3 Released)<br/>
+                 (1 August 2021, Version 8.1.3 Released)<br/>
                  (29 December 2020, Version 8.1.2 Released)<br/>
                  (19 May 2020, Version 8.1.1 Released)<br/>
                  (2 July 2019, Version 8.1 Released)<br/>
