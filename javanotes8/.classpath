@@ -15,10 +15,6 @@
 	<classpathentry kind="src" path="src-c10"/>
 	<classpathentry kind="src" path="src-c11"/>
 	<classpathentry kind="src" path="src-c13"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-11-FX">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre with JavaFX"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
