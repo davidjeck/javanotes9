@@ -1157,7 +1157,7 @@ Suppose that the class <classname>Score</classname> is defined as</p>
     String firstName;
     String lastName;
     int score;
-    Score( String lName, String fName, int s ) {
+    ScoreInfo( String lName, String fName, int s ) {
         firstName = fName;
         lastName = lName;
         score = s;
@@ -1184,21 +1184,21 @@ Do not use <b>any</b> for loops or other control structures.  Do everything
 using the stream API.  For testing your code, you can use this array:</np>
 
 <pre>private static ScoreInfo[] scoreData = new ScoreInfo[] {
-        new Score("Smith","John",70),
-        new Score("Doe","Mary",85),
-        new Score("Page","Alice",82),
-        new Score("Cooper","Jill",97),
-        new Score("Flintstone","Fred",66),
-        new Score("Rubble","Barney",80),
-        new Score("Smith","Judy",48),
-        new Score("Dean","James",90),
-        new Score("Russ","Joe",55),
-        new Score("Wolfe","Bill",73),
-        new Score("Dart","Mary",54),
-        new Score("Rogers","Chris",78),
-        new Score("Toole","Pat",51),
-        new Score("Khan","Omar",93),
-        new Score("Smith","Ann",95)
+        new ScoreInfo("Smith","John",70),
+        new ScoreInfo("Doe","Mary",85),
+        new ScoreInfo("Page","Alice",82),
+        new ScoreInfo("Cooper","Jill",97),
+        new ScoreInfo("Flintstone","Fred",66),
+        new ScoreInfo("Rubble","Barney",80),
+        new ScoreInfo("Smith","Judy",48),
+        new ScoreInfo("Dean","James",90),
+        new ScoreInfo("Russ","Joe",55),
+        new ScoreInfo("Wolfe","Bill",73),
+        new ScoreInfo("Dart","Mary",54),
+        new ScoreInfo("Rogers","Chris",78),
+        new ScoreInfo("Toole","Pat",51),
+        new ScoreInfo("Khan","Omar",93),
+        new ScoreInfo("Smith","Ann",95)
 };</pre>
 </exercise-question>
 <exercise-discuss><p>In each case, to process the values from the array using the stream 
