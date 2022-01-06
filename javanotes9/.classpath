@@ -15,6 +15,6 @@
 	<classpathentry kind="src" path="src-c10"/>
 	<classpathentry kind="src" path="src-c11"/>
 	<classpathentry kind="src" path="src-c13"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre with JavaFX"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jfx17"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
