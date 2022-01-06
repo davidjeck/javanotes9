@@ -9,23 +9,23 @@
    encoding="UTF-8"/>
     
 <xsl:template match="/">
-   <redirect:write file="epub/OEBPS/javanotes8.opf">
+   <redirect:write file="epub/OEBPS/javanotes9.opf">
 		<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="javanotesID">
 		    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/"
 		          xmlns:opf="http://www.idpf.org/2007/opf">
-		   		<dc:title>Introduction to Programming Using Java, Version 8.1.3</dc:title>
+		   		<dc:title>Introduction to Programming Using Java, Version 9</dc:title>
 		   		<dc:creator opf:role="aut">David J. Eck</dc:creator>
-		   		<dc:description>A free introductory programming textbook using Java as the programming language, version 8.1.3.</dc:description>
-		   		<dc:date>2021-8</dc:date>
+		   		<dc:description>A free introductory programming textbook using Java as the programming language, version 9.</dc:description>
+		   		<dc:date>2022-5</dc:date>
 		   		<dc:language>en-US</dc:language>
 		   		<dc:rights>Copyright 1996-2021 by David J. Eck.  Released under the
 		   		    Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.</dc:rights>
-		   		<dc:identifier id="javanotesID">http://math.hws.edu/javanotes8</dc:identifier>
+		   		<dc:identifier id="javanotesID">https://math.hws.edu/javanotes9</dc:identifier>
 		    </metadata>
 		    <manifest>
 		        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
 		        <item id="css" href="javanotes-epub.css" media-type="text/css"/>
-		        <item id="cover-image" href="javanotes8-cover-518x675.jpg" media-type="image/jpeg"/>
+		        <item id="cover-image" href="javanotes9-cover-518x675.jpg" media-type="image/jpeg"/>
 		    	<item id="titlepage" href="titlepage.html" media-type="application/xhtml+xml"/>
 		    	<item id="cover" href="cover.html" media-type="application/xhtml+xml"/>
 		    	<item id="quiz-answers-intro" href="quiz-answers-intro.html" media-type="application/xhtml+xml"/>
@@ -120,7 +120,7 @@
    <redirect:write file="epub/OEBPS/toc.ncx">
 	<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en-US">
 	    <head>
-	        <meta content="http://math.hws.edu/javanotes8" name="dtb:uid"/>
+	        <meta content="http://math.hws.edu/javanotes9" name="dtb:uid"/>
 	    </head>
 	    <docTitle>
 	        <text>Introduction to Programming Using Java, Version 8.1.3</text>

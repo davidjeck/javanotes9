@@ -35,6 +35,6 @@
 
 <!--
    To use this file, export the web site, copy the "sources" folder into
-   the javanotes8 source directory, cd to javanotes8, and run xalan on
-   javanotes8.xml with this xsl transform file.
+   the javanotes9 source directory, cd to javanotes9, and run xalan on
+   javanotes9.xml with this xsl transform file.
 -->

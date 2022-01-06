@@ -8,21 +8,20 @@
    <redirect:write file="web/index.html">
         <html>
         <head>
-        <title>Javanotes 8.1.3 -- Title Page</title>
+        <title>Javanotes 9 -- Title Page</title>
         <link href="javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
-        <h2 class="chapter_title">Version 8.1.3, August 2021</h2>
-        <p style="text-align:center">(Minor update of Version 8.0 from December 2018;<br/>
-           very minor update of Version 8.1 from July 2019)</p>
+        <h2 class="chapter_title">Version 9, 2022</h2>
+        <p style="text-align:center">(Under Development!)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
         <table border="0">
-        <tr valign="top"><td><p style="margin-right:20pt"><img height="235" width="180" src="javanotes8-cover-180x235.png"/></p></td>
+        <tr valign="top"><td><p style="margin-right:20pt"><img height="235" width="180" src="javanotes9-cover-180x235.png"/></p></td>
         <td style="margin-left:1cm">
         <p><big>W</big>ELCOME TO
          the Eighth Edition of <i>Introduction to Programming Using Java</i>,
@@ -33,7 +32,7 @@
          provide complete coverage of the Java language.
         </p>
         <p>The eighth edition requires Java 8 or later, and it uses JavaFX for GUI programming.
-         Version&#160;8.1.3 is a small update of Version&#160;8.0.  This version briefly covers some of the new
+         Version&#160;9 is a small update of Version&#160;8.0.  This version briefly covers some of the new
          features added to Java after Java&#160;8, and it
          makes it clearer how to use this book with Java&#160;11 and later.
          Earlier editions of the book are still available. See the <a href="preface.html">preface</a> for links to
@@ -85,7 +84,7 @@
         <li>
           <b>Full Web Site Download:</b>
           <ul>
-          <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8.zip</a></b> &#8212;
+          <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes9.zip">http://math.hws.edu/eck/cs124/downloads/javanotes9.zip</a></b> &#8212;
           This "zip" archive contains a complete copy of the web site.  It should be usable on almost
           any computer. 
           Size:&#160;5.7&#160;Megabytes.
@@ -95,12 +94,12 @@
         <li>
           <b>Source Code Downloads:</b>
           <ul>
-          <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-example-programs.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8-example-programs.zip</a></b>  &#8212;
+          <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes9-example-programs.zip">http://math.hws.edu/eck/cs124/downloads/javanotes9-example-programs.zip</a></b>  &#8212;
           A zip archive of the "source" directory from the web site, which includes source code for sample programs from the text.
           Note that if you download the complete web site, then you <b>already have</b> a copy of the same source directory.
           See the <a href="README-running-the-examples.txt">README&#160;file</a>. Size: 1.4&#160;Megabytes.
           </li>
-          <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-exercise-solutions.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8-exercise-solutions.zip</a></b>  &#8212;
+          <li><b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes9-exercise-solutions.zip">http://math.hws.edu/eck/cs124/downloads/javanotes9-exercise-solutions.zip</a></b>  &#8212;
           A zip archive containing source code for all the end-of-chapter exercises.  These have been extracted from the
           web pages that contain the solutions as a convenience.  They are <b>not</b> included in the web site download.
           See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 922&#160;Kilobytes.
@@ -111,14 +110,14 @@
           <b>PDF Downloads:</b>
           <ul>
           <li>
-          <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-linked.pdf">http://math.hws.edu/eck/cs124/downloads/javanotes8-linked.pdf</a></b> &#8212;
+          <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes9-linked.pdf">http://math.hws.edu/eck/cs124/downloads/javanotes9-linked.pdf</a></b> &#8212;
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
           Size:&#160;6.7&#160;Megabytes; 760 pages.
           </li>
           <li>
-          <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf">http://math.hws.edu/eck/cs124/downloads/javanotes8.pdf</a></b> &#8212;
+          <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes9.pdf">http://math.hws.edu/eck/cs124/downloads/javanotes9.pdf</a></b> &#8212;
           a PDF version without links, more suitable for printing.  <!-- This PDF is in the format that is used for the printed version of the text,
           except that it also includes an appendix listing example programs and a glossary (since they would have
           exceeded the lulu.com page limit). -->
@@ -130,10 +129,10 @@
            <b>E-book Downloads.</b> 
            <ul>
            <li>
-           <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.mobi">http://math.hws.edu/eck/cs124/downloads/javanotes8.mobi</a></b>, for Kindle.
+           <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes9.mobi">http://math.hws.edu/eck/cs124/downloads/javanotes9.mobi</a></b>, for Kindle.
            </li>
            <li>
-           <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8.epub">http://math.hws.edu/eck/cs124/downloads/javanotes8.epub</a></b>, for most other ebook readers.<br/>
+           <b><a href="http://math.hws.edu/eck/cs124/downloads/javanotes9.epub">http://math.hws.edu/eck/cs124/downloads/javanotes9.epub</a></b>, for most other ebook readers.<br/>
            &#160;&#160;&#160;&#160;&#160;&#160;These should be considered experimental.  Depending on the particular ebook reader that you use,
            there can be problems with rendering of long lines in program code sample.  You might find that lines that are too long
            to fit across your screen are incorrectly split into multiple lines, or that the part that extends beyond the right
@@ -143,7 +142,7 @@
            </li>
            </ul>
         </li>
-        <li>
+ <!--       <li>
           <b>Print Version Available from Lulu.com:</b>
           <ul>
           <li><b>Printed version</b> &#8212;  I have made this book available for
@@ -156,8 +155,7 @@
           It is also available in two parts: 
           <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java-part-i/paperback/product-1k8pjg9.html">Chapters 1 through 7</a>,
           and <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java-part-2/paperback/product-1yjjdq2.html">Chapters 8 through 13</a>.
-          (The printed version is 8.1, not 8.1.3.)
-          </li>
+           </li>
           </ul>
         </li>
         <li>
@@ -168,15 +166,12 @@
           audience.  See the end of the <a href="preface.html">preface</a> for more information and a link.</li>
           </ul>
         </li>
+-->
         </ul>
         </td></tr></table>
         <hr/>
         <div align="right"><small><i>
-                 (1 August 2021, Version 8.1.3 Released)<br/>
-                 (29 December 2020, Version 8.1.2 Released)<br/>
-                 (19 May 2020, Version 8.1.1 Released)<br/>
-                 (2 July 2019, Version 8.1 Released)<br/>
-                 (5 December 2018, Version 8 Released)
+                 (Winter 2022, Version 9 under development)
               </i></small></div>
         </div>
         </div></body>
@@ -200,7 +195,7 @@
    <redirect:write select="$file">
      <html>
      <head>
-     <title>Javanotes 8.1.3 Table of Contents</title>
+     <title>Javanotes 9 Table of Contents</title>
      <link href="javanotes.css" rel="stylesheet" type="text/css"/>
      </head>
      <body><div class="page">
@@ -270,7 +265,7 @@
    <redirect:write select="concat('web/c',position(),'/index.html')">
         <html>
         <head>
-        <title>Javanotes 8.1.3, Chapter <xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
+        <title>Javanotes 9, Chapter <xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
@@ -331,13 +326,13 @@
    <redirect:write select="'web/preface.html'">
      <html>
      <head>
-     <title>Javanotes 8.1.3 Preface</title>
+     <title>Javanotes 9 Preface</title>
      <link href="javanotes.css" rel="stylesheet" type="text/css"/>
      </head>
      <body><div class="page">
      <div class="content">
         <h3 align="center">Introduction to Programming Using Java<br/>
-           Version 8.1.3, August 2021<br/></h3>
+           Version 9, 2022<br/></h3>
         <h2 align="center">Preface</h2>
         <hr class="break"/>
         <xsl:apply-templates/>
@@ -402,7 +397,7 @@
     <redirect:write select="concat('web/c',$chapternum,'/s',position(),'.html')">
         <html>
         <head>
-        <title>Javanotes 8.1.3, Section <xsl:value-of select="$chapternum"/>.<xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
+        <title>Javanotes 9, Section <xsl:value-of select="$chapternum"/>.<xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
@@ -457,7 +452,7 @@
     <redirect:write select="concat('web/c',$chapternum,'/exercises.html')">
         <html>
         <head>
-        <title>Javanotes 8.1.3, Exercises for Chapter <xsl:value-of select="$chapternum"/></title>
+        <title>Javanotes 9, Exercises for Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
@@ -499,7 +494,7 @@
        <redirect:write select="concat('web/c',$chapternum,'/ex',position(),'-ans.html')">
            <html>
            <head>
-           <title>Javanotes 8.1.3, Solution to Exercise <xsl:value-of select="position()"/>, Chapter <xsl:value-of select="$chapternum"/></title>
+           <title>Javanotes 9, Solution to Exercise <xsl:value-of select="position()"/>, Chapter <xsl:value-of select="$chapternum"/></title>
            <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
            </head>
            <body><div class="page">
@@ -551,7 +546,7 @@
     <redirect:write select="concat('web/c',$chapternum,'/',$filename,'.html')">
         <html>
         <head>
-        <title>Javanotes 8.1.3, <xsl:if test="$answers">Answers for </xsl:if>Quiz on Chapter <xsl:value-of select="$chapternum"/></title>
+        <title>Javanotes 9, <xsl:if test="$answers">Answers for </xsl:if>Quiz on Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">

@@ -30,7 +30,7 @@ echo Running Xalan to create LaTeX source files...
 
 for PART in all one two ; do 
 
-  if ! $XALAN_COMMAND -PARAM lulu $PART -xsl convert-lulu.xsl -in javanotes8-tex.xml -out tex/javanotes8-$PART.tex ; then
+  if ! $XALAN_COMMAND -PARAM lulu $PART -xsl convert-lulu.xsl -in javanotes9-tex.xml -out tex/javanotes9-$PART.tex ; then
     echo
     echo "An error occurred while trying to run xalan on convert-lulu.xsl."
     echo "Cleaning up and exiting from BUILD-PDF.sh"
@@ -39,7 +39,7 @@ for PART in all one two ; do
     exit 1
   fi
   echo
-  echo Created tex/javanotes8-$PART.tex
+  echo Created tex/javanotes9-$PART.tex
 done
 
 echo
@@ -58,16 +58,16 @@ echo
 for PART in all one two ; do 
 
   echo
-  echo javanotes8-$PART
+  echo javanotes9-$PART
   echo
 
-  $LATEX_COMMAND javanotes8-$PART.tex
-  $LATEX_COMMAND javanotes8-$PART.tex
-  $LATEX_COMMAND javanotes8-$PART.tex
+  $LATEX_COMMAND javanotes9-$PART.tex
+  $LATEX_COMMAND javanotes9-$PART.tex
+  $LATEX_COMMAND javanotes9-$PART.tex
 
-  if [ ! -e "javanotes8-$PART.dvi" ] ; then
+  if [ ! -e "javanotes9-$PART.dvi" ] ; then
     echo
-    echo "An error occurred while trying to run latex on javanotes8-$PART.tex."
+    echo "An error occurred while trying to run latex on javanotes9-$PART.tex."
     echo "Exiting from BUILD-PDF.sh; latex files are in $JAVA_SOURCE_DIR/tex"
     echo
     cd ..
@@ -84,14 +84,14 @@ echo
 for PART in all one two ; do 
 
   echo
-  echo javanotes8-$PART
+  echo javanotes9-$PART
   echo
 
-  $DVIPDF_COMMAND javanotes8-$PART.dvi
+  $DVIPDF_COMMAND javanotes9-$PART.dvi
 
-  if [ ! -e "javanotes8-$PART.pdf" ] ; then
+  if [ ! -e "javanotes9-$PART.pdf" ] ; then
      echo
-     echo "An error occurred while trying to run dvipdf on javanotes8-$PART.dvi."
+     echo "An error occurred while trying to run dvipdf on javanotes9-$PART.dvi."
      echo "Exiting from BUILD-lulu.sh; latex files are in $JAVA_SOURCE_DIR/tex"
      echo
      cd ..
@@ -102,7 +102,7 @@ for PART in all one two ; do
      mkdir $BUILD_OUTPUT_DIR
   fi
    
-  if ! mv javanotes8-$PART.pdf $BUILD_OUTPUT_DIR ; then
+  if ! mv javanotes9-$PART.pdf $BUILD_OUTPUT_DIR ; then
     echo "PDF file successfully generated, but could not be moved to $BUILD_OUTPUT_DIR."
     echo "PDF can be found in $JAVA_SOURCE_DIR/tex"
     cd ..
@@ -113,7 +113,7 @@ done
 
 echo
 echo "BUILD-lulu.sh completed."
-echo "javanotes8-*.pdf created in $BUILD_OUTPUT_DIR"
+echo "javanotes9-*.pdf created in $BUILD_OUTPUT_DIR"
 
 cd ..
 

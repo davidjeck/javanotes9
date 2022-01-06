@@ -40,13 +40,13 @@ echo Building web site...
 echo
 echo Running Xalan to create web site html files...
 
-if  $XALAN_COMMAND -xsl convert-web.xsl -in javanotes8.xml ; then
+if  $XALAN_COMMAND -xsl convert-web.xsl -in javanotes9.xml ; then
 
    echo Copying other web site files...
 
    cp javanotes.css web
    cp -r TextIO_Javadoc web
-   cp javanotes8-cover-180x235.png web
+   cp javanotes9-cover-180x235.png web
    cp news.html web
    cp news-for-web.html web
    cp README.txt web/README-full-source.txt

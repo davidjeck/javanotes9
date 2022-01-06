@@ -28,7 +28,7 @@ echo Building linked PDF...
 echo
 echo Running Xalan to create LaTeX source file...
 
-if ! $XALAN_COMMAND -xsl convert-tex-linked.xsl -in javanotes8-tex.xml -out tex/javanotes8-linked.tex ; then
+if ! $XALAN_COMMAND -xsl convert-tex-linked.xsl -in javanotes9-tex.xml -out tex/javanotes9-linked.tex ; then
    echo
    echo "An error occurred while trying to run xalan on convert-tex-linked.xsl."
    echo "Cleaning up and exiting from BUILD-PDF.sh"
@@ -49,13 +49,13 @@ echo
 echo Running latex three times...
 echo
 
-$LATEX_COMMAND javanotes8-linked.tex
-$LATEX_COMMAND javanotes8-linked.tex
-$LATEX_COMMAND javanotes8-linked.tex
+$LATEX_COMMAND javanotes9-linked.tex
+$LATEX_COMMAND javanotes9-linked.tex
+$LATEX_COMMAND javanotes9-linked.tex
 
-if [ ! -e "javanotes8-linked.dvi" ] ; then
+if [ ! -e "javanotes9-linked.dvi" ] ; then
    echo
-   echo "An error occurred while trying to run latex on javanotes8-linked.tex."
+   echo "An error occurred while trying to run latex on javanotes9-linked.tex."
    echo "Exiting from BUILD-PDF.sh; latex files are in $JAVA_SOURCE_DIR/tex"
    echo
    cd ..
@@ -66,11 +66,11 @@ echo
 echo Running dvipdf... 
 echo
 
-$DVIPDF_COMMAND javanotes8-linked.dvi
+$DVIPDF_COMMAND javanotes9-linked.dvi
 
-if [ ! -e "javanotes8-linked.pdf" ] ; then
+if [ ! -e "javanotes9-linked.pdf" ] ; then
    echo
-   echo "An error occurred while trying to run dvipdf on javanotes8-linked.dvi."
+   echo "An error occurred while trying to run dvipdf on javanotes9-linked.dvi."
    echo "Exiting from BUILD-PDF.sh; latex files are in $JAVA_SOURCE_DIR/tex"
    echo
    cd ..
@@ -81,7 +81,7 @@ if [ ! -e "$BUILD_OUTPUT_DIR" ] ; then
    mkdir $BUILD_OUTPUT_DIR
 fi
    
-if ! mv javanotes8-linked.pdf $BUILD_OUTPUT_DIR ; then
+if ! mv javanotes9-linked.pdf $BUILD_OUTPUT_DIR ; then
    echo "PDF file successfully generated, but could not be moved to $BUILD_OUTPUT_DIR."
    echo "PDF can be found in $JAVA_SOURCE_DIR/tex"
    cd ..
@@ -90,7 +90,7 @@ fi
 
 echo
 echo "BUILD-linked-pdf.sh completed."
-echo "javanotes8-linked.pdf created in $BUILD_OUTPUT_DIR"
+echo "javanotes9-linked.pdf created in $BUILD_OUTPUT_DIR"
 
 cd ..
 

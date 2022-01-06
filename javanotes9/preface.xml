@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE preface SYSTEM "javanotes8.dtd">
+<!DOCTYPE preface SYSTEM "javanotes9.dtd">
 
 <preface>
 <p><start><big>I</big>ntroduction to Programming Using Java</start> is a free
@@ -127,6 +127,8 @@ at the following Web addresses:</p>
 "http://math.hws.edu/eck/cs124/javanotes7/">http://math.hws.edu/eck/cs124/javanotes7/</a> (Covers Java 7.)</li>
 <li>Eighth edition: <a href=
 "http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 8, plus a bit of 11 and 17.)</li>
+<li>Ninth edition: <a href=
+"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes9/</a> (Covers Java 17.)</li>
 </ul>
    
 
@@ -178,7 +180,7 @@ The scripts work on Linux and on Mac&nbsp;OS.
 <p><b>I have made the complete source files available for download at
 the following address:</b></p>
 
-<p align="center"><a href="http://math.hws.edu/eck/cs124/downloads/javanotes8-full-source.zip">http://math.hws.edu/eck/cs124/downloads/javanotes8-full-source.zip</a></p>
+<p align="center"><a href="http://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip">http://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip</a></p>
 
 
 <p>These files were not originally meant for publication, and therefore are not very

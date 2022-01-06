@@ -1,9 +1,9 @@
 #!/bin/bash
 
-VERSION='javanotes-8.1.3'
-PROJECT='javanotes8'
+VERSION='javanotes-9.0'
+PROJECT='javanotes9'
 
-SOURCE_DIR='/home/eck/git/javanotes8'
+SOURCE_DIR='/home/eck/git/javanotes9'
 EXPORT_DIR="/home/eck/Desktop/$VERSION-source"
 XALAN_DIR="/home/eck/xalan-j_2_7_1"
 
@@ -18,7 +18,7 @@ cp -r $SOURCE_DIR/$PROJECT $EXPORT_DIR
 cd $EXPORT_DIR
 
 perl -i -p -e 's/\t/    /g' `find . -name "*.java"`
-perl -i -p -e 's/<!DOCTYPE.*javanotes8.dtd" *>//' `find . -name "*.xml" -and ! -name "javanotes8*"`
+perl -i -p -e 's/<!DOCTYPE.*javanotes9.dtd" *>//' `find . -name "*.xml" -and ! -name "javanotes9*"`
 
 rm $PROJECT/export-source.sh
 rm $PROJECT/export-source-Mac.sh

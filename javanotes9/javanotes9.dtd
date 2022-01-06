@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!ENTITY pi "&#960;">       <!-- these are used by javanotes8.xml but are redefined in javanotes8-tex.xml -->
+<!ENTITY pi "&#960;">       <!-- these are used by javanotes9.xml but are redefined in javanotes9-tex.xml -->
 <!ENTITY Omega "&#937;">
 <!ENTITY Theta "&#920;">
 <!ENTITY nbsp "&#160;">
@@ -11,7 +11,7 @@
 <!ENTITY textitlebreak "">
 <!ENTITY newcodestyle "red">
 
-<!ENTITY includes SYSTEM "javanotes8-xml-includes.txt">
+<!ENTITY includes SYSTEM "javanotes9-xml-includes.txt">
 
 <!ENTITY % textitem "b|i|u|big|sub|sup|code|br|a|localref|web|tex|sourceref|jarref|ptype|newword|codedef|bnf|newcode|start|classname|atype|prog">
 <!ENTITY % simpletext "(#PCDATA|%textitem;)*">
