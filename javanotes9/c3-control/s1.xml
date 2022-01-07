@@ -12,7 +12,7 @@ control structures are: the <newword>block</newword>, the
 <newword>while loop</newword>, the <newword>do..while loop</newword>, the 
 <newword>for loop</newword>, the <newword>if statement</newword>, and the 
 <newword>switch statement</newword>.  Each of these structures is considered to be a single
-"statement," but a <b>structured</b> statement that
+"statement," but it is a <b>structured</b> statement that
 can contain one or more other statements inside itself.</p>
 
 <subsection id="control.1.1" title="Blocks">
