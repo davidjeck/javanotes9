@@ -13,9 +13,9 @@
 
 <!ENTITY includes SYSTEM "javanotes9-xml-includes.txt">
 
-<!ENTITY % textitem "b|i|u|big|sub|sup|code|br|a|localref|web|tex|sourceref|jarref|ptype|newword|codedef|bnf|newcode|start|classname|atype|prog">
+<!ENTITY % textitem "b|i|u|big|sub|sup|code|br|a|localref|web|tex|swing|fx|sourceref|jarref|ptype|newword|codedef|bnf|newcode|start|classname|atype|prog">
 <!ENTITY % simpletext "(#PCDATA|%textitem;)*">
-<!ENTITY % text "(p|np|pre|break|img|ul|ol|narrower|centered|imageclear|webdiv|texdiv)*">
+<!ENTITY % text "(p|np|pre|break|img|ul|ol|narrower|centered|imageclear|webdiv|texdiv|fxdiv|swingdiv)*">
 
 <!ELEMENT javanotes (preface?,chapter*,fudgeref*,glossary?,source?)>
 <!ELEMENT preface (%text;)>
@@ -108,6 +108,8 @@
     alt CDATA #IMPLIED
     width CDATA #IMPLIED
     height CDATA #IMPLIED
+    swingwidth CDATA #IMPLIED
+    swingheight CDATA #IMPLIED
     bordered CDATA #IMPLIED
     align CDATA #IMPLIED
     tex CDATA #IMPLIED
@@ -131,6 +133,8 @@
 <!ELEMENT newcode %simpletext;>
 <!ELEMENT web %simpletext;>   <!-- appears only in web version -->
 <!ELEMENT tex %simpletext;>   <!-- appears only in tex version -->
+<!ELEMENT fx %simpletext;>   <!-- appears only in JavaFX version -->
+<!ELEMENT swing %simpletext;>   <!-- appears only in Swing version -->
 <!ELEMENT ptype %simpletext;>   <!-- primitive type -->
 <!ELEMENT bnf %simpletext;>
 <!ELEMENT classname (#PCDATA)>
@@ -139,6 +143,8 @@
 <!ELEMENT codedef %simpletext;>
 <!ELEMENT webdiv %text;>   <!-- appears only in web version -->
 <!ELEMENT texdiv %text;>   <!-- appears only in tex version -->
+<!ELEMENT fxdiv %text;>   <!-- appears only in JavaFX version -->
+<!ELEMENT swingdiv %text;>   <!-- appears only in Swing version -->
 
 <!ENTITY source SYSTEM "source.xml">
 <!ENTITY glossary SYSTEM "glossary.xml">

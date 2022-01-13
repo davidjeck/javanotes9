@@ -253,16 +253,16 @@
       <xsl:apply-templates/>
 </xsl:template>
     
-<xsl:template match="fx">
+<xsl:template match="fx"></xsl:template>
+    
+<xsl:template match="fxdiv"></xsl:template>
+    
+<xsl:template match="swing">
     <xsl:apply-templates/>
 </xsl:template>
     
-<xsl:template match="fxdiv">
+<xsl:template match="swingdiv">
     <xsl:apply-templates/>
 </xsl:template>
-    
-<xsl:template match="swing"></xsl:template>
-    
-<xsl:template match="swingdiv"></xsl:template>
     
 </xsl:stylesheet>

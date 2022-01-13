@@ -4,7 +4,8 @@
 <preface>
 <p><start><big>I</big>ntroduction to Programming Using Java</start> is a free
 introductory computer programming textbook that uses Java as the language of
-instruction.  It is suitable for use in an introductory programming course
+instruction.  This version of the book covers Java&nbsp;17.
+It is suitable for use in an introductory programming course
 and for people who are trying to learn programming on their own. There are
 no prerequisites beyond a general familiarity with the ideas of computers and
 programs.  There is more than enough material for a full year of college-level
@@ -12,23 +13,15 @@ programming.  Chapters 1 through 7 can be used as a textbook in a one-semester
 college-level course or in a year-long high school course.  The remaining
 chapters can be covered in a second course.</p>
 
-<p>The Eighth Edition of the book uses Java&nbsp;8, with brief coverage
-of features that were added to the language in Java&nbsp;9 and later.
-JavaFX is used for GUI programming.  All sample programs and all exercise 
-solutions have been compiled with Java&nbsp;11 and with Java&nbsp;16,
-as well as with Java&nbsp;8.</p>
-   
-<p>The home web site for this book, which is always the latest version, is
-<a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.
-The page at that address contains links for downloading a copy of
-the web site and for downloading PDF versions of the book.
-The web site&mdash;and the web site download&mdash;includes source code for the sample programs that are
-discussed in the text, answers to end-of-chapter quizzes and a discussion
-and solution for each end-of-chapter exercise.  Readers are encouraged
+<p>The textbook home page, <fx><a href="https://math.hws.edu/javanotes/">https://math.hws.edu/javanotes/</a>,</fx>
+<swing><a href="https://math.hws.edu/javanotes-swing/">https://math.hws.edu/javanotes-swing/</a>,</swing> 
+has links for downloading both web site and PDF versions of the book.  Example programs and
+solutions to end-of-chapter exercises are part of the web site download and can also be downloaded
+separately.  Readers are encouraged
 to download the source code for the examples and to read and run the
 programs as they read the book.  Readers are also strongly encouraged
-to read the exercise solutions if they want to get the most out of this book.</p>
-
+to read the exercise solutions if they want to get the most out of this book.
+</p>
 
 <p>In style, this is a textbook rather than a tutorial. That is, it
 concentrates on explaining concepts rather than giving step-by-step
@@ -62,46 +55,41 @@ Chapters&nbsp;9 and 10 cover recursion and data structures, including generic pr
 Framework.  Chapter&nbsp;11 is about files and networking.  Chapter&nbsp;12
 covers threads and parallel processing.  Finally,
 Chapter&nbsp;13 returns to the topic of graphical user interface programming
-to cover some of JavaFX's more advanced capabilities.</p>
+to cover some more advanced features.</p>
 
 <break/>
 
-<p>The biggest change from the seventh edition of this textbook is a switch from
-Swing to JavaFX for GUI programming.  With just a few exceptions in code that
-the user is not meant to read, all example code and exercises use JavaFX.
-(Unfortunately, even as I was working on the new edition, the future of JavaFX
-became unclear because, as of Java&nbsp;11, JavaFX is no longer
-included as part of the basic Java download.  However, it is
-still available to be downloaded and installed separately.
-People who are interested in using Swing instead of JavaFX might consider
-using Chapter&nbsp;6 and Chapter&nbsp;13 from Version&nbsp;7 in place of
-the same chapters from Version&nbsp;8.)
-The eighth edition also incorporates two features that were introduced
-in Java&nbsp;8: lambda expressions and the stream API.  Lambda expressions are
-covered fairly early, as part of the material on subroutines in Chapter&nbsp;4.
-They are used extensively with JavaFX in Chapter&nbsp;6 and Chapter&nbsp;13, as
-well as with the stream API, which is introduced in Section&nbsp;10.6.
-Aside from these major changes, there are small improvements throughout,
-such as a short discussion of loop invariants and class invariants in
-Section&nbsp;8.2, increased coverage of Java's higher level concurrency
-support in Chapter&nbsp;12, and the consistent use of factory methods like
-<code>Integer.valueOf(n)</code> in preference to constructors.</p>
+<p>Java currently has two major approaches to Graphical User Interface programming:
+JavaFX and Swing.  This edition of the textbook uses <fx>JavaFX</fx><swing>Swing</swing>,
+but there is an alternative edition that uses <fx>Swing</fx><swing>JavaFX</swing>.
+The main differences are in Chapters&nbsp;6 and&nbsp;13, which are devoted to GUI programming.</p>
 
-<p>Version 8.1 was a fairly small update to Version 8.0, and Versions 8.1.1 through 8.1.3
-made only very minor changes.   The main motivation
-for the update from 8.0 to 8.1 was to make it clearer how to use the book with Java&nbsp;11
-and later, but I also took the opportunity to briefly discuss a few features
-that were introduced after Java&nbsp;8.  The major change to the
-language itself was the introduction of modules in Java&nbsp;9; these were already
-mentioned in Version&nbsp;8.0, but that discussion has been updated.  (However,
-this book does not explain how to create modules.)
-Aside from that, there have been few language changes that impact this textbook,
-but Version&nbsp;8.1 does introduce the use of var for declaring variables (Subsection 4.8.2), several new methods
-related to the stream API, and the revisions made to the switch statement in Java&nbsp;14 (Subsection 3.6.5).
-Version 8.1.2 added brief mentions of two additional new features in Java&nbsp;15 and &nbsp;16: 
-text blocks (Subsection 2.3.5)
-and records (Subsection 7.1.4).  It also updated the information about programming environments in
-Section&nbsp;2.6.  Version 8.1.3 is primarily a further update of the information in Section&nbsp;2.6.</p>
+<p>Swing is a standard part of Java.  JavaFX was introduced as a more modern approach to
+GUI programming, but it must be downloaded and installed separately from Java itself,
+which makes it more complicated to use.  Swing and JavaFX can both be used to write
+complex, fully functional GUI programs, and either one is a reasonable choice.  Version&nbsp;8 of
+this textbook used JavaFX.  The alternative edition that uses Swing has been added
+for Version&nbsp;9.</p>
+
+<p>GUI programming was never included in the textbook as an end in itself, and it would
+take another textbook to cover the topic in its entirety.  I cover GUI because it is a
+great example of object-oriented programming, it lets me introduce event-driven programs,
+and it lets students literally see the effect of the code that they write.  JavaFX and
+Swing both offer good support for all of those purposes.</p>
+
+<break/>
+
+<p>Version 8 of this textbook originally covered Java&nbsp;8, but minor updates of that
+version added notes about new features in Java&nbsp;9 through Java&nbsp;16.  Version&nbsp;9 of
+the book covers Java&nbsp;17, but the differences between Version&nbsp;9 and the final update
+of Version&nbsp;8 are not large.</p>
+
+<p>The large majority of this textbook is valid for Java&nbsp;8, and the book does not
+cover features added after Java&nbsp;8 in as much detail.  
+Note that only Java 8, 11, and&nbsp;17 are "long-term support"
+releases.  When I introduce a feature
+that requires Java&nbsp;11 or Java&nbsp;17, I will make note of that fact.
+However, I will never refer to any of the non-long-term-support releases.</p>
 
 <break/>
    
@@ -127,13 +115,15 @@ at the following Web addresses:</p>
 "http://math.hws.edu/eck/cs124/javanotes7/">http://math.hws.edu/eck/cs124/javanotes7/</a> (Covers Java 7.)</li>
 <li>Eighth edition: <a href=
 "http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 8, plus a bit of 11 and 17.)</li>
-<li>Ninth edition: <a href=
+<li>Ninth edition with JavaFX: <a href=
 "http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes9/</a> (Covers Java 17.)</li>
+<li>Ninth edition with Swing: <a href=
+"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes9-swing/</a> (Covers Java 17.)</li>
 </ul>
    
 
 <p><i>Introduction to Programming using Java</i> is <b>free</b>, but it is not in the
-public domain. Version&nbsp;8 is published under the terms of the
+public domain. Version&nbsp;9 is published under the terms of the
 Creative Commons Attribution-NonCommercial-ShareAlike 4.0 License. 
 To view a copy of this license, visit 
 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">http://creativecommons.org/licenses/by-nc-sa/4.0/</a>.
@@ -180,7 +170,7 @@ The scripts work on Linux and on Mac&nbsp;OS.
 <p><b>I have made the complete source files available for download at
 the following address:</b></p>
 
-<p align="center"><a href="http://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip">http://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip</a></p>
+<p align="center"><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip</a></p>
 
 
 <p>These files were not originally meant for publication, and therefore are not very
@@ -198,7 +188,7 @@ Hobart and William Smith Colleges<br />
 300 Pulteney Street<br />
 Geneva, New York 14456, USA<br />
 Email: <a href="mailto:eck@hws.edu">eck@hws.edu</a><br />
-WWW: <a href="http://math.hws.edu/eck/">http://math.hws.edu/eck/</a><br /><br />
+WWW: <a href="https://math.hws.edu/eck/">https://math.hws.edu/eck/</a><br /><br />
 </np>
 
 

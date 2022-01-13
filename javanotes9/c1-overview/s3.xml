@@ -13,8 +13,11 @@ called a <newword>compiler</newword>. A compiler takes a
 high-level-language program and translates it into an executable
 machine-language program. Once the translation is done, the machine-language
 program can be run any number of times, but of course it can only be run on one
-type of computer (since each type of computer has its own individual machine
-language). If the program is to run on another type of computer it has to be
+type of computer, since each type of computer has its own individual machine
+language.  (In fact, Java also depends on the particular operating system
+under which it is running, since it must work with the operating system to perform certain tasks such as
+accessing the computer's hardware. But let's ignore that complication here.)
+If the program is to run on another type of computer it has to be
 re-translated, using a different compiler, into the appropriate machine
 language.</p>
 
@@ -83,7 +86,7 @@ it easy to write a bytecode interpreter for a new type of computer; once that
 is done, that computer can run any compiled Java program. It would be much
 harder to write a Java compiler for the same computer.</p>
 
-<p>Furthermore, some Java programs are meant to be downloaded over a network.
+<p>Furthermore, Java was created with the idea that some programs would be downloaded over a network.
 This leads to obvious security concerns: you don't want to download and run a
 program that will damage your computer or your files. The bytecode interpreter
 acts as a buffer between you and the program you download. You are really
@@ -102,7 +105,7 @@ translates Java bytecode into native machine language.  It does
 this while it is executing the program.  Just as for a normal interpreter,
 the input to a just-in-time compiler is a Java bytecode program, and its task
 is to execute that program.  But as it is executing the program, it also
-translates parts of it into machine language.  The translated parts of the
+translates parts of it into the native machine language.  The translated parts of the
 program can then be executed much more quickly than they could be interpreted.
 Since a given part of a program is often executed many times as the program
 runs, a just-in-time compiler can significantly speed up the overall 
@@ -117,8 +120,8 @@ and Java bytecode is platform-independent, secure, and network-compatible
 while allowing you to program in a modern high-level object-oriented
 language.</p>
 
-<p>In the past few years, it has become fairly common to create new programming
-languages, or versions of old languages, that compile into Java bytecode.  The 
+<p>There are even some other programming
+languages that compile into Java bytecode.  The 
 compiled bytecode programs can then be executed by a standard JVM.  New languages
 that have been developed specifically for programming the JVM include Scala,
 Groovy, Clojure, and Processing.  Jython and JRuby are versions of older languages,

@@ -8,14 +8,14 @@
    <redirect:write file="web/index.html">
         <html>
         <head>
-        <title>Javanotes 9, JavaFX Edition -- Title Page</title>
+        <title>Javanotes 9, Swing Edition -- Title Page</title>
         <link href="javanotes.css" rel="stylesheet" type="text/css"/>
         </head>
         <body><div class="page">
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Ninth Edition</h2>
-        <h2 class="chapter_title">Version 9, JavaFX Edition, 2022</h2>
+        <h2 class="chapter_title">Version 9, Swing Edition, 2022</h2>
         <p style="text-align:center">(Under Development!)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
@@ -32,9 +32,9 @@
          provide complete coverage of the Java language.
         </p>
         <p>Version 9 covers Java 17.  It updates Version&#160;8.1.3 mostly by moving definitively to Java&#160;17.
-         This edition of Version&#160;9 uses JavaFX for GUI programming;
-         <a href="http://math.hws.edu/javanotes/">an&#160;edition</a> that uses
-         Swing instead of JavaFX is also available. See the <a href="preface.html">preface</a> for links to
+         This edition of Version&#160;9 uses Swing for GUI programming;  
+         <a href="http://math.hws.edu/javanotes-swing/">an&#160;edition</a> that uses
+         JavaFX instead of Swing is also available. See the <a href="preface.html">preface</a> for links to
          older versions.</p>
          <p>You can the download this
          web site for use on your own computer. 
@@ -75,7 +75,7 @@
             <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">license</a> for full
             details.)<br/><br/>
             This book is available for downloading and for on-line use at the Web address:
-            <a href="https://math.hws.edu/javanotes/">https://math.hws.edu/javanotes/</a></small></i>
+            <a href="http://math.hws.edu/javanotes-swing/">http://math.hws.edu/javanotes-swing/</a></small></i>
           </blockquote>
         <hr/>
         <h3>Downloading And Other Links</h3>
@@ -83,7 +83,7 @@
         <li>
           <b>Full Web Site Download:</b>
           <ul>
-          <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9.zip</a></b> &#8212;
+          <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.zip</a></b> &#8212;
           This "zip" archive contains a complete copy of the web site.  It should be usable on almost
           any computer. 
           Size:&#160;5.7&#160;Megabytes.
@@ -93,12 +93,12 @@
         <li>
           <b>Source Code Downloads:</b>
           <ul>
-          <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-example-programs.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-example-programs.zip</a></b>  &#8212;
+          <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-example-programs.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-example-programs.zip</a></b>  &#8212;
           A zip archive of the "source" directory from the web site, which includes source code for sample programs from the text.
           Note that if you download the complete web site, then you <b>already have</b> a copy of the same source directory.
           See the <a href="README-running-the-examples.txt">README&#160;file</a>. Size: 1.4&#160;Megabytes.
           </li>
-          <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-exercise-solutions.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-exercise-solutions.zip</a></b>  &#8212;
+          <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-exercise-solutions.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-exercise-solutions.zip</a></b>  &#8212;
           A zip archive containing source code for all the end-of-chapter exercises.  These have been extracted from the
           web pages that contain the solutions as a convenience.  They are <b>not</b> included in the web site download.
           See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 922&#160;Kilobytes.
@@ -109,14 +109,14 @@
           <b>PDF Downloads:</b>
           <ul>
           <li>
-          <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-linked.pdf">https://math.hws.edu/eck/cs124/downloads/javanotes9-linked.pdf</a></b> &#8212;
+          <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-linked.pdf">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-linked.pdf</a></b> &#8212;
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
           Size:&#160;6.7&#160;Megabytes; 760 pages.
           </li>
           <li>
-          <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9.pdf">https://math.hws.edu/eck/cs124/downloads/javanotes9.pdf</a></b> &#8212;
+          <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.pdf">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.pdf</a></b> &#8212;
           a PDF version without links, more suitable for printing.  <!-- This PDF is in the format that is used for the printed version of the text,
           except that it also includes an appendix listing example programs and a glossary (since they would have
           exceeded the lulu.com page limit). -->
@@ -128,10 +128,10 @@
            <b>E-book Downloads.</b> 
            <ul>
            <li>
-           <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9.mobi">https://math.hws.edu/eck/cs124/downloads/javanotes9.mobi</a></b>, for Kindle.
+           <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.mobi">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.mobi</a></b>, for Kindle.
            </li>
            <li>
-           <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9.epub">https://math.hws.edu/eck/cs124/downloads/javanotes9.epub</a></b>, for most other ebook readers.<br/>
+           <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.epub">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.epub</a></b>, for most other ebook readers.<br/>
            &#160;&#160;&#160;&#160;&#160;&#160;These should be considered experimental.  Depending on the particular ebook reader that you use,
            there can be problems with rendering of long lines in program code sample.  You might find that lines that are too long
            to fit across your screen are incorrectly split into multiple lines, or that the part that extends beyond the right
@@ -253,7 +253,7 @@
         </xsl:if>
      </div>
      <hr/>
-     <div align="right"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a></small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
      </div>
      </div></body>
      </html>
@@ -325,19 +325,19 @@
    <redirect:write select="'web/preface.html'">
      <html>
      <head>
-     <title>Javanotes 9, JavaFX Edition, Preface</title>
+     <title>Javanotes 9, Swing Edition, Preface</title>
      <link href="javanotes.css" rel="stylesheet" type="text/css"/>
      </head>
      <body><div class="page">
      <div class="content">
         <h3 align="center">Introduction to Programming Using Java<br/>
-           Version 9, JavaFX Edition, 2022<br/></h3>
+           Version 9, Swing Edition, 2022<br/></h3>
         <h2 align="center">Preface</h2>
         <hr class="break"/>
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a></small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
      </div></body>
      </html>
    </redirect:write>
@@ -358,7 +358,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a></small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
      </div></body>
      </html>
    </redirect:write>
@@ -379,7 +379,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a></small></div>
+     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
      </div></body>
      </html>
     </redirect:write>
@@ -783,8 +783,14 @@
 <xsl:template name="copy-image">
     <img>
        <xsl:attribute name="src"><xsl:value-of select="@src"/></xsl:attribute>
-       <xsl:if test="@width"><xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute></xsl:if>
-       <xsl:if test="@height"><xsl:attribute name="height"><xsl:value-of select="@height"/></xsl:attribute></xsl:if>
+       <xsl:choose>
+          <xsl:when test="@swingwidth"><xsl:attribute name="width"><xsl:value-of select="@swingwidth"/></xsl:attribute></xsl:when>
+          <xsl:when test="@width"><xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute></xsl:when>
+       </xsl:choose>
+       <xsl:choose>
+          <xsl:when test="@swingheight"><xsl:attribute name="height"><xsl:value-of select="@swingheight"/></xsl:attribute></xsl:when>
+          <xsl:when test="@height"><xsl:attribute name="height"><xsl:value-of select="@height"/></xsl:attribute></xsl:when>
+       </xsl:choose>
        <xsl:if test="@align"><xsl:attribute name="align"><xsl:value-of select="@align"/></xsl:attribute></xsl:if>
        <xsl:attribute name="alt"><xsl:value-of select="@alt"/></xsl:attribute>
        <xsl:if test="@bordered"><xsl:attribute name="class"><xsl:text>bordered</xsl:text></xsl:attribute></xsl:if>
@@ -823,16 +829,16 @@
     
 <xsl:template match="texdiv"></xsl:template>
     
-<xsl:template match="fx">
+<xsl:template match="fx"></xsl:template>
+    
+<xsl:template match="fxdiv"></xsl:template>
+    
+<xsl:template match="swing">
     <xsl:apply-templates/>
 </xsl:template>
     
-<xsl:template match="fxdiv">
+<xsl:template match="swingdiv">
     <xsl:apply-templates/>
 </xsl:template>
-    
-<xsl:template match="swing"></xsl:template>
-    
-<xsl:template match="swingdiv"></xsl:template>
     
 </xsl:stylesheet>

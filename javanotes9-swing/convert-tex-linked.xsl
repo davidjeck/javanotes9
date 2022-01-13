@@ -29,16 +29,27 @@
 </xsl:template>
     
 <xsl:template match="/">
-\documentclass[letterpaper,11pt]{book}
+\documentclass[letterpaper,11pt,oneside]{book}
 \usepackage[dvips]{graphicx}
 \usepackage[mathscr]{eucal}
+\usepackage[dvips]{hyperref}
 \setlength{\headsep}{0.4truein}
 \setlength{\topmargin}{-0.3 true in}
 \setlength{\topskip}{0 true in}
 \setlength{\textwidth}{6.25 true in}
-\setlength{\oddsidemargin}{0.25 true in}
+\setlength{\oddsidemargin}{0 true in}
 \setlength{\evensidemargin}{0 true in}
 \setlength{\textheight}{8.9 true in}
+\hypersetup{colorlinks=true,
+   bookmarksnumbered=true,
+   filecolor=blue,
+   breaklinks=true,
+   urlcolor=blue
+}
+\setlength{\marginparwidth}{0.95 in}
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Subsection}
+\renewcommand{\chapterautorefname}{Chapter}
 \pretolerance=1000
 \tolerance=8000
 \input texmacros
@@ -46,7 +57,7 @@
 \author{David J. Eck}
 \begin{document}
 \frontmatter
-\pageone
+\pageonelinked
 \tableofcontents
 <xsl:apply-templates select="/javanotes/preface"/>
 \mainmatter
@@ -59,6 +70,10 @@
 
 <xsl:template match="chapter">
 \chapter<xsl:if test="@shorttitle">[<xsl:value-of select="@shorttitle"/>]</xsl:if>{<xsl:value-of select="@title"/>}\label{<xsl:value-of select="@id"/>}
+\ifodd\thepage
+\else
+   \addtocounter{page}{1}
+\fi
 <xsl:apply-templates/>
 </xsl:template>
    
@@ -73,26 +88,30 @@
 </xsl:template>
    
 <xsl:template match="preface">
-\chapter*{Preface}\addcontentsline{toc}{chapter}{Preface}\markboth{\textsc{Preface}}{\textsc{Preface}}
+\chapter*{Preface}\phantomsection\addcontentsline{toc}{chapter}{Preface}\markboth{\textsc{Preface}}{\textsc{Preface}}
 <xsl:apply-templates/>
 </xsl:template>
     
 <xsl:template match="source">
-\chapter*{Appendix: Source Files}\addcontentsline{toc}{chapter}{Appendix: Source Files}\markboth{\textsc{Source Code Listing}}{\textsc{Source Code Listing}}
+\chapter*{Appendix: Source Files}\phantomsection\addcontentsline{toc}{chapter}{Appendix: Source Files}\markboth{\textsc{Source Code Listing}}{\textsc{Source Code Listing}}
+\ifodd\thepage
+\else
+   \addtocounter{page}{1}
+\fi
 <xsl:apply-templates/>
 </xsl:template>
     
 <xsl:template match="exercises">
 \begin{exercises}
 <xsl:for-each select="exercise">
-\exercise <xsl:apply-templates select="exercise-question"/>
+\exercise \marginpar{\small{\textit{\href{https://math.hws.edu/eck/cs124/javanotes9/c<xsl:number count="chapter"/>/ex<xsl:number count="exercise"/>-ans.html}{\ \ \ (solution)}}}}\ignorespaces <xsl:apply-templates select="exercise-question"/>
 </xsl:for-each> 
 
 \end{exercises}
 </xsl:template>
 
 <xsl:template match="quiz">
-\begin{quiz}
+\begin{quiz}\marginpar{\small{\textit{\href{https://math.hws.edu/eck/cs124/javanotes9/c<xsl:number count="chapter"/>/quiz_answers.html}{\ \ (answers)}}}}
 <xsl:for-each select="question">
 \quizquestion <xsl:apply-templates select="ques"/>
 </xsl:for-each>
@@ -102,6 +121,10 @@
 
 <xsl:template match="glossary">
 \chapter*{Glossary}\addcontentsline{toc}{chapter}{Glossary}\markboth{\textsc{Glossary}}{\textsc{Glossary}}
+\ifodd\thepage
+\else
+   \addtocounter{page}{1}
+\fi
 <xsl:apply-templates/>
 </xsl:template>
     
@@ -164,27 +187,48 @@
 
 <xsl:template match="sub">{{$_{<xsl:apply-templates/>}$}}</xsl:template>
 
-<xsl:template match="code|ptype|newword|codedef|bnf|newcode|start|classname|atype">\<xsl:value-of select="name()"/>{<xsl:apply-templates/>}</xsl:template>
-    
-<xsl:template match="a">\weblink{<xsl:value-of select="@href"/>}{<xsl:apply-templates/>}</xsl:template>
+<xsl:template match="code|ptype|newword|codedef|bnf|newcode|classname|atype|start">\<xsl:value-of select="name()"/>{<xsl:apply-templates/>}</xsl:template>
+
+<!-- 
+<xsl:template match="start">\<xsl:value-of select="name()"/>{<xsl:apply-templates/>}<xsl:if test="ancestor::section">\marginpar{\small{\textit{\href{https://math.hws.edu/eck/cs124/javanotes9/c<xsl:number count="chapter"/>/s<xsl:number count="section"/>.html }{\ \ \ (online)}}}}</xsl:if></xsl:template>
+-->
+
+<xsl:template match="a"><xsl:choose>
+   <xsl:when test="substring(@href,1,7)='http://'">\href{<xsl:value-of select="@href"/>}{<xsl:apply-templates/>}</xsl:when>
+   <xsl:otherwise>\weblink{<xsl:value-of select="@href"/>}{<xsl:apply-templates/>}</xsl:otherwise>
+</xsl:choose></xsl:template>
    
-<xsl:template match="sourceref"><xsl:choose>
-   <xsl:when test="text()">\sourceref{<xsl:apply-templates/>}</xsl:when>
-   <xsl:otherwise><xsl:variable name="a" select="str:new(@href)"/><xsl:variable name="b" select="str:replaceAll($a,'_','\\_')"/>\sourceref{<xsl:value-of select="$b"/>}</xsl:otherwise>
+<xsl:template match="sourceref"><xsl:variable name="a" select="str:new(@href)"/><xsl:variable name="b" select="str:replaceAll($a,'_','\\_')"/>
+   <xsl:variable name="chapternum"><!-- chapter attribute must be a chapter number; used occasionally, only in chapters, for ref to example in another chapter -->
+      <xsl:choose>
+         <xsl:when test="@chapter"><xsl:value-of select="@chapter"/></xsl:when>
+         <xsl:otherwise><xsl:number count="chapter"/></xsl:otherwise>
+      </xsl:choose>
+   </xsl:variable>
+   <xsl:variable name="ref">
+      <xsl:choose>
+         <xsl:when test="ancestor::source"><xsl:text>http://math.hws.edu/eck/cs124//source/</xsl:text><xsl:value-of select="@href"/></xsl:when>
+         <xsl:otherwise><xsl:text>http://math.hws.edu/eck/cs124//source/chapter</xsl:text><xsl:value-of select="$chapternum"/><xsl:text>/</xsl:text><xsl:value-of select="@href"/></xsl:otherwise>
+      </xsl:choose>
+   </xsl:variable>
+   <xsl:choose>
+      <xsl:when test="text()">\href{<xsl:value-of select="$ref"/>}{<xsl:apply-templates/>}</xsl:when>
+      <xsl:otherwise>\href{<xsl:value-of select="$ref"/>}{<xsl:value-of select="@href"/>}</xsl:otherwise>
+   </xsl:choose>
+</xsl:template>
+   
+<xsl:template match="jarref"><xsl:variable name="a" select="str:new(@href)"/><xsl:variable name="b" select="str:replaceAll($a,'_','\\_')"/><xsl:choose>
+   <xsl:when test="text()">\href{https://math.hws.edu/eck/cs124/javanotes9/jars/c<xsl:number count="chapter"/>/<xsl:value-of select="$b"/>}{<xsl:apply-templates/>}</xsl:when>
+   <xsl:otherwise>\href{https://math.hws.edu/eck/cs124/javanotes9/jars/chapter<xsl:number count="chapter"/>/<xsl:value-of select="$b"/>}{<xsl:value-of select="$b"/>}</xsl:otherwise>
 </xsl:choose></xsl:template>
-    
-<xsl:template match="jarref"><xsl:choose>
-   <xsl:when test="text()">\jarref{<xsl:apply-templates/>}</xsl:when>
-   <xsl:otherwise><xsl:variable name="a" select="str:new(@href)"/><xsl:variable name="b" select="str:replaceAll($a,'_','\\_')"/>\jarref{<xsl:value-of select="$b"/>}</xsl:otherwise>
-</xsl:choose></xsl:template>
-    
+   
 <xsl:template match="localref">
      <xsl:choose>
          <xsl:when test="text()"><xsl:apply-templates/></xsl:when>
-         <xsl:when test="not(id(@href))">(\textit{Unknown reference}~\ref{<xsl:value-of select="@href"/>})</xsl:when>
-         <xsl:when test="name(id(@href))='chapter'"><xsl:text>Chapter~\ref{</xsl:text><xsl:value-of select="@href"/><xsl:text>}</xsl:text></xsl:when>
-         <xsl:when test="name(id(@href))='section'"><xsl:text>Section~\ref{</xsl:text><xsl:value-of select="@href"/><xsl:text>}</xsl:text></xsl:when>
-         <xsl:when test="name(id(@href))='subsection'"><xsl:text>Subsection~\ref{</xsl:text><xsl:value-of select="@href"/><xsl:text>}</xsl:text></xsl:when>
+         <xsl:when test="not(id(@href))">(\textit{Unknown reference}~'<xsl:value-of select="@href"/>')</xsl:when>
+         <xsl:when test="name(id(@href))='chapter'"><xsl:text>\autoref{</xsl:text><xsl:value-of select="@href"/><xsl:text>}</xsl:text></xsl:when>
+         <xsl:when test="name(id(@href))='section'"><xsl:text>\autoref{</xsl:text><xsl:value-of select="@href"/><xsl:text>}</xsl:text></xsl:when>
+         <xsl:when test="name(id(@href))='subsection'"><xsl:text>\autoref{</xsl:text><xsl:value-of select="@href"/><xsl:text>}</xsl:text></xsl:when>
          <xsl:when test="name(id(@href))='exercise'"><xsl:text>Exercise~</xsl:text><xsl:for-each select="id(@href)"><xsl:number count="chapter"/>.<xsl:number count="exercise"/></xsl:for-each></xsl:when>
          <xsl:when test="name(id(@href))='fudgeref'"><xsl:for-each select="id(@href)"><xsl:value-of select="@text"/></xsl:for-each></xsl:when>
      </xsl:choose>
@@ -224,7 +268,7 @@
    
 <xsl:template match="imageclear">
 </xsl:template>
-    
+       
    
 <xsl:template match="centered">\par
 \begin{center}
@@ -253,16 +297,16 @@
       <xsl:apply-templates/>
 </xsl:template>
     
-<xsl:template match="fx">
+<xsl:template match="fx"></xsl:template>
+    
+<xsl:template match="fxdiv"></xsl:template>
+    
+<xsl:template match="swing">
     <xsl:apply-templates/>
 </xsl:template>
     
-<xsl:template match="fxdiv">
+<xsl:template match="swingdiv">
     <xsl:apply-templates/>
 </xsl:template>
-    
-<xsl:template match="swing"></xsl:template>
-    
-<xsl:template match="swingdiv"></xsl:template>
     
 </xsl:stylesheet>

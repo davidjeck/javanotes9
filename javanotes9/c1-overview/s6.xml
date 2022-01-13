@@ -44,10 +44,10 @@ in the window. The labels themselves are components (even though you can't
 interact with them). The right half of the window is a text area component,
 which can display multiple lines of text. A&nbsp;scrollbar component appears
 alongside the text area when the number of lines of text becomes larger
-than will fit in the text area.  And in fact, in Java terminology, the
-whole window is itself considered to be a "component."</p>
+than will fit in the text area.  And in fact, the
+whole window can itself be considered to be a "component."</p>
 
-<img src="overview-GUIDemo.png" tex="overview-GUIDemo.eps" height="177" width="561" 
+<img src="overview-GUIDemo.png" tex="overview-GUIDemo.eps" height="177" width="561" swingwidth="577" swingheight="180"
     alt="Screenshot from GUIDemo demonstrates some basic GUI components"
     texscale="0.6" bordered="true"/>
     
@@ -55,18 +55,18 @@ whole window is itself considered to be a "component."</p>
 is available on line.  For more information on using
 this and other examples from this textbook, see <localref href="basics.6"/>.)</np>
 
-<p>Now, Java actually has three complete sets of GUI components. One of these,
+<p>In fact, there are three complete sets of GUI components that can be used with Java. One of these,
 the AWT or <newword>Abstract Windowing Toolkit</newword>, was
-available in the original version of Java. The second, which is known as
+part of the original version of Java. The second, which is known as
 <newword>Swing</newword>, was introduced in Java version 1.2,
 and was the standard GUI toolkit for many years.  The third GUI toolkit,
-JavaFX, became a standard part of Java in Version&nbsp;8 (but 
-has recently been removed, so that it requires separate installation 
-in some versions of Java).  Although
-Swing, and even the AWT, can still be used, JavaFX is meant as a more modern
-way to write GUI applications.  This textbook covers JavaFX exclusively.
-(If you need to learn Swing, you can take a look at the previous version of this book.)
-</p>
+JavaFX, briefly became a standard part of Java in Version&nbsp;8 but is now distributed
+separately.  JavaFX is meant as a more modern
+way to write GUI applications, but using it is complicated by the fact that
+it has to be downloaded and installed separately.
+<fx>This textbook covers JavaFX exclusively, but an alternative version of the textbook is available that covers
+Swing instead.</fx><swing>This textbook covers Swing exclusively, but an alternative version of the textbook is available that covers
+JavaFX instead.</swing> Either version of the textbook can be a reasonable choice.</p>
 
 <p>When a user interacts with GUI components,
 "events" are generated.  For example, clicking a push button generates an event, and pressing
@@ -83,11 +83,12 @@ In a more realistic example, the event handlers would have more to do.</p>
 the <localref href="overview.5">previous&nbsp;section</localref>, are sent to objects. In fact, Java
 GUI components are implemented as objects. Java includes many predefined
 classes that represent various types of GUI components. Some of these classes
-are subclasses of others. Here is a diagram showing just a few of the JavaFX GUI classes
+are subclasses of others. Here is a diagram showing just a few of the <fx>JavaFX</fx><swing>Swing</swing> GUI classes
 and their relationships:</p>
 
-<img width="605" height="272" src="overview-fig5.png" tex="overview-fig5.eps" texscale="0.7"/>
+<img width="601" height="268" swingwidth="557" swingheight="277" src="overview-fig5.png" tex="overview-fig5.eps" texscale="0.7"/>
 
+<fxdiv>
 <p>Don't worry about the details for now, but try to get some feel about how
 object-oriented programming and inheritance are used here. Note that all the
 GUI classes shown here are subclasses, directly or indirectly, of a class called
@@ -102,6 +103,23 @@ are subclasses of <classname>ButtonBase</classname>, which represents
 properties common to both buttons and checkboxes.  (<classname>ComboBox</classname>,
 by the way, is the class that represents pop-up menus.)
 </p>
+</fxdiv>
+<swingdiv>
+<p>Don't worry about the details for now, but try to get some feel about how
+object-oriented programming and inheritance are used here. Note that all the
+GUI classes are subclasses, directly or indirectly, of a class called
+<classname>JComponent</classname>, which represents general properties
+that are shared by all Swing components. In the diagram,
+two of the direct subclasses of <classname>JComponent</classname>
+themselves have subclasses. The classes <classname>JTextArea</classname> and
+<classname>JTextField</classname>, which have certain behaviors in common, are grouped
+together as subclasses of <classname>JTextComponent</classname>.
+Similarly <classname>JButton</classname> and <classname>JToggleButton</classname>
+are subclasses of <classname>JAbstractButton</classname>, which represents
+properties common to both buttons and checkboxes.  (<classname>JComboBox</classname>,
+by the way, is the Swing class that represents pop-up menus.)
+</p>
+</swingdiv>
 
 <p>Just from this brief discussion, perhaps you can see how GUI programming can
 make effective use of object-oriented design. In fact, GUIs, with their

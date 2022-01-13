@@ -50,6 +50,7 @@
 \renewcommand{\sectionautorefname}{Section}
 \renewcommand{\subsectionautorefname}{Subsection}
 \renewcommand{\chapterautorefname}{Chapter}
+\pretolerance=1000
 \tolerance=8000
 \input texmacros
 \title{Introduction to Programming Using Java}
@@ -295,5 +296,17 @@
 <xsl:template match="texdiv">
       <xsl:apply-templates/>
 </xsl:template>
+    
+<xsl:template match="fx">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="fxdiv">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="swing"></xsl:template>
+    
+<xsl:template match="swingdiv"></xsl:template>
     
 </xsl:stylesheet>
