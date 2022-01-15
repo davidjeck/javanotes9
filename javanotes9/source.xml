@@ -58,6 +58,8 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    a specific amount of money over a period of one year.</li>
    <li><sourceref href="chapter2/TimedComputation.java">TimedComputation.java</sourceref>, from <localref href="basics.3"/>, 
    demonstrates a few basic built-in subroutines and functions.</li>
+   <li><sourceref href="chapter2/TextBlockDemo.java">TextBlockDemo</sourceref>, from <localref href="basics.3.3a"/>, demonstrates
+   text blocks, a kind of multiline string literal.  This demo requires Java&nbsp;17.</li>
    <li><sourceref href="chapter2/EnumDemo.java">EnumDemo.java</sourceref>, from <localref href="basics.3"/>, a <b>very</b> simple
    first demonstration of enum types.  The enum types used in this program are defined in the same
    file as the program.  An alternative version, 
@@ -514,9 +516,6 @@ compiled with a Java&nbsp;8 JDK.  (These sample programs were added to this
 textbook for Version 8.1 or later.)</p>
 
 <ul>
-   <li><sourceref href="post-java8/TextBlockDemo.java">TextBlockDemo</sourceref> demonstrates
-   text blocks, a new kind of multiline string literal, new in Java&nbsp;15. They are
-   discussed very briefly in <localref href="basics.3.5"/>.</li>
    <li><sourceref href="post-java8/NewSwitchDemo.java">NewSwitchDemo.java</sourceref> demonstrates
    a new syntax for <code>switch</code> statements that was introduced in Java&nbsp;14.
    The new <code>switch</code> syntax is discussed in <localref href="control.6.5"/>.</li>

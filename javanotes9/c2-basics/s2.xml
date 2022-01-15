@@ -282,7 +282,7 @@ than 2000000000.  There is no rule about how many digits have to be in each grou
 Underscores can be especially useful in long binary numbers; for example,
 <code>0b1010_1100_1011</code>.</p>
 
-<p>I will note that hexadecimal numbers can also be used in character literals to represent
+<p>I will note that hexadecimal numbers can also be used to represent
 arbitrary Unicode characters.  A Unicode literal consists of <code>\u</code> followed
 by four hexadecimal digits.  For example, the character literal <code>'\u00E9'</code>
 represents the Unicode character that is an "e" with an acute accent.
@@ -290,7 +290,7 @@ represents the Unicode character that is an "e" with an acute accent.
 
 <p>For the type <ptype>boolean</ptype>, there are precisely two literals:
 <code>true</code> and <code>false</code>. These literals are typed just as I've written
-them here, without quotes, but they represent values, not variables. Boolean
+them here, without quotes, but they represent constant values, not variables. Boolean
 values occur most often as the values of conditional expressions. For
 example,</p>
 
@@ -320,7 +320,8 @@ we are not concerned with objects for the time being. However, there is one
 predefined object type that is very important: the type <classname>String</classname>. 
 (<classname>String</classname> is a type, but not a primitive type; it is in fact the
 name of a class, and we will return to that aspect of strings in the 
-<localref href="basics.3">next&nbsp;section</localref>.)</p>
+<localref href="basics.3">next&nbsp;section</localref>.  The fact that <classname>String</classname> is
+a class explains why the name begins with an upper case "S" rather than lower case.)</p>
 
 
 <p>A value of type <classname>String</classname> is a sequence of characters. You've already seen a string
@@ -455,8 +456,9 @@ pair of parentheses.</p>
    
 <p>
 All the sample programs for this textbook are available in separate source code files in
-the on-line version of this text at <a href="http://math.hws.edu/javanotes/source">http://math.hws.edu/javanotes/source</a>.  
-They are also included in the downloadable archives of the web site, in a folder named <code>source</code>.
+the on-line version of this text at <fx><a href="http://math.hws.edu/javanotes/source">http://math.hws.edu/javanotes/source</a>.</fx>
+<swing><a href="http://math.hws.edu/javanotes-swing/source">http://math.hws.edu/javanotes-swing/source</a>.</swing>  They
+are also included in the downloadable archive of the web site, in a folder named <code>source</code>.
 The source code for the <code>Interest</code> program, for example, 
 can be found in the file <sourceref href="Interest.java"/> in subfolder named <code>chapter2</code> inside the <code>source</code>
 folder.

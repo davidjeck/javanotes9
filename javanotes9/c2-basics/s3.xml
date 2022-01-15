@@ -24,7 +24,7 @@ program just by calling subroutines that have already been written for you. In
 Java, every subroutine is contained either in a class or in an object. Some classes
 that are standard parts of the Java language contain predefined subroutines
 that you can use. A value of type <classname>String</classname>, which is an object, contains
-subroutines that can be used to manipulate that string.  These subroutines are
+subroutines that you can use to manipulate that string.  These subroutines are
 "built into" the Java language.  You can call all these
 subroutines without understanding how they were written or how they work.
 Indeed, that's the whole point of subroutines: A subroutine is a "black box"
@@ -68,7 +68,7 @@ This class gives us an example of a class that contains
 static variables: It includes the variables <code>Math.PI</code> and <code>Math.E</code>
 whose values are the mathematical constants &pi; and&nbsp;e.
 <classname>Math</classname> also contains a large number of mathematical "functions."
-Every subroutine performs some specific task. For some subroutines, that
+Now, any subroutine performs some specific task, but for some subroutines, the
 task is to compute or retrieve some data value. Subroutines of this type are
 called <newword>functions</newword>. We say that a function
 <newword>returns</newword> a value. Generally, the returned value is meant to be
@@ -77,7 +77,7 @@ used somehow in the program that calls the function.
 
 <p>You are familiar with the mathematical function that computes the square
 root of a number. The corresponding function in Java is called <code>Math.sqrt</code>.
-This function is a static member subroutine of the class named <classname>Math</classname>.
+This function is a static member subroutine in the class named <classname>Math</classname>.
 If <code>x</code> is any numerical value, then <code>Math.sqrt(x)</code> computes and
 returns the square root of that value. Since <code>Math.sqrt(x)</code> represents a
 value, it doesn't make sense to put it on a line by itself in a subroutine call
@@ -131,7 +131,7 @@ e.</li>
 value that is less than or equal to <code>x</code>.   Even though the return value is
 mathematically an integer, it is returned as a value of type <ptype>double</ptype>, rather than
 of type <ptype>int</ptype> as you might expect.   For example,
-<code>Math.floor(3.76)</code> is 3.0, and <code>Math.floor(-4.2)</code> is&nbsp;-5.  
+<code>Math.floor(3.76)</code> is 3.0, and <code>Math.floor(-4.2)</code> is&nbsp;-5.0.  
 The function <code>Math.round(x)</code> returns
 the integer that is closest to <code>x</code>, and <code>Math.ceil(x)</code> rounds <code>x</code>
 up to an integer.  ("Ceil" is short for "ceiling", the opposite of "floor.")</li>
@@ -263,7 +263,9 @@ used in the same way&mdash;through a <code>println</code> subroutine. The
 <classname>PrintStream</classname> class expresses the commonalities among all these
 objects.</p>
 
-<p>The dual role of classes can be confusing, and in practice most classes are designed to
+<p>The dual role of classes&mdash;to contain static variables and subroutines and to
+describe objects that can also contain variables and subroutines&mdash;can
+be confusing, and in practice most classes are designed to
 perform primarily or exclusively in only one of the two possible roles.  Fortunately,
 you will not need to worry too much about it until we start working with objects in a
 more serious way, in <localref href="OOP"/>.</p>
@@ -346,9 +348,10 @@ is less than zero or is greater than or equal to <code>s1.length()</code>.</li>
 <li><code>s1.substring(N,M)</code>, where <code>N</code> and <code>M</code> are integers,
 returns a value of type <classname>String</classname>. The returned value consists of the
 characters of <code>s1</code> in positions <code>N</code>, <code>N+1</code>,&dots;,
-<code>M-1</code>. Note that the character in position <code>M</code> is not included.
+<code>M-1</code>. Remember that character positions are numbered starting from zero.
+Note that the character in position <code>M</code> is not included.
 The returned value is called a substring of <code>s1</code>.
-The subroutine <code>s1.substring(N)</code> returns the substring of <code>s1</code>
+The subroutine <code>s1.substring(N)</code>, with just one parameter, returns the substring of <code>s1</code>
 consisting of characters starting at position <code>N</code> up until the end of
 the string.</li>
 
@@ -368,7 +371,8 @@ some number greater than zero. There is also a function <code>s1.compareToIgnore
 (If both of the strings consist entirely of
 lower case letters, or if they consist entirely of upper case letters, 
 then "less than" and "greater than" refer to alphabetical
-order. Otherwise, the ordering is more complicated.)</li>
+order. Otherwise, the ordering is more complicated; it compares individual characters using
+their Unicode code numbers.)</li>
 
 <li><code>s1.toUpperCase()</code> is a <classname>String</classname>-valued function that returns
 a new string that is equal to <code>s1</code>, except that any lower case letters
@@ -428,6 +432,57 @@ examples presented earlier in this chapter.</np>
 
 </subsection>
    
+<subsection id="basics.3.3a" title="Text Blocks: Multiline Strings">
+
+<p>Representing long strings that extend over several lines can be tedious. The
+end-of-line characters in the string can be represented by an escaped "n" (that is,
+by&nbsp;<code>\n</code>), and the full string could be broken into several parts
+that are concatenated together using <code>+</code> operators.  For example,</p>
+
+<pre>String poem = "As I was walking down the stair,\n"
+    + "   I met a man who wasn't there.\n"
+    + "He wasn't there again today.\n"
+    + "   I wish, I wish he'd go away!";</pre> 
+
+
+<np>However, Java 17 defines a new kind of string literal that makes it easier 
+to represent multiline strings.  (Recall that a "literal" is something 
+you type in program to represent a constant
+value.)  The new literals are called <newword>text blocks</newword>.
+A text block starts with a string of three double-quote characters, followed
+by optional white space and then a new line.  The white space and newline are
+not part of the string constant that is represented by the text block.  The text block
+is terminated by another string of three double-quote characters.  A text block
+can be used anywhere an ordinary string literal could be used.  For example,</np>
+
+<pre>String poem = """ 
+    As I was walking down the stair,
+       I met a man who wasn't there.
+    He wasn't there again today.
+       I wish, I wish he'd go away!""";</pre>
+
+<np>This is easier to write and to read than the previous way of writing the
+value of <code>poem</code>.</np>
+  
+<p>Remember that you can't have anything except white space (that is, spaces and tabs) on
+the same line after the three double-quotes that start the text block.  Also,
+note that any extra white space that occurs at the beginning of every line of the text block
+is removed from the string that is represented by the literal.  In the example, the 
+first four spaces are removed from each line of the text block, but the three extra
+spaces at the beginning of the second and fourth lines are not removed.
+This means that you can indent the lines of the text block to match the indentation of your program,
+without including that indentation in the string represented by the text block.</p>
+
+<p>A text block can include escaped characters such as \t or \\, but aside
+from the backslash character, '\', nothing in the text block has special
+meaning.  For example, something in the text block that looks like a
+Java comment is not actually a comment; it is just ordinary characters
+that are part of the string.</p>
+
+<p><sourceref href="TextBlockDemo.java"/> is a short demo program that uses text blocks.</p>
+
+</subsection>
+
 <subsection id="basics.3.4" title="Introduction to Enums">
    
 <p>Java comes with eight built-in primitive types and a huge collection of types that
@@ -436,7 +491,7 @@ this large collection of types is not sufficient to cover all the possible situa
 that a programmer might have to deal with.  So, an essential part of Java, just like
 almost any other programming language, is the ability to create <b>new</b> types.  For the
 most part, this is done by defining new classes; you will learn how to do that
-in <localref href="OOP"/>.  But we will look here at one particular case:
+in <localref href="OOP"/>.  But, to give an example of defining a new type, we will look here at one particular case:
 the ability to define <newword>enums</newword> (short for
 <newword>enumerated types</newword>).</p>
    
@@ -454,8 +509,10 @@ values.  However, <ptype>boolean</ptype> is a primitive type, while an enum is n
 
 <pre>enum <bnf>enum-type-name</bnf> { <bnf>list-of-enum-values</bnf> }</pre>
 
-<np>This definition cannot be inside a subroutine.  You can place it <b>outside</b> the <code>main()</code> routine
-of the program (or it can be in a separate file).  The <bnf>enum-type-name</bnf> can be any simple identifier.
+<np>The definition can be in the same class as the program that uses it,
+but outside the <code>main()</code> routine, or it can be in a separate .java file.  (In Java 17, it is also possible to
+put the definition inside <code>main()</code>.) The <bnf>enum-type-name</bnf> in the definition of
+an enum can be any simple identifier.
 This identifier becomes the name of the enum type, in the same way that "boolean" is the name of
 the <ptype>boolean</ptype> type and "String" is the name of the <classname>String</classname> type.
 Each value in the <bnf>list-of-enum-values</bnf> must be a simple identifier,
@@ -474,10 +531,10 @@ to as <newword>enum constants</newword>.</p>
 are used for things that are contained in other things&mdash;the names that you actually
 use in your program to refer to them are <code>Season.SPRING</code>, <code>Season.SUMMER</code>, 
 <code>Season.FALL</code>, and <code>Season.WINTER</code>.</p>
-   
-<p>Once an enum type has been created, it can be used to declare variables in exactly
+
+<p>Once an enum type such as <classname>Season</classname> has been created, it can be used to declare variables in exactly
 the same ways that other types are used.  For example, you can declare a variable
-named <code>vacation</code> of type <code>Season</code> with the statement:</p>
+named <code>vacation</code> of type <classname>Season</classname> with the statement:</p>
    
 <pre>Season vacation;</pre>
    
@@ -512,8 +569,7 @@ Here is a little example that shows enums being used in a complete program:</p>
    
 <pre>public class EnumDemo {
  
-       // Define two enum types -- remember that the definitions
-       // go OUTSIDE the main() routine!
+       // Define two enum types for use in this program.
   
     enum Day { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
       
@@ -550,41 +606,5 @@ except that the enum types that it uses are defined in files named
 
 </subsection>
    
-<subsection id="basics.3.5" title="Text Blocks: Multiline Strings">
-
-<p>Java 15 introduced a new kind of string literal to represent multiline strings.
-(Recall that a literal is something you type in program to represent a constant
-value.)  The new literals are called <newword>text blocks</newword>.
-A text block starts with a string of three double-quote characters, followed
-by optional white space and then a new line.  The white space and newline are
-not part of the string constant that is represented by the text block.  The text block
-is terminated by another string of three double-quote characters.  A text block
-can be used anywhere an ordinary string literal could be used.  For example,</p>
-
-<pre>String poem = """ 
-    As I was walking down the stair,
-       I met a man who wasn't there.
-    He wasn't there again today.
-       I wish, I wish he'd go away!""";</pre>
-
-<np>This is easier to write and to read than the following equivalent code,
-which builds up the multiline string using concatenation:</np>
-  
-<pre>String poem = "As I was walking down the stair,\n"
-    + "   I met a man who wasn't there.\n"
-    + "He wasn't there again today.\n"
-    + "   I wish, I wish he'd go away!\n";</pre> 
-
-<np>Note that extra white space at the beginning of each line of the text block
-is removed from the string that is represented by the literal, but that
-newlines are preserved. </np>
-
-<p>A textblock can include escaped characters such as \t or \\, but aside
-from the backslash character, '\', nothing in the text block has special
-meaning.  For example, something in the text block that looks like a
-Java comment is not actually a comment; it is just ordinary characters
-that are part of the string.</p>
-
-</subsection>
 
 </section>

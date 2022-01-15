@@ -16,7 +16,7 @@ dealt only informally with expressions. This section tells you the more-or-less
 complete story (leaving out some of the less commonly used operators).</p>
 
 <p>The basic building blocks of expressions are literals (such as <code>674</code>,
-<code>3.14</code>, <code>true</code>, and <code>'X'</code>), variables, and function calls.
+<code>3.14</code>, <code>true</code>, <code>'X'</code>, and <code>"Hello"</code>), variables, and function calls.
 Recall that a function is a subroutine that returns a value. You've already
 seen some examples of functions, such as the input routines from the <classname>TextIO</classname>
 class and the mathematical functions from the <classname>Math</classname> class.
@@ -67,10 +67,10 @@ the important ones are here.</p>
 division. They are indicated by <code>+</code>, <code>-</code>, <code>*</code>, and
 <code>/</code>. These operations can be used on values of any numeric type:
 <ptype>byte</ptype>, <ptype>short</ptype>, <ptype>int</ptype>, <ptype>long</ptype>, <ptype>float</ptype>, or
-<ptype>double</ptype>.  (They can also be used with values of type <ptype>char</ptype>, which
+<ptype>double</ptype>.  They can also be used with values of type <ptype>char</ptype>, which
 are treated as integers in this context;
 a <ptype>char</ptype> is converted into its Unicode code number when it is used with an
-arithmetic operator.)  When the computer actually calculates one of these operations,
+arithmetic operator.  When the computer actually calculates one of these operations,
 the two values that it combines must be of the same type. If your program tells
 the computer to combine two values of different types, the computer will
 convert one of the values from one type to another. For example, to compute
@@ -100,13 +100,14 @@ divided by another. This operator is indicated by <code>%</code>. If <code>A</co
 <code>B</code> are integers, then <code>A&nbsp;%&nbsp;B</code> represents the remainder when
 <code>A</code> is divided by <code>B</code>. 
 (However, for negative operands, <code>%</code> is not quite the
-same as the usual mathematical "modulus" operator, since if one of <code>A</code> or
-<code>B</code> is negative, then the value of <code>A&nbsp;%&nbsp;B</code> will be negative.)
+same as the usual mathematical "modulus" operator, since if <code>A</code> 
+is negative, then the value of <code>A&nbsp;%&nbsp;B</code> will be negative.)
 For example, <code>7&nbsp;%&nbsp;2</code> is <code>1</code>,
 while <code>34577&nbsp;%&nbsp;100</code> is <code>77</code>, and <code>50&nbsp;%&nbsp;8</code> is <code>2</code>. A
 common use of <code>%</code> is to test whether a given integer is even or odd:
-<code>N</code> is even if <code>N&nbsp;%&nbsp;2</code> is zero, and it is odd if <code>N&nbsp;%&nbsp;2</code>
-is <code>1</code>. More generally, you can check whether an integer <code>N</code> is
+<code>N</code> is even if and only if <code>N&nbsp;%&nbsp;2</code> is zero.  (If <code>N</code> is odd, then
+<code>N&nbsp;%&nbsp;2</code> is plus or minus <code>1</code>, depending on whether <code>N</code>
+is positive or negative.)  More generally, you can check whether an integer <code>N</code> is
 evenly divisible by an integer <code>M</code> by checking whether
 <code>N&nbsp;%&nbsp;M</code> is zero.</p>
 
@@ -322,7 +323,7 @@ the form</p>
 
 <np>The computer tests the value of <bnf>boolean-expression</bnf>. If the value is <code>true</code>, it
 evaluates <bnf>expression1</bnf>; otherwise, it evaluates
-<bnf>expression2</bnf>. For example:</np>
+<bnf>expression2</bnf>. The two expressions must be of the same type.  For example:</np>
 
 <pre>next = (N % 2 == 0) ? (N/2) : (3*N+1);</pre>
 

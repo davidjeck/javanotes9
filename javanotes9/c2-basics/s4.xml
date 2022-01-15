@@ -59,7 +59,7 @@ where <code>amount</code> is a variable of type <ptype>double</ptype>:
 <pre>System.out.printf( "%1.2f", amount );</pre>
    
    
-<np>The output format for a value is give by a <newword>format specifier</newword> in the format string.
+<np>The output format for a value is given by a <newword>format specifier</newword> in the format string.
 In this example, the format specifier is <code>%1.2f</code>.
 The format string (in the simple cases that I cover here) contains one format specifier for
 each of the values that is to be output.  Some typical format specifiers are 
@@ -79,7 +79,7 @@ an integer will be printed using just as many spaces as necessary.
 output an integer value in hexadecimal form.)
 </np>
    
-<p>The letter "s" at the end of a format specifier can be used with any type of value.
+<p>The letter "s" in a format specifier can be used with any type of value.
 It means that the value should be output in its default format, just as it would be
 in unformatted output.  A number, such as the "20" in <code>%20s</code>, can
 be added to specify the (minimum) number of characters.  The "s" stands for "string,"
@@ -133,11 +133,20 @@ so the output would be something like "The product of 17 and 42 is 714" (quotati
 marks not included in output!).
 </np>
 
-<p>To output a percent sign, use the format specifier <code>%%</code> in the format 
+<p>To include an actual percent sign in the output, use the format specifier <code>%%</code> in the format 
 string.  You can use <code>%n</code> to output a line feed.  You can also use
 a backslash, <code>\</code>, as usual in strings to output special characters
 such as tabs and double quote characters.</p>
 
+<p>The format string in a <code>System.printf</code> statement can be given by a
+text block, which makes it easier to output multiple lines of text.  For example,</p>
+
+<pre>System.out.printf("""
+        The equivalent of %d miles is:
+            %,d yards,
+            %,d feet, or
+            %,d inches
+        """, miles, 1760*miles, 5280*miles, 12*5280*miles);</pre>
 
 </subsection>
 
@@ -188,9 +197,11 @@ This is done with the import directive
 <pre>import textio.TextIO;</pre>
 
 <np>This directive must come before the "public class" that begins your program.  Most of
-Java's standard classes are defined in packages and are imported into programs in the same way.</np>
+Java's standard classes, including <classname>Scanner</classname>,
+are defined in packages and are imported into programs in the same way.</np>
 
-<p>To use the <classname>TextIO</classname> class, you must make sure that the class is
+<p>Because <classname>TextIO</classname> is not a built-in part of Java, you must make sure that the 
+<classname>TextIO</classname> class is
 available to your program. What this means depends on the Java programming
 environment that you are using.  In general, you just have to
 add the folder <sourceref href="textio"/> to the same folder that contains
@@ -556,8 +567,18 @@ input. <classname>TextIO</classname> stores that line in the input buffer until
 the data on the line has been read or discarded (by one of the "getln"
 functions).  The user only gets to
 type when the buffer is empty.</np>
+
+<p>Previously, I said that <code>TextIO.getln()</code> reads a full line of input.
+Given the way that <classname>TextIO</classname> uses the input buffer, that is not
+quite true.   In fact, if <code>TextIO.getln()</code> is called when the buffer is not
+empty, then it  will simply return whatever characters remain in the buffer without
+getting a new line of input from the user.  If you ever want to empty the input buffer
+and simply discard the input, you can call <code>TextIO.getln()</code> as a subroutine,
+without assigning the returned value to a variable:</p>
+
+<pre>TextIO.getln();</pre>
    
-<p>Note, by the way, that although the <classname>TextIO</classname> input functions will
+<p>Note, by the way, that although most <classname>TextIO</classname> input functions will
 skip past blank spaces and carriage returns while looking for input, they will 
 <b>not</b> skip past other characters.  For example, if you try
 to read two <ptype>ints</ptype> and the user types "42,17", the computer will read the
@@ -565,7 +586,7 @@ first number correctly, but when it tries to read the second number, it will
 see the comma. It will regard this as an error and will force the user to
 retype the number. If you want to input several numbers from one line, you
 should make sure that the user knows to separate them with spaces, not commas.
-Alternatively, if you want to require a comma between the numbers, use
+Alternatively, if you want to <b>require</b> a comma between the numbers, use
 <code>getChar()</code> to read the comma before reading the second number.</p>
 
 <p>There is another character input function, <code>TextIO.getAnyChar()</code>,

@@ -4,8 +4,9 @@
  */
 public class EnumDemo {
 
-	// Define two enum types -- remember that the definitions
-	// go OUTSIDE The main() routine!
+	// Define two enum types.  (In Java 17, these definitions could also be
+	// inside main(), but earlier versions of Java require them to be outside
+	// main(), or in a separate .java file.)
 
 	enum Day { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
 

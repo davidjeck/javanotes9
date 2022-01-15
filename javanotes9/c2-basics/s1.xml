@@ -120,7 +120,7 @@ will be displayed on standard output. Unfortunately, I can't say exactly what
 that means! Java is meant to run on many different platforms, and standard
 output will mean different things on different platforms. However, you can
 expect the message to show up in some convenient or inconvenient place. (If you use a
-command-line interface, like that in Oracle's Java Development Kit,
+command-line interface, like that in a Java Development Kit,
 you type in a command to tell the computer to run the program. The computer
 will type the output from the program, Hello&nbsp;World!, on the next line.
 In an integrated development environment such as Eclipse, the output
@@ -156,7 +156,7 @@ program. In order to define a program, a class must include a subroutine named
 
 <p>When you tell the Java interpreter to run the program, the interpreter calls
 this <code>main()</code> subroutine, and the statements that it contains are
-executed. These statements make up the script that tells the computer exactly
+executed. Those statements make up the script that tells the computer exactly
 what to do when the program is executed. The <code>main()</code> routine can call other
 subroutines that are defined in the same class or even in other classes, but it
 is the <code>main()</code> routine that determines how and in what order the other
