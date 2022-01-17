@@ -28,7 +28,7 @@ interfaces!</p>
 
 <p>A lot of GUI interface components have become fairly standard. That is, they
 have similar appearance and behavior on many different computer platforms
-including Mac&nbsp;OS, Windows, and Linux. Java programs,
+including MacOS, Windows, and Linux. Java programs,
 which are supposed to run on many different platforms without modification to
 the program, can use all the standard GUI components. They might vary a little in
 appearance from platform to platform, but their functionality should be

@@ -228,13 +228,13 @@
                          select="concat('c',$chapter,'/s',$section,'.html')"/></xsl:attribute><xsl:value-of select="@title"/></a>
                <xsl:if test="$subsections and subsection">
                   <ul>
-                     <xsl:for-each select="subsection">
+                     <xsl:for-each select="subsection"><xsl:if test="@scope != 'fx'">
                         <li>
                            <xsl:value-of select="$chapter"/>.<xsl:value-of select="$section"/>.<xsl:value-of select="position()"/>&#160;
                                  <a><xsl:attribute name="href"><xsl:value-of 
                                         select="concat('c',$chapter,'/s',$section,'.html#',@id)"/></xsl:attribute><xsl:value-of select="@title"/></a>
                         </li>
-                     </xsl:for-each>
+                     </xsl:if></xsl:for-each>
                   </ul>
                </xsl:if>
               </li>
@@ -406,9 +406,9 @@
            <table align="right" border="2" cellpadding="5" hspace="8" vspace="8" class="subsections"><tr><td>
               <div align="center">
                  <b>Subsections</b><hr/>
-                 <small><xsl:for-each select="subsection">
+                 <small><xsl:for-each select="subsection"><xsl:if test="@scope != 'fx'">
                     <a><xsl:attribute name="href"><xsl:value-of select="concat('#',@id)"/></xsl:attribute><xsl:value-of select="@title"/></a><br/>
-                 </xsl:for-each>
+                 </xsl:if></xsl:for-each>
                  </small>
               </div>
            </td></tr></table>
@@ -438,11 +438,11 @@
     </small>
 </xsl:template>
     
-<xsl:template match="subsection">
+<xsl:template match="subsection"><xsl:if test="@scope != 'fx'">
     <hr class="break"/>
     <h3 class="subsection_title"><a><xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute><xsl:if test="not(ancestor::source)"><xsl:number count="chapter"/>.<xsl:number count="section"/>.<xsl:number count="subsection"/>&#160;&#160;</xsl:if><xsl:value-of select="@title"/></a></h3>
     <xsl:apply-templates/>
-</xsl:template>
+</xsl:if></xsl:template>
 
 <xsl:template name="do-exercises">
     <xsl:variable name="chapternum">

@@ -11,50 +11,41 @@ where the user types commands and the computer responds,
 and an <newword>integrated development environment</newword> (IDE),
 where the user uses the keyboard and mouse to interact with a graphical user 
 interface.  While there is essentially just one command line environment for Java
-programming, there are several common IDEs, including Eclipse, NetBeans, IntelliJ&nbsp;IDEA,
+programming, there are several common IDEs, including Eclipse, IntelliJ&nbsp;IDEA,
 and BlueJ. I cannot give complete or definitive information on Java programming environments
 in this section, but I will try to give enough information to let you compile
 and run the examples from this textbook using the command line, Eclipse, or BlueJ.  
 (Readers are strongly encouraged to read,
 compile, and run the examples.  Source code for sample programs and solutions to
 end-of-chapter exercises can be downloaded from the
-book's web page, <a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a>.)</p>
+book's web page, <fx><a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a>.</fx>
+<swing><a href="http://math.hws.edu/javanotes-swing">http://math.hws.edu/javanotes-swing</a>.</swing>)</p>
 
 <p>One thing to keep in mind is that you do not have to pay any money
 to do Java programming (aside from buying a computer, of course).  Everything
 that you need can be downloaded for free on the Internet.</p>
 
-<p>This textbook can be used with Java 8 and later.  As of the release of Version&nbsp;8.1.3
-of the book in August 2021, the current version of Java is Java&nbsp;16.  
-Significant changes both in the Java language and in the
-Oracle corporation's policies concerning Java have been made since the release
-of Java&nbsp;8.  Unfortunately, the changes have made it somewhat more difficult
-to install Java and get it up and running.  In this section, I will try to give
+<p>This textbook is meant for use with Java 17 or later, although the large majority of it
+it is valid for versions as old as Java&nbsp;8. In this section, I will try to give
 you enough information to make it possible to install Java and use it with this textbook.
-</p>
-
-<p>One of the changes made to Java was to the release schedule.  New versions of
-Java are now released much more frequently than in the past, about twice a year,
+Since Java&nbsp;8, new versions of
+Java are released much more frequently than in the past, about twice a year,
 but only some of the releases are "long-term support" (LTS) releases that will continue
 to receive bug fixes and security updates over an extended period of time.
-Java&nbsp;8 and Java&nbsp;11 are long-term support releases.  The upcoming Java&nbsp;17,
-due to be released in September 2021, will be another long-term support release.
-In fact, only Java 8, 11, and 16 are currently officially supported (although for the
-purposes of this textbook, using another version that is no longer receiving
-support is not a real problem).  As of August 2021, people are most likely to use
-Java&nbsp;11 or Java&nbsp;16. When Java&nbsp;17 is released, it will be the
-preferred version.</p>
+Java&nbsp;8, Java&nbsp;11, and Java&nbsp;17 are long-term support releases. 
+I&nbsp;recommend that you use Java&nbsp;17, or Java&nbsp;11 if you already have
+that installed, and avoid non-long-term-support releases unless you have
+specific need for some feature that they offer.</p>
    
-<subsection id="basics.6.1" title="Getting JDK and JavaFX">
+<subsection id="basics.6.1" title="Getting a JDK">
 
 <p>The basic development system for Java programming is usually referred
-to as a <newword>JDK</newword> (Java Development Kit).  For this textbook, 
-you need a JDK for Java&nbsp;8 or later.  Note that Java comes in 
+to as a <newword>JDK</newword> (Java Development Kit). Note that Java comes in 
 two versions: a Development Kit version (the JDK) and a Runtime Environment version
 (the JRE).  A&nbsp;Runtime Environment can be used to run Java programs,
 but it does not allow you to compile your own Java programs.
 A&nbsp;Development Kit includes the Runtime Environment but also
-lets you compile programs.  (Since the release of Java&nbsp;11 it has become
+lets you compile programs.  (It has become
 harder find a separate JRE download, but you will still see the term used &mdash;
 sometimes to refer, in fact, to a JDK.) 
 A&nbsp;JDK will include the command line environment that you need to work with Java
@@ -68,56 +59,44 @@ the Oracle JDK is meant mostly for commercial use.  For personal and educational
 it is probably preferable to use OpenJDK, which has the same functionality as the version
 available from Oracle and is distributed under a fully free, open-source license.
 Although OpenJDK can be downloaded from <a href="https://jdk.java.net/">https://jdk.java.net/</a>,
-which is also owned by Oracle, I recommend downloading from AdoptOpenJDK at this address:</p>
+which is also owned by Oracle, I recommend downloading from Adoptium at this address:</p>
 
-<p align="center"><a href="https://adoptopenjdk.net/">https://adoptopenjdk.net/</a></p>
+<p align="center"><a href="https://adoptium.net/">https://adoptium.net/</a></p>
 
-<np>This site has OpenJDKs for a wider range of platforms, and it provides installers
-for Mac&nbsp;OS and Windows that make it easier to set up Java on those platforms.
-(The installer for Mac&nbsp;OS is a .pkg file, and the installer for Windows is a .msi file.)
-The sample programs and exercises in this
-textbook will work with JDK versions as old as Java&nbsp;8.</np>
+<np>This site is run by the Eclipse Foundation, and it distributes a version of the OpenJDk under
+the name "Eclipse Temurin."  You will want to download Temurin&nbsp;17 or later.  The JDK
+comes in different versions, depending on the operating system and type of CPU for your computer, but the
+Adoptium web page should detect your operating system and CPU, so that you just need to click the
+"Latest release" download button to get the appropriate version.  (If you need to select the
+version yourself, note that the CPU type is referred to as "Architecture."  You are most likely
+to be using the "x64" architecture, which works for Intel and AMD CPUs, but the newer M1 
+Macs use "aarch64," which refers to ARM CPUs.)</np>
 
-<p>If you download a JDK installer for Windows or Mac&nbsp;OS from AdoptOpenJDK, you can just double-click the 
+<p>The Adoptium site provides installers for MacOS and Windows that make it easier to set up Java on those platforms.
+(The installer for MacOS is a .pkg file, and the installer for Windows is a .msi file.)
+If you use the Linux operating system, you can probably install an OpenJDK using the usual software
+manager for your distribution; if not, you can download a version from Adoptium, but it will
+just be a compressed archive rather than an installer.</p>
+
+<p>If you download a JDK installer for Windows or MacOS from Adoptium, you can just double-click the 
 installer file to start the installation, if it does not start automatically.   If you use the default
 installation, the installer will set up your computer so that you can use the <code>javac</code> 
 and <code>java</code> commands on the command line.</p>
 
+<fxdiv>
 <p>The GUI programs in this book use a programming library known as <newword>JavaFX</newword>,
 which must be downloaded separately from the OpenJDK.  You will need to download JavaFX even
 if you use Eclipse for all of your Java work.  (BlueJ comes with JavaFX.)
-You can download the JavaFX library from</p>
-
-<p align="center"><a href="https://gluonhq.com/products/javafx/">https://gluonhq.com/products/javafx/</a></p>
-
-<np>You should get the JavaFX "SDK"&mdash;<b>not</b> the "jmods"&mdash;for your operating system (Linux,
-Mac&nbsp;OS, or Windows).  You should get the version number that matches the version number
-of the OpenJDK that you downloaded (but it should be OK as long as the major version numbers match;
-for example, JavaFX 11.0.2 should work with JDK&nbsp;11.0.9).
-</np>
-
-<p>When you download the JavaFX SDK, it will be in the form of a compressed archive
-file.  You will need to extract the contents of the archive.  
-Usually, simply double-clicking the icon of the archive file
-will either extract the contents or open a program that you can use to extract the
-contents.  You will get a directory with a name something like 
-<i>javafx-sdk-11.0.2</i>.  You can put the directory anywhere on your
-computer, but you will need to know where it is located.</p>
+Information about downloading and using JavaFX is given at the end of this section.</p>
+</fxdiv>
 
 <p>(An OpenJDK can also be downloaded as a compressed archive, which you can decompress and
 place anywhere on your computer.  However, to use the <code>javac</code> and <code>java</code>
 commands, you will either need to put the bin directory from the OpenJDK directory on your
 PATH environment variable, or use full path names for the <code>javac</code> and <code>java</code>
-commands.  The AdoptOpenJDK installers for Windows and for MacOS will take care of this
+commands.  The Adoptium installers for Windows and for MacOS will take care of this
 detail for you.)</p>
 
-<p>Note that if you are using Linux, then a recent OpenJDK and JavaFX should be available in the
-software repositories for your version of Linux, and all that you need to do is use
-your Linux software installer tool to install them.  (Exactly what that means depends
-on the version of Linux that you are using.  Search for packages with names containing
-"openjdk" and "openjfx".)   You will still need to know where
-the JavaFX SDK directory is located; on my Linux computer, it's /usr/share/openjfx.
-It is also possible to download Linux versions from the AdoptOpenJDK and JavaFX web sites.</p>
  
 </subsection>
 
@@ -130,13 +109,13 @@ graphical user interfaces that most people are used to.  However, it
 takes only a little practice to learn the basics of the command line
 environment and to become productive using it.  It is useful to know
 how to use the command line, and it is particularly important for
-computer science students, but you can skip this subsection and the next if you plan to
+computer science students, but you can skip this subsection if you plan to
 do all of your work with Java in an IDE.</p>
    
 <p>To use a command line programming environment, you will have to open a window
-where you can type in commands.  In Windows, you can open such a command window
+where you can type commands.  In Windows, you can open such a command window
 by running a program named <newword>cmd</newword>. 
-In Mac&nbsp;OS, you want to run the
+In MacOS, you want to run the
 <newword>Terminal</newword> program, which can be found in
 the Utilities folder inside the Applications folder.  In Linux, there
 are several possibilities, including a very old program called <newword>xterm</newword>;
@@ -153,7 +132,7 @@ words "directory" and "folder" mean the same thing.)   Often, the
 name of the current directory is part of the command prompt.  You
 can get a list of the files in the current directory by typing in the
 command <newword>dir</newword> (on Windows) or
-<newword>ls</newword> (on Linux and Mac&nbsp;OS).  When the window
+<newword>ls</newword> (on Linux and MacOS).  When the window
 first opens, the current directory is your <newword>home directory</newword>,
 where your personal files are stored.  You can change the current directory using
 the <newword>cd</newword> command with the name of the
@@ -179,16 +158,16 @@ you can organize your files any way you like.</p>
 <newword>javac</newword> and <newword>java</newword>.  The
 <code>javac</code> command is used to compile Java source code, and <code>java</code>
 is used to run Java programs.  These commands, and other commands for working
-with Java, can be found in a directory named <i>bin</i> inside the JDK
-directory.  If you set things up correctly on your computer, it should recognize these
+with Java, can be found in a directory named <i>bin</i> inside the
+directory that holds the JDK.  If you set things up correctly on your computer, it should recognize these
 commands when you type them on the command line.  Try typing the commands
 <code>java&nbsp;-version</code> and <code>javac&nbsp;-version</code>. The output
 from these commands should tell you which version of Java is being used.  If you get a message
 such as "Command not found," then Java is not correctly configured.</p>
 
 <p>Java should already be configured correctly on Linux, if you have installed Java
-from the Linux software repositories. The same is true on Mac&nbsp;OS and Windows, if you have 
-used an installer from AdoptOpenJDK.</p>
+from the Linux software repositories. The same is true on MacOS and Windows, if you have 
+used an installer from Adoptium.</p>
 
 
 <break/>
@@ -197,11 +176,12 @@ used an installer from AdoptOpenJDK.</p>
 into your working directory.  (If you downloaded the Web site of this book,
 you can find it in the directory named <code>chapter2</code> inside the
 directory named <code>source</code>; you can use
-your computer's GUI to copy-and-paste this file into your working directory.
-Alternatively, you can navigate to <sourceref href="HelloWorld.java"/> on the
-book's <tex><a href="http://math.hws.edu/javanotes/source/index.html">Web&nbsp;site</a></tex><web><a href="../source/index.html">Web&nbsp;site</a></web> and use the 
-"Save&nbsp;As" command in your Web browser to save a copy of the file into your working directory.)
-Type the command:</p>
+your computer's GUI to copy-and-paste this file into your working directory,
+or you could <code>cd</code> into the <code>chapter2</code> folder and work there.
+Alternatively, you can navigate to <sourceref href="HelloWorld.java"/> on the book's 
+<tex><fx><a href="http://math.hws.edu/javanotes/source/index.html">Web&nbsp;site</a></fx><swing><a href="http://math.hws.edu/javanotes-swing/source/index.html">Web&nbsp;site</a></swing></tex><web><a href="../source/index.html">Web&nbsp;site</a></web>
+and use the  "Save&nbsp;As" command in your Web browser to save a copy of the file into your working directory.)
+Type the command (while working in the directory that contains the file <code>HelloWorld.java</code>):</p>
    
 <pre>javac  HelloWorld.java</pre>
    
@@ -214,9 +194,9 @@ be able to run the program using the <code>java</code> command:</np>
 <pre>java  HelloWorld</pre>
 
 <np>The computer should respond by outputting the message "Hello World!".  Note that although
-the program is stored in a file named <code>HelloWorld.class</code>, the <code>java</code>
+the compiled program is stored in a file named <code>HelloWorld.class</code>, the <code>java</code>
 command uses the name of the class, <classname>HelloWorld</classname>, not the name of the
-file.</np>
+file.  To run the program, you only need .class file, not the .java file.</np>
 
 <p>Many of the sample programs for this book use <classname>TextIO</classname>
 to read input from the user (see <localref href="basics.4.3"/>).  Since <classname>TextIO</classname>
@@ -249,8 +229,8 @@ command prompt, and you can enter another command. (Note, by the way, that "<cod
 would not make sense, since <code>TextIO</code> does not have a <code>main()</code> routine,
 and so it is not possible to execute it as a program.)</np>
 
-<p>You can follow a similar procedure to run all of the examples in this book that do not use JavaFX.
-For running JavaFX programs, see the next subsection below.</p>
+<p>You can follow a similar procedure to run all of the examples in this book<fx> that do not use JavaFX.
+For running JavaFX programs, see <localref href="basics.6.8"/> below</fx>.</p>
    
 <break/>
    
@@ -261,7 +241,7 @@ that is without any special encoding or formatting information.  Word processor
 documents are not appropriate, unless you can get your word processor to save
 as plain text.  A good text editor can make programming a lot more pleasant.
 Linux comes with several text editors.  On Windows, you can use notepad in a pinch, 
-but you will probably want something better.  For Mac&nbsp;OS, you might download 
+but you will probably want something better.  For MacOS, you might download 
 the <a href="https://www.barebones.com/products/bbedit/">BBEdit</a> application, which
 can be used for free.  
 One possibility that will work on any platform is to use <newword>jedit</newword>, 
@@ -299,110 +279,6 @@ you have to go back to the edit/save/compile loop to try to find and fix the pro
 
 </subsection>
 
-<subsection id="basics.6.2a" title="JavaFX on the Command Line">
-
-<p>JavaFX is a collection of Java classes that can be used for making GUI programs.
-In this book, it is first used in <localref href="control.8"/> and is covered extensively
-in <localref href="GUI1"/> and <localref href="GUI2"/>.  It is also used in example
-programs in several other chapters.  JavaFX was a standard part of the Oracle JDK for Java&nbsp;8, but
-with OpenJDK and with any JDK for Java&nbsp;11 and later, JavaFX requires some special 
-treatment. This subsection explains how to use JavaFX on the command line with Java&nbsp;11
-or later.  It assumes that you have already downloaded the JavaFX SDK, as described above.
-Starting with Java&nbsp;11, JavaFX is distributed as a set of "modules."  (See <localref href="subroutines.5.3a"/>)
-The modules are stored in .jar files in the <i>lib</i> subdirectory of the JavaFX SDK.
-When using the <code>javac</code> and <code>java</code> commands on a program that uses
-JavaFX, you need to tell the command where to find the JavaFX modules.</p>
-
-<p>The modules are specified for the <code>javac</code> and <code>java</code> commands
-using two command options:  <code>--module-path</code> and <code>--add-modules</code>.
-The first option specifies the directory that contains the module .jar files, and the
-second says which modules you actually want to use.  For the purposes of this
-textbook, you can set the value of <code>--add-modules</code> to <code>ALL-MODULE-PATH</code>,
-which makes all of JavaFX available to your program.  The value of <code>--module-path</code>
-is a path to the <i>lib</i> directory that contains the JavaFX .jar files.
-For example, let's say that the JavaFX directory is named <i>openjfx-sdk-11</i> and
-that it is in my home directory, <i>/home/eck</i>.  Then the full path to the
-<i>lib</i> directory is <code>/home/eck/openjfx-sdk-11/lib</code>, and the <code>javac</code>
-command for compiling JavaFX programs would be:</p>
-
-<pre>javac --module-path=/home/eck/openjfx-sdk-11/lib --add-modules=ALL-MODULE-PATH</pre>
-
-<np>followed by the .java files that you want to compile.  Exactly the same options would
-be used with the <code>java</code> command to run JavaFX programs.
-The option <code>--module-path</code> can also be abbreviated to <code>-p</code>, with no
-equals sign.  So this can also be written</np>
-
-<pre>javac -p /home/eck/openjfx-sdk-11/lib --add-modules=ALL-MODULE-PATH</pre>
-
-<p>If you don't know the full path to the JavaFX SDK, open a command window and use
-the <i>cd</i> command to move to the SDK's <i>lib</i> directory. On Mac or Linux,
-enter the command <i>pwd</i> to print out the full path of the working directory.
-On windows, use the command <i>cd</i>, with no directory specified, to print out the path.
-Use the output as the value for the <code>--module-path</code>. On windows, a typical
-<code>java</code> command for use with javafx might look something like this:</p>
-
-<pre>java -p C:\Users\eck\openjfx-sdk-11\lib --add-modules=ALL-MODULE-PATH</pre>
-
-<np>If the path name includes a space, or certain other special characters, it
-must be enclosed in quotation marks.</np>
-
-<p>Of course, this is very verbose, and it would be nice not to have to retype it
-all the time.  On Mac&nbsp;OS or Linux, it is easy to define <newword>aliases</newword>,
-which are shortcuts for long commands.  On my computer, I used an alias to define
-a <i>jfxc</i> command for compiling JavaFX programs.  In the alias, I used the
-full path name of the <code>javac</code> command as well as the full path name
-of the JavaFX <i>lib</i> directory.  This allowed me to use a JDK that was not
-officially installed on the computer.  The alias is defined as follows, 
-except that <b>this must all be typed on one line</b>:</p>
-
-<pre>alias jfxc='/home/eck/jdk-11.0.7/bin/javac 
-                  --module-path=/home/eck/javafx-sdk-11/lib 
-                  --add-modules=ALL-MODULE-PATH'</pre>
-                  
-<np>Similarly, I defined an alias for running JavaFX programs (again, <b>all on one line</b>):</np>
-
-<pre>alias jfx='/home/eck/jdk-11.0.7/bin/java 
-                  --module-path=/home/eck/javafx-sdk-11/lib 
-                  --add-modules=ALL-MODULE_PATH'</pre>
-
-<p>To make these alias definitions permanent on my Linux computer, I added them to a file named
-<i>.bashrc</i>.  On Mac&nbsp;OS, I would put them in
-a file named <i>.zshrc</i> for Mac&nbsp;OS 10.15 and later or in a file named
-<i>.bash_profile</i> (for earlier versions of Mac&nbsp;OS).  The file must
-be placed in your home directory.   The file might or might not already exist; 
-if it doesn't exist, you can create it.  The file is
-executed whenever you open a Terminal window. (In particular, changes do
-not become effective until you open a new Terminal.) Note that the file name
-begins with a period, which makes it a "hidden file."  That means that 
-it won't show up in a usual directory listing or file browser.
-(On Linux, it's usually easy to set a file browser window to show hidden
-files; try looking in a "View" menu.  On Mac, it's not so easy.
-In any case, on the command line, you can get a directory listing that includes hidden
-files using the command <i>ls&nbsp;-a</i> &mdash; with a space after <i>ls</i>.
-If you have trouble working with a hidden file, one option is to rename it to
-be a non-hidden file that you can edit, and then rename it back.
-The <i>mv</i> command can be used to rename files.  For example:
-<i>mv&nbsp;.zshrc&nbsp;temp</i> and <i>mv&nbsp;temp&nbsp;.zshrc</i>.)</p>
-
-<p>Unfortunately, Windows currently does not have an equivalent of a .bashrc or
-.zshrc for its <i>cmd</i> command window.  One option is
-to make a batch script file to run the command.  For compilation, you could 
-create a file named <i>jfxc.bat</i> containing just one line similar to</p>
-
-<pre>javac -p C:\Users\eck\javafx-sdk-11\lib --add-modules=ALL-MODULE-PATH %*</pre>
-
-<np>but, of course, using the appropriate JavaFX location for your own computer.
-The "<code>%*</code>" at the end represents the inputs to the <code>javac</code> command.
-The file can be in the current directory or somewhere on the system path, such
-as the JDK <i>bin</i> directory.  Then you can use <code>jfxc</code> as a 
-command for compiling JavaFX programs:</np>
-
-<pre>jfxc MyJavaFXProgram.java</pre>
-
-<np>You can handle the <code>java</code> command with a similar .bat file.</np>
-
-</subsection>
-
 <subsection id="basics.6.3" title="Eclipse IDE">
 
    
@@ -420,27 +296,31 @@ IDEs have features that are very useful even
 for a beginning programmer, although a beginner will want to ignore many of their
 advanced features.</p>
 
+<fxdiv>
 <p>Unless you happen to be using Oracle's JDK for Java 8, 9, or 10, using Eclipse for JavaFX programs
-will require some extra configuration.  The next subsection discusses using JavaFX in Eclipse.
+will require some extra configuration.  <localref href="basics.6.8"/> discusses using JavaFX in Eclipse.
 This subsection tells you how to use it for programs that use only standard Java classes.</p>
-   
+</fxdiv>
+
 <p>You can download an Eclipse IDE from <a href="https://www.eclipse.org">eclipse.org</a>.  
 When I install Eclipse, I get the "Eclipse IDE for Java Developers" package (<b>not</b> the "installer")
 from this web page:</p>
 
 <p align="center"><a href="https://www.eclipse.org/downloads/packages/">https://www.eclipse.org/downloads/packages/</a></p>
 
-<np>For Windows and Linux, the download is a compressed archive file.  You can simply extract the contents
+<np>For Windows and Linux, the package download is a compressed archive file.  You can simply extract the contents
 of the archive and place the resulting directory wherever you want it on your computer.
 You will find the Eclipse application in that directory, and you can start Eclipse by double-clicking
-the application icon.  For Mac&nbsp;OS, the download is a .dmg file that contains the Eclipse application.
+the application icon.  For MacOS, the download is a .dmg file that contains the Eclipse application.
 You can open the .dmg file and drag the application to any location that you prefer (probably the
-Applications folder).</np>
+Applications folder).  Note that the MacOS and Linux packages are available in two versions, for
+x86_64 and AArch64.  This refers to the type of CPU that the computer uses.  Newer "M1" Macs can
+use the AArch64 version; the x86_64 version is for older Macs that use Intel CPUs.  For Linux, you are
+most likely to need the x86_64 version, which will work for Intel and AMD CPUs.</np>
 
 <p>Eclipse is a free program.  It is itself written in Java. Recent versions of Eclipse include
-a copy of an OpenJDK (although Eclipse calls it a JRE), so you can use it without downloading a separate JDK.
-The June 2021 version includes a Java&nbsp;16 SDK.  The upcoming September 2021 version 
-is likely to use Java&nbsp;17.</p>
+an OpenJDK (although Eclipse calls it a JRE), so you can use it without downloading a separate JDK.
+The December 2021 version includes a Java&nbsp;17 SDK.</p>
       
 <p>The first time you start Eclipse, you will be asked to specify a <newword>workspace</newword>,
 which is the directory where your work will be stored.  You can accept the default name, or
@@ -485,37 +365,38 @@ a Java project, go to the "New" submenu in the "File" menu, and select the "Java
 In the window that pops up, you will need to fill in a "Project Name," which can be anything you like.
 There are two other sections of the window that you might need to pay attention to:</p>
 
-<img src="eclipse-create-project.png" width="578" height="357" 
-      tex="eclipse-create-project.eps" texscale="0.6"/>
+<img src="eclipse-create-project.png" width="579" height="247" swingwidth="570" swingheight="311"
+      tex="eclipse-create-project.eps" texscale="0.6"
+      bordered="true"/>
 
-<np>If the project will use JavaFX, and if you have configured the workspace for JavaFX as described
-in the next subsection, then you should make sure that the JRE configuration that you
-have created for JavaFX is selected in the "JRE" section of the dialog box, as shown here.  And for
-any program from this textbook, you should uncheck the option labeled "Create module-info.java file"
-in the "Module" section.    (The "Module" section appears in the June 2021 version of Eclipse but not
-in earlier versions.  For earlier versions, you might be asked whether you want to
-create module-info.java.  For the programs in this book, you should always say no.) 
-This textbook does <b>not</b> use modular programs.  Note that the
-workspace will remember these two settings for the next time that you create a new project
+<np><swing>For the "JRE," you should use an "execution environment," which should be set to 
+JavaSE&nbsp;17 or later, as shown here.</swing><fx>If the project 
+will use JavaFX, you must already have configured the workspace
+for JavaFX, as described at the end of this section.  You should
+make sure that the JRE configuration that you
+have created for JavaFX is selected in the "JRE" section of the dialog box, as shown here.  For a project
+that does not require JavaFX, you can set the JRE to be an "execution environment," which
+should be set to JavaSE&nbsp;17 or later.</fx>  And for
+any program from this textbook, you need to uncheck the option labeled "Create module-info.java file"
+in the "Module" section.  This textbook does <b>not</b> use modular programs!  Note that the
+workspace will remember these two settings for the next time that you create a new project<fx>
 and that it is harmless to use a JRE with JavaFX support even for a project that does not
-use JavaFX.</np>
+use JavaFX</fx>.</np>
 
 <p>After entering a project name, and changing the options if necessary,
-click the "Finish" button.  Remember to say "Don't Create" if Eclipse
-asks you whether you want to create "module-info.java".
- The project should appear in the
+click the "Finish" button.  The project should appear in the
 "Package Explorer" view on the left side of the Eclipse window.  
 Click on the small triangle or plus sign next to the project name to see the
 contents of the project.  Assuming that you use the default settings, there should be
 a directory named "src," which is where your Java source code files will go.  The project also 
 contains the "JRE System Library". This is the collection of standard built-in classes 
-that come with Java; if you have configured the project for JavaFX, it will also include
-the JavaFX classes.</p>
+that come with Java<fx>; if you have configured the project for JavaFX, it will also include
+the JavaFX classes</fx>.</p>
    
 <p>To run any of the sample Java programs from this textbook, you need to copy the source code file into
 your Eclipse Java project.  Assuming that you have downloaded the source code file onto your
 computer, you can copy-and-paste it into the Eclipse window.  (Right-click the file icon
-(or control-click on Mac&nbsp;OS); select "Copy" 
+(or control-click on MacOS); select "Copy" 
 from the pop-up menu; then right-click the project's src folder in the Eclipse window, and select
 "Paste". Be sure to paste it into the src folder, not into the project itself; files outside
 the <code>src</code> folder are <b>not</b> treated as Java source code files.) Alternatively, you can try dragging
@@ -523,8 +404,8 @@ the file icon from a file browser window onto the src folder in the Eclipse wind
 
 <p>To use the <classname>TextIO</classname>-based examples from this textbook, you must add the
 source code file <sourceref href="textio/TextIO.java">TextIO.java</sourceref> to your project.  This file has to be in
-a "package" named <code>textio</code>.  If you have downloaded <code>TextIO.java</code>
-and placed it into a folder named "textio," as described above, then you can simply copy-and-paste 
+a "package" named <code>textio</code>.  If you already have <code>TextIO.java</code>
+in a folder named "textio," as described above, then you can simply copy-and-paste 
 the <code>textio</code> folder
 into the "src" folder of your project.  
 Alternatively, you can create the <code>textio</code>
@@ -538,10 +419,10 @@ you accidently put a file in the wrong location.)</p>
 <p>Once a Java program is in the project, you can open it in an editor by double-clicking the
 file name in the "Package Explorer" view.  To run the program,
 right-click in the editor window, or on the file name in
-the Package Explorer view (or control-click in Mac&nbsp;OS).  In the menu that pops
+the Package Explorer view (or control-click in MacOS).  In the menu that pops
 up, go to the "Run As" submenu, and select "Java Application".  The program
 will be executed.  If the program writes to standard output, the output will
-appear in the "Console" view, in the area of the Eclipse window below the editing area.  If the program uses
+appear in the "Console" view, in the section of the Eclipse window below the editor section.  If the program uses
 <classname>TextIO</classname> or <classname>Scanner</classname> for input, you will have to type the required input into
 the "Console" view&mdash;<b>click the "Console" view before you start typing</b> so that
 the characters that you type will be sent to the correct part of the window.
@@ -611,9 +492,8 @@ press Return or Enter.  (You can also click an item with the mouse to select it,
 or hit Escape to dismiss the list.)  If there is
 only one possible completion when you hit Control-Space, it will be
 inserted automatically.  By default, Content Assist will also pop up automatically,
-after a short delay, when you type a period or certain other characters.
-For example, if you type "<code>TextIO.</code>" and pause for just a
-fraction of a second, you will get a list of all the subroutines in the
+when you type a period or certain other characters.
+For example, if you type "<code>TextIO.</code>", you will get a list of all the subroutines in the
 <classname>TextIO</classname> class.  Personally, I find this auto-activation annoying.
 You can disable it in the Eclipse Preferences.  (Look under Java / Editor /
 Content Assist, and turn off the "Enable auto activation" option.)  You can
@@ -623,95 +503,9 @@ still call up Code Assist manually with Control-Space.</p>
 If you find a problem when you run it, it's very
 easy to go back to the editor, make changes, and run it again.</p>
 
-
-</subsection>
-
-<subsection id="basics.6.3a" title="Using JavaFX in Eclipse">
-
-<p>You are probably using a JDK that does not include JavaFX, which means that you need to
-configure your Eclipse projects to use it.  There are many ways to do that.  My goal here is
-<b>not</b> to present the most "correct" or general way to do it; I just want to make it
-possible to easily work with basic JavaFX programs like the ones that come with this textbook.
-I will discuss a one-time configuration of an Eclipse workspace that seems to work reliably for
-all the versions of Eclipse in which I have tried it.</p>
-
-<p>You need to get a JavaFX SDK from 
-<a href="https://gluonhq.com/products/javafx/">the JavaFX download site</a>,
-as discussed above.  You want an SDK whose major version number is the
-same as the JDK version that is included in Eclipse.  For the June 2021 version of
-Eclipse, that would be JavaFX&nbsp;SDK&nbsp;16.</p>
-
-<p>To begin, open the Eclipse preferences, using the "Preferences" command (which is in the
-"Windows" menu on Linux and Windows and in the "Eclipse" menu on Mac&nbsp;OS).
-Expand the Java section in the list on the left, by clicking the small triangle or plus
-sign next to the word "Java."  Click on "Installed JREs."  You will see a list of the
-Java environments that Eclipse knows about.  In a new workspace, there should be just
-one, showing the JRE that is included in Eclipse.  You can click on that JRE to select
-it and click the "Duplicate" button to make a copy.  You can then add JavaFX support to the copy.
-(You could also just "Edit" the original JRE, or "Add" a completely new configuration.
-I recommend using "Duplicate", but if you add a new configuration,
-you would have the freedom to use a different JDK that you have downloaded,
-along with a matching JavaFX.)</p>
-
-<p>When you "Duplicate" an existing JRE, you should see a dialog
-box similar to the following.  The "JRE&nbsp;home"
-and "JRE&nbsp;name" will already be filled in, and there will be one entry under
-"JRE system libraries".</p>
-
-<img src="eclipse-fx.png" width="709" height="547" tex="eclipse-fx.eps"
-       texscale="0.5" alt="editing a JRE to add support for JavaFX to Eclipse"/>
-       
-<np>You should change the "JRE name" to something that indicates that it supports
-JavaFX.  This is just so that you will recognize the name when you create a project,
-as discussed in the previous subsection.  But the main thing is to add the
-JavaFX configuration.</np>
-
-<p>Remember that to use JavaFX, you need to make it available to your program both
-at compile time and at run time.  The first step in the configuration is to
-make it available at compile time.  To do that, you want to add the 
-JavaFX .jar files to the JRE system libraries:  Click the "Add External JARs" button,
-and navigate to the <i>lib</i> directory in the JavaFX&nbsp;SDK that you downloaded
-or installed.  You should see the JavaFX .jar files.  Select them all,
-and click "OK".  They should appear in the "JRE system libraries" list.</p>
-
-<p>The second step is to configure the JavaFX source files.
-This optional step will allow Eclipse to find the documentation for JavaFX,
-which can be very useful when you are writing programs.
-For this step,
-make sure that all of the JavaFX jar files are selected in the 
-list of .jar files.  Click the "Source Attachment"
-button.  In the "Source Attachment Configuration" dialog box, select "External Location",
-and click "External File".  Select the file <i>src.zip</i> from the JavaFX <i>lib</i> directory, and click
-"OK".  That's all there is to it.</p>
-
-<p>Finally, you must make JavaFX available to your programs at run time.
-To do that, you need to fill in the
-"Default VM arguments" input box by typing in the JavaFX command line options for
-the <i>java</i> command. The input box contains options that will be added to the
-<i>java</i> command every time you run a program in Eclipse using this JDK.
-You should type the same options that you would use on the <i>java</i> command
-line, as discussed above.  The value of the <code>-p</code> (or <code>--module-path</code>)
-option is the location of the JavaFX <i>lib</i> directory.  It should
-be exactly the same as the beginning of the paths for the JavaFX .jar files
-as shown in the "JRE system libraries" list.
-The value for <code>--add-modules</code> can be <code>ALL-MODULE-PATH</code>,
-as shown in the illustration.</p>
-
-<p>When everything is set up, click "Finish" and then click "Apply and Close" in
-the main "Preferences" dialog box. When you create a new Java project in the
-workspace, make sure that the JRE that you set up to use JavaFX is selected in
-the project creation dialog box. Look in the "JRE" section of the dialog box,
-select "Use project-specific JRE," and select the appropriate JRE from the popup menu.
-You should then be able to use JavaFX in that project.  If not, check your JRE configuration.
-You can "Edit" it in the same Java preferences where you set it up in the first place.
-If you can't compile JavaFX programs, make sure that you are using a JavaFX SDK with
-the same major version number as the built-in JDK in Eclipse (JavaFX&nbsp;16 for the
-June 2021 version of Eclipse). If you can compile JavaFX programs but not run them, 
-then the problem is likely to be with the "Default VM arguments".</p>
-
 <break/>
 
-<p>(As a side note, it is possible to use the JDK that is now included with Eclipse
+<p>(As a side note, it is possible to use the JDK that is included with Eclipse
 on the command line.  That JDK is a directory inside the Eclipse installation,
 with a long, complex name.  The best way to find the name might be to open
 The "Installed JREs" section of the Eclipse preferences, as described above, select the built-in
@@ -725,21 +519,18 @@ javac and java commands.)</p>
 </subsection>
 
 
-<subsection id="basics.6.5" title="BlueJ">
+
+<subsection id="basics.6.4" title="BlueJ">
    
 
-<p>Finally, I will mention BlueJ, a small IDE that is designed specifically for people who
+<p>As a simpler alternative to Eclipse, I will mention BlueJ, a small IDE that is designed specifically for people who
 are learning to program.  It is much less complex than Eclipse, but it
 does have some features that make it useful for education.
 BlueJ can be downloaded from <a href="https://bluej.org">bluej.org</a>.  There
-are installers available for Windows, MacOS, and Windows.  As of August 2021,
-the installers include OpenJDK&nbsp;11 as well as JavaFX&nbsp;11, so you
+are installers available for Windows, for MacOS, and for Debian-based Linux (such as Ubuntu Linux and Linux Mint).
+The installers include an OpenJDK as well as JavaFX (which is required to run BlueJ), so you
 will not need to do any additional downloading or configuration.
-There is also a generic installer that requires you to download a JDK and JavaFX
-separately.  When you run the generic installer, BlueJ will ask you to input
-the locations of the JDK and JavaFX.  (The current version of the generic installer 
-in July 2021 did not work for me with OpenJDK&nbsp;16 but did work with OpenJDK&nbsp;15.  
-It will certainly work with OpenJDK&nbsp;11.)</p>
+As of January, 2022, BlueJ supports Java&nbsp;11 but not later versions.</p>
 
 <p>In BlueJ, you can begin a project with the "New Project" command in the "Project" menu.
 A BlueJ project is simply a folder.  When you create a project, you will have to select
@@ -768,12 +559,12 @@ the name of a class or object.</p>
 a compile button in the project window, which compiles all the classes in the project.</p>
 
 <p>To run a program, it must already be compiled.  Right-click the icon of a compiled program.
-In the menu that pops up, you will see "<code>void&nbsp;main(String[]&nbsp;args)</code>".
-Select that option from the menu to run the program.  Just click "OK" in the dialog box that pops up.
-A separate window will open for input/output.</p>
+In the menu that pops up, you will see "<code>void&nbsp;main(String[]&nbsp;args)</code>"<fx> or,
+for a JavaFX program, "Run JavaFX Application")</fx>.
+Select that option from the menu to run the program.</p>
 
 <p>One of the neatest features of BlueJ is that you can actually use it to run any subroutine,
-not just <code>main</code>.  If a class contains other subroutines, you will see them in the
+not just <code>main()</code>.  If a class contains other subroutines, you will see them in the
 list that you get by right-clicking its icon.  A pop-up dialog allows you to enter any parameters
 required by the routine, and if the routine is a function, you will get another dialog box
 after the routine has been executed to tell you its return value.  This allows easy testing of
@@ -786,7 +577,7 @@ you until we get to object-oriented programming in <localref href="OOP"/>.</p>
 
   
    
-<subsection id="basics.6.6" title="The Problem of Packages">
+<subsection id="basics.6.5" title="The Problem of Packages">
    
 <p>Every class in Java is contained in something called a <newword>package</newword>.
 Classes that are not explicitly  put into a  package are in the "default" package.
@@ -820,8 +611,8 @@ a class that is in a non-default package cannot use a class from the default pac
 That is, if <classname>TextIO</classname> were in the default package, then
 it could <b>only</b> be used by programs that are also in the default package.
 (In fact, in earlier versions of this textbook, <classname>TextIO</classname> was
-in the default package.  I have moved it to package <classname>textio</classname>
-for Version&nbsp;8 of the book.)</np>
+in the default package.  I moved it to package <classname>textio</classname>
+as of Version&nbsp;8 of the book.)</np>
 
 <p>When packages are used in a command-line environment, some complications
 arise.  For example, if a program is in a package named <classname>test.pkg</classname>, then
@@ -831,7 +622,7 @@ execute the program, you should be working in the main directory, not in the sub
 When you compile the source code file, you have to include the name of the
 directory in the command:  For example, for a program in package <classname>test.pkg</classname> 
 use "<code>javac&nbsp;test/pkg/ClassName.java</code>"
-on Linux or Mac&nbsp;OS, or "<code>javac&nbsp;test\pkg\ClassName.java</code>" on
+on Linux or MacOS, or "<code>javac&nbsp;test\pkg\ClassName.java</code>" on
 Windows.  The command for executing the program is then
 "<code>java&nbsp;test.pkg.ClassName</code>", with a period separating the package
 name from the class name.</p>
@@ -839,11 +630,11 @@ name from the class name.</p>
 </subsection>   
 
 
-<subsection title="About jshell" id="basics.6.7">
+<subsection title="About jshell" id="basics.6.6">
 
 <p>I will mention one more command-line tool for working with Java: <i>jshell</i>.
-The <code>jshell</code> command is a standard part of the JDK for Java&nbsp;9 or
-later.  If you have Java&nbsp;9 or later, and if you can use the <code>javac</code>
+The <code>jshell</code> command is a standard part of the JDK (after Java&nbsp;8).  
+If you can use the <code>javac</code>
 and <code>java</code> commands on the command line, then you can also use <code>jshell</code>.
 The purpose of <code>jshell</code> is to let you type in and execute Java code
 without the bother of creating a .java file and writing a main program.  To start
@@ -856,7 +647,7 @@ the user is shown in bold.</web></p>
 
 <pre>
 $ <b>jshell</b>
-|  Welcome to JShell -- Version 11.0.7
+|  Welcome to JShell -- Version 17.0.1
 |  For an introduction type: /help intro
 
 jshell> <b>System.out.println("Hello World")</b>
@@ -876,9 +667,228 @@ jshell> <b>/exit</b>
 its features.  I won't give any more detailed information about it in this book, but
 you can learn more at</np>
 
-<p align="center"><a href="https://docs.oracle.com/en/java/javase/11/jshell/introduction-jshell.html">https://docs.oracle.com/en/java/javase/11/jshell/introduction-jshell.html</a></p>
+<p align="center"><a href="https://docs.oracle.com/en/java/javase/17/jshell/introduction-jshell.html">https://docs.oracle.com/en/java/javase/17/jshell/introduction-jshell.html</a></p>
 
 <np>or you can use the <code>/help</code> command inside jshell to learn more about it.</np>
+
+</subsection>
+
+
+
+<subsection id="basics.6.7" title="JavaFX on the Command Line" scope="fx">
+
+<p>Version 7 of this textbook used Swing for GUI programming.  When I began work on Version&nbsp;8, JavaFX
+had been added to the standard JDK, and it seemed to be the furture of Java GUIs.  So, in Version&nbsp;8,
+I made the switch to JavaFX.  Not long after that, however, JavaFX was removed from the JDK, and it is
+now developed and distributed separately.  This has made it somewhat more difficult to use.  So for Version&nbsp;9,
+I decided to make the book available in two editions, one covering Swing and one covering JavaFX.
+The only significant differences are in the chapters that cover GUI programming, <localref href="GUI1"/>
+and <localref href="GUI2"/>.  This edition covers JavaFX.  If you also want to learn Swing, you can
+read those two chapters in the <a href="https://math.hws.edu/javanotes-swing/">Swing&nbsp;edition</a>.</p>
+
+<p>To use JavaFX on the command line or in Eclipse, you have to download it onto your computer.  You can find
+download links on this page:</p>
+
+<p align="center"><a href="https://gluonhq.com/products/javafx/">https://gluonhq.com/products/javafx/</a></p>
+
+<np>You need to download a JavaFX "SDK"&mdash;<b>not</b> "jmods" or "Monocle SDK"&mdash;that is 
+appropriate for your operating system (Linux, MacOS, or Windows) and for the JDK that you
+are using.  You should get the version number that matches the version 
+of the JDK; that probably means JavaFX version 17.0.1.  (Only the major version number, 17, has to match.)
+Furthermore, you need to select the "Architecture," which refers to the CPU type.
+The architecture should match the architecture used by your JDK.  If you are using an "x64" JDK from
+Adoptium or if you are using an "x86_64" Eclipse package, then you need JavaFX for the x64 architecture.
+If you are using an "aarch64" JDK from Adoptium or an "AArch64" package from Eclipse, then you need
+the aarch64 architecture.</np>
+
+<p>When you download the JavaFX SDK, it will be in the form of a compressed archive
+file.  You will need to extract the contents of the archive.  
+Usually, simply double-clicking the icon of the archive file
+will either extract the contents or open a program that you can use to extract the
+contents.  You will get a directory with a name something like 
+<i>javafx-sdk-17.0.1</i>.  You can put the directory anywhere on your
+computer, but you will need to know where it is located.</p>
+
+<p>JavaFX is a collection of Java classes that can be used for making GUI programs.
+In this book, it is first used in <localref href="control.8"/> and is covered extensively
+in <localref href="GUI1"/> and <localref href="GUI2"/>.  It is also used in example
+programs in several other chapters. 
+This subsection explains how to use JavaFX on the command line.
+It assumes that you have already downloaded the JavaFX SDK, as described above.
+JavaFX is distributed as a set of "modules."  (See <localref href="subroutines.5.3a"/>)
+The modules are stored in .jar files in the <i>lib</i> subdirectory of the JavaFX SDK.
+When using the <code>javac</code> and <code>java</code> commands on a program that uses
+JavaFX, you need to tell the command where to find the JavaFX modules.</p>
+
+<p>The modules are specified for the <code>javac</code> and <code>java</code> commands
+using two command options:  <code>--module-path</code> and <code>--add-modules</code>.
+The first option specifies the directory that contains the JavaFX .jar files, and the
+second says which modules you actually want to use.  For the purposes of this
+textbook, you can set the value of <code>--add-modules</code> to <code>ALL-MODULE-PATH</code>,
+which makes all of JavaFX available to your program.  The value of <code>--module-path</code>
+is a path to the <i>lib</i> directory that contains the JavaFX .jar files.
+For example, let's say that the JavaFX SDK directory is named <i>openjfx-sdk-17.0.1</i> and
+that it is in my home directory, <i>/home/eck</i>.  Then the full path to the
+<i>lib</i> directory is <code>/home/eck/openjfx-sdk-11/lib</code>, and the <code>javac</code>
+command for compiling JavaFX programs would be:</p>
+
+<pre>javac --module-path=/home/eck/openjfx-sdk-17.0.1/lib --add-modules=ALL-MODULE-PATH</pre>
+
+<np>This would be followed on the same line by the .java files that you want to compile.  
+Exactly the same options would
+be used with the <code>java</code> command to run JavaFX programs.
+The option <code>--module-path</code> can also be abbreviated to <code>-p</code>, with no
+equals sign.  So this can also be written</np>
+
+<pre>javac -p /home/eck/openjfx-sdk-17.0.1/lib --add-modules=ALL-MODULE-PATH</pre>
+
+<p>If you don't know the full path to the JavaFX SDK, open a command window and use
+the <i>cd</i> command to move to the SDK's <i>lib</i> directory. On Mac or Linux,
+enter the command <i>pwd</i> to print out the full path of the working directory.
+On windows, use the command <i>cd</i>, with no directory specified, to print out the path.
+Use the output from that command as the value for the <code>--module-path</code>. On windows, a typical
+<code>java</code> command for use with javafx might look something like this:</p>
+
+<pre>java -p C:\Users\eck\openjfx-sdk-17.0.1\lib --add-modules=ALL-MODULE-PATH</pre>
+
+<np>If the path name includes a space, or certain other special characters, it
+must be enclosed in quotation marks.  For example,</np>
+
+<pre>java -p "C:\JavaFX Support\openjfx-sdk-17.0.1\lib" --add-modules=ALL-MODULE-PATH</pre>
+
+<p>Of course, this is very verbose, and it would be nice not to have to retype it
+all the time.  On MacOS or Linux, it is easy to define <newword>aliases</newword>,
+which are shortcuts for long commands.  On my computer, I use an alias to define
+a <i>jfxc</i> command for compiling JavaFX programs. The alias is defined as follows:</p>
+
+<pre>alias jfxc='javac -p /home/eck/javafx-sdk-17.0.11/lib --add-modules=ALL-MODULE-PATH'</pre>
+                  
+<np>Similarly, I defined an alias for running JavaFX programs:</np>
+
+<pre>alias jfx='java -p /home/eck/javafx-sdk-17.0.1/lib --add-modules=ALL-MODULE-PATH'</pre>
+
+<np>This lets me compile and run JavaFX programs using commands such as</np>
+
+<pre>jfxc MyJavaFXProgram.java
+jfx MyJavaFXProgram</pre>
+
+<p>To make the alias definitions permanent on my Linux computer, I added them to a file named
+<i>.bashrc</i>.  On MacOS, I would put them in
+a file named <i>.zshrc</i> (for MacOS 10.15 and later) or in a file named
+<i>.bash_profile</i> (for earlier versions of MacOS).  That file must
+be placed in your home directory.   The file might or might not already exist; 
+if it doesn't exist, you can create it.  The file is
+executed whenever you open a Terminal window. (In particular, changes do
+not become effective until you open a new Terminal.) Note that the file name
+begins with a period, which makes it a "hidden file."  That means that 
+it won't show up in a usual directory listing or file browser, but you should
+be able to set your file browser to show hidden files.</p>
+
+<p>Unfortunately, Windows currently does not have an equivalent of a .bashrc or
+.zshrc for its <i>cmd</i> command window.  One option is
+to make a batch script file to run the command.  For compilation, you could 
+create a file named <i>jfxc.bat</i> containing just one line similar to</p>
+
+<pre>javac -p C:\Users\eck\javafx-sdk-17.0.1\lib --add-modules=ALL-MODULE-PATH %*</pre>
+
+<np>but, of course, using the appropriate JavaFX location for your own computer.
+The "<code>%*</code>" at the end represents the inputs to the <code>javac</code> command.
+The file can be in the current directory or somewhere on the system path, such
+as the JDK <i>bin</i> directory.  Then you can use <code>jfxc</code> as a 
+command for compiling JavaFX programs. 
+You can handle the <code>java</code> command with a similar .bat file.</np>
+
+</subsection>
+
+
+
+<subsection id="basics.6.8" title="Using JavaFX in Eclipse" scope="fx">
+
+<p>To compile and run JavaFX programs in Eclipse, you need to configure
+your Eclipse workspace to support it.   My goal here is
+<b>not</b> to present the most "correct" or general way to configure Eclipse for JavaFX;
+I just want to make it possible to easily work with basic JavaFX programs like the ones that come with this textbook.
+I will discuss a one-time configuration of an Eclipse workspace that seems to work reliably for
+all the versions of Eclipse in which I have tried it.</p>
+
+<p>The first step is to download a JavaFX SDK from 
+<a href="https://gluonhq.com/products/javafx/">the JavaFX download site</a>,
+as discussed in the previous subsection.</p>
+
+<p>To begin, open the Eclipse preferences, using the "Preferences" command (which is in the
+"Windows" menu on Linux and Windows and in the "Eclipse" menu on MacOS).
+Expand the Java section in the list on the left, by clicking the small triangle or plus
+sign next to the word "Java."  Click on "Installed JREs."  You will see a list of the
+Java environments that Eclipse knows about. The list should include
+at least the JRE that is included in Eclipse, and it might also include other JREs
+that have been installed.  You can click on a JRE to select
+it and click the "Duplicate" button to make a copy.  You can then add JavaFX support to the copy.
+(You could also just "Edit" the original JRE, or "Add" a completely new configuration.
+I recommend using "Duplicate", but if you add a new configuration,
+you would have the freedom to use a different JDK that you have downloaded,
+along with a matching JavaFX.)</p>
+
+<p>When you "Duplicate" an existing JRE, you should see a dialog
+box similar to the following.  The "JRE&nbsp;home"
+and "JRE&nbsp;name" will already be filled in, and there will be just one entry under
+"JRE system libraries".</p>
+
+<img src="eclipse-fx.png" width="696" height="523" tex="eclipse-fx.eps"
+       texscale="0.5" alt="editing a JRE to add support for JavaFX to Eclipse"
+        bordered="true" />
+       
+<np>You should change the "JRE name" to something that indicates that it supports
+JavaFX.  This is just so that you will recognize the name when you create 
+a new project in Eclipse.  But the main thing is to add the
+JavaFX configuration.</np>
+
+<p>Remember that to use JavaFX, you need to make it available to your program both
+at compile time and at run time.  The first step in the configuration is to
+make it available at compile time.  To do that, you want to add the 
+JavaFX .jar files to the JRE system libraries:  Click the "Add External JARs" button,
+and navigate to the <i>lib</i> directory in the JavaFX&nbsp;SDK that you downloaded.
+You should see the JavaFX .jar files.  Select them all,
+and click "OK".  They should appear in the "JRE system libraries" list.</p>
+
+<p>The second step is to configure the JavaFX source file.
+This step is optional, but it will allow Eclipse to find the documentation for JavaFX,
+which can be very useful when you are writing programs.
+For this step,
+make sure that all of the JavaFX jar files are selected in the 
+list of .jar files, as shown in the above illustration.  Click the "Source Attachment"
+button.  In the "Source Attachment Configuration" dialog box, select "External Location",
+and click "External File".  Select the file <i>src.zip</i> from the JavaFX SDK directory, and click
+"OK".  That's all there is to it.</p>
+
+<p>Finally, you must make JavaFX available to your programs at run time.
+To do that, you need to fill in the
+"Default VM arguments" input box by typing in the JavaFX command line options for
+the <i>java</i> command.
+The input box contains options that will be added to the
+<i>java</i> command every time you run a program in Eclipse using this JRE.
+The <code>-p</code> (or <code>--module-path</code>) and <code>ALL-MODULE-PATH</code>
+options that are needed were discussed in the previous subsection.
+Examples appropriate for my own computer are shown in the above illustration.
+The value of the <code>-p</code> 
+option is the location of the JavaFX <i>lib</i> directory.  It should
+be exactly the same as the beginning of the paths for the JavaFX .jar files
+as shown in the "JRE system libraries" list.  (But enclose the value in quotation
+marks if it includes spaces or other special characters.)
+The value for <code>--add-modules</code> can be <code>ALL-MODULE-PATH</code>,
+as shown in the illustration.</p>
+
+<p>When everything is set up, click "Finish" and then click "Apply and Close" in
+the main "Preferences" dialog box. When you create a new Java project in the
+workspace, make sure that the JRE that you set up to use JavaFX is selected in
+the project creation dialog box. Look in the "JRE" section of the dialog box,
+select "Use project-specific JRE," and select the JRE with JavaFX from the popup menu.
+You should then be able to use JavaFX in that project.  If not, check your JRE configuration.
+You can "Edit" it in the same Java preferences where you set it up in the first place.
+If you can't compile JavaFX programs, make sure that you are using a JavaFX SDK with
+the same major version number as the built-in JDK in Eclipse (JavaFX&nbsp;17 for the
+December 2021 version of Eclipse). If you can compile JavaFX programs but not run them, 
+check the "Default VM arguments" and check that you have the JavaFX SDK for the
+correct operating system and architecture.</p>
 
 </subsection>
 

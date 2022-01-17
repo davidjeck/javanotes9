@@ -67,10 +67,10 @@
 <xsl:apply-templates/>
 </xsl:template>
    
-<xsl:template match="subsection">
+<xsl:template match="subsection"><xsl:if test="@scope != 'fx'">
 <xsl:choose><xsl:when test="ancestor::source">\section*</xsl:when><xsl:otherwise>\subsection</xsl:otherwise></xsl:choose><xsl:if test="@shorttitle">[<xsl:value-of select="@shorttitle"/>]</xsl:if>{<xsl:value-of select="@title"/>}\label{<xsl:value-of select="@id"/>}
 <xsl:apply-templates/>
-</xsl:template>
+</xsl:if></xsl:template>
    
 <xsl:template match="preface">
 \chapter*{Preface}\addcontentsline{toc}{chapter}{Preface}\markboth{\textsc{Preface}}{\textsc{Preface}}

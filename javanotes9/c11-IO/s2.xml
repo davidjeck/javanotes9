@@ -304,7 +304,7 @@ from one type of computer to another. Here are some examples:</p>
 <li><code>data.dat</code> &mdash; on any computer, this would be a file named "data.dat"
 in the current directory.</li>
 <li><code>/home/eck/java/examples/data.dat</code> &mdash; This is an absolute path name
-in a UNIX operating system, including Linux and Mac&nbsp;OS&nbsp;X. 
+in a UNIX operating system, including Linux and MacOS&nbsp;X. 
 It refers to a file named data.dat in a directory
 named examples, which is in turn in a directory named java,&nbsp;&dots;.</li>
 <li><code>C:\eck\java\examples\data.dat</code> &mdash; An absolute path name on a 

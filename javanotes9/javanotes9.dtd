@@ -37,7 +37,8 @@
 <!ATTLIST subsection 
 	id ID #REQUIRED
 	title CDATA #REQUIRED
-	shorttitle CDATA #IMPLIED>
+	shorttitle CDATA #IMPLIED
+    scope (fx|swing|both) "both">
 <!ELEMENT endchapter EMPTY>
 
 <!ELEMENT source (%text;,subsection*)>

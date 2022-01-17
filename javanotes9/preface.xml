@@ -164,7 +164,7 @@ PDF version, the XML is processed into a form that can be used by the TeX
 typesetting program.  In addition to
 XML files, the source includes DTDs, XSLT transformations, Java source code files,
 image files, a TeX macro file, and a couple of scripts that are used in processing.
-The scripts work on Linux and on Mac&nbsp;OS.
+The scripts work on Linux and on MacOS.
 </p>
 
 <p><b>I have made the complete source files available for download at

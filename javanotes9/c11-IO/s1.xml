@@ -351,7 +351,7 @@ read, the end-of-line marker is read from the input stream, but it is not part
 of the string that is returned.  Different input streams use different
 characters as end-of-line markers, but the <code>readLine</code> method
 can deal with all the common cases.  (Traditionally, Unix computers, including Linux
-and Mac OS&nbsp;X, use a line feed character, <code>'\n'</code>, to mark an end of line;
+and MacOS, use a line feed character, <code>'\n'</code>, to mark an end of line;
 classic Macintosh used a carriage return character,&nbsp;<code>'\r'</code>;
 and Windows uses the two-character sequence "<code>\r\n</code>".  In general, modern
 computers can deal correctly with all of these possibilities.)</np>

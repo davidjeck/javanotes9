@@ -82,10 +82,10 @@
 <xsl:apply-templates/>
 </xsl:template>
    
-<xsl:template match="subsection">
+<xsl:template match="subsection"><xsl:if test="@scope != 'fx'">
 <xsl:choose><xsl:when test="ancestor::source">\section*</xsl:when><xsl:otherwise>\subsection</xsl:otherwise></xsl:choose><xsl:if test="@shorttitle">[<xsl:value-of select="@shorttitle"/>]</xsl:if>{<xsl:value-of select="@title"/>}\label{<xsl:value-of select="@id"/>}
 <xsl:apply-templates/>
-</xsl:template>
+</xsl:if></xsl:template>
    
 <xsl:template match="preface">
 \chapter*{Preface}\phantomsection\addcontentsline{toc}{chapter}{Preface}\markboth{\textsc{Preface}}{\textsc{Preface}}
@@ -104,14 +104,14 @@
 <xsl:template match="exercises">
 \begin{exercises}
 <xsl:for-each select="exercise">
-\exercise \marginpar{\small{\textit{\href{https://math.hws.edu/eck/cs124/javanotes9/c<xsl:number count="chapter"/>/ex<xsl:number count="exercise"/>-ans.html}{\ \ \ (solution)}}}}\ignorespaces <xsl:apply-templates select="exercise-question"/>
+\exercise \marginpar{\small{\textit{\href{https://math.hws.edu/eck/cs124/javanotes9-swing/c<xsl:number count="chapter"/>/ex<xsl:number count="exercise"/>-ans.html}{\ \ \ (solution)}}}}\ignorespaces <xsl:apply-templates select="exercise-question"/>
 </xsl:for-each> 
 
 \end{exercises}
 </xsl:template>
 
 <xsl:template match="quiz">
-\begin{quiz}\marginpar{\small{\textit{\href{https://math.hws.edu/eck/cs124/javanotes9/c<xsl:number count="chapter"/>/quiz_answers.html}{\ \ (answers)}}}}
+\begin{quiz}\marginpar{\small{\textit{\href{https://math.hws.edu/eck/cs124/javanotes9-swing/c<xsl:number count="chapter"/>/quiz_answers.html}{\ \ (answers)}}}}
 <xsl:for-each select="question">
 \quizquestion <xsl:apply-templates select="ques"/>
 </xsl:for-each>
@@ -190,7 +190,7 @@
 <xsl:template match="code|ptype|newword|codedef|bnf|newcode|classname|atype|start">\<xsl:value-of select="name()"/>{<xsl:apply-templates/>}</xsl:template>
 
 <!-- 
-<xsl:template match="start">\<xsl:value-of select="name()"/>{<xsl:apply-templates/>}<xsl:if test="ancestor::section">\marginpar{\small{\textit{\href{https://math.hws.edu/eck/cs124/javanotes9/c<xsl:number count="chapter"/>/s<xsl:number count="section"/>.html }{\ \ \ (online)}}}}</xsl:if></xsl:template>
+<xsl:template match="start">\<xsl:value-of select="name()"/>{<xsl:apply-templates/>}<xsl:if test="ancestor::section">\marginpar{\small{\textit{\href{https://math.hws.edu/eck/cs124/javanotes9-swing/c<xsl:number count="chapter"/>/s<xsl:number count="section"/>.html }{\ \ \ (online)}}}}</xsl:if></xsl:template>
 -->
 
 <xsl:template match="a"><xsl:choose>
@@ -218,8 +218,8 @@
 </xsl:template>
    
 <xsl:template match="jarref"><xsl:variable name="a" select="str:new(@href)"/><xsl:variable name="b" select="str:replaceAll($a,'_','\\_')"/><xsl:choose>
-   <xsl:when test="text()">\href{https://math.hws.edu/eck/cs124/javanotes9/jars/c<xsl:number count="chapter"/>/<xsl:value-of select="$b"/>}{<xsl:apply-templates/>}</xsl:when>
-   <xsl:otherwise>\href{https://math.hws.edu/eck/cs124/javanotes9/jars/chapter<xsl:number count="chapter"/>/<xsl:value-of select="$b"/>}{<xsl:value-of select="$b"/>}</xsl:otherwise>
+   <xsl:when test="text()">\href{https://math.hws.edu/eck/cs124/javanotes9-swing/jars/c<xsl:number count="chapter"/>/<xsl:value-of select="$b"/>}{<xsl:apply-templates/>}</xsl:when>
+   <xsl:otherwise>\href{https://math.hws.edu/eck/cs124/javanotes9-swing/jars/chapter<xsl:number count="chapter"/>/<xsl:value-of select="$b"/>}{<xsl:value-of select="$b"/>}</xsl:otherwise>
 </xsl:choose></xsl:template>
    
 <xsl:template match="localref">

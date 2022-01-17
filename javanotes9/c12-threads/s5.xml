@@ -58,9 +58,9 @@ you need to add JavaFX options to the <code>javac</code>
 and <code>java</code> commands.  Let's say that you've defined
 <code>jfxc</code> and <code>jfx</code> commands that are equivalent
 to the <code>javac</code> and <code>java</code> with JavaFX options included, as discussed in
-<localref href="basics.6.2a"/>. Then, to compile
+<localref href="basics.6.7"/>. Then, to compile
 all the java files in the package <sourceref href="netgame/common/">netgame.common</sourceref>,
-for example, you can use the following command in Mac OS or Linux:</p>
+for example, you can use the following command in MacOS or Linux:</p>
 
 <pre>jfxc netgame/common/*.java</pre>
 

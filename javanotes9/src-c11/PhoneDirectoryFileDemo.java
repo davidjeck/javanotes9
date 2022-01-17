@@ -24,7 +24,7 @@ public class PhoneDirectoryFileDemo {
 	 * file is stored in the user's home directory.  The "." at the
 	 * beginning of the file name means that the file will be a
 	 * "hidden" file on Unix-based computers, including Linux and
-	 * Mac OS X.
+	 * MacOS.
 	 */
 	private static String DATA_FILE_NAME = ".phone_book_demo";
 

@@ -72,7 +72,7 @@ technically subroutines that have been written and made available for use in
 Java programs.</p>
 
 <p>Java is platform-independent. That is, the same program can run on platforms
-as diverse as Mac&nbsp;OS, Windows, Linux, and others. The same Java API must work
+as diverse as MacOS, Windows, Linux, and others. The same Java API must work
 on all these platforms. But notice that it is the <b>interface</b>
 that is platform-independent; the <b>implementation</b> of some parts of the API varies from
 one platform to another. A Java system on a particular computer includes
@@ -312,7 +312,7 @@ standard modules that are required to run that application.  That runtime
 can then be distributed as a standalone application that can be executed even
 by people who have not installed a JDK on their computer.  But just as for
 the JDK itself, different versions of the custom runtime will be needed for Windows,
-for Mac&nbsp;OS, and for Linux.  Furthermore, when security updates are made
+for MacOS, and for Linux.  Furthermore, when security updates are made
 to the JDK, they are not automatically applied to custom runtimes, so the
 application developer takes on the responsibility of updating custom
 runtimes.  Once again, this is really only useful for fairly large applications.</p>

@@ -221,7 +221,7 @@ be counted using</p>
 <pre>long lineCt = in.lines().count();</pre>
    
 <p>One note about the command line for calling this program. If you are
-using UNIX, including Mac OS or Linux, you can take advantage of something called "wildcards" in
+using UNIX, including MacOS or Linux, you can take advantage of something called "wildcards" in
 the command-line arguments. For example, if you say, "<code>java LineCounts *.txt</code>",
 the "*" is a wildcard. The operating system will expand "*.txt" into a list of
 all the files in the current directory that end in ".txt". Similarly, "*xx*"
@@ -941,7 +941,7 @@ public class <newcode>PhoneDirectoryXMLDemo</newcode> {
     * file is stored in the user's home directory.  The "." at the
     * beginning of the file name means that the file will be a
     * "hidden" file on Unix-based computers, including Linux and
-    * Mac OS X.
+    * MacOS.
     */
    private static String DATA_FILE_NAME = ".<newcode>phone_book_xml_demo</newcode>";
    

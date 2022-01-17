@@ -501,7 +501,7 @@ jar file</newword>.  A user can run an executable jar file in much the same way
 as any other application, usually by double-clicking the icon of the jar file.
 (The user's computer must have a correct version of Java installed, and the computer
 must be configured correctly for this to work.  The configuration is usually done automatically when
-Java is installed, at least on Windows and Mac OS.)</p>
+Java is installed, at least on Windows and MacOS.)</p>
    
 <p>The question, then, is how to create a jar file.  The answer depends on what
 programming environment you are using.  The two basic types of programming environment&mdash;command line
