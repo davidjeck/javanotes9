@@ -208,6 +208,11 @@
 <!ENTITY OOP_exercises SYSTEM "c5-OOP/exercises.xml">
 <!ENTITY OOP_quiz SYSTEM "c5-OOP/quiz.xml">
 
+<!-- Note for Chapter 6:  In the JavaFX version, sections 7 and 8 are
+     empty files.  In the Swing version, section 2 is an empty file.
+     This allows the same javanotes9.dtd and javanotes9-xml-includes.txt 
+     to work in both versions.-->
+
 <!ENTITY GUI1_intro SYSTEM "c6-GUI1/intro.xml">
 <!ENTITY GUI1_s1 SYSTEM "c6-GUI1/s1.xml"> 
 <!ENTITY GUI1_s2 SYSTEM "c6-GUI1/s2.xml"> 
@@ -215,6 +220,8 @@
 <!ENTITY GUI1_s4 SYSTEM "c6-GUI1/s4.xml">
 <!ENTITY GUI1_s5 SYSTEM "c6-GUI1/s5.xml">
 <!ENTITY GUI1_s6 SYSTEM "c6-GUI1/s6.xml">
+<!ENTITY GUI1_s7 SYSTEM "c6-GUI1/s7.xml">
+<!ENTITY GUI1_s8 SYSTEM "c6-GUI1/s8.xml">
 <!ENTITY GUI1_exercises SYSTEM "c6-GUI1/exercises.xml">
 <!ENTITY GUI1_quiz SYSTEM "c6-GUI1/quiz.xml">
 

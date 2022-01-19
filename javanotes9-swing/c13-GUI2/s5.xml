@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes9.dtd" >
+
+<section id="GUI2.5" title="Finishing Touches">
+   
+<p><start><big>I</big>n this final section</start>, I will present a program
+that is more complex and more polished than those we have looked at previously.
+Most of the examples in this book have been "toy" programs that illustrated
+one or two points about programming techniques.  It's time to put it all
+together into a full-scale program that uses many of the techniques that
+we have covered, and a few more besides.  After discussing the program and
+its basic design, I'll use it as an excuse to talk briefly about some of
+the features of Java that didn't fit into the rest of this book.</p>
+   
+<p>The program that we will look at is a Mandelbrot Viewer that lets the user
+explore the famous Mandelbrot set.  I will begin by explaining what that means.
+Note that an even more capable Mandelbrot program can be found at
+<a href="http://math.hws.edu/xJava/MB">http://math.hws.edu/xJava/MB</a>.</p>
+   
+   
+<subsection id="GUI2.5.1" title="The Mandelbrot Set">
+
+<p>The Mandelbrot set is a set of points in the xy-plane that is defined by a computational
+procedure.  To use the program, all you really need to know is that the Mandelbrot
+set can be used to make some pretty pictures, but here are the mathematical details:
+Consider the point that has real-number coordinates <code>(a,b)</code> and
+apply the following computation:</p>
+
+<pre>Let x = a
+Let y = b
+Repeat:
+   Let newX = x*x - y*y + a
+   Let newY = 2*x*y + b
+   Let x = newX
+   Let y = newY</pre>
+   
+<np>As the loop is repeated, the point <code>(x,y)</code> changes.  The question for the Mandelbrot set is,
+does <code>(x,y)</code> grow without bound, or is it trapped forever in a finite region
+of the plane?  If <code>(x,y)</code> escapes to infinity (that is, grows without bound), 
+then the starting point <code>(a,b)</code> is <b>not</b> in the Mandelbrot set.  If 
+<code>(x,y)</code> is trapped in a finite region, then <code>(a,b)</code> is in the 
+Mandelbrot set. Now, it is known that if <code>x<sup>2</sup>&nbsp;+&nbsp;y<sup>2</sup></code>
+ever becomes strictly greater than&nbsp;4, then <code>(x,y)</code> will escape to infinity.
+So, if <code>x<sup>2</sup>&nbsp;+&nbsp;y<sup>2</sup></code> ever becomes bigger than 4 in the
+above loop, we can end the loop and say that <code>(a,b)</code> is definitely not in the Mandelbrot
+set.  For a point <code>(a,b)</code> in the Mandelbrot set, the loop will never end.
+When we do this on a computer, of course, we don't want to have a loop that runs
+forever, so we put a limit on the number of times that the loop is executed:</np>
+   
+<pre>x = a;
+y = b;
+count = 0;
+while ( x*x + y*y &lt; 4.1 ) {
+   count++;
+   if (count > maxIterations)
+      break;
+   double newX = x*x - y*y + a;
+   double newY = 2*x*y + b;
+   x = newY;
+   y = newY;
+}</pre>
+
+<np>After this loop ends, if <code>count</code> is less than or equal to <code>maxIterations</code>,
+we can say that <code>(a,b)</code> is definitely not in the Mandelbrot set.  If <code>count</code> is
+greater than <code>maxIterations</code>, then <code>(a,b)</code> might or might not be
+in the Mandelbrot set, but the larger <code>maxIterations</code> is, the more likely that
+<code>(a,b)</code> is actually in the set.</np> 
+   
+<p>To make a picture from this procedure, use a rectangular grid of pixels to represent
+some rectangle in the plane.  Each pixel corresponds to some real number coordinates
+<code>(a,b)</code>.  (Use the coordinates of the center of the pixel.)  Run the above
+loop for each pixel.  If the <code>count</code> goes past <code>maxIterations</code>,
+color the pixel black; this is a point that is <i>possibly</i> in the Mandelbrot set.  Otherwise,
+base the color of the pixel on the value of <code>count</code> after the loop ends,
+using different colors for different counts.  In some sense, the higher the count, the
+closer the point is to the Mandelbrot set, so the colors give some information about
+points outside the set and about the shape of the set.  However, it's important to
+understand that the colors are arbitrary and that colored points are definitely <b>not</b>
+in the set.  Here is a picture that was produced by the Mandelbrot Viewer program
+using this computation.  The black region is the Mandelbrot set (except that not
+all black points are known to be definitely in the set):</p>
+        
+<img src="mandelbrot.png" width="253" height="200" alt="The Mandelbrot Set" tex="mandelbrot.eps"/>
+
+<p>When you use the program, you can "zoom in" on small regions of the plane.  To do so,
+just click-and-drag the mouse on the picture.  This will draw a rectangle around part of the picture.
+When you release the mouse, the part of the picture inside the rectangle will be zoomed
+to fill the entire display.  If you simply click a point in the picture, you will zoom
+in on the point where you click by a magnification factor of two.  (Shift-click or
+use the right mouse button to zoom out instead of zooming in.)  The interesting points
+are along the boundary of the Mandelbrot set.  In fact, the boundary is infinitely
+complex.  (Note that if you zoom in too far, you will exceed the capabilities of
+the <ptype>double</ptype> data type; nothing is done in the program to prevent this.)</p>
+   
+<p>Use the "MaxIterations" menu to increase
+the maximum number of iterations in the loop.  Remember that black pixels might or might
+not be in the set; when you increase "MaxIterations," you might find that a black region
+becomes filled with color.  The "Palette" menu determines the set of colors that are
+used.  Different palettes give very different visualizations of the set.  The
+"PaletteLength" menu determines how many different colors are used.  In the default
+setting, a different color is used for each possible value of <code>count</code> in
+the algorithm.  Sometimes, you can get a much better picture by using a different
+number of colors.  If the palette length is less than <code>maxIterations</code>,
+the palette is repeated to cover all the possible values of <code>count</code>;
+if the palette length is greater than <code>maxIterations</code>, only part of
+of the palette will be used.  (If the picture is of an almost uniform color, try
+<i>decreasing</i> the palette length, since that makes the color vary more quickly
+as <code>count</code> changes.  If you see what look like randomly colored dots
+instead of bands of color, try <i>increasing</i> the palette length.)</p>
+   
+<p>The program has a "File" menu that can be used to save the picture as a PNG image file.  You
+can also save a "param" file which simply saves the settings that produced the current
+picture.  A param file can be read back into the program using the "Open" command.</p>
+   
+<p>The Mandelbrot set is named after Benoit Mandelbrot, who was the first person
+to note the incredible complexity of the set.  It is astonishing that such complexity
+and beauty can arise out of such a simple algorithm.</p>
+   
+</subsection>
+
+
+<subsection id="GUI2.5.2" title="Design of the Program">
+
+<p>Most classes in Java are defined in packages.  While we have used
+standard packages such as <code>javax.swing</code> and <code>java.io</code>
+extensively, almost all of my programming examples have been in the
+"default package," which means that they are not declared to belong
+to any named package.  However, when doing more serious programming, 
+it is good style to create a package to hold the classes for your
+program.  The Oracle corporation recommends that package names should be
+based on an Internet domain name of the organization that produces
+the package.  My office computer has domain name <code>eck.hws.edu</code>,
+and no other computer in the world should have the same name.
+According to Oracle, this allows me to use the package name
+<code>edu.hws.eck</code>, with the elements of the domain name
+in reverse order.  I can also use sub-packages of this package,
+such as <code>edu.hws.eck.mdb</code>, which is the package name
+that I decided to use for my Mandelbrot Viewer application.
+No one else&mdash;or at least no one else who uses the same naming
+convention&mdash;will ever use the same package name, so this
+package name uniquely identifies my program.</p>
+
+<p>I briefly discussed using packages in <localref href="basics.6.6"/>
+and in the context of the programming examples in <localref href="threads.5"/>.
+Here's what you need to know for the Mandelbrot Viewer program:
+The program is defined in eight Java source code files.  They can be
+found in the directory <sourceref href="edu/hws/eck/mdb"/> inside
+the <code>source</code> directory of the web site.  (That is, they
+are in a directory named <code>mdb</code>, which is inside a
+directory named <code>eck</code>, which is inside <code>hws</code>,
+which is inside <code>edu</code>.  The directory structure must follow
+the package name in this way.)  The same directory also contains a
+file named <sourceref href="edu/hws/eck/mdb/strings.properties">strings.properties</sourceref>
+that is used by the program and that will be discussed below.
+And there is an <code>examples</code> folder that contains resource files used for an "Examples" menu.
+For an Integrated Development Environment
+such as Eclipse, you should just have to add the <code>edu</code> directory
+to your project.  To compile the files on the command line, you must be
+working in the directory that contains the <code>edu</code> directory.
+Use the command</p>
+   
+<pre>javac  edu/hws/eck/mdb/*.java</pre>
+   
+<np>or, if you use Windows,</np>
+   
+<pre>javac  edu\hws\eck\mdb\*.java</pre>
+   
+<np>to compile the source code.  The main routine for the 
+program is defined by a class named <classname>Main</classname>.  To run this
+class, use the command:</np>
+   
+<pre>java  edu.hws.eck.mdb.Main</pre>
+   
+<np>This command must also be given in the directory that contains the <code>edu</code> directory.</np>
+   
+<break/>
+   
+<p>The work of computing and displaying images of the Mandelbrot set is done
+in <sourceref href="edu/hws/eck/mdb/MandelbrotDisplay.java">MandelbrotDisplay.java</sourceref>.  The
+<classname>MandelbrotDisplay</classname> class is a subclass of <classname>JPanel</classname>.
+It uses an off-screen canvas to hold a copy of the image.  (See <localref href="GUI2.1.1"/>.)
+The <code>paintComponent()</code> method copies this image onto the panel.  Then, if the user
+is drawing a "zoom box" with the mouse, the zoom box is drawn on top of the image.
+In addition to the image, the class uses a two-dimensional array to store the
+iteration count for each pixel in the image.
+If the range of xy-values changes, or if the size of the window changes, all the
+counts must be recomputed.  Since the computation can take quite a while,
+it would not be acceptable to block the user interface while the computation is
+being performed.  The solution is to do the computation in separate "worker" threads,
+as discussed in <localref href="threads"/>.  The program uses one worker thread
+for each available processor.  When the computation begins, the image is filled
+with gray.  Every so often, about twice a second, the data that has been computed by
+the computation threads is gathered and applied to the off-screen canvas, and the part
+of the canvas that has been modified is copied to the screen.  A <classname>Timer</classname>
+is used to control this process&mdash;each time the timer fires, the image is updated with any
+new data that has been computed by the threads.  The user can continue
+to use the menus and even the mouse while the image is being computed.</p>
+   
+<p>The file <sourceref href="edu/hws/eck/mdb/MandelbrotPanel.java">MandelbrotPanel.java</sourceref> defines the
+main panel of the Mandelbrot Viewer window.  <classname>MandelbrotPanel</classname>
+is another subclass of <classname>JPanel</classname>.  A <classname>MandelbrotPanel</classname>
+is mostly filled with a <classname>MandelbrotDisplay</classname>.  It also adds
+a <classname>JLabel</classname> beneath the display.  The <classname>JLabel</classname>
+is used as a "status bar" that shows some information that might be interesting to
+the user.  The <classname>MandelbrotPanel</classname> also defines the program's
+mouse listener.  In addition to handling zooming, the mouse listener puts the
+x and y coordinates of the current mouse location in the status bar as the user
+moves or drags the mouse.  Also, when the mouse exits the drawing area, the text
+in the status bar is set to read "Idle".  This is the first time that we have seen
+an actual use for <code>mouseMoved</code> and <code>mouseExited</code> events.
+(See <localref href="GUI1.4.2"/> and <localref href="GUI1.4.4"/>.)</p>
+   
+<p>The menu bar for the program is defined in <sourceref href="edu/hws/eck/mdb/Menus.java">Menus.java</sourceref>.
+Commands in the "File" and "Control" menu are defined as <classname>Actions</classname>.
+(See <localref href="GUI2.3.1"/>.)  Note that among the actions are file manipulation
+commands that use techniques from <localref href="IO.2.3"/>, <localref href="IO.5.2"/>,
+and <localref href="GUI2.1.5"/>.  The "MaxIterations," "Palette," and "PaletteLength"
+menus each contain a group of <classname>JRadioButtonMenuItems</classname>.
+(See <localref href="GUI2.3.3"/>.)  I have tried several approaches for handling such
+groups, and none of them have satisfied me completely.  In this program, I have
+defined a nested class inside <classname>Menus</classname> to represent each group.
+For example, the <classname>PaletteManager</classname> class contains the
+menu items in the "Palette" menu as instance variables.  It registers an action
+listener with each item, and it defines a few utility routines for operating on
+the menu.  The classes for the three menus are very similar and should probably
+have been defined as subclasses of some more general class.  There is an
+"Examples" menu that contains settings for several sample views of pieces of the
+Mandelbrot set.</p>
+
+<p>The <classname>MandelbrotPanel</classname> that
+is being used in the program is a parameter to the <classname>Menus</classname> constructor.
+Many of the menu commands operate on this panel
+or on the <classname>MandelbrotDisplay</classname> that it contains.  In order to
+carry out these commands, the <classname>Menus</classname> object needs a reference
+to the <classname>MandelbrotPanel</classname>.  As for the <classname>MandelbrotDisplay</classname>,
+the panel has a method <code>getDisplay()</code> that returns a reference to
+the display that it contains. So as long as the menu bar has a reference to the
+panel, it can obtain a reference to the display.  In previous examples, everything
+was written as one large class file, so all the objects were directly available to
+all the code.  When a program is made up of multiple interacting files,
+getting access to the necessary objects can be more of a problem.</p>
+   
+<p><classname>MandelbrotPanel</classname>, <classname>MandelbrotDisplay</classname>,
+and <classname>Menus</classname> are the main classes that make up the
+Mandelbrot Viewer program.  <sourceref href="edu/hws/eck/mdb/MandelbrotFrame.java">MandelbrotFrame.java</sourceref>
+defines a simple subclass of <classname>JFrame</classname> that  shows a
+MandelbrotPanel and its menu bar.  And
+<sourceref href="edu/hws/eck/mdb/Main.java">Main.java</sourceref>
+contains the <code>main()</code> routine that actually runs the program.
+There are a few other classes that I will discuss below.</p>
+   
+<p>This brief discussion of the design of the Mandelbrot Viewer has shown that it
+uses a wide variety of techniques that were covered earlier in this book.
+In the rest of this section, we'll look at a few new features of Java
+that were used in the program.</p>
+   
+</subsection>   
+   
+<subsection id="GUI2.5.3" title="Internationalization">
+   
+<p><newword>Internationalization</newword> refers to writing a program that
+is easy to adapt for running in different parts of the world.  Internationalization
+is often referred to as <newword>I18n</newword>, where 18 is the number of letters
+between the "I" and the final "n" in "Internationalization."  The process of adapting
+the program to a particular location is called <newword>localization</newword>,
+and the locations are called <newword>locales</newword>.  Locales differ in many
+ways, including the type of currency used and the format used for numbers and
+dates, but the most obvious difference is language.  Here, I will discuss how
+to write a program so that it can be easily translated into other languages.</p>
+   
+<p>The key idea is that strings that will be presented to the user should
+not be coded into the program source code.  If they were, then a translator
+would have to search through the entire source code, replacing every string
+with its translation.  Then the program would have to be recompiled.  In
+a properly internationalized program, all the strings are stored together
+in one or more files that are separate from the source code, where they
+can easily be found and translated.  And since the source code doesn't have
+to be modified to do the translation, no recompilation is necessary.</p>
+   
+<p>To implement this idea, the strings are stored in one or more <newword>properties files</newword>.
+A properties file is just a list of key/value pairs.  For translation purposes, the
+values are strings that will be presented to the user; these are the strings that
+have to be translated.  The keys are also strings, but they don't have to be translated
+because they will never be presented to the user.  Since they won't have to be modified,
+the key strings can be used in the program source code.  Each key uniquely identifies
+one of the value strings.  The program can use the key string to look up the corresponding
+value string from the properties file.  The program only needs to know the key string;
+the user will only see the value string.  When the properties file is translated,
+the user of the program will see different value strings.</p>
+   
+<p>The format of a properties file is very simple.  The key/value pairs take the form</p>
+
+<pre>key.string=value string</pre>
+   
+<np>There are no spaces in the key string or before the equals sign.  Periods are often
+used to divide words in the key string.  The value string
+can contain spaces or any other characters.  If the line ends with a backslash ("<code>\</code>"),
+the value string is continued on the next line; in this case, spaces at the beginning
+of that line are ignored.  One unfortunate detail is that a properties file can contain
+only plain ASCII characters.  The ASCII character set only supports the English alphabet.  Nevertheless,
+a value string can include arbitrary UNICODE characters.  Non-ASCII characters just have
+to be specially encoded.  The JDK comes with a program, <i>native2ascii</i>,
+that can convert files that use non-ASCII characters into a form that is suitable
+for use as a properties file.</np>
+   
+<p>Suppose that the program wants to present a string to the user 
+(as the name of a menu command, for example).   The properties file would contain a key/value pair
+such as</p>
+   
+<pre>menu.saveimage=Save PNG Image...</pre>
+   
+<np>where "Save PNG Image&dots;" is the string that will appear in the menu.  The
+program would use the key string, "menu.saveimage", to look up the corresponding value string
+and would then use the value string as the text of the menu item.  In Java, the look
+up process is supported by the <classname>ResourceBundle</classname> class, which
+knows how to retrieve and use properties files.  Sometimes a string that is presented
+to the user contains substrings that are not known until the time when the program is
+running.  A typical example is the name of a file.  Suppose, for example, that
+the program wants to tell the user, "Sorry, the file, <bnf>filename</bnf>, cannot be loaded",
+where <bnf>filename</bnf> is the name of a file that was selected by the user at run time.
+To handle cases like this, value strings in properties files can include placeholders
+that will be replaced by strings to be determined by the program at run time.  The
+placeholders take the form "<code>{0}</code>", "<code>{1}</code>", "<code>{2}</code>",&nbsp;&dots;.
+For the file error example, the properties file might contain:</np>
+   
+<pre>error.cantLoad=Sorry, the file, {0}, cannot be loaded</pre>
+   
+<np>The program would fetch the value string for the key <code>error.cantLoad</code>.  It would
+then substitute the actual file name for the placeholder, "<code>{0}</code>".  Note that when
+the string is translated, the word order might be completely different.  By using a placeholder for
+the file name, you can be sure that the file name will be put in the correct grammatical
+position for the language that is being used.  Placeholder substitution is not handled
+by the <classname>ResourceBundle</classname> class, but Java has another class,
+<classname>MessageFormat</classname>, that makes such substitutions easy.</np>
+   
+<p>For the Mandelbrot Viewer program, the properties file is 
+<sourceref href="edu/hws/eck/mdb/strings.properties">strings.properties</sourceref>.  (Any properties
+file should have a name that ends in "<code>.properties</code>".)  Any string that you see when
+you run the program comes from this file.  For handling value string lookup, I wrote
+<sourceref href="edu/hws/eck/mdb/I18n.java">I18n.java</sourceref>.  The <classname>I18n</classname>
+class has a static method</p>
+   
+<pre>public static tr( String key, Object... args )</pre>
+   
+<np>that handles the whole process.  Here, <code>key</code> is the key string
+that will be looked up in <code>strings.properties</code>.  Additional parameters, if any,
+will be substituted for placeholders in the value string.  (Recall that the
+formal parameter declaration "<code>Object...</code>" means that there can be any
+number of actual parameters after <code>key</code>; see <localref href="arrays.1.2"/>.)
+Typical uses would include:</np>
+   
+<pre>String saveImageCommandText = I18n.tr( "menu.saveimage" );
+   
+String errMess = I18n.tr( "error.cantLoad" , selectedFile.getName() );</pre>
+   
+<np>You will see function calls like this throughout the Mandelbrot Viewer source code.
+The <classname>I18n</classname> class is written in a general way so that it can be
+used in any program.  As long as you provide a properties file as a resource,
+the only things you need to do are change the resource file name in <code>I18n.java</code>
+and put the class in your own package.</np>
+   
+<p>It is actually possible to provide several alternative properties files in the
+same program.  For example, you might include French and Japanese versions of the
+properties file along with an English version.  If the English properties file is named
+<code>strings.properties</code>, then the names for the French and Japanese versions
+should be <code>strings_fr.properties</code> and <code>strings_ja.properties</code>.
+Every language has a two-letter code, such as "fr" and "ja", that is used in constructing
+properties file names for that language.  The program asks for the properties file
+using the simple name "<code>strings</code>".  If the program is being run on a
+Java system in which the preferred language is French, the program will try to
+load "<code>strings_fr.properties</code>"; if that fails, it will look for
+"<code>strings.properties</code>".  This means that the program will use the
+French properties files in a French locale; it will use the Japanese properties file in a
+Japanese locale; and in any other locale it will use the default properties file.</p>
+   
+</subsection>
+
+
+<subsection id="GUI2.5.4" title="Events, Events, Events">
+   
+<p>We have worked extensively with mouse events, key events, and action events, but
+these are only a few of the event types that are used in Java.  The Mandelbrot Viewer
+program makes use of several other types of events.  It also serves as an example of
+the benefits of event-oriented programming.</p>
+   
+<p>Let's start from the following fact:  The <classname>MandelbrotDisplay</classname>
+class knows nothing about any of the other classes that make up the program (with the
+single exception of one call to the internationalization method <code>I18n.tr</code>).
+Yet other classes are aware of things that are going on in the <classname>MandelbrotDisplay</classname>
+class.  For example, when the size of the display is changed, the new size is reported
+in the status bar that is part of the <classname>MandelbrotPanel</classname> class.
+In the <classname>Menus</classname> class, certain menus are disabled when the
+display begins the computation of an image and are re-enabled when the computation
+completes.  The display doesn't call methods in the <classname>MandelbrotPanel</classname>
+or <classname>Menus</classname> classes, so how do these classes get their information
+about what is going on in the display?  The answer, of course, is events.  The
+<classname>MandelbrotDisplay</classname> object emits events of various types when various
+things happen.  The <classname>MandelbrotPanel</classname> and <classname>Menus</classname>
+objects set up listeners that hear those events and respond to them.</p>
+   
+<p>The point is that because events are used for communication, the <classname>MandelbrotDisplay</classname>
+class is not strongly coupled to the other classes.  In fact, it can be used in other
+programs without any modification and without access to the other classes.  The alternative to using events would be
+to have the display object call methods such as <code>displaySizeChanged()</code>
+or <code>computationStarted()</code> in the <classname>MandelbrotPanel</classname> and 
+<classname>MandelbrotFrame</classname> objects to tell them what is going on in the display.
+This would be strong coupling: Any programmer who wanted to use <classname>MandelbrotDisplay</classname>
+would also have to use the other two classes or would have to modify the display class so
+that it no longer refers to the other classes.  Of course, not everything can be done with 
+events and not all strong coupling is bad: The <classname>MandelbrotPanel</classname> class
+refers directly to the <classname>MandelbrotDisplay</classname> class and cannot be used
+without it&mdash;but since the whole purpose of a <classname>MandelbrotPanel</classname>
+is to hold a <classname>MandelbrotDisplay</classname>, the coupling is not a problem.</p>
+   
+<break/>
+   
+<p>The Mandelbrot Viewer program responds to mouse events on the display.  These
+events are generated by the display object, but the display class itself doesn't care
+about mouse events and doesn't do anything in response to them.  Mouse events are handled
+by a listener in the <classname>MandelbrotPanel</classname>, which responds to them by
+zooming the display and by showing mouse coordinates in the status bar.</p>
+   
+<p>The status bar also shows the new size of the display whenever that size is changed.
+To handle this, events of type <classname>ComponentEvent</classname> are used.
+When the size of a component is changed, a <classname>ComponentEvent</classname>
+is generated.  In the Mandelbrot Viewer program, a <classname>ComponentListener</classname>
+in the <classname>MandelbrotPanel</classname> class listens for size-change events
+in the display.  When one occurs, the listener responds by showing the new size in the
+status bar; the display knows nothing about the status bar that shows the display's size.</p>
+
+<p>Component events are also used internally in the <classname>MandelbrotDisplay</classname> 
+class in an interesting way.  When the user dynamically changes the size of the display,
+its size can change several times each second.  Normally, a change of display size
+would trigger the creation of a new off-screen canvas and the start of a new
+asynchronous computation of the image.  However, doing this is
+a big deal, not something I want to do several times in a second.  If you try resizing
+the program's window, you'll notice that the image doesn't change size dynamically
+as the window size changes.  The same image and off-screen canvas are used as long as
+the size is changing.  Only about one-third of a second after the size has stopped
+changing will a new, resized image be produced.  Here is how this works:
+The display sets up a <classname>ComponentListener</classname> to listen for
+resize events on itself.  When a resize occurs, the listener starts a <classname>Timer</classname>
+that has a delay of 1/3 second.  (See <localref href="GUI1.5.1"/>.)
+While this timer is running, the <code>paintComponent()</code>
+method does not resize the image; instead, it reuses the image that already exists.
+If the timer fires 1/3 second later, the image will be resized at that time. However, if
+another resize event occurs while the first timer is running, then the first timer will
+be stopped before it has a chance to fire, and a new timer will be started with a
+delay of 1/3 second.  The result is that the image does not get resized until 1/3
+second after the size of the window stops changing.</p>
+   
+<p>The Mandelbrot Viewer program also uses events of type <classname>WindowEvent</classname>,
+which are generated by a window when it opens or closes (among other things).
+Window events are used by <sourceref href="edu/hws/eck/mdb/Main.java">Main.java</sourceref>
+to trigger an action that has to be taken when the program is ending; this will be discussed
+below.</p>
+
+<p>Perhaps the most interesting use of events in the Mandelbrot Viewer program is to
+enable and disable menu commands based on the status of the display.  For this,
+events of type <classname>PropertyChangeEvent</classname> are used.  This event
+class is part of a "bean" framework that Java uses for some advanced work with objects,
+and class <classname>PropertyChangeEvent</classname> and related classes are
+defined in the package <code>java.beans</code>.  The idea is that bean objects are
+defined by their "properties" (which are just aspects of the state of the bean).
+When a bean property changes, the bean can emit a <classname>PropertyChangeEvent</classname>
+to notify other objects of the change.  Properties for which property change
+events are emitted are known technically as <newword>bound properties</newword>.
+A bound property has a <b>name</b> that identifies that particular property 
+among all the properties of the bean.  When a property change event is generated,
+the event object includes the name of the property that has changed, the previous
+value of the property, and the new value of the property.</p>
+   
+<p>The <classname>MandelbrotDisplay</classname> class has a bound property whose
+name is given by the constant <code>MandelbrotDisplay.STATUS_PROPERTY</code>.
+A display emits a property change event when its status changes.
+The possible values of the status property are given by other constants, such as
+<code>MandelbrotDisplay.STATUS_READY</code>.  The <code>READY</code> status
+indicates that the display is not currently running a computation and is ready
+to do another one.  There are several menu commands that should be enabled only when the status
+of the display is <code>READY</code>.  To implement this, the <classname>Menus</classname>
+class defines a <classname>PropertyChangeListener</classname> to listen
+for property change events from the display.  When this listener hears an
+event, it responds by enabling or disabling menu commands according to the
+new value of the status property.</p>
+   
+<p>All of Java's GUI components are beans and are capable of emitting property change
+events.  In any subclass of <classname>Component</classname>, this can be done simply by calling
+the method</p>
+   
+<pre>public void firePropertyChange(String propertyName, 
+                                           Object oldValue, Object newValue)</pre>
+
+<np>For example, the <classname>MandelbrotDisplay</classname> class uses the following
+method for setting its current status:</np>
+   
+<pre>private void setStatus(String status) {
+   if (status == this.status) {
+           // Note: Event should be fired only if status actually changes.
+      return;
+   }
+   String oldStatus = this.status;
+   this.status = status;
+   firePropertyChange(STATUS_PROPERTY, oldStatus, status);
+}</pre>
+   
+<np>When writing bean classes from scratch, you have to add support for
+property change events, if you need them.  To make this easier, the <code>java.beans</code> package
+provides the <classname>PropertyChangeSupport</classname> class.</np>
+
+   
+</subsection>
+
+
+<subsection id="GUI2.5.5" title="Custom Dialogs">
+   
+<p>Java has several standard dialog boxes that are defined in the classes
+<classname>JOptionPane</classname>, <classname>JColorChooser</classname>,
+and <classname>JFileChooser</classname>.  These were introduced in
+<localref href="GUI1.8.2"/> and <localref href="IO.2.3"/>.  Dialogs of
+all these types are used in the Mandelbrot Viewer program.  However, sometimes
+other types of dialog are needed.  In such cases, you can build a custom
+dialog box.</p>
+   
+<p>Dialog boxes are defined by subclasses of the class <classname>JDialog</classname>.
+Like frames, dialog boxes are separate windows on the screen, and the <classname>JDialog</classname>
+class is very similar to the <classname>JFrame</classname> class.  The big difference is
+that a dialog box has a <newword>parent</newword>, which is a frame or another dialog
+box that "owns" the dialog box.   If the parent of a dialog box closes, the dialog box
+closes automatically.  Furthermore, the dialog box might "float" on top of
+its parent, even when its parent is the active window.</p>
+   
+<p>Dialog boxes can be either <newword>modal</newword> or <newword>modeless</newword>.
+When a modal dialog is put up on the screen, the rest of the application is blocked
+until the dialog box is dismissed.  This is the most common case, and all the standard
+dialog boxes are modal.  Modeless dialog boxes are more like independent windows,
+since they can stay on the screen while the user interacts with other windows.
+There are no modeless dialogs in the Mandelbrot Viewer program.</p>
+   
+<p>The Mandelbrot Viewer program uses two custom dialog boxes.  They are used to
+implement the "Set Image Size" and "Set Limits" commands and are defined by the
+files <sourceref href="edu/hws/eck/mdb/SetImageSizeDialog.java">SetImageSizeDialog.java</sourceref>
+and <sourceref href="edu/hws/eck/mdb/SetLimitsDialog.java">SetLimitsDialog.java</sourceref>.
+The "set image size" dialog lets the user enter a new width and height for the Mandelbrot image.
+The "set limits" dialog lets the user input the minimum and maximum values for x and y
+that are shown in the image.  The two dialog classes are very similar.  In both classes,
+several <classname>JTextFields</classname> are used for user input.  Two buttons named
+"OK" and "Cancel" are added to the window, and listeners are set up for these buttons.
+If the user clicks "OK", the listener checks whether the inputs in the text fields
+are legal; if not, an error message is displayed to the user and the dialog stays
+on the screen.  If the input is legal when the user clicks "OK", the dialog is disposed.
+The dialog is also disposed if the user clicks "Cancel" or clicks the dialog box's
+close box.  The net effect is that the dialog box stays on the screen until the
+user either cancels the dialog or enters legal values for the inputs and clicks "OK".
+The program can find out which of these occurred by calling a method named
+<code>getInput()</code> in the dialog object after showing the dialog.  This method returns <code>null</code>
+if the dialog was canceled; otherwise it returns the user input.</p>
+   
+<p>To make my custom dialog boxes easy to use, I added a <code>static</code>
+<code>showDialog()</code> method to each dialog class.  When this function is called,
+it shows the dialog, waits for it to be dismissed, and then returns the value
+of the <code>getInput()</code> method.  This makes it possible to use my
+custom dialog boxes in much the same way as Java's standard dialog boxes are
+used.</p>
+   
+<p>Custom dialog boxes are not difficult to create and to use, if you already
+know about frames.  I will not discuss them further here, but you can look
+at the source code file <sourceref href="edu/hws/eck/mdb/SetImageSizeDialog.java">SetImageSizeDialog.java</sourceref>
+as a model.</p>
+   
+   
+</subsection>
+
+
+<subsection id="GUI2.5.6" title="Preferences">
+<p>Most serious programs allow the user to set <newword>preferences</newword>.
+A preference is really just a piece of the program's state that is saved between
+runs of the program.  In order to make preferences persistent from one run of
+the program to the next, the preferences could simply be saved to a file in the user's
+home directory.  However, there would then be the problem of locating the file.
+There would be the problem of naming the file in a way that avoids conflicts with
+file names used by other programs.  And there would be the problem of cluttering up
+the user's home directory with files that the user shouldn't even have to know 
+about.</p>
+   
+<p>To deal with these problems, Java has a standard means of handling
+preferences.  It is defined by the package <code>java.util.prefs</code>.
+In general, the only thing that you need from this package is the class
+named <classname>Preferences</classname>.</p>
+
+<p>In the Mandelbrot Viewer program, the file <sourceref href="edu/hws/eck/mdb/Main.java">Main.java</sourceref>
+has an example of using <classname>Preferences</classname>.  <code>Main.java</code> contains
+the <code>main()</code> routine for the program.</p>
+   
+<p>In most programs, the user sets preferences in a custom dialog box. However,
+the Mandelbrot program doesn't have any preferences that are appropriate for that
+type of treatment.  Instead, as an example, I automatically save a few aspects of the
+program's state as preferences.  Every time the program starts up, it reads the
+preferences, if any are available.  Every time the program terminates, it saves
+the preferences.  (Saving the preferences poses an interesting problem because
+the program ends when the <classname>MandelbrotFrame</classname> window closes,
+not when the <code>main()</code> routine ends.  In fact, the <code>main()</code> routine
+ends as soon as the window appears on the screen.  So, it isn't possible to save
+the preferences at the end of the main program.  The solution is to use events:
+A listener listens for <classname>WindowEvents</classname> from the frame.  When
+a window-closed event is received, indicating that the program is ending,
+the listener saves the preferences.)</p>
+   
+<p>Preferences for Java programs are stored in some platform-dependent form in some
+platform-dependent location.  As a Java programmer, you don't have to worry about it;
+the Java preferences system knows where to store the data.  There is still the problem
+of identifying the preferences for one program among all the possible Java programs
+that might be running on a computer.  Java solves this problem in the same way
+that it solves the package naming problem.  In fact, by convention, the preferences
+for a program are identified by the package name of the program, with a slight
+change in notation.  For example, the Mandelbrot Viewer program is defined in the
+package <code>edu.hws.eck.mdb</code>, and its preferences are identified
+by the string "/edu/hws/eck/mdb".  (The periods have been changed to "<code>/</code>",
+and an extra "<code>/</code>" has been added at the beginning.)</p>
+   
+<p>The preferences for a program are stored in something called a "node."  The user
+preferences node for a given program identifier can be accessed as follows:</p>
+   
+<pre>Preferences root = Preferences.userRoot();
+Preferences node = root.node(pathName);</pre>
+   
+<np>where <code>pathname</code> is the string, such as "/edu/hws/eck/mdb", that
+identifies the node.  The node itself consists of a simple list of
+key/value pairs, where both the key and the value are strings.  You can
+store any strings you want in preferences nodes&mdash;they are really just
+a way of storing some persistent data between program runs.  In general, though,
+the key string identifies some particular preference item, and the associated
+value string is the value of that preference.  A <classname>Preferences</classname> object,
+<code>prefnode</code>, contains methods <code>prefnode.get(key)</code> for retrieving the value
+string associated with a given key and <code>prefnode.put(key,value)</code> for
+setting the value string for a given key.</np>
+   
+<p>In <code>Main.java</code>, I use preferences to store the shape and position of
+the program's window.  This makes the size and shape of the window persistent
+between runs of the program; when you run the program, the window will be right
+where you left it the last time you ran it.  I also store the name of the directory
+that is currently selected in the file dialog box that is used by the program for the Save and
+Open commands.  This is particularly satisfying, since the default behavior
+for a file dialog box is to start in the user's home directory, which is hardly
+ever the place where the user wants to keep a program's files.  With the preferences
+feature, I can switch to the right directory the first time I use the program,
+and from then on I'll automatically be back in that directory when I use the program again.
+You can look at the source code in <sourceref href="edu/hws/eck/mdb/Main.java">Main.java</sourceref>
+for the details.</p>
+  
+<break/>
+   
+<p>And that's it&dots;.  There's a lot more that I could say about Java and about
+programming in general, but this book is only "An Introduction to Programming Using Java,"
+and it's time for our journey to end.  I hope that it has been a pleasant journey
+for you, and I hope that I have helped you establish a foundation that you can
+use as a basis for further exploration.</p>
+
+</subsection>
+
+<endchapter/>
+
+</section>

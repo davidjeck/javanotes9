@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE quiz SYSTEM "../javanotes9.dtd" >
+
+<quiz>
+
+<question>
+<ques><p>Programs written for a
+graphical user interface have to deal with "events." Explain what is meant by
+the term <i>event.</i> Give at least two different examples of events, and
+discuss how a program might respond to those events.</p></ques>
+<ans><p> An event is anything that can
+occur asynchronously, not under the control of the program, to which the
+program might want to respond. GUI programs are said to be "event-driven"
+because for the most part, such programs simply wait for events and respond to
+them when they occur. In many (but not all) cases, an event is the result of a
+user action, such as when the user clicks the mouse button, types a character,
+or clicks a button. The program might respond to a mouse-click on a canvas by
+drawing a shape, to a typed character by adding the character to an input box,
+or to a click on a button by clearing a drawing. More generally, a programmer
+can set up any desired response to an event by writing an event-handling
+routine for that event.</p></ans>
+</question>
+   
+<question>
+<ques><p>Explain carefully what the
+<code>repaint()</code> method does.</p></ques>
+<ans><p>The <code>repaint()</code> method of a component is
+called to notify the system that the component
+needs to be redrawn. It does not itself do any drawing, and
+does not itself call <code>paintComponent()</code>, but
+sometime shortly after you call it, the system will call 
+the component's <code>paintComponent()</code> routine.
+You should call <code>repaint()</code> for a component when you have made some change to
+the state of a program that requires the appearance of that component to change. </p></ans>
+</question>
+   
+<question>
+<ques><p>Java has a standard class
+called <classname>JPanel</classname>. Discuss <b>two</b> ways in which JPanels can be
+used.</p></ques>
+<ans><p>A JPanel can be used as a <i>container</i> for other components or
+as a <i>drawing surface</i>.   A JPanel is a type of component.
+That is, it is a visible element of a GUI. By itself, a JPanel is simply a
+blank rectangular region on the screen. However, a JPanel is a "container",
+which means that other components can be added to it and will then appear on
+the screen inside the JPanel. A JPanel can also be used as a drawing surface.
+In order to do this, it is necessary to create a subclass of <classname>JPanel</classname>
+and define a <code>paintComponent()</code> method in that subclass. An object
+belonging to that subclass can then be added to another panel or other container.
+The <code>paintComponent()</code> method defines how that object will draw itself
+on the screen.</p></ans>
+</question>
+   
+<question>
+<ques><p>Draw the picture that will
+be produced by the following <code>paintComponent()</code> method:</p>
+<pre>public static void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    for (int i=10; i &lt;= 210; i = i + 50)
+       for (int j = 10; j &lt;= 210; j = j + 50)
+          g.drawLine(i,10,j,60);
+}</pre></ques>
+<ans><p>The outer loop is executed for
+values of <code>i</code> equal to 10, 60, 110, 160, and 210. For <b>each</b> of
+these values, the inner loop is executed for <code>j</code> equal to 10, 60, 110,
+160, and 210. The <code>drawLine</code> command is therefore executed 25 times&mdash;and
+so, 25 different lines are drawn. These lines connect the five points
+(10,10), (60,10), (110,10), (160,10), and (210,10) to the five points (10,60),
+(60,60), (110,60), (160,60), and (210,60) in all possible pairings. Here is the
+picture:</p>
+<img width="220" height="70" src="crisscross.png" alt="(25 criss-crossed lines)"/></ans>
+</question>
+   
+<question>
+<ques><p>Suppose you would like a
+panel that displays a green square inside a red circle, as illustrated. Write
+a <code>paintComponent()</code> method for the panel class that will draw the image.</p>
+<img src="square-in-circle.png" width="100" height="100" alt="(Picture of Circle in Square)"
+   tex="square-in-circle.eps" texscale="0.8"/></ques>
+<ans><p>(The size of the square and
+circle are not specified in the problem, so any size would be acceptable, as
+long as the square is in the middle of the circle. Notice that the drawing
+commands are <code>fillOval</code> and <code>fillRect</code>. There are no special
+routines for drawing circles or squares.  If your circle looks more jagged around
+the edges than the one in the picture, it's because my solution turns on
+antialiasing!)</p>
+<pre>public void paintComponent(Graphics g) {
+
+   super.paintComponent(g);
+   
+   Graphics2D g2 = (Graphics2D)g;  // turn on antialiasing
+   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                                RenderingHints.VALUE_ANTIALIAS_ON);  
+   
+   g.setColor(Color.RED);      // draw the shapes
+   g.fillOval(10,10,80,80);
+   g.setColor(Color.GREEN);
+   g.fillRect(30,30,40,40);
+
+}</pre></ans>
+</question>
+   
+<question>
+<ques><p>Java has a standard class
+called <classname>MouseEvent</classname>. What is the purpose of this class? What does an
+object of type <classname>MouseEvent</classname> do?</p></ques>
+<ans><p>When an event occurs, the system
+packages information about the event into an object. That object is passed as a
+parameter to the event-handling routine. Different types of events are
+represented by different classes of objects. An object of type
+<classname>MouseEvent</classname> represents a mouse or mouse motion event. It contains
+information about the location of the mouse cursor and any modifier keys that
+the user is holding down. This information can be obtained by calling the
+instance methods of the object. For example, if <code>evt</code> is a
+<classname>MouseEvent</classname> object, then <code>evt.getX()</code> is the
+<code>x</code>-coordinate of the mouse cursor, and <code>evt.isShiftDown()</code> is a
+boolean value that tells you whether the user was holding down the Shift
+key.</p></ans>
+</question>
+   
+<question>
+<ques><p>One of the main classes in
+Swing is the <classname>JComponent</classname> class. What is meant by a component? What are
+some examples?</p></ques>
+<ans><p>A <classname>JComponent</classname> represents
+a visual component of the computer's graphical user interface. A
+<classname>JComponent</classname> is not completely independent. It must be added to a
+"container," such as a panel. Examples of <classname>JComponents</classname> are
+<classname>JButtons</classname>, <classname>JTextFields</classname>, and <classname>JPanels</classname>.</p></ans>
+</question>
+   
+<question>
+<ques><p> What is the function of a
+<classname>LayoutManager</classname> in Java?</p></ques>
+<ans><p>A <classname>LayoutManager</classname>
+implements some policy for laying out all the visual components that have been
+added to a container, such as a <classname>JPanel</classname>. 
+That is, it sets the sizes and positions of the components.
+Different types of layout managers have different rules about how components
+are to be arranged. Some standard layout manager classes are
+<classname>BorderLayout</classname> and <classname>GridLayout</classname>.</p></ans>
+</question>
+   
+<question>
+<ques><p>Consider the illustration of nested panels from the beginning of <localref href="GUI1.7"/>.
+What type of layout manager is being used for each of the three panels
+in that picture?</p>
+</ques>
+<ans><p>The outer panel, shown in pink, seems to be using a <classname>GridLayout</classname>
+with two rows and one column.  A <classname>GridLayout</classname> is most likely
+since the two components in the main panel&mdash;the other two panels, shown in light cyan&mdash;are
+exactly the same size.  Similarly, the bottom subpanel seems to
+be using a <classname>GridLayout</classname> with one row and three columns.
+The top subpanel could be using a <classname>BorderLayout</classname>.
+The components on the left and right ends of the subpanel would be in the
+<code>WEST</code> and <code>EAST</code> positions of the <classname>BorderLayout</classname>.
+Each of these components would then be shown at its own preferred width, which would
+explain how their widths could be different.  The third component, in the center
+of the subpanel, would then be in the <code>CENTER</code> position.</p></ans>
+</question>
+   
+<question>
+<ques><p>Explain how <classname>Timers</classname>
+are used to do animation.</p></ques>
+<ans><p>Displaying an animation requires
+showing a sequence of frames. The frames are shown one after the other, with a
+short delay between each frame and the next. A <classname>Timer</classname> can generate a
+sequence of <classname>ActionEvents</classname>. When a timer is used to do animation, each
+event triggers the display of another frame. The <classname>ActionListener</classname> that
+processes events from the timer just needs to be programmed to display a new frame
+each time its <classname>actionPerformed()</classname> method is called.  Usually,
+the <code>actionPerformed()</code> method just changes the values of some state variables and
+calls <code>repaint()</code> to make the effect of the changes visible on the screen.</p></ans>
+</question>
+   
+<question>
+<ques><p>What is a <classname>JCheckBox</classname>
+and how is it used?</p></ques>
+<ans><p>A <classname>JCheckBox</classname> is a
+component that has two possible states, "selected" and "not selected". The user can
+change the state by clicking on the <classname>JCheckBox</classname>. If <code>box</code> is a
+variable of type <classname>JCheckBox</classname>, then a program can set the state of the box 
+to "selected" by
+calling <code>box.setSelected(true)</code> and can unselect the box by calling
+<code>box.setSelected(false)</code>. The current state can be determined by calling
+<code>box.isSelected()</code>, which is a boolean-valued function. A
+<classname>JCheckBox</classname> generates an event of type <code>ActionEvent</code> when it
+changes state. A program can listen for these events if it wants to take some
+action at the time the state changes. Often, however, it's enough for a program
+simply to look at the state of the <classname>JCheckBox</classname> when it needs it.</p></ans>
+</question>
+   
+<question>
+<ques><p>How is the <i>preferred size</i> of a component set, and how is it used?</p></ques>
+<ans><p>Standard components such as <classname>JButton</classname> and <classname>JLabel</classname>
+are responsible for computing their own preferred size, and the preferred size of a container
+is usually computed by the layout manager for that container, but it is possible to set the
+preferred size of a component, <code>comp</code>, by calling the method <code>comp.setPreferredSize(dim)</code>,
+where <code>dim</code> is an object of type <classname>Dimension</classname>.  When a <classname>JPanel</classname>
+is used as a drawing surface, it is usually necessary to set its preferred size in this way,
+since otherwise its preferred size will be zero.</p>
+<p>A layout uses the preferred sizes of all the components in a container when it decides how to
+lay out those components.  It also uses the components' preferred sizes when computing the
+preferred size of the container.  (Note that the preferred size is only preferred; it is not
+necessarily the size at which the component will appear on screen.  The actual size can depend
+on which layout manager is used, the position of the component in the layout, the size of the
+container, and the preferred sizes of other components in the container.)</p></ans>
+</question>
+   
+</quiz>

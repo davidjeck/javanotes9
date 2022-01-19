@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section SYSTEM "../javanotes9.dtd" >
+
+<section id="GUI2.3" title="Actions and Buttons">
+   
+<p><start><big>F</big>or the past two sections</start>, we have been looking
+at some  of the more advanced aspects of the Java graphics API.  But the
+heart of most graphical user interface programming is using GUI components.
+In this section and the next, we'll be looking at <classname>JComponents</classname>.
+We'll cover several component classes that were not covered in <localref href="GUI1"/>,
+as well as some additional features of classes that were covered there.</p>
+   
+<p>This section is mostly about buttons.  Buttons are among the simplest of
+GUI components, and it seems like there shouldn't be all that much to say
+about them.  However, buttons are not as simple as they seem.  For one thing,
+there are many different types of buttons.  The basic functionality of
+buttons in Java is defined by the class <code>javax.swing.AbstractButton</code>.
+Subclasses of this class represent push buttons, check boxes, and radio
+buttons.  Menu items are also considered to be buttons.  The
+<classname>AbstractButton</classname> class defines a surprisingly
+large API for controlling the appearance of buttons.  This section will
+cover part of that API, but you should see the class documentation for
+full details.</p>
+   
+<p>In this section, we'll also encounter a few classes that do not themselves define
+buttons but that are related to the button API, starting with "actions."</p>
+   
+   
+<subsection id="GUI2.3.1" title="Action and AbstractAction">
+   
+<p>The <classname>JButton</classname> class represents push buttons.  Up until
+now, we have created push buttons using the constructor</p>
+   
+<pre>public JButton(String text);</pre>
+   
+<np>which specifies text that will appear on the button.  We then added an
+<classname>ActionListener</classname> to the button, to respond when the
+user presses it.  Another way to create a <classname>JButton</classname> is
+using an <classname>Action</classname>.  The <classname>Action</classname>
+interface represents the general idea of some action that can be performed,
+together with properties associated with that action, such as a name for
+the action, an icon that represents the action, and whether the action
+is currently enabled or disabled.  <classname>Actions</classname> are
+usually defined using the class <classname>AbstractAction</classname>,
+an <code>abstract</code> class which includes a method</np>
+   
+<pre>public void actionPerformed(ActionEvent evt)</pre>
+   
+<np>that must be defined in any concrete subclass.  Often, this is done
+in an anonymous inner class.  For example, suppose that <code>display</code>
+is an object that has a <classname>clear()</classname> method.  Then
+an <classname>Action</classname> object that represents the action 
+"clear the display" can be defined as:</np>
+   
+<pre>Action clearAction = new AbstractAction("Clear") {
+   public void actionPerformed(ActionEvent evt) { 
+      display.clear();
+   }
+};</pre>
+   
+<np>The parameter, <code>"Clear"</code>, in the constructor of the
+<classname>AbstractAction</classname> is the name of the action.  Other
+properties can be set by calling the method <code>putValue(key,value)</code>,
+which is part of the <classname>Action</classname> interface.  For example,</np>
+   
+<pre>clearAction.putValue(Action.SHORT_DESCRIPTION, "Clear the Display");</pre>
+   
+<np>sets the <code>SHORT_DESCRIPTION</code> property of the action to
+have the value "Clear the Display".  The <code>key</code> parameter 
+in the <code>putValue()</code> method is usually given as one of several
+constants defined in the <classname>Action</classname> interface.  As
+another example, you can change the name of an action by using
+<code>Action.NAME</code> as the <code>key</code> in the <code>putValue()</code>
+method.</np>
+   
+<p>Once you have an <classname>Action</classname>, you can use it in the constructor
+of a button.  For example, using the action <code>clearAction</code> defined
+above, we can create the <classname>JButton</classname></p>
+   
+<pre>JButton clearButton = new JButton( clearAction );</pre>
+   
+<np>The name of the action will be used as the text of the button,
+and some other properties of the button will be taken from properties of the
+action.  For example, if the <code>SHORT_DESCRIPTION</code> property of the
+action has a value, then that value is used as the tooltip text for
+the button.  (The tooltip text appears when the user hovers the mouse
+over the button.)  Furthermore, when you change a property of the
+action, the corresponding property of the button will also be
+changed.  For example, changing the Action's property associated with the key
+<code>Action.NAME</code> will also change the text on the button.</np>
+   
+<p>The <classname>Action</classname> interface defines a <code>setEnabled()</code>
+method that is used to enable and disable the action.  The <code>clearAction</code> action can be enabled
+and disabled by calling <code>clearAction.setEnabled(true)</code> and
+<code>clearAction.setEnabled(false)</code>.  When you do this, any button that
+has been created from the action is also enabled or disabled at the same time.</p>
+   
+<p>Now of course, the question is, <b>why</b> should you want to use <classname>Actions</classname>
+at all?  One advantage is that using actions can help you to organize your code
+better.  You can create separate objects that represent each of the actions that
+can be performed in your program.  This represents a nice division of responsibility.
+Of course, you could do the same thing with individual <classname>ActionListener</classname>
+objects, but then you couldn't associate descriptions and other properties with
+the actions.</p>
+   
+<p>More important is the fact that <classname>Actions</classname> can also be used in
+other places in the Java API.  You can use an <classname>Action</classname> to create
+a <classname>JMenuItem</classname> in the same way as for a <classname>JButton</classname>:</p>
+   
+<pre>JMenuItem clearCommand = new JMenuItem( clearAction );</pre>
+   
+<np>A <classname>JMenuItem</classname>, in fact, is a kind of button and shares many
+of the same properties that a <classname>JButton</classname> can have.  You can use
+the <b>same</b> <classname>Action</classname> to create both a button and a menu
+item (or even several of each if you want).
+Whenever you enable or disable the action or change its name, the button and the
+menu item will <b>both</b> be changed to match.  If you change the <code>NAME</code>
+property of the action, the text of both the menu item and the button will be
+set to the new name of the action.  If you disable the action, both menu item
+and button will be disabled.  You can think of the button and
+the menu items as being two presentations of the <classname>Action</classname>,
+and you don't have to keep track of the button or menu item after you create them.
+You can do everything that you need to do by manipulating the <classname>Action</classname>
+object.</np>
+      
+<p>By the way, if you want to add a menu item that is defined by an <classname>Action</classname>
+to a menu, you don't even need to create the <classname>JMenuItem</classname> yourself.
+You can add the action object directly to the menu, and the menu item will be created
+from the properties of the action.  For example, if <code>menu</code> is a <classname>JMenu</classname>
+and <code>clearAction</code> is an <classname>Action</classname>, you can simply say
+<code>menu.add(clearAction)</code>.</p>
+
+<p><classname>Actions</classname> have some other useful properties that we will encounter
+later in this section.</p>
+   
+</subsection>
+      
+   
+<subsection id="GUI2.3.2" title="Icons on Buttons">
+   
+<p>In addition to&mdash;or instead of&mdash;text, buttons can also show icons.
+Icons are represented by the <classname>Icon</classname> interface and are usually
+created as <classname>ImageIcons</classname>, as discussed in <localref href="GUI2.1.4"/>.
+For example, here is a picture of a button that displays an image of a large "X"
+as its icon:</p>
+   
+<img src="button-with-icon.png" width="134" height="38" 
+   alt="a JButton with both text and an icon" tex="button-with-icon.eps" texscale="0.75"/>
+   
+<np>The icon for a button can be set by calling the button's <code>setIcon()</code> method,
+or by passing the icon object as a parameter to the constructor when the button is created.
+To create the button shown above, I created an <classname>ImageIcon</classname> from a
+<classname>BufferedImage</classname> on which I drew the picture that I wanted, and
+I constructed the <classname>JButton</classname> using a constructor that takes
+both the text and the icon for the button as parameters.  Here's the code segment
+that does it:</np>
+   
+<pre>BufferedImage image = new BufferedImage(24,24,BufferedImage.TYPE_INT_RGB);
+ 
+Graphics2D g2 = (Graphics2D)image.getGraphics();
+g2.setColor(Color.LIGHT_GRAY);             // Draw the image for the icon.
+g2.fillRect(0,0,24,24);
+g2.setStroke( new BasicStroke(3) );        //    Use thick lines.
+g2.setColor(Color.BLACK);
+g2.drawLine(4,4,20,20);                    //    Draw the "X".
+g2.drawLine(4,20,20,4);
+g2.dispose();
+
+Icon clearIcon = new ImageIcon(image);     // Create the icon.
+
+JButton clearButton = new JButton("Clear the Display", clearIcon);</pre>   
+
+<p>You can create a button with an icon but no text by using a constructor
+that takes just the icon as parameter.  Another alternative is for the
+button to get its icon from an <classname>Action</classname>.  When a button
+is constructed from an action, it takes its icon from the value of the
+action property <code>Action.SMALL_ICON</code>.  For example, suppose that
+we want to use an action named <code>clearAction</code> to create the
+button shown above.  This could be done with:</p>
+
+<pre>clearAction.putValue( Action.SMALL_ICON, clearIcon );
+JButton clearButton = new JButton( clearAction );</pre>
+   
+<np>The icon could also be associated with the action by passing it
+as a parameter to the constructor of an <classname>AbstractAction</classname>:</np>
+   
+<pre>Action clearAction = new AbstractAction("Clear the Display", clearIcon) {
+   public void actionPerformed(ActionEvent evt) {
+      .
+      .  // Carry out the action.
+      .
+   }  
+}
+JButton clearButton = new JButton( clearAction );</pre>
+
+<np>The <code>SMALL_ICON</code> for an <classname>Action</classname> will also be 
+used by a <classname>JMenuItem</classname> created from the action.
+(An action can also have an icon associated with the key 
+<code>Action.LARGE_ICON_KEY</code>.  If it does, then a <classname>JButton</classname>
+will use the "large" icon in preference to the "small" icon.  However, a
+<classname>JMenuItem</classname> will only use a small icon.)</np>
+   
+
+<p>The appearance of buttons can be tweaked in many ways.  For example, you
+can change the size of the gap between the button's text and its icon.  You can
+associate additional icons with a button that are used when the button is
+in certain states, such as when it is pressed or when it is disabled.  
+It is even possible to change the positioning of the text with respect to
+the icon.  For example, to place the text centered below the icon on
+a button, you can say:</p>
+
+<pre>button.setHorizontalTextPosition(JButton.CENTER);
+button.setVerticalTextPosition(JButton.BOTTOM);</pre>
+   
+<np>These methods and many others are defined in the
+class <classname>AbstractButton</classname>.  This class is a superclass
+for <classname>JMenuItem</classname>, as well as for <classname>JButton</classname>
+and for the classes that define check boxes and radio buttons.</np>
+   
+<p>Finally, I will mention that it is possible to use icons on <classname>JLabels</classname>
+in much the same way that they can be used on <classname>JButtons</classname>.
+Placing an <classname>ImageIcon</classname> on a <classname>JLabel</classname>
+can be a convenient way to add a static image to your GUI.</p>
+   
+</subsection>
+   
+   
+<subsection id="GUI2.3.3" title="Making Choices">
+
+<p>The <classname>JCheckBox</classname> class was covered in 
+<localref href="GUI1.6.3"/>, and the equivalent for use in menus,
+<classname>JCheckBoxMenuItem</classname>, in <localref href="GUI1.8.1"/>.
+A checkbox lets the user make a choice between two alternatives.
+A checkbox has two states, selected and not selected, and the user
+can change the state by clicking on the check box.  The state
+of a checkbox can also be set programmatically by calling its
+<code>setSelected()</code> method, and the current value of the
+state can be checked using the <code>isSelected()</code> method.</p>
+
+   
+<p>Closely related to checkboxes are <newword>radio buttons</newword>.
+Like a checkbox, a radio button can be either selected or not.  However,
+radio buttons are expected to occur in groups, and at most one radio button in a
+group can be selected at any given time.  Radio button groups let the user
+make a choice among several alternatives.  In Java, a radio button is represented
+by an object of type <classname>JRadioButton</classname>. When used in isolation, a
+<classname>JRadioButton</classname> acts just like a <classname>JCheckBox</classname>, 
+and it has the same
+methods and events. Ordinarily, however, a <classname>JRadioButton</classname> is used in a
+group. A group of radio buttons is represented by an object belonging to the
+class <classname>ButtonGroup</classname>. A <classname>ButtonGroup</classname> is <b>not</b> a component
+and does not itself have a visible representation on the screen. A
+<classname>ButtonGroup</classname> works behind the scenes to organize a group of radio
+buttons, to ensure that at most one button in the group can be selected at any given
+time.</p>
+
+<p>To use a group of radio buttons, you must create a <classname>JRadioButton</classname>
+object for each button in the group, and you must create one object of type
+<classname>ButtonGroup</classname> to organize the individual buttons into a group. Each
+<classname>JRadioButton</classname> must be added individually to some container, so that it
+will appear on the screen. (A <classname>ButtonGroup</classname> plays no role in the
+placement of the buttons on the screen.) Each <classname>JRadioButton</classname> must also
+be added to the <classname>ButtonGroup</classname>, which has an <code>add()</code> method for
+this purpose. If you want one of the buttons to be selected initially, you
+can call <code>setSelected(true)</code> for that button. If you don't do this, then
+none of the buttons will be selected until the user clicks on one of them.</p>
+
+<p>As an example, here is how you could set up a set of radio buttons that can
+be used to select a color:</p>
+
+<pre>JRadioButton redRadio, blueRadio, greenRadio, yellowRadio;
+         // Variables to represent the radio buttons.
+         // These should probably be instance variables, so
+         // that they can be used throughout the program.
+ 
+ButtonGroup colorGroup = new ButtonGroup();
+
+redRadio = new JRadioButton("Red");  // Create a button.
+colorGroup.add(redRadio);            // Add it to the group.
+   
+blueRadio = new JRadioButton("Blue");
+colorGroup.add(blueRadio);
+ 
+greenRadio = new JRadioButton("Green");
+colorGroup.add(greenRadio);
+ 
+yellowRadio = new JRadioButton("Yellow");
+colorGroup.add(yellowRadio);
+ 
+redRadio.setSelected(true);  // Make an initial selection.</pre>
+
+<np>The individual buttons must still be added to a container if they are to
+appear on the screen. If you want to respond immediately when the user clicks
+on one of the radio buttons, you can register an <classname>ActionListener</classname> for
+each button.  Just as for
+checkboxes, it is not always necessary to register listeners for radio buttons.
+In some cases, you can simply check the state of each button when you need to
+know it, using the button's <code>isSelected()</code> method.</np>
+         
+<p>You can add the equivalent of a group of radio buttons to a menu by using
+the class <classname>JRadioButtonMenuItem</classname>.  To use this class,
+create several objects of this type, and create a <classname>ButtonGroup</classname>
+to manage them.  Add each <classname>JRadioButtonMenuItem</classname> to
+the <classname>ButtonGroup</classname>, and also add them to
+a <classname>JMenu</classname>.  If you want one of the items to be selected
+initially, call its <code>setSelected()</code> method to set its selection state
+to true.  You can add <classname>ActionListeners</classname> to each
+<classname>JRadioButtonMenuItem</classname> if you need to take some action
+when the user selects the menu item; if not, you can simply check the selected states
+of the buttons whenever you need to know them.  As an example, suppose that
+<code>menu</code> is a <classname>JMenu</classname>.  Then you can add a
+group of buttons to <code>menu</code> as follows:</p>
+   
+<pre>JRadioButtonMenuItem selectRedItem, selectGreenItem, selectBlueItem;
+   // These might be defined as instance variables
+ButtonGroup group = new ButtonGroup();
+selectRedItem = new JRadioButtonMenuItem("Red");
+group.add(selectRedItem);
+menu.add(selectRedItem);
+selectGreenItem = new JRadioButtonMenuItem("Green");
+group.add(selectGreenItem);
+menu.add(selectGreenItem);
+selectBlueItem = new JRadioButtonMenuItem("Blue");
+group.add(selectBlueItem);
+menu.add(selectBlueItem);</pre>
+
+<break/>
+   
+<p>When it's drawn on the screen, a <classname>JCheckBox</classname> includes
+a little box that is either checked or unchecked to show the state of the box.
+That box is actually a pair of <classname>Icons</classname>.
+One icon is shown when the check box is unselected; the other is shown when it
+is selected.  You can change the appearance of the check box by substituting
+different icons for the standard ones.</p>
+   
+<p>The icon that is shown when the check box is unselected is just the main
+icon for the <classname>JCheckBox</classname>.  You can provide a different
+unselected icon in the constructor or you can change the icon using the
+<code>setIcon()</code> method of the <classname>JCheckBox</classname> object.
+To change the icon that is shown when the check box is selected, use
+the <code>setSelectedIcon()</code> method of the <classname>JCheckBox</classname>.
+All this applies equally to <classname>JRadioButton</classname>,
+<classname>JCheckBoxMenuItem</classname>, and <classname>JRadioButtonMenuItem</classname>.
+</p>
+   
+<p>An example of this can be found in the sample program <sourceref href="ToolBarDemo.java"/>,
+which is discussed in the next subsection.  That program creates a set of radio buttons
+that use custom icons.  The buttons are created by the following method:</p>
+
+<pre>/**
+ * Create a JRadioButton and add it to a specified button group.  The button
+ * is meant for selecting a drawing color in the display.  The color is used to 
+ * create two custom icons, one for the unselected state of the button and one
+ * for the selected state.  These icons are used instead of the usual
+ * radio button icons.
+ * @param c the color of the button, and the color to be used for drawing.
+ *    (Note that c has to be "final" since it is used in the anonymous inner
+ *    class that defines the response to ActionEvents on the button.)
+ * @param grp the ButtonGroup to which the radio button will be added.
+ * @param selected if true, then the state of the button is set to selected.
+ * @return the radio button that was just created; sorry, but the button
+ *    is not as pretty as I would like!
+ */
+private JRadioButton makeColorRadioButton(final Color c, 
+                                           ButtonGroup grp, boolean selected) {
+   
+   /* Create an ImageIcon for the normal, unselected state of the button,
+      using a BufferedImage that is drawn here from scratch. */
+   
+   BufferedImage image = new BufferedImage(30,30,BufferedImage.TYPE_INT_RGB);
+   Graphics g = image.getGraphics();
+   g.setColor(Color.LIGHT_GRAY);
+   g.fillRect(0,0,30,30);
+   g.setColor(c);
+   g.fill3DRect(1, 1, 24, 24, true);
+   g.dispose();
+   Icon unselectedIcon = new ImageIcon(image);
+   
+   /* Create an ImageIcon for the selected state of the button. */
+ 
+   image = new BufferedImage(30,30,BufferedImage.TYPE_INT_RGB);
+   g = image.getGraphics();
+   g.setColor(Color.DARK_GRAY);
+   g.fillRect(0,0,30,30);
+   g.setColor(c);
+   g.fill3DRect(3, 3, 24, 24, false);
+   g.dispose();
+   Icon selectedIcon = new ImageIcon(image);
+   
+   /* Create and configure the button. */
+
+   JRadioButton button = new JRadioButton(unselectedIcon);
+   button.setSelectedIcon(selectedIcon);
+   button.addActionListener( new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+           // The action for this button sets the current drawing color
+           // in the display to c.
+         display.setCurrentColor(c);
+      }
+   });
+   grp.add(button);
+   if (selected)
+      button.setSelected(true);
+
+   return button;
+} // end makeColorRadioButton </pre>
+   
+<break/>
+
+   
+<p>It is possible to create radio buttons and check boxes&mdash;both the
+regular sort and the corresponding menu items&mdash;from <classname>Actions</classname>.
+The button or checkbox takes its name, main icon, tooltip text, and enabled/disabled state from the
+action. And the Action's <code>actionPerformed()</code> method is called when the user
+changes the state. Furthermore, an action has a property named <code>Action.SELECTED_KEY</code>, which 
+means that the action itself can have a selected state.  By default, the
+value of the <code>SELECTED_KEY</code> property is <code>null</code> and is not
+used for anything.  However, you can set the value to be true or false by calling
+<code>action.putValue(Action.SELECTED_KEY,true)</code> or
+<code>action.putValue(Action.SELECTED_KEY,false)</code>.  Once you have done so,
+the action's <code>SELECTED_KEY</code> property and the selected state of any
+checkbox or radio button created from the action will automatically be kept
+in sync.  You can find out the current value of the property by calling
+<code>action.getValue(Action.SELECTED_KEY)</code>.  Note that the value of
+a property is actually an object.  When you set the value to <code>true</code>
+or <code>false</code>, the value is wrapped in an object of type
+<classname>Boolean</classname>.  The return type of <code>action.getValue()</code>
+is <classname>Object</classname>, so you will probably need to type-cast the return value
+to <classname>Boolean</classname>.</p>
+
+<break/>
+
+<p>Java has another component that lets the user choose from a set of options:
+the <classname>JComboBox</classname>.  A combo box contains a list of items,
+but only displays the currently selected items.  The user clicks the combo box
+to see a pop-up list of options and can then select from the list.  The functionality
+is similar to a group of radio buttons.</p>
+
+<p><classname>JComboBox</classname> is a parameterized class, where the type parameter
+specifies the type of items that that combo box can hold.  Most commonly, the items
+are strings, and the type is <atype>JComboBox&lt;String&gt;</atype>.  This is the only
+case I will discuss.
+When a <classname>JComboBox&lt;String&gt;</classname> object is first constructed, it initially contains
+no items. An item is added to the bottom of the list of options by calling the combo box's instance
+method, <code>addItem(str)</code>, where <code>str</code> is the string that will be
+displayed in the menu.</p>
+
+<p>For example, the following code will create an object of type
+<classname>JComboBox</classname> that contains the options Red, Blue, Green, and Black:</p>
+
+<pre>JComboBox&lt;String&gt; colorChoice = new JComboBox&lt;String&gt;();
+colorChoice.addItem("Red");
+colorChoice.addItem("Blue");
+colorChoice.addItem("Green");
+colorChoice.addItem("Black");</pre>
+
+<p>You can call the <code>getSelectedIndex()</code> method of a <classname>JComboBox</classname>
+to find out which item is currently selected. This method returns an integer
+that gives the position of the selected item in the list, where the items are
+numbered starting from zero. Alternatively, you can call
+<code>getSelectedItem()</code> to get the selected item itself. (This method
+returns a value of type <classname>Object</classname>&mdash;even when the items
+are limited to being strings.)  You can change the selection by
+calling the method <code>setSelectedIndex(n)</code>, where <code>n</code> is an integer
+giving the position of the item that you want to select.</p>
+
+<p>The most common way to use a <classname>JComboBox</classname> is to call its
+<code>getSelectedIndex()</code> method when you have a need to know which item is
+currently selected. However, 
+<classname>JComboBox</classname> components generate <classname>ActionEvents</classname> when
+the user selects an item, and you can register
+an <classname>ActionListener</classname> with the <classname>JComboBox</classname> if you want to respond
+to such events as they occur.</p>
+
+<p><classname>JComboBoxes</classname> have a nifty feature, which is probably not all that
+useful in practice. You can make a <classname>JComboBox</classname> "editable" by calling its
+method <code>setEditable(true)</code>. If you do this, the user can edit the
+selection by clicking on the <classname>JComboBox</classname> and typing. This allows the
+user to make a selection that is not in the pre-configured list that you
+provide. (The "Combo" in the name "JComboBox" refers to the fact that it's a
+kind of combination of menu and text-input box.) If the user has edited the
+selection in this way, then the <code>getSelectedIndex()</code> method will return
+the value <code>-1</code>, and <code>getSelectedItem()</code> will return the string
+that the user typed. An <classname>ActionEvent</classname> is triggered if the user presses
+return while typing in the <classname>JComboBox</classname>.</p>
+
+<break/>
+
+<p>There is a lot of information in this section.  The sample program <sourceref href="ChoiceDemo.java"/>
+demonstrates the use of combo boxes, check boxes, and radio buttons&mdash;including the
+use of Actions with check boxes and radio buttons.  I encourage you to run the program to see
+how these things work and to read the source code.  The source code has a lot of comments to
+explain what is going on.</p>
+   
+</subsection>
+   
+      
+<subsection id="GUI2.3.4" title="Toolbars">
+   
+<p>It has become increasingly common for programs to have a row of small buttons
+along the top or side of the program window that offer access to some of the
+commonly used features of the program.  The row of buttons is known as a
+<newword>tool bar</newword>.  Typically, the buttons in a tool bar are presented
+as small icons, with no text.  Tool bars can also contain other components,
+such as <classname>JTextFields</classname> and <classname>JLabels</classname>.</p>
+   
+<p>In Swing, tool bars are represented by the class <classname>JToolBar</classname>.
+A <classname>JToolBar</classname> is a container that can hold other components.
+It is also itself a component, and so can be added to other containers.  In general,
+the parent component of the tool bar should use a <classname>BorderLayout</classname>.
+The tool bar should occupy one of the edge positions&mdash;<code>NORTH</code>,
+<code>SOUTH</code>, <code>EAST</code>, or <code>WEST</code>&mdash;in the
+<classname>BorderLayout</classname>.  Furthermore, the other three edge positions
+should be empty.  The reason for this is that it might be possible (depending
+on the platform and configuration) for the user to drag the tool bar from one edge position in
+the parent container to another.  It might even be possible for the user to drag the
+tool bar off its parent entirely, so that it becomes a separate window.</p>
+
+<p>Here is a picture of a toolbar.  This
+is from the sample program <sourceref href="ToolBarDemo.java"/>, which I
+discuss below:</p>
+
+<img src="toolbar.png" width="304" height="50" alt="a free-floating toolbar"
+    tex="toolbar.eps" texscale="0.75"/>
+   
+
+<p>In the demo program, the user can draw colored curves in a large drawing area.  
+The first three buttons in the tool bar are a set
+of radio buttons that control the drawing color.  The fourth
+button is a push button that the user can click to clear the drawing.
+</p>
+   
+<p>Tool bars are easy to use.  You just have to create the <classname>JToolBar</classname>
+object, add it to a container, and add some buttons and possibly other components to
+the tool bar.  One fine point is adding space to a tool bar, such as the gap between
+the radio buttons and the push button in the above picture.  You can leave
+a gap by adding a separator to the tool bar.  For example:</p>
+   
+<pre>toolbar.addSeparator(new Dimension(20,20));</pre>
+   
+<np>This adds an invisible 20-by-20 pixel block to the tool bar.  This will appear
+as a 20 pixel gap between components.</np>
+   
+<p>Here is the constructor from the <code>ToolBarDemo</code> program. 
+It shows how to create the tool bar and place it in a container.  Note that
+class <classname>ToolBarDemo</classname> is a subclass of <classname>JPanel</classname>,
+and the tool bar and display are added to the panel object that is being constructed:</p>
+   
+<pre>public ToolBarDemo() {
+   
+   setLayout(new BorderLayout(2,2));
+   setBackground(Color.GRAY);
+   setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
+   
+   display = new Display();  // the area where the user draws.
+   add(display, BorderLayout.CENTER);
+   
+   JToolBar toolbar = new JToolBar();
+   add(toolbar, BorderLayout.NORTH);
+   
+   ButtonGroup group = new ButtonGroup();
+   toolbar.add( makeColorRadioButton(Color.RED,group,true) );
+   toolbar.add( makeColorRadioButton(Color.GREEN,group,false) );
+   toolbar.add( makeColorRadioButton(Color.BLUE,group,false) );
+   
+   toolbar.addSeparator(new Dimension(20,20));
+   
+   toolbar.add( makeClearButton() );
+   
+}</pre>
+   
+<p>If you want a vertical tool bar that can be placed in the <code>EAST</code>
+or <code>WEST</code> position of a <classname>BorderLayout</classname>,
+you should specify the orientation in the tool bar's constructor:</p>
+   
+<pre>JToolBar toolbar = new JToolBar( JToolBar.VERTICAL );</pre>
+   
+<np>The default orientation is <code>JToolBar.HORIZONTAL</code>.  The
+orientation is adjusted automatically when the user drags the tool bar
+into a new position.  If you want to prevent the user from dragging
+the tool bar, just say <code>toolbar.setFloatable(false)</code>.</np>
+
+</subsection>
+   
+   
+<subsection id="GUI2.3.5" title="Keyboard Accelerators">
+   
+<p>In most programs, commonly used menu commands have keyboard equivalents.
+The user can type the keyboard equivalent instead of selecting the command
+from the menu, and the result will be exactly the same.  Typically, for
+example, the "Save" command has keyboard equivalent <code>CONTROL-S</code>,
+and the "Undo" command corresponds to <code>CONTROL-Z</code>.  (Under
+Mac OS, the keyboard equivalents for these commands would probably
+be <code>META-S</code> and <code>META-Z</code>, where <code>META</code>
+refers to holding down the "apple" key.)  The keyboard equivalents
+for menu commands are referred to as <newword>accelerators</newword>.</p>
+   
+<p>The class <code>javax.swing.KeyStroke</code> is used to represent
+key strokes that the user can type on the keyboard.  Keystrokes can
+refer to pressing a key, releasing a key, or typing a character,
+possibly while holding down one or more of the
+modifier keys <code>control</code>, <code>shift</code>, <code>alt</code>,
+and <code>meta</code>. The <classname>KeyStroke</classname> class has
+a convenient static method, <code>getKeyStroke(String)</code>, that makes it easy to 
+create key stroke objects representing key pressed events.  For example,</p>
+
+<pre>KeyStroke.getKeyStroke( "ctrl S" )</pre>
+   
+<np>returns a <classname>KeyStroke</classname> that represents the action
+of pressing the "S" key while holding down the control key.  In addition
+to "ctrl", you can use the modifiers "shift", "alt", and "meta" in the
+string that describes the key stroke.  You can even combine several modifiers,
+so that</np>
+   
+<pre>KeyStroke.getKeyStroke( "ctrl shift Z" )</pre>
+   
+<np>represents the action of pressing the "Z" key while holding down both
+the control and the shift keys.  When the key stroke involves pressing a
+character key, the character must appear in the string in upper case
+form.  You can also have key strokes that correspond to non-character
+keys.  The number keys can be referred to as "1", "2", etc., while
+certain special keys have names such as "F1", "ENTER", and "LEFT"
+(for the left arrow key).  The class <classname>KeyEvent</classname>
+defines many constants such as <code>VK_ENTER</code>, <code>VK_LEFT</code>,
+and <code>VK_S</code>.  The names that are used for keys in the
+keystroke description are just these constants with the leading
+"<code>VK_</code>" removed.</np>
+
+<p>There are at least two ways to associate a keyboard accelerator with
+a menu item.  One is to use the <code>setAccelerator()</code> method
+of the menu item object:</p>
+   
+<pre>JMenuItem saveCommand = new JMenuItem( "Save..." );
+saveCommand.setAccelerator( KeyStroke.getKeyStroke("ctrl S") );</pre>
+   
+<np>The other technique can be used if the menu item is created from 
+an <classname>Action</classname>.  The action property
+<code>Action.ACCELERATOR_KEY</code> can be used to associate a
+<classname>KeyStroke</classname> with an <classname>Action</classname>.
+When a menu item is created from the action, the keyboard accelerator
+for the menu item is taken from the value of this property.  For
+example, if <code>redoAction</code> is an <classname>Action</classname>
+representing a "Redo" action, then you might say:</np>
+   
+<pre>redoAction.putValue( Action.ACCELERATOR_KEY, 
+                              KeyStroke.getKeyStroke("ctrl shift Z") );
+JMenuItem redoCommand = new JMenuItem( redoAction );</pre>
+   
+<np>or, alternatively, you could simply add the action to a <classname>JMenu</classname>,
+<code>editMenu</code>, with <code>editMenu.add(redoAction)</code>.
+(Note, by the way, that accelerators apply only to menu items, not to
+push buttons.  When you create a <classname>JButton</classname> from an
+action, the <code>ACCELERATOR_KEY</code> property of the action is ignored.)</np>
+   
+<p>Note that you can use accelerators for <classname>JCheckBoxMenuItems</classname>
+and <classname>JRadioButtonMenuItems</classname>, as well as for simple
+<classname>JMenuItems</classname>.</p>
+   
+<p>For examples of using keyboard accelerators, see <sourceref href="ChoiceDemo.java"/>
+and the solution to <localref href="GUI2.ex.2"/>.</p>
+   
+<break/>
+   
+<p>By the way, as noted above, in the Mac&nbsp;OS operating system, the
+meta (or apple) key is usually used for keyboard accelerators instead of
+the control key.  Java has a way of determining the correct modifier
+for the computer on which it is running.  However, it requires the
+use of a different method for constructing the <classname>KeyStroke</classname>.  The 
+function call</p>
+
+<pre>int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()</pre>
+
+<np>returns a "mask" that can be used to represent the correct modifier key when
+the keystroke is created by the function</np>
+
+<pre>KeyStroke stoke = KeyStroke( keyCode, shortcutMask );</pre>
+
+<np>The first parameter, <code>keyCode</code>, is one of the constants
+such as <code>KeyEvent.VK_Z</code> that represent keys on the keyboard.
+For example, <code>KeyStroke.getKeyStroke(KeyEvent.VK_Z,shortcutMask)</code>
+represents the action of pressing the Z key while holding down the
+meta key on a Mac or the control key on Windows or Linux.  It is possible
+to add other modifiers to the <code>shortcutMask</code> to account for
+holding down the shift or alt keys; see the documentation.</np>
+
+<p>As an example, here is a
+code segment that is used in <sourceref href="ChoiceDemo.java"/> to make
+a "Quit" menu item that will have the appropriate modifier key for
+the computer on which the program is running</p>
+
+<pre>int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+KeyStroke quitKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Q, shortcutMask);
+JMenuItem quit = new JMenuItem("Quit");
+quit.setAccelerator(quitKeyStroke);
+quit.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent evt) {
+        System.exit(0);
+    }
+});
+controlMenu.add(quit);</pre>
+   
+</subsection>
+   
+   
+<subsection id="GUI2.3.6" title="HTML on Buttons">
+   
+<p>As a final stop in this brief tour of ways to spiff up your buttons,
+I'll mention the fact that the text that is displayed on a button can
+be specified in HTML format.  HTML is the markup language that is used to
+write web pages.  I don't cover it in this book, but I will explain a
+few things that you can do with it.  HTML allows you to apply color or italics
+or other styles to just part of the text on your buttons.  It also makes
+it possible to have buttons that display multiple lines of text.
+(You can also use HTML on <classname>JLabels</classname>,
+which can be even more useful.)   
+Here's a picture of a button with HTML text (along with a "Java" icon):</p>
+   
+<img src="java-button.png" width="226" height="100" alt="button with HTML text"
+   tex="java-button.eps" texscale="0.75"/>
+   
+<p>If the string of text that is applied to a button starts with "<code>&lt;html&gt;</code>",
+then the string is interpreted as HTML.  The string does not have to use strict
+HTML format; for example, you don't need a closing <code>&lt;/html&gt;</code> at the end of
+the string.  To get multi-line text, use <code>&lt;br&gt;</code> in the string
+to represent line breaks.  If you would like the lines of text to be center
+justified, include the entire text (except for the <code>&lt;html&gt;</code>) between
+<code>&lt;center&gt;</code> and <code>&lt;/center&gt;</code>.  For example,</p>
+   
+<pre>JButton button = new JButton(
+               "&lt;html&gt;&lt;center&gt;This button has&lt;br&gt;two lines of text&lt;/center&gt;" );</pre>
+   
+<np>creates a button that displays two centered lines of text.  You can apply italics
+to part of the string by enclosing that part between <code>&lt;i&gt;</code> and
+<code>&lt;/i&gt;</code>.  Similarly, use <code>&lt;b&gt;...&lt;/b&gt;</code>
+for bold text and <code>&lt;u&gt;...&lt;/u&gt;</code> for underlined text.
+For green text, enclose the text between <code>&lt;font&nbsp;color=green&gt;</code>
+and <code>&lt;/font&gt;</code>.  You can, of course, use other colors
+in place of "green."  The "Java" button that is shown above was created using:</np>
+   
+<pre>JButton javaButton = new JButton( "&lt;html&gt;&lt;u&gt;Now&lt;/u&gt; is the time for&lt;br&gt;" +
+                           "a nice cup of &lt;font color=red&gt;coffee&lt;/font&gt;." );</pre>
+   
+<np>and then adding the Java image as an icon for the button.</np>
+   
+   
+</subsection>
+   
+   
+</section>

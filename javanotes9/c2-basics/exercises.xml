@@ -136,6 +136,16 @@ directly:</np>
 quantity. By the way, the parentheses around <code>(die1 + die2)</code> are
 essential because of the precedence rules for the <code>+</code> operator. You
 might try to experiment with leaving them out and see what happens.</np>
+
+<p>As a final variation, all three lines of output could be produced using 
+a multiline text block. Text blocks were discussed in <localref href="basics.3.3a"/>.
+Using a text block also requires <code>System.out.printf</code>:</p>
+
+<pre>System.out.printf("""
+    The first die comes up %d
+    The second die comes up %d
+    Your total roll is %d
+    """, die1, die2, roll);</pre>
    </exercise-discuss>
    <exercise-code>
 <pre><prog name="RollTheDice">
