@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE glossary SYSTEM "javanotes9.dtd" >
 <glossary>
+<gitem term="abstraction">Abstraction refers, in general, to the idea of providing
+a simplified or higher level interface to a complex system.  It is closely related
+to the idea of a "black box." Abstraction makes it possible to understand or
+use a system, while ignoring some of the details of what actually goes on in the
+system.  For example, control abstractions such as if statements and while
+loops are actually implemented in machine language by jump and conditional jump 
+instructions, but it is possible&mdash;and easier&mdash;to use if statements
+and while loops without knowing anything about their machine language implementation.
+Control abstractions make it possible to implement algorithms on a higher level
+than machine language.  Abstraction is a fundamental concept in computer science.</gitem>
 <gitem term="abstract class">A class that cannot be used to create objects, and that
 exists only for the purpose of creating subclasses.  Abstract classes in Java are
 defined using the modifier <code>abstract</code>.</gitem>

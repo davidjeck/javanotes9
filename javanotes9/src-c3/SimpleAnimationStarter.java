@@ -66,10 +66,9 @@ public class SimpleAnimationStarter extends Application {
 					drawFrame(canvas.getGraphicsContext2D(), 0, 0, width, height);
 				}
 				else if (now - previousTime > 0.95e9/60) {
-					   // The test in the else-if is to guard against a bug that has shown
-					   // up in some versions of JavaFX on some computers.  The bug allows
-					   // the handle() method to be called many times more than the 60 times
-					   // per second that is specified in the JavaFX documentation.
+					   // The test in the else-if is to make sure that drawFrame() is
+					   // called about once every 1/60 second.  It is required since
+					   // handle() can be called by system more often than that.
 					frameNum++;
 					drawFrame(canvas.getGraphicsContext2D(), frameNum, (now-startTime)/1e9, width, height);
 					previousTime = now;

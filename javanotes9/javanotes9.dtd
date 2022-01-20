@@ -73,7 +73,8 @@
 <!ELEMENT prog %simpletext;>
 <!ATTLIST prog
 	xml:space CDATA #FIXED "preserve"
-	name CDATA #REQUIRED>
+	name CDATA #REQUIRED
+    scope (fx|swing|both) "both">
 
 <!ELEMENT p %simpletext;>
 <!ATTLIST p 

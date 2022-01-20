@@ -144,7 +144,7 @@ practice, you'll become comfortable with it.  It might be useful to look at a
 flow control diagram for the general "if..else&nbsp;if" statement shown above:</np>
 
 <img src="multiway-if-flow-control.png" alt="Flow control diagram for a multiway if statement"
-   width="549" height="463" bordered="true" tex="multiway-if-flow-control.eps" texscale="0.75"/>
+   width="547" height="463" bordered="true" tex="multiway-if-flow-control.eps" texscale="0.75"/>
 
 </subsection>
 
@@ -317,12 +317,13 @@ inputs a&nbsp;0. Here's the complete program:</p>
                                            //   each possible unit of
                                            //   measure.
        
-       System.out.println("Enter measurements in inches, feet, yards, or miles.");
-       System.out.println("For example:  1 inch    17 feet    2.73 miles");
-       System.out.println("You can use abbreviations:   in   ft  yd   mi");
-       System.out.println("I will convert your input into the other units");
-       System.out.println("of measure.");
-       System.out.println();
+       System.out.println("""
+                Enter measurements in inches, feet, yards, or miles.
+                For example:  1 inch    17 feet    2.73 miles
+                You can use abbreviations:   in   ft  yd   mi
+                I will convert your input into the other units
+                of measure.
+                """);
        
        while (true) {
           
@@ -367,13 +368,15 @@ inputs a&nbsp;0. Here's the complete program:</p>
           
           /* Output measurement in terms of each unit of measure. */
           
-            System.out.println();
-            System.out.println("That's equivalent to:");
-            System.out.printf("%14.5g inches%n", inches);
-            System.out.printf("%14.5g feet%n", feet);
-            System.out.printf("%14.5g yards%n", yards);
-            System.out.printf("%14.5g miles%n", miles);
-            System.out.println();
+          System.out.printf("""
+                    That's equivalent to:
+                    %14.5g inches
+                    %14.5g feet
+                    %14.5g yards
+                    %14.5g miles
+                    """, inches, feet, yards, miles);
+
+          System.out.println();
        
        } // end while
        
@@ -386,7 +389,9 @@ inputs a&nbsp;0. Here's the complete program:</p>
 </pre>
 
    
-<p>(Note that this program uses formatted output with the "g" format specifier.  In this program,
+<p>(Note that this program uses text blocks for multiline outputs (see <localref href="basics.3.3a"/>;
+text blocks require Java&nbsp;17).
+It also uses formatted output with the "g" format specifier.  In this program,
 we have no control over how large or how small the numbers might be.  It could easily make
 sense for the user to enter very large or very small measurements.  The "g" format will
 print a real number in exponential form if it is very large or very small, and in the usual decimal form

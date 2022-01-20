@@ -10,11 +10,11 @@ book, we'll be more concerned with the larger scale structure of programs, but
 the material that you've already learned will be an important foundation for
 everything to come.  In this section, we see how techniques that you have  
 learned so far can be applied in the context of graphical user interface programming.  GUI programs
-here, and in the rest of this book, are written using JavaFX, a collection of classes
+here, and in the rest of this book, are written using <fx>JavaFX</fx><swing>Swing</swing>, a collection of classes
 that form a "toolkit" for writing GUI programs.  All of the classes mentioned in this
-section are part of JavaFX, and they must be imported into any program that uses them.
-See <localref href="basics.6"/> for information about compiling and running programs 
-that use JavaFX.</p>
+section are part of <fx>JavaFX</fx><swing>Swing</swing>, and they must be imported into any program that uses them.<fx>
+See <localref href="basics.6.7"/> and <localref href="basics.6.8"/> for information about compiling and running programs 
+that use JavaFX.</fx></p>
 
 <p>When you run a GUI program, it opens one or more windows on your computer
 screen.  As a programmer, you can have complete control over what appears in the
@@ -32,8 +32,8 @@ any subroutine, not just <code>main()</code>.</p>
 coordinate systems.  The computer screen is made up of small squares called 
 <newword>pixels</newword>, arranged in rows and columns, usually about 100 pixels
 per inch.  (Many screen now have many more physical pixels per inch.  On these
-"high-resolution" screens, a JavaFX "pixel" might refer to a physical pixel, but
-it is more likely to refer to a "logical pixel," which is a unit of measure
+"high-resolution" screens, a "pixel" might refer to a physical pixel, but
+it might also refer to a "logical pixel," which is a unit of measure
 somewhere close to 1/100 inch.)</p> 
 
 <p>The computer controls the color of the pixels, and drawing is done by
@@ -71,24 +71,29 @@ Different graphics context objects
 can draw to different drawing surfaces.  For us, the drawing surface will be the
 content area of a window, not including its border or title bar.</p>
 
-<p>There are two ways to draw a shape in JavaFX:  You can <newword>fill</newword> the
+<p>There are two ways to draw a shape in <fx>JavaFX</fx><swing>Swing</swing>:  You can <newword>fill</newword> the
 shape, meaning you can set the color of each of the pixels inside the shape.
-Or you can <newword>stroke</newword> the shape, meaning that you set the color of
+Or you can <newword><fx>stroke</fx><swing>draw</swing></newword> the shape, meaning that you set the color of
 the pixels that lie along the border of the shape.  Some shapes, such as a line,
-can only be stroked.  A graphics context actually keeps track of two separate
-colors, one used for filling shapes and one used for stroking shapes.
-Stroking a shape is like dragging a pen along the border of the
+can only be <fx>stroked</fx><swing>drawn</swing>.  <fx>A&nbsp;JavaFX graphics context actually keeps track of two separate
+colors, one used for filling shapes and one used for stroking shapes.</fx><swing>A&nbsp;Swing
+graphics context keeps track of the color that will be used for filling 
+and drawing shapes.</swing>  <fx>Stroking</fx><swing>Drawing</swing> a shape is 
+like dragging a pen along the border of the
 shape.  The properties of that pen (such as its size and whether it produces
 a solid line or a dashed line) are properties of the graphics context.
 </p>
 
 <p>A graphics context is represented by a variable.  The type for the variable is
-<classname>GraphicsContext</classname>  (just like the type for a string variable is 
+<fx><classname>GraphicsContext</classname></fx><swing><classname>Graphics</classname></swing>
+(just like the type for a string variable is 
 <classname>String</classname>).   The variable is often named <i>g</i>, but 
 the name of the variable is of course up to the programmer.  Here are a few of the
 subroutines that are available in a graphics context&nbsp;<i>g</i>.  Note that
-all numerical parameter values can be of type <ptype>double</ptype>.</p>
+all numerical parameter values <fx>can be 
+of type <ptype>double</ptype></fx><swing> are of type <ptype>int</ptype></swing>.</p>
 
+<fxdiv>
 <ul>
 <li><codedef>g.setFill(c)</codedef> is called to set the
 color to be used for filling shapes. The parameter, <code>c</code> is an object
@@ -130,7 +135,43 @@ and for <code>h</code>.</li>
 <code>g.strokeOval()</code> except that it fills in the inside of the oval instead
 of drawing an outline.</li>
 </ul>
-
+</fxdiv>
+<swingdiv>
+<ul>
+<li><codedef>g.setColor(c)</codedef>, is called to set the
+color to be used for drawing. The parameter, <code>c</code> is an object
+belonging to a class named <classname>Color</classname>.  There are about
+a dozen constants representing standard colors that can be used as the parameter
+in this subroutine. The standard colors include
+<code>Color.BLACK</code>, <code>Color.WHITE</code>, <code>Color.LIGHT_GRAY</code>, <code>Color.RED</code>,
+<code>Color.GREEN</code>, and <code>Color.BLUE</code>.  (Later, we will see that it is also possible
+to create new colors.)  For example, if you want to draw
+in red, you would say "<code>g.setColor(Color.RED);</code>". The specified color is
+used for all subsequent drawing operations up until the next time <code>g.setColor()</code> is
+called.</li>
+<li><codedef>g.drawLine(x1,y1,x2,y2)</codedef> draws a line from the point with
+coordinates <code>(x1,y1)</code> to the point with coordinates <code>(x2,y2)</code>.</li>
+<li><codedef>g.drawRect(x,y,w,h)</codedef> draws the outline
+of a rectangle with vertical and horizontal sides.
+The parameters <code>x</code>, <code>y</code>, <code>w</code>, and
+<code>h</code> must be integers or integer-valued expressions. 
+This subroutine draws the outline of the rectangle whose
+top-left corner is <code>x</code> pixels from the left edge of the drawing area and
+<code>y</code> pixels down from the top. The width of the rectangle
+is <code>w</code> pixels, and the height is <code>h</code> pixels.  The color that
+is used is black, unless a different color has been set by calling <code>g.setColor()</code>.</li>
+<li><codedef>g.fillRect(x,y,w,h)</codedef> is similar to
+<code>g.drawRect()</code> except that it fills in the inside of the rectangle instead
+of drawing an outline.</li>
+<li><codedef>g.drawOval(x,y,w,h)</codedef> draws the outline
+of an oval.  The oval just fits inside the rectangle that would be drawn by
+<code>g.drawRect(x,y,w,h)</code>.  To get a circle, use the same values for <code>w</code>
+and for <code>h</code>.</li>
+<li><codedef>g.fillOval(x,y,w,h)</codedef> is similar to
+<code>g.drawOval()</code> except that it fills in the inside of the oval instead
+of drawing an outline.</li>
+</ul>
+</swingdiv>
 
 <p>This is enough information to draw some pictures using Java graphics.  To start
 with something simple, let's say that we want to draw a set of ten parallel lines, something
@@ -141,7 +182,7 @@ like this:</p>
          
 <np>Let's say that the lines are 200 pixels long and that the distance from each line
 to the next is 10 pixels, and let's put the start of the first line at the pixel
-with coordinates (100,50). To draw one line, we just have to call <code>g.strokeLine(x1,y1,x2,y2)</code>
+with coordinates (100,50). To draw one line, we just have to call <code>g.<fx>stroke</fx><swing>draw</swing>Line(x1,y1,x2,y2)</code>
 with appropriate values for the parameters.
 Now, all the lines start at <i>x</i>-coordinate 100, so we can use the constant 100 as the value for 
 <code>x1</code>.  Since the lines are 200 pixels long, we can use the constant 300 as the value
@@ -149,7 +190,7 @@ for <code>x2</code>.  The <i>y</i>-coordinates of the lines are different, but w
 both endpoints of a line have the <b>same</b> <i>y</i>-coordinates, so we can use a single
 variable as the value for <code>y1</code> and for <code>y2</code>.  Using <code>y</code> as the
 name of that variable, the command for drawing one of the lines becomes
-<code>g.strokeLine(100,y,300,y)</code>.  The value of <code>y</code> is 50 for the top line
+<code>g.<fx>stroke</fx><swing>draw</swing>Line(100,y,300,y)</code>.  The value of <code>y</code> is 50 for the top line
 and increases by 10 each time we move down from one line to the next.  We just need to make
 sure that <code>y</code> takes on the correct sequence of values.  We can use a for loop
 that counts from 1 to 10:</np>
@@ -158,7 +199,7 @@ that counts from 1 to 10:</np>
 int i;   // loop control variable
 y = 50;  // y starts at 50 for the first line
 for ( i = 1; i &lt;= 10; i++ ) {
-    g.strokeLine( 100, y, 300, y );
+    g.<fx>stroke</fx><swing>draw</swing>Line( 100, y, 300, y );
     y = y + 10;  // increase y by 10 before drawing the next line.
 }</pre>
 
@@ -167,12 +208,13 @@ that the value of <code>y</code> for the last line is 140:</np>
 
 <pre>int y;
 for ( y = 50; y &lt;= 140; y = y + 10 )
-    g.strokeLine( 100, y, 300, y );</pre>
+    g.<fx>stroke</fx><swing>draw</swing>Line( 100, y, 300, y );</pre>
 
 <np>If we wanted the lines to be blue, we could do
-that by calling <code>g.setStroke(Color.BLUE)</code> <b>before</b> drawing them.  If we just draw
-the lines without setting the color, they will be black.  If we wanted the lines to be 3 pixels wide,
-we could call <code>g.setLineWidth(3)</code> <b>before</b> drawing the lines.</np>
+that by calling <code>g.set<swing>Color</swing><fx>>Stroke</fx>(Color.BLUE)</code> <b>before</b> drawing them.  
+If we just draw
+the lines without setting the color, they will be black.<fx>  If we wanted the lines to be 3 pixels wide,
+we could call <code>g.setLineWidth(3)</code> <b>before</b> drawing the lines.</fx></np>
 
 <p>For something a little more complicated, let's draw a large number of randomly colored,
 randomly positioned, filled circles.  Since we only know a few colors, I will randomly select
@@ -181,16 +223,16 @@ to the ones in <localref href="control.6.4"/>:</p>
 
 <pre>switch ( (int)(4*Math.random()) ) {
     case 0:
-        g.setFill( Color.RED );
+        g.set<fx>Fill</fx><swing>Color</swing>( Color.RED );
         break;
     case 1:
-        g.setFill( Color.GREEN );
+        g.set<fx>Fill</fx><swing>Color</swing>( Color.GREEN );
         break;
     case 2:
-        g.setFill( Color.BLUE );
+        g.set<fx>Fill</fx><swing>Color</swing>( Color.BLUE );
         break;
     case 3:
-        g.setFill( Color.YELLOW );
+        g.set<fx>Fill</fx><swing>Color</swing>( Color.YELLOW );
         break;
 }</pre>
 
@@ -219,8 +261,8 @@ g.fillOval( centerX - 50, centerY - 50, 100, 100 );</pre>
 In the end, I found that the picture looks better if I also draw a black outline
 around each filled circle, so I added this code at the end:</np>
 
-<pre>g.setStroke( Color.BLACK );
-g.strokeOval( centerX - 50, centerY - 50, 100, 100 );</pre>
+<pre>g.set<fx>Stroke</fx><swing>Color</swing>( Color.BLACK );
+g.<fx>stroke</fx><swing>draw</swing>Oval( centerX - 50, centerY - 50, 100, 100 );</pre>
 
 <np>Finally, to get a large number of circles, I put all of the above code into
 a <code>for</code> loop that runs for 500 executions.  Here's a typical drawing from
@@ -239,12 +281,12 @@ The code has to be inside a subroutine definition that is itself inside a class
 definition.  In fact, for my circle-drawing program, the complete subroutine for
 drawing the picture looks like this:</p>
 
-<pre>public void drawPicture(GraphicsContext g, int width, int height) {
+<pre>public void drawPicture(Graphics<fx>Context</fx> g, int width, int height) {
 
-    g.setFill(Color.WHITE);
+<fx>    g.setFill(Color.WHITE);
     g.fillRect(0, 0, width, height); // First, fill  with a background color.
 
-    // As an example, draw a large number of colored disks.
+</fx>    // As an example, draw a large number of colored disks.
     // To get a different picture, erase this code, and substitute your own. 
     
     int centerX;     // The x-coord of the center of a disk.
@@ -260,22 +302,22 @@ drawing the picture looks like this:</p>
         colorChoice = (int)(4*Math.random());
         switch (colorChoice) {
         case 0:
-            g.setFill(Color.RED);
+            g.set<fx>Fill</fx><swing>Color</swing>(Color.RED);
             break;
         case 1:
-            g.setFill(Color.GREEN);
+            g.set<fx>Fill</fx><swing>Color</swing>(Color.GREEN);
             break;
         case 2:
-            g.setFill(Color.BLUE);
+            g.set<fx>Fill</fx><swing>Color</swing>(Color.BLUE);
             break;
         case 3:
-            g.setFill(Color.YELLOW);
+            g.set<fx>Fill</fx><swing>Color</swing>(Color.YELLOW);
             break;
         }
 
         g.fillOval( centerX - 50, centerY - 50, 100, 100 );
-        g.setStroke(Color.BLACK);
-        g.strokeOval( centerX - 50, centerY - 50, 100, 100 );
+        g.set<fx>Stroke</fx><swing>Color</swing>(Color.BLACK);
+        g.<fx>stroke</fx><swing>draw</swing>Oval( centerX - 50, centerY - 50, 100, 100 );
     }
 
 } // end drawPicture()
@@ -350,14 +392,13 @@ the same variable.  I call that variable <code>inset</code>, since it is the amo
 which the edges of the rectangle are inset from the edges of the drawing area.   The
 width and height decrease from one rectangle to the next, while the <code>inset</code>
 increases.  The while loop ends when either the width or the height becomes less than or equal to zero. 
-In general outline, the algorithm for drawing one frame is</p>
+In general outline, the algorithm for drawing the rectangles in one frame is</p>
 
-<pre>Fill the drawing area with white
-Set the amount of inset for the first rectangle
+<pre>Set the amount of inset for the first rectangle
 Set the width and height for the first rectangle
 Set the stroke color to black
 while the width and height are both greater than zero:
-    draw a rectangle (using the g.strokeRect subroutine)
+    draw a rectangle (using the g.<fx>stroke</fx><swing>draw</swing>Rect subroutine)
     increase the inset (to move the next rectangle over and down)
     decrease the width and height (to make the next rectangle smaller)</pre>
 
@@ -386,19 +427,19 @@ the animation proceeds, the inset should go through the sequence of values
 
 <pre>inset = frameNumber % 15;</pre>
 
-<np>Finally, note that the first rectangle fills the drawing area except for a border
+<np>Finally, note that the first rectangle that is drawn in a frame fills the drawing area except for a border
 of size <code>inset</code> around the outside of the rectangle.  This means that
-the width of the rectangle is the width of the drawing area minus two times the inset,
+the width of the first rectangle is the width of the drawing area minus two times the inset,
 and similarly for the height.  Here, then is the <code>drawFrame()</code> subroutine for
 the moving rectangle example:</np>
 
-<pre>public void drawFrame(GraphicsContext g, int frameNumber, 
+<pre>public void drawFrame(Graphics<fx>Context</fx> g, int frameNumber, 
                             double elapsedSeconds, int width, int height) {
 
-    g.setFill(Color.WHITE);
+    <fx>g.setFill(Color.WHITE);
     g.fillRect(0,0,width,height);  // Fill drawing area with white.
 
-    double inset; // Gap between edges of drawing area and outer rectangle.
+    </fx>double inset; // Gap between edges of drawing area and outer rectangle.
 
     double rectWidth, rectHeight;   // The size of one of the rectangles.
 
@@ -411,7 +452,7 @@ the moving rectangle example:</np>
     rectHeight = height - 2*inset;
 
     while (rectWidth >= 0 &amp;&amp; rectHeight >= 0) {
-        g.strokeRect(inset, inset, rectWidth, rectHeight);
+        g.<fx>stroke</fx><swing>draw</swing>Rect(inset, inset, rectWidth, rectHeight);
         inset += 15;       // rectangles are 15 pixels apart
         rectWidth -= 30;
         rectHeight -= 30;
@@ -420,12 +461,12 @@ the moving rectangle example:</np>
 }</pre>
 
 <np>You can find the full source code for the program is in the sample program
-<sourceref href="MovingRects.java"/>.  Take a look!  It's a neat effect.
+<sourceref href="MovingRects.java"/>.  Take a look!  It's a neat effect.<fx>
 For another example of animation, see the
 sample program <sourceref href="RandomCircles.java"/>.  That program adds one
 random colored disk to the picture in each frame; it illustrates the fact
 that the image from one frame is not automatically erased before the next frame
-is drawn.</np>
+is drawn.</fx></np>
 
 </subsection>
 

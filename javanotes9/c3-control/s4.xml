@@ -71,7 +71,8 @@ is usually a declaration or an assignment statement, but it
 can be any expression that would be allowed as a statement in a program.
 The <bnf>update</bnf> can be any simple statement, but is usually
 an increment, a decrement, or an assignment statement. Any
-of the three parts can be empty. If the continuation condition is empty, it is
+of the three parts can be empty, but the two semicolons are required in any case. 
+If the continuation condition is empty, it is
 treated as if it were "<code>true</code>," so the loop will be repeated forever or
 until it ends for some other reason, such as a <code>break</code> statement. (Some
 people like to begin an infinite loop with "<code>for&nbsp;(;;)</code>" instead of
@@ -224,7 +225,7 @@ user and computes how many different divisors <code>N</code> has. The numbers th
 could possibly be divisors of <code>N</code> are 1, 2,&nbsp;&dots;,&nbsp;<code>N</code>. To compute
 the number of divisors of <code>N</code>, we can just test each possible divisor of
 <code>N</code> and count the ones that actually do divide <code>N</code> evenly. (This is
-a correct solution, but is certainly not the most efficient way to perform this task.)  In
+a correct solution, but there are much more efficient ways to perform this task.)  In
 pseudocode, the algorithm takes the form</p>
 
 <pre>Get a positive integer, N, from the user
@@ -354,7 +355,7 @@ even have multiple levels of nesting, such as a <code>while</code> loop inside a
 <code>if</code> statement inside another <code>while</code> loop. The syntax of Java
 does not set a limit on the number of levels of nesting. As a practical matter,
 though, it's difficult to understand a program that has more than a few levels
-of nesting.</p>
+of nesting, and it is a style rule that excessive nesting should be avoided.</p>
 
 <p>Nested <code>for</code> loops arise naturally in many algorithms, and it is
 important to understand how they work. Let's look at a couple of examples.

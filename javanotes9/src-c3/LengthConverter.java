@@ -22,12 +22,13 @@ public class LengthConverter {
 		                                    //   each possible unit of
 		                                    //   measure.
 
-		System.out.println("Enter measurements in inches, feet, yards, or miles.");
-		System.out.println("For example:  1 inch    17 feet    2.73 miles");
-		System.out.println("You can use abbreviations:   in   ft  yd   mi");
-		System.out.println("I will convert your input into the other units");
-		System.out.println("of measure.");
-		System.out.println();
+		System.out.println("""
+				Enter measurements in inches, feet, yards, or miles.
+				For example:  1 inch    17 feet    2.73 miles
+				You can use abbreviations:   in   ft  yd   mi
+				I will convert your input into the other units
+				of measure.
+				""");
 
 		while (true) {
 
@@ -72,12 +73,14 @@ public class LengthConverter {
 
 			/* Output measurement in terms of each unit of measure. */
 
-			System.out.println();
-			System.out.println("That's equivalent to:");
-			System.out.printf("%14.5g inches%n", inches);
-			System.out.printf("%14.5g feet%n", feet);
-			System.out.printf("%14.5g yards%n", yards);
-			System.out.printf("%14.5g miles%n", miles);
+			System.out.printf("""
+					That's equivalent to:
+					%14.5g inches
+					%14.5g feet
+					%14.5g yards
+					%14.5g miles
+					""", inches, feet, yards, miles);
+
 			System.out.println();
 
 		} // end while

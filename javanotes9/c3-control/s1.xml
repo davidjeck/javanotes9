@@ -90,12 +90,14 @@ three control structures in later sections.</p>
 <p>A <newword>while loop</newword> is used to repeat a given
 statement over and over. Of course, it's not likely that you would want to keep
 repeating it forever. That would be an <newword>infinite loop</newword>, which is 
-generally a bad thing. (There is an old story about
+generally a bad thing.  (There is an old story about
 computer pioneer Grace Murray Hopper, who read instructions on a bottle of
 shampoo telling her to "lather, rinse, repeat." As the story goes, she claims
 that she tried to follow the directions, but she ran out of shampoo. (In case
 you don't get it, she was making a joke about the way that computers mindlessly follow
-instructions.))</p>
+instructions.))  By the way, if you are working on the command line and need to
+stop a program that has gotten into an infinite loop, you should be able to
+do so with Control-C, that is, hold down the Control key and press the C key.</p>
 
 <p>To be more specific, a <code>while</code> loop will repeat a statement over and
 over, but only so long as a specified condition remains true. A <code>while</code>
@@ -328,6 +330,38 @@ computing task. Simple looping and branching are all you really need!</p>
 
 </subsection>
 
+<subsection id="control.1.3a" title="Control Abstractiont">
+
+<p>Control structures such as <code>if</code> statements and <code>while</code> loops
+allow you to control processes that go on inside the CPU of a computer.  But as to
+what actually goes on in the CPU, there is no such thing as an <code>if</code> statements or a <code>while</code> loops.
+As discussed in <localref href="overview.1"/>, a CPU can only execute simple machine language
+instructions.  Loops and branches must be implemented in machine language using jump instructions,
+which change the value stored in the program counter register, and conditional jump instructions,
+which might or might not change the program counter, depending on the result of a simple test.</p>
+
+<p>Implementing Java control structures in machine language can get rather complicated.
+Fortunately, you don't need to know how to do it.  You can use Java control structures
+without knowing how they are implemented in machine language.  In fact, you don't need
+to know anything about machine language or how CPUs work.  This is an example of
+<newword>abstraction</newword>.</p>
+
+<p>Abstraction is a central concept in computer science.  Abstraction allows you
+to work with something without understanding how it works in detail.  It allows
+you to work on a "higher level."  <code>If</code> statements and <code>while</code> loops
+are examples of <newword>control abstractions</newword>.  They allow you to work
+with a high-level programming language like Java, rather than with very low-level
+machine language.</p>
+
+<p>You will encounter other kinds of abstraction later in this book.  In fact, you've already
+encountered one: A variable is a basic example of <newword>data abstraction</newword>.
+A variable lets you use a name to work with a data value of a certain type.  The computer
+has to keep track of the numerical address of that data in memory, how many bytes of memory
+the data occupies, and how to interpret the bits that are stored in that memory to
+represent the value.  The variable is an abstraction that lets you avoid all that detail.</p>
+
+</subsection>
+
 <subsection id="control.1.4" title="Definite Assignment">
 
 <p>I will finish this introduction to control structures with a somewhat technical
@@ -383,7 +417,9 @@ else                               if (x &gt;= 0)
 
 <np>After the code on the left is executed, <code>x</code> is 1; after the code on the
 right, <code>x</code> is&nbsp;2.  If you don't believe this, work though the code step-by-step,
-doing exactly what the computer does when it executes each step.</np>
+doing exactly what the computer does when it executes each step.  The key point is that for
+the code on the right, both assignment statements, <code>x&nbsp;=&nbsp;1</code> and <code>x&nbsp;=&nbsp;2</code>,
+are executed.  Make sure that you understand why.</np>
 
 </subsection>
 

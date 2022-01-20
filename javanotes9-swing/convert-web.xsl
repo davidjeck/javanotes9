@@ -813,9 +813,9 @@
     <hr/>
 </xsl:template>
     
-<xsl:template match="prog">
+<xsl:template match="prog"><xsl:if test="@scope != 'fx'">
     <xsl:apply-templates/>
-</xsl:template>
+</xsl:if></xsl:template>
     
 <xsl:template match="web">
     <xsl:apply-templates/>

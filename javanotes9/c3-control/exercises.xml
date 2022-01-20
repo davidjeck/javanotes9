@@ -298,7 +298,7 @@ written as "<code>while (true)</code>":</p>
     Display the value.</pre>
 
 <p>To evaluate the user's expression, we have to test the <code>operator</code> to
-find out which operation to compute. We can do this with either a multi-way
+find out which operation to compute. We can do this with either a multiway
 <code>if</code> statement or with a <code>switch</code> statement. In the program
 below, I use a <code>switch</code>. The <code>if</code> statement would be:</p>
 
@@ -379,21 +379,14 @@ public class SimpleCalculator {
           /* Compute the value of the expression. */
           
           switch (operator) {
-              case '+':
-                 value = firstNum + secondNum;
-                 break;
-              case '-':
-                 value = firstNum - secondNum;
-                 break;
-              case '*':
-                 value = firstNum * secondNum;
-                 break;
-              case '/':
-                 value = firstNum / secondNum;
-                 break;
-              default:
+              case '+' -> value = firstNum + secondNum;
+              case '-' -> value = firstNum - secondNum;
+              case '*' -> value = firstNum * secondNum;
+              case '/' -> value = firstNum / secondNum;
+              default -> {
                  System.out.println("Unknown operator: " + operator);
                  continue;  // Back to start of loop!
+              }
           } // end switch
           
           /* Display the value. */
@@ -626,7 +619,7 @@ does this.  If we neglected to read the carriage return at the end of the line,
 <code>TextIO.eof()</code> would not detect the end of the file correctly.  After the
 data from the last line is read, the carriage return character would still be there in
 the file waiting to be read; since there is still something left to read in the file,
-<code>TextIO.eof()</code> would be false <code>false</code> and the while loop would
+<code>TextIO.eof()</code> would be <code>false</code> and the while loop would
 continue, even though all the cities have already been processed.  In fact, the program
 would crash while looking for the next&nbsp;':', which is not there.  Text processing
 can be surprisingly subtle!)</np>
@@ -1230,8 +1223,10 @@ erasing the code that it already contains.</p>
 
 <p>The checkerboard should be 400-by-400  pixels.  You can change the size of
 the drawing area in <code>SimpleGraphicsStarter.java</code> by modifying the
-first two lines of the <code>start()</code> subroutine to set <code>width</code>
-and <code>height</code> to 400 instead of 800 and 600.  A checkerboard
+<fx>first two lines of the <code>start()</code> subroutine to set <code>width</code>
+and <code>height</code></fx><swing>line in <code>main()</code> that says
+<code>drawingArea.setPreferredSize(new Dimension(800,600))</code> to change the numbers</swing> to 400 
+instead of 800 and 600.  A checkerboard
 contains 8 rows and 8 columns of squares.  If the size of the drawing area is 400,
 that means that each square should be 50-by-50 pixels.  
 The squares are red and black (or whatever other colors you choose). Here is a tricky way
@@ -1263,16 +1258,16 @@ checkerboard, we can expand the body of the for loop into another for loop:</np>
 with the command <code>g.fillRect(x,y,50,50)</code>, where <code>x</code> and
 <code>y</code> are the coordinates of the top-left corner of the square. Before
 drawing the square, we have to determine whether it should be red or black, and
-we have to set the correct color with <code>g.setFill</code>. So, the algorithm
+we have to set the correct color with <code>g.set<fx>Fill</fx><swing>Color</swing></code>. So, the algorithm
 becomes</p>
 
 <pre>for each row on the checkerboard:
     for each of the eight columns:
         Compute x,y for the top-left corner of the square
         if it's a red square:
-           g.setFill(Color.RED)
+           g.set<fx>Fill</fx><swing>Color</swing>(Color.RED)
         else
-           g.setFill(Color.BLACK)
+           g.set<fx>Fill</fx><swing>Color</swing>(Color.BLACK)
         g.fillRect(x,y,50,50)</pre>
 
 <p>The top of the first row of squares is at <code>y=0</code>. Since each square is
@@ -1307,9 +1302,9 @@ code, the algorithm becomes</np>
        x = 50*col;
        y = 50*row;
        if ( (row % 2) == (col % 2) )
-          g.setFill(Color.RED);
+          g.set<fx>Fill</fx><swing>Color</swing>(Color.RED);
        else
-          g.setFill(Color.BLACK);
+          g.set<fx>Fill</fx><swing>Color</swing>(Color.BLACK);
        g.fillRect(x,y,50,50);
    }
 }</pre>
@@ -1319,10 +1314,9 @@ code, the algorithm becomes</np>
 into the body of the <code>drawPicture()</code>subroutine.</p>
 
 <p>The complete program is shown below.  In the original program, the size of the
-drawing area was 800-by-600.  As noted in a comment, to change the size to
-400-by-400, I had to change the first two lines in the main routine, replacing 800 and
-600 by 400.  And I changed the title of the window to "Checkerboard" in another
-line in <code>main()</code>.</p>
+drawing area was 800-by-600.  I changed this to 400-by-400, as noted in the exercise.  
+And I changed the title of the window to "Checkerboard" in another
+line in <code><swing>main</swing><fx>>start</fx>()</code>.</p>
 
 <p>I also changed the name of the class from
 <classname>SimpleGraphicsStarter</classname> to <classname>Checkerboard</classname>.
@@ -1331,7 +1325,7 @@ Remember that this also requires changing the name of the file from
 </p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="Checkerboard">
+<pre><prog name="Checkerboard" scope="fx">
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Scene;
@@ -1394,6 +1388,69 @@ public class Checkerboard extends Application {
 
 } // end Checkerboard
 </prog></pre>
+<pre><prog name="Checkerboard" scope="swing">
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class Checkerboard extends JPanel implements ActionListener {
+
+   public void drawFrame(Graphics g, int frameNumber, int width, int height) {
+
+      int row;   // Row number, from 0 to 7
+      int col;   // Column number, from 0 to 7
+      int x,y;   // Top-left corner of square
+
+      for ( row = 0;  row &lt; 8;  row++ ) {
+
+         for ( col = 0;  col &lt; 8;  col++) {
+            x = col * 50;
+            y = row * 50;
+            if ( (row % 2) == (col % 2) )
+               g.setColor(Color.RED);
+            else
+               g.setColor(Color.BLACK);
+            g.fillRect(x, y, 50, 50);
+         } 
+
+      }
+      
+   }
+   
+   //------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS ------
+   
+   
+   public static void main(String[] args) {
+      
+      JFrame window = new JFrame("Checkerboard");
+      Checkerboard drawingArea = new Checkerboard();
+      drawingArea.setBackground(Color.WHITE);
+      window.setContentPane(drawingArea);
+      drawingArea.setPreferredSize(new Dimension(400,400));
+      window.pack();
+      window.setLocation(100,50);
+      window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      window.setResizable(false); // The user can't change the size.
+      Timer frameTimer = new Timer(20,drawingArea);
+      window.setVisible(true);
+      //frameTimer.start(); // commented out so we don't get an animation
+
+   } // end main
+
+   private int frameNum;
+   
+   public void actionPerformed(ActionEvent evt) {
+      frameNum++;
+      repaint();
+   }
+   
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      drawFrame(g, frameNum, getWidth(), getHeight());
+   }
+
+}
+</prog></pre>
 </exercise-code>
 </exercise>
 
@@ -1438,7 +1495,7 @@ and working with coordinates.</p>
 <p>Some decisions have to be made before you can start writing code.  I decided to use
 rather small squares.  (Actually, I tried it with big squares and didn't like the appearance
 as much.)  The size of my squares is 20-by-20 pixels.  For my first cyclic motion, I decided 
-to make the length of the frame 300 frames, or about 5 seconds.  This means that 
+to make the length of the animation 300 frames, or about 5 seconds.  This means that 
 <code>cyclicFrameNumber</code> can be computed as <code>frameNumber&nbsp;%&nbsp;300</code>.
 And I decided to move the
 square at one pixel per frame; that lets me use <code>cyclicFrameNumber</code> as
@@ -1483,6 +1540,7 @@ You might think at first that the width should be 300, since the x-coordinate of
 the square goes up to 300.  But that x-coordinate is actually where the left edge
 of the square is.  When the left edge is at 300, the right edge is at 320.  So for the
 entire square to be visible, we have to make the width 320.</p>
+<fxdiv>
 <p>For drawing the horizontal black lines, the program uses the statement</p>
 <pre>g.strokeLine(0,y+0.5,320,y+0.5);</pre>
 <np>(I should explain the "+ 0.5".  The coordinates in <code>g.strokeLine()</code> give
@@ -1495,9 +1553,10 @@ line instead of a one pixel wide black line.  This is an example of something ca
 "antialiasing," which you will encounter again later in the text.  By moving the line down 0.5 pixels, it
 will exactly cover one row of pixels, which will be filled with solid black.)
 </np>
+</fxdiv>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="CyclicAndOscillatingMotionDemo">
+<pre><prog name="CyclicAndOscillatingMotionDemo" scope="fx">
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
@@ -1630,6 +1689,115 @@ public class CyclicAndOscillatingMotionDemo extends Application {
     }
 
 } // end CyclicAndOscillatingMotionDemo
+</prog></pre>
+<pre><prog name="CyclicAndOscillatingMotionDemo" scope="swing">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/**
+ * This program demonstrates cyclic and oscillating animations.  For cyclic animation,
+ * it repeats itself every N frames, for some value of N.  An oscillating animation also
+ * repeats, but the repetition is "back-and-forth."  That is, the second half
+ * of the repeated animation is the same as the first half played backwards.
+ */
+public class CyclicAndOscillatingMotionDemo extends JPanel implements ActionListener {
+
+    public void drawFrame(Graphics g, int frameNumber, int width, int height) {
+
+        
+        /* Show cyclic motion at three speeds.  In each case, a square 
+         * moves across the drawing area from left to right, then jumps
+         * back to the start.
+         */
+
+        int cyclicFrameNum;
+        
+        cyclicFrameNum = frameNumber % 300;  // Repeats every 300 frames
+        g.setColor(Color.RED);
+        g.fillRect( cyclicFrameNum, 0, 20, 20 );
+        
+        cyclicFrameNum = frameNumber % 150;  // Repeats every 150 frames
+        g.setColor(Color.GREEN);
+        g.fillRect( 2*cyclicFrameNum, 20, 20, 20 );
+        
+        cyclicFrameNum = frameNumber % 100;  // Repeats every 100 frames
+        g.setColor(Color.BLUE);
+        g.fillRect( 3*cyclicFrameNum, 40, 20, 20 );
+        
+
+        /* Show oscillating motion at three speeds.  In each case, a square 
+         * moves across the drawing area from left to right, then reverses
+         * direction to move from right to left back to its starting point.
+         */
+        
+        int oscillationFrameNum;
+        
+        oscillationFrameNum = frameNumber % 600;  // repeats every 600 frames
+        if (oscillationFrameNum &gt; 300)
+            oscillationFrameNum = 600 - oscillationFrameNum; // after 300, the values go backwards back to 0
+        g.setColor(Color.CYAN);
+        g.fillRect( oscillationFrameNum, 60, 20, 20 );
+        
+        oscillationFrameNum = frameNumber % 300; // repeats every 300 frames
+        if (oscillationFrameNum &gt; 150)
+            oscillationFrameNum = 300 - oscillationFrameNum; // after 150, the values go backwards back to 0
+        g.setColor(Color.MAGENTA);
+        g.fillRect( 2*oscillationFrameNum, 80, 20, 20 );
+        
+        oscillationFrameNum = frameNumber % 200; // repeats every 200 frames
+        if (oscillationFrameNum &gt; 100)
+            oscillationFrameNum = 200 - oscillationFrameNum; // after 100, the values go backwards back to 0
+        g.setColor(Color.YELLOW);
+        g.fillRect( 3*oscillationFrameNum, 100, 20, 20 );
+        
+        
+        /* Draw horizontal black lines across the window to separate the
+         * regions used by the six squares.  Also draw a box around the outside,
+         * mostly for the picture that I need for the web page!
+         */
+        
+        int y;
+        g.setColor(Color.BLACK);
+        for ( y = 20; y &lt; 120; y = y + 20 )
+            g.drawLine(0,y,320,y);
+        g.drawRect(0,0,319,119);  // Why not (0,0,320,120)? This is a technicality.
+                                  // If you use 320 and 120, the right and bottom edges
+                                  // of the rect will actually be outside the drawing area.        
+    }
+    
+    //------ Implementation details: DO NOT EXPECT TO UNDERSTAND THIS ------
+    
+    
+    public static void main(String[] args) {
+        
+        JFrame window = new JFrame("Cyclic and Oscillating Motion");
+        CyclicAndOscillatingMotionDemo drawingArea = new CyclicAndOscillatingMotionDemo();
+        drawingArea.setBackground(Color.WHITE);
+        window.setContentPane(drawingArea);
+        drawingArea.setPreferredSize(new Dimension(320,120));  // size is 320 by 120
+        window.pack();
+        window.setLocation(100,50);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false); // The user can't change the size.
+        Timer frameTimer = new Timer(20,drawingArea);
+        window.setVisible(true);
+        frameTimer.start();
+
+    } // end main
+
+    private int frameNum;
+    
+    public void actionPerformed(ActionEvent evt) {
+        frameNum++;
+        repaint();
+    }
+    
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        drawFrame(g, frameNum, getWidth(), getHeight());
+    }
+
+}
 </prog></pre>
 </exercise-code>
 </exercise>

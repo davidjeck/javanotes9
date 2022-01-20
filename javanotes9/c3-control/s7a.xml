@@ -206,7 +206,7 @@ int i;
 total = 0;
 count = 0;
 for ( i = 0; i &lt; A.length; i++ ) {
-    if ( A[i] != 0 ) {
+    if ( A[i] != 0 ) {  // Only process non-zero elements!
         total = total + A[i];  // Add element to the total
         count = count + 1;     //      and count it.
     }
@@ -342,7 +342,7 @@ no more than 100 numbers will be input. Then the size of the array can be fixed
 at 100. But the program must keep track of how many numbers have actually been
 read and stored in the array. For this, it can use an integer variable.
 Each time a number is stored in the array, we have to count it;
-that is, value of the counter variable must be incremented by one. 
+that is, the value of the counter variable must be incremented by one. 
 One question is, when we add a new item to the array, where do we put
 it?  Well, if the number of items is <code>count</code>, then they would
 be stored in the array in positions number 0, 1, &dots;, (count-1).
@@ -475,8 +475,8 @@ to hold the colors of a grid of colored squares.  But sometimes
 two-dimensional arrays are used in problems in which the grid is
 not so visually obvious. Consider a company that owns 25 stores. Suppose that
 the company has data about the profit earned at each store for each month in
-the year 2018. If the stores are numbered from 0 to 24, and if the twelve
-months from January 2018 through December 2018 are numbered from 0 to 11, then
+the year 2022. If the stores are numbered from 0 to 24, and if the twelve
+months from January 2022 through December 2022 are numbered from 0 to 11, then
 the profit data could be stored in an array, <code>profit</code>, created as
 follows:</p>
 

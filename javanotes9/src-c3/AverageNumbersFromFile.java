@@ -6,7 +6,8 @@ import textio.TextIO;
  * nothing but numbers of type double; if this is not the case, the 
  * output will be the sum and average of however many numbers were 
  * successfully read from the file.  The name of the file will be
- * input by the user.
+ * input by the user.  (The user can choose to end the program by
+ * typing Control-C.)
  */
 public class AverageNumbersFromFile {
 
