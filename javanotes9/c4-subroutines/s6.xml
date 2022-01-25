@@ -98,7 +98,7 @@ and postconditions, but that has not yet been done.)</p>
 <p>Let's work through an example of program design using subroutines. In this
 example, we will use pre-written subroutines as building blocks and we will also design
 new subroutines that we need to complete the project.  The API that I will use here
-is defined in two classes that I have written, <sourceref href="Mosaic.java"/>, which in turn depends on
+is defined in two classes that I have written: <sourceref href="Mosaic.java"/>, which in turn depends on
 <sourceref href="MosaicCanvas.java"/>.  To compile and run a program that uses the
 API, the classes <classname>Mosaic</classname> and <classname>MosaicCanvas</classname>
 must be available.  That is, the files <code>Mosaic.java</code> and
@@ -117,8 +117,8 @@ a Javadoc comment comes before the thing that it is commenting on.)</p>
    
 <pre>/**
  * Opens a "mosaic" window on the screen.  This subroutine should be called
- * before any of the other Mosaic subroutines are used.  The program will end
- * when the user closes the window.
+ * before any of the other Mosaic subroutines are used.<fx>  The program will end
+ * when the user closes the window.</fx>
  *
  * Precondition:   The parameters rows, cols, h, and w are positive integers.
  * Postcondition:  A window is open on the screen that can display rows and
@@ -130,7 +130,7 @@ a Javadoc comment comes before the thing that it is commenting on.)</p>
  * Note:  The rows are numbered from 0 to rows - 1, and the columns are 
  * numbered from 0 to cols - 1.
  */
-<newcode>public static void open(int rows, int cols, int h, int w)</newcode>
+<newcode>public static void open(int rows, int cols, int w, int h)</newcode>
    
    
 /**
@@ -170,8 +170,19 @@ a Javadoc comment comes before the thing that it is commenting on.)</p>
  */
 <newcode>public static int getBlue(int row, int col)</newcode>
 
+
+<swing>/**
+ * Tests whether the mosaic window is currently open.
+ *
+ * Precondition:   None.
+ * Postcondition:  The return value is true if the window is open when this
+ *                   function is called, and it is false if the window is
+ *                   closed.
+ */
+<newcode>public static boolean isOpen()</newcode>
+
    
-/**
+</swing>/**
  * Inserts a delay in the program (to regulate the speed at which the colors
  * are changed, for example).
  *
@@ -182,11 +193,11 @@ a Javadoc comment comes before the thing that it is commenting on.)</p>
  */
 <newcode>public static void delay(int milliseconds)</newcode></pre>
    
-<p>Remember that these subroutines are members of the <code>Mosaic</code>
+<p>Remember that these subroutines are static members of the <code>Mosaic</code>
 class, so when they are called from outside <code>Mosaic</code>, the name of the class
 must be included as part of the name of the routine.  For example,
-we'll have to use the name <code>Mosaic.isOpen()</code> rather than simply
-<code>isOpen()</code>.</p>
+we'll have to use the name <code>Mosaic.open</code> rather than simply
+<code>open</code>.</p>
 
 <p>You'll notice that the comments on the subroutine don't specify what
 happens when the preconditions are <b>not</b> met.  Although a subroutine
@@ -200,8 +211,9 @@ the exception, and it would be good to document it with a <code>@throws</code>
 doc tag in the Javadoc comment.
 Other questions remain about the behavior of the subroutines.
 For example, what happens if you call <code>Mosaic.open()</code> and there
-is already a mosaic window open on the screen?  (In fact, the second call will
-simply be ignored.)  It's difficult to fully document
+is already a mosaic window open on the screen?  (In fact, <fx>the second call will
+simply be ignored</fx><swing>the old one will
+be closed, and a new one will be created.</swing>.)  It's difficult to fully document
 the behavior of a piece of software&mdash;sometimes, you just have to 
 experiment or look at the full source code.</p>
 
@@ -217,8 +229,8 @@ each square that it encounters. Here's a picture showing what the contents of th
 might look like at one point in time:</p>
 
 <img src="mosaic.png" width="404" height="324" alt="a 20-by-16 grid of randomly colored squares"
+      swingwidth="400" swingheight="320"
       tex="mosaic.eps" texscale="0.5"/>
-
 
 <p>With basic routines for manipulating the window as a foundation, I can turn
 to the specific problem at hand. A basic outline for my program is</p>
@@ -256,7 +268,7 @@ Java as:</np>
 fillWithRandomColors();
 currentRow = 8;       // Middle row, halfway down the window.
 currentColumn = 10;   // Middle column.
-while ( true ) { // Program ends when user closes the window.
+while ( <fx>true</fx><swing>Mosaic.isOpen()</swing> ) { // Program ends when user closes the window.
     changeToRandomColor(currentRow, currentColumn);
     randomMove();      
 }</pre>
@@ -329,26 +341,26 @@ which direction to move, the code for <code>randomMove</code> becomes:</p>
 <pre>int directionNum;
 directionNum = (int)(4*Math.random());
 switch (directionNum) {
-   case 0:  // move up 
+   case 0 -> {  // move up 
       currentRow--;
       if (currentRow &lt; 0)   // CurrentRow is outside the mosaic;
          currentRow = 15;   // move it to the opposite edge.
-      break;
-   case 1:  // move right
+   }
+   case 1 -> {  // move right
       currentColumn++;
       if (currentColumn &gt;= 20)
          currentColumn = 0;
-      break; 
-   case 2:  // move down
+   }
+   case 2 -> {  // move down
       currentRow++;
       if (currentRow &gt;= 16)
          currentRow = 0;
-      break;
-   case 3:  // move left
+   }
+   case 3 -> {  // move left
       currentColumn--;
       if (currentColumn &lt; 0)
          currentColumn = 19;
-      break; 
+   }
 }</pre>
    
 </subsection>
@@ -383,7 +395,7 @@ public class RandomMosaicWalk {
         fillWithRandomColors();
         currentRow = 8;   // start at center of window
         currentColumn = 10;
-        while (true) {
+        while ( <fx>true</fx><swing>Mosaic.isOpen()</swing> ) {
             changeToRandomColor(currentRow, currentColumn);
             randomMove();
             Mosaic.delay(10);  // Remove this line to speed things up!
@@ -436,26 +448,26 @@ public class RandomMosaicWalk {
         int directionNum; // Randomly set to 0, 1, 2, or 3 to choose direction.
         directionNum = (int)(4*Math.random());
         switch (directionNum) {
-        case 0:  // move up 
-            currentRow--;
-            if (currentRow &lt; 0)
-                currentRow = 15;
-            break;
-        case 1:  // move right
-            currentColumn++;
-            if (currentColumn &gt;= 20)
-                currentColumn = 0;
-            break; 
-        case 2:  // move down
-            currentRow ++;
-            if (currentRow &gt;= 16)
-                currentRow = 0;
-            break;
-        case 3:  // move left  
-            currentColumn--;
-            if (currentColumn &lt; 0)
-                currentColumn = 19;
-            break; 
+            case 0 -> {  // move up 
+               currentRow--;
+               if (currentRow &lt; 0)   // CurrentRow is outside the mosaic;
+                  currentRow = 15;   // move it to the opposite edge.
+            }
+            case 1 -> {  // move right
+               currentColumn++;
+               if (currentColumn &gt;= 20)
+                  currentColumn = 0;
+            }
+            case 2 -> {  // move down
+               currentRow++;
+               if (currentRow &gt;= 16)
+                  currentRow = 0;
+            }
+            case 3 -> {  // move left
+               currentColumn--;
+               if (currentColumn &lt; 0)
+                  currentColumn = 19;
+            }
         }
     }  // end randomMove
 

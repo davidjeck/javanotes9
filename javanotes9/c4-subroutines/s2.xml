@@ -26,8 +26,7 @@ objects.  Non-static subroutines only become relevant when you are working
 with objects.  The distinction between static and non-static also applies to variables
 and to other things that can occur in class definitions.  This chapter will
 deal with static subroutines and static variables almost exclusively. We'll turn to non-static
-stuff and to object-oriented programming in the <localref href="OOP">next
-chapter</localref>.</p>
+stuff and to object-oriented programming in the <localref href="OOP">next chapter</localref>.</p>
 
 <p>A subroutine that is in a class or object is often called a <newword>method</newword>, 
 and "method" is the term that most people prefer for
@@ -307,8 +306,9 @@ the interaction with the user to make it flow better.</p>
 <p>Now, where exactly should you put this? It should be part of the same class
 as the <code>main()</code> routine, but <b>not</b> inside the main routine. It is not
 legal to have one subroutine physically nested inside another. The
-<code>main()</code> routine will <b>call</b> <code>playGame()</code>, but not contain
-its definition, only a call statement. You can put the definition of <code>playGame()</code> either before
+<code>main()</code> routine will <b>call</b> <code>playGame()</code>; it will
+<b>not</b> contain the definition of <code>playGame</code>.
+You can put the definition of <code>playGame()</code> either before
 or after the <code>main()</code> routine. Java is not very picky about having the
 subroutine definitions in a class in any particular order.</p>
 

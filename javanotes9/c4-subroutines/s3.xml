@@ -260,8 +260,9 @@ the subroutine. Remember that the syntax of any subroutine is:</p>
 }</pre>
 
 <np>Writing a subroutine always means filling out this format. In this case,
-the statement of the problem
-tells us that there is one parameter, of type <ptype>int</ptype>, and it tells us
+the statement of the problem implies that there is one parameter, 
+of type <ptype>int</ptype>, that represents the "given integer" whose
+divisors are to be printed.  And it tells us
 what the statements in the body of the subroutine should do. Since we are only
 working with static subroutines for now, we'll need to use <code>static</code> as a
 modifier. We could add an access modifier (<code>public</code> or
@@ -333,14 +334,15 @@ case that <code>N&nbsp;&lt;=&nbsp;0</code>.</np>
 <p>Finally, let's do an example that shows how one subroutine can build on
 another. Let's write a subroutine that takes a <classname>String</classname> as a parameter.
 For each character in the string, it should print a line of output containing 25
-copies of that character. It should use the <code>printRow()</code> subroutine to
+copies of that character. It should use the <code>printRow()</code> subroutine defined above to
 produce the output.</p>
 
 <p>Again, we get to choose a name for the subroutine and a name for the
 parameter. I'll call the subroutine <code>printRowsFromString</code> and the
 parameter <code>str</code>. The algorithm is pretty clear: For each position
 <code>i</code> in the string <code>str</code>, call <code>printRow(str.charAt(i),25)</code>
-to print one line of the output. So, we get:</p>
+to print one line of the output that contains 25 copies of character number <code>i</code>
+from the string. So, we get:</p>
 
 <pre>/**
  * For each character in str, write a line of output
@@ -466,7 +468,7 @@ files to a program.  For example, consider the following program for making
 a copy of a text file.  It does this by copying one line at a time from
 the original file to the copy, using TextIO.  The function 
 <code>TextIO.eof()</code> is a <ptype>boolean</ptype>-valued function that
-is <code>true</code> if the end of the file has been reached.</p>
+is <code>true</code> if the end of the input file has been reached.</p>
   
 <pre>input textio.TextIO;
 

@@ -108,7 +108,7 @@ you can find information about it at the end of <web>this web page</web><tex>Par
    <li><sourceref href="chapter4/CopyTextFile.java">CopyTextFile.java</sourceref>, from
    <localref href="subroutines.3"/>, demonstrates the use of command-line arguments by using
    file names from the command line.</li>
-   <li><sourceref href="chapter4/ThreeN2.java">ThreeN2.java</sourceref>, from <localref href="subroutines.4.3"/>, is an improved
+   <li><sourceref href="chapter4/ThreeN2.java">ThreeN2.java</sourceref>, from <localref href="subroutines.4"/>, is an improved
    3N+1 program that uses subroutines and prints its output in neat columns.</li>
    <li><sourceref href="chapter5/RollTwoPairs.java">RollTwoPairs.java</sourceref>, 
    from <localref href="OOP.2.2"/>, uses <sourceref href="chapter5/PairOfDice.java">PairOfDice.java</sourceref> 

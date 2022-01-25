@@ -27,6 +27,7 @@ rm -r $EXPORT_DIR/$PROJECT/c13-GUI2
 #Remove files that are not needed for Swing (and are not replaced by files of the same name)
 
 FILES_TO_REMOVE="c2-basics/eclipse-fx.png images-tex/eclipse-fx.eps
+  src-c3/RandomCircles.java
   images-tex/alerts.eps images-tex/bound-property-demo.eps images-tex/colorRadioButtons.eps
   images-tex/edit-list-demo.eps images-tex/gradient-rect.eps images-tex/HelloWorldFX-screenshot.eps 
   images-tex/linear-gradient.eps images-tex/line-attributes.eps images-tex/mosaic-draw.eps 

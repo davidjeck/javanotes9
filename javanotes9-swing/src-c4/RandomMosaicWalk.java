@@ -3,29 +3,25 @@
  * moves randomly around in the window, randomly changing the color of each
  * square that it visits.  The program runs until the user closes the window.
  */
-public class RandomMosaicWalk2 {
-
-	final static int ROWS = 20;        // Number of rows in mosaic.
-	final static int COLUMNS = 30;     // Number of columns in mosaic.
-	final static int SQUARE_SIZE = 20; // Size of each square in mosaic.
+public class RandomMosaicWalk {
 
 	static int currentRow;    // Row currently containing the disturbance.
 	static int currentColumn; // Column currently containing disturbance.
 
 	/**
 	 * The main program creates the window, fills it with random colors,
-	 * and then moves the disturbances in a random walk around the window
+	 * and then moves the disturbance in a random walk around the window
 	 * as long as the window is open.
 	 */
 	public static void main(String[] args) {
-		Mosaic.open( ROWS, COLUMNS, SQUARE_SIZE, SQUARE_SIZE );
+		Mosaic.open(16,20,25,25);
 		fillWithRandomColors();
-		currentRow = ROWS / 2;   // start at center of window
-		currentColumn = COLUMNS / 2;
-		while (true) {
+		currentRow = 8;   // start at center of window
+		currentColumn = 10;
+		while (Mosaic.isOpen()) {
 			changeToRandomColor(currentRow, currentColumn);
 			randomMove();
-			Mosaic.delay(5);
+			Mosaic.delay(10); // Remove this line to speed things up!
 		}
 	}  // end main
 
@@ -35,8 +31,9 @@ public class RandomMosaicWalk2 {
 	 * Postcondition:  Each square has been set to a random color. 
 	 */
 	static void fillWithRandomColors() {
-		for (int row=0; row < ROWS; row++) {
-			for (int column=0; column < COLUMNS; column++) {
+		int row, column;
+		for (row=0; row < 16; row++) {
+			for (column=0; column < 20; column++) {
 				changeToRandomColor(row, column);  
 			}
 		}
@@ -74,27 +71,27 @@ public class RandomMosaicWalk2 {
 		int directionNum; // Randomly set to 0, 1, 2, or 3 to choose direction.
 		directionNum = (int)(4*Math.random());
 		switch (directionNum) {
-			case 0 -> {  // move up 
-				currentRow--;
-				if (currentRow < 0)
-					currentRow = ROWS - 1;
-			}
-			case 1 -> {  // move right
-				currentColumn++;
-				if (currentColumn >= COLUMNS)
-					currentColumn = 0;
-			} 
-			case 2 -> {  // move down
-				currentRow ++;
-				if (currentRow >= ROWS)
-					currentRow = 0;
-			}
-			case 3 -> {  // move left  
-				currentColumn--;
-				if (currentColumn < 0)
-					currentColumn = COLUMNS - 1;
-			} 
-		}
+		   case 0 -> { // move up 
+		      currentRow--;
+		      if (currentRow < 0)   // CurrentRow is outside the mosaic;
+		         currentRow = 15;   // move it to the opposite edge.
+		   }
+		   case 1 -> {  // move right
+		      currentColumn++;
+		      if (currentColumn >= 20)
+		         currentColumn = 0;
+		   }
+		   case 2 -> {  // move down
+		      currentRow++;
+		      if (currentRow >= 16)
+		         currentRow = 0;
+		   }
+		   case 3 -> {  // move left
+		      currentColumn--;
+		      if (currentColumn < 0)
+		         currentColumn = 19;
+		   }
+		}	
 	}  // end randomMove
 
-} // end class RandomMosaicWalk2
+} // end class RandomMosaicWalk

@@ -123,7 +123,7 @@ statements).  For example:</p>
 
 <subsection id="subroutines.7.1a" title="Declaring Variables with var">
 
-<p>Java 10 introduced a new way of declaring variables, using the word
+<p>In Java 11 and later, there is a new way of declaring variables, using the word
 "var" instead of specifying an explicit type for the variable.
 The new syntax for declarations can only be used for local variables,
 that is for variables that are declared inside subroutines
@@ -182,8 +182,8 @@ the program is compiled.  (A "final" modifier on a public interest rate makes a 
 of sense&mdash;a bank might want to publish its interest rate, but it certainly 
 wouldn't want to let random people make changes to it!)</np>
 
-<p>It is legal to apply the <code>final</code> modifier to local variables and even
-to formal parameters, but it is most useful for member variables. I will often
+<p>It is legal to apply the <code>final</code> modifier to local variables and to formal parameters
+(and even to classes and subroutines), but it is probably most useful for member variables. I will often
 refer to a static member variable that is declared to be <code>final</code> as a
 <newword>named constant</newword>, since its value remains constant
 for the whole time that the program is running. The readability of a program
@@ -296,7 +296,7 @@ edge of the mosaic to the opposite edge.  I've left out most of the comments to 
         fillWithRandomColors();
         <newcode>currentRow = ROWS / 2</newcode>;   // start at center of window
         <newcode>currentColumn = COLUMNS / 2</newcode>;
-        while (true) {
+        while ( <fx>true</fx><swing>Mosaic.isOpen()</swing> ) {
             changeToRandomColor(currentRow, currentColumn);
             randomMove();
             Mosaic.delay(5);
@@ -322,26 +322,26 @@ edge of the mosaic to the opposite edge.  I've left out most of the comments to 
          int directionNum; // Randomly set to 0, 1, 2, or 3 to choose direction.
          directionNum = (int)(4*Math.random());
          switch (directionNum) {
-            case 0:  // move up 
+            case 0 -> {  // move up 
                currentRow--;
                if (currentRow &lt; 0)
                   <newcode>currentRow = ROWS - 1;</newcode>
-               break;
-            case 1:  // move right
+            }
+            case 1 -> {  // move right
                currentColumn++;
                if (<newcode>currentColumn &gt;= COLUMNS</newcode>)
                   currentColumn = 0;
-               break; 
-            case 2:  // move down
+            }
+            case 2 -> {  // move down
                currentRow++;
                if (<newcode>currentRow &gt;= ROWS</newcode>)
                   currentRow = 0;
-               break;
-            case 3:  // move left  
+            }
+            case 3 -> {  // move left  
                currentColumn--;
                if (currentColumn &lt; 0)
                   <newcode>currentColumn = COLUMNS - 1</newcode>;
-               break; 
+            }
          }
      }  // end randomMove
  

@@ -37,18 +37,10 @@ public class SimpleGraphicsStarter extends Application {
 	
 			colorChoice = (int)(4*Math.random());
 			switch (colorChoice) {
-			case 0:
-				g.setFill(Color.RED);
-				break;
-			case 1:
-				g.setFill(Color.GREEN);
-				break;
-			case 2:
-				g.setFill(Color.BLUE);
-				break;
-			case 3:
-				g.setFill(Color.YELLOW);
-				break;
+				case 0 -> g.setFill(Color.RED);
+				case 1 -> g.setFill(Color.GREEN);
+				case 2 -> g.setFill(Color.BLUE);
+				case 3 -> g.setFill(Color.YELLOW);
 			}
 	
 			g.fillOval( centerX - 50, centerY - 50, 100, 100 );

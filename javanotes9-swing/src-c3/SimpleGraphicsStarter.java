@@ -10,7 +10,8 @@ public class SimpleGraphicsStarter extends JPanel {
 
 	/**
 	 * Draws a picture.  The parameters width and height give the size 
-	 * of the drawing area, in pixels.  
+	 * of the drawing area, in pixels.  The drawing area is automatically
+	 * filled with the background color before this subroutine is called.
 	 */
 	public void drawPicture(Graphics g, int width, int height) {
 				
@@ -27,18 +28,10 @@ public class SimpleGraphicsStarter extends JPanel {
 			
 			colorChoice = (int)(4*Math.random());
 			switch (colorChoice) {
-			case 0:
-				g.setColor(Color.RED);
-				break;
-			case 1:
-				g.setColor(Color.GREEN);
-				break;
-			case 2:
-				g.setColor(Color.BLUE);
-				break;
-			case 3:
-				g.setColor(Color.YELLOW);
-				break;
+				case 0 -> g.setColor(Color.RED);
+				case 1 -> g.setColor(Color.GREEN);
+				case 2 -> g.setColor(Color.BLUE);
+				case 3 -> g.setColor(Color.YELLOW);
 			}
 			
 			centerX = (int)(width*Math.random());

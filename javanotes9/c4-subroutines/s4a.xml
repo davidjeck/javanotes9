@@ -15,10 +15,12 @@ subroutine as a kind of data value.  In Java&nbsp;8, that ability was added to
 Java in the form of something called <newword>lambda expressions.</newword></p>
 
 <p>Lambda expressions are becoming more and more common in Java programs.
-They are especially useful for working with  the JavaFX GUI toolkit,
-and it will be useful to know about them before we cover GUI programming
-in <localref href="GUI1"/>.  However, we won't encounter them again until near the end
-of the <localref href="OOP"/>, so you can skip this section for now if you want.</p>
+They are especially useful for working with the stream API that will be
+covered in <localref href="generics.6"/><fx> and with
+the JavaFX GUI toolkit. It will definitely be useful to know about them before we 
+cover GUI programming in <localref href="GUI1"/></fx>.  However, 
+we won't encounter them again until near the end
+of <localref href="OOP"/>, so you can skip this section for now if you want.</p>
 
 <subsection title="First-class Functions" id="subroutines.4a.1">
 
@@ -35,7 +37,7 @@ with <i>x</i> as a dummy parameter:</p>
     return x*x;
 }</pre>
 
-<np>but to do that, we had to name the function <i>square</i>, and that function becomes
+<np>but to do that, we had to name the function <i>square</i>, and that name becomes
 a permanent part of the program&mdash;which is overkill if we just want to use the
 function once.  Alonzo Church introduced the notation <i>lambda</i>(<i>x</i>).<i>x</i><sup>2</sup>
 to represent "the function of <i>x</i> that is given by <i>x</i><sup>2</sup>" (except using
@@ -153,14 +155,14 @@ is a variable of type <classname>FunctionR2R</classname>, then the value of
 the function can be a lambda expression, which can be written in any of the following
 forms:</p>
 
-<pre>sqr = (double x) -> { return x*x; };
+<pre>sqr = (double x) -> { return x*x; }; // The full lambda expression syntax!
 sqr = (x) -> { return x*x; };
 sqr = x -> { return x*x; };
 sqr = x -> x*x;
 sqr = (double fred) -> fred*fred;
 sqr = (z) -> z*z;</pre>
 
-<np>The last two statements are there to emphasize that the parameter names in a lambda expression
+<np>The last two statements are there to emphasize that the parameters in a lambda expression
 are dummy parameters; their names are irrelevant.  The six lambda expressions in these statements
 all define exactly the same function.  Note that the parameter type <ptype>double</ptype> can be
 omitted because the compiler knows that <code>sqr</code> is of type <classname>FunctionR2R</classname>,
@@ -226,7 +228,7 @@ static double sum( FunctionR2R f, int start, int end ) {
 <np>Note that since <i>f</i> is a value of type <classname>FunctionR2R</classname>,
 the value of <i>f</i> at <i>n</i> is actually written as <i>f.valueAt</i>(<i>n</i>).
 When the function <i>sum</i> is called, the first parameter can be given as
-a lambda expression.  For example:</np>
+a lambda expression that matches the type <classname>FunctionR2R</classname>.  For example:</np>
 
 <pre>System.out.print("The sum of n squared for n from 1 to 100 is ");
 System.out.println( sum( <newcode>x -> x*x</newcode>, 1, 100 ) );

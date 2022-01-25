@@ -67,9 +67,8 @@ The return value is added to <code>17</code>, and the result, 30.0, is stored in
 statement in the function definition.  At any point in the function where you
 know the value that you want to return, you can return it.  Returning a value
 will end the function immediately, skipping any subsequent statements in the
-function.  However, it must be the case that the function definitely does
-return some value, no matter what path the execution of the function takes
-through the code.</p>
+function. However, a function must definitely return some value (or throw an exception),
+no matter what path the execution of the function takes through the code.</p>
 
 <p>You can use a <code>return</code> statement inside an ordinary subroutine,  one
 with declared return type "<code>void</code>".  Since a void subroutine
@@ -197,12 +196,15 @@ static boolean isPrime(int N) {
    
    int maxToTry;  // The largest divisor that we need to test.
 
-   maxToTry = (int)Math.sqrt(N);
+   maxToTry = (int)(Math.sqrt(N) + 0.001);
         // We will try to divide N by numbers between 2 and maxToTry.
         // If N is not evenly divisible by any of these numbers, then 
         // N is prime.  (Note that since Math.sqrt(N) is defined to
         // return a value of type double, the value must be typecast 
-        // to type int before it can be assigned to maxToTry.)
+        // to type int before it can be assigned to maxToTry.  I added
+        // the 0.001 because computations with double values are not
+        // exact, and I worry that, for example, Math.sqrt(49) might
+        // be computed as 6.999... instead of as 7.0.) 
         
     for (divisor = 2; divisor &lt;= maxToTry; divisor++) {
         if ( N % divisor == 0 )  // Test if divisor evenly divides N.
@@ -347,7 +349,7 @@ public class ThreeN2 {
 } // end of class ThreeN2
 </pre>
 
-<np>You should read this program carefully and try to understand how it works.
+<np>You should read <sourceref href="ThreeN2.java">this program</sourceref> carefully and try to understand how it works.
 </np>
 
 </subsection>

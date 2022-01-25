@@ -71,27 +71,27 @@ public class RandomMosaicWalk {
 		int directionNum; // Randomly set to 0, 1, 2, or 3 to choose direction.
 		directionNum = (int)(4*Math.random());
 		switch (directionNum) {
-		case 0:  // move up 
-			currentRow--;
-			if (currentRow < 0)
-				currentRow = 15;
-			break;
-		case 1:  // move right
-			currentColumn++;
-			if (currentColumn >= 20)
-				currentColumn = 0;
-			break; 
-		case 2:  // move down
-			currentRow ++;
-			if (currentRow >= 16)
-				currentRow = 0;
-			break;
-		case 3:  // move left  
-			currentColumn--;
-			if (currentColumn < 0)
-				currentColumn = 19;
-			break; 
-		}
+		   case 0 -> { // move up 
+		      currentRow--;
+		      if (currentRow < 0)   // CurrentRow is outside the mosaic;
+		         currentRow = 15;   // move it to the opposite edge.
+		   }
+		   case 1 -> {  // move right
+		      currentColumn++;
+		      if (currentColumn >= 20)
+		         currentColumn = 0;
+		   }
+		   case 2 -> {  // move down
+		      currentRow++;
+		      if (currentRow >= 16)
+		         currentRow = 0;
+		   }
+		   case 3 -> {  // move left
+		      currentColumn--;
+		      if (currentColumn < 0)
+		         currentColumn = 19;
+		   }
+		}	
 	}  // end randomMove
 
 } // end class RandomMosaicWalk

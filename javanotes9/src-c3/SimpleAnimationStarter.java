@@ -68,7 +68,7 @@ public class SimpleAnimationStarter extends Application {
 				else if (now - previousTime > 0.95e9/60) {
 					   // The test in the else-if is to make sure that drawFrame() is
 					   // called about once every 1/60 second.  It is required since
-					   // handle() can be called by system more often than that.
+					   // handle() can be called by the system more often than that.
 					frameNum++;
 					drawFrame(canvas.getGraphicsContext2D(), frameNum, (now-startTime)/1e9, width, height);
 					previousTime = now;

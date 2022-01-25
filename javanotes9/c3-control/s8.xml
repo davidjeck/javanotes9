@@ -31,7 +31,7 @@ any subroutine, not just <code>main()</code>.</p>
 <p>To understand computer graphics, you need to know a little about pixels and 
 coordinate systems.  The computer screen is made up of small squares called 
 <newword>pixels</newword>, arranged in rows and columns, usually about 100 pixels
-per inch.  (Many screen now have many more physical pixels per inch.  On these
+per inch.  (Many screens now have many more physical pixels per inch.  On these
 "high-resolution" screens, a "pixel" might refer to a physical pixel, but
 it might also refer to a "logical pixel," which is a unit of measure
 somewhere close to 1/100 inch.)</p> 
@@ -211,7 +211,7 @@ for ( y = 50; y &lt;= 140; y = y + 10 )
     g.<fx>stroke</fx><swing>draw</swing>Line( 100, y, 300, y );</pre>
 
 <np>If we wanted the lines to be blue, we could do
-that by calling <code>g.set<swing>Color</swing><fx>>Stroke</fx>(Color.BLUE)</code> <b>before</b> drawing them.  
+that by calling <code>g.set<swing>Color</swing><fx>Stroke</fx>(Color.BLUE)</code> <b>before</b> drawing them.  
 If we just draw
 the lines without setting the color, they will be black.<fx>  If we wanted the lines to be 3 pixels wide,
 we could call <code>g.setLineWidth(3)</code> <b>before</b> drawing the lines.</fx></np>
@@ -219,21 +219,13 @@ we could call <code>g.setLineWidth(3)</code> <b>before</b> drawing the lines.</f
 <p>For something a little more complicated, let's draw a large number of randomly colored,
 randomly positioned, filled circles.  Since we only know a few colors, I will randomly select
 the color to be red, green, blue, or yellow.  That can be done with a simple switch statement, similar
-to the ones in <localref href="control.6.4"/>:</p>
+to the ones in <localref href="control.6"/>:</p>
 
 <pre>switch ( (int)(4*Math.random()) ) {
-    case 0:
-        g.set<fx>Fill</fx><swing>Color</swing>( Color.RED );
-        break;
-    case 1:
-        g.set<fx>Fill</fx><swing>Color</swing>( Color.GREEN );
-        break;
-    case 2:
-        g.set<fx>Fill</fx><swing>Color</swing>( Color.BLUE );
-        break;
-    case 3:
-        g.set<fx>Fill</fx><swing>Color</swing>( Color.YELLOW );
-        break;
+    case 0 -> g.set<fx>Fill</fx><swing>Color</swing>( Color.RED );
+    case 1 -> g.set<fx>Fill</fx><swing>Color</swing>( Color.GREEN );
+    case 2 -> g.set<fx>Fill</fx><swing>Color</swing>( Color.BLUE );
+    case 3 -> g.set<fx>Fill</fx><swing>Color</swing>( Color.YELLOW );
 }</pre>
 
 
@@ -301,18 +293,10 @@ drawing the picture looks like this:</p>
 
         colorChoice = (int)(4*Math.random());
         switch (colorChoice) {
-        case 0:
-            g.set<fx>Fill</fx><swing>Color</swing>(Color.RED);
-            break;
-        case 1:
-            g.set<fx>Fill</fx><swing>Color</swing>(Color.GREEN);
-            break;
-        case 2:
-            g.set<fx>Fill</fx><swing>Color</swing>(Color.BLUE);
-            break;
-        case 3:
-            g.set<fx>Fill</fx><swing>Color</swing>(Color.YELLOW);
-            break;
+            case 0 -> g.set<fx>Fill</fx><swing>Color</swing>( Color.RED );
+            case 1 -> g.set<fx>Fill</fx><swing>Color</swing>( Color.GREEN );
+            case 2 -> g.set<fx>Fill</fx><swing>Color</swing>( Color.BLUE );
+            case 3 -> g.set<fx>Fill</fx><swing>Color</swing>( Color.YELLOW );
         }
 
         g.fillOval( centerX - 50, centerY - 50, 100, 100 );
@@ -396,7 +380,7 @@ In general outline, the algorithm for drawing the rectangles in one frame is</p>
 
 <pre>Set the amount of inset for the first rectangle
 Set the width and height for the first rectangle
-Set the stroke color to black
+Set the <fx>stroke</fx><swing>drawing</swing> color to black
 while the width and height are both greater than zero:
     draw a rectangle (using the g.<fx>stroke</fx><swing>draw</swing>Rect subroutine)
     increase the inset (to move the next rectangle over and down)
@@ -439,14 +423,14 @@ the moving rectangle example:</np>
     <fx>g.setFill(Color.WHITE);
     g.fillRect(0,0,width,height);  // Fill drawing area with white.
 
-    </fx>double inset; // Gap between edges of drawing area and outer rectangle.
+    double</fx><swing>int</swing> inset; // Gap between edges of drawing area and outer rectangle.
 
-    double rectWidth, rectHeight;   // The size of one of the rectangles.
+    <fx>double</fx><swing>int</swing> rectWidth, rectHeight;   // The size of one of the rectangles.
 
-    g.setStroke(Color.BLACK);  // Draw the rectangle outlines in black.
+    g.set<fx>Stroke</fx><swing>Color</swing>(Color.BLACK);  // Draw the rectangle outlines in black.
 
-    inset = frameNumber % 15 + 0.5;  // (The 0.5 is a technicality that gives
-                                     //  a sharper picture.)
+    inset = frameNumber % 15<fx> + 0.5</fx>;<fx>  // (The 0.5 is a technicality that gives
+                                     //  a sharper picture.)</fx>
 
     rectWidth = width - 2*inset;
     rectHeight = height - 2*inset;

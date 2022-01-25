@@ -8,6 +8,11 @@ import javax.swing.*;
  *  shows a set of nested rectangles that seems to be moving infinitely 
  *  inward towards the center.  The animation continues until the user
  *  closes the window.
+ *  
+ *  (NOTE FOR LINUX USERS:  To get smooth animation, you might need
+ *  to run this program using   java -Dsun.java2d.opengl=true MovingRects 
+ *  or, alternatively, add System.setProperty("sun.java2d.opengl", "true");
+ *  as the very first line of the main() routine in this program.)
  */
 public class MovingRects extends JPanel implements ActionListener {
 
@@ -19,6 +24,8 @@ public class MovingRects extends JPanel implements ActionListener {
 	 * and height give the size of the drawing area, in pixels.  
 	 * The sizes and positions of the rectangles that are drawn depend
 	 * on the frame number, giving the illusion of motion.
+	 * Note that the drawing area is automatically filled with the background color
+	 * before this method is called.
 	 */
 	public void drawFrame(Graphics g, int frameNumber, double elapsedSeconds, int width, int height) {
 		

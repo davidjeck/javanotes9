@@ -49,7 +49,8 @@ games,&nbsp;&dots;). This is called <newword>applications programming</newword>.
 interface to the programmer. This interface is a specification of what routines
 are in the toolbox, what parameters they use, and what tasks they perform. This
 information constitutes the <newword>API</newword>, or <newword>Application Programming Interface</newword>, 
-associated with the toolbox. The Macintosh API is
+associated with the toolbox.  The API is the abstraction through which you access
+the functionality of the software in the toolbox.  The Macintosh API is
 a specification of all the routines available in the Macintosh Toolbox. A
 company that makes some hardware device&mdash;say a card for connecting a computer
 to a network&mdash;might publish an API for that device consisting of a list of
@@ -80,7 +81,8 @@ implementations of all the standard API routines. A Java program includes only
 <b>calls</b> to those routines. When the Java interpreter executes a
 program and encounters a call to one of the standard routines, it will pull up
 and execute the implementation of that routine which is appropriate for the
-particular platform on which it is running. This is a very powerful idea. It
+particular platform on which it is running. This is a very powerful idea. 
+It is the power of abstraction.  It
 means that you only need to learn one API to program for a wide variety of
 platforms.</p>
 
@@ -91,19 +93,20 @@ platforms.</p>
 <p>Like all subroutines in Java, the routines in the standard API are grouped
 into classes. To provide larger-scale organization, classes in Java can be
 grouped into <newword>packages</newword>, which were introduced briefly in
-<localref href="basics.6.6"/>.  You can have even higher
+<localref href="basics.6.5"/>.  You can have even higher
 levels of grouping, since packages can also contain other packages. In fact,
 the entire standard Java API is implemented in several packages. One of these,
 which is named "<code>java</code>", contains several non-GUI packages as well as the
 original AWT graphical user interface classes. Another package,
-"<code>javax</code>", contains the classes used by the Swing graphical user interface
-as well as many other classes.
-And "<code>javafx</code>" contains the JavaFX API that is used for GUI programming
-in this textbook.</p>
+"<code>javax</code>", contains the classes used by the Swing graphical user interface<swing> that
+is covered in this textbook</swing>, as well as many other classes.
+And "<code>javafx</code>," which is not a standard part of Java,
+contains the <swing>alternative graphics API, 
+JavaFX</swing><fx> JavaFX API that is used for GUI programming in this textbook</fx>.</p>
 
 <p>A package can contain both classes and other packages. A package that is
-contained in another package is sometimes called a "sub-package." Both the
-<code>java</code> package and the <code>javafx</code> package contain sub-packages. 
+contained in another package is sometimes called a "sub-package." The
+<code>java</code>, <code>,javax</code>, and <code>javafx</code> packages all contain sub-packages. 
 One of the sub-packages of <code>java</code>, for example, is named "<code>util</code>".
 Since <code>util</code> is contained within <code>java</code>, its full name is actually
 <code>java.util</code>.  This package contains a variety of utility classes, including
@@ -125,12 +128,20 @@ picture, since it shows only a very few of the many items in each element:</p>
 <img width="524" height="350" alt="(Diagram of subroutine/class/package nesting)" 
    src="package-class-subroutine.png" tex="package-class-subroutine.eps" texscale="0.6"/>
    
+<fxdiv>
 <p>Similarly, the package <code>javafx</code> contains a package <code>javafx.scene</code>,
 which in turn contains <code>javafx.scene.control</code>.
 This package contains classes that represent GUI components
 such as buttons and input boxes.  Another subpackage, <code>javafx.scene.paint</code>,
 contains class <classname>Color</classname> and other classes that define ways to
 fill and stroke a shape.</p>
+</fxdiv>
+<swingdiv>
+<p>Similarly, the package <code>javax</code> contains the package <code>javax.swing</code>
+that contains classes representing GUI components such as buttons and input boxes.
+And <code>javax.swing</code> in turn contains a package <code>javax.swing.event</code>
+that contains classes for working with events such as key presses and mouse clicks.</p>
+</swingdiv>
 
 <p>The standard Java API includes thousands of classes in hundreds of packages.  Many of
 the classes are rather obscure or
@@ -138,13 +149,15 @@ very specialized, but you might want to browse through the documentation to see
 what is available. As I write this, the
 documentation for the complete basic API for Java&nbsp;8 can be found at</p>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/">https://docs.oracle.com/javase/8/docs/api/</a></pre>
+<fxdiv>
 <np>and for JavaFX at</np>
 <pre><a href="https://docs.oracle.com/javase/8/javafx/api/toc.htm">https://docs.oracle.com/javase/8/javafx/api/toc.htm</a></pre>
+</fxdiv>
 
 <np>See the subsection about "modules," below, for a discussion of changes
-that were made the language in Java&nbsp;9 and for links to the documentation for Java&nbsp;11.
+that were made the language after Java&nbsp;8 and for links to the documentation for Java&nbsp;17.
 However, for the purposes of this textbook, you will probably find that the
-Java&nbsp;8 documentation is easier to use.</np>
+Java&nbsp;8 documentation is easier to use, and the information that it provides is still relevant.</np>
 
 <p>Even an expert programmer won't be familiar with the entire Java API,
 or even a majority of it.  In this book, you'll only encounter
@@ -155,17 +168,18 @@ wide variety of programs.</p>
    
 <subsection id="subroutines.5.3" title="Using Classes from Packages">
 
-<p>Let's say that you want to use the class <code>javafx.scene.paint.Color</code> in a
+<p>Let's say that you want to use the class 
+<fx><code>javafx.scene.paint.Color</code></fx><swing><code>java.awt.Color</code></swing> in a
 program that you are writing.  This is the full name of class <classname>Color</classname>
-in package <code>javafx.scene.paint</code>.
-Like any class, <code>javafx.scene.paint.Color</code> is
+in package <fx><code>javafx.scene.paint</code></fx><swing><code>java.awt</code></swing>.
+Like any class, <fx><code>javafx.scene.paint.Color</code></fx><swing><code>java.awt.Color</code></swing> is
 a type, which means that you can use it to declare variables and parameters and
 to specify the return type of a function. One way to do this is to use the
 full name of the class as the name of the type. For example, suppose that you
 want to declare a variable named <code>rectColor</code> of type <classname>Color</classname>.
 You could say:</p>
 
-<pre>javafx.scene.paint.Color  rectColor;</pre>
+<pre><fx>javafx.scene.paint.Color</fx><swing>java.awt.Color</swing> rectColor;</pre>
 
 <np>This is just an ordinary variable declaration of the form
 "<bnf>type-name</bnf>&nbsp;<bnf>variable-name</bnf>;".
@@ -174,16 +188,16 @@ ever see full names like this used in a program.
 Java makes it possible to avoid using the full name of a class by <newword>importing</newword>
 the class. If you put</np>
 
-<pre>import javafx.scene.paint.Color;</pre>
+<pre>import <fx>javafx.scene.paint.Color</fx><swing>java.awt.Color</swing>;</pre>
 
 <np>at the beginning of a Java source code file, then, in the rest of the file,
-you can abbreviate the full name <code>javafx.scene.paint.Color</code> to just the simple name of
+you can abbreviate the full name <fx><code>javafx.scene.paint.Color</code></fx><swing><code>java.awt.Color</code></swing> to just the simple name of
 the class, which is <code>Color</code>.  Note that the <code>import</code> line comes at the start of 
 a file (after the <code>package</code> statement, if there is one) 
 and is not inside any class.  Although it is sometimes referred to
 as a statement, it is more properly called an <newword>import&nbsp;directive</newword>
 since it is not a statement in the usual sense.  The <code>import</code>
-directive "<code>import&nbsp;javafx.scene.paint.Color</code>" would allow you to say</np>
+directive "<code>import&nbsp;<fx>javafx.scene.paint.Color</fx><swing>java.awt.Color</swing></code>" would allow you to say</np>
 
 <pre>Color  rectColor;</pre>
 
@@ -199,8 +213,8 @@ the classes from a given package. For example, you can import all the classes fr
 
 <np>The "<code>*</code>" is a <newword>wildcard</newword> that matches every class in the package.
 (However, it does not match sub-packages; for example, you <b>cannot</b> import the entire
-contents of all the sub-packages of the <code>javafx</code> package by saying
-<code>import&nbsp;javafx.*</code>.)</np>
+contents of all the sub-packages of the <code>java</code> package by saying
+<code>import&nbsp;java.*</code>.)</np>
    
 <p>Some programmers think that using a wildcard in an <code>import</code> statement
 is bad style, since it can make a large number of class names available that you are
@@ -211,8 +225,8 @@ individual imports when I am using just one or two classes from a given package.
 
    
 <p>A program that works with networking might include the line
-"<code>import java.net.*;</code>", while one that reads or writes files might
-use "<code>import java.io.*;</code>".  But when you start importing lots
+"<code>import&nbsp;java.net.*;</code>", while one that reads or writes files might
+use "<code>import&nbsp;java.io.*;</code>".  But when you start importing lots
 of packages in this way, you have to be careful about one thing: It's possible
 for two classes that are in different packages to have the same name. For
 example, both the <code>java.awt</code> package and the <code>java.util</code> package
@@ -226,8 +240,8 @@ need, instead of importing entire packages.</p>
 
 <p>Because the package <code>java.lang</code> is so fundamental, all the classes in
 <code>java.lang</code> are <b>automatically</b> imported into every
-program. It's as if every program began with the statement "<code>import
-java.lang.*;</code>". This is why we have been able to use the class name
+program. It's as if every program began with the statement "<code>import&nbsp;java.lang.*;</code>". 
+This is why we have been able to use the class name
 <classname>String</classname> instead of <code>java.lang.String</code>, and <code>Math.sqrt()</code>
 instead of <code>java.lang.Math.sqrt()</code>. It would still, however, be
 perfectly legal to use the longer forms of the names.</p>
@@ -260,13 +274,8 @@ book, you need to know about packages mainly so that you will be able to import 
 and classes from the standard
 packages. The standard packages are always available to the programs that you write.
 You might wonder where the standard classes are actually located.  Again, that can
-depend to some extent on the version of Java that you are using.  In Java&nbsp;8
-they are stored in <newword>jar files</newword> in a subdirectory named <i>lib</i>
-inside the Java Runtime Environment installation
-directory.  A&nbsp;.jar (or "Java archive") file is a single file that can contain many classes.
-Most of the classes used with Java&nbsp;8 can be found in a jar file named <code>rt.jar</code>.
-Things changed substantially in Java&nbsp;9, as discussed in the next subsection.
-</p>
+depend to some extent on the version of Java that you are using, but they will be
+part of the installed JDK.</p>
 
 <p>Although we won't be creating packages explicitly, <b>every</b>
 class is actually part of a package. If a class is not specifically placed in a
@@ -284,7 +293,7 @@ of Java with the introduction of <newword>modules</newword>.  A module is a coll
 of packages, so it represents yet another level of containment:  Modules contain
 packages which contain classes which contain variables and methods.  A package
 does not have to be in a module to be used, but all of the standard classes in
-Java and in JavaFX have been divided into a set of modules.</p>
+Java <fx>and in JavaFX</fx> have been divided into a set of modules.</p>
 
 <p>Modules were introduced for several reasons.  A major reason is to provide
 better access control.  Before modules, a class that is declared <code>public</code>
@@ -323,32 +332,34 @@ are stored together in a file named <i>modules</i> inside a directory named
 and there is a command-line tool named <i>jimage</i> for working with such files.
 If you use the <i>jlink</i> tool to create a custom runtime, part of what it does
 is to create a custom <i>modules</i> file containing just the modules that are
-needed by the runtime.  In the JDK&nbsp;12 on my Linux computer, <i>modules</i>
-is a 130 megabyte file containing 30199 classes in 1000 packages in 70 modules.
+needed by the runtime.  In the JDK&nbsp;17 on my Linux computer, <i>modules</i>
+is a 127 megabyte file containing 26401 classes in 835 packages in 70 modules.
 The JDK directory also has a subdirectory named <i>jmods</i> that contains the
 modules in another form.  However, it is not required for compiling and running
 programs and, as far as I can tell, is meant mostly for use by <i>jlink</i>.</p>
 
 <p>Modules in the JDK include, for example, <i>java.base</i> (which contains the basic modules
 such as <code>java.lang</code> and <code>java.util</code>) and <code>java.desktop</code>
-(which include packages for the Swing GUI toolkit).  JavaFX packages include 
+(which include packages for the Swing GUI toolkit).  <fx>JavaFX packages include 
 <i>javafx.base</i>, <i>javafx.control</i>, <i>javafx.graphics</i>, and a few that are less
-generally useful.  The API documentation for modular versions of Java is divided into
+generally useful.</fx> The API documentation for modular versions of Java is divided into
 modules, then into packages, and finally into classes.  This makes the documentation harder to browse
 than in older versions of Java.  However, the documentation web site does have an effective
-search feature.  As I write this, the documentation for Java&nbsp;11 and for
-JavaFX&nbsp;11 is available at:</p>
+search feature.  As I write this, the documentation for Java&nbsp;17<fx> and for
+JavaFX&nbsp;17 is available at</fx>:</p>
 
-<p align="center"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/index.html">https://docs.oracle.com/en/java/javase/11/docs/api/index.html</a></p>
+<p align="center"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/index.html">https://docs.oracle.com/en/java/javase/17/docs/api/index.html</a></p>
 
-<p align="center"><a href="https://openjfx.io/javadoc/11/">https://openjfx.io/javadoc/11/</a></p>
+<fxdiv>
+<p align="center"><a href="https://openjfx.io/javadoc/17/">https://openjfx.io/javadoc/17/</a></p>
+</fxdiv>
 
 <p>A class can be defined outside of any module, and it is possible for that class
 to use packages from modules, provided that those packages are exported by the
 modules where they are defined.  In particular, a programmer can use classes from 
 the JDK without ever thinking about modules or knowing that they exist.  This
-applies to all the command-line programs in this book.  However, when using
-Java&nbsp;11 or later, things are different for GUI programs that use JavaFX,
+applies to all the <fx>command-line</fx> programs in this book.<fx>  However, when using
+Java&nbsp;9 or later, things are different for GUI programs that use JavaFX,
 which has been removed from the JDK and is distributed as a separate set of
 modules.  As we saw in <localref href="basics.6"/>, when you compile or run
 a JavaFX program, you need to specify a module path that includes the JavaFX
@@ -357,9 +368,9 @@ modules, and you need to provide an <code>--add-modules</code> option.
 <code>--add-modules</code> was given as <code>ALL-MODULE-PATH</code>, which
 lets the program access any modules that are found on the module path.  
 An alternative is to specify a list of names of just those modules that
-are actually used by the program.)</p> 
+are actually used by the program.)</fx></p> 
 
-<p>Aside from using modules with JavaFX and
+<p>Aside from <fx>using modules with JavaFX and</fx>
 the basic background information in this section, this textbook does not 
 cover modules.</p>
 

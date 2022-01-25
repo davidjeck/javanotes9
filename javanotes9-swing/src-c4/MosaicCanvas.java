@@ -1,18 +1,17 @@
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.application.Platform;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
 
 /**
- *  A MosaicPanel object represents a grid containing rows
+ *  A MosaicCanvas object represents a grid containing rows
  *  and columns of colored rectangles.  There can be "grouting"
  *  between the rectangles.  (The grouting is just drawn as a 
  *  one-pixel outline around each rectangle.)  The rectangles can
- *  optionally be drawn as raised 3D-style rectangles; this effect
- *  works much better with some colors than with others.  Methods are 
+ *  optionally be drawn as raised 3D-style rectangles.  Methods are 
  *  provided for getting and setting the colors of the rectangles.
  */
-public class MosaicCanvas extends Canvas {
+public class MosaicCanvas extends JPanel {
 
 
 	//------------------ private instance variables --------------------
@@ -39,32 +38,53 @@ public class MosaicCanvas extends Canvas {
 	                        //   alwaysDrawGrouting is true.  Also, the 
 	                        //   rectangle is drawn as a flat rectangle rather
 	                        //   than as a 3D rectangle.
-	private GraphicsContext g; // The graphics context for drawing on this canvas.
+	private BufferedImage OSI;  // The mosaic is actually drawn here, then the image 
+	                            //is copied to the screen
+	private Graphics OSG;  // Graphics context for drawing to OSI
+	private boolean needsRedraw;   // This is set to true when a change has occurred that
+	                               // changes the appearance of the mosaic.
 
 
 	//------------------------ constructors -----------------------------
 
 
 	/**
-	 *  Construct a MosaicPanel with 42 rows and 42 columns of rectangles,
+	 *  Construct a MosaicCanvas with 42 rows and 42 columns of rectangles,
 	 *  and with preferred rectangle height and width both set to 16.
 	 */
 	public MosaicCanvas() {
-		this(42,42);
+		this(42,42,16,16);
 	}
 
 	/**
-	 *  Construct a MosaicPanel with specified numbers of rows and columns of rectangles,
+	 *  Construct a MosaicCanvas with specified numbers of rows and columns of rectangles,
 	 *  and with preferred rectangle height and width both set to 16.
 	 */
 	public MosaicCanvas(int rows, int columns) {
 		this(rows,columns,16,16);
 	}
 
+	/**
+	 *  Construct a MosaicCanvas with the specified number of rows and
+	 *  columns of rectangles, and with a specified preferred size for the  
+	 *  rectangle.  The default rectangle color is black, the
+	 *  grouting color is gray, and alwaysDrawGrouting is set to false.
+	 *  @param rows the mosaic will have this many rows of rectangles.  This must be a positive number.
+	 *  @param columns the mosaic will have this many columns of rectangles.  This must be a positive number.
+	 *  @param preferredBlockWidth the preferred width of the mosaic will be set this value times the number of
+	 *  columns.  The actual width is set by the component that contains the mosaic, and so might not be
+	 *  equal to the preferred width.  Size is measured in pixels.  The value should not be less than about 5.
+	 *  @param preferredBlockHeight the preferred height of the mosaic will be set this value times the number of
+	 *  rows.  The actual height is set by the component that contains the mosaic, and so might not be
+	 *  equal to the preferred height.   Size is measured in pixels.  The value should not be less than about 5.
+	 */
+	public MosaicCanvas(int rows, int columns, int preferredBlockWidth, int preferredBlockHeight) {
+		this(rows, columns, preferredBlockWidth, preferredBlockHeight, null, 0);
+	}
 
 
 	/**
-	 *  Construct a MosaicPanel with the specified number of rows and
+	 *  Construct a MosaicCanvas with the specified number of rows and
 	 *  columns of rectangles, and with a specified preferred size for the  
 	 *  rectangle.  The default rectangle color is black, the
 	 *  grouting color is gray, and alwaysDrawGrouting is set to false.
@@ -73,30 +93,36 @@ public class MosaicCanvas extends Canvas {
 	 *  size of the panel.
 	 *  @param rows the mosaic will have this many rows of rectangles.  This must be a positive number.
 	 *  @param columns the mosaic will have this many columns of rectangles.  This must be a positive number.
-	 *  @param preferredBlockWidth the preferred width of the mosaic will be set to this value times the number of
+	 *  @param preferredBlockWidth the preferred width of the mosaic will be set this value times the number of
 	 *  columns.  The actual width is set by the component that contains the mosaic, and so might not be
-	 *  equal to the preferred width.  Size is measured in pixels.  The value should not be less than about 5,
-	 *  and any smaller value will be increased to 5.
-	 *  @param preferredBlockHeight the preferred height of the mosaic will be set to this value times the number of
+	 *  equal to the preferred width.  Size is measured in pixels.  The value should not be less than about 5.
+	 *  @param preferredBlockHeight the preferred height of the mosaic will be set this value times the number of
 	 *  rows.  The actual height is set by the component that contains the mosaic, and so might not be
-	 *  equal to the preferred height.  Size is measured in pixels.  The value should not be less than about 5,
-	 *  and any smaller value will be increased to 5.
+	 *  equal to the preferred height.   Size is measured in pixels.  The value should not be less than about 5.
+	 *  @param borderColor if non-null, a border of this color is added to the panel.  The border is then
+	 *  taken into account in the computation of the panel's preferred size.
+	 *  @param borderWidth if borderColor is non-null, then this parameter gives the width of the border; any
+	 *  value less than 1 is treated as 1.
 	 */
-	public MosaicCanvas(int rows, int columns, int preferredBlockWidth, int preferredBlockHeight) {
-		
+	public MosaicCanvas(int rows, int columns, int preferredBlockWidth, int preferredBlockHeight, Color borderColor, int borderWidth) {
 		this.rows = rows;
 		this.columns = columns;
-		if (rows <= 0 || columns <= 0)
-			throw new IllegalArgumentException("Rows and Columns must be greater than zero.");
-		preferredBlockHeight = Math.max( preferredBlockHeight, 5);
-		preferredBlockWidth = Math.max( preferredBlockWidth, 5);
 		grid = new Color[rows][columns];
 		defaultColor = Color.BLACK;
 		groutingColor = Color.GRAY;
 		alwaysDrawGrouting = false;
-		setWidth(preferredBlockWidth*columns);
-		setHeight(preferredBlockHeight*rows);
-		g = getGraphicsContext2D();
+		setBackground(defaultColor);
+		setOpaque(true);
+		setDoubleBuffered(false);
+		if (borderColor != null) {
+			if (borderWidth < 1)
+				borderWidth = 1;
+			setBorder(BorderFactory.createLineBorder(borderColor,borderWidth));
+		}
+		else
+			borderWidth = 0;
+		if (preferredBlockWidth > 0 && preferredBlockHeight > 0)
+			setPreferredSize(new Dimension(preferredBlockWidth*columns + 2*borderWidth, preferredBlockHeight*rows + 2*borderWidth));
 	}
 
 
@@ -115,6 +141,7 @@ public class MosaicCanvas extends Canvas {
 			c = Color.BLACK;
 		if (! c.equals(defaultColor)) {
 			defaultColor = c;
+			setBackground(c);
 			forceRedraw();
 		}
 	}
@@ -196,23 +223,23 @@ public class MosaicCanvas extends Canvas {
 	 *  the preserveData parameter is false, then the color values of all
 	 *  the rectangles in the new grid are set to null.  If it is true,
 	 *  then as much color data as will fit is copied from the old grid.
-	 *  The number of rows and number of columns must be positive.
 	 */
-	public void setGridSize(int rows, int columns, boolean preserveData) {
-		if (rows <= 0 && columns <= 0) 
-			throw new IllegalArgumentException("Rows and columns must be positive.");
-		Color[][] newGrid = new Color[rows][columns];
-		if (preserveData) {
-			int rowMax = Math.min(rows,this.rows);
-			int colMax = Math.min(columns,this.columns);
-			for (int r = 0; r < rowMax; r++)
-				for (int c = 0; c < colMax; c++)
-					newGrid[r][c] = grid[r][c];
+	public void setGridSize(int rows, 
+			int columns, boolean preserveData) {
+		if (rows > 0 && columns > 0) {
+			Color[][] newGrid = new Color[rows][columns];
+			if (preserveData) {
+				int rowMax = Math.min(rows,this.rows);
+				int colMax = Math.min(columns,this.columns);
+				for (int r = 0; r < rowMax; r++)
+					for (int c = 0; c < colMax; c++)
+						newGrid[r][c] = grid[r][c];
+			}
+			grid = newGrid;
+			this.rows = rows;
+			this.columns = columns;
+			forceRedraw();
 		}
-		grid = newGrid;
-		this.rows = rows;
-		this.columns = columns;
-		forceRedraw();
 	}
 
 
@@ -253,12 +280,11 @@ public class MosaicCanvas extends Canvas {
 
 	/**
 	 *  Return the red component of color of the rectangle in the
-	 *  specified row and column, as a double value in the range
-	 *  0.0 to 1.0.  If the specified rectangle lies outside 
+	 *  specified row and column.  If that rectangle lies outside 
 	 *  the grid or if no color has been specified for the rectangle,
 	 *  then the red component of the defaultColor is returned.
 	 */
-	public double getRed(int row, int col) {
+	public int getRed(int row, int col) {
 		if (row >=0 && row < rows && col >= 0 && col < columns && grid[row][col] != null)
 			return grid[row][col].getRed();
 		else
@@ -268,12 +294,11 @@ public class MosaicCanvas extends Canvas {
 
 	/**
 	 *  Return the green component of color of the rectangle in the
-	 *  specified row and column, as a double value in the range
-	 *  0.0 to 1.0.  If the specified rectangle lies outside 
+	 *  specified row and column.  If that rectangle lies outside 
 	 *  the grid or if no color has been specified for the rectangle,
 	 *  then the green component of the defaultColor is returned.
 	 */
-	public double getGreen(int row, int col) {
+	public int getGreen(int row, int col) {
 		if (row >=0 && row < rows && col >= 0 && col < columns && grid[row][col] != null)
 			return grid[row][col].getGreen();
 		else
@@ -283,12 +308,11 @@ public class MosaicCanvas extends Canvas {
 
 	/**
 	 *  Return the blue component of color of the rectangle in the
-	 *  specified row and column, as a double value in the range
-	 *  0.0 to 1.0.  If the specified rectangle lies outside 
+	 *  specified row and column.  If that rectangle lies outside 
 	 *  the grid or if no color has been specified for the rectangle,
 	 *  then the blue component of the defaultColor is returned.
 	 */
-	public double getBlue(int row, int col) {
+	public int getBlue(int row, int col) {
 		if (row >=0 && row < rows && col >= 0 && col < columns && grid[row][col] != null)
 			return grid[row][col].getBlue();
 		else
@@ -306,24 +330,33 @@ public class MosaicCanvas extends Canvas {
 	public void setColor(int row, int col, Color c) {
 		if (row >=0 && row < rows && col >= 0 && col < columns) {
 			grid[row][col] = c;
-			drawSquare(row,col);
+			if (OSI == null)
+				repaint();
+			else {
+				drawSquare(row,col,true);
+			}
 		}
 	}
 
 
 	/**
-	 *  Set the color of the rectangle in the specified row and column,
-	 *  where the RGB color components are given as double values in 
-	 *  the range 0.0 to 1.0. Values are clamped to lie in that range.
+	 *  Set the color of the rectangle in the specified row and column.
+	 *  The color is specified by giving red, green, and blue components
+	 *  of the color.  These values should be in the range from 0 to
+	 *  255, inclusive, and they are clamped to lie in that range.
 	 *  If the rectangle lies outside the grid, this is simply ignored.
 	 */
-	public void setColor(int row, int col, double red, double green, double blue) {
+	public void setColor(int row, int col, int red, int green, int blue) {
 		if (row >=0 && row < rows && col >= 0 && col < columns) {
-			red = (red < 0)? 0 : ( (red > 1)? 1 : red );
-			green = (green < 0)? 0 : ( (green > 1)? 1 : green );
-			blue = (blue < 0)? 0 : ( (blue > 1)? 1 : blue );
-			grid[row][col] = Color.color(red,green,blue);
-			drawSquare(row,col);
+			red = (red < 0)? 0 : ( (red > 255)? 255 : red);
+			green = (green < 0)? 0 : ( (green > 255)? 255 : green);
+			blue = (blue < 0)? 0 : ( (blue > 255)? 255 : blue);
+			grid[row][col] = new Color(red,green,blue);
+			if (OSI == null)
+				repaint();
+			else {
+				drawSquare(row,col,true);
+			}
 		}
 	}
 
@@ -331,20 +364,39 @@ public class MosaicCanvas extends Canvas {
 	/**
 	 *  Set the color of the rectangle in the specified row and column.
 	 *  The color is specified by giving hue, saturation, and brightness
-	 *  components of the color.  The hue should be in the range 0.0 to 360.0,
-	 *  and the saturation and brightness should be in the range 0.0. to 1.0.
-	 *  Their values are clamped to lie in those ranges.
+	 *  components of the color.  These values should be in the range from 
+	 *  0.0 to 1.0, inclusive, and they are clamped to lie in that range.
 	 *  If the rectangle lies outside the grid, this is simply ignored.
 	 */
 	public void setHSBColor(int row, int col, 
 			double hue, double saturation, double brightness) {
 		if (row >=0 && row < rows && col >= 0 && col < columns) {
-			hue = (hue < 0)? 0 : ( (hue > 360)? 360 : hue );
-			saturation = (saturation < 0)? 0 : ( (saturation > 1)? 1 : saturation );
-			brightness = (brightness < 0)? 0 : ( (brightness > 1)? 1 : brightness );
-			grid[row][col] = Color.hsb(hue,saturation,brightness);
-			drawSquare(row,col);
+			grid[row][col] = makeHSBColor(hue,saturation,brightness);
+			if (OSI == null)
+				repaint();
+			else {
+				drawSquare(row,col,true);
+			}
 		}
+	}
+
+
+	/**
+	 *  A little utility routine that is provided for making a color
+	 *  from hue, saturation, and brightness values.  These values should
+	 *  be in the range from 0.0 to 1.0, inclusive, and they are clamped
+	 *  to lie in that range.  (This method is more convenient than
+	 *  Color.getHSBColor() since it use double values rather than float.)
+	 */
+	public static Color makeHSBColor(
+			double hue, double saturation, double brightness) {
+		float h = (float)hue;
+		float s = (float)saturation;
+		float b = (float)brightness;
+		h = (h < 0)? 0 : ( (h > 1)? 1 : h );
+		s = (s < 0)? 0 : ( (s > 1)? 1 : s );
+		b = (b < 0)? 0 : ( (b > 1)? 1 : b );
+		return Color.getHSBColor(h,s,b);
 	}
 
 
@@ -364,14 +416,14 @@ public class MosaicCanvas extends Canvas {
 	/**
 	 *  Set all rectangles of the grid to have the color specified by
 	 *  the given red, green, and blue components.  These components 
-	 *  should be double values in the range 0 to 1 and are clamped to lie
+	 *  should be integers in the range 0 to 255 and are clamped to lie
 	 *  in that range.
 	 */
-	public void fill(double red, double green, double blue) {
-		red = (red < 0)? 0 : ( (red > 1)? 1 : red );
-		green = (green < 0)? 0 : ( (green > 1)? 1 : green );
-		blue = (blue < 0)? 0 : ( (blue > 1)? 1 : blue );
-		fill(Color.color(red,green,blue));
+	public void fill(int red, int green, int blue) {
+		red = (red < 0)? 0 : ( (red > 255)? 255 : red);
+		green = (green < 0)? 0 : ( (green > 255)? 255 : green);
+		blue = (blue < 0)? 0 : ( (blue > 255)? 255 : blue);
+		fill(new Color(red,green,blue));
 	}
 
 
@@ -379,11 +431,13 @@ public class MosaicCanvas extends Canvas {
 	 *  Fill all the rectangles with randomly selected colors.
 	 */
 	public void fillRandomly() {
-		for (int i = 0; i < rows; i++) {
+		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++) {
-				grid[i][j] = Color.color(Math.random(),Math.random(),Math.random());
+				int r = (int)(256*Math.random());
+				int g = (int)(256*Math.random());
+				int b = (int)(256*Math.random());
+				grid[i][j] = new Color(r,g,b);
 			}
-		}
 		forceRedraw();
 	}
 
@@ -404,7 +458,6 @@ public class MosaicCanvas extends Canvas {
 		return autopaint;
 	}
 
-	
 	/**
 	 * Sets the value of the autopaint property.  When this property is true,
 	 * then every call to one of the setColor methods automatically results in
@@ -429,14 +482,15 @@ public class MosaicCanvas extends Canvas {
 
 	/**
 	 * This method can be called to force redrawing of the entire mosaic.  The only
-	 * time it might be necessary for users of this class to call this method is
+	 * time it might be necessary for users of this class to recall this method is
 	 * while the autopaint property is set to false, and it is desired to show
 	 * all the changes that have been made to the mosaic, without resetting
 	 * the autopaint property to true.
-	 * @see #setAutopaint(boolean)
+	 *@see #setAutopaint(boolean)
 	 */
 	final public void forceRedraw() {
-		drawAllSquares();
+		needsRedraw = true;
+		repaint();
 	}
 
 	/**
@@ -497,6 +551,7 @@ public class MosaicCanvas extends Canvas {
 			for (int j = 0; j < columns; j++)
 				grid[i][j] = newGrid[i][j];
 		defaultColor = newGrid[newRows-1][newColumns];
+		setBackground(defaultColor);
 		groutingColor = newGrid[newRows-1][newColumns+1];
 		alwaysDrawGrouting = newGrid[newRows-1][newColumns+2] != null;
 		use3D = newGrid[newRows-1][newColumns+3] != null;
@@ -505,17 +560,18 @@ public class MosaicCanvas extends Canvas {
 	}
 
 	/**
-	 * Given an x-coordinate of a pixel in the MosaicPanel, this method returns
+	 * Given an x-coordinate of a pixel in the MosaicCanvas, this method returns
 	 * the row number of the mosaic rectangle that contains that pixel.  If
 	 * the x-coordinate does not lie within the bounds of the mosaic, the return
 	 * value is -1 or is equal to the number of columns, depending on whether
 	 * x is to the left or to the right of the mosaic.
 	 */
-	public int xCoordToColumnNumber(double x) {
-		if (x < 0)
+	public int xCoordToColumnNumber(int x) {
+		Insets insets = getInsets();
+		if (x < insets.left)
 			return -1;
-		double colWidth = getWidth() / columns;
-		int col = (int)( x / colWidth);
+		double colWidth = (double)(getWidth()-insets.left-insets.right) / columns;
+		int col = (int)( (x-insets.left) / colWidth);
 		if (col >= columns)
 			return columns;
 		else
@@ -523,108 +579,87 @@ public class MosaicCanvas extends Canvas {
 	}
 
 	/**
-	 * Given a y-coordinate of a pixel in the MosaicPanel, this method returns
+	 * Given a y-coordinate of a pixel in the MosaicCanvas, this method returns
 	 * the column number of the mosaic rectangle that contains that pixel.  If
 	 * the y-coordinate does not lie within the bounds of the mosaic, the return
 	 * value is -1  or is equal to the number of rows, depending on whether
 	 * y is above or below the mosaic.
 	 */
-	public int yCoordToRowNumber(double y) {
-		if (y < 0)
+	public int yCoordToRowNumber(int y) {
+		Insets insets = getInsets();
+		if (y < insets.top)
 			return -1;
-		double rowHeight = getHeight() / rows;
-		int row = (int)(y / rowHeight);
+		double rowHeight = (double)(getHeight()-insets.top-insets.bottom) / rows;
+		int row = (int)( (y-insets.top) / rowHeight);
 		if (row >= rows)
 			return rows;
 		else
 			return row;
 	}
 
-	// private implementation section -- the only part that actually draws squares
-	
-	private void drawSquare(int row, int col) {
-		if ( autopaint ) {
-			if (Platform.isFxApplicationThread()) {
-				drawOneSquare(row,col);
-			}
-			else {
-				Platform.runLater( () -> drawOneSquare(row,col) );
-			}
-			try { // to avoid overwhelming the application thread with draw operations...
-				Thread.sleep(1);
-			}
-			catch (InterruptedException e) {
-			}
-		}
-	}
-	
-	private void drawAllSquares() {
-		if (Platform.isFxApplicationThread()) {
-			for (int r = 0; r < rows; r++)
-				for (int c = 0; c < columns; c++)
-					drawOneSquare(r,c);
-		}
-		else {
-			Platform.runLater( () -> {
-			for (int r = 0; r < rows; r++)
-				for (int c = 0; c < columns; c++)
-					drawOneSquare(r,c);
-			} );
-		}
-		try { // to avoid overwhelming the application thread with draw operations...
-			Thread.sleep(1);
-		}
-		catch (InterruptedException e) {
-		}
-	}
-	
-	private void drawOneSquare(int row, int col) {
-		   // only called from two previous methods
-		double rowHeight = getHeight() / rows;
-		double colWidth = getWidth() / columns;
-		int y = (int)Math.round(rowHeight*row);
-		int h = Math.max(1, (int)Math.round(rowHeight*(row+1)) - y);
-		int x = (int)Math.round(colWidth*col);
-		int w = Math.max(1, (int)Math.round(colWidth*(col+1)) - x);
-		Color c = grid[row][col];
-		g.setFill( (c == null)? defaultColor : c );
-		if (groutingColor == null || (c == null && !alwaysDrawGrouting)) {
-			if (!use3D || c == null)
-				g.fillRect(x,y,w,h);
-			else
-				fill3DRect(c,x,y,w,h);
-		}
-		else {
-			if (!use3D || c == null)
-				g.fillRect(x+1,y+1,w-2,h-2);
-			else
-				fill3DRect(c,x+1,y+1,w-2,h-2);
-			g.setStroke(groutingColor);
-			g.strokeRect(x+0.5,y+0.5,w-1,h-1);
-		}
+	/**
+	 *  Returns the BufferedImage that contains the actual image of the mosaic.
+	 *  If this is called before the mosaic has been drawn on screen, the return value will be null.
+	 */
+	public BufferedImage getImage() {
+		return OSI;
 	}
 
-	private void fill3DRect(Color color, int x, int y, int width, int height) {
-		double h = color.getHue();
-		double b = color.getBrightness();
-		double s = color.getSaturation();
-		if (b > 0.8) {
-			b = 0.8;
-			g.setFill(Color.hsb(h,s,b));
+	//--------------- implementation details ------------------------
+	//---------- (routines called internally or by the system) ------
+
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		synchronized(this) {
+			if ( (OSI == null) || OSI.getWidth() != getWidth() || OSI.getHeight() != getHeight() ) {
+				OSI = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+				OSG = OSI.getGraphics();
+				needsRedraw = true;
+			}
 		}
-		else if (b < 0.2) {
-			b = 0.2;
-			g.setFill(Color.hsb(h,s,b));
+		if (needsRedraw) {
+			for (int r = 0; r < rows; r++)
+				for (int c = 0; c < columns; c++)
+					drawSquare(r,c,false);
+			needsRedraw = false;
 		}
-		g.fillRect(x,y,width,height);
-		g.setStroke(Color.hsb(h,s,b+0.2));
-		g.strokeLine(x+0.5,y+0.5,x+width-0.5,y+0.5);
-		g.strokeLine(x+0.5,y+0.5,x+0.5,y+height-0.5);
-		g.setStroke(Color.hsb(h,s,b-0.2));
-		g.strokeLine(x+width-0.5,y+1.5,x+width-0.5,y+height-0.5);
-		g.strokeLine(x+1.5,y+height-0.5,x+width-0.5,y+height-0.5);
+		g.drawImage(OSI,0,0,null);
 	}
-	
+
+	synchronized private void drawSquare(int row, int col, boolean callRepaint) {
+		   // Draw one of the rectangles in a specified graphics 
+		   // context.  g must be non-null and (row,col) must be
+		   // in the grid.
+		if (callRepaint && !autopaint)
+			return;
+		Insets insets = getInsets();
+		double rowHeight = (double)(getHeight()-insets.left-insets.right) / rows;
+		double colWidth = (double)(getWidth()-insets.top-insets.bottom) / columns;
+		int xOffset = insets.left;
+		int yOffset = insets.top; 
+		int y = yOffset + (int)Math.round(rowHeight*row);
+		int h = Math.max(1, (int)Math.round(rowHeight*(row+1))+yOffset - y);
+		int x = xOffset + (int)Math.round(colWidth*col);
+		int w = Math.max(1, (int)Math.round(colWidth*(col+1))+xOffset - x);
+		Color c = grid[row][col];
+		OSG.setColor( (c == null)? defaultColor : c );
+		if (groutingColor == null || (c == null && !alwaysDrawGrouting)) {
+			if (!use3D || c == null)
+				OSG.fillRect(x,y,w,h);
+			else
+				OSG.fill3DRect(x,y,w,h,true);
+		}
+		else {
+			if (!use3D || c == null)
+				OSG.fillRect(x+1,y+1,w-2,h-2);
+			else
+				OSG.fill3DRect(x+1,y+1,w-2,h-2,true);
+			OSG.setColor(groutingColor);
+			OSG.drawRect(x,y,w-1,h-1);
+		}
+		if (callRepaint)
+			repaint(x,y,w,h);
+	}
 
 
 } // end class MosaicCanvas

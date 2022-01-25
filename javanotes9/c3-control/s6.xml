@@ -341,7 +341,7 @@ should then be specified by a <code>yield</code> statement, which takes a form
 such as "<code>yield&nbsp;42;</code>".  The value after the word <code>yield</code> is
 then returned as the value of the <code>switch</code> expression.</p>
 
-<p>>Of course, <code>switch</code> expressions are not limited to assignment statements.
+<p>Of course, <code>switch</code> expressions are not limited to assignment statements.
 You can use a <code>switch</code> expression any place where any other kind of expression
 could be used, such as in an output statement or as part of a larger expression.</p>
 

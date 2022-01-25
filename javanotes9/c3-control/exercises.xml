@@ -1316,7 +1316,7 @@ into the body of the <code>drawPicture()</code>subroutine.</p>
 <p>The complete program is shown below.  In the original program, the size of the
 drawing area was 800-by-600.  I changed this to 400-by-400, as noted in the exercise.  
 And I changed the title of the window to "Checkerboard" in another
-line in <code><swing>main</swing><fx>>start</fx>()</code>.</p>
+line in <code><swing>main</swing><fx>start</fx>()</code>.</p>
 
 <p>I also changed the name of the class from
 <classname>SimpleGraphicsStarter</classname> to <classname>Checkerboard</classname>.

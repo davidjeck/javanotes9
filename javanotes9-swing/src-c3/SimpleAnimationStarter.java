@@ -8,6 +8,11 @@ import javax.swing.*;
  *  the definition of drawFrame with the code to draw one frame of the 
  *  animation, and possibly change a few of the values in the rest of
  *  the program as noted below.
+ *  
+ *  (NOTE FOR LINUX USERS:  To get smooth animation, you might need
+ *  to run this program using   java -Dsun.java2d.opengl=true SimpleAnimationStarter 
+ *  or, alternatively, add System.setProperty("sun.java2d.opengl", "true");
+ *  as the very first line of the main() routine in this program.)
  */
 public class SimpleAnimationStarter extends JPanel implements ActionListener {
 
@@ -20,6 +25,8 @@ public class SimpleAnimationStarter extends JPanel implements ActionListener {
 	 * was started.  By using frameNumber and/or elapsedSeconds in the drawing
 	 * code, you can make a picture that changes over time.  That's an animation.
 	 * The parameters width and height give the size of the drawing area, in pixels.  
+	 * Note that the drawing area is automatically filled with the background color
+	 * before this method is called.
 	 */
 	public void drawFrame(Graphics g, int frameNumber, double elapsedSeconds, int width, int height) {
 		

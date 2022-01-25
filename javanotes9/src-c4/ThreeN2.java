@@ -5,7 +5,10 @@ import textio.TextIO;
  * values for the sequences are input by the user.  Terms in the sequence 
  * are printed in columns, with five terms on each line of output.
  * After a sequence has been displayed, the number of terms in that 
- * sequence is reported to the user.
+ * sequence is reported to the user.  (Note that if a term of the 3N+1
+ * sequence for an input value exceeds the maximum value that can be 
+ * represented as a value of type int, then the output of the program for
+ * that input is not valid.  An improved program would check for that error.)
  */
 public class ThreeN2 {
 

@@ -22,7 +22,7 @@ public class RandomMosaicWalk2 {
 		fillWithRandomColors();
 		currentRow = ROWS / 2;   // start at center of window
 		currentColumn = COLUMNS / 2;
-		while (true) {
+		while (Mosaic.isOpen()) {
 			changeToRandomColor(currentRow, currentColumn);
 			randomMove();
 			Mosaic.delay(5);

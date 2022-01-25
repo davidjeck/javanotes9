@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE section SYSTEM "../javanotes9.dtd" >
 
-<section id="subroutines.1" title="Black Boxes">
+<section id="subroutines.1" title="Black Boxes and Procedural Abstraction" shorttitle="Black Boxes">
    
 <p><start><big>A</big> subroutine consists of instructions</start> for
 performing some task, chunked together and given a name. "Chunking" allows you
@@ -109,12 +109,34 @@ that subroutines exist in the first place, and they are your guidelines for
 using them. This should be especially clear in <localref href="subroutines.6"/>,
 where I will discuss subroutines as a tool in program development.</p>
 
-<break/>
-
 <p>You should keep in mind that subroutines are not the only example of black
 boxes in programming. For example, a class is also a black box. We'll see that
 a class can have a "public" part, representing its interface, and a "private"
 part that is entirely inside its hidden implementation. All the principles of
 black boxes apply to classes as well as to subroutines.</p>
+
+<break/>
+
+<p><localref href="control.1.3a"/> introduced the idea of "control abstraction" to 
+express the fact that a Java control structure lets the user work on a
+higher level than machine language, hiding the details of the process
+in the CPU that implements the control structure.
+</p>
+
+<p>In a similar way, we say that a subroutine is a <newword>procedural abstraction</newword>.
+The interface of a subroutine is an abstraction that you can use to carry out some
+procedure without worrying about the details of how the procedure is actually implemented.
+This is just another, fancier way of saying that the subroutine can be used as a
+black box, but it brings us back to abstraction as a central concept in computer science.</p>
+
+<p>An important aspect of abstraction in general is <newword>information hiding</newword>.
+An abstraction hides information about what is behind the abstraction, in its implementation.
+Information hiding by control abstractions is what makes it possible to use the same
+Java control structures on different types of CPU, with different underlying machine
+language implementations.  Information hiding by procedural abstractions is what makes
+it possible for the inside of a subroutine to be changed without affecting the programs
+in which the subroutine is used.  Again, this is just another term for the black box principle.
+</p>
+
 
 </section>
