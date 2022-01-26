@@ -15,5 +15,11 @@
    <redirect:write select="$name"><xsl:apply-templates/></redirect:write>
 </xsl:if></xsl:template>
 
+<xsl:template match="fx">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="swing"></xsl:template>
+
 
 </xsl:stylesheet>

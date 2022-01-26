@@ -13,7 +13,8 @@ standard output. The string to be printed should be a parameter to the
 subroutine. Test your subroutine with a <code>main()</code> routine that gets a
 line of input from the user and applies the subroutine to it.</p>
 <p>Note that a letter is the first letter of a word if it is not immediately
-preceded in the string by another letter. Recall from <localref href="control.ex.4"/> that there is a standard
+preceded in the string by another letter. Recall 
+from <localref href="control.ex.4"/> that there is a standard
 <ptype>boolean</ptype>-valued function <code>Character.isLetter(char)</code> that can be
 used to test whether its parameter is a letter. There is another standard
 <ptype>char</ptype>-valued function, <code>Character.toUpperCase(char)</code>, that
@@ -31,8 +32,15 @@ by the function.) The first line of the subroutine definition will be:</p>
 
 <pre>static  void  printCapitalized( String str )</pre>
 
-<np>The subroutine must look at each character in <code>str</code> and decide
-whether to capitalize it or not. An algorithm for the subroutine is</np>
+<np>Adding a <code>public</code> or <code>private</code> access modifer
+at the beginning of the line is optional.  Note that <code>static</code>
+is not optional, since this subroutine will be used in the <code>static</code>
+subroutine <code>main()</code>, and it is not legal for a <code>static</code>
+routine to use a non-<code>static</code> subroutine.</np>
+
+<p>As for the code inside the subroutine definition, it
+must look at each character in <code>str</code> and decide
+whether to capitalize it or not. An algorithm for the subroutine is</p>
 
 <pre>for each character in str:
     if the character is the first letter of a word:
@@ -111,7 +119,8 @@ This doesn't exhaust the possibilities. Another idea, for example, would be
 to use a boolean variable to keep track of whether the previous character was a
 letter.</p>
 
-<p>Finally, we should add a <localref href="subroutines.5.4">Javadoc comment</localref> to document the subroutine.
+<p>Finally, we should add a <localref href="subroutines.5.4">Javadoc comment</localref> 
+to document the subroutine.
 Writing a <code>main()</code> routine to test this subroutine on a line of input
 is easy.</p>
 </exercise-discuss>
@@ -195,9 +204,39 @@ type <ptype>int</ptype>. It's easy to write the <code>switch</code> statement, a
 it's tedious because of the number of cases. A little creative cut-and-paste
 can help. The <code>switch</code> statement has a <code>default</code> case that covers
 all the characters that are not hexadecimal digits. For such characters, a
-value of <code>-1</code> is returned.   The subroutine is shown in the program below, and I
-will not repeat it here.  Note that in this <code>switch</code> statement, the cases are
-terminated by <code>return</code> statements, rather than <code>break</code>.</p>
+value of <code>-1</code> is returned.  Note that the action in each case of the <code>switch</code>
+is to return a value.  A <code>return</code> statement is not allowed after the <code>-&gt;</code>
+in a case (only subroutine call statements, <code>throw</code> statements, and block statements are allowed).
+So the <code>return</code> statements in the example are enclosed between braces
+to make it into a block statement.  For example,</p>
+
+<pre>case 0 -> { return 0; }</pre>
+
+<p>The complete subroutine is shown in the program below.  It would actually make more sense
+in this program to use a <code>switch</code> expression (<localref href="control.6.5"/>) to
+compute the return value.  Then the suboutine could be written:</p>
+
+<pre>public static int hexValue(char ch) {
+    return  switch(ch) {
+       case '0' -&gt; 0;
+       case '1' -&gt; 1;
+       case '2' -&gt; 2;
+       case '3' -&gt; 3;
+       case '4' -&gt; 4;
+       case '5' -&gt; 5;
+       case '6' -&gt; 6;
+       case '7' -&gt; 7;
+       case '8' -&gt; 8;
+       case '9' -&gt; 9;
+       case 'A', 'a' -&gt; 10;
+       case 'B', 'b' -&gt; 11;
+       case 'C', 'c' -&gt; 12;
+       case 'D', 'd' -&gt; 13;
+       case 'E', 'e' -&gt; 14;
+       case 'F', 'f' -&gt; 15;
+       default  -&gt; -1;
+    };
+}</pre>
 
 <p>In the main program, I will use <code>TextIO.getlnWord()</code> to read the
 user's input, rather than <code>TextIO.getln()</code>. This has the advantage that
@@ -328,50 +367,27 @@ public class Hex2Dec {
      */
     public static int hexValue(char ch) {
        switch (ch) {
-          case '0':
-             return 0;
-          case '1':
-             return 1;
-          case '2':
-             return 2;
-          case '3':
-             return 3;
-          case '4':
-             return 4;
-          case '5':
-             return 5;
-          case '6':
-             return 6;
-          case '7':
-             return 7;
-          case '8':
-             return 8;
-          case '9':
-             return 9;
-          case 'a':     // Note:  Handle both upper and lower case letters.
-          case 'A':
-             return 10;
-          case 'b':
-          case 'B':
-             return 11;
-          case 'c':
-          case 'C':
-             return 12;
-          case 'd':
-          case 'D':
-             return 13;
-          case 'e':
-          case 'E':
-             return 14;
-          case 'f':
-          case 'F':
-             return 15;
-          default:
-             return -1;
+          case '0' -&gt; { return 0; }
+          case '1' -&gt; { return 1; }
+          case '2' -&gt; { return 2; }
+          case '3' -&gt; { return 3; }
+          case '4' -&gt; { return 4; }
+          case '5' -&gt; { return 5; }
+          case '6' -&gt; { return 6; }
+          case '7' -&gt; { return 7; }
+          case '8' -&gt; { return 8; }
+          case '9' -&gt; { return 9; }
+          case 'A', 'a' -&gt; { return 10; } // Note: Handle both upper and lower case.
+          case 'B', 'b' -&gt; { return 11; }
+          case 'C', 'c' -&gt; { return 12; }
+          case 'D', 'd' -&gt; { return 13; }
+          case 'E', 'e' -&gt; { return 14; }
+          case 'F', 'f' -&gt; { return 15; }
+          default  -&gt; { return -1; }
        }
     }  // end hexValue
 
-}</prog></pre>
+} // end class Hex2Dec</prog></pre>
 </exercise-code>
 </exercise> 
 
@@ -660,7 +676,7 @@ The program that you write for this exercise will need access to the
 file <sourceref href="ArrayProcessor.java"/>, which defines the functional
 interface.</p>
 </exercise-question>
-<exercise-discuss><p>The interface <classname>ArrayList</classname> defines a
+<exercise-discuss><p>The interface <classname>ArrayProcessor</classname> defines a
 function <code>apply(array)</code> that takes an array of type <atype>double[]</atype> and
 that returns a <ptype>double</ptype>.   A lambda expression of type <classname>ArrayList</classname>
 will typically take the form</p>
@@ -678,9 +694,9 @@ could be written</np>
     }
     return total;
 }</pre>
-<np>This lambda expression is a value of type <classname>ArrayList</classname>.
+<np>This lambda expression is a value of type <classname>ArrayProcessor</classname>.
 For this exercise, we are supposed to assign this lambda expression to a
-<code>public static final</code> member variable of type <classname>ArrayList</classname>.
+<code>public static final</code> member variable of type <classname>ArrayProcessor</classname>.
 Calling that variable <i>sumer</i>, this takes the form:</np>
 <pre>public static final ArrayProcessor sumer = array -> {
     double total = 0;
@@ -878,7 +894,7 @@ complicated existing program.</p>
 <code>randomMove()</code> routine is unchanged. The important changes in the
 <code>main()</code> routine are to substitute a call to <code>brightenSquare</code> for
 the call to <code>changeToRandomColor</code> and to add the line calling <code>Mosaic.setUse3DEffect</code>. 
-I also removed the call to <code>Mosaic.delay</code> to speed up the program.
+I also set the delay to 1 in the call to <code>Mosaic.delay()</code> to speed up the program.
 The subroutines
 <code>fillWithRandomColors</code> and <code>changeToRandomColor</code> in the
 <code>RandomMosaicWalk2</code> program are not needed in the new program and should be removed. In the
@@ -950,7 +966,7 @@ public class RandomBrighten {
       currentRow = ROWS / 2;   // start at center of window
       currentColumn = COLUMNS / 2;
       Mosaic.setUse3DEffect(false);
-      while (Mosaic.isOpen()) {
+      while ( <fx>true</fx><swing>Mosaic.isOpen()</swing> ) {
          brightenSquare(currentRow, currentColumn);
          randomMove();
          Mosaic.delay(1);
@@ -1067,11 +1083,11 @@ becomes:</np>
 
 <pre>Mosaic.open(ROWS, COLUMNS, SQUARE_SIZE, SQUARE_SIZE);
 fillWithRandomColors();
-while (Mosaic.isOpen()) {
+while ( <fx>true</fx><swing>Mosaic.isOpen()</swing> ) {
    int randomRow = (int)(ROWS * Math.random());
    int randomColumn = (int)(COLUMNS * Math.random());
    convertRandomNeighbor(randomRow, randomColumn); 
-   // (I removed the call to Mosaic.delay(5) to speed up the program.)
+   Mosaic.delay(1);
 }</pre>
 
 <p>All that remains is to write the <code>convertRandomNeighbor()</code> subroutine.
@@ -1102,30 +1118,30 @@ that would work:
    int directionNum = (int)(4*Math.random());  // random direction;
 
    switch (directionNum) {
-   case 0:    // Choose neighbor above.
-      neighborColumn = col;        // Neighbor is in the same column.
-      neighborRow = row - 1;       // Subtract 1 to get neighbor's row number.
-      if (neighborRow &lt; 0)         // Neighbor's row number is outside the mosaic.
-         neighborRow = ROWS - 1;  // So wrap around to bottom of the mosaic.
-      break;
-   case 1:    // Choose neighbor to the right.
-      neighborRow = row;               // Same row.
-      neighborColumn = col + 1;        // Column to the right.
-      if (neighborColumn &gt;= COLUMNS)   // Outside the mosaic?
-         neighborColumn = 0;          // Wrap around to the left edge
-      break; 
-   case 2:    // Choose neighbor below.
-      neighborColumn = col;
-      neighborRow = row + 1;
-      if (neighborRow &gt;= ROWS)
-         neighborRow = 0;
-      break;
-   default:    // Choose neighbor to the left.
-      neighborRow = row;
-      neighborColumn = col - 1;
-      if (neighborColumn &lt; 0)
-         neighborColumn = COLUMNS - 1;
-      break; 
+       case 0 -> {   // Choose neighbor above.
+          neighborColumn = col;        // Neighbor is in the same column.
+          neighborRow = row - 1;       // Subtract 1 to get neighbor's row number.
+          if (neighborRow &lt; 0)         // Neighbor's row number is outside the mosaic.
+             neighborRow = ROWS - 1;  // So wrap around to bottom of the mosaic.
+       }
+       case 1 -> {    // Choose neighbor to the right.
+          neighborRow = row;               // Same row.
+          neighborColumn = col + 1;        // Column to the right.
+          if (neighborColumn &gt;= COLUMNS)   // Outside the mosaic?
+             neighborColumn = 0;          // Wrap around to the left edge
+       }
+       case 2 -> {    // Choose neighbor below.
+          neighborColumn = col;
+          neighborRow = row + 1;
+          if (neighborRow &gt;= ROWS)
+             neighborRow = 0;
+       }
+       default -> {    // Choose neighbor to the left.
+          neighborRow = row;
+          neighborColumn = col - 1;
+          if (neighborColumn &lt; 0)
+             neighborColumn = COLUMNS - 1;
+       }
    }
        
    /* Get the color components for position (row,col) */
@@ -1193,10 +1209,11 @@ public class RandomConvert {
         Mosaic.setUse3DEffect(false);
         Mosaic.open(ROWS, COLUMNS, SQUARE_SIZE, SQUARE_SIZE);
         fillWithRandomColors();
-        while (Mosaic.isOpen()) {
+        while ( <fx>true</fx><swing>Mosaic.isOpen()</swing> ) {
             int randomRow = (int)(ROWS * Math.random());
             int randomColumn = (int)(COLUMNS * Math.random());
             convertRandomNeighbor(randomRow, randomColumn);
+            Mosaic.delay(1);
         }
     }
 
@@ -1237,26 +1254,26 @@ public class RandomConvert {
 
         int directionNum = (int)(4*Math.random());
         switch (directionNum) {
-        case 0:    // Choose neighbor above.
-            row--;  // Move row number one row up.
-            if (row &lt; 0)  // row number is outside the mosaic.
-                row = ROWS - 1;  // Wrap around to bottom of the mosaic.
-            break;
-        case 1:    // Choose neighbor to the right.
-            col++;
-            if (col &gt;= COLUMNS)
-                col = 0;
-            break; 
-        case 2:    // Choose neighbor below.
-            row++;
-            if (row &gt;= ROWS)
-                row = 0;
-            break;
-        case 3:    // Choose neighbor to the left.
-            col--;
-            if (col &lt; 0)
-                col = COLUMNS - 1;
-            break; 
+            case 0 -> {    // Choose neighbor above.
+                row--;  // Move row number one row up.
+                if (row &lt; 0)  // row number is outside the mosaic.
+                    row = ROWS - 1;  // Wrap around to bottom of the mosaic.
+            }
+            case 1 -> {    // Choose neighbor to the right.
+                col++;
+                if (col >= COLUMNS)
+                    col = 0;
+            }
+            case 2 -> {    // Choose neighbor below.
+                row++;
+                if (row >= ROWS)
+                    row = 0;
+            }
+            case 3 -> {    // Choose neighbor to the left.
+                col--;
+                if (col &lt; 0)
+                    col = COLUMNS - 1;
+            }
         }
 
         /* Change the color of the neighbor to color of the original square. */
@@ -1264,7 +1281,7 @@ public class RandomConvert {
         Mosaic.setColor(row,col,red,green,blue);
     }
 
-}
+} // end class RandomConvert
 </prog></pre>
  </exercise-code>
  </exercise>
@@ -1532,9 +1549,10 @@ public class AdditionQuizNoGlobals {
     
     /**
      * Asks the user each of the ten quiz questions and gets the user's answers.
-     * The answers are stored in an array, which is created in this subroutine.
      * The first two parameters hold the operands for the quiz questions.  The user's
-     * answers to the ten problems will be stored in the third array.
+     * answers to the ten problems will be stored in the third array.  All arrays
+     * exist before this subroutine is called, and the first two arrays have
+     * already been filled with values.
      */
     private static void administerQuiz(int[] firstNumbers, int[] secondNumbers, int[] userAnswers) {
         for (int i = 0; i &lt; 10; i++) {

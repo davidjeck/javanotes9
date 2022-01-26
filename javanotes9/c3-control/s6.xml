@@ -42,8 +42,9 @@ or
 
 <np>The case label is followed by <code>-&gt;</code>, that is by a symbol made up
 of a hyphen and a greater-than character, and then by a single statement.
-The statement can, as usual, be a block statement, containing several 
-nested statements.  A switch statement can also, optionally, have one jump point labeled with <code>default</code>
+The statement can be a subroutine call statement, a <code>throw</code> statement,
+or a block statement, containing several nested statements.
+A switch statement can also, optionally, have one jump point labeled with <code>default</code>
 instead of which a case label.  The syntax for the statement can be specified as follows,
 noting that there can be at most one <code>default</code> case and that all the constants
 in the case label must be different:</np>
@@ -319,7 +320,7 @@ in the previous subsection.</p>
 instead of a <code>switch</code> statement.  Like any
 expression, a <code>switch</code> expression computes and returns a single value.
 The syntax is similar to a <code>switch</code> statement, but instead of a statement
-in each <code>case</code>, there is an expression.  For example,</p>
+in each <code>case</code>, there is an expression (or a <code>throw</code> statement).  For example,</p>
 
 <pre>String computerMove = switch ( (int)(3*Math.random()) ) {
         case 1 -> "Rock";
@@ -333,8 +334,8 @@ expression.  The semicolon on the last line is the semicolon that is required
 at the end of the assignment statement; it is not part of the <code>switch</code>
 expression.</np>
 
-<p>A <code>switch</code> expression must always compute a value and therefore
-will almost always have a <code>default</code> case.
+<p>A <code>switch</code> expression must always compute a value (or throw an exception) and therefore
+will usually have a <code>default</code> case.
 The expression in a <code>case</code>
 can be replaced by a block containing several statements; the value for that <code>case</code>
 should then be specified by a <code>yield</code> statement, which takes a form
@@ -372,12 +373,13 @@ has the form:</p>
 } // end of switch statement</pre>
 
 
-<np>Note that only one constant is allowed in a case label, and that a case label
-can be followed by any number of statements.  This traditional syntax uses a colon
-after each case label, rather than <code>-&gt;</code>.  The <code>defaule</code> case
-at the end is optional.</np>
+<np>Note that in the traditional syntax, only one constant is allowed in a case label
+(but Java&nbsp;17 allows a comma-separated list of constants here). 
+A case label can be followed by any number of statements.  This traditional syntax uses a colon
+after each case label, rather than <code>-&gt;</code>.  The <code>default</code> case
+is optional.</np>
   
-<p>To execute this <code>switch</code> statemetn, the computer will evaluate
+<p>To execute this <code>switch</code> statement, the computer will evaluate
 the <bnf>expression</bnf> and jump to the case label that contains that constant, 
 if there is one, or to the default case if not.
 The <code>break</code> statements in this <code>switch</code> are not actually
@@ -393,7 +395,7 @@ it is a common source of bugs. However, it is legal and is even occasionally use
 (including the <code>break</code>). You then have two case labels in a row,
 containing two different constants. This just means that the computer will jump
 to the same place and perform the same action for each of the two
-constants.  It is not possible to combine the two case labels into a single label.</p>
+constants.</p>
 
 <p>Here is how our first example <code>switch</code> statement would
 be written using the traditional syntax:</p>

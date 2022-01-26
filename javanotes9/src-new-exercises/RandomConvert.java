@@ -69,26 +69,26 @@ public class RandomConvert {
 
         int directionNum = (int)(4*Math.random());
         switch (directionNum) {
-        case 0:    // Choose neighbor above.
-            row--;  // Move row number one row up.
-            if (row < 0)  // row number is outside the mosaic.
-                row = ROWS - 1;  // Wrap around to bottom of the mosaic.
-            break;
-        case 1:    // Choose neighbor to the right.
-            col++;
-            if (col >= COLUMNS)
-                col = 0;
-            break; 
-        case 2:    // Choose neighbor below.
-            row++;
-            if (row >= ROWS)
-                row = 0;
-            break;
-        case 3:    // Choose neighbor to the left.
-            col--;
-            if (col < 0)
-                col = COLUMNS - 1;
-            break; 
+	        case 0 -> {    // Choose neighbor above.
+	            row--;  // Move row number one row up.
+	            if (row < 0)  // row number is outside the mosaic.
+	                row = ROWS - 1;  // Wrap around to bottom of the mosaic.
+	        }
+	        case 1 -> {    // Choose neighbor to the right.
+	            col++;
+	            if (col >= COLUMNS)
+	                col = 0;
+	        }
+	        case 2 -> {    // Choose neighbor below.
+	            row++;
+	            if (row >= ROWS)
+	                row = 0;
+	        }
+	        case 3 -> {    // Choose neighbor to the left.
+	            col--;
+	            if (col < 0)
+	                col = COLUMNS - 1;
+	        }
         }
 
         /* Change the color of the neighbor to color of the original square. */
