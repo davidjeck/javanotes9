@@ -50,7 +50,7 @@ for each of the methods specified by the interface. Here is an example of a
 very simple Java <code>interface</code>:</p>
 
 <pre>public interface Strokeable {
-   public void stroke(GraphicsContext g);
+   public void stroke(Graphics<fx>Context</fx> g);
 }</pre>
 
 <np>This looks much like a class definition, except that the implementation of
@@ -60,7 +60,7 @@ the <code>stroke()</code> method is omitted. A class that implements the
 example,</np>
 
 <pre>public class Line implements Strokeable {
-    public void stroke(GraphicsContext g) {
+    public void stroke(Graphics<fx>Context</fx> g) {
         . . . // do something&mdash;presumably, draw a line
     }
     . . . // other methods, variables, and constructors
@@ -96,7 +96,7 @@ interface.  You can compare the <classname>Strokeable</classname>
 interface with the abstract class</p>
 
 <pre>public abstract class AbstractStrokeable {
-   public abstract void stroke(GraphicsContext g);
+   public abstract void stroke(Graphics<fx>Context</fx> g);
 }</pre>
 
 <np>The main difference is that a class that extends <classname>AbstractStrokeable</classname>
@@ -140,7 +140,7 @@ is an interface that defines a method <code>fill(g)</code>, then we could define
 
 <np>A concrete class that implements <classname>Drawable</classname> must then
 provide implementations for the <code>stroke()</code> method from 
-<classname>Strokeable</classname> and the <code>draw()</code> method from
+<classname>Strokeable</classname> and the <code>fill()</code> method from
 <classname>Fillable</classname>, as well as for any abstract methods specified
 directly in the <classname>Drawable</classname> interface.</np>
 
@@ -150,6 +150,19 @@ name must match the name of the <code>interface</code>.  For example,
 <code>Strokeable.java</code>.  Just like a <code>class</code>, an
 <code>interface</code> can be in a package and can <code>import</code>
 things from other packages.</p>
+
+<p>This discussion has been about the syntax rules for <code>interfaces</code>.
+But of course, an <code>interface</code> also has a semantic component.  That is,
+the person who creates the <code>interface</code> intends for the methods that
+it defines to have some specific meaning.  The <code>interface</code> definition
+should include comments to express that meaning, and classes that implement the
+<code>interface</code> should take that meaning into account.  The Java compiler,
+however, can only check the syntax; it can't enforce the meaning.  For example,
+the <code>stroke()</code> method in an object that implements <classname>Strokeable</classname>
+is presumably meant to draw a graphical representation of the object by
+stroking it<swing> (that is, by dragging a pen along its outline)</swing>,
+but the compiler can only check that the <code>stroke()</code> method exists
+in the object.</p>
 
 </subsection>
 
@@ -166,7 +179,7 @@ still cannot define instance variables.  Default methods can call abstract metho
 are defined in the same interface, but they cannot refer to any instance variables.</p>
 
 <p>Note that a functional interface can include default methods in addition to
-the single abstract method that it specified.</p>
+the single abstract method that it specifies.</p>
 
 <p>A default method in an interface must be marked with the modifier <code>default</code>.
 It can optionally be marked <code>public</code> but, as for everything else in interfaces,

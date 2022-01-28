@@ -126,13 +126,15 @@ modifications to the superclass. <code>super</code> doesn't know about any of th
 additions and modifications; it can only be used to refer to methods and
 variables in the superclass.</p>
 
-<p>Let's say that the class that you are writing contains an instance method
-named <code>doSomething()</code>. Consider the subroutine call statement
-<code>super.doSomething()</code>. Now, <code>super</code> doesn't know anything about
-the <code>doSomething()</code> method in the subclass. It only knows about things
-in the superclass, so it tries to execute a method named <code>doSomething()</code>
-from the superclass. If there is none&mdash;if the <code>doSomething()</code> method
-was an addition rather than a modification&mdash;you'll get a syntax error.</p>
+<p>Let's say that you use a method call 
+<code>super.doSomething()</code> in a class that you are writing.
+Now, <code>super</code> doesn't know anything about
+any <code>doSomething()</code> method in the same class. It only knows about things
+in the superclass of that class, so <code>super.doSomething()</code> represents
+an attempt to execute a method named <code>doSomething()</code>
+from the superclass. If there is no such method in the superclass, you'll get a syntax
+error&mdash;even if there is a <code>doSomething()</code> method
+in the class that you are writing.</p>
 
 <p>The reason <code>super</code> exists is so you can get access to things in the
 superclass that are <b>hidden</b> by things in the subclass. For example,

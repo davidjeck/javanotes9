@@ -94,7 +94,7 @@ dice = new PairOfDice();  // Construct a new object and store a
 memory for the object, initializes the object's instance variables, and then
 returns a reference to the object. This reference is the value of the
 expression, and that value is stored by the assignment statement in the
-variable, <code>dice</code>, so that after the assignment statement is
+variable, <code>dice</code>. So, after the assignment statement is
 executed, <code>dice</code> refers to the newly created object.
 Part of this expression, "<code>PairOfDice()</code>",
 looks like a subroutine call, and that is no accident. It is, in fact, a call
@@ -487,7 +487,7 @@ harder. If an object has been used for a while, there might be several
 references to the object stored in several variables. The object doesn't become
 garbage until all those references have been dropped.</p>
 
-<p>In many other programming languages, it's the programmer's responsibility to
+<p>In some other programming languages, it's the programmer's responsibility to
 delete the garbage. Unfortunately, keeping track of memory usage is very
 error-prone, and many serious program bugs are caused by such errors. A
 programmer might accidently delete an object even though there are still

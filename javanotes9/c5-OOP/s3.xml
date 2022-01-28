@@ -106,25 +106,27 @@ object, you might not agree that it is actually easier.)  An object of
 type <code>Random</code> can also be used to generate so-called
 Gaussian distributed random real numbers.</np>
 
-<p>Many of Java's standard classes are used in GUI programming. You will encounter
-many of them in the <localref href="GUI1"/>.  Here, I will mention only
+<p>Some of Java's standard classes are used in GUI programming. You will encounter
+many of them in <localref href="GUI1"/>.  Here, I will mention only
 the class <classname>Color</classname>,
-from the package <code>javafx.scene.paint</code>, so that I can use it in the next example.
-A <classname>Color</classname> object represents a 
+from the package <swing><code>java.awt</code></swing><fx><code>javafx.scene.paint</code></fx>,
+so that I can use it in the next example. A <classname>Color</classname> object represents a 
 color that can be used for drawing.  In <localref href="control.8"/>, you encountered
 color constants such as <code>Color.RED</code>.  These constants are final static member
 variables in the <classname>Color</classname> class, and their values are objects of type
 <classname>Color</classname>.  It is also possible to create new color objects.  Class
-<classname>Color</classname> has several constructors.  One of them, which is called
-as <code>new&nbsp;Color(r,g,b)</code>, takes three <ptype>double</ptype> parameters to specify the
-red, green, and blue components of the color.  The parameters must be in the range 0.0
-to 1.0.  For example, a value of 0.0 for <i>r</i> means that
-the color contains no red, while a value of 1.0 means that the color contains the maximum
-possible amount of red. Another constructor, <code>new&nbsp;Color(r,g,b,t)</code>, adds a fourth
-<ptype>double</ptype> parameter, which must also be in the range 0.0 to 1.0.  The fourth parameter
-determines how transparent or opaque the color is.  When you draw with a partially transparent
+<classname>Color</classname> has a constructor
+<code>new&nbsp;Color(r,g,b,a)</code>, which takes four <fx><ptype>double</ptype></fx><swing><ptype>int</ptype></swing> 
+parameters to specify the
+red, green, and blue components of the color, plus an "alpha" component that says how transparent the color is.  
+The parameters must be in the range 0<fx>.0</fx>
+to <fx>1.0</fx><swing>255</swing>.  For example, a value of 0<fx>.0</fx> for <i>r</i> means that
+the color contains no red, while a value of <fx>1.0</fx><swing>255</swing> means that the color contains the maximum
+possible amount of red.  When you draw with a partially transparent
 color, the background shows through the color to some extent.  A larger value of
-the parameter <code>t</code> gives a color that is less transparent and more opaque.</p>
+the fourth parameter gives a color that is less transparent and more opaque.<swing> There are
+a few other color constructors, including one that omits the alpha component and produces fully
+opaque colors.</swing></p>
 
 <p>A <classname>Color</classname> object has only a few instance methods that you
 are likely to use.  Mainly, there are functions like <code>getRed()</code> to
@@ -133,7 +135,7 @@ to change the color components.  In fact, a <classname>Color</classname> is
 an <newword>immutable</newword> object, meaning that all of its instance variables
 are <code>final</code> and cannot be changed after the object is created.
 <classname>Strings</classname> are another example of immutable objects, and we
-will make some of our own later in this section.</p>
+will make some of our own later in this chapter.</p>
    
 <p>The main point of all this, again, is that many problems have already been solved,
 and the solutions are available in Java's standard classes. If you are faced
@@ -225,8 +227,10 @@ the constructor's parameters specify the location and size for
 the circle, but the constructor makes up a color using random values for the red, green,
 and blue components.  Here's the complete class:</np>
 
-<pre>import javafx.scene.paint.Color;
-import javafx.scene.canvas.GraphicsContext;
+<pre><fx>import javafx.scene.paint.Color;
+import javafx.scene.canvas.GraphicsContext;</fx><swing>
+import java.awt.Color;
+import java.awt.Graphics;</swing>
 
 /**
  * A simple class that holds the size, color, and location of a colored disk,
@@ -250,25 +254,28 @@ public class CircleInfo {
         x = centerX;
         y = centerY;
         radius = rad;
-        double red = Math.random();
+        <swing>int red = (int)(256*Math.random());
+        int green = (int)(256*Math.random());
+        int blue = (int)(256*Math.random());
+        color = new Color(red,green,blue,100);</swing><fx>double red = Math.random();
         double green = Math.random();
         double blue = Math.random();
-        color = new Color( red,green,blue, 0.4 );
+        color = new Color( red,green,blue, 0.4 );</fx>
     }
     
     /**
      * Draw the disk in graphics context g, with a black outline.
      */
-    public void draw( GraphicsContext g ) {
-        g.setFill( color );
+    public void draw( Graphics<fx>Context</fx> g ) {
+        g.set<swing>Color</swing><fx>Fill</fx>( color );
         g.fillOval( x - radius, y - radius, 2*radius, 2*radius );
-        g.setStroke( Color.BLACK );
-        g.strokeOval( x - radius, y - radius, 2*radius, 2*radius );
+        g.set<swing>Color</swing><fx>Stroke</fx>( Color.BLACK );
+        g.<swing>draw</swing><fx>stroke</fx>Oval( x - radius, y - radius, 2*radius, 2*radius );
     }
 }</pre>
 
 <np>It would probably be better style to write getters and setters for the
-instance variables, but to keep things simple, I made them public.</np>
+instance variables, but to keep things simple, I made the variables public.</np>
 
 <p>The main program for my animation is a class <classname>GrowingCircleAnimation</classname>.
 The program uses 100 disks, each one represented by an object of type
@@ -319,7 +326,7 @@ of <code>circleData[i].radius++</code> is to increase the radius of the circle b
 The second line of code is similar, but in that statement, <code>circleData[i].draw</code>
 is an instance method in the <classname>CircleInfo</classname> object.  The statement
 <code>circleData[i].draw(g)</code> calls that instance method with a parameter&nbsp;<code>g</code>
-that represents the <classname>GraphicsContext</classname> that is being used for drawing.</np>
+that represents the graphics context that is being used for drawing.</np>
 
 <p>The source code example <sourceref href="GrowingCircleAnimation.java"/> contains the
 full source code for the program, if you are interested.  Since the program uses
@@ -422,7 +429,8 @@ This is your starting point. Further analysis might uncover the need for more
 classes and methods, and it might reveal that subclassing can be used to take
 advantage of similarities among classes.</p>
 
-<p>This is perhaps a bit simple-minded, but the idea is clear and the general
+<p>This is perhaps a bit simple-minded. (This is not a software engineering textbook.)
+But the idea is clear and the general
 approach can be effective: Analyze the problem to discover the concepts that
 are involved, and create classes to represent those concepts. The design should
 arise from the problem itself, and you should end up with a program whose

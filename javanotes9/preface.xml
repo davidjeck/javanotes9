@@ -62,7 +62,9 @@ to cover some more advanced features.</p>
 <p>Java currently has two major approaches to Graphical User Interface programming:
 JavaFX and Swing.  This edition of the textbook uses <fx>JavaFX</fx><swing>Swing</swing>,
 but there is an alternative edition that uses <fx>Swing</fx><swing>JavaFX</swing>.
-The main differences are in Chapters&nbsp;6 and&nbsp;13, which are devoted to GUI programming.</p>
+The main differences are in Chapters&nbsp;6 and&nbsp;13, which are devoted to GUI programming.
+For the Swing edition, those two chapters are taken from Version&nbsp;7 of this textbook,
+with some updating and modification.</p>
 
 <p>Swing is a standard part of Java.  JavaFX was introduced as a more modern approach to
 GUI programming, but it must be downloaded and installed separately from Java itself,
@@ -81,10 +83,15 @@ Swing both offer good support for all of those purposes.</p>
 
 <p>Version 8 of this textbook originally covered Java&nbsp;8, but minor updates of that
 version added notes about new features in Java&nbsp;9 through Java&nbsp;16.  Version&nbsp;9 of
-the book covers Java&nbsp;17, but the differences between Version&nbsp;9 and the final update
-of Version&nbsp;8 are not large.</p>
+the book covers Java&nbsp;17.  The main change from Version&nbsp;8 is the addition of the
+Swing edition.  A&nbsp;section on records has
+been added to Chapter&nbsp;7. Many examples have been modified to use text blocks and
+the new <code>switch</code> statement syntax.  Some&nbsp;references to the general idea of
+"abstraction" have been added, such as a short subsection on control abstraction in
+Section&nbsp;3.1. A&nbsp;short subsection on final classes and methods has been added
+to Section&nbsp;5.5.  There are also small corrections and modifications throughout.</p>
 
-<p>The large majority of this textbook is valid for Java&nbsp;8, and the book does not
+<p>The majority of this textbook is valid for Java&nbsp;8, and the book does not
 cover features added after Java&nbsp;8 in as much detail.  
 Note that only Java 8, 11, and&nbsp;17 are "long-term support"
 releases.  When I introduce a feature
@@ -116,9 +123,9 @@ at the following Web addresses:</p>
 <li>Eighth edition: <a href=
 "http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 8, plus a bit of 11 and 17.)</li>
 <li>Ninth edition with JavaFX: <a href=
-"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes9/</a> (Covers Java 17.)</li>
+"http://math.hws.edu/eck/cs124/javanotes9/">http://math.hws.edu/eck/cs124/javanotes9/</a> (Covers Java 17.)</li>
 <li>Ninth edition with Swing: <a href=
-"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes9-swing/</a> (Covers Java 17.)</li>
+"http://math.hws.edu/eck/cs124/javanotes9-swing/">http://math.hws.edu/eck/cs124/javanotes9-swing/</a> (Covers Java 17.)</li>
 </ul>
    
 
@@ -170,8 +177,12 @@ The scripts work on Linux and on MacOS.
 <p><b>I have made the complete source files available for download at
 the following address:</b></p>
 
+<fxdiv>
 <p align="center"><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip</a></p>
-
+</fxdiv>
+<swingdiv>
+<p align="center"><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-full-source.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-full-source.zip</a></p>
+</swingdiv>
 
 <p>These files were not originally meant for publication, and therefore are not very
 cleanly written.  Furthermore, it requires a fair amount of expertise to use them.

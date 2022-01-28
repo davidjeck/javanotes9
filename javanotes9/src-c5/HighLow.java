@@ -2,7 +2,7 @@ import textio.TextIO;
 
 /**
  * This program lets the user play HighLow, a simple card game 
- * that is described in the output statements at the beginning of 
+ * that is described in the output statement at the beginning of 
  * the main() routine.  After the user plays several games, 
  * the user's average score is reported.
  */
@@ -11,13 +11,14 @@ public class HighLow {
 
 	public static void main(String[] args) {
 
-		System.out.println("This program lets you play the simple card game,");
-		System.out.println("HighLow.  A card is dealt from a deck of cards.");
-		System.out.println("You have to predict whether the next card will be");
-		System.out.println("higher or lower.  Your score in the game is the");
-		System.out.println("number of correct predictions you make before");
-		System.out.println("you guess wrong.");
-		System.out.println();
+		System.out.println("""
+				This program lets you play the simple card game,
+				HighLow.  A card is dealt from a deck of cards.
+				You have to predict whether the next card will be
+				higher or lower.  Your score in the game is the
+				number of correct predictions you make before
+				you guess wrong.
+				""");
 
 		int gamesPlayed = 0;     // Number of games user has played.
 		int sumOfScores = 0;     // The sum of all the scores from 

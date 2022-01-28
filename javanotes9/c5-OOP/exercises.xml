@@ -1409,7 +1409,7 @@ so that it uses the following class to represent addition questions:</p>
 
 }</prog></pre>
 </exercise-question>
-<exercise-discuss><p>The original program used two array of type <ptype>int[]</ptype>
+<exercise-discuss><p>The original program used two arrays of type <ptype>int[]</ptype>
 to represent the addition questions.  One array held the first number from each of
 the ten problems, while the other array held the second number.  This representation is
 an example of <newword>parallel arrays</newword>: The data for a single question is split
@@ -1431,7 +1431,7 @@ and correct answer for a problem, we can just call <code>questions[i].getQuestio
 and <code>questions[i].getCorrectAnswer()</code>.  In fact, we can't get the question
 any other way, since the two instance variables in
 an <classname>ArithmeticQuestion</classname> are <code>private</code>.
-One downside of this is that I couln't format the output from <code>gradeQuis()</code>
+One downside of this is that I couln't format the output from <code>gradeQuiz()</code>
 as neatly as in the first version.</p>
 <p>All-in-all, it is fairly straightforward to translate the
 old version of the program into the new version. You can read my solution below.</p>
@@ -1527,7 +1527,7 @@ public class AdditionQuizWithObjects {
 </exercise-code>
 </exercise>
 
-<exercise>
+<exercise id="OOP.ex.7">
 <exercise-question><p>Rewrite the program from the <localref href="OOP.ex.6">previous exercise</localref>
 so that it administers a quiz with several different kinds of questions.
 In the previous exercise, you used
@@ -1623,10 +1623,13 @@ a class to represent such questions:</p>
         else
             questions[i] = new SubtractionQuestion();
     }
-    questions[7] = new GeneralQuestion("How many states are there in the United States?",50);
-    questions[8] = new GeneralQuestion("In what year did the First World War begin?",1914);
-    questions[9] = new GeneralQuestion("What is the answer to the ultimate question " +
-                                "of life, the universe, and everything?",42);
+    questions[7] = new GeneralQuestion(
+                         "How many states are there in the United States?", 50 );
+    questions[8] = new GeneralQuestion(
+                         "In what year did the First World War begin?", 1914 );
+    questions[9] = new GeneralQuestion(
+                          "What is the answer to the ultimate question " +
+                                "of life, the universe, and everything?", 42 );
 }</pre>
 <p>Aside from the declaration of the array <code>questions</code> 
 and the routine for creating the quiz, everything else in the program can be exactly as

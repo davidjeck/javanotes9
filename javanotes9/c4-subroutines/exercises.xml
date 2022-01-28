@@ -1003,26 +1003,26 @@ public class RandomBrighten {
       int directionNum; // Randomly set to 0, 1, 2, or 3 to choose direction.
       directionNum = (int)(4*Math.random());
       switch (directionNum) {
-      case 0:  // move up 
-         currentRow--;
-         if (currentRow &lt; 0)
-            currentRow = ROWS - 1;
-         break;
-      case 1:  // move right
-         currentColumn++;
-         if (currentColumn &gt;= COLUMNS)
-            currentColumn = 0;
-         break; 
-      case 2:  // move down
-         currentRow ++;
-         if (currentRow &gt;= ROWS)
-            currentRow = 0;
-         break;
-      case 3:  // move left  
-         currentColumn--;
-         if (currentColumn &lt; 0)
-            currentColumn = COLUMNS - 1;
-         break; 
+          case 0 -> {  // move up 
+             currentRow--;
+             if (currentRow &lt; 0)
+                currentRow = ROWS - 1;
+          }
+          case 1 -> {  // move right
+             currentColumn++;
+             if (currentColumn &gt;= COLUMNS)
+                currentColumn = 0;
+          }
+          case 2 -> {  // move down
+             currentRow ++;
+             if (currentRow &gt;= ROWS)
+                currentRow = 0;
+          }
+          case 3 -> {  // move left  
+             currentColumn--;
+             if (currentColumn &lt; 0)
+                currentColumn = COLUMNS - 1;
+          }
       }
    }  // end randomMove
    

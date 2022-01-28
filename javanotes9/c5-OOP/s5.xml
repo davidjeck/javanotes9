@@ -345,21 +345,21 @@ System.out.println("Registration number:  "
                               + myVehicle.registrationNumber);
 if (myVehicle instanceof Car) {
    System.out.println("Type of vehicle:  Car");
-   Car c;
-   c = (Car)myVehicle;  // Type-cast to get access to numberOfDoors!
-   System.out.println("Number of doors:  " + c.numberOfDoors);
+   Car myCar;
+   myCar = (Car)myVehicle;  // Type-cast to get access to numberOfDoors!
+   System.out.println("Number of doors:  " + myCar.numberOfDoors);
 }
 else if (myVehicle instanceof Truck) {
    System.out.println("Type of vehicle:  Truck");
-   Truck t;
-   t = (Truck)myVehicle;  // Type-cast to get access to numberOfAxles!
-   System.out.println("Number of axles:  " + t.numberOfAxles);
+   Truck myTruck;
+   myTruck = (Truck)myVehicle;  // Type-cast to get access to numberOfAxles!
+   System.out.println("Number of axles:  " + myTruck.numberOfAxles);
 }
 else if (myVehicle instanceof Motorcycle) {
    System.out.println("Type of vehicle:  Motorcycle");
-   Motorcycle m;
-   m = (Motorcycle)myVehicle;  // Type-cast to get access to hasSidecar!
-   System.out.println("Has a sidecar:    " + m.hasSidecar);
+   Motorcycle myCycle;
+   myCycle = (Motorcycle)myVehicle;  // Type-cast to get access to hasSidecar!
+   System.out.println("Has a sidecar:    " + myCycle.hasSidecar);
 }</pre>
 
 <p>Note that for object types, when the computer executes a program, it checks
@@ -370,6 +370,22 @@ would be an error.  When this happens, an exception of type
 not compile time, because the actual type of the object referred to by <code>myVehicle</code>
 is not known when the program is compiled.  The code above avoids <classname>ClassCastExceptions</classname>
 by using <code>instanceof</code> to test the type of the variable before doing a type cast.</p>
+
+<break/>
+
+<p>In Java 17, the previous example can also be written using one of the more obscure new
+language features, known as <newword>pattern matching</newword> for <code>instanceof</code>.
+Pattern matching makes it possible to include declaration and initialization of a variable in
+an <code>instanceof</code> test.  For example,</p>
+
+<pre>if (myVehicle instanceof Car <newcode>myCar</newcode>) {
+    System.out.println("Type of vehicle: Car");
+    System.out.println(Number of doors: " + myCar.numberOfDoors);
+}</pre>
+
+<np>If the test succeeds, then the variable <code>myCar</code> is created and
+automatically assigned the value <code>(Car)myVehicle</code>. The scope of
+the variable is limited to the body of the <code>if</code> statement.</np>
 
 </subsection>
 
@@ -415,7 +431,8 @@ instance variable, and then redrawing the shape in its new color:</p>
 <p>Now, you might see a problem here with the method <code>redraw()</code>. The
 problem is that each different type of shape is drawn differently. The method
 <code>setColor()</code> can be called for any type of shape. How does the computer
-know which shape to draw when it executes the <code>redraw()</code>? Informally, we
+know which shape to draw when it executes the <code>redraw()</code>  command in
+the <code>setColor()</code> method? Informally, we
 can answer the question like this: The computer executes <code>redraw()</code> by
 asking the shape to redraw <b>itself</b>. Every shape object knows
 what it has to do to redraw itself.</p>
@@ -650,14 +667,17 @@ You might want to look at this file, even though you won't be able to
 understand all of it at this time. Even the definitions of the shape classes
 are somewhat different from those that I have described in this section. (For example,
 the <code>draw()</code> method has a parameter of type
-<classname>GraphicsContext</classname>. This parameter is required because drawing in 
+<fx><classname>GraphicsContext></classname></fx><swing><classname>Graphics</classname></swing>. 
+This parameter is required because all drawing in 
 Java requires a graphics context.) I'll return to similar examples in later chapters when you know more
 about GUI programming. However, it would still be worthwhile to look at the definition
 of the <classname>Shape</classname> class and its subclasses in the source code.
 You might also check how an array is used to hold the list of shapes.  Here is a scaled-down screenshot
 from the program:</p>
  
- <img src="shapedraw-screenshot.png" width="500" height="415" alt="screenshot from ShapeDraw, showing several shapes in its drawing area"
+ <img src="shapedraw-screenshot.png" width="500" height="415" 
+           alt="screenshot from ShapeDraw, showing several shapes in its drawing area"
+           swingwidth="498" swingheight="375"
            tex="shapedraw-screenshot.eps" texscale="0.5"/>
    
 <p>If you run the <code>ShapeDraw</code> program, 
@@ -681,6 +701,38 @@ is responsible for drawing itself. If I wanted to add a new type of shape to
 the program, I would define a new subclass of <classname>Shape</classname>, add another
 button, and program the button to add the correct type of shape
 to the screen. No other changes in the programming would be necessary.</p>
+
+</subsection>
+
+<subsection id="OOP.5.6" title="Final Methods and Classes">
+
+<p>We have seen how the <code>final</code> modifier applies to variables: It makes it impossible
+to assign a new value to the variable after it has been initialized.  (For a <code>final</code>
+instance variable, the initialization can take place in the constructors for the class that
+contains the variable.)  However, the <code>final</code> modifier can also be applied to
+classes and to method definitions.</p>
+
+<p>A <code>final</code> class cannot be used be used as a basis for making subclasses.  That is,
+if a class is defined as "<code>final class A&dots;</code>", then it is a syntax error to
+try to extend <classname>A</classname> with "class B extends A&dots;".</p>
+
+<p>If a method is declared <code>final</code> in a class, then it is not possible for a subclass
+to contain a method with the same signature.  That is, the method cannot be "overridden".
+This is true both for <code>static</code> methods and for instance methods.
+Note that in a <code>final</code> class, all methods are implicitly final since it is
+not even possible to make a subclass of that class.</p>
+
+<p>The idea is that a <code>final</code> class or method is in its final form&mdash;it cannot
+be modified or replaced by a subclass.  With <code>final</code>, it is possible to make a guarantee
+about the behavior of a method.  For example, suppose that a <classname>Rectangle</classname> class has
+an instance method <code>draw()</code> that draws a rectangle, and that <code>rect</code>
+is a variable of type <classname>Rectangle</classname>.  If <code>draw()</code> is a <code>final</code>
+method, then we are guaranteed that a call to <code>rect.draw()</code> will draw a rectangle.  But
+if <code>draw()</code> is <b>not</b> <code>final</code>, then it could draw anything, or nothing!
+The problem is that <code>rect</code> could actually refer to an object belonging to some subclass
+of <classname>Rectangle</classname>, and that subclass could define its own <code>draw()</code>
+method that overrides the <code>draw()</code> method from class <classname>Rectangle</classname>.
+Using <code>final</code> can make it easier to reason about the behavior of a program.</p>
 
 </subsection>
 

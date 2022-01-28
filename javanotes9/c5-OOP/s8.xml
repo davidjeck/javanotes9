@@ -163,7 +163,9 @@ variables in the <classname>PokerGame</classname> object. Each <code>PokerGame</
 its own <code>deck</code> and <code>pot</code> and <code>Players</code>. Players of that
 poker game use the deck and pot for that game; players of another poker game use
 the other game's deck and pot. That's the effect of making the <classname>Player</classname>
-class non-static. This is the most natural way for players to behave. A
+class non-static: it associates any <classname>Player</classname> object with some particular
+<classname>PokerGame</classname> object and gives it access to the instance variables for
+that particular game.  This is the most natural way for players to behave. A
 <classname>Player</classname> object represents a player of one particular poker game. If
 <classname>Player</classname> were an independent class or a <b>static</b> nested class, 
 on the other hand, it would represent the general idea of a poker player, independent of a
@@ -202,7 +204,7 @@ parameters for a constructor in the <bnf>superclass</bnf>.</p>
 is an interface defined as:</p>
 
 <pre>public interface Drawable {
-    public void draw(GraphicsContext g);
+    public void draw(Graphics<fx>Context</fx> g);
 }</pre>
 
 <np>Suppose
@@ -212,8 +214,8 @@ create the object, we can use an anonymous class to create the object in one
 statement:</np>
 
 <pre>Drawable redSquare = <newcode>new Drawable() {
-       public void draw(GraphicsContext g) {
-          g.setFill(Color.RED);
+       public void draw(Graphics<fx>Context</fx> g) {
+          g.set<fx>Fill</fx><swing>Color</swing>(Color.RED);
           g.fillRect(10,10,100,100);
        }
    }</newcode>;</pre>
@@ -227,7 +229,7 @@ statement.</np>
 <p>Anonymous classes are often used for actual parameters.  For example, consider the
 following simple method, which draws a <classname>Drawable</classname> in two different graphics contexts:</p>
 
-<pre>void drawTwice( GraphicsContext g1, GraphicsContext g2, Drawable figure ) {
+<pre>void drawTwice( Graphics<fx>Context</fx> g1, Graphics<fx>Context</fx> g2, Drawable figure ) {
     figure.draw(g1);
     figure.draw(g2);
 }</pre>
@@ -236,7 +238,7 @@ following simple method, which draws a <classname>Drawable</classname> in two di
 For example:</np>
 
 <pre>drawTwice( firstG, secondG, <newcode>new Drawable() {
-          void draw(GraphicsContext g) {
+          void draw(Graphics<fx>Context</fx> g) {
              g.fillOval(10,10,100,100);
           }
      }</newcode> );</pre>
@@ -262,9 +264,7 @@ The last example could then be written simply</p>
 
 <np>This approach has the advantage that it does <b>not</b> create an extra .class file.
 However, lambda expressions can only be used with functional interfaces, while anonymous
-classes can be used with any interface or class.  Before Java&nbsp;8, anonymous classes
-were often used for handling events in GUI programs.  With Java&nbsp;8 and JavaFX, they
-can be mostly replaced in that context by lambda expressions.</np>
+classes can be used with any interface or class.</np>
 
 </subsection>
    
@@ -311,25 +311,36 @@ are used in the definition of a local class.</p>
 
 <p>The same restriction on the use of local variables also applies to
 lambda expressions, which are very similar to anonymous classes.  Here
-is an example using the stream API and the <classname>Runnable</classname>
-interface, which are discussed in <localref href="subroutines.4a"/>.
-This subroutine will print out the numbers 1 to 10 in some indeterminate
-order (since it uses a parallel stream):</p>
+is an example using the stream API and the <classname>FunctionR2R</classname>
+functional interface from <localref href="subroutines.4a.2"/>, which defines the
+single method "<code>double&nbsp;valueAt(double&nbsp;x))</code>".
+This code segment creates an array of <classname>FunctionR2R</classname>
+objects, where <code>multpliers[i]</code> is a function that multiplies
+its parameter by&nbsp;i:</p>
 
-<pre>static void print1to10() {
-    ArrayList&lt;Runnable&gt; printers = new ArrayList&lt;&gt;();
-    for (int i = 1; i &lt;= 10; i++) {
-        int x = i;
-        printers.add( () -> System.out.println(x) );
-    }
-    printers.parallelStream().forEach( r -> r.run() );
+<pre>FunctionR2R[] multipliers = new FunctionR2R[100];
+for (int i = 0; i &lt; 100; i++) {
+   int n = i;
+   multipliers[i] =  z -> n * z;
 }</pre>
 
-<np>The local variable <code>x</code> is effectively final and therefore
+<np>The local variable <code>n</code> is effectively final and therefore
 can be used in the lambda expression.  On the other hand, it would have
 been illegal to use the variable <code>i</code> directly in the lambda
 expression, since <code>i</code> is not effectively final; its value
-is changed when <code>i++</code> is executed.</np>
+is changed when <code>i++</code> is executed.  Note also that this example
+could be written using an anonymous class instead of a lambda expression:</np>
+
+<pre>FunctionR2R[] multipliers = new FunctionR2R[100];
+for (int i = 0; i &lt; 100; i++) {
+   int n = i;
+   multipliers[i] =  new FunctionR2R() {
+       public double valueAt(double x) {
+          return n * x;
+       }
+   };
+}</pre>
+
 
 </subsection>
    

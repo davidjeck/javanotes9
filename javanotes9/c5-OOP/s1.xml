@@ -271,7 +271,7 @@ the student's name.</p>
 <p>It is possible for a variable like <code>std</code>, whose type is given by a
 class, to refer to no object at all. We say in this case that <code>std</code>
 holds a <newword>null pointer</newword> or <newword>null reference</newword>. The null pointer is
-written in Java as "<code>null</code>". You can store a null reference in the
+written in Java as: <code>null</code>. You can store a null reference in the
 variable <code>std</code> by saying</p>
 
 <pre>std = null;</pre>
@@ -285,7 +285,7 @@ you can test whether the value of <code>std</code> is null by testing</np>
 
 <p>If the value of a variable is <code>null</code>, then it is, of course, illegal
 to refer to instance variables or instance methods through that variable&mdash;since
-there <b>is</b> no object, and hence no instance variables to refer to!  For
+there <b>is no object</b>, and hence no instance variables to refer to!  For
 example, if the value of the variable <code>std</code> is <code>null</code>, then it
 would be illegal to refer to <code>std.test1</code>. If your program attempts to
 use a null pointer illegally in this way, the result is an error called a
@@ -359,8 +359,7 @@ variable. The variable just holds a pointer to the object."</np>
 you make a test "<code>if&nbsp;(std1&nbsp;==&nbsp;std2)</code>", you are testing whether the
 values stored in <code>std1</code> and <code>std2</code> are the same. But the values that you are comparing
 are references to objects; they are not objects. So, you are testing whether
-<code>std1</code> and <code>std2</code> refer to the same object, that is, whether they
-point to the same location in memory. This is fine, if it's what you want to do.
+<code>std1</code> and <code>std2</code> refer to the same object. This is fine, if it's what you want to do.
 But sometimes, what you want to check is whether the instance variables in the
 objects have the same values. To do that, you would need to ask whether 
 "<code>std1.test1 == std2.test1 &amp;&amp; std1.test2 == std2.test2 &amp;&amp;
