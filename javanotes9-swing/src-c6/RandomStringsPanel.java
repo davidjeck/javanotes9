@@ -71,22 +71,12 @@ public class RandomStringsPanel extends JPanel {
 
 			int fontNum = (int)(5*Math.random()) + 1;
 			switch (fontNum) {
-			case 1:
-				g.setFont(font1);
-				break;
-			case 2:
-				g.setFont(font2);
-				break;
-			case 3:
-				g.setFont(font3);
-				break;
-			case 4:
-				g.setFont(font4);
-				break;
-			case 5:
-				g.setFont(font5);
-				break;
-			} // end switch
+				case 1 -> g.setFont(font1);
+				case 2 -> g.setFont(font2);
+				case 3 -> g.setFont(font3);
+				case 4 -> g.setFont(font4);
+				case 5 -> g.setFont(font5);
+			}
 
 			// Set the color to a bright, saturated color, with random hue.
 

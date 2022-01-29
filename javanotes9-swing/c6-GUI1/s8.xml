@@ -6,7 +6,7 @@
 <p><start><big>W</big>e have already encountered</start> many of the basic
 aspects of GUI programming, but professional programs use many
 additional features.  We will cover some of the advanced features
-of Java GUI programming in <localref href="GUI2"/>, but in this
+of GUI programming with Swing in <localref href="GUI2"/>, but in this
 section we look briefly at a few more features that are
 essential for writing GUI programs.  I will discuss these features
 in the context of a
@@ -16,7 +16,7 @@ in the context of a
       tex="mosaic-draw.eps" texscale="0.6"/>
    
 <np>The source code for the program is in the file <sourceref href="MosaicDraw.java"/>.
-The program also requires <sourceref href="MosaicPanel.java"/> and 
+The program also requires <sourceref href="MosaicCanvas.java"/> and 
 <sourceref href="MosaicDrawController.java"/>.  You will want to try it out!</np>
 
 <p>As the user clicks-and-drags the
@@ -33,35 +33,35 @@ Using the default "Draw" tool, the mouse leaves a trail of single squares.  Usin
 There are also "Erase" tools, which let the user set squares back to their default
 black color.</p>
    
-<p>The drawing area of the program is a panel that belongs to the <classname>MosaicPanel</classname>
-class, a subclass of <classname>JPanel</classname> that is defined in <sourceref href="MosaicPanel.java"/>.
-<classname>MosaicPanel</classname> is a highly reusable class for representing mosaics of colored
+<p>The drawing area of the program is a panel that belongs to the <classname>MosaicCanvas</classname>
+class, a subclass of <classname>JPanel</classname> that is defined in <sourceref href="MosaicCanvas.java"/>.
+<classname>MosaicCanvas</classname> is a highly reusable class for representing mosaics of colored
 rectangles.  It was also used behind the scenes in the sample program in <localref href="subroutines.6.3"/>.
-The <classname>MosaicPanel</classname> class
+The <classname>MosaicCanvas</classname> class
 does not directly support drawing on the mosaic, but it does support setting
 the color of each individual square.  The MosaicDraw program installs a mouse listener on
-the panel; the mouse listener responds to mousePressed and mouseDragged events on the
-panel by setting the color of the square that contains the mouse.  This is a nice example of
+the MosaicCanvas; the mouse listener responds to mousePressed and mouseDragged events on the
+canvas by setting the color of the square that contains the mouse.  This is a nice example of
 applying a listener to an object to do something that was not programmed into the object
 itself.</p>
 
 <p>The file  <sourceref href="MosaicDraw.java"/> is a simple class that contains only the <code>main()</code>
 routine for the program.
 Most of the programming for MosaicDraw can be found in <sourceref href="MosaicDrawController.java"/>.
-(It might have gone into the <classname>MosaicPanel</classname> class, if I had not decided to
+(It might have gone into the <classname>MosaicCanvas</classname> class, if I had not decided to
 use that pre-existing class in unmodified form.)  It is the <classname>MosaicDrawController</classname>
-class that creates a <classname>MosaicPanel</classname> object and adds a mouse listener to
+class that creates a <classname>MosaicCanvas</classname> object and adds a mouse listener to
 it.  It also creates the menu bar that is shown at the top of the program, and it implements all
-the commands in the menu bar.  It has an instance method <code>getMosaicPanel()</code> that
-returns a reference to the mosaic panel that it has created, and it has another instance
+the commands in the menu bar.  It has an instance method <code>getMosaicCanvas()</code> that
+returns a reference to the MosaicCanvas that it has created, and it has another instance
 method <code>getMenuBar()</code> that returns a menu bar for the program.  These methods are
-used to obtain the panel and menu bar so that they can be added to the program's window.</p>
+used to obtain the canvas and menu bar so that they can be added to the program's window.</p>
    
 <p>I urge you to study MosaicDrawController.java and MosaicDraw.java.  I will not be discussing all aspects
 of the code here, but you should be able to understand it all after reading this section. As for
-MosaicPanel.java, it uses some techniques that you would not understand at this
-point, but I encourage you to at least read the comments in this file to learn about the API
-for mosaic panels.</p>
+MosaicCanvas.java, it uses some techniques that you would not understand at this
+point, but I encourage you to at least read the comments in that file to learn about the API
+for <classname>MosaicCanvas</classname>.</p>
    
 <subsection title="Menus and Menubars" id="GUI1.8.1">
    
@@ -133,7 +133,7 @@ Here is the basic code that is used (in somewhat modified form) to set up the in
 
 <pre>MosaicDrawController controller = new MosaicDrawController();
 
-MosaicPanel content = controller.getMosaicPanel();
+MosaicCanvas content = controller.getMosaicCanvas();
 window.setContentPane( content );  // Use panel from controller as content pane.
    
 JMenuBar menuBar = controller.getMenuBar();
@@ -185,21 +185,23 @@ redrawn with or without the grouting, depending on the state of the menu item.</
    
 <p>My program uses a single <classname>ActionListener</classname> to respond to
 all of the menu items in all the menus.  This is not a particularly good design, but it
-is easy to implement for a small program like this one.  The <code>actionPerformed()</code> method
+is easy to implement for a small program like this one, and it keeps all of the
+programming for responding to the menu items in the same place. The <code>actionPerformed()</code> method
 of the listener object uses the statement</p>
 
 <pre>String command = evt.getActionCommand();</pre>
    
 <np>to get the action command of the source of the event; this will be the text of
 the menu item.  The listener tests the value of <code>command</code> to determine
-which menu item was selected by the user.  If the menu item is a
+which menu item was selected by the user.</np>
+
+<p>In the case when the menu item is a
 <classname>JCheckBoxMenuItem</classname>, the listener must check the state of
-the menu item.  The menu item is the source of the event that is being processed.
-The listener can get its hands on the menu item object by
+the menu item.  The listener can get its hands on the menu item object by
 calling <code>evt.getSource()</code>.  Since the return value of <code>getSource()</code>
 is of type <classname>Object</classname>, the return value must be type-cast to
 the correct type.  Here, for example, is the code that handles the "Use Randomness"
-command:</np>
+command:</p>
       
 <pre>if (command.equals("Use Randomness")) {
         // Set the value of useRandomness depending on the menu item's state.
@@ -399,7 +401,7 @@ several new features of frames that I want to discuss:</p>
    public MosaicDraw() {
       super("Mosaic Draw");
       MosaicDrawController controller = new MosaicDrawController();
-      setContentPane( controller.getMosaicPanel() );
+      setContentPane( controller.getMosaicCanvas() );
       setJMenuBar( controller.getMenuBar() );
       pack();
       Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -489,8 +491,8 @@ You can accomplish the same thing programmatically by calling the instance metho
    
 <subsection title="Creating Jar Files" id="GUI1.8.4">
    
-<p>As the final topic for this chapter, we look again at jar files.  Recall
-that a jar file is a "java archive" that can contain a number of class files. When creating
+<p>As the final topic for this chapter, we look briefly at <newword>jar files</newword>.
+A&nbsp;jar file is a "java archive file" that can contain a number of class files and other resources. When creating
 a program that uses more than one class, it's usually a good idea to place all the classes that
 are required by the program into a jar file.  If that is done, then a user will only need that
 one file to run the program. In fact, it is possible to make a so-called <newword>executable
@@ -498,7 +500,7 @@ jar file</newword>.  A user can run an executable jar file in much the same way
 as any other application, usually by double-clicking the icon of the jar file.
 (The user's computer must have a correct version of Java installed, and the computer
 must be configured correctly for this to work.  The configuration is usually done automatically when
-Java is installed, at least on Windows and Mac OS.)</p>
+a JDK is installed.)</p>
    
 <p>The question, then, is how to create a jar file.  The answer depends on what
 programming environment you are using.  The two basic types of programming environment&mdash;command line
@@ -518,8 +520,7 @@ You have to enter the name of the class that contains the <code>main()</code> ro
 that will be run when the jar file is executed.  If you hit the "Browse" button next to
 the "Main class" box, you can select the class from a list of classes that contain
 <code>main()</code> routines.  Once you've selected the main class, you can
-click the "Finish" button to create the executable jar file.  (Note that newer versions of Eclipse
-also have an option for exporting an executable Jar file in fewer steps.)</p>
+click the "Finish" button to create the executable jar file.</p>
 
 <p>It is also possible to create jar files on the command line.  The Java Development Kit
 includes a command-line program named <code>jar</code> that can be used to create jar files.
@@ -536,7 +537,12 @@ file in the current directory.  This means that all the class files in the direc
 included in the jar file.  If you want to include only certain class files, you
 can name them individually, separated by spaces.  (Things get more complicated if your classes are not in the
 default package.  In that case, the class files must be in subdirectories of the
-directory in which you issue the <code>jar</code> command.  See <localref href="basics.6.6"/>.)</np>
+directory in which you issue the <code>jar</code> command.  See <localref href="basics.6.6"/>.)
+For example, making a jar file that includes <classname>TextIO</classname> might look 
+something like the following (for MacOS or Linux; for Windows, the "/" would
+be replaced by&nbsp;a&nbsp;'\'):</np>
+  
+<pre>jar  cf  *.class  textio/TextIO.class</pre>
    
 <p>Making an executable jar file on the command line is  more complicated.
 There has to be some way of specifying which class contains the <code>main()</code>

@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 /**
@@ -9,19 +10,31 @@ import javax.swing.*;
  * random colors on a background that is a random shade of gray.
  * A main() routine allows this class to be run as a program
  */
-public class RandomArt extends JPanel {
+public class RandomArtWithNestedClass extends JPanel {
+
+	/**
+	 * A RepaintAction object calls the repaint method of this panel each
+	 * time its actionPerformed() method is called.  An object of this
+	 * type is used as an action listener for a Timer that generates an
+	 * ActionEvent every four seconds.  The result is that the panel is
+	 * redrawn every four seconds.
+	 */
+	private class RepaintAction implements ActionListener {
+		public void actionPerformed(ActionEvent evt) {
+			repaint();  // Call the repaint() method in the panel class.
+		}
+	}
 
 	/**
 	 * The constructor creates a timer with a delay time of four seconds
-	 * (4000 milliseconds), and with a lambda expression of type
-	 * ActionListener that responds to an event by repainting this
-	 * panel.  It also starts the timer running.
+	 * (4000 milliseconds), and with a RepaintAction object as its
+	 * ActionListener.  It also starts the timer running.
 	 */
-	public RandomArt() {
-		Timer timer = new Timer(4000, e -> repaint() );
+	public RandomArtWithNestedClass() {
+		RepaintAction action = new RepaintAction();
+		Timer timer = new Timer(4000, action);
 		timer.start();
 	}
-
 	/**
 	 * The paintComponent() method fills the panel with a random shade of
 	 * gray and then draws one of three types of random "art".  The type
@@ -79,11 +92,11 @@ public class RandomArt extends JPanel {
 		}
 
 	} // end paintComponent()
-
 	
+
 	/**
 	 * main() routine makes it possible to run this class as a program.
-	 * It just opens a window that contains a RandomArt panel.
+	 * It just opens a window that contains a RandomArtWithNestedClass panel.
 	 */
 	public static void main(String[] args) {
 		JFrame window = new JFrame("Random Art ??");
@@ -95,5 +108,6 @@ public class RandomArt extends JPanel {
 		window.setVisible(true);
 	}
 
-} // end class RandomArt
+
+} // end class RandomArtWithNestedClass
 

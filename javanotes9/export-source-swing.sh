@@ -43,6 +43,11 @@ cp -r $SOURCE_DIR/$PROJECT_SWING/* $EXPORT_DIR/$PROJECT
 
 cd $EXPORT_DIR
 
+#Remove source folder src-extra, which contains duplicates of files from javanotes9 that are
+#also needed in javanotes9-swing
+
+rm -r $PROJECT/src-extra
+
 perl -i -p -e 's/\t/    /g' `find . -name "*.java"`
 perl -i -p -e 's/<!DOCTYPE.*javanotes9.dtd" *>//' `find . -name "*.xml" -and ! -name "javanotes9*"`
 

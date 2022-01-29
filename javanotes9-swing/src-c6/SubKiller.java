@@ -49,26 +49,25 @@ public class SubKiller extends JPanel {
 	/**
 	 * The constructor sets the background color of the panel, creates the
 	 * timer, and adds a KeyListener, FocusListener, and MouseListener to the
-	 * panel.  These listeners, as well as the ActionListener for the timer
-	 * are defined by anonymous inner classes.  The timer will run only
-	 * when the panel has the input focus.
+	 * panel.  These listeners are defined by anonymous inner classes.
+	 * The ActionListener for the Timer is defined by a lambda expression.
+	 * The timer will run only when the panel has the input focus; it it 
+	 * started and stopped in the FocusListener methods.
 	 */
 	public SubKiller() {
 
 		setBackground( new Color(0,200,0) ); 
 
-		ActionListener action = new ActionListener() {
-				// Defines the action taken each time the timer fires.
-			public void actionPerformed(ActionEvent evt) {
-				if (boat != null) {
-					boat.updateForNewFrame();
-					bomb.updateForNewFrame();
-					sub.updateForNewFrame();
+		timer = new Timer( 30,   // Timer fires every 30 milliseconds.
+				evt -> { // defines action to take when timer fires
+					if (boat != null) {
+						boat.updateForNewFrame();
+						bomb.updateForNewFrame();
+						sub.updateForNewFrame();
+					}
+					repaint();			
 				}
-				repaint();
-			}
-		};
-		timer = new Timer( 30, action );  // Fires every 30 milliseconds.
+			); 
 
 		addMouseListener( new MouseAdapter() {
 				// The mouse listener simply requests focus when the user

@@ -181,6 +181,10 @@ public class SimplePaint extends JPanel implements MouseListener, MouseMotionLis
 	 */
 	private void setUpDrawingGraphics() {
 		graphicsForDrawing = getGraphics();
+		Graphics2D g2 = (Graphics2D)graphicsForDrawing;  // for access to advanced features.
+		g2.setStroke( new BasicStroke(2) ); // draw lines that are two pixels wide.
+		g2.setRenderingHint(  // turn on antialiasting for smoother lines. 
+				RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		switch (currentColor) {
 		case BLACK:
 			graphicsForDrawing.setColor(Color.BLACK);

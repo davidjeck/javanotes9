@@ -37,9 +37,10 @@ public class HighLowGUI extends JPanel {
 	/**
 	 * The constructor lays out the panel.  A CardPanel occupies the CENTER 
 	 * position of the panel (where CardPanel is a subclass of JPanel that is 
-	 * defined below).  On the bottom is a panel that holds three buttons.  
-	 * The CardPanel listens for ActionEvents from the buttons and does all 
-	 * the real work of the program.
+	 * defined below).  On the bottom is a panel that holds three buttons.
+	 * Methods in the CardPanel are called in response to button clicks.
+	 * Event handling for the ActionEvents from the buttons is set up using
+	 * lambda expressions to define the ActionListeners.
 	 */
 	public HighLowGUI() {
 
@@ -47,7 +48,7 @@ public class HighLowGUI extends JPanel {
 
 		setLayout( new BorderLayout(3,3) );
 
-		CardPanel board = new CardPanel(); // Board will also act as ActionListener.
+		CardPanel board = new CardPanel();
 		add(board, BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel();
@@ -55,15 +56,18 @@ public class HighLowGUI extends JPanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 
 		JButton higher = new JButton( "Higher" );
-		higher.addActionListener(board);
+		higher.addActionListener( evt -> board.doHigher() );
+		   // Note: the action listener is a lambda expression that
+		   // calls the doHigher() method in the board object when
+		   // the user clicks the button.
 		buttonPanel.add(higher);
 
 		JButton lower = new JButton( "Lower" );
-		lower.addActionListener(board);
+		lower.addActionListener( evt -> board.doLower() );
 		buttonPanel.add(lower);
 
 		JButton newGame = new JButton( "New Game" );
-		newGame.addActionListener(board);
+		newGame.addActionListener( evt -> board.doNewGame() );
 		buttonPanel.add(newGame);
 
 		setBorder(BorderFactory.createLineBorder( new Color(130,50,40), 3) );
@@ -76,7 +80,7 @@ public class HighLowGUI extends JPanel {
 	 * A nested class that displays the cards and does all the work
 	 * of keeping track of the state and responding to user events.
 	 */
-	private class CardPanel extends JPanel implements ActionListener {
+	private class CardPanel extends JPanel {
 
 		Deck deck;       // A deck of cards to be used in the game.
 		Hand hand;       // The cards that have been dealt.
@@ -105,24 +109,9 @@ public class HighLowGUI extends JPanel {
 			doNewGame();
 		} // end constructor
 
-		/**
-		 * Respond when the user clicks on a button by calling the appropriate 
-		 * method.  Note that the buttons are created and listening is set
-		 * up in the constructor of the HighLowPanel class.
-		 */
-		public void actionPerformed(ActionEvent evt) {
-			String command = evt.getActionCommand();
-			if (command.equals("Higher"))
-				doHigher();
-			else if (command.equals("Lower"))
-				doLower();
-			else if (command.equals("New Game"))
-				doNewGame();
-		} // end actionPerformed()
-		
 
 		/**
-		 * Called by actionPerformed() when user clicks "Higher" button.
+		 * Called when the user clicks the "Higher" button.
 		 * Check the user's prediction.  Game ends if user guessed
 		 * wrong or if the user has made three correct predictions.
 		 */
@@ -158,7 +147,7 @@ public class HighLowGUI extends JPanel {
 		
 
 		/**
-		 * Called by actionPerformed() when user clicks "Lower" button.
+		 * Called when the user clicks the "Lower" button.
 		 * Check the user's prediction.  Game ends if user guessed
 		 * wrong or if the user has made three correct predictions.
 		 */
@@ -194,8 +183,8 @@ public class HighLowGUI extends JPanel {
 		
 
 		/**
-		 * Called by the constructor, and called by actionPerformed() if
-		 * the use clicks the "New Game" button.  Start a new game.
+		 * Called by the constructor, and called when
+		 * the user clicks the "New Game" button.  Starts a new game.
 		 */
 		void doNewGame() {
 			if (gameInProgress) {

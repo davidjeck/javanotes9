@@ -35,7 +35,7 @@ object must belong to a class that is declared to "<code>implement ActionListene
 and that class must define the <code>actionPerformed</code> method.  Then, if
 the object is set to listen for events from the timer, the code in the listener's
 <code>actionPerformed</code> method will be executed every time the timer generates
-an event.</np>
+an event. </np>
    
 <p>Since there is no point to having a timer without having a listener to respond to
 its events, the action listener for a timer is specified as a parameter in the
@@ -54,6 +54,15 @@ will be executed every time the timer emits an event.
 Note that a timer is not guaranteed 
 to deliver events at precisely regular intervals.  If the computer is busy
 with some other task, an event might be delayed or even dropped altogether.</np>
+
+<p>Note that, since <classname>ActionListener</classname> is a
+functional interface, the listener can be specified as a lambda expression.  In that
+case, the <classname>Timer</classname> constructor would have the form</p>
+
+<pre>timer = new Timer( millisDelay, <newcode>e -> ...</newcode> );</pre>
+
+<np>where the "&dots;" represents the statement or block that is executed each
+time the timer generates an event.</np>
    
 <p>A timer does not automatically start generating events when the timer object
 is created.  The <code>start()</code> method in the timer must be called to tell
@@ -87,29 +96,17 @@ starts like this:</p>
 import java.awt.event.*;
 import javax.swing.*;
 
-public class RandomArtPanel extends JPanel {
-   
-   /**
-    * A RepaintAction object calls the repaint method of this panel each
-    * time its actionPerformed() method is called.  An object of this
-    * type is used as an action listener for a Timer that generates an
-    * ActionEvent every four seconds.  The result is that the panel is
-    * redrawn every four seconds.
-    */
-   private class RepaintAction implements ActionListener {
-      public void actionPerformed(ActionEvent evt) {
-         repaint();  // Call the repaint() method in the panel class.
-      }
-   }
+public class RandomArt extends JPanel {
    
    /**
     * The constructor creates a timer with a delay time of four seconds
-    * (4000 milliseconds), and with a RepaintAction object as its
-    * ActionListener.  It also starts the timer running.
+    * (4000 milliseconds), and with a lambda expression of type
+    * ActionListener that responds to an event by repainting this
+    * panel.  It also starts the timer running.
     */
-   public RandomArtPanel() {
+   public RandomArt() {
       RepaintAction action = new RepaintAction();
-      Timer timer = new Timer(4000, action);
+      Timer timer = new Timer(4000, e -> repaint() );
       timer.start();
    }
    
@@ -124,21 +121,11 @@ public class RandomArtPanel extends JPanel {
        .</pre>
    
 <np>You can find the full source code for this class in the file <sourceref href="RandomArt.java"/>.
-I will only note that the very short <classname>RepaintAction</classname> class is a natural 
-candidate to be replaced by an anonymous inner class. That can be done where the timer is
-created:
-</np>
+An alternative version that uses a nested class to define the action listener, instead of
+a lambda expression, can be found in <sourceref href="RandomArtWithNestedClass.java"/>.</np>
 
-<pre>Timer timer = new timer(4000, new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-            repaint();
-        }
-    });
-</pre>
-   
-   
-<np>Later in this section, we will use a timer to drive the animation in a simple
-computer game.</np>
+<p>Later in this section, we will use a timer to drive the animation in a simple
+computer game.</p>
    
 </subsection>
    
@@ -266,9 +253,8 @@ part, this will not affect your programming, but you should not expect every
 <code>keyPressed</code> event to have a corresponding <code>keyReleased</code>
 event.</p>
 
-<p>Every key on the keyboard has an integer code number. (Actually, this is
-only true for keys that Java knows about. Many keyboards have extra keys that
-can't be used with Java.) When the <code>keyPressed</code> or <code>keyReleased</code>
+<p>Every key on the keyboard has an integer code number. 
+When the <code>keyPressed</code> or <code>keyReleased</code>
 method is called, the parameter, <code>evt</code>, contains the code of the key
 that was pressed or released. The code can be obtained by calling the function
 <code>evt.getKeyCode()</code>. Rather than asking you to memorize a table of code
@@ -361,8 +347,8 @@ public void focusLost(FocusEvent evt);</pre>
 
 <p>Furthermore, the <code>addFocusListener()</code> method must be used to set up a
 listener for the focus events. When a component gets the input focus, it calls
-the <code>focusGained()</code> method of any registered with 
-<classname>FocusListener</classname>. When it loses the focus, it calls
+the <code>focusGained()</code> method of any <classname>FocusListeners</classname> 
+that have been registered with the component. When it loses the focus, it calls
 the listener's <code>focusLost()</code> method.</p>
 
 <p>In the sample <code>KeyboardAndFocusDemo</code> program,  the response to
@@ -558,7 +544,8 @@ anyway. Any changes in the state will become visible to the user as soon as the
 next frame is drawn. At some point in the program, I have to make sure that the
 user does not move the boat off the screen. I could have done this in
 <code>keyPressed()</code>, but I choose to check for this in another routine, in
-the boat object.</np>
+the boat object, since it makes sense for the boat object to be responsible
+for keeping itself on screen.</np>
 
 <p>The program uses four listeners, to respond to
 action events from the timer, key events from the user, focus events, and
@@ -570,7 +557,8 @@ game begins.  The timer runs only when the panel has the input focus; this
 is programmed by having the focus listener start the timer when the panel
 gains the input focus and stop the timer when the panel loses the input focus.
 All four listeners are created in the constructor of the <classname>SubKillerPanel</classname>
-class using anonymous inner classes.  (See <localref href="GUI1.4.5"/>.)</p>
+class, one using a lambda expression and the others
+using anonymous inner classes.</p>
 
 <p>I encourage you to read the source code in <sourceref href="SubKiller.java"/>.
 Although a few points are tricky, you should  with some effort be able to read and

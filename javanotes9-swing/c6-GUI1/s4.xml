@@ -154,7 +154,7 @@ all three routines&mdash;<code>mousePressed</code>, <code>mouseReleased</code>, 
 should define <code>mousePressed</code> instead of <code>mouseClicked</code>. The
 <code>mouseEntered</code> and <code>mouseExited</code> methods are called when the
 mouse cursor enters or leaves the component. For example, if you want the
-component to change appearance whenever the user moves the mouse over the
+component to change appearance whenever the user moves the mouse into or out of the
 component, you could define these two methods.</p>
 
 <p>As a first example, we will look at a small addition to the <classname>RandomStringsPanel</classname>
@@ -269,9 +269,9 @@ import javax.swing.JFrame;
 /**
  * Displays a window that shows 25 copies of the string "Java!" in
  * random colors, fonts, and positions.  The content of the window
- * is an object of type RandomStringsPanel.  When the user clicks
+ * is an object of type RandomStringsPanel.  <newcode>When the user clicks
  * the window, the content of the window is repainted, with the 
- * strings in newly selected random colors, fonts, and positions.
+ * strings in newly selected random colors, fonts, and positions.</newcode>
  */
 public class ClickableRandomStrings {
     
@@ -335,22 +335,11 @@ button.   For events triggered by a mouse button,
 you can determine which button was pressed or released by calling
 <code>evt.getButton()</code>, which returns one of the integer constants
 <code>MouseEvent.BUTTON1</code>, <code>MouseEvent.BUTTON2</code>, or <code>MouseEvent.BUTTON3</code>
-for the left, middle, and right buttons.
+for the first, second, and third mouse buttons (usually, the left, middle, and right buttons).
+For computers that use a trackpad or single-button mouse, buttons might be emulated in
+some way, for example by tapping a trackpad with two fingers.
 For events such as mouseEntered and mouseExited that are not triggered by buttons,
 <code>evt.getButton()</code> returns <code>MouseEvent.NOBUTTON</code>.</p>
-
-<p>Now, not every mouse has a middle button and a right button, and Java deals with
-that fact in a somewhat peculiar way.  If the user clicks with the right mouse
-button, then <code>evt.isMetaDown()</code> will return true, even if the user
-was not holding down the Meta key.  Similarly, if the user clicks with the
-middle mouse button, then <code>evt.isAltDown()</code> will return true, even
-if the user is not holding down the Alt/Option key.  By using these functions,
-you can design an interface that will work even on computers that lack a middle
-or right mouse button.  Note that there is a subtle difference between these functions
-and <code>evt.getButton()</code>:  <code>evt.getButton()</code> really only applies
-to mousePressed, mouseReleased, and mouseClicked events, while <code>evt.isMetaDown()</code>
-and <code>evt.isAltDown()</code> are useful in any mouse event.  I will often 
-use them instead of <code>evt.getButton()</code>.</p>
 
 <p>As an example, consider a <classname>JPanel</classname> that does the
 following:  Clicking on the panel with the
@@ -375,10 +364,12 @@ listener for the program.  The constructor for the panel class contains the stat
 
 <pre>addMouseListener(this);</pre>
 
-<np>which is equivalent to saying <code>this.addMouseListener(this)</code>.  Now, the
+<np>which is equivalent to saying <code>this.addMouseListener(this)</code>, since
+<code>addMouseListener()</code> is an instance method in the <classname>JPanel</classname>
+object represented by <code>this</code>.  Now, the
 ordinary way to register a mouse listener is to say <code>X.addMouseListener(Y)</code>
 where <code>Y</code> is the listener and <code>X</code> is the component that will
-generate the mouse events.  In the statement <code>addMouseListener(this)</code>,
+generate the mouse events.  In the statement <code>this.addMouseListener(this)</code>,
 both roles are played by <code>this</code>; that is, "this object" (the panel) is
 generating mouse events and is also listening for those events.  Although this might
 seem a little strange, you should get used to seeing things like this.  In a large
@@ -455,7 +446,7 @@ public class SimpleStamper extends JPanel implements MouseListener {
       Graphics g = getGraphics(); // Graphics context for drawing directly.
                                   // <newcode>NOTE: This is considered to be bad style!</newcode>
       
-      if ( evt.isMetaDown() ) {
+      if ( evt.getButton() == MouseEvent.BUTTON3 ) {
              // User right-clicked at the point (x,y). Draw a blue oval centered 
              // at the point (x,y). (A black outline around the oval will make it 
              // more distinct when shapes overlap.)

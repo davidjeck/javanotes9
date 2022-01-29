@@ -14,8 +14,8 @@ A GUI program offers a much richer type of user interface, where the user uses a
 and keyboard to interact with GUI components such as windows, menus, buttons,
 check boxes, text input boxes, scroll bars, and so on.</p>
 
-<p>A GUI program still has a <code>main()</code> subroutine, but in general, that main
-routine just creates one or more GUI components and displays them
+<p>A GUI program still has a <code>main()</code> subroutine, but in general, the main
+routine in a Swing application generally just creates one or more GUI components and displays them
 on the computer screen. Once the GUI
 components have been created, they follow their <b>own</b> programming&mdash;programming
 that tells them how to draw themselves on the screen and how to respond to events
@@ -316,7 +316,7 @@ as an event listener.  This is done with the statement:</p>
 <pre>okButton.addActionListener(listener);</pre>
    
 <np>This statement tells <code>okButton</code> that when the user clicks the button, the
-ActionEvent that is generated should be sent to <code>listener</code>.  Without this statement,
+<classname>ActionEvent</classname> that is generated should be sent to <code>listener</code>.  Without this statement,
 the button has no way of knowing that there is something that would like to listen for events
 from the button.</np>
    
@@ -329,40 +329,25 @@ a very roundabout and complicated way to get things done, but as you gain experi
 with it, you will find that it is very flexible and that it goes together very well with
 object oriented programming.</p>
 
-<p>This section has introduced some of the fundamentals of GUI programming.  We will
+<p>Now, in fact, <classname>ActionListener</classname> is a functional interface, since it defines
+just one method, and it can be used to define lambda expressions (see <localref href="subroutines.4a"/>).
+This means that we could use a lambda expression as the event handler for an action event.
+In the sample program, we could eliminate the nested subclass <classname>ButtonHandler</classname>
+and the variable <code>listener</code> of type <classname>ButtonHandler</classname> and
+set up the event handling with the statement</p>
+
+<pre>okButton.addActionListener( e -> System.exit(0) );</pre>
+
+<np>The parameter <code>e</code> is required, even though its value is not used, 
+because the function defined by the <classname>ActionListener</classname> interface 
+requires a parameter.  See <sourceref href="HelloWorldGUI3.java"/> for a complete 
+program that uses this technique.  Unfortunately, lambda expressions cannot be
+used for all event handling in Swing, since most interfaces in Swing are not
+functional interfaces.</np>
+
+<p>This section has introduced some of the fundamentals of GUI programming with Swing.  We will
 spend the rest of the chapter exploring them in more detail.</p>
 
 </subsection>
 
-
-<subsection id="GUI1.1.4" title="Some Java GUI History">
-
-<p>The original GUI toolkit for Java was the AWT, the "Abstract Windowing Toolkit." It provided
-a common interface to the GUI components already built into various operating systems.  At the
-very beginning, it used a simpler event model that did not require listener objects, but that model
-was abandoned in favor of listeners very quickly in Java&nbsp;1.1.</p>
-
-<p>When Java was first introduced, one of the important applications was
-<newword>applets</newword>.  An applet is a GUI program that can run on a web page
-in a web browser.  Applets were covered in previous versions of this textbook,
-but they have become much less widely used and have been dropped from this
-seventh edition of the book.</p>
-
-<p>The <newcode>Swing</newcode> GUI toolkit was introduced in Java 1.2
-as an improved alternative to the AWT, with a larger variety of
-sophisticated components and a more logical structure.  Although Swing uses some aspects of
-the AWT, most of its components are written in Java rather than being based on operating system
-components.  Swing has been the standard toolkit for writing GUI programs in Java for over
-ten years, and it is the toolkit that I cover in this book.</p>
-
-<p>More recently, however, another GUI toolkit called <newword>JavaFX</newword> has been
-introduced.  It uses many of the same core ideas as Swing, including components, layout, and
-events, but uses a different structure for its applications and a different set of classes.
-With Java&nbsp;8, JavaFX becomes the preferred approach to writing GUI applications.
-However, I do not cover JavaFX in this book.  JavaFX is compatible with Swing and can use
-Swing components, and Swing will continue to be supported in Java.  (Indeed, the AWT is
-still supported!)  And as I've said, JavaFX is built on the same core ideas as Swing.</p>
-
-</subsection>
-   
 </section>

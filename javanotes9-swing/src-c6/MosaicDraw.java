@@ -28,7 +28,7 @@ public class MosaicDraw extends JFrame {
 	public MosaicDraw() {
 		super("Mosaic Draw");
 		MosaicDrawController controller = new MosaicDrawController();
-		setContentPane(controller.getMosaicPanel());
+		setContentPane(controller.getMosaicCanvas());
 		setJMenuBar(controller.getMenuBar());
 		pack();
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();

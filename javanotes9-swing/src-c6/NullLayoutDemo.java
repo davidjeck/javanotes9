@@ -5,7 +5,7 @@
  * of each component is called to set the size and position of the
  * component.
  *
- * It is assumed that the panel is 350 pixels wide and 240 pixels high!
+ * It is assumed that the panel is 520 pixels wide and 420 pixels high!
  * If you want to deal with other sizes, you should implement the
  * ComponentListener interface, and compute the sizes and positions of 
  * the components in terms of the actual width and height of the panel
@@ -35,7 +35,7 @@ public class NullLayoutDemo extends JPanel implements ActionListener {
 	//-------------------------------------------------------------------------
 
 	Checkerboard board;  // A checkerboard.  The Checkerboard class is 
-	//    nested inside the NullLayoutDemo class.
+						 //    nested inside the NullLayoutDemo class.
 
 	JButton resignButton;      // Two buttons.
 	JButton newGameButton;
@@ -48,7 +48,7 @@ public class NullLayoutDemo extends JPanel implements ActionListener {
 	/**
 	 * The constructor sets the layout manager for the panel to be null.
 	 * It adds four components to the panel and sets their bounds explicitly.
-	 * It is assumed that the panel has a fixed size of 350-by-240 pixels;
+	 * It is assumed that the panel has a fixed size of 520-by-420 pixels;
 	 * it sets the preferred size of the panel to be that size.
 	 */
 	public NullLayoutDemo() {
@@ -59,9 +59,9 @@ public class NullLayoutDemo extends JPanel implements ActionListener {
 
 		setBorder( BorderFactory.createEtchedBorder() ); 
 
-		setPreferredSize( new Dimension(350,240) );
+		setPreferredSize( new Dimension(520,420) );
 
-		/* Create the components and add them to the content pane.  If you
+		/* Create the components and add them to this panel.  If you
 			 don't add them to a container, they won't appear, even if
 			 you set their bounds! */
 
@@ -86,10 +86,10 @@ public class NullLayoutDemo extends JPanel implements ActionListener {
 		/* Set the position and size of each component by calling
 			 its setBounds() method. */
 
-		board.setBounds(20,20,164,164);
-		newGameButton.setBounds(210, 60, 120, 30);
-		resignButton.setBounds(210, 120, 120, 30);
-		message.setBounds(20, 200, 330, 30);
+		board.setBounds(20,20,324,324);
+		newGameButton.setBounds(370, 120, 120, 30);
+		resignButton.setBounds(370, 200, 120, 30);
+		message.setBounds(20, 370, 380, 30);
 
 	}
 
@@ -111,15 +111,15 @@ public class NullLayoutDemo extends JPanel implements ActionListener {
 
 
 	/**
-	 * This canvas displays a 160-by-160 checkerboard pattern with
+	 * This canvas displays a 320-by-320 checkerboard pattern with
 	 * a 2-pixel black border.  It is assumed that the size of the
-	 * board is set to exactly 164-by-164 pixels.  This size is 
-	 *  set as the preferred size of the board.
+	 * board is set to exactly 324-by-324 pixels.  This size is 
+	 * set as the preferred size of the board.
 	 */
 	private static class Checkerboard extends JPanel {
 
 		public Checkerboard() {
-			setPreferredSize( new Dimension(164, 164) );
+			setPreferredSize( new Dimension(324, 324) );
 		}
 
 		public void paintComponent(Graphics g) {
@@ -140,7 +140,7 @@ public class NullLayoutDemo extends JPanel implements ActionListener {
 						g.setColor(Color.LIGHT_GRAY);
 					else
 						g.setColor(Color.GRAY);
-					g.fillRect(2 + col*20, 2 + row*20, 20, 20);
+					g.fillRect(2 + col*40, 2 + row*40, 40, 40);
 				}
 			}
 		}

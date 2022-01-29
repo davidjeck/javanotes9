@@ -43,7 +43,7 @@ several programming examples that use components and layout.</p>
 
 <p>Every container has a default layout manager and has 
 an instance method, <code>setLayout()</code>, that takes
-a parameter of type <classname>LayoutManager</classname> and that is used to specify
+a parameter of type <classname>LayoutManager</classname>.  That method can be used to specify
 a different layout manager for the container.
 Components are added to a container by calling
 an instance method named <code>add()</code> in the container object.  There
@@ -337,7 +337,7 @@ the panel, and the components are added to the panel:</np>
 
    
 <pre>/* Create the display label, with properties to match the
-       values of the sliders and the setting of the combo box. */
+       values of the sliders and with a default BOLD font. */
 
 displayLabel = new JLabel("Hello World!", JLabel.CENTER);
 displayLabel.setOpaque(true);
@@ -452,7 +452,7 @@ of the panel is visible.</np>
 a <classname>JLabel</classname> displaying the text "<code>x&nbsp;=</code>"
 and a <classname>JTextField</classname>.  A grid layout can only
 have one component in each position.  In this case, the component in the first row
-is a <classname>JPanel</classname>, a subpanel that is nested inside
+is a <classname>JPanel</classname>; it is a subpanel that is nested inside
 the main panel.  This subpanel in turn contains the label and text
 field.  This can be programmed as follows:</p>
    
@@ -558,16 +558,17 @@ you should not interfere with its job.</np>
 
 <p>Assuming that you have set the layout manager to <code>null</code>, you can call
 the <code>setBounds()</code> method any time you like. (You can even make a
-component that moves or changes size while the user is watching.) If you are
+component that moves or changes size while the user is watching; see
+<sourceref href="BashfulButton.java"/> for a cute little example.) If you are
 writing a panel that has a known, fixed size, then you can set the bounds of
 each component in the panel's constructor.  Note that you must also add
 the components to the panel, using the panel's <code>add(component)</code>
 instance method; otherwise, the component will not appear on the screen.</p>
    
 <p>Our example contains four components: two buttons, a label, and a
-panel that displays a checkerboard pattern:</p>
+subpanel that displays a checkerboard pattern:</p>
 
-<img src="null-layout-demo.png" width="350" height="240" alt="NullLayoutDemo with checkerboard, two buttons, and a message"
+<img src="null-layout-demo.png" width="390" height="315" alt="NullLayoutDemo with checkerboard, two buttons, and a message"
      tex="null-layout-demo.eps" texscale="0.6"/>
 
 <np>This is just an example of using a null layout; it doesn't do anything,
@@ -588,9 +589,9 @@ called to set the size and position of the component:</p>
 
     setBorder( BorderFactory.createEtchedBorder() ); 
 
-    setPreferredSize( new Dimension(350,240) );
+    setPreferredSize( new Dimension(520,420) );
 
-    /* Create the components and add them to the content pane.  If you
+    /* Create the components and add them to this panel.  If you
          don't add them to a container, they won't appear, even if
          you set their bounds! */
 
@@ -615,10 +616,10 @@ called to set the size and position of the component:</p>
     /* Set the position and size of each component by calling
          its setBounds() method. */
 
-    board.setBounds(20,20,164,164);
-    newGameButton.setBounds(210, 60, 120, 30);
-    resignButton.setBounds(210, 120, 120, 30);
-    message.setBounds(20, 200, 330, 30);
+    board.setBounds(20,20,324,324);
+    newGameButton.setBounds(370, 120, 120, 30);
+    resignButton.setBounds(370, 200, 120, 30);
+    message.setBounds(20, 370, 380, 30);
 
 } // end constructor</pre>
 
@@ -734,13 +735,11 @@ games, and the user is supposed to click the "New Game" button. It's a good
 idea to keep track of this basic difference in state. The <classname>CardPanel</classname> class uses a
 boolean instance variable named <code>gameInProgress</code> for this purpose.</p>
 
-<p>The state of the game can change whenever the user clicks on a button. The
-<classname>CardPanel</classname> class implements the <classname>ActionListener</classname> interface
-and defines an <code>actionPerformed()</code> method to respond to the user's
-clicks. This method simply calls one of three other methods,
-<code>doHigher()</code>, <code>doLower()</code>, or <code>newGame()</code>, depending on
-which button was pressed. It's in these three event-handling methods that the
-action of the game takes place.</p>
+<p>The state of the game can change whenever the user clicks on a button. The methods
+that respond to <classname>ActionEvents</classname> from the buttons are methods in
+the <classname>CardPanel</classname>
+class:  <code>doHigher()</code>, <code>doLower()</code>, and <code>newGame()</code>
+It's in these three event-handling methods that the action of the game takes place.</p>
 
 <p>We don't want to let the user start a new game if a game is currently in
 progress. That would be cheating. So, the response in the <code>newGame()</code>
@@ -753,8 +752,8 @@ be repainted so that the user can see that the state has changed. The complete
 <code>newGame()</code> method is as follows:</p>
 
 <pre>/**
- * Called by the CardPanel constructor, and called by actionPerformed() if
- * the user clicks the "New Game" button.  Start a new game.
+ * Called by the CardPanel constructor, and called when the
+ * user clicks the "New Game" button.  Starts a new game.
  */
 void doNewGame() {
    if (gameInProgress) {
@@ -787,7 +786,7 @@ set to <code>false</code> because the game is over. In any case, the board is
 repainted to show the new state. Here is the <code>doHigher()</code> method:</p>
 
 <pre>/**
- * Called by actionPerformed() when user clicks the "Higher" button.
+ * Called when the user clicks the "Higher" button.
  * Check the user's prediction.  Game ends if user guessed
  * wrong or if the user has made three correct predictions.
  */
@@ -822,7 +821,7 @@ void doHigher() {
 } // end doHigher()</pre>
 
 <p>The <code>paintComponent()</code> method of the <classname>CardPanel</classname> class
-uses the values in the state variables to decide what to show. It displays the
+uses the values in the state variables to decide what to draw. It displays the
 string stored in the <code>message</code> variable. It draws each of the cards in
 the <code>hand</code>. There is one little tricky bit: If a game is in progress, it
 draws an extra face-down card, which is not in the hand, to represent the next

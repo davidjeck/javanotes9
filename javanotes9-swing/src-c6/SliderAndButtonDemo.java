@@ -52,7 +52,7 @@ public class SliderAndButtonDemo extends JPanel implements ActionListener, Chang
 		setBorder(BorderFactory.createEmptyBorder(6,6,6,6));
 
 		/* Create the display label, with properties to match the
-			   values of the sliders and the setting of the combo box. */
+			   values of the sliders and with a BOLD font. */
 
 		displayLabel = new JLabel("Hello World!", JLabel.CENTER);
 		displayLabel.setOpaque(true);
@@ -96,9 +96,9 @@ public class SliderAndButtonDemo extends JPanel implements ActionListener, Chang
 	} // end constructor
 
 	/**
-	 * This method will be called when the user changes the selection
-	 * in the combo box.  The method just changes the label's font to
-	 * match the new selection.
+	 * This method will be called when the user  clicks one of the buttons.
+	 * The method just changes the label's font to the style specified by
+	 * the button.
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		String cmd = evt.getActionCommand();

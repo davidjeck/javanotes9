@@ -58,8 +58,7 @@ public class SimpleStamper extends JPanel implements MouseListener {
 
 		Graphics g = getGraphics();  // Graphics context for drawing directly.
 		                             // NOTE:  This is considered to be bad style!
-
-		if ( evt.isMetaDown() ) {
+		if ( evt.getButton() == MouseEvent.BUTTON3 ) {
 				// User right-clicked at the point (x,y). Draw a blue oval centered 
 				// at the point (x,y). (A black outline around the oval will make it 
 				// more distinct when shapes overlap.)

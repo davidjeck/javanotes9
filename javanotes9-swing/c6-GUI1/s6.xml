@@ -251,8 +251,8 @@ there is another method in the <classname>JCheckBox</classname> class, <code>doC
 which simulates a user click on the checkbox and does generate an
 <classname>ActionEvent</classname>.)</p>
 
-<p>When handling an <classname>ActionEvent</classname>, you can call <code>evt.getSource()</code>
-in the <code>actionPerformed()</code> method to find out which object generated the
+<p>When handling an <classname>ActionEvent</classname>, you can call the event object's
+<code>evt.getSource()</code> method to find out which object generated the
 event. (Of course, if you are only listening for events from one component, you
 don't have to do this.) The returned value is of type <code>Object</code>, but
 you can type-cast it to another type if you want. Once you know the object that
@@ -467,8 +467,9 @@ that it will be called when you change the value with the <code>setValue()</code
 method, as well as when the user changes the value. In the
 <code>stateChanged()</code> method, you can call <code>evt.getSource()</code> to find
 out which object generated the event. If you want to know whether the user
-generated the change event, call the slider's <code>getValueIsAdjusting()</code>
-method, which returns true if the user is dragging the knob on the slider.</np>
+generated the change event by dragging the knob on the slider,
+call the slider's <code>getValueIsAdjusting()</code> method,
+which returns a <ptype>boolean</ptype> value.</np>
 
 <p>Using tick marks on a slider is a two-step process: Specify the interval
 between the tick marks, and tell the slider that the tick marks should be
@@ -505,6 +506,13 @@ the commands:</np>
 slider3.addChangeListener(this);
 slider3.setLabelTable( slider3.createStandardLabels(50) );
 slider3.setPaintLabels(true);</pre>
+
+<p>A <classname>SliderDemo</classname> object implements <classname>ChangeListener</classname>,
+and the calls to the sliders' <code>addChangeListener()</code> methods use <code>this</code>
+to refer to that object.  But the <classname>ChangeListener</classname> interface defines just one method
+and so is a functional interface.  This means that the change listeners for the sliders could alternatively
+have been specified as lambda expressions.  The sample program <sourceref href="SliderDemoWithLambda.java"/>
+is a modified version of <sourceref href="SliderDemo.java"/> that does that.</p>
    
 </subsection>
    

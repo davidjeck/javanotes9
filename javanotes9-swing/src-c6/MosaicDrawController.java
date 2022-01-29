@@ -7,12 +7,12 @@ import javax.swing.*;
 /**
  * This is the class that does most of the work in the MosaicDraw program.
  * It creates the two pieces of the program -- the panel and the menu bar -- and
- * makes them available in its getMosaicPanel() and getMenuBar() methods.
+ * makes them available in its getMosaicCanvas() and getMenuBar() methods.
  * It attaches a mouse listener to the panel to respond to user mouse actions.
  * It attaches a listener to all the menu items to respond to menu commands from
  * the user.  It contains other instance methods and instance variables to 
  * implement the drawing and all the menu commands.  (Note that this class does
- * not itself represent a GUI component.)  This class depends on MosaicPanel.java.
+ * not itself represent a GUI component.)  This class depends on MosaicCanvas.java.
  */
 public class MosaicDrawController {
 
@@ -31,7 +31,7 @@ public class MosaicDrawController {
 					// than a variable of type Color, to make it easier to add
 					// in the random color variation.)
 
-	private MosaicPanel mosaic;     // The panel where the drawing takes place.
+	private MosaicCanvas mosaic;     // The panel where the drawing takes place.
 
 	private boolean useRandomness;  // If true, then a small random variation is
 									// added to the current color whenever a 
@@ -47,7 +47,7 @@ public class MosaicDrawController {
 									// option in the control menu.
 
 	/**
-	 * Create a controller that uses a MosaicPanel with 40 rows and 40 columns,
+	 * Create a controller that uses a MosaicCanvas with 40 rows and 40 columns,
 	 * and in which the preferred size of each square is 12 pixels.
 	 */
 	public MosaicDrawController() {
@@ -55,7 +55,7 @@ public class MosaicDrawController {
 	}
 
 	/**
-	 * Create a controller that uses a MosaicPanel with a specified number of
+	 * Create a controller that uses a MosaicCanvas with a specified number of
 	 * rows and columns and in which the preferred size of each square is 12 pixels.
 	 */
 	public MosaicDrawController(int rows, int columns) {
@@ -63,12 +63,12 @@ public class MosaicDrawController {
 	}
 
 	/**
-	 * Create a controller that uses a MosaicPanel with a specified number of
+	 * Create a controller that uses a MosaicCanvas with a specified number of
 	 * rows and columns and in which the preferred size of each square is also
 	 * given as a parameter.
 	 */
 	public MosaicDrawController(int rows, int columns, int squareSize) {
-		mosaic = new MosaicPanel(rows, columns, squareSize, squareSize);
+		mosaic = new MosaicCanvas(rows, columns, squareSize, squareSize);
 		useRandomness = true;
 		useSymmetry = false;
 		currentRed = 150;
@@ -80,16 +80,16 @@ public class MosaicDrawController {
 	}
 
 	/**
-	 * Returns the MosaicPanel that is used by this controller, so that it
+	 * Returns the MosaicCanvas that is used by this controller, so that it
 	 * can, for example, be used as the content pane of a JFrame.
 	 */
-	public MosaicPanel getMosaicPanel() {
+	public MosaicCanvas getMosaicCanvas() {
 		return mosaic;
 	}
 
 	/**
 	 * Creates and returns a menu bar that contains options that affect the
-	 * drawing that is done on the MosaicPanel.
+	 * drawing that is done on the MosaicCanvas.
 	 */
 	public JMenuBar getMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
@@ -231,7 +231,7 @@ public class MosaicDrawController {
 
 	/**
 	 * An object of type MouseHandler is installed as a mouse listener and mouse
-	 * motion listener on the MosaicPanel.  It responds to a mousePressed or
+	 * motion listener on the MosaicCanvas.  It responds to a mousePressed or
 	 * mouseDragged event on the panel by calling the applyCurrentTool() method
 	 * for the square that contained the mouse.  (It is declared as a subclass of
 	 * MouseAdapter so that it doesn't have to include definitions of mouse event

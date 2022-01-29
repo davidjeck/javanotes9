@@ -23,7 +23,7 @@ That will happen automatically, since it already knows how to draw itself.</p>
 
 <p>Sometimes, however, you do want to draw on a component. You will have to do
 this whenever you want to display something that is not included among the
-standard, pre-defined component classes. When you want to do this, you have to
+standard, predefined component classes. When you want to do this, you have to
 define your own component class and provide a method in that class for drawing
 the component.  I will always use a subclass of <classname>JPanel</classname>
 when I need a drawing surface of this kind, as I did for the
@@ -109,13 +109,13 @@ component's <code>paintComponent()</code> method <i>later</i>, as soon as it get
 a chance to do so, after processing other pending events if there are any.
 It is even possible that many calls to <code>repaint()</code> will all be handled
 by one call to <code>paintComponent()</code>, if the calls to <code>repaint()</code>
-occur in a very short timespan.</np>
+occur in a very short time span.</np>
 
 <p>Note that the system can also call <code>paintComponent()</code> for other
 reasons. It is called when the component first appears on the screen. It will
 also be called if the size of the component changes, which can happen when
 the user resizes the window that contains the component.  This means that
-<code>paintComponent()</code> should be capable of redrawing the content
+<code>paintComponent()</code> should be capable of redrawing the complete content
 of the component on demand.  As you will see, however, some of our early examples 
 will not be able to do this correctly.</p>
 
@@ -220,7 +220,8 @@ ranging from red through orange through all the other colors of the rainbow.
 The brightness is pretty much what it sounds like. A fully saturated color is a
 pure color tone. Decreasing the saturation is like mixing white or gray paint
 into the pure color. In Java, the hue, saturation and brightness are always
-specified by values of type <ptype>float</ptype> in the range from 0.0F to 1.0F. The
+specified by values of type <ptype>float</ptype> in the range from 0.0F to 1.0F.
+Instead of a constructor, the
 <classname>Color</classname> class has a <code>static</code> member function named
 <code>getHSBColor</code> for creating HSB colors. To create the color with HSB
 values given by <code>h</code>, <code>s</code>, and <code>b</code>, you can say:</p>
@@ -247,6 +248,12 @@ other. The best way to understand the color systems is to experiment with them.
 (The sample program <sourceref href="SimpleColorChooser.java"/> lets you do that.
 You won't understand the source code at this time, but you can run it to play
 with color selection or to find the RGB or HSB values for the color that want.)</p>
+
+<p>Java also makes it possible to use translucent (partially transparent) colors. 
+The degree of transparency is given by a fourth color component, usually called
+the "alpha" component.  The constructor <code>new&nbsp;Color(r,g,b,a)</code>
+creates an RGB color with a fourth parameter to specify the alpha component.
+Transparency was already used in the example in <localref href="OOP.3.2"/>.</p>
 
 <break/>
 
@@ -375,9 +382,10 @@ is at <code>(x,y)</code>, and the width and height of the rectangle are as
 specified. If <code>width</code> equals <code>height</code>, then the rectangle is a
 square. If the <code>width</code> or the <code>height</code> is negative, then nothing
 is drawn. The rectangle is drawn with the same pen that is used for
-<code>drawLine()</code>. This means that the actual width of the rectangle as drawn
-is <code>width+1</code>, and similarly for the height. There is an extra pixel
-along the right edge and the bottom edge. For example, if you want to draw a
+<code>drawLine()</code>, which colors pixels one pixel to the right and below
+the geometric line.  This means that the actual width of the rectangle as drawn
+is <code>width+1</code>, since the drawing extends one pixel past the right
+edge of the rectangle, and similarly for the height. For example, if you want to draw a
 rectangle around the edges of the component, you can say "<code>g.drawRect(0, 0,
 getWidth()-1, getHeight()-1);</code>".  If you use "<code>g.drawRect(0, 0,
 getWidth(), getHeight());</code>", then the right and bottom edges of the
@@ -423,11 +431,11 @@ sure that <code>width</code> is equal to <code>height</code>.</li>
 <li><codedef>g.fillRect(int x, int y, int width, int
 height)</codedef> &mdash; Draws a filled-in rectangle. This fills in the interior
 of the rectangle that would be drawn by <code>drawRect(x,y,width,height)</code>.
-The extra pixel along the bottom and right edges is not included. The
+The extra pixel along the bottom and right edges is not included; the
+exact geometric rectangle is filled.  The
 <code>width</code> and <code>height</code> parameters give the exact width and height
 of the rectangle. For example, if you wanted to fill in the entire component,
-you could say "<code>g.fillRect(0, 0, getWidth(),
-getHeight());</code>"</li>
+you could say "<code>g.fillRect(0, 0, getWidth(), getHeight());</code>"</li>
 
 <li><codedef>g.fillOval(int x, int y, int width, int
 height)</codedef> &mdash; Draws a filled-in oval.</li>
@@ -617,23 +625,13 @@ public class RandomStringsPanel extends JPanel {
             // available fonts, at random.  
 
             int fontNum = (int)(5*Math.random()) + 1;
-            switch (fontNum) {
-            case 1:
-                g.setFont(font1);
-                break;
-            case 2:
-                g.setFont(font2);
-                break;
-            case 3:
-                g.setFont(font3);
-                break;
-            case 4:
-                g.setFont(font4);
-                break;
-            case 5:
-                g.setFont(font5);
-                break;
-            } // end switch
+			switch (fontNum) {
+				case 1 -> g.setFont(font1);
+				case 2 -> g.setFont(font2);
+				case 3 -> g.setFont(font3);
+				case 4 -> g.setFont(font4);
+				case 5 -> g.setFont(font5);
+			}
 
             // Set the color to a bright, saturated color, with random hue.
 
@@ -705,7 +703,7 @@ the panel class as a program, and it has the advantage of keeping everything in 
 file.  For an example, you can look at
 <sourceref href="RandomStringsPanelWithMain.java"/>, which is identical to
 the original class except for the addition of a <code>main()</code> routine.
-Although it might not be great style, I will usually take a similar approach
+Although it is not great style, I will often take a similar approach
 in future examples.</p>
 
 <p>I am not going to discuss the
