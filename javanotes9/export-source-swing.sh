@@ -23,6 +23,8 @@ cp -r $SOURCE_DIR/$PROJECT $EXPORT_DIR
 
 rm -r $EXPORT_DIR/$PROJECT/c6-GUI1
 rm -r $EXPORT_DIR/$PROJECT/c13-GUI2
+rm -r $EXPORT_DIR/$PROJECT/src-c6
+rm -r $EXPORT_DIR/$PROJECT/src-c13
 
 #Remove files that are not needed for Swing (and are not replaced by files of the same name)
 
