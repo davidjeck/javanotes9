@@ -205,8 +205,8 @@ is generated.  You can register an event handler for the action with the button'
 
 <p>In addition to the methods inherited from <classname>Labeled</classname>, a button
 has the instance methods <code>setDisable(boolean)</code> and <code>setToolTip(string)</code>
-that were mentioned at the beginning of this section.  These two methods can be very useful
-for buttons.  The <code>setDisable()</code> and <code>setText()</code> methods are
+that were mentioned at the beginning of this section.  
+The <code>setDisable()</code> and <code>setText()</code> methods are
 particularly useful for giving the user information about what is going on in
 the program. A disabled button is better than a button that gives an obnoxious
 error message such as "Sorry, you can't click on me now!"  For example, suppose
@@ -478,7 +478,8 @@ the text has been edited and scrolled down a few lines:</p>
 
 <p>A <classname>Slider</classname> provides a way for the user to select an integer value
 from a range of possible values. The user does this by dragging a "knob" along
-a bar. A slider can, optionally, be decorated with tick marks and with labels.
+a bar, or by clicking at some point along the bar.
+A slider can, optionally, be decorated with tick marks and with labels.
 This picture, from the sample program <sourceref href="SliderDemo.java"/>, shows 
 three sliders with different decorations and with different ranges of values:</p>
 
@@ -504,7 +505,7 @@ is an enum from package <code>javafx.geometry</code>.</np>
 <p>The current value of a
 <classname>Slider</classname> can be read at any time with its <code>getValue()</code> method,
 which returns a value of type <ptype>double</ptype>. If you want to change the
-value, you can do so with the method <code>setValue(val)</code>, which takes a
+value programmatically, you can do so with the method <code>setValue(val)</code>, which takes a
 parameter of type <ptype>double</ptype>.  If the specified value is not between
 the minimum and maximum slider values, it is adjusted to lie in that range.</p>
 
@@ -522,9 +523,9 @@ sample program, I add listeners to the sliders with commands such as</p>
 
 <np>The listener will be called whenever the value changes, either because the
 user is dragging the knob on the slider or because the program calls <code>setValue()</code>.
-If you want to know whether the user generated the event, call the slider's 
-boolean-valued <code>isValueChanging()</code>
-method, which returns <code>true</code> if the user is dragging the knob on the slider.</np>
+If you want to know whether the user generated the event by dragging the slider's knob,
+call the slider's boolean-valued <code>isValueChanging()</code>
+method, which returns <code>true</code> if the user is dragging the knob.</np>
 
 <p>Using tick marks on a slider is a two-step process: Specify the interval
 between the tick marks, and tell the slider that the tick marks should be

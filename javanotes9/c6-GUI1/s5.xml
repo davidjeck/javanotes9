@@ -73,34 +73,8 @@ starting with using <classname>Pane</classname> directly.</p>
 
 
 <p>Sometimes, you would like to do your own layout, instead of letting it
-up to one of the standard subclasses of <classname>Pane</classname>.
-For our first example, we'll look at using the <classname>Pane</classname>
-class itself.  When you do that, you assume responsibility for setting
-the positions of the child nodes.  The <classname>Pane</classname>
-will, by default, resize each child to its preferred size, but you
-can take over that job too if you want.</p>
-
-<p>If <code>node</code> is any screen graph node, then the statement</p>
-
-<pre>node.relocate( x, y );</pre>
-
-<np>puts the top left corner of the node at the point <code>(x,y)</code>,
-measured in the coordinate system of the container that contains the
-node.  For a resizable node,</np>
-
-<pre>node.resize( width, height )</pre>
-
-<np>will set its size.  This method has no effect on a non-resizable node.
-(However, some nodes that are non-resizable in this sense, such as <classname>Canvas</classname>,
-nevertheless have a <code>setWidth(w)</code> and a <code>setHeight(h)</code> method for
-changing their size.)</np>
-
-<p>If the node is in a container that does all layout then, by default, neither
-<code>relocate()</code> nor <code>resize()</code> will have any effect.
-If the node is in a container such as <classname>Pane</classname>, then
-<code>resize()</code> will work (on resizable nodes), but <code>relocate()</code>
-will have no effect.  However, this is true only for nodes that are <newword>managed</newword>.
-A node can be made "unmanaged" by calling</p>
+up to one of the standard container classes.  You can get complete control
+of the size and location of a node by setting it to be "unmanaged":</p>
 
 <pre>node.setManaged(false);</pre>
 
@@ -110,6 +84,30 @@ your responsibility to set its location and (for resizable nodes) size.  Note th
 an unmanaged node must still be placed inside a container for it to appear on
 the screen.</np>
 
+<p>For our first layout example, we'll look at using the <classname>Pane</classname>
+class itself for the container.  The <classname>Pane</classname> will manage
+the size, but not the location, of the managed nodes that it contains.
+That is, by using a <classname>Pane</classname> as container,
+you assume responsibility for setting the positions of the child nodes.
+The <classname>Pane</classname> will, by default, resize each child to its 
+preferred size; if you want to take over that job too,
+you need to make the child unmanaged.</p>
+
+<p>If <code>node</code> is any scene graph node that is unmanaged or is
+in a container that does not set the location  of its child nodes, then
+you can set the location by calling</p>
+
+<pre>node.relocate( x, y );</pre>
+
+<np>This puts the top left corner of the node at the point <code>(x,y)</code>,
+measured in the coordinate system of the container that contains the
+node.  Similarly, you can set the size of <code>node</code>, when that
+is allowed, by calling</np>
+
+<pre>node.resize( width, height )</pre>
+
+<np>The width and height are measured in pixels.</np>
+   
 <break/>
    
 <p>We will look at an example that contains four components: two buttons, a label, and a
@@ -179,8 +177,8 @@ and height of the pane:</p>
 root.setPrefWidth(500);
 root.setPrefHeight(420);</pre>
 
-<np>The buttons, label, and board must be added as children of the
-pane.  This is done with the command:</np>
+<np>The buttons, label, and board must still be added as children of the
+pane, to make them appear on the screen.  This is done with the command:</np>
 
 <pre>root.getChildren().addAll(board, newGameButton, resignButton, message);</pre>
 

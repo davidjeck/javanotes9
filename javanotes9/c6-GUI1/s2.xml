@@ -254,7 +254,7 @@ and can refer to points inside a pixel.  For example, the center of the
 top left pixel in a canvas has coordinates (0.5,0.5).  In fact, all drawing
 is done using coordinates of type <ptype>double</ptype>.</np>
 
-<p>The width and height of a <classname>Canvas</classname> can be specified in the constructor that
+<p>The width and height of a <classname>Canvas</classname> can be specified in the constructor that is
 used to create the canvas object.  For example, to create a tiny 20-by-12 canvas:</p>
 
 <pre>Canvas canvas = new Canvas(20,12)</pre>
@@ -356,7 +356,7 @@ upper left corner at <code>(x,y)</code>, using the actual size of the image.
 </li>
 <li><codedef>g.drawImage(image,x,y,w,h)</codedef> &mdash; Draws the <code>image</code> in the
 rectangle with upper left corner at <code>(x,y)</code>, with width <code>w</code>, and
-with height&nbsp;<code>h</code>.  The image is stetched or shrunk to fit that rectangle if 
+with height&nbsp;<code>h</code>.  The image is stretched or shrunk to fit that rectangle if 
 necessary.
 </li>
 <li><codedef>g.drawImage(image, sx,sy,sw,sh, dx,dy,dh,dw)</codedef> &mdash; Draws the contents
@@ -412,21 +412,11 @@ text, and a randomly selected font for each copy:</np>
 
         int fontNum = (int)(5*Math.random()) + 1;
         switch (fontNum) {
-        case 1:
-            g.setFont(font1);
-            break;
-        case 2:
-            g.setFont(font2);
-            break;
-        case 3:
-            g.setFont(font3);
-            break;
-        case 4:
-            g.setFont(font4);
-            break;
-        case 5:
-            g.setFont(font5);
-            break;
+            case 1 -> g.setFont(font1);
+            case 2 -> g.setFont(font2);
+            case 3 -> g.setFont(font3);
+            case 4 -> g.setFont(font4);
+            case 5 -> g.setFont(font5);
         } // end switch
 
         // Set the color to a bright, saturated color, with random hue.
@@ -536,7 +526,7 @@ a few of them in this short section and will use them in my programs.
 For people who already know CSS, a guide to its use in JavaFX is
 available as I write this at</p>
 
-<p align="center"><a href="https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html">https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html</a></p>
+<p align="center"><a href="https://openjfx.io/javadoc/17/javafx.graphics/javafx/scene/doc-files/cssref.html">https://openjfx.io/javadoc/17/javafx.graphics/javafx/scene/doc-files/cssref.html</a></p>
 
 <p>A CSS <newword>style rule</newword> consists of a property and a value for that property.
 For example, CSS can be used to place a border around many kinds of GUI components.

@@ -24,7 +24,7 @@ import javafx.scene.paint.Color;
 public class KeyboardEventDemo extends Application {
 
 	public static void main(String[] args) {
-		launch(args);
+		launch();
 	}
 
 	//------------------------------------------------------------------------
@@ -71,7 +71,7 @@ public class KeyboardEventDemo extends Application {
 		String ch = evt.getCharacter();
 		System.out.println("Char Typed: " + ch);  // for testing
 
-		switch (ch) {
+		switch (ch) {  // (Note: Old switch statement syntax used here, just as an example.)
 		case "r":
 			squareColor = Color.RED;
 			filled = true;

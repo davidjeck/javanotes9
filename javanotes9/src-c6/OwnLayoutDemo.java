@@ -28,7 +28,7 @@ import javafx.scene.text.FontWeight;
 public class OwnLayoutDemo extends Application {
 
 	public static void main(String[] args) {
-		launch(args);
+		launch();
 	}
 
 	//-------------------------------------------------------------------------

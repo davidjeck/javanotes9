@@ -23,7 +23,7 @@ import javafx.scene.text.Font;
 public class BlackjackGUI extends Application {
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 
     //---------------------------------------------------------------------

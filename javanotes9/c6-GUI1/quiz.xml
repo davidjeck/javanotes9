@@ -63,12 +63,12 @@ Since it's not given in the problem, you have to get the graphics context by cal
 then the methods for drawing the interior of circle and square are <code>g.fillOval(x,y,w,h)</code> 
 and <code>g.fillRect(x,y,w,h)</code>.  (There are no special methods for drawing circles and squares;
 you have to draw ovals and rectangles, using the same value for the width and for the
-height.)  The graphics context's <code>setPaint()</code> has to be called before filling
+height.)  The graphics context's <code>setFill()</code> has to be called before filling
 each shape, to set the color for the shape.</p>
 <pre>GraphicsContext g = canvas.getGraphicsContext2D();
-g.setPaint(Color.RED);      // draw the shapes
+g.setFill(Color.RED);      // draw the shapes
 g.fillOval(10,10,80,80);
-g.setPaint()Color.GREEN);
+g.setFill(Color.GREEN);
 g.fillRect(30,30,40,40);
 </pre></ans>
 </question>
@@ -95,7 +95,7 @@ picture:</p>
    
    
 <question>
-<ques><p>Java has a standard class
+<ques><p>JavaFX has a standard class
 called <classname>MouseEvent</classname>. What is the purpose of this class? What does an
 object of type <classname>MouseEvent</classname> do?</p></ques>
 <ans><p>When an event occurs, the system
@@ -145,8 +145,8 @@ are used to do animation.</p></ques>
 <ans><p>Displaying an animation requires
 showing a sequence of frames. The frames are shown one after the other, with a
 short delay between each frame and the next. An <classname>AnimationTimer</classname> 
-has an instance method, <code>handle()</code>, that is called for each frame
-while the animation is running (which should be 60 times per second).  That method
+has an instance method, <code>handle()</code>, that is called repeatedly
+while the animation is running.  That method
 can update any state variables that need to change between frames, and it can draw a
 picture for the current frame.  To use an <classname>AnimationTimer</classname>
 you need to create a subclass of <classname>AnimationTimer</classname> 
@@ -227,7 +227,7 @@ lay out those components.  It also uses the components' preferred sizes if it ne
 compute its own preferred size.</p>
 <p>(Note that the preferred size is only preferred; it is not
 necessarily the size at which the component will appear on the screen.  The actual size can depend
-on how container it is in does lay out, the position of the component in the layout, the size of the
+on how container it is in does layout, the position of the component in the layout, the size of the
 container, and the preferred sizes of other components in the container.)</p></ans>
 </question>
    

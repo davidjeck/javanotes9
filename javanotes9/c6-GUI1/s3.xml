@@ -92,7 +92,7 @@ or with some other object that knows about the event.  For example, lets look ag
 this statement from <sourceref href="HelloWorldFX.java"/>, our first GUI program
 from <localref href="GUI1.1"/>:</p>
 
-<pre>helloButton.setOnAction( e -> message.setText("Hello World!") );</pre>
+<pre>helloButton.setOnAction( evt -> message.setText("Hello World!") );</pre>
 
 <np>Here, <code>helloButton</code> is an object of type <classname>Button</classname>.
 When the user clicks on the button, an event of type <classname>ActionEvent</classname>
@@ -100,7 +100,7 @@ is generated.  The target of that event is <code>helloButton</code>.
 The method <code>helloButton.setOnAction()</code> registers an event listener that will
 receive notification of any <classname>ActionEvents</classname> from the button.
 The listener in this case is defined by a lambda expression.  In the lambda 
-expression, the parameter, <code>e</code>, is the <classname>ActionEvent</classname>
+expression, the parameter, <code>evt</code>, is the <classname>ActionEvent</classname>
 object, and the code in the lambda expression is what happens in response to the
 event.  Most event handling in this chapter will be set up in a similar way.</np>
 
@@ -594,13 +594,8 @@ Its job is to do whatever is necessary to implement each frame.</p>
 <p>The <code>handle()</code> method will be called on the JavaFX application thread,
 which means that you can do things like draw on a canvas or manipulate a 
 GUI component.  However, whatever you do should not take very long, since
-JavaFX animations are meant to run at 60 frames per second, which means
-<code>handle()</code> will ideally be called every 1/60 second.  (Note: A bug has been reported
-that sometimes allows <code>handle()</code> to be called much more frequently than 60 times per
-second. I have observed this myself in one version of Linux.  To guard against this bug,
-some implementations of <classname>AnimationTimer</classname> in my sample programs
-include some extra code to guard against this bug&mdash;with a comment to make it clear what
-is going on.)</p>
+JavaFX animations are meant to run at at least 60 frames per second, which means
+<code>handle()</code> should ideally take less than 1/60 second to run.</p>
 
 <p><classname>AnimationTimer</classname> itself is
 an abstract class, and <code>handle()</code> is an abstract method.  This means that
@@ -622,16 +617,19 @@ done as follows, using an anonymous subclass of <classname>AnimationTimer</class
 
 <p>The parameter, <code>time</code>, gives the current time, measured as the
 number of nanoseconds since some arbitrary time in the past (the same arbitrary
-time that is used by <code>System.nanoTime()</code>).  You might use <code>time</code> 
+time that is used by <code>System.nanoTime()</code>).  You can use <code>time</code> 
 in the calculations that you do for the frame, as a way of making each frame
-different from the next.</p>
+different from the next.  Another option is to use a frame number that increases
+by one each time a frame is drawn, but you should keep in mind that the rate
+at which <code>handle()</code> is called can vary, and the time between frames
+is not guaranteed to be 1/60 second.</p>
 
 </subsection>
 
 
 <subsection title="State Machines" id="GUI1.3.6">
 
-<p>We are ready to look at an a program that uses animation and key events
+<p>We are ready to look at a program that uses animation and key events
 to implement a simple game.  The program uses an <classname>AnimationTimer</classname>
 to drive the animation, and it uses a number of instance variables to keep track
 of the current state of the game.  The idea of "state" is an important one.</p>
@@ -788,7 +786,8 @@ anyway. Any changes in the state will become visible to the user as soon as the
 next frame is drawn. At some point in the program, I have to make sure that the
 user does not move the boat off the screen. I could have done this in the key
 event handler, but I chose to check for this in another routine, in
-the boat object.</np>
+the boat object, since it seems natural to let the boat object be responsible
+for keeping itself on the screen.</np>
 
 <p>I encourage you to read the source code in <sourceref href="SubKiller.java"/>.
 Although a few points are tricky, you should  with some effort be able to read and
@@ -847,7 +846,9 @@ code to the <code>start()</code> method:</p>
 change listener with the property.
 Note that the lambda expression for the event handler takes three parameters.
 The only one that I need here is <code>newVal</code> which represents the current
-value of the stage's <code>focused</code> property.</np>
+value of the stage's <code>focused</code> property.  The <code>draw()</code>
+method draws draws some things differently, depending on whether the
+stage is focused.  It tests for that calling <code>stage.isFocused()</code>.</np>
 
 <p>JavaFX GUI components have many observable properties, of various types.  For example,
 the text on a <classname>Button</classname> is  a property of type

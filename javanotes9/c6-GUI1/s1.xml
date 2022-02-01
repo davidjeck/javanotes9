@@ -43,10 +43,13 @@ for the <code>start</code>() method.  (See <localref href="OOP.5.1"/> and <local
 <code>main()</code> method that simply "launches" the application:</p>
 
 <pre>public static void main(String[] args) {
-    launch(args);
+    launch();
 }</pre>
 
-<np>When this <code>main()</code> routine is executed, the <code>launch()</code> method 
+<np>(The call to <code>launch()</code> can be replace by <code>launch(args)</code> for an
+application that uses command-line arguments (<localref href="subroutines.3.4b"/>), but the parameter is
+optional for all of the examples in this book.)
+When this <code>main()</code> routine is executed, the <code>launch()</code> method 
 creates a new thread, called the <newword>JavaFX application thread</newword>.
 Recall from <localref href="overview.2"/> that a thread can execute a sequence of instructions that can be run in parallel 
 with other threads.  It is important that anything that affects the GUI be done on
@@ -57,10 +60,7 @@ The <code>launch()</code> method then creates the object that represents the app
 that object is an instance of the class that contains the call to the <code>launch()</code>
 method.  The <code>start()</code> method of that object is then called on the
 JavaFX application thread, and it is the responsibility of that <code>start()</code>
-method to set up the GUI and open a window on the screen.  (Some versions of Java
-can run a JavaFX <classname>Application</classname> class even if the class does not contain a <code>main()</code>
-method of the above form; however, it is best not to rely on that, and I will always
-include <code>main()</code> in my JavaFX applications.)</np>
+method to set up the GUI and open a window on the screen.</np>
 
 <p>Here, then is our first JavaFX application.  We will spend the rest of this 
 section discussing it:</p>
@@ -84,11 +84,11 @@ public class HelloWorldFX extends Application {
         message.setFont( new Font(40) );
         
         Button helloButton = new Button("Say Hello");
-        helloButton.setOnAction( e -> message.setText("Hello World!") );
+        helloButton.setOnAction( evt -> message.setText("Hello World!") );
         Button goodbyeButton = new Button("Say Goodbye");
-        goodbyeButton.setOnAction( e -> message.setText("Goodbye!!") );
+        goodbyeButton.setOnAction( evt -> message.setText("Goodbye!!") );
         Button quitButton = new Button("Quit");
-        quitButton.setOnAction( e -> Platform.exit() );
+        quitButton.setOnAction( evt -> Platform.exit() );
 
         HBox buttonBar = new HBox( 20, helloButton, goodbyeButton, quitButton );
         buttonBar.setAlignment(Pos.CENTER);
@@ -104,7 +104,7 @@ public class HelloWorldFX extends Application {
     } // end start();
     
     public static void main(String[] args) {
-        launch(args);  // Run this Application.
+        launch();  // Run this Application.
     }
 
 } // end class HelloWorldFX</pre>
@@ -114,9 +114,9 @@ the start of the program, all from subpackages of the <code>javafx</code> packag
 A typical JavaFX program uses many classes from such packages.  When I discuss a
 JavaFX class for the first time, I will usually mention the package that it comes
 from.  But in any case, you can look up the class in the JavaFX API documentation.
-As I write this, it can be found at</np>
+As I write this, the documentation for JavaFX&nbsp;17 can be be found at
+<a href="https://openjfx.io/javadoc/17/">https://openjfx.io/javadoc/17/</a>.</np>
 
-<p align="center"><a href="https://docs.oracle.com/javase/8/javafx/api/toc.htm">https://docs.oracle.com/javase/8/javafx/api/toc.htm</a></p>
 
 <p>The <classname>HelloWorldFX</classname> program contains a <code>main</code> method to launch the
 application, and it contains the required <code>start()</code> method.  Of course, we will often
@@ -209,9 +209,7 @@ The nodes that are contained in a parent are called <newword>children</newword>
 of that node.  The root node in a scene graph must be a <classname>Parent</classname>.</p>
 
 <p>The buttons in <classname>HelloWorldFX</classname> are represented by objects of
-type <classname>Button</classname>,
-which is a subclass of <classname>Parent</classname>.  (We'll see later that buttons
-can actually contain other nodes.)  The constructor that is used
+type <classname>Button</classname>.  The constructor that is used
 to create the button objects specifies the text that is displayed on the button.
 Similarly, <code>message</code> is a node of type <classname>Label</classname>,
 from package <code>javafx.scene.control</code>, whose purpose is simply to passively
@@ -265,7 +263,7 @@ The event itself is represented by an object that holds information about the ev
 For a button click, the event is of type <classname>ActionEvent</classname>,
 and the information that it carries is the button that was clicked.  The second
 object is of type <classname>EventHandler</classname>, a functional interface that defines
-a method <code>handle(e)</code>, where the parameter, <code>e</code>, is the event object.
+a method <code>handle(evt)</code>, where the parameter, <code>evt</code>, is the event object.
 To program a response to an event, you can create a class that implements the <classname>EventHandler</classname>
 interface and provides a definition for the <code>handle()</code> method.  However, since 
 <classname>EventHandler</classname> is a functional interface, the handler can alternatively
@@ -273,20 +271,22 @@ be specified as a lambda expression (see <localref href="subroutines.4a"/>).  La
 are very commonly used in JavaFX for writing event handlers, among other uses.
 For example, the lambda expression</p>
 
-<pre>e -> message.setText("Hello World!")</pre>
+<pre>evt -> message.setText("Hello World!")</pre>
 
 <np>represents an event handler that responds to an event
-by changing the text of the message to read "Hello World!".  The parameter, <code>e</code>,
+by changing the text of the message to read "Hello World!".  The parameter, <code>evt</code>,
 is the <classname>ActionEvent</classname> object that represents the event.
 In this case, the parameter is not used in the response in any way, but it still has
-to be there to satisfy the syntax of the lambda expression.</np>
+to be there to satisfy the syntax of the lambda expression: Since the function in
+the <classname>EventHandler</classname> interface has a parameter, the
+lambda expression must have a parameter to match the interface.</np>
 
 <p>In addition to writing the event handler, you also have to <newword>register</newword>
 the handler with the object that will produce the event.  In this case, the object is
 <code>helloButton</code>, and the handler is registered by calling the button's
 <code>setOnAction()</code> method:</p>
 
-<pre>helloButton.setOnAction( e -> message.setText("Hello World!") );</pre>
+<pre>helloButton.setOnAction( evt -> message.setText("Hello World!") );</pre>
 
 <np>Handlers for each of the other two buttons are set up in a similar way.  Remember that
 in each case, there is an object that generates the event in response to a user action,

@@ -314,7 +314,8 @@ top of a <classname>BorderPane</classname>, which is the root of the scene graph
    
 <p>There are other kinds of menu items, defined by subclasses of <classname>MenuItem</classname>,
 that can be added to menus.  A very simple example is <classname>SeparatorMenuItem</classname>,
-which appears in a menu as a line between other menu items.  To add a separator to
+which appears in a menu as a line between other menu items.  You can see an example
+in the "Control" menu of <classname>MosaicDraw</classname>. To add a separator to
 a <classname>Menu</classname>, <code>menu</code>, you just need to say</p>
 
 <pre>menu.getItems().add( new SeparatorMenuItem() );</pre>
@@ -421,16 +422,11 @@ the one that has only the root as parameter: <code>new&nbsp;Scene(root)</code>.<
 constructor: <code>new Scene(root,width,height)</code>.  In the typical case
 where the <code>root</code> is a <classname>Pane</classname>, the size of the
 pane will be set to match the size of the scene, and the pane will lay out
-its contents based on that size.  If the size of the scene is not specified,
+its contents based on that size.  If the size of the scene is not specified in the constructor,
 then the size of the scene will be set to the preferred size of the pane.
-(Another possible class for the root node is <classname>Group</classname>,
-from package <code>javafx.scene</code>, which we have not covered.  When a
-<classname>Group</classname> is used as the root in a scene that has a
-specified size, the group is not resized to match the size of the scene;
-instead, it is "clipped"; that is, any part of the group that lies outside
-the scene is simply not shown.)  It is not possible for a program to set the width or
-height of a <classname>Scene</classname>, but if the size of the stage that 
-contains a scene is changed, then the size of the scene is changed 
+It is not possible for a program to set the width or
+height of a <classname>Scene</classname> after it has been created, but if the size of the stage that 
+contains a scene is changed, then the size of the scene is automatically changed 
 to match the new size of the stage's content area, and the root node of the
 scene (if it is a <classname>Pane</classname>) will be resized as well.</p>
 
@@ -445,8 +441,9 @@ of the root to be transparent if you want to see the scene background instead.</
 <p>A <classname>Stage</classname>, from package <code>javafx.stage</code>, represents a
 window on the computer's screen.  Any JavaFX <classname>Application</classname> has at
 least one stage, called the primary stage, which is created by the system and passed 
-as a parameter to the application's <code>start()</code> method.  A typical program
-uses more than one window.  It is possible for a program to create new <classname>Stage</classname>
+as a parameter to the application's <code>start()</code> method.  Although we have not seen any
+examples so far in this textbook, many programs
+use more than one window.  It is possible for a program to create new <classname>Stage</classname>
 objects; we will see how to do that in <localref href="GUI2"/>.</p>
 
 <p>A stage contains a scene, which fills its content area.  The scene is installed in the stage by calling the
@@ -491,26 +488,35 @@ primary stage is typically the last thing that you do in a application's
    
 <subsection title="Creating Jar Files" id="GUI1.6.4">
    
-<p>As the last topic for this chapter, we look again at jar files.  Recall
-that a jar file is a "java archive" that can contain a number of class files as well
-as resource files used by the program. When creating
-a program that uses more than one file, it's usually a good idea to place all required
-class and resource files into a jar file.  If that is done, then a user will only need that
-one file to run the program. In fact, it is possible to make a so-called <newword>executable
-jar file</newword>.  A user can run an executable jar file in much the same way
-as any other application, usually by double-clicking the icon of the jar file.
-(The user's computer must have a correct version of Java installed, and the computer
-must be configured correctly for this to work.  The configuration is usually done automatically when
-Java is installed, at least on Windows and MacOS.)</p>
+<p>Java classes and resource files are often distributed in jar ("java archive") files.
+For a program that consists of multiple files, it can make sense to pack them
+into a single jar file.  As the last topic for this chapter, we look at how to do that.
+The program can be run directly from the jar file, without unpacking it.  However, for
+JavaFX programs, the user will still need access to the JavaFX SDK.
+A jar file can be "executable," meaning that it specifies the class that
+contains the <code>main()</code> routine that will be run when the jar file is
+executed.  If you have an executable jar file that does not require JavaFX or
+other external resources, you can run it on the command line using a command
+of the form:</p>
+
+<pre>java  -jar  JarFileName.jar</pre>
+
+<np>and you might even be able to run the jar file by double-clicking its icon in 
+a file browser window.  If an executable jar file requires JavaFX, you will need 
+to add the same options to the <code>java</code> command that were discussed in 
+<localref href="basics.6.7"/>.  For example,</np>
+
+<pre>java -p /opt/jfx17/lib --add-modules=ALL-MODULE-PATH JarFileName.jar</pre>
+
    
 <p>The question, then, is how to create a jar file.  The answer depends on what
 programming environment you are using.  The two basic types of programming environment&mdash;command line
 and IDE&mdash;were discussed in <localref href="basics.6"/>.  Any IDE (Integrated Development Environment)
 for Java should have a command for creating jar files.  In the Eclipse IDE, for example,
 it can be done as follows:  In the Package Explorer pane, select the programming project (or just
-all the individual source files that you need).  Right-click on the selection, and
+all the individual source and resource files that you want to include).  Right-click on the selection, and
 choose "Export" from the menu that pops up.  In the window that appears, select "JAR file"
-and click "Next".  In the window that appears next, enter a name for the jar file in
+and click "Next".  In the window that appears next, enter a full path name for the jar file in
 the box labeled "JAR file".  (Click the "Browse" button next to this box to select the
 file name using a file dialog box.)  The name of the file should end with ".jar".
 If you are creating a regular jar file, not an executable
@@ -535,15 +541,18 @@ Then give the command</p>
 <np>where <code>JarFileName</code> can be any name that you want to use for the jar file.
 The "<code>*</code>" in "<code>*.class</code>" is a wildcard that makes <code>*.class</code> match every class
 file in the current directory.  This means that all the class files in the directory will be
-included in the jar file.  If the program uses resource files, such as images, they should
-also be listed in the command.  If you want to include only certain class files, you
-can name them individually, separated by spaces.  (Things get more complicated if your classes and resources are not in the
-default package.  In that case, the class files must be in subdirectories of the
-directory in which you issue the <code>jar</code> command.  See <localref href="basics.6.6"/>.)</np>
+included in the jar file.  If you want to include only certain class files, you
+can name them individually, separated by spaces. You can also list the class file names separately.
+If the program uses resource files, such as images, they should
+also be listed in the command.  (Things get more complicated if your classes and resources are not in the
+default package.  In that case, the files must be in subdirectories of the
+directory in which you issue the <code>jar</code> command, and you have to include the path to
+the file in the name.  For example: <code>textio/TextIO.class</code> on MacOS and Linux,
+or <code>textio\TextIO.class</code> on Windows.)</np>
    
 <p>Making an executable jar file on the command line is  more complicated.
 There has to be some way of specifying which class contains the <code>main()</code>
-routine.  This is done by creating a <newword>manifest file</newword>.  The manifest
+routine.  This can be done by creating a <newword>manifest file</newword>.  The manifest
 file can be a plain text file containing a single line of the form</p>
 
 <pre>Main-Class: ClassName</pre>
@@ -561,10 +570,6 @@ and use a command of the form</np>
 variety of different operations.  The first parameter to the command, such as "<code>cf</code>"
 or "<code>cmf</code>", tells it which operation to perform.)</np>
    
-<p>By the way, if you have successfully created an executable jar file, you can run
-it on the command line using the command "<code>java&nbsp;-jar</code>".  For example:</p>
-   
-<pre>java  -jar  JarFileName.jar</pre>
 
 </subsection>
 

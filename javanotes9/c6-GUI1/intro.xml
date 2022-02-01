@@ -24,21 +24,23 @@ menus are objects.  Events are handled by instance methods contained in objects.
 In Java, GUI programming is object-oriented programming.  The purpose of this chapter is, as
 much as anything, to give you some experience with a large-scale object-oriented API.</p>
 
-<p>Java has had several "toolkits" for building GUI program.  This textbook
-uses <newword>JavaFX</newword> as its toolkit.  The previous version used
-the Swing GUI toolkit, and if you are interested in learning Swing rather
-than JavaFX, you should consult Chapter&nbsp;6 and Chapter&nbsp;13 in
-that version, which is still available at
-<a href="http://math.hws.edu/javanotes7">http://math.hws.edu/javanotes7</a>.</p>
-
 <p>This chapter is just an introduction to JavaFX, but it covers the
 essential features of GUI programming in enough detail to write some
 interesting programs.  The discussion of JavaFX will continue in <localref href="GUI2"/> 
 with more details and with more advanced techniques, but complete coverage
 of JavaFX would require an entire book of its own.</p>
 
-<p>Note that JavaFX is no longer being distributed as part of the Java
+<p>Note that JavaFX is not distributed as part of the Java
 Development Kit.  For information about how to obtain JavaFX and how to
 compile and run programs that use it, see <localref href="basics.6"/>.</p>
+
+<p>This edition of this textbook covers GUI program using the JavaFX GUI toolkit.
+An alternative edition covers the Swing GUI toolkit instead of JavaFX.  
+Swing is included as a standard part of Java, so does not require any extra
+downloads or configuration.  The Swing edition can be found
+at <a href="https://math.hws.edu/javanotes9-swing">https://math.hws.edu/javanotes9-swing</a>.
+The only really significant differences between the two editions are in this
+chapter and in <localref href="GUI2"/>.</p>
+
 
 </intro>

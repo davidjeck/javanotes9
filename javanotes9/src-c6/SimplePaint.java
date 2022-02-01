@@ -21,7 +21,7 @@ public class SimplePaint extends Application {
 	 * This main routine allows this class to be run as a program.
 	 */
 	public static void main(String[] args) {
-		launch(args);
+		launch();
 	}
 
 	//-----------------------------------------------------------------

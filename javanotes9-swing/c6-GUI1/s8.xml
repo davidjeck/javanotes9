@@ -490,26 +490,30 @@ You can accomplish the same thing programmatically by calling the instance metho
 </subsection>
    
 <subsection title="Creating Jar Files" id="GUI1.8.4">
-   
-<p>As the final topic for this chapter, we look briefly at <newword>jar files</newword>.
-A&nbsp;jar file is a "java archive file" that can contain a number of class files and other resources. When creating
-a program that uses more than one class, it's usually a good idea to place all the classes that
-are required by the program into a jar file.  If that is done, then a user will only need that
-one file to run the program. In fact, it is possible to make a so-called <newword>executable
-jar file</newword>.  A user can run an executable jar file in much the same way
-as any other application, usually by double-clicking the icon of the jar file.
-(The user's computer must have a correct version of Java installed, and the computer
-must be configured correctly for this to work.  The configuration is usually done automatically when
-a JDK is installed.)</p>
+     
+<p>Java classes and resource files are often distributed in jar ("java archive") files.
+For a program that consists of multiple files, it can make sense to pack them
+into a single jar file.  As the last topic for this chapter, we look at how to do that.
+The program can be run directly from the jar file, without unpacking it. 
+A jar file can be "executable," meaning that it specifies the class that
+contains the <code>main()</code> routine that will be run when the jar file is
+executed.  If you have an executable jar file that does not require any resources
+external to the jar file, you can run it on the command line using a command
+of the form:</p>
+
+<pre>java  -jar  JarFileName.jar</pre>
+
+<np>and you might even be able to run the jar file by double-clicking its icon in 
+a file browser window.</np>
    
 <p>The question, then, is how to create a jar file.  The answer depends on what
 programming environment you are using.  The two basic types of programming environment&mdash;command line
-and IDE&mdash;were discussed in <localref href="basics.6"/>.  Any IDE (Integrated Programming Environment)
+and IDE&mdash;were discussed in <localref href="basics.6"/>.  Any IDE (Integrated Development Environment)
 for Java should have a command for creating jar files.  In the Eclipse IDE, for example,
 it can be done as follows:  In the Package Explorer pane, select the programming project (or just
-all the individual source code files that you need).  Right-click on the selection, and
+all the individual source and resource files that you want to include).  Right-click on the selection, and
 choose "Export" from the menu that pops up.  In the window that appears, select "JAR file"
-and click "Next".  In the window that appears next, enter a name for the jar file in
+and click "Next".  In the window that appears next, enter a full path name for the jar file in
 the box labeled "JAR file".  (Click the "Browse" button next to this box to select the
 file name using a file dialog box.)  The name of the file should end with ".jar".
 If you are creating a regular jar file, not an executable
@@ -535,18 +539,17 @@ Then give the command</p>
 The "<code>*</code>" in "<code>*.class</code>" is a wildcard that makes <code>*.class</code> match every class
 file in the current directory.  This means that all the class files in the directory will be
 included in the jar file.  If you want to include only certain class files, you
-can name them individually, separated by spaces.  (Things get more complicated if your classes are not in the
-default package.  In that case, the class files must be in subdirectories of the
-directory in which you issue the <code>jar</code> command.  See <localref href="basics.6.6"/>.)
-For example, making a jar file that includes <classname>TextIO</classname> might look 
-something like the following (for MacOS or Linux; for Windows, the "/" would
-be replaced by&nbsp;a&nbsp;'\'):</np>
-  
-<pre>jar  cf  *.class  textio/TextIO.class</pre>
+can name them individually, separated by spaces. You can also list the class file names separately.
+If the program uses resource files, such as images, they should
+also be listed in the command.  (Things get more complicated if your classes and resources are not in the
+default package.  In that case, the files must be in subdirectories of the
+directory in which you issue the <code>jar</code> command, and you have to include the path to
+the file in the name.  For example: <code>textio/TextIO.class</code> on MacOS and Linux,
+or <code>textio\TextIO.class</code> on Windows.)</np>
    
 <p>Making an executable jar file on the command line is  more complicated.
 There has to be some way of specifying which class contains the <code>main()</code>
-routine.  This is done by creating a <newword>manifest file</newword>.  The manifest
+routine.  This can be done by creating a <newword>manifest file</newword>.  The manifest
 file can be a plain text file containing a single line of the form</p>
 
 <pre>Main-Class: ClassName</pre>
@@ -564,12 +567,9 @@ and use a command of the form</np>
 variety of different operations.  The first parameter to the command, such as "<code>cf</code>"
 or "<code>cmf</code>", tells it which operation to perform.)</np>
    
-<p>By the way, if you have successfully created an executable jar file, you can run
-it on the command line using the command "<code>java&nbsp;-jar</code>".  For example:</p>
-   
-<pre>java  -jar  JarFileName.jar</pre>
 
 </subsection>
+
 
 <endchapter/>
 

@@ -17,11 +17,11 @@ public class HelloWorldFX extends Application {
 		message.setFont( new Font(40) );
 
 		Button helloButton = new Button("Say Hello");
-		helloButton.setOnAction( e -> message.setText("Hello World!") );
+		helloButton.setOnAction( evt -> message.setText("Hello World!") );
 		Button goodbyeButton = new Button("Say Goodbye");
-		goodbyeButton.setOnAction( e -> message.setText("Goodbye!!") );
+		goodbyeButton.setOnAction( evt -> message.setText("Goodbye!!") );
 		Button quitButton = new Button("Quit");
-		quitButton.setOnAction( e -> Platform.exit() );
+		quitButton.setOnAction( evt -> Platform.exit() );
 
 		HBox buttonBar = new HBox( 20, helloButton, goodbyeButton, quitButton );
 		buttonBar.setAlignment(Pos.CENTER);
@@ -33,11 +33,11 @@ public class HelloWorldFX extends Application {
 		stage.setScene(scene);
 		stage.setTitle("JavaFX Test");
 		stage.show();
-
+		
 	} // end start();
 
 	public static void main(String[] args) {
-		launch(args);  // Run this Application.
+		launch();  // Run this Application.
 	}
 
 } // end class HelloWorldFX

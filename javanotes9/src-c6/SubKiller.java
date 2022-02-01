@@ -101,13 +101,13 @@ public class SubKiller extends Application {
 			   // frames per second.
 			long previousFrameTime;
 			public void handle(long time) {
-				if (time - previousFrameTime > 0.95e9/60) {
-					   // The test in the if is to guard against a bug that has shown
-					   // up in some versions of JavaFX on some computers.  The bug allows
-					   // the handle() method to be called many times more than the 60 times
-					   // per second that is specified in the JavaFX documentation.  The
-					   // test throttles the frame rate to 60 per second, in case JavaFX
-					   // is not already doing that.  It should not be necessary.
+				if (time - previousFrameTime > 0.99e9/60) {
+					   // This program is designed to run at 60 frames per
+					   // second.  Since handle() can be called more frequently
+					   // than that, we do an update-and-draw only if the
+					   // time since the previous update-and-draw is greater
+					   // than 0.99/60 seconds.  Note that time is measured in
+					   // nanoseconds, where one second equals 1e9 nanoseconds.
 					boat.updateForNewFrame();
 					bomb.updateForNewFrame();
 					sub.updateForNewFrame();
