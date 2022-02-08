@@ -151,7 +151,7 @@ import javafx.scene.input.MouseButton;
 public class SimpleStamperWithDrag extends Application {
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 
     // ----------------------------------------------------------------------
@@ -420,6 +420,31 @@ else {   // Move the blue square.
    y2 = y - offsetY;
 }</pre>
 
+<p>An alternative to using <code>offsetX</code> and <code>offsetY</code>
+would be to keep track of <code>prevX</code> and <code>prevY</code>,
+the previous values of <code>x</code> and <code>y</code>.  Then, in
+<code>mouseDragged()</code>, you can use the current and previous values
+of <code>x</code> and <code>y</code> to determine how far the mouse has
+moved.  Then, you can simply move the square by the same amount.  This idea
+can be implemented in <code>mouseDragged()</code> with the following code:</p>
+
+<pre>int x = evt.getX();  // Current location of the mouse.
+int y = evt.getY();
+
+int dx = x - prevX;   // amount by which the mouse has moved.
+int dy = y - prevY;
+
+if (dragRedSquare) {
+   x1 = x1 + dx;  // move the red square by the same amount
+   y1 = y1 + dy;
+}
+else {
+   x2 = x2 + dx;  // move the blue square by the same amount
+   y2 = y2 + dy;
+}
+
+prevX = x;   // new values of prevX,prevY for next call to mouseDragged()
+prevY = y;</pre>
 <p>By the way, if you wanted to stop the user from dragging the square outside
 the window, you would just have to add code to the <code>mouseDragged</code>
 routine to "clamp" the variables <code>x1</code>, <code>y1</code>, <code>x2</code>, and
@@ -457,6 +482,7 @@ routine that keeps the square entirely within the canvas:</p>
     }
     draw();
 }</pre>
+
 <p>Finally, we need to program a response to the Escape key.
 As discussed in <localref href="GUI1.3.4"/>, we can register the
 <code>KeyPressed</code> event handler with the scene.  The handler
@@ -754,7 +780,7 @@ and 1 pixel between rows. This puts the tops of the rows at 3, 3+9+1, and
 3+9+1+9+1, that is, at 3, 13, and 23. The columns use the same numbers. (If you
 believe that I got all this right the first time, I won't disillusion you!)</p>
 
-<p>The <code>draw()</code> method fills the canvs with light blue, draws a 2-pixel blue border
+<p>The <code>draw()</code> method fills the canvas with light blue, draws a 2-pixel blue border
 around the canvas, and draws the two dice:</p>
 
 <pre>public void draw()) {
@@ -798,7 +824,7 @@ import javafx.scene.paint.Color;
 public class RollDice extends Application {
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 
     //---------------------------------------------------------------------
@@ -968,54 +994,69 @@ call <code>time.start()</code>.  But there is a big problem with this:
 The animation should only go on for a short time.  In order to stop
 it, <code>timer.stop()</code> has to be called.  But who will call it,
 and how will they know when to call it?  In fact, the timer can stop
-itself after a certain number of frames have passed.  In order to do
-that, I use a global <code>frameNumber</code> variable.  When <code>roll()</code>
-starts the timer, it sets the frame number to 0:</np>
+itself after a certain amount of time has passed.  In order to do
+that, I use a global <code>startTime</code> variable.  When <code>roll()</code>
+starts the timer, it sets the start time to the current time in
+nanoseconds:</np>
 
 <pre>private void roll() {
-   frameNumber = 0;
    rollButton.setDisable(true);
+   startTime = System.nanoTime();
    timer.start(); // start an animation
 }</pre>
 
 <np>Note that it also
 disables the button, so that the user will not be able to roll the dice
 while they are already being rolled.  Then the timer's <code>handle()</code>
-method should increment the frame number, and it should stop itself if the frame number
-has reached some maximum value.
-It must also re-enable the button to make it possible to
+method should check the difference between the current time and the start time, 
+and it should stop itself if the time has reached some maximum value.
+The current time, in nanoseconds, is passed as a parameter to the <code>handle()</code> method.
+My program stops the animation after one second (1,000,000,000 nanoseconds) has passed.
+The method must also re-enable the button to make it possible to
 roll the dice again.  So, here is the actual definition of the timer:</np>
 
 <pre>private AnimationTimer timer = new AnimationTimer() {
         // The timer is used to animate "rolling" of the dice.
         // In each frame, the dice values are randomized.  When
-        // the number of frames reaches 60, the timer stops itself.
+        // the elapsed time reaches 1 second, the timer stops itself.
         // The rollButton is disabled while an animation is in
         // progress, so it has to be enabled when the animation stops.
     public void handle( long time ) {
         die1 = (int)(Math.random()*6) + 1;
         die2 = (int)(Math.random()*6) + 1;
         draw();
-        frameNumber++;
-        if (frameNumber == 60) {
+        if ( time - startTime >= 1_000_000_000 ) {
             timer.stop();
             rollButton.setDisable(false);
         }
     }
 };</pre>
 
-<np>The dice will change for 60 frames or about one second (if JavaFX animation is working correctly).
-It might be that changing the dice
-every 1/60 second is too fast.  Unfortunately, there is no way to slow down the
-frame rate in an <classname>AnimationTimer</classname>.  However, it is certainly
-possible to do nothing in some of the frames.  For example, if you only want
-to change the dice every 10 frames, you can begin the <code>handle()</code>
-method by saying</np>
+<p>You might want to slow down the rate at which the numbers on the dice change.
+Unfortunately, there is no way to slow down the frame rate in an <classname>AnimationTimer</classname>.
+However, it is certainly possible to do nothing in some of the frames.  To implement that,
+you could record the time when the dice are drawn, and not draw them again until a
+certain time has passed.  For example, if you want to draw the dice every 1/10 second,
+The <code>handle()</code> method could be written:</p>
 
-<pre>if (frameNumber % 10 != 0) {
-       // do nothing if frameNumber is not a multiple of 10
-    return;
+<pre>public void handle( long time ) {
+    if ( time - previousDrawTime > 100_000_000 ) {
+        previousDrawTime = time;
+        die1 = (int)(Math.random()*6) + 1;
+        die2 = (int)(Math.random()*6) + 1;
+        draw();
+        if ( time - startTime >= 1_000_000_000 ) {
+            timer.stop();
+            rollButton.setDisable(false);
+        }
+    }
 }</pre>
+
+<np>Here, <code>previousDrawTime</code> is a global variable. The test 
+"<code>if (time-previousDrawTime > 100_000_000)</code>" will always be
+true the first time <code>handle()</code> is called, every time the
+button is clicked.  You might think about why that is true.</np>
+
 
 </exercise-discuss>
 <exercise-code>
@@ -1032,12 +1073,13 @@ import javafx.animation.AnimationTimer;
 
 /**
  * Shows a pair of dice that are rolled when the user clicks a button
- * that appears below the dice.
+ * that appears below the dice.  A short animation runs when the 
+ * button is clicked, showing the numbers on the dice changing.
  */
 public class RollDiceWithButton extends Application {
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 
     //---------------------------------------------------------------------
@@ -1049,22 +1091,24 @@ public class RollDiceWithButton extends Application {
    
    private Button rollButton;  // The button that is clicked to roll the dice.
    
-   private int frameNumber;  // When an animation is running, the number of
-                             //    frames for which it has been running.  This
-                             //    is used to end the animation after 60 frames.
+   private long elapsedTime;  // When an animation is running, the number of
+                              //    nanoseconds for which it has been running.  This
+                              //    is used to end the animation after 1 second.
+                              //    (One second is 1,000,000,000 nanoseconds.
+                             
+   private long startTime;   // Time, in nanoseconds, when the animaion started.
 
    private AnimationTimer timer = new AnimationTimer() {
            // The timer is used to animate "rolling" of the dice.
            // In each frame, the dice values are randomized.  When
-           // the number of frames reaches 60, the timer stops itself.
+           // the elapsed time reaches 1 second, the timer stops itself.
            // The rollButton is disabled while an animation is in
            // progress, so it has to be enabled when the animation stops.
        public void handle( long time ) {
            die1 = (int)(Math.random()*6) + 1;
            die2 = (int)(Math.random()*6) + 1;
            draw();
-           frameNumber++;
-           if (frameNumber == 60) {
+           if ( time - startTime >= 1_000_000_000 ) {
                timer.stop();
                rollButton.setDisable(false);
            }
@@ -1103,13 +1147,13 @@ public class RollDiceWithButton extends Application {
    /**
     * Roll the dice by starting an animation that randomizes
     * the values on the dice in each frame.  The animation will
-    * last for 60 frames, and the rollButton is disabled while
+    * last for one second, and the rollButton is disabled while
     * the animation is in progress.  This method is called
     * when the user clicks the roll button.
     */
    private void roll() {
-       frameNumber = 0;
        rollButton.setDisable(true);
+       startTime = System.nanoTime();
        timer.start(); // start an animation
    }
 
@@ -1212,7 +1256,7 @@ checkerboard has been drawn:</p>
 entirely inside the square, we need to stroke a rectangle that is inset from
 the edges of the square by half of the line width, that is, by 1.5 pixels.
 This explains the parameters to <code>g.strokeRect()</code>.  Remember that
-when a shape is stroked, the center of the pen is dragged along the border
+when a shape is stroked, it is the center of the pen that is dragged along the border
 of the shape.</np>
 
 <p>Now, let's say that the user clicks at the point <code>(x,y)</code>. The problem is
@@ -1237,7 +1281,9 @@ the highlighting. That can be done by setting <code>selectedRow = -1</code>, the
 that indicates that no square is selected. Otherwise, the values of
 <code>selectedRow</code> and <code>selectedCol</code> are set to the row and column
 that the user clicked.  In the end, <code>draw()</code> is called so that the
-change will be reflected in what is shown on the screen.</p>
+change will be reflected in what is shown on the screen.  The <code>draw()</code>
+method completely redraws the canvas, which is the easiest way to ensure that
+its appearance matches the current state of the program.</p>
 
 <p>All this explains the reasoning behind the <code>mousePressed()</code> routine,
 which you can see below.</p>
@@ -1265,7 +1311,7 @@ import javafx.scene.input.MouseEvent;
 public class ClickableCheckerboard extends Application {
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 
     //-------------------------------------------------------------------
@@ -1408,8 +1454,8 @@ g.fillText("Number of hits:   " + hits, 15, 24);
 g.fillText("Number of misses: " + misses, 15, 45);</pre>
 
 <p>(Using the coordinates in these statements, the messages about hits and misses were
-drawn over the "CLICK TO ACTIVATE" message, so I also moved the
-"CLICK TO ACIVATE" message from x-coordinate 30 to x-coordinate 300 to make room 
+drawn over the "(ANIMATION PAUSED)" message, so I also moved the
+"(ANIMATION PAUSED)" message from x-coordinate 30 to x-coordinate 300 to make room 
 for the new messages.)</p>
    
 <p>I made one further non-essential change when I decided that I wanted the output to be
@@ -1445,7 +1491,7 @@ import javafx.scene.text.FontWeight;
 public class SubKillerWithScore extends Application {
     
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
     
     //------------------------------------------------------------------------
@@ -1534,13 +1580,13 @@ public class SubKillerWithScore extends Application {
                // frames per second.
             long previousFrameTime;
             public void handle(long time) {
-                if (time - previousFrameTime > 0.95e9/60) {
-                       // The test in the if is to guard against a bug that has shown
-                       // up in some versions of JavaFX on some computers.  The bug allows
-                       // the handle() method to be called many times more than the 60 times
-                       // per second that is specified in the JavaFX documentation.  The
-                       // test throttles the frame rate to 60 per second, in case JavaFX
-                       // is not already doing that.  It should not be necessary.
+                if (time - previousFrameTime > 0.99e9/60) {
+                       // This program is designed to run at 60 frames per
+                       // second.  Since handle() can be called more frequently
+                       // than that, we do an update-and-draw only if the
+                       // time since the previous update-and-draw is greater
+                       // than 0.99/60 seconds.  Note that time is measured in
+                       // nanoseconds, where one second equals 1e9 nanoseconds.
                     boat.updateForNewFrame();
                     bomb.updateForNewFrame();
                     sub.updateForNewFrame();
@@ -2017,7 +2063,7 @@ import javafx.scene.text.Font;
 public class StatCalcGUI extends Application {
  
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 
     //---------------------------------------------------------------------
@@ -2119,7 +2165,7 @@ public class StatCalcGUI extends Application {
      * four display labels.  It is possible that an error will occur,
      * in which case an error message is put into the label at the top
      * of the window.  (Because the Enter button has been set to be the
-     * default button for the program, this mehod is also invoked when
+     * default button for the program, this method is also invoked when
      * the user presses return.)
      */
     private void doEnter() {
@@ -2257,8 +2303,8 @@ method:</p>
 
 <np>The first parameter to the <classname>VBox</classname> constructor is the spacing
 between components, and the remaining parameter are added as child nodes of the
-<classname>VBox</classname>. Note that both
-<code>countButton</code> IS wrapped in a pane which is then added to the
+<classname>VBox</classname>. Note that 
+<code>countButton</code> is wrapped in a pane which is then added to the
 <classname>VBox</classname>.</np>
 
 <p>The <code>ActionEvent</code> handler for the button calls the 
@@ -2532,7 +2578,7 @@ be written.  To make the picture look nicer, I decided to use wide lines.
 There is also a question about what to draw when there is only one point.  It's nice
 if the user can see that the point has been added to the data, but one point is not
 enough to draw a line or polygon.  I decided to draw a small square at the first point,
-just to make it visible and noticeable.  This also helps the user to find the first point when he is 
+just to make it visible and noticeable.  This also helps the user to find the first point when she is 
 trying to click on it to complete the polygon.  The fill color of the polygon
 is given by a global constant, <code>POLYGON_COLOR</code>.
 </p>
@@ -2597,7 +2643,7 @@ whether the user clicks "near the starting point". The starting point has
 coordinates <code>(xCoord[0],yCoord[0])</code> and the point where the user clicked
 has coordinates <code>(evt.getX(),evt.getY())</code>. In my program, I check whether
 the <code>x</code>-coordinates of these points are three pixels or less apart and the
-<code>y</code>-coordinates are also two pixels or less apart. This is done by
+<code>y</code>-coordinates are also three pixels or less apart. This is done by
 checking whether "<code>Math.abs(xCoord[0]&nbsp;-&nbsp;evt.getX()) &lt;=&nbsp;3 &amp;&amp;
 Math.abs(yCoord[0]&nbsp;-&nbsp;evt.getY()) &lt;=&nbsp;3</code>".</p>
 
@@ -2625,7 +2671,7 @@ import javafx.scene.paint.Color;
 public class SimplePolygons extends Application {
      
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 
     //---------------------------------------------------------------------
@@ -2854,7 +2900,7 @@ has changed. Later, I realized that the <code>doNewGame()</code> routine also ha
 to check whether one of the players has Blackjack, since there is really no
 other place where this can be done. It has to happen immediately after the first two
 cards are dealt.  If one of the players has Blackjack, the
-game is over as soon as it starts, so <code>gameIsProgress</code> has to be false, and the only action
+game is over as soon as it starts, so <code>gameInProgress</code> has to be false, and the only action
 that the user can take at that point is to click the "New Game" button again.
 (Note that the <code>doNewGame()</code> routine is also called by the <code>start()</code> method.
 This sets up the first game, so the user doesn't have to click on the "New Game"
@@ -3252,7 +3298,7 @@ private void setGameInProgress( boolean inProgress ) {
 
 <np>Note that this method requests that the "Hit" button get focus of there is a game in progress,
 and that the "New Game" button get focus if not.  When a button has the input focus, the user
-can trigger the button by pressing Return.  The idea is to give the input focus to
+can trigger the button by pressing the space bar (or the Enter key).  The idea is to give the input focus to
 the button that represents the user's most likely next action.  This makes it possible
 for the user to play the game largely by hitting the space bar, instead of using the
 mouse.  (In fact, since the TAB key can be used to move the input focus, the user can
@@ -3403,7 +3449,7 @@ import javafx.scene.text.Font;
 public class BlackjackGUI2 extends Application {
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 
     //---------------------------------------------------------------------
