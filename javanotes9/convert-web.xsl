@@ -14,7 +14,7 @@
         <body><div class="page">
         <div class="content">
         <hr/>
-        <h2 class="chapter_title">Introduction to Programming Using Java, Ninth Edition</h2>
+        <h2 class="chapter_title">Introduction to Programming Using Java</h2>
         <h2 class="chapter_title">Version 9, JavaFX Edition, 2022</h2>
         <p style="text-align:center">(Under Development!)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
@@ -199,7 +199,7 @@
      </head>
      <body><div class="page">
      <div class="content">
-        <h3 align="center">Introduction to Programming Using Java, Ninth Edition</h3>
+        <h3 align="center">Introduction to Programming Using Java, Version 9, JavaFX Edition</h3>
         <h2 align="center">Table of Contents</h2>
         <hr/>
         <p align="center"><span class="start"><big>T</big>his is the Table of Contents</span> for the free on-line
@@ -352,7 +352,7 @@
      </head>
      <body><div class="page">
      <div class="content">
-        <h3 align="center">Introduction to Programming Using Java, Ninth Edition</h3>
+        <h3 align="center">Introduction to Programming Using Java, Version 9, JavaFX Edition</h3>
         <h2 align="center">Source Code</h2>
         <hr class="break"/>
         <xsl:apply-templates/>
@@ -373,7 +373,7 @@
      </head>
      <body><div class="page">
      <div class="content">
-        <h3 align="center">Introduction to Programming Using Java, Ninth Edition</h3>
+        <h3 align="center">Introduction to Programming Using Java, Version 9</h3>
         <h2 align="center">Glossary</h2>
         <hr class="break"/>
         <xsl:apply-templates/>
@@ -831,8 +831,14 @@
     <xsl:apply-templates/>
 </xsl:template>
     
+<xsl:template match="fxSourceItems">
+    <xsl:apply-templates/>
+</xsl:template>
+    
 <xsl:template match="swing"></xsl:template>
     
 <xsl:template match="swingdiv"></xsl:template>
+
+<xsl:template match="swingSourceItems"></xsl:template>
     
 </xsl:stylesheet>

@@ -67,10 +67,10 @@
 <xsl:apply-templates/>
 </xsl:template>
    
-<xsl:template match="subsection">
+<xsl:template match="subsection"><xsl:if test="@scope != 'swing'">
 <xsl:choose><xsl:when test="ancestor::source">\section*</xsl:when><xsl:otherwise>\subsection</xsl:otherwise></xsl:choose><xsl:if test="@shorttitle">[<xsl:value-of select="@shorttitle"/>]</xsl:if>{<xsl:value-of select="@title"/>}\label{<xsl:value-of select="@id"/>}
 <xsl:apply-templates/>
-</xsl:template>
+</xsl:if></xsl:template>
    
 <xsl:template match="preface">
 \chapter*{Preface}\addcontentsline{toc}{chapter}{Preface}\markboth{\textsc{Preface}}{\textsc{Preface}}
@@ -143,7 +143,7 @@
 <xsl:template match="ul">
 <xsl:text>&#10;</xsl:text>
 \mylist{
-<xsl:for-each select="li">
+<xsl:for-each select="li | fxSourceItems/li">
 \myitem <xsl:apply-templates/>
 </xsl:for-each>
 }
@@ -235,9 +235,9 @@
 <xsl:template match="endchapter">
 </xsl:template>
     
-<xsl:template match="prog">
+<xsl:template match="prog"><xsl:if test="@scope != 'swing'">
     <xsl:apply-templates/>
-</xsl:template>
+</xsl:if></xsl:template>
     
 <xsl:template match="web">
 </xsl:template>
@@ -261,8 +261,14 @@
     <xsl:apply-templates/>
 </xsl:template>
     
+<xsl:template match="fxSourceItems">
+    <xsl:apply-templates/>
+</xsl:template>
+    
 <xsl:template match="swing"></xsl:template>
     
 <xsl:template match="swingdiv"></xsl:template>
+
+<xsl:template match="swingSourceItems"></xsl:template>
     
 </xsl:stylesheet>

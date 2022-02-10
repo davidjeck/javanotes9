@@ -30,11 +30,32 @@
 
 <xsl:template match="text()"></xsl:template>
 
+<xsl:template match="fx">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="fxdiv">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="fxSourceItems">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="swing"></xsl:template>
+    
+<xsl:template match="swingdiv"></xsl:template>
+
+<xsl:template match="swingSourceItems"></xsl:template>
+    
 
 </xsl:stylesheet>
 
 <!--
    To use this file, export the web site, copy the "sources" folder into
-   the javanotes9 source directory, cd to javanotes9, and run xalan on
-   javanotes9.xml with this xsl transform file.
+   the javanotes9/source directory, cd to javanotes9, and run xalan on
+   javanotes9.xml with this xsl transform file:
+   
+   XALAN_DIR='...'
+   java -cp $XALAN_DIR/xalan.jar:$XALAN_DIR/serializer.jar:$XALAN_DIR/xercesImpl.jar:$XALAN_DIR/xml-apis.jar org.apache.xalan.xslt.Process -xsl convert-check-sourceref.xsl -in javanotes9.xml
 -->

@@ -13,12 +13,12 @@
 		<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="javanotesID">
 		    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/"
 		          xmlns:opf="http://www.idpf.org/2007/opf">
-		   		<dc:title>Introduction to Programming Using Java, Version 9</dc:title>
+		   		<dc:title>Introduction to Programming Using Java, Version 9, JavaFX Edition</dc:title>
 		   		<dc:creator opf:role="aut">David J. Eck</dc:creator>
-		   		<dc:description>A free introductory programming textbook using Java as the programming language, version 9.</dc:description>
+		   		<dc:description>A free introductory programming textbook using Java as the programming language, version 9, JavaFX Edition.</dc:description>
 		   		<dc:date>2022-5</dc:date>
 		   		<dc:language>en-US</dc:language>
-		   		<dc:rights>Copyright 1996-2021 by David J. Eck.  Released under the
+		   		<dc:rights>Copyright 1996-2022 by David J. Eck.  Released under the
 		   		    Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.</dc:rights>
 		   		<dc:identifier id="javanotesID">https://math.hws.edu/javanotes9</dc:identifier>
 		    </metadata>
@@ -123,7 +123,7 @@
 	        <meta content="http://math.hws.edu/javanotes9" name="dtb:uid"/>
 	    </head>
 	    <docTitle>
-	        <text>Introduction to Programming Using Java, Version 8.1.3</text>
+	        <text>Introduction to Programming Using Java, Version 9.0</text>
 	    </docTitle>
 	    <docAuthor>
 	        <text>David J. Eck</text>
@@ -155,7 +155,7 @@
 		                  <text><xsl:value-of select="concat('Section ',$chapter,'.',$section,': ',@title)"/></text>
 		               </navLabel>
 		               <content><xsl:attribute name="src"><xsl:value-of select="concat('c',$chapter,'/s',$section,'.html')"/></xsl:attribute></content>
-		               <xsl:for-each select="subsection">
+		               <xsl:for-each select="subsection"><xsl:if test="@scope != 'swing'">
 			                <xsl:variable name="subsection"><xsl:value-of select="position()"/></xsl:variable>
 				            <navPoint><xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
 				               <navLabel>
@@ -163,7 +163,7 @@
 				               </navLabel>
 				               <content><xsl:attribute name="src"><xsl:value-of select="concat('c',$chapter,'/s',$section,'.html#',@id)"/></xsl:attribute></content>
 				            </navPoint>  
-		               </xsl:for-each>
+		               </xsl:if></xsl:for-each>
 		            </navPoint>
 		          </xsl:for-each>
 		           <xsl:if test="exercises">
@@ -236,14 +236,14 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.1.3 -- Title Page</title>
+        <title>Javanotes 9, JavaFX Edition -- Title Page</title>
         <link href="javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h2>
-        <h2 class="chapter_title">Version 8.1.3, August 2021</h2>
+        <h2 class="chapter_title">Version 9.0, May 2022</h2>
  <!--        <p class="centeralign">
         <i>(Version 7.0.3, with minor corrections, May 2018)</i>
         </p>
@@ -352,7 +352,7 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.1.3, Chapter <xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
+        <title>Javanotes 9.0, Chapter <xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
@@ -399,13 +399,13 @@
 &lt;!DOCTYPE html PUBLIC  "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
 </xsl:text>
      <html xmlns="http://www.w3.org/1999/xhtml">     <head>
-     <title>Javanotes 8.1.3 Preface</title>
+     <title>Javanotes 9 Preface</title>
      <link href="javanotes-epub.css" rel="stylesheet" type="text/css"/>
      </head>
      <body>
      <div class="content">
         <h3 class="centeralign">Introduction to Programming Using Java<br/>
-           Version 8.1.3, August 2021<br/></h3>
+           Version 9.0, May 2022<br/></h3>
 <!--       <p class="centeralign"><small><i>Version 7.0.3, with minor corrections, December 2018</i></small></p> -->
         <h2 class="centeralign">Preface</h2>
         <hr class="break"/>
@@ -478,7 +478,7 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.1.3, Section <xsl:value-of select="$chapternum"/>.<xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
+        <title>Javanotes 9.0, Section <xsl:value-of select="$chapternum"/>.<xsl:value-of select="position()"/> -- <xsl:value-of select="@title"/></title>
         <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
@@ -493,11 +493,11 @@
     </redirect:write>
 </xsl:template>
     
-<xsl:template match="subsection">
+<xsl:template match="subsection"><xsl:if test="@scope != 'swing'">
     <hr class="break"/>
     <h3 class="subsection_title"><a><xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute><xsl:if test="not(ancestor::source)"><xsl:number count="chapter"/>.<xsl:number count="section"/>.<xsl:number count="subsection"/>&#160;&#160;</xsl:if><xsl:value-of select="@title"/></a></h3>
     <xsl:apply-templates/>
-</xsl:template>
+</xsl:if></xsl:template>
 
 <xsl:template name="do-exercises">
     <xsl:variable name="chapternum">
@@ -509,7 +509,7 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.1.3, Exercises for Chapter <xsl:value-of select="$chapternum"/></title>
+        <title>Javanotes 9.0, Exercises for Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
@@ -538,7 +538,7 @@
 </xsl:text>
            <html xmlns="http://www.w3.org/1999/xhtml">
            <head>
-           <title>Javanotes 8.1.3, Solution to Exercise <xsl:value-of select="position()"/>, Chapter <xsl:value-of select="$chapternum"/></title>
+           <title>Javanotes 9.0, Solution to Exercise <xsl:value-of select="position()"/>, Chapter <xsl:value-of select="$chapternum"/></title>
            <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
            </head>
            <body>
@@ -580,7 +580,7 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 8.1.3, <xsl:if test="$answers">Answers for </xsl:if>Quiz on Chapter <xsl:value-of select="$chapternum"/></title>
+        <title>Javanotes 9.0, <xsl:if test="$answers">Answers for </xsl:if>Quiz on Chapter <xsl:value-of select="$chapternum"/></title>
         <link href="../javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
@@ -840,6 +840,10 @@
    
 <xsl:template match="endchapter"></xsl:template>
     
+<xsl:template match="prog"><xsl:if test="@scope != 'swing'">
+    <xsl:apply-templates/>
+</xsl:if></xsl:template>
+    
 <xsl:template match="web"></xsl:template>
     
 <xsl:template match="webdiv"></xsl:template>
@@ -852,4 +856,22 @@
     <xsl:apply-templates/>
 </xsl:template>
 
+<xsl:template match="fx">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="fxdiv">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="fxSourceItems">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="swing"></xsl:template>
+    
+<xsl:template match="swingdiv"></xsl:template>
+
+<xsl:template match="swingSourceItems"></xsl:template>
+    
 </xsl:stylesheet>

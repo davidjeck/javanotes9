@@ -84,11 +84,12 @@
    &GUI1_quiz;
 </chapter>
 
-<chapter id="arrays" title="Arrays and ArrayLists">
+<chapter id="arrays" title="Arrays, ArrayLists, and Records">
    &arrays_intro;
    &arrays_s1;
    &arrays_s2;
    &arrays_s3;
+   &arrays_s3a;
    &arrays_s4;
    &arrays_s5;
    &arrays_exercises;

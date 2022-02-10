@@ -117,9 +117,16 @@
     tex CDATA #IMPLIED
     texscale CDATA #IMPLIED>
     
-<!ELEMENT ul (li*)>
+<!-- swingSourceItems and fxSourceItems are used only
+     in source.xml, to allow source listing items specific
+     to the Swing and JavaFX editions, for Chapters 6 and 13
+     in particular. -->
+    
+<!ELEMENT ul ((li|swingSourceItems|fxSourceItems)*)>
 <!ELEMENT ol (li*)>
 <!ELEMENT li %simpletext;>
+<!ELEMENT swingSourceItems (li*)>
+<!ELEMENT fxSourceItems (li*)>
 
 <!ELEMENT br EMPTY>
 <!ELEMENT break EMPTY>
@@ -230,6 +237,7 @@
 <!ENTITY arrays_s1 SYSTEM "c7-arrays/s1.xml">
 <!ENTITY arrays_s2 SYSTEM "c7-arrays/s2.xml">
 <!ENTITY arrays_s3 SYSTEM "c7-arrays/s3.xml">
+<!ENTITY arrays_s3a SYSTEM "c7-arrays/s3a.xml">
 <!ENTITY arrays_s4 SYSTEM "c7-arrays/s4.xml">
 <!ENTITY arrays_s5 SYSTEM "c7-arrays/s5.xml">
 <!ENTITY arrays_exercises SYSTEM "c7-arrays/exercises.xml">

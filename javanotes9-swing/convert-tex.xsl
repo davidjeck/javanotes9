@@ -143,7 +143,7 @@
 <xsl:template match="ul">
 <xsl:text>&#10;</xsl:text>
 \mylist{
-<xsl:for-each select="li">
+<xsl:for-each select="li | swingSourceItems/li">
 \myitem <xsl:apply-templates/>
 </xsl:for-each>
 }
@@ -235,9 +235,9 @@
 <xsl:template match="endchapter">
 </xsl:template>
     
-<xsl:template match="prog">
+<xsl:template match="prog"><xsl:if test="@scope != 'fx'">
     <xsl:apply-templates/>
-</xsl:template>
+</xsl:if></xsl:template>
     
 <xsl:template match="web">
 </xsl:template>
@@ -256,12 +256,18 @@
 <xsl:template match="fx"></xsl:template>
     
 <xsl:template match="fxdiv"></xsl:template>
-    
+
+<xsl:template match="fxSourceItems"></xsl:template>
+  
 <xsl:template match="swing">
     <xsl:apply-templates/>
 </xsl:template>
     
 <xsl:template match="swingdiv">
+    <xsl:apply-templates/>
+</xsl:template>
+
+<xsl:template match="swingSourceItems">
     <xsl:apply-templates/>
 </xsl:template>
     

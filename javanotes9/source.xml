@@ -7,13 +7,13 @@
 <web><start><big>T</big>his page contains links</start> to the source code for</web>
 <tex><start><big>T</big>his appendix contains a list</start> of the</tex>
 examples appearing in the free, on-line textbook <i>Introduction 
-to Programming Using Java,</i> Eighth Edition.
+to Programming Using Java,</i> Version 9, <swing>Swing Edition</swing><fx>JavaFX Edition</fx>.
 <web>The <a href="../index.html">index&nbsp;page</a></web>
 <tex>The web site for the book, 
-<a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a>,</tex>
+<fx><a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a></fx><swing><a href="http://math.hws.edu/javanotes-swing">http://math.hws.edu/javanotes-swing</a></swing>,</tex>
 has links for downloading the entire web site.  If you do that, you will find
 the source code files in a directory named <i>sources</i>.  There is also
-a link for downloading just the source code.  
+a link for downloading just the source code files.  
 <a href="../README-running-the-examples.txt">The&nbsp;README&nbsp;file</a> from the download includes some 
 instructions for compiling and running the programs.
 Note however that some of these
@@ -48,7 +48,7 @@ when you run the program.  Since <classname>TextIO</classname> is defined in a p
 named <code>textio</code>, this means that
 TextIO.java and/or TextIO.class must be in a directory named textio,
 which must be in the same directory as the program.  There is also a GUI version of <classname>TextIO</classname>;
-you can find information about it at the end of <web>this web page</web><tex>Part&nbsp;3, below</tex>.</p>
+you can find information about it <web>at the end of this web page</web><tex>in Part&nbsp;3, below</tex>.</p>
 
 <ul>
    <li><sourceref href="chapter2/HelloWorld.java">HelloWorld.java</sourceref>, from <localref href="basics.1"/>, a trivial program that does
@@ -239,12 +239,12 @@ you can find information about it at the end of <web>this web page</web><tex>Par
 
 <subsection id="source.2" title="Part 2: Graphical Examples from the Text">
 
-<p>The following sample programs use a graphical user interface.  All of these programs use JavaFX
+<p>The following sample programs use a graphical user interface.  All of these programs use <swing>Swing</swing><fx>JavaFX</fx>
 as the GUI toolbox.</p>
 
 <ul>
    <li><sourceref href="chapter1/GUIDemo.java">GUIDemo.java</sourceref> is a simple demonstration of some basic
-   GUI components from the JavaFX graphical user interface library.  It appears in
+   GUI components from the <fx>JavaFX</fx><swing>Swing</swing> graphical user interface library.  It appears in
    the text in <localref href="overview.6"/>, but you won't be able to understand
    it until you learn about GUI programming.</li>
    <li><sourceref href="chapter3/SimpleGraphicsStarter.java">SimpleGraphicsStarter.java</sourceref>, from <localref href="control.8"/>, 
@@ -254,9 +254,9 @@ as the GUI toolbox.</p>
    <li><sourceref href="chapter3/MovingRects.java">MovingRects.java</sourceref>, from <localref href="control.8"/>, 
    draws a set of nested rectangles that seem to move infinitely towards the center.  This program is based on
    <sourceref href="chapter3/SimpleAnimationStarter.java">SimpleAnimationStarter.java</sourceref>, which can
-   be used as a starting point for writing similar animation programs. 
+   be used as a starting point for writing similar animation programs. <fx> 
    <sourceref href="chapter3/RandomCircles.java">RandomCircles.java</sourceref>
-   is another animation in which the computer continuously adds random colored disks to an image.</li>
+   is another animation in which the computer continuously adds random colored disks to an image.</fx></li>
    <li><sourceref href="chapter4/RandomMosaicWalk.java">RandomMosaicWalk.java</sourceref>, a
    program that displays a window full of colored squares with a moving
    disturbance, from <localref href="subroutines.6"/>.  This program depends on
@@ -272,6 +272,7 @@ as the GUI toolbox.</p>
    <li><sourceref href="chapter5/ShapeDraw.java">ShapeDraw.java</sourceref>, from <localref href="OOP.5"/>, is a program
    that lets the user place various shapes on a drawing area; an example of
    abstract classes, subclasses, and polymorphism.</li>
+ <fxSourceItems>
    <li><sourceref href="chapter6/HelloWorldFX.java">HelloWorldFX.java</sourceref> 
    from <localref href="GUI1.1"/>, displays a the message  in a window, with three buttons
    for changing the message and quitting the program.  One of the messages is "Hello World", and
@@ -314,6 +315,78 @@ as the GUI toolbox.</p>
    <li><sourceref href="chapter6/MosaicDraw.java">MosaicDraw.java</sourceref>, from <localref href="GUI1.6"/>,
    demonstrates menus.  In this program, the user colors the squares of a mosaic by clicking-and-dragging the mouse. It uses
    <sourceref href="chapter6/MosaicCanvas.java">MosaicCanvas.java</sourceref> to define the mosaic itself.</li>
+ </fxSourceItems>
+ <swingSourceItems>
+   <li><sourceref href="chapter6/HelloWorldGUI1.java">HelloWorldGUI1.java</sourceref>, 
+   <sourceref href="chapter6/HelloWorldGUI2.java">HelloWorldGUI2.java</sourceref>,
+   and <sourceref href="chapter6/HelloWorldGUI3.java">HelloWorldGUI3.java</sourceref>,
+   from <localref href="GUI1.1"/>, show the message "Hello World" in a window, the first
+   one by using the built-in <classname>JOptionPane</classname> class, the second
+   by building the interface "by hand," and the third is similar to the second but
+   uses a lambda expression to specify the event handler.</li>
+   <li><sourceref href="chapter6/SimpleColorChooser.java">SimpleColorChooser.jav</sourceref>, used in <localref href="GUI1.3"/>
+   to demonstrate RGB and HSB colors. This program uses techniques that are not
+   covered until later in the text, and it is not presented as a programming
+   example.  You can run it to experiment with colors.</li>
+   <li><sourceref href="chapter6/RandomStringsPanel.java">RandomStringsPanel.java</sourceref>, 
+   from <localref href="GUI1.3"/>, shows 25 copies of the string "Java!" (or some other string 
+   specified in it constructor) in random colors and fonts.  The program
+   <sourceref href="chapter6/RandomStrings.java">RandomStrings.java</sourceref> uses
+   a <classname>RandomStringsPanel</classname> as its content pane.  And
+   <sourceref href="chapter6/RandomStringsPanelWithMain.java">RandomStringsPanelWithMain.java</sourceref>
+   is a program that combines the <code>main()</code> routine and the definition of the
+   panel into one file.  Finally, <sourceref href="chapter6/ClickableRandomStrings.java">ClickableRandomStrings.java</sourceref>
+   from <localref href="GUI1.4"/> is a modification of <code>RandomStrings.java</code> with a mouse listener
+   that redraws the panel when the user clicks on it.</li>
+   <li><sourceref href="chapter6/SimpleStamper.java">SimpleStamper.java</sourceref>, from <localref href="GUI1.4"/>,
+   lets the user place rectangles and ovals on a drawing area by clicking with the mouse.</li>
+   <li><sourceref href="chapter6/SimpleTrackMouse.java">SimpleTrackMouse.java</sourceref>, from <localref href="GUI1.4"/>,
+   shows information about mouse events as the user moves and clicks with the mouse.</li>
+   <li><sourceref href="chapter6/SimplePaint.java">SimplePaint.java</sourceref>, from <localref href="GUI1.4"/>,
+   lets the user draw curves in a drawing area and select the drawing color from a
+   palette.</li>
+   <li><sourceref href="chapter6/RandomArt.java">RandomArt.java</sourceref>, from <localref href="GUI1.5"/>, shows
+   a new random "artwork" every four seconds.  This is an example of using a <classname>Timer</classname>.
+   <sourceref href="chapter6/RandomArtWithNestedClass.java">RandomArtWithNestedClass.java</sourceref> is
+   similar, but uses a nested class instead of a lambda expression to define an <classname>ActionListener</classname>
+   for the timer.</li>
+   <li><sourceref href="chapter6/KeyboardAndFocusDemo.java">KeyboardAndFocusDemo.java</sourceref>, from <localref href="GUI1.5"/>, shows
+   how to use keyboard and focus events.</li>
+   <li><sourceref href="chapter6/SubKiller.java">SubKiller.java</sourceref>, from <localref href="GUI1.5"/>, lets the
+   user play a simple arcade-style game.  Uses a timer as well as keyboard and focus events.</li>
+   <li><sourceref href="chapter6/SliderDemo.java">SliderDemo.java</sourceref> and
+   <sourceref href="chapter6/TextAreaDemo.java">TextAreaDemo.java</sourceref>, 
+   small programs that demonstrate basic components, used as examples in <localref href="GUI1.6"/>.
+   <sourceref href="chapter6/SliderDemoWithLambda.java">SliderDemoWithLambda.java</sourceref> is a 
+   version of <code>SliderDemo</code> that uses lambda expressions.</li>
+   <li><sourceref href="chapter6/BorderDemo.java">BorderDemo.java</sourceref> and</li>
+   <li><sourceref href="chapter6/BorderDemo.java">BorderDemo.java</sourceref>, 
+   from <localref href="GUI1.7"/>, a very simple program that demonstrates six types of border.</li>
+   <li><sourceref href="chapter6/SliderAndButtonDemo.java">SliderAndButtonDemo.java</sourceref>, from <localref href="GUI1.7"/>,
+   shows how to create several components and lay them out in a <classname>GridLayout</classname>.</li>
+   <li><sourceref href="chapter6/SimpleCalc.java">SimpleCalc.java</sourceref>, from <localref href="GUI1.7"/>, lets the
+   user add, subtract, multiply, or divide two numbers input by the user.  A demo
+   of text fields, buttons, and layout with nested subpanels.</li>
+   <li><sourceref href="chapter6/NullLayoutDemo.java">NullLayoutDemo.java</sourceref>, from <localref href="GUI1.7"/>, shows
+   how to lay out the components in a container for which the layout manager has been
+   set to <code>null</code>.  <sourceref href="chapter6/BashfulButton.java">BashfulButton.java</sourceref>
+   is another, cute, example that uses a null layout.</li>
+   <li><sourceref href="chapter6/HighLowGUI.java">HighLowGUI.java</sourceref>, from <localref href="GUI1.7"/>, 
+    implements a GUI version of the card game
+   <sourceref href="chapter5/HighLow.java">HighLow.java</sourceref>, in which the user sees a playing card and guesses
+   whether the next card will be higher or lower in value. This program depends on
+   <sourceref href="chapter6/Card.java">Card.java</sourceref>, <sourceref href="chapter6/Hand.java">Hand.java</sourceref>, and
+   <sourceref href="chapter6/Deck.java">Deck.java</sourceref>.</li>
+   <li><sourceref href="chapter6/MosaicDraw.java">MosaicDraw.java</sourceref>, from <localref href="GUI1.8"/>,
+   demonstrates menus and a color chooser dialog.  This is used in a program where
+   the user colors the squares of a mosaic by clicking-and-dragging the mouse. It uses
+   <sourceref href="chapter6/MosaicPanel.java">MosaicPanel.java</sourceref> to define the mosaic panel itself,
+   and it uses <sourceref href="chapter6/MosaicDrawController.java">MosaicDrawController.java</sourceref>
+   to create the panel and menu bar and to handle events.</li>
+   <li><sourceref href="chapter6/SimpleDialogDemo.java">SimpleDialogDemo.java</sourceref>, from <localref href="GUI1.8"/>,
+   is a small program that demonstrates <classname>JColorChooser</classname> and some
+   dialogs from <classname>JOptionPane</classname>.</li>
+ </swingSourceItems>
    <li><sourceref href="chapter7/RandomStringsWithArray.java">RandomStringsWithArray.java</sourceref>, 
    from <localref href="arrays.2"/>,
    shows multiple copies of a message in random colors, sizes, and positions.  There is an animation in
@@ -330,7 +403,6 @@ as the GUI toolbox.</p>
    users play a game of checkers against each other.  Illustrates the use of a 
    two-dimensional array and a variety of programming techniques. 
    (This is the longest program in the book so far, at over 700 lines!)</li>
-   
    <li><sourceref href="chapter9/Maze.java">Maze.java</sourceref> and
    <sourceref href="chapter9/LittlePentominos.java">LittlePentominos.java</sourceref>
    are demo programs mentioned in <localref href="recursion.1"/> as examples of
@@ -392,6 +464,7 @@ as the GUI toolbox.</p>
    examples:  A chat room, defined in package <sourceref href="chapter12/netgame/chat/">netgame.chat</sourceref>;
    a tic-tac-toe game, defined in package <sourceref href="chapter12/netgame/tictactoe">netgame.tictactoe</sourceref>;
    and a poker game, defined in package <sourceref href="chapter12/netgame/fivecarddraw/">netgame.fivecarddraw</sourceref>.</li>
+ <fxSourceItems>
    <li><sourceref href="chapter13/BoundPropertyDemo.java">BoundPropertyDemo.java</sourceref>,
    from <localref href="GUI2.1"/>, demonstrates bindings and bidirectional bindings of 
    JavaFX observable properties.</li>
@@ -434,6 +507,63 @@ as the GUI toolbox.</p>
    displays visualizations of the Mandelbrot set, is defined by several classes in the
    package <code>edu.hws.eck.mdbfx</code>.  The source code files can be found in
    the directory <sourceref href="chapter13/edu/hws/eck/mdbfx">edu/hws/eck/mdbfx</sourceref>.</li>
+ </fxSourceItems>
+ <swingSourceItems>
+  <li><sourceref href="chapter13/HighLowWithImages.java">HighLowWithImages.java</sourceref>, from <localref href="GUI2.1"/>, is a 
+   variation of <sourceref href="chapter6/HighLowGUI.java">HighLowGUI.java</sourceref> that takes playing card images from an
+   image file.  Requires the image file <sourceref href="chapter13/cards.png">cards.png</sourceref> and depends on
+   <sourceref href="chapter13/Card.java">Card.java</sourceref>, <sourceref href="chapter13/Deck.java">Deck.java</sourceref>, 
+   and <sourceref href="chapter13/Hand.java">Hand.java</sourceref>.</li>
+   <li><sourceref href="chapter13/PaintWithOffScreenCanvas.java">PaintWithOffScreenCanvas.java</sourceref>, from <localref href="GUI2.1"/>, is a little
+   paint program that illustrates the use of a <classname>BufferedImage</classname> as
+   an off-screen canvas. </li>
+   <li><sourceref href="chapter13/SoundAndCursorDemo.java">SoundAndCursorDemo.java</sourceref>, from <localref href="GUI2.1"/>, lets the user
+   play a few sounds and change the cursor by clicking some buttons.  This demonstrates
+   using audio resource files and using an image resource to create a custom cursor.  Requires
+   the resource files in the directory <sourceref href="chapter13/snc_resources">snc_resources</sourceref>.</li>
+   <li><sourceref href="chapter13/TransparencyDemo.java">TransparencyDemo.java</sourceref>, from <localref href="GUI2.2"/>, demonstrates
+   using the alpha component of colors.  It is also an example of using <classname>FontMetrics</classname>.</li>
+   <li><sourceref href="chapter13/StrokeDemo.java">StrokeDemo.java</sourceref>, from <localref href="GUI2.2"/>, demonstrates the
+   use of various <classname>BasicStrokes</classname> for drawing lines and rectangles.
+   Also demonstrates antialiasing.</li>
+   <li><sourceref href="chapter13/PaintDemo.java">PaintDemo.java</sourceref>, from <localref href="GUI2.2"/>, demonstrates
+   using a <classname>GradientPaint</classname> and using a <classname>TexturePaint</classname>
+   to fill a polygon.  Uses the image resource files <sourceref href="chapter13/TinySmiley.png">TinySmiley.png</sourceref>
+   and <sourceref href="chapter13/QueenOfHearts.png">QueenOfHearts.png</sourceref>.</li>
+   <li><sourceref href="chapter13/ChoiceDemo.java">ChoiceDemo.java</sourceref>, discussed in <localref href="GUI2.3"/>, demonstrates
+   radio buttons, combo boxes, and Actions.</li>
+   <li><sourceref href="chapter13/ToolBarDemo.java">ToolBarDemo.java</sourceref>, from <localref href="GUI2.3"/>, uses a <classname>JToolBar</classname>
+   that holds a group of 3 radio buttons and a push button.  All the buttons use custom
+   icons, and the push button is created from an <classname>Action</classname>.</li>
+   <li><sourceref href="chapter13/SillyStamper.java">SillyStamper.java</sourceref>, from <localref href="GUI2.4"/>, demonstrates using
+   a <classname>JList</classname> of <classname>Icons</classname>.  The user can "stamp" images
+   of a selected icon onto a drawing area.  This program uses the icon images in the
+   directory <sourceref href="chapter13/stamper_icons">stamper_icons</sourceref> as resources.</li>
+   <li><sourceref href="chapter13/StatesAndCapitalsTableDemo.java">StatesAndCapitalsTableDemo.java</sourceref>, from <localref href="GUI2.4"/>, is
+   a completely trivial demo of  a <classname>JTable</classname>.</li>
+   <li><sourceref href="chapter13/ScatterPlotTableDemo.java">ScatterPlotTableDemo.java</sourceref>, from <localref href="GUI2.4"/>, uses
+   a <classname>TableModel</classname> to customize a <classname>JTable</classname>.
+   The table is a list of xy-points that the user can edit.  A scatter plot of the
+   points is displayed.</li>
+   <li><sourceref href="chapter13/SimpleWebBrowser.java">SimpleWebBrowser.java</sourceref> and 
+   <sourceref href="chapter13/SimpleWebBrowserWithThread.java">SimpleWebBrowserWithThread.java</sourceref>,
+   from <localref href="GUI2.4"/>, implement a simple web browser using <classname>JEditorPane</classname>
+   (which is ridiculously easy).  The difference between the programs is that the first
+   loads documents synchronously, which can hang the program in an unpleasant way, while
+   the second uses a thread to load documents asynchronously.</li>
+   <li><sourceref href="chapter13/SimpleRTFEdit.java">SimpleRTFEdit.java</sourceref>, mentioned but just barely discussed
+   in <localref href="GUI2.4"/>, lets the user edit RTF files, which are text files in
+   a format that include style information such as bold and italics.  This is mainly a simple
+   demo of using <classname>Actions</classname> defined by "editor kits."</li>
+   <li><sourceref href="chapter13/StopWatchLabel.java">StopWatchLabel.java</sourceref> 
+   and <sourceref href="chapter13/MirrorText.java">MirrorText.java</sourceref>, from
+   <localref href="GUI2.4"/>, are classes that implement custom components.
+   <sourceref href="chapter13/CustomComponentTest.java">CustomComponentTest.java</sourceref> is a program that tests them.</li>
+   <li>The Mandelbrot program from <localref href="GUI2.5"/>, which computes and
+   displays visualizations of the Mandelbrot set, is defined by several classes in the
+   package <code>edu.hws.eck.mdb</code>.  The source code files can be found in
+   the directory <sourceref href="chapter13/edu/hws/eck/mdb">edu/hws/eck/mdb</sourceref>.</li>
+ </swingSourceItems>
 </ul>
 
    
@@ -467,8 +597,8 @@ along with the programs that use them.</p>
    class that makes it possible to use <code>System.out</code> and other features
    of <classname>System</classname> in the same window.  I use these classes to build
    executable jar files for my text-oriented examples that run in a window instead of
-   on the command line.  See the comments in the source code files for more information.
-   (Note that this GUI version of <classname>TextIO</classname> uses the Swing GUI toolkit rather than JavaFX.)</li>
+   on the command line.  See the comments in the source code files for more information.<fx>
+   (Note that this GUI version of <classname>TextIO</classname> uses the Swing GUI toolkit rather than JavaFX.)</fx></li>
    <li><sourceref href="chapter3/SimpleGraphicsStarter.java">SimpleGraphicsStarter.java</sourceref> and
    <sourceref href="chapter3/SimpleAnimationStarter.java">SimpleAnimationStarter.java</sourceref> are
    small programs that you can edit to make very simple pictures and animations
@@ -478,14 +608,15 @@ along with the programs that use them.</p>
    window that contains a grid of colored rectangles.  
    It depends on <sourceref href="chapter4/MosaicCanvas.java">MosaicCanvas.java</sourceref>.
    It is used in several examples and exercises in <localref href="subroutines"/>.</li>
-   <li><sourceref href="chapter4/MosaicCanvas.java"/>  defines a subclass of <classname>Canvas</classname> that shows little
-   rectangles arranged in rows and columns, with many options.</li>
+   <li><sourceref href="chapter4/MosaicCanvas.java"/>  defines a subclass of 
+   <fx><classname>Canvas</classname></fx><swing><classname>JPanel</classname></swing> 
+   that shows little rectangles arranged in rows and columns, with many options.</li>
    <li><sourceref href="chapter5/StatCalc.java">StatCalc.java</sourceref> is a simple
    class that computes some statistics of a set of numbers.  It is used only
    for a couple exercises in <localref href="OOP"/> and
    <localref href="GUI1"/>.</li>
    <li><sourceref href="chapter8/Expr.java">Expr.java</sourceref> defines a class <classname>Expr</classname> that
-   represent mathematical expressions involving the variable <code>x</code>.  It is used only
+   represents mathematical expressions involving the variable <code>x</code>.  It is used only
    in a couple of the exercises in <localref href="robustness"/>.</li>
    <li><sourceref href="chapter11/TextReader.java">TextReader.java</sourceref> 
    is not used in this textbook, but it might be useful to some readers.
@@ -502,33 +633,13 @@ along with the programs that use them.</p>
    All of these classes are part of the package <sourceref href="chapter12/netgame/fivecarddraw/">netgame.fivecarddraw</sourceref>,
    which is discussed in <localref href="threads.5.4"/>, but these classes can be used independently
    of the netgame framework.</li>
+ <fxSourceItems>
    <li><sourceref href="chapter13/SimpleDialogs.java">SimpleDialogs.java</sourceref> contains easy-to-use
    static methods for showing several kinds of JavaFX dialog box and getting back the results of user
    interaction when appropriate.</li>
+ </fxSourceItems>
 </ul>
 
 </subsection>
-
-<subsection id="source.4" title="Part 4: Some Examples of New Features">
-<p>This section lists a few demo programs that illustrate features that
-were added to Java after version Java&nbsp;8.  These programs cannot be
-compiled with a Java&nbsp;8 JDK.  (These sample programs were added to this
-textbook for Version 8.1 or later.)</p>
-
-<ul>
-   <li><sourceref href="post-java8/NewSwitchDemo.java">NewSwitchDemo.java</sourceref> demonstrates
-   a new syntax for <code>switch</code> statements that was introduced in Java&nbsp;14.
-   The new <code>switch</code> syntax is discussed in <localref href="control.6.5"/>.</li>
-   <li><sourceref href="post-java8/VarDeclarationDemo.java">VarDeclarationDemo</sourceref>
-   demonstrates using <code>var</code> instead of a type name when declaring local variables.
-   This feature was introduced in Java&nbsp;10.
-   The use of <code>var</code> is discussed in <localref href="subroutines.7.1a"/>.</li>
-   <li><sourceref href="post-java8/RecordDemo.java">RecordDemo.java</sourceref> 
-   demonstrates <code>records</code>, a new kind of class
-   that represents a simple aggregate data structure.  Records are a new feature
-   in Java&nbsp;16.  They are briefly introduced in <localref href="arrays.1.4"/>.</li>
-</ul>
-</subsection>
-
 
 </source>
