@@ -26,7 +26,13 @@ public class RandomStringsWithArray extends Application {
 	
 	private final static String MESSAGE = "Hello JavaFX"; 
 
-	private Font[] fonts;  // The five fonts.
+	private final static Font[] fonts = new Font[] {
+			Font.font("Times New Roman", FontWeight.BOLD, 20),
+			Font.font("Arial", FontWeight.BOLD, FontPosture .ITALIC, 28),
+			Font.font("Verdana", 32),
+			Font.font(40),
+			Font.font("Times New Roman", FontWeight.BOLD, FontPosture .ITALIC, 60)
+	};
 
 	private Canvas canvas;  // The canvas on which the strings are drawn.
 	
@@ -42,14 +48,6 @@ public class RandomStringsWithArray extends Application {
 	
 
 	public void start( Stage stage ) {
-
-		fonts= new Font[] {
-				Font.font("Times New Roman", FontWeight.BOLD, 20),
-				Font.font("Arial", FontWeight.BOLD, FontPosture .ITALIC, 28),
-				Font.font("Verdana", 32),
-				Font.font(40),
-				Font.font("Times New Roman", FontWeight.BOLD, FontPosture .ITALIC, 60)
-		};
 
 		canvas = new Canvas(500,300);
 		createStringData();

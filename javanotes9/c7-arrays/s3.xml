@@ -9,14 +9,15 @@ we can easily encode the dynamic array pattern into a class, but it looks like
 we need a different class for each data type.  In fact, Java has a feature called
 "parameterized types" that makes it possible to avoid the multitude of classes, and
 Java has a single class named <classname>ArrayList</classname> that implements the
-dynamic array pattern for all data types.</p>
+dynamic array pattern for all data types that are defined as classes (but not,
+directly, for primitive types).</p>
  
 
 <subsection id="arrays.3.1" title="ArrayList and Parameterized Types">   
 
 <p>Java has a standard type with the rather odd name <atype>ArrayList&lt;String&gt;</atype> that represents
-dynamic arrays of <classname>Strings</classname>.  Similarly, there is a type <atype>ArrayList&lt;Button&gt;</atype>
-that can be used to represent dynamic arrays of <classname>Buttons</classname>.  And if
+dynamic arrays of <classname>Strings</classname>.  Similarly, there is a type <atype>ArrayList&lt;Color&gt;</atype>
+that can be used to represent dynamic arrays of <classname>Colors</classname>.  And if
 <classname>Player</classname> is a class representing players in a game, then
 the type <atype>ArrayList&lt;Player&gt;</atype> can be used to represent a dynamic
 array of <classname>Players</classname>.</p>
@@ -27,7 +28,7 @@ is only one class, the <classname>ArrayList</classname> class, defined in the pa
 <newword>parameterized type</newword>.  A parameterized type can take a type
 parameter, so that from the single class <classname>ArrayList</classname>,
 we get a multitude of types including <atype>ArrayList&lt;String&gt;</atype>,
-<atype>ArrayList&lt;Button&gt;</atype>, and in fact <atype>ArrayList&lt;T&gt;</atype>
+<atype>ArrayList&lt;Color&gt;</atype>, and in fact <atype>ArrayList&lt;T&gt;</atype>
 for any object type <classname>T</classname>.  The type parameter <classname>T</classname>
 must be an object type such as a class name or an interface name.  It cannot be
 a primitive type.  This means that, unfortunately, you can not have an ArrayList of
@@ -61,7 +62,7 @@ create a list of players with</p>
 with <code>playerList.remove(k)</code>.</np>
 
 <p>Furthermore if <code>playerList</code> is a local variable, then
-its declaration can be abbreviated  (in Java 10 or later) to</p>
+its declaration can be abbreviated to</p>
 
 <pre>var playlerList = new ArrayList&lt;Player&gt;();</pre>
 
@@ -76,11 +77,12 @@ An attempt to add an object that is not of type <classname>T</classname> will be
 a syntax error, and the program will not compile.  However, note that objects
 belonging to a subclass of <classname>T</classname> can be added to the list, since
 objects belonging to a subclass of <classname>T</classname> are still considered to
-be of type <classname>T</classname>. Thus, for example, a variable of type
-<atype>ArrayList&lt;Pane&gt;</atype> can be used to hold objects of type
-<classname>BorderPane</classname>, <classname>TilePane</classname>, <classname>GridPane</classname>,
-or any other subclass of <classname>Pane</classname>.
-(Of course, this is the same way arrays work:  An object of type <atype>T[]</atype>
+be of type <classname>T</classname>. Thus, if class <classname>Shape</classname>
+has subclasses <classname>Rectangle</classname>, <classname>Oval</classname>
+and <classname>RounRect</classname>, then a variable of type
+<atype>ArrayList&lt;Shape&gt;</atype> can be used to hold objects of type
+<classname>Rectangle</classname>, <classname>Oval</classname>, and <classname>RoundRect</classname>.
+(Of course, this is the same way arrays work:  An array of type <atype>T[]</atype>
 can hold objects belonging to any subclass of <classname>T</classname>.)
 Similarly, if <classname>T</classname> is an interface, then any object that 
 implements interface <classname>T</classname> can be added to the list.</p>
@@ -122,13 +124,15 @@ to zero.</li>
 <code>N</code>, this removes the <code>N-th</code> item in the <classname>ArrayList</classname>.
 <code>N</code> must be in the range <code>0</code> to <code>list.size()-1</code>. Any items
 in the list that come after the removed item are moved up one position. The
-size of the list decreases by 1.</li>
+size of the list decreases by 1.  This method returns the removed item.</li>
 <li><codedef>list.remove(obj)</codedef> &mdash; If the specified
 object occurs somewhere in the list, it is removed from the list.
 Any items in the list that come after the removed item are moved up one
 position. The size of the <classname>ArrayList</classname> decreases by 1. If <code>obj</code>
 occurs more than once in the list, only the first copy is removed.  If <code>obj</code>
-does not occur in the list, nothing happens; this is not an error.</li>
+does not occur in the list, nothing happens; this is not an error. This method
+returns a <ptype>boolean</ptype> value that says whether or not an item was
+actually removed.</li>
 <li><codedef>list.indexOf(obj)</codedef> &mdash; A function that
 searches for the object, <code>obj</code>, in the list. If the object
 is found in the list, then the first position number where it is found is returned.
@@ -190,35 +194,40 @@ primitive type values in an <classname>ArrayList</classname>.
 You can't do that literally, but you can "wrap" the
 primitive type value in an object belonging to one of the wrapper classes.</p>
    
-<p>For example, an object of type <classname>Double</classname> contains a single instance
-variable, of type <ptype>double</ptype>.  The object is a "wrapper" 
-for the <ptype>double</ptype> value.  You can create an object that
-wraps the <ptype>double</ptype> value <code>6.0221415e23</code> with</p>
+<p>For example, an object of type <classname>Integer</classname> contains a single instance
+variable, of type <ptype>int</ptype>.  The object is a "wrapper" 
+for the <ptype>int</ptype> value.  You can get an object that
+wraps the <ptype>int</ptype> value <code>42</code> with</p>
    
-<pre>Double d = new Double(6.0221415e23);</pre>
+<pre>Integer n = Integer.valueOf(42);</pre>
    
-<np>The value of <code>d</code> contains the same information as the value of type
-<ptype>double</ptype>, but it is an object.   If you want to retrieve the <ptype>double</ptype>
+<np>The value of <code>n</code> has the same information as the value of type
+<ptype>int</ptype>, but it is an object. If you want to retrieve the <ptype>double</ptype>
 value that is wrapped in the object, you can call the function <code>d.doubleValue()</code>.
-Similarly, you can wrap an <ptype>int</ptype>
-in an object of type <classname>Integer</classname>, a <ptype>boolean</ptype> value
-in an object of type <classname>Boolean</classname>, and so on.</np>
+Similarly, you can wrap a <ptype>double</ptype>
+in an object of type <classname>Double</classname>, a <ptype>boolean</ptype> value
+in an object of type <classname>Boolean</classname>, and so on.  Each wrapper
+class has a static <code>valueOf</code>() method for wrapping a primitive type
+value in an object.</np>
 
-<p>Actually, instead of calling the constructor, <code>new Double(x)</code>,
-it is preferable to use the static method <code>Double.valueOf(x)</code>,
-which does essentially the same thing; that is, it returns an object of
-type <classname>Double</classname> that wraps the <ptype>double</ptype>
-value&nbsp;<code>x</code>.  The advantage is that if <code>Double.valueOf()</code>
-is called more than once with the same parameter, value, it has the option
-of returning the same object each time.  After the first call with that parameter,
-it can reuse the same object in subsequent calls with the same parameter.
-This is OK because objects of type <classname>Double</classname> are
-immutable, so two objects that start out with the same value are guaranteed to be
-identical forever.  <code>Double.valueOf</code> is a kind of "factory method"
-like those we saw for <classname>Color</classname> and <classname>Font</classname>
-in <localref href="GUI1.2"/>.  Each of the wrapper classes has a similar
-factory method:  <code>Integer.valueOf(n)</code>, <code>Character.valueOf(ch)</code>,
-and so on.</p>
+<p>The method <code>Integer.valueOf()</code> is a <code>static</code> factory method
+that returns an object of type <classname>Integer</classname>.
+The <classname>Integer</classname> class also has a constructor for creating
+objects, but it has been <newword>deprecated</newword>, meaning that it should not be used in new
+code and might be removed from the language in the future.  The static factory
+method has the advantage that if <code>Integer.valueOf()</code>
+is called more than once with the same parameter value, it has the option
+of returning the same object each time. 
+This is OK because objects of type <classname>Integer</classname> are
+<newword>immutable</newword>, that is, the content of the object cannot
+be modified after the object has been created.  Someone who gets their
+hands on an <classname>Integer</classname> will not be able to 
+change the primitive <ptype>int</ptype> value that it represents.<fx> We saw something 
+similar for the <classname>Color</classname>
+class in <localref href="GUI1.2.1"/>, which also has static factory methods for 
+creating immutable objects.</fx></p>
+
+
 
 <break/>
    
@@ -275,14 +284,14 @@ but because of unboxing, the compiler will automatically convert the return valu
 <np>So, in effect, we can pretty much use <code>integerList</code> as if it were
 a dynamic array of <ptype>int</ptype> rather than a dynamic array of <classname>Integer</classname>.
 Of course, a similar statement holds for lists of other wrapper classes such as
-<atype>ArrayList&lt;Double&gt;</atype> and <atype>ArrayList&lt;Character&gt;</atype>.
-(There is one issue that sometimes causes problems:  A list can hold <code>null</code>
+<atype>ArrayList&lt;Double&gt;</atype> and <atype>ArrayList&lt;Character&gt;</atype>.</np>
+
+<p>There is one issue that sometimes causes problems:  A list can hold <code>null</code>
 values, and a <code>null</code> does not correspond to any primitive type value.  This
 means, for example, that the statement "<code>int num = integerList.get(3);</code>"
 can produce a null pointer exception in the case where <code>integerList.get(3)</code>
 returns <code>null</code>.  Unless you are sure that all the values in your list are
-non-null, you need to take this possibility into account.)
-</np>
+non-null, you need to take this possibility into account.</p>
 
 </subsection>
 
@@ -367,7 +376,8 @@ for ( Double num : numbers ) {
 
 <p>For a more complete and useful example, we will look at the program
 <sourceref href="SimplePaint2.java"/>.  This is a much improved version of
-<sourceref chapter="6" href="SimplePaint.java"/> from <localref href="GUI1.3.3"/>.
+<sourceref chapter="6" href="SimplePaint.java"/> from
+<fx><localref href="GUI1.3.3"/></fx><swing><localref href="GUI1.4.4"/></swing>.
 In the new program, the user can sketch curves in a drawing area
 by clicking and dragging with the mouse.
 The user can select the drawing color using a menu.  The background color of the
@@ -389,13 +399,20 @@ command is implemented by deleting the data for most recently drawn curve,
 and then redrawing the entire picture using the remaining data.</p>  
 
 <p>The data structure that we need is implemented using <classname>ArrayLists</classname>.
-The main data for a curve consists of a list of the points on the curve.  This
-data is stored in an object of type <atype>ArrayList&lt;Point2D&gt;</atype>.
-(<classname>Point2D</classname> is standard class in package <code>javafx.geometry</code>.
-A <classname>Point2D</classname> can be constructed from two <ptype>double</ptype>
-values, giving the (x,y) coordinates of a point.  A <classname>Point2D</classname>
-object, <code>pt</code>, has getter methods <code>pt.getX()</code> and <code>pt.getY()</code>
-that return the x and y coordinates.)  But in addition to a list of points
+The main data for an individual curve consists of a list of the points on the curve.  This
+data is stored in an object of type 
+<fx><atype>ArrayList&lt;Point2D&gt;</atype></fx><swing><atype>ArrayList&lt;Point&gt;</atype></swing>.
+(<fx><classname>Point2D</classname></fx><swing><classname>Point</classname></swing> 
+is standard class in package <fx><code>javafx.geometry</code></fx><swing><code>java.awt</code></swing>:
+A&nbsp;<fx><classname>Point2D</classname></fx><swing><classname>Point</classname></swing> 
+can be constructed from two <fx><ptype>double</ptype></fx><swing><ptype>int</ptype></swing>
+values, giving the (x,y) coordinates of the point.  And
+a&nbsp;<fx><classname>Point2D</classname></fx><swing><classname>Point</classname></swing>
+object, <code>pt</code>, has 
+<fx>getter methods <code>pt.getX()</code> and <code>pt.getY()</code>
+that return the x and y coordinates</fx><swing>instance
+variables <code>x</code> and <code>y</code> representing 
+the coordinates of the point</swing>.)  But in addition to a list of points
 on a curve, to redraw the curve, we also need to know its color,
 and we need to know whether the symmetry option should be applied to the curve.
 All the data that is needed to redraw the curve is grouped into
@@ -405,7 +422,7 @@ as a nested class in the program:</p>
 <pre>private static class CurveData {
    Color color;  // The color of the curve.
    boolean symmetric;  // Are horizontal and vertical reflections also drawn?
-   ArrayList&lt;Point2D&gt; points;  // The points on the curve.
+   ArrayList&lt;Point<fx>2D</fx>&gt; points;  // The points on the curve.
 }</pre>
    
 <np>However, a picture can contain many curves, not just one, so to store
@@ -419,7 +436,7 @@ the program uses an <classname>ArrayList</classname>, <code>curves</code>, decla
 points as part of its data!  Let's look at a few examples of processing
 this data structure.  When the user clicks the mouse on the drawing surface,
 it's the start of a new curve, and a new <classname>CurveData</classname>
-object must be created.  The instance
+object must be created to represent that curve.  The instance
 variables in the new <classname>CurveData</classname> object must
 also be initialized.  Here is the code from the <code>mousePressed()</code>
 routine that does this, where <code>currentCurve</code> is a global
@@ -435,7 +452,7 @@ currentCurve.symmetric = useSymmetry; // The "symmetric" property of the curve
                                       // is also copied from the current value
                                       // of an instance variable, useSymmetry.
 
-currentCurve.points = new ArrayList&lt;Point2D&gt;();  // A new point list object.</pre>
+currentCurve.points = new ArrayList&lt;Point<fx>2D</fx>&gt;();  // A new point list object.</pre>
 
 <np>As the user drags the mouse, new points are added to <code>currentCurve</code>,
 and line segments of the curve are drawn between points as they are added.  When the
@@ -445,8 +462,10 @@ the list of curves by calling</np>
 <pre>curves.add( currentCurve );</pre>
 
 <p>When the user changes the background color or selects the "Undo" command,
-the picture has to be redrawn.  The program has a <code>redraw()</code>
-method that completely redraws the picture. That method uses the data in <code>curves</code>
+the picture has to be redrawn.  The program has a 
+<fx><code>redraw()</code></fx><swing><code>paintComponent()</code></swing>
+method that completely redraws the picture. That method uses the data in the 
+list of <classname>CurveData</classname>
 to draw all the curves.  The basic structure is a for-each loop that processes
 the data for each individual curve in turn.  This has the form:</p>
    
@@ -457,23 +476,26 @@ the data for each individual curve in turn.  This has the form:</p>
 }</pre>
    
 <np>In the body of this loop, <code>curve.points</code> is a variable of
-type <atype>ArrayList&lt;Point2D&gt;</atype> that holds the list of 
+type <fx><atype>ArrayList&lt;Point2D&gt;</atype></fx><swing><atype>ArrayList&lt;Point&gt;</atype></swing> 
+that holds the list of 
 points on the curve.  The <code>i-th</code> point on the curve can be
 obtained by calling the <code>get()</code> method of this list:
 <code>curve.points.get(i)</code>.  This returns a value of type
-<classname>Point2D</classname> which has getter methods named
-<code>getX()</code> and <code>getY()</code>.  We can refer directly to the
+<fx><classname>Point2D</classname></fx><swing><classname>Point</classname></swing> which has 
+<fx>getter methods named <code>getX()</code> and <code>getY()</code></fx><swing>instance
+variables named <code>x</code> and <code>y</code></swing>.  We can refer directly to the
 x-coordinate of the <code>i-th</code> point as:</np>
    
-<pre>curve.points.get(i).getX()</pre>
+<pre>curve.points.get(i).<fx>getX()</fx><swing>x</swing></pre>
    
 <np>This might seem rather complicated, but it's a nice example of a complex name
 that specifies a path to a desired piece of data: Go to the object, <code>curve</code>.
 Inside <code>curve</code>, go to <code>points</code>.  Inside <code>points</code>,
 get the <code>i-th</code> item.  And from that item, get the x coordinate
-by calling its <code>getX()</code> method.  Here is the complete definition of the
+<fx>by calling its <code>getX()</code> method</fx>.  Here is the complete definition of the
 method that redraws the picture:</np>
    
+<fxdiv>
 <pre>private void redraw() {
     g.setFill(backgroundColor);
     g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
@@ -494,6 +516,36 @@ method that redraws the picture:</np>
 from <code>(x1,y1)</code> to <code>(x2,y2)</code>.  If the first parameter is
 <code>true</code>, it also draws the horizontal and vertical reflections of
 that segment.</np>
+</fxdiv>
+<swingdiv>
+<pre>public void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    Graphics2D g2 = (Graphics2D)g;
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                               RenderingHints.VALUE_ANTIALIAS_ON);
+    for ( CurveData curve : curves) {
+        g.setColor(curve.color);
+        for (int i = 1; i &lt; curve.points.size(); i++) {
+                // Draw a line segment from point number i-1 to point number i.
+            int x1 = curve.points.get(i-1).x;
+            int y1 = curve.points.get(i-1).y;
+            int x2 = curve.points.get(i).x;
+            int y2 = curve.points.get(i).y;
+            g.drawLine(x1,y1,x2,y2);
+            if (curve.symmetric) {
+                    // Also draw the horizontal and vertical reflections
+                    // of the line segment.
+                int w = getWidth();
+                int h = getHeight();
+                g.drawLine(w-x1,y1,w-x2,y2);
+                g.drawLine(x1,h-y1,x2,h-y2);
+                g.drawLine(w-x1,h-y1,w-x2,h-y2);
+            }
+        }
+    }
+} // end paintComponent()
+</pre>
+</swingdiv>
    
 <p>I have mostly been interested here in discussing how the program uses
 <classname>ArrayList</classname>, but

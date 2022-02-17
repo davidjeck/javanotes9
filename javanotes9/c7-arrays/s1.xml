@@ -15,8 +15,9 @@ of <i>elements</i>, and each element acts like a separate variable.  All of the
 elements are of the same type, which is called the <i>base type</i> of the array.
 The array as a whole also has a type.  If the base type is <classname>btype</classname>,
 then the array is of type <atype>btype[]</atype>.  Each element in the array
-has an <i>index</i>, which is just its numerical position in the sequence of elements.
-If the array is <code>A</code>, then the i-th element of the array is <code>A[i]</code>.
+has an <i>index</i>, which is just its numerical position in the sequence of elements
+with numbering starting from zero.
+If the array is <code>A</code>, then element number <code>i</code> of the array is <code>A[i]</code>.
 The number of elements in an array is called its <i>length</i>.  The length of
 an array <code>A</code> is <code>A.length</code>.  The length of an array can't
 be changed after the array is created.  The elements of the array <code>A</code>
@@ -69,9 +70,10 @@ represents one of the values in the array, not the index of one of the values.
 </np>
 
 <p>The for-each loop is meant specifically for processing all the values
-in a data structure, and we will see in <localref href="generics"/> that it applies to other
+in a data structure, and we will see in <localref href="arrays.3"/> and 
+<localref href="generics"/> that it applies to other
 data structures besides arrays.  The for-each loop makes it possible to process the
-values without even knowing the details of how the data is structured.  In the
+values in a data structure without even knowing the details of how the data is structured.  In the
 case of arrays, it lets you avoid the complications of using array indices.</p>
 
 <p>A for-each loop
@@ -117,6 +119,13 @@ for ( int item : A ) {
    if (item &gt; 0)
       sum = sum + item;
 }</pre>
+
+<p>I also note that the use of <b>var</b> for declaring local variables, which
+was introduced in <localref href="subroutines.7.1a"/>, applies to the loop control variable
+in a for-each loop. So, instead of "<code>for&nbsp;(BaseType item&nbsp;:&nbsp;itemArray)</code>",
+we could write "<code>for&nbsp;(var item&nbsp;:&nbsp;itemArray)</code>".  The
+type of the variable is deduced from the base type of the array.  This syntax becomes
+more useful when dealing with more complicated types.</p>
    
 <p>The for-each loop is not always appropriate.  For example, there is no
 simple way to use it to process the items in just a part of an array, or to
@@ -124,9 +133,9 @@ process the elements in reverse order.
 However, it does make the code a little simpler when you do want to process all the values, in order.
 since it eliminates any need to use array indices.</p>   
    
-<p>It's important to note that a for-each loop processes the <b>values</b> in
+<p>But it's important to note that a for-each loop processes the <b>values</b> in
 the array, not the <b>elements</b> (where an element means the actual memory
-location that is part of the array).  For example, consider the following
+location that is part of the array and that holds the value).  For example, consider the following
 incorrect attempt to fill an array of integers with 17's:</p>
    
 <pre>int[] intList = new int[10];
@@ -205,7 +214,7 @@ and the values of the actual parameters would be <code>numbers[0]</code>,
       sum = sum + numbers[i];  // Add one of the actual parameters to the sum.
    }
    average = sum / numbers.length;
-   return average;
+   return average; // (Will be Double.NaN if numbers.length is zero.)
 }</pre>
 
 
@@ -222,27 +231,28 @@ very last formal parameter.</p>
 <p>As an example, consider a method that can draw a polygon through
 any number of points.  The points are given as values of type <classname>Point</classname>,
 where an object of type <classname>Point</classname> has two instance variables,
-<code>x</code> and <code>y</code>, of type <ptype>double</ptype>.
+<code>x</code> and <code>y</code>, of type <fx><ptype>double</ptype></fx><swing><ptype>int</ptype></swing>.
 In this case, the method has one ordinary parameter&mdash;the
 graphics context that will be used to draw the polygon&mdash;in addition to the
 variable arity parameter.  Remember that inside the definition of the
 method, the parameter <code>points</code> becomes an array of 
 <classname>Points</classname>:</p>
    
-<pre>public static void drawPolygon(GraphicsContext g, Point... points) {
+<pre>public static void drawPolygon(Graphics<fx>Context</fx> g, Point... points) {
     if (points.length &gt; 1) {  // (Need at least 2 points to draw anything.)
        for (int i = 0; i &lt; points.length - 1; i++) {
            // Draw a line from i-th point to (i+1)-th point
-           g.strokeLine( points[i].x, points[i].y, points[i+1].x, points[i+1].y );
+           g.<fx>stroke</fx><swing>draw</swing>Line( points[i].x, points[i].y, points[i+1].x, points[i+1].y );
        }
        // Now, draw a line back to the starting point.
-       g.strokeLine( points[points.length-1].x, points[points.length-1].y,
+       g.<fx>stroke</fx><swing>draw</swing>Line( points[points.length-1].x, points[points.length-1].y,
                        points[0].x, points[0].y );
     }
 }</pre>
 
 <np>When this method is called, the subroutine call statement must have one actual parameter
-of type <classname>GraphicsContext</classname>, which can be followed by any number of
+of type <fx><classname>GraphicsContext</classname></fx><swing><classname>Graphics</classname></swing>, 
+which can be followed by any number of
 actual parameters of type <classname>Point</classname>.</np>
    
 <p>For a final example, let's look at a method that strings together all of the
@@ -250,7 +260,7 @@ values in a list of strings into a single, long string.  This example uses a for
 loop to process the array:</p>
 
 <pre>public static String concat( String... values ) {
-   StringBuilder buffer;  // Use a StringBuilder for more efficient concatenation.
+   StringBuilder buffer;  // Use StringBuilder for more efficient concatenation.
    buffer = new StringBuilder();  // Start with an empty StringBuilder.
    for ( String str : values ) { // A "for each" loop for processing the values.
        buffer.append(str); // Add string to the buffer.
@@ -307,7 +317,8 @@ in a program to represent a value. This means that it can be used in any
 context where an object of type <bnf>base-type</bnf><code>[]</code> is legal.
 For example, you could pass the newly created array as an actual parameter to
 a subroutine.  Consider the following utility method for creating a menu
-from an array of strings.  (Menus were discussed in <localref href="GUI1.6.2"/>.)</np>
+from an array of strings.  (Menus were discussed in 
+<fx><localref href="GUI1.6.2"/></fx><swing><localref href="GUI1.8.1"/></swing>.)</np>
 
 <pre>/**
  * Creates a Menu.  The names for the MenuItems in the menu are
@@ -322,11 +333,11 @@ public static Menu createMenu( String menuName, String[] itemNames ) {
     Menu menu = new Menu(menuName);
     for ( String itemName : itemNames ) {
         if ( itemName == null ) {
-            menu.getItems().add( new SeparatorMenuItem() );
+            menu.<swing>addSeparator()</swing><fx>getItems().add( new SeparatorMenuItem() )</fx>;
         }
         else {
             MenuItem item = new MenuItem(itemName);
-            menu.getItems().add(item);
+            menu.<fx>getItems().</fx>add(item);
         }
     }
     return menu;
@@ -378,52 +389,5 @@ follow the "<bnf>type-name</bnf>  <bnf>variable-name</bnf>;" syntax for such dec
   
 </subsection>
 
-
-<subsection id="arrays.1.4" title="Introducing Records">
-
-<p>An array is a simple data structure in which members are numbered and all
-members have the same type.  A <newword>record</newword> is another kind
-of simple data structure in which members can have different types and
-are referred to by name instead of by number.  In Java, classes can
-be used to represent records, but the term "record" has not traditionally
-been used.  However, in Java Version 16, records became an official part
-of the language.  A record
-in Java is a kind of object, and a record type is a special kind of class that is
-defined similarly to an ordinary class.  For example:
-</p>
-
-<pre>record FullName(String firstName, String lastName) { }</pre>
-
-<np>This defines a class named <classname>FullName</classname> that
-can be used in the same way as other classes, such as to declare
-variables.  The <classname>FullName</classname> class has instance
-variables named <code>firstName</code> and <code>lastName</code>.
-The "{&nbsp;}" at the end of the definition is an
-empty class body.  The class body for a record type can contain
-static members, and it can define instance methods.  However, it
-cannot add additional instance variables.  The class is automatically
-<code>final</code>, which means that it cannot be extended by
-subclasses.  If the record definition is nested inside another
-class, then the record class is automatically static.  These restrictions
-make sense, because a record is supposed to be a simple container
-for a fixed set of named fields.</np>
-
-<p>A record type automatically includes a constructor, with one
-parameter corresponding to each instance variable.  This constructor
-simply initializes the instance variables.  For example, an
-object of type <classname>FullName</classname> can be created with</p>
-
-<pre>FullName fn = new FullName("Jane", "Doe");</pre>
-
-<np>Accessor, or "getter", methods for the instance variables are also automatically
-defined, but instead of using the typical <code>getXXX()</code> naming convention
-for getter methods, their names are the same as the names of the instance
-variables.  For example, for the <classname>FullName</classname> variable
-defined above, the instance variables would be accessed as <code>fn.firstName()</code>
-and <code>fn.lastName()</code>.  A record type also provides reasonable default
-definitions for several methods inherited from class <classname>Object</classname>:
-<code>toString()</code>, <code>equals()</code>, and <code>hashCode()</code>.</np>
-
-</subsection>
 
 </section>

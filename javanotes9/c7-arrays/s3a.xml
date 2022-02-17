@@ -4,6 +4,341 @@
 <section id="arrays.3a" title="Records">
    
    
-<p><start><big>A</big>s we have seen</start></p>
+<p><start><big>S</big>ome programming languages</start> have two
+basic kinds of built-in data structures:  arrays and records.
+An array consists of a sequence of items, where individual items are referred
+to by their numerical position in the sequence.  In a record, on the other
+hand, the positions in the data structure have names instead of numbers.
+The items in a record are called its "fields," and the names for the
+items are "field names."  A field is accessed using its field name.
+We recognize records as similar to objects, with the fields in
+a record playing the same role as instance variables in an
+object, but records existed before object-oriented programming.
+The actual word "record" is used in programming languages such as
+Pascal and Cobol.  The C programming language uses the term "struct"
+for the same idea.   The "record" terminology might have originated
+with databases, which are just large, organized collections of data,
+where a record is a (typically small) set of related data items,
+and a database is a collection of records. </p>
+
+<p>In Java, classes can be used to represent records, but the term 
+"record" has not traditionally been used.  However, in Java&nbsp;17, 
+records have become an official part of the language in the form of 
+a special kind of class.  Java records are not really equivalent to
+records in other languages, since a record in Java is immutable, 
+that is, its content cannot be modified after the record is created.
+However, they are similar to other records is that they are fairly
+simple containers for named fields.</p>
+
+
+<subsection title="Basic Java Records" id="arrays.3a.1">
+
+<p>A Java record is an object that belongs to a special kind of
+class, which I will call a record class.  In the simplest case,
+a record class specifies nothing but the set of instance variables
+that represent the fields of the record.  Here is an example:</p>
+
+<pre>public record FullName(String firstName, String lastName) { }</pre>
+
+<np>This is a class definition for a record class named <classname>FullName</classname>
+that has two instance variables of type <classname>String</classname> named
+<code>firstName</code> and <code>lastName</code>.  These instance variables
+are the <code>fields</code> of the record.
+The "{&nbsp;}" at the end of the definition is an empty class body.
+Note that the instance variables in a record class are listed in parentheses after the
+class name.  The syntax is the same as the syntax for a list of formal
+parameters in a method definition, but the meaning is very different.
+A record of type <classname>FullName</classname>&mdash;that is, an instance
+of the record class&mdash;is created in the usual way, with the new
+operator.  For example,</np>
+
+<pre>FullName fname = new FullName("Jane", "Doe");</pre>
+
+<np>This statement calls a constructor that has one parameter for each
+field of the record, whose effect is simply to provide a value for each 
+field.  Note that this constructor was not explicitly defined in the
+class. It is called the <newword>canonical constructor</newword> for
+the record class, and it is provided automatically by the compiler.
+In fact, many things are added implicitly to a record class definition
+by the compiler.  The simple record definition of <classname>FullName</classname>, 
+given above, is essentially equivalent to the following regular class definition:</np>
+
+<pre>public final class FullName {
+    private final String firstName;
+    private final String lastName;
+    public FullName( String firstName, String lastName ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    public firstName() {
+        return firstName;
+    }
+    public lastName() {
+        return lastName;
+    }
+    public String toString() {
+       return "FullName[firstName=" + firstName 
+                      + ", lastName=" + lastName + "]";
+    }
+    public boolean equals(Object obj) {
+        // <newcode>(definition omitted)</newcode>
+    }
+    public int hashCode() {
+        // <newcode>(definition omitted)</newcode>
+    }
+}</pre>
+
+<np>We see that a record class is automatically <code>final</code>, that is, it
+cannot be extended by subclasses.  Furthermore, a record class cannot 
+extend another class (but it is a subclass of <classname>Object</classname>, as
+is true for any class).</np>
+
+<p>The instance variables in a record are <code>private</code>
+and <code>final</code>.   Accessor, or "getter", methods for the instance variables 
+are automatically defined, but instead of using the typical 
+<code>getXXX()</code> naming convention
+for getter methods, their names are the same as the names of the instance
+variables.  For example, if <code>fname</code> is a variable of type
+<classname>FullName</classname>, then the instance variables 
+would be accessed as <code>fname.firstName()</code>
+and <code>fname.lastName()</code>.  Because its instance variables are <code>final</code>, 
+a record is immutable, so no "setter" methods can be defined.</p>
+
+<p>Furthermore, reasonable definitions are automatically
+provided for three methods inherited from class <classname>Object</classname>:
+<code>toString()</code>, <code>equals()</code>, and <code>hashCode</code>().
+The <code>toString()</code> method returns a string that includes the name of the
+class and the names and values of its fields.  The <code>equals()</code> method
+returns <code>true</code> if its parameter is an object of the same type that has
+the same values for its fields.  (We will not encounter the <code>hashCode()</code> 
+method until <sourceref href="generics.3"/>.)</p>
+
+<p>We will see that record class definitions can be more complex, but you should
+expect basic record classes, with empty class bodies, to be very common, since
+they provide a simple way to group together a set of related data items.  For
+example, the <classname>CurveData</classname> class from the 
+<sourceref href="SimplePaint2.java"/> example in the <localref href="arrays.3">previous section</localref>
+was created to group together all the data relevant to a single curve:</p>
+
+<pre>private static class CurveData {
+    Color color;
+    boolean symmetric; 
+    ArrayList&lt;Point<fx>2D</fx>&gt; points;
+}</pre>
+
+<np>This nested class could be replaced by a nested record class:</np>
+
+<pre>private record CurveData(
+    Color color,
+    boolean symmetric,
+    ArrayList&lt;Point<fx>2D</fx>&gt; points
+) { }</pre>
+
+<np>Note that the nested <classname>CurveData</classname> record class
+does not have to be declared <code>static</code>, because nested record
+classes are automatically <code>static</code>.</np>
+
+<p>After this change, when a <classname>CurveData</classname> object is created,
+values must be provided for its fields.  For example,</p>
+
+<pre>currentCurve = new CurveData(currentColor, useSymmetry, new ArrayList&lt;Point<fx>2D</fx>&gt;());</pre>
+
+<np>Another change is that <classname>CurveData</classname> objects are now
+immutable.  That happens to be OK in <code>SimplePaint2.java</code>, but it's
+not something that will work in all cases.  For example,
+class <swing><classname>Point</classname></swing><fx><classname>Point2D</classname></fx>
+is a simple container for <code>xy</code> coordinates, but it could not be 
+a record class because points are not immutable.</np>
+
+</subsection>
+
+<subsection title="More Record Syntax" id="arrays.3a.2">
+
+<p>It is not possible to add additional instance variables to a record
+class, beyond those that are defined in the list after the class name.
+But almost anything else can be added in the class body.
+For example, a record class can contain <code>static</code> items
+of any kind.  It can define instance methods, including replacements
+for the default <code>toString()</code>, <code>equals()</code>,
+and <code>hashCode()</code> methods.  And it can define
+constructors, with just a few restrictions.  First of all, it
+is possible to extend the definition for the canonical
+constructor that is defined automatically, using a syntax
+in which the parameter list for the constructor is omitted.
+For example, the canonical constructor for the <classname>FullName</classname>
+class might throw an exception if <code>firstName</code> is <code>null</code>:</p>
+
+<pre>public FullName { // canonical constructor for the FullName class
+    if ( firstName == null) {
+        throw new IllegalArgumentException("First name can't be null.");
+    }
+}</pre>
+
+<np>This extends the canonical constructor.  Although the parameter list
+is omitted in the definition, a call to this constructor
+still requires two parameters, and it still uses those parameters to
+initialize <code>firstName</code> and <code>lastName</code>,
+before the code in the constructor definition is executed.</np>
+
+<p>Additional constructors can be defined, but any non-canonical
+constructor must begin with a call to a constructor in the same
+class, using the special variable <code>this</code> as discussed
+in <localref href="OOP.6.3"/>.  This means that the canonical
+constructor will be called, directly or indirectly, by any other
+constructor.</p>
+
+<p>As an example, noting that there are people who use only a single
+name, we might want to provide a <classname>FullName</classname>
+constructor that takes just one parameter representing that name:</p>
+
+<pre>public FullName(String onlyName) {
+    this( onlyName, null ); // call the canonical constructor
+}</pre>
+
+<np>This constructor calls the default constructor to set the
+<code>firstName</code> field equal to <code>onlyName</code>
+and the <code>lastName</code> field equal to <code>null</code>.</np>
+
+<p>We might also want to define a more natural version of <code>toString()</code>
+for the <classname>FullName</classname> record class.  For a full
+class definition that implements all of these ideas, see
+the sample file <sourceref href="FullName.java"/>.</p>
+
+<p>Two final syntax notes:  Although a record class cannot extend
+another class, it can implement one or more interfaces.
+</p>
+
+</subsection>
+
+<subsection title="A Complex Example" id="arrays.3a.3">
+
+<p>A <newword>complex number</newword> consists of two real numbers,
+which are called the real part and the imaginary part of the
+complex number.  Without knowing anything about the mathematics
+of complex numbers, you should see that this is a natural application
+for records.  To represent a complex number in Java, we need a
+simple container for two values of type <ptype>double</ptype>.
+That could be done with a basic record class</p>
+
+<pre>record Complex( double re, double im ) { }</pre>
+
+<np>But there are many things that can be done with complex
+numbers, and we would want to include some of those things
+in a class that could truly be said to represent them.
+Here is a record class that includes a few of those things:</np>
+
+<pre>/**
+ * A record type for representing complex numbers, where
+ * a complex number consists of two real numbers called its
+ * real and imaginary parts.  The class includes methods for
+ * doing arithmetic with complex numbers.
+ */
+public record Complex(double re, double im)  {
+    
+    // Some named constants for common complex numbers.
+
+    public final static Complex ONE = new Complex(1,0);
+    public final static Complex ZERO = new Complex(0,0);
+    public final static Complex I = new Complex(0,1);
+
+    /**
+     * This constructor creates a complex number with a given
+     * real part and with imaginary part zero.
+     */
+    public Complex(double re) {
+        this(re,0);
+    }
+    
+    /**
+     * Creates string representations of complex number such
+     * as:  3.0 + I*5.0,  -I*3.14,   2.7 - I*8.6,   3.14
+     */
+    public String toString() {
+        if (im == 0)
+            return String.valueOf(re);
+        else if (re == 0) {
+            if (im &lt; 0)
+                return "-I*" + (-im);
+            else
+                return "I*" + im;
+        }
+        else if (im &lt; 0)
+            return re + " - " + "I*" + (-im);
+        else
+            return re + " + " + "I*" + im;
+    }
+
+    // Some methods for doing arithmetic on two complex numbers
+    
+    public Complex plus(Complex c) {
+        return new Complex(re + c.re, im + c.im);
+    }
+    public Complex minus(Complex c) {
+        return new Complex(re - c.re, im - c.im);
+    }
+    public Complex times(Complex c) {
+        return new Complex(re*c.re - im*c.im,
+                re*c.im + im*c.re);
+    }
+    public Complex dividedBy(Complex c) {
+        double denom = c.re*c.re + c.im*c.im;
+        double real = (re*c.re + im*c.im)/denom;
+        double imaginary = (im*c.re - re*c.im)/denom;
+        return new Complex(real,imaginary);
+    }
+        
+} // end record Complex</pre>
+
+<p>This class adds some static member variables, a constructor that
+creates a complex number from a single real number, a <code>toString()</code>
+method that prints a complex number in a reasonable format, and some
+instance variables that implement arithmetic operations on complex
+numbers.  Of course, it also has the canonical constructor that 
+creates a complex number from two real numbers.  The sample
+program <sourceref href="RecordDemo.java"/> tests both
+<sourceref href="Complex.java"/> and <sourceref href="FullName.java"/>.</p>
+
+<break/>
+
+<p>It might be worth thinking about why record classes should be <code>final</code> and
+why records should be immutable.  One reason for them to be <code>final</code>
+is that it can make it possible for a
+complier to apply certain kinds of optimization to the code that it generates.
+This applies not just to record classes but to final classes
+in general.</p>
+
+<p>Here is an example.  It is common to compute complicated arithmetic expressions
+involving complex numbers.  Consider the quadratic formula Ax<sup>2</sup>+Bx+C.
+If A, B, C, and&nbsp;x are objects of type <classname>Complex</classname>, then the
+value of this expression can be computed as</p>
+
+<pre>(A.times(x).times(x)).plus(B.times(x)).plus(C)</pre>
+
+<np>If you check the definitions of the <code>times()</code> and <code>plus()</code> methods,
+you can see that every time a method is called, it creates a new <classname>Complex</classname>
+object.  In the quadratic formula example, five new objects are generated, but we are
+only interested in the one that represents the final answer.  The other four objects
+are just scratch work: They are created, used very briefly and then immediately become
+eligible for garbage collection.  Creating and garbage collecting large numbers of objects
+can be inefficient.  However, in this case, the compiler might be able to avoid creating
+those extra objects by replacing the calls to <code>plus()</code> and <code>times()</code>
+with code that performs the same operations directly using temporary local variables of type
+<ptype>double</ptype> instead of objects.
+It can do this because it knows exactly what each method call does&mdash;but that is only
+the case because the <classname>Complex</classname> class is final.  If that were not
+the case, then A, B, C, or&nbsp;x might actually refer to objects belonging to subclasses
+of <classname>Complex</classname> that have redefined <code>plus()</code> and <code>times()</code>.
+That is something that can only be checked at run time, not at compile time, so a
+compiler would have no way of knowing what the calls to <code>plus()</code> and <code>times()</code>
+will actually do when the program is run.</np>
+
+<p>As for immutability, it might also help with optimization, since a compiler can be
+sure that calling a method on an object will not modify the instance variables in that
+object.  However, it is probably more important that immutability makes it easier to
+reason about a program.  If you can prove that some property of an immutable object is true
+at some point in time, you can be sure that it won't become false later because the
+object has been modified.</p>
+
+</subsection>
 
 </section>

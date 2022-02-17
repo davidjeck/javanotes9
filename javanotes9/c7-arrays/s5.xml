@@ -174,7 +174,7 @@ for (int i = 0; i &lt; A.length; i++) {
 <subsection id="arrays.5.2" title="Conway's Game Of Life">
 
 <p>As an example of more typical 2D array processing, let's look at a very well-known example:
-John Conway's Game of Life, invented by mathematician John Horton Conway in 1970.
+Conway's Game of Life, invented by mathematician John Horton Conway in 1970.
 This Game of Life is not really a game (although sometimes it's
 referred to as a "zero-person game" that plays itself).  It's a "two-dimensional cellular
 automaton."  This just means that it's a grid of cells whose content changes over time
@@ -190,10 +190,10 @@ and diagonal) and counts how many of its neighbors are alive.  Then the state of
 cell in the next step is determined by the rules:</p>
 
 <ul>
-<li>If the cell is alive in the current time step:  If the cell has 2 or 3 living neighbors,
+<li>For a cell that is alive in the current time step:  If the cell has 2 or 3 living neighbors,
 then the cell remains alive in the next time step; otherwise, it dies. (A living cell dies of
 loneliness if it has 0 or 1 living neighbor, and of overcrowding if it has more than 3 living neighbors.)</li>
-<li>If the cell is dead in the current time step:  If the cell has 3 living neighbors,
+<li>For a cell that is dead in the current time step:  If the cell has 3 living neighbors,
 then the cell becomes alive in the next time step; otherwise, it remains dead.  (Three living cells
 give birth to a new living cell.)</li>
 </ul>
@@ -359,10 +359,11 @@ try the program.  Don't forget that you will also need <sourceref href="MosaicCa
 <subsection id="arrays.5.3" title="Checkers">
 
 <p>As a final example for this chapter, we'll look at a more substantial example of using a 2D array. 
-This is the longest program that we have encountered so far, with 745 lines of
+This is the longest program that we have encountered so far, with <fx>741</fx><swing>721</swing> lines of
 code.  The program lets two users play checkers against each other.
 The checkers game is played on an eight-by-eight board, which is based on an
-example from <localref href="GUI1.5.1"/>.  The players are called "red" and "black,"
+example from <fx><localref href="GUI1.5.1"/></fx><swing><localref href="GUI1.7.5"/></swing>.  
+The players are called "red" and "black,"
 after the color of their checkers.  I'm not going to explain the rules of checkers here;
 possibly you can learn them by trying out the program.</p>
 

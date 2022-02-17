@@ -396,6 +396,10 @@ as the GUI toolbox.</p>
    <li><sourceref href="chapter7/SimplePaint2.java">SimplePaint2.java</sourceref>, from <localref href="arrays.3"/>, lets
    the user draw colored curves and stores the data needed for repainting the
    drawing surface in a list of type <atype>ArrayList&lt;CurveData&gt;</atype>.</li>
+   <li><sourceref href="chapter7/Complex.java/">Complex.java</sourceref> and 
+   <sourceref href="chapter7/FullName.java">FullName.java</sourceref> are examples of record classes,
+   from <localref href="arrays.3a"/>.  <sourceref href="chapter7/RecordDemo.java">RecordDemo.java</sourceref>
+   is a simple program that tests the two record classes.</li>
    <li><sourceref href="chapter7/Life.java">Life.java</sourceref>, from <localref href="arrays.5"/>,
    implements John H. Conway's game of life and is an example of using 2D arrays.  This program
    depends on <sourceref href="chapter7/MosaicCanvas.java">MosaicCanvas.java</sourceref>.</li>

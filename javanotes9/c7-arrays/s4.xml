@@ -24,26 +24,23 @@ object in the array that contains the given name. It would also be useful to be
 able to sort the array according to various criteria. One example of sorting
 would be ordering the elements of the array so that the names are in
 alphabetical order. Another example would be to order the elements of the array
-according to zip code before printing a set of mailing labels. (This kind of
-sorting can get you a cheaper postage rate on a large mailing.)</p>
+according to zip code before printing a set of mailing labels.</p>
 
 <p>This example can be generalized to a more abstract situation in which we
 have an array that contains objects, and we want to search or sort the array
-based on the value of one of the instance variables in the objects. We can use
-some terminology here that originated in work with "databases," which are just
-large, organized collections of data. We refer to each of the objects in the
-array as a <newword>record</newword>. The instance variables in an
-object are then called <newword>fields</newword> of the record. In
-the mailing list example, each record would contain a name and address. The
-fields of the record might be the first name, last name, street address, state,
-city and zip code. For the purpose of searching or sorting, one of the fields
+based on the value of one of the instance variables in the objects.  In that case, we might use
+the terminology of "records" and "fields" that originated in work with 
+databases, as discussed in the <localref href="arrays.3a">previous section</localref>.
+In the mailing list example, we might have an array of records where
+each record contains a first name, last name, street address, state,
+city, and zip code as fields. For the purpose of searching or sorting, one of the fields
 is designated to be the <newword>key</newword> field. Searching then
 means finding a record in the array that has a specified value in its key
 field. Sorting means moving the records around in the array so that the key
 fields of the record are in increasing (or decreasing) order.</p>
 
 <p>In this section, most of my examples follow the tradition of using arrays of
-numbers. But I'll also give a few examples using records and keys, to remind
+numbers. But I'll also give a few examples using objects, to remind
 you of the more practical applications.</p>
 
 
@@ -104,7 +101,8 @@ locations numbered 500 or above contain values that are greater than or equal
 to 93. These locations can be eliminated as possible locations of the number
 42.</p>
 
-<p>The next obvious step is to check location 250. If the number at that
+<p>Once we know that 42 can only be in the first half of the array,
+the obvious next step is to check location 250. If the number at that
 location is, say, -21, then you can eliminate locations before 250 and limit
 further search to locations between 251 and 499. The next test will limit the
 search to about 125 locations, and the one after that to about 62. After just
@@ -114,8 +112,8 @@ would still take only 20 steps for binary search to search the array!
 (Mathematically, the number of steps is approximately equal to
 the logarithm, in the base 2, of the number of items in the array.)</p>
 
-<p>In order to make binary search into a Java subroutine that searches an array
-A for an item <code>N</code>, we just have to keep track of the range of locations
+<p>In order to make binary search into a Java subroutine that searches an array,
+<code>A</code>, for an item, <code>N</code>, we just have to keep track of the range of locations
 that could possibly contain <code>N</code>. At each step, as we eliminate
 possibilities, we reduce the size of this range. The basic operation is to look
 at the item in the middle of the range. If this item is greater than
@@ -154,7 +152,7 @@ static int binarySearch(int[] A, int N) {
        }
     }
     
-    // At this point, highestPossibleLoc &lt; LowestPossibleLoc,
+    // At this point, highestPossibleLoc &lt; lowestPossibleLoc,
     // which means that N is known to be not in the array.  Return
     // a -1 to indicate that N could not be found in the array.
  
@@ -202,13 +200,14 @@ a realistic way to implement a phone directory!)</p>
 <atype>PhoneEntry[]</atype> and an integer variable to keep track of how many entries
 are actually stored in the directory.  The technique of dynamic arrays
 (<localref href="arrays.2.4"/>) can be used in order to avoid putting an arbitrary limit on
-the number of entries that the phone directory can hold.  Using an
-<classname>ArrayList</classname> would be another possibility.
+the number of entries that the phone directory can hold.
 A <classname>PhoneDirectory</classname> class should include instance methods
 that implement the "get" and "put" operations.  Here is one possible simple
 definition of the class:</p>
 
-<pre>/**
+<pre>import java.util.Arrays;
+
+/**
  * A PhoneDirectory holds a list of names with a phone number for
  * each name.  It is possible to find the number associated with
  * a given name, and to specify the phone number for a given name.
@@ -292,7 +291,7 @@ public class PhoneDirectory {
    }
 
 } // end class PhoneDirectory</pre>
-   
+
 <p>The class defines a private instance method, <code>find()</code>, that
 uses linear search to find the position of a given name in the
 array of name/number pairs.  The <code>find()</code> method is used both in the
@@ -302,18 +301,23 @@ name is in the phone directory. If so, it just changes the number in the
 existing entry; if not, it has to create a new phone entry and add it to the
 array.</p>
 
-<p>This class could use a lot of improvement. For one thing, it would be nice
-to use binary search instead of simple linear search in the <code>getNumber</code>
-method. However, we could only do that if the list of PhoneEntries were sorted
-into alphabetical order according to name. In fact, it's really not all that
+<p>This class could also have be written using an ArrayList (<localref href="arrays.3"/>)
+instead of a dynamic array.  And the nested <classname>PhoneEntry</classname> class is a
+natural candidate to be a record class (<localref href="arrays.3a"/>).  For a version that
+uses these ideas, see <sourceref href="PhoneDirectory2.java"/>.</p>
+   
+<p>This phone directory implementation could be improved by using
+binary search instead of simple linear search in the <code>find()</code>
+method. However, we could only do that if the list of <classname>PhoneEntries</classname>
+were sorted into alphabetical order according to name. In fact, it's really not all that
 hard to keep the list of entries in sorted order, as you'll see in the
 next subsection.</p>
 
 <p>I will mention that association lists are also called "maps," and Java has
 a standard parameterized type named <classname>Map</classname> that implements
-association lists for keys and values of any type.  The implementation is <b>much</b>
+association lists for keys and values of any type.  The implementation is
 more efficient than anything you can do with basic arrays. You will encounter this
-class in <localref href="generics"/>.</p>
+class in <localref href="generics.3"/>.</p>
 
 </subsection>
 
@@ -445,7 +449,7 @@ write:</p>
 introduced in <localref href="OOP.4.1"/>. (By the way, you are
 finally in a position to fully understand the source code for
 the <classname>Hand</classname> class from that section; note that
-it uses <classname>ArrayList</classname>.
+it uses an <classname>ArrayList</classname>.
 The source file is <sourceref chapter="5" href="Hand.java"/>.)</p>
 
 <p>In the <classname>Hand</classname> class, a hand of playing cards is represented by an
@@ -456,8 +460,8 @@ The objects stored in the list are of type <classname>Card</classname>. A
 card. In my sorting method, I actually create a new list and move the cards
 one-by-one from the old list to the new list. The cards are selected from
 the old list in increasing order. In the end, the new list becomes the hand
-and the old list is discarded. This is not the most efficient procedure.
-But hands of cards are so small that the inefficiency is negligible. Here is
+and the old list is discarded. This is not the most efficient procedure,
+but hands of cards are so small that the inefficiency is negligible. Here is
 the code for sorting cards by suit:</p>
 
 <pre>/**

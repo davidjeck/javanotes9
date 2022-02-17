@@ -159,7 +159,17 @@ that is not a subclass of any other class.)</p>
 
 <p>Class <classname>Object</classname> defines several instance methods that are inherited by
 every other class.  These methods can be used with any object whatsoever. I will mention
-just one of them here.  You will encounter more of them later in the book.</p>
+two of them here.  You will encounter more of them later in the book.</p>
+
+<p>The method <code>equals(obj)</code> is defined in class <classname>Object</classname>.  It takes
+one parameter, which can be any object.  It is meant for testing whether two objects are "equal"
+but its definition gives <code>obj1.equals(obj2)</code> the same meaning as
+<code>obj1&nbsp;==&nbsp;obj2</code>.  That is, it tests whether <code>obj1</code> and
+<code>obj2</code> refer to the same object.  The <classname>String</classname> class overrides this
+method to say that two <classname>Strings</classname> are equal if they contain the same sequence of characters, 
+and it is common to similarly override <code>equals()</code> in a class to say that two objects belonging
+to that class are equal if they have the same contents.  We see again that what it means for 
+objects to be "equal" is not always clear.  We will have more use for this method later.</p>
    
 <p>The instance method <code>toString()</code> in class <classname>Object</classname> returns
 a value of type <classname>String</classname> that is supposed to be a string representation

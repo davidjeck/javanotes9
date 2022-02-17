@@ -103,13 +103,17 @@ to decrement the value of <code>playerCt</code>:</p>
 <pre>playerList[k] = playerList[playerCt - 1];
 playerCt--;</pre>
 
-<np>The player previously in position <code>k</code> is no longer in the array, so
-we have deleted that player from the list.  The
+<np>The player previously in position <code>k</code> has been replaced and 
+is no longer in the array, so we have deleted that player from the list.  The
 player previously in position <code>playerCt&nbsp;-&nbsp;1</code> is now in the array twice.
 But it's only in the occupied or valid part of the array once, since
 <code>playerCt</code> has decreased by one. Remember that every element of the
 array has to hold some value, but only the values in positions 0 through
 <code>playerCt&nbsp;-&nbsp;1</code> will be looked at or processed in any way.
+You can set <code>playerList[playerCt]&nbsp;=&nbsp;null</code>, which could
+free up the deleted <classname>Player</classname> object for
+<localref href="OOP.2.3">garbage collection</localref>, but that is not necessary
+to correctly delete the player from the list of (active) players.
 (By the way, you should think about what happens if the player that is being deleted
 is in the last position in the list.  The code does still work in this case.  What
 exactly happens?)</np>
@@ -143,7 +147,7 @@ array in the first place?</p>
 
 <p>Suppose that <code>A</code> and <code>B</code> are array variables, with the same base type,
 and that <code>A</code> already refers to an array.  Suppose that we want <code>B</code> to
-refer to a copy of <code>A</code>.  The first thing to note is that
+refer to a copy of&nbsp;<code>A</code>.  The first thing to note is that
 the assignment statement</p>
 
 <pre>B = A;</pre>
@@ -154,7 +158,7 @@ into <code>B</code>, and the result is that <code>A</code> and <code>B</code> no
 to the same array.  For example, <code>A[0]</code> and <code>B[0]</code> are just
 different names for exactly the same array element.  To make <code>B</code> refer to
 a copy of <code>A</code>, we need to make an entirely new array and copy all the items from
-<code>A</code> into <code>B</code>.  Let's say that <code>A</code> and <code>B</code>
+<code>A</code> into&nbsp;<code>B</code>.  Let's say that <code>A</code> and <code>B</code>
 are of type <atype>double[]</atype>.  Then to make a copy of <code>A</code>, we can say</np>
 
 <pre>double[] B;
@@ -291,9 +295,11 @@ in <localref href="arrays.4"/>.</li>
 
 <subsection  id="arrays.2.3" title="RandomStrings Revisited">
    
-<p>One of the examples in <localref href="GUI1.2.4"/> was a GUI program
-that shows multiple copies of a message in random positions, colors, and fonts.
-When the user clicks the program window, the positions, colors, and fonts are
+<p>One of the examples in <swing><localref href="GUI1.4.2"/></swing><fx><localref href="GUI1.2.4"/></fx> was a GUI program,
+<swing><sourceref chapter="6" href="ClickableRandomStrings.java"/></swing><fx><sourceref chapter="6" href="RandomStrings.java"/></fx>,
+that shows multiple copies of a message in random positions, colors, and fonts. <swing>(Much of the
+code is in a separate class, <sourceref chapter="6" href="RandomStringsPanel.java"/>.)</swing> 
+When the user clicks <swing>the program window</swing><fx>a button</fx>, the positions, colors, and fonts are
 changed to new random values.  But suppose that we want the message strings
 to move.  That is, we want to run an animation where the strings drift
 around in the window.  In that case, we need to store the properties of
@@ -303,9 +309,10 @@ of the animation.  A new version of the program that does that is <sourceref hre
 <p>There are 25 strings.  We need to store the (x,y) coordinates where each string is drawn,
 the color of each string, and the font that is used for each string.  To make the
 strings move, I also store a velocity for each string, represented as two numbers
-<code>dx</code> and <code>dy</code>.  In each frame, the <code>dx</code> for each string
-is added to the <code>x</code> coordinate of the string, and <code>dy</code> is
-added to the <code>y</code> coordinate.  Now the data for the string could be
+<code>dx</code> and <code>dy</code>.  In each frame, the <code>dx</code> for each string,
+multiplied by the elapsed time since the previous frame,
+is added to the <code>x</code> coordinate of the string, similarly
+for <code>dy</code>.  Now, the data for the string could be
 stored in six arrays</p>
 
 <pre>double[] x = new double[25];  
@@ -316,24 +323,21 @@ Color[] color = new Color[25];
 Font[] font = new Font[25];</pre>
 
 <np>These arrays would be filled with random values. In the
-<code>draw()</code> method that draws the canvas, the <code>i</code>-th string would be
+method that draws the strings, the <code>i</code>-th string would be
 drawn at the point <code>(x[i],y[i])</code>. Its color would be given by
 <code>color[i]</code>. And it would be drawn in the font <code>font[i]</code>.
-(The <code>dx</code> and <code>dy</code> would not be used in <code>draw()</code>;
+(The <code>dx</code> and <code>dy</code> would not be used for the drawing;
 they are used when updating the data for the next frame.)  This
-would be accomplished by a <code>draw()</code> method such as:</np>
+would be accomplished by code such as:</np>
 
-<pre>public void draw() {
-    GraphicsContext g = canvas.getGraphicsContext2D();
-    g.setFill(Color.WHITE); // (Fill with white, erasing previous picture.)
-    g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
-    for (int i = 0; i &lt; 25; i++) {
-       g.setFill( color[i] );
-       g.setFont( font[i] );
-       g.fillText( MESSAGE, x[i], y[i] );
-       g.setStroke(Color.BLACK);
-       g.strokeText( MESSAGE, x[i], y[i] );
-    }
+<pre>g.set<fx>Fill</fx><swing>Color</swing>(Color.WHITE); // (Fill with white background.)
+g.fillRect(0,0,<fx>canvas.</fx>getWidth(),<fx>canvas.</fx>getHeight());
+for (int i = 0; i &lt; 25; i++) {
+   g.set<fx>Fill</fx><swing>Color</swing>( color[i] );
+   g.setFont( font[i] );
+   g.<fx>fillText</fx><swing>drawString</swing>( MESSAGE, <swing>(int)</swing>x[i], <swing>(int)</swing>y[i] );<fx>
+   g.setStroke(Color.BLACK);
+   g.strokeText( MESSAGE, x[i], y[i] );</fx>
 }</pre>
 
 <np>This approach is said to use <newword>parallel arrays</newword>.
@@ -372,8 +376,8 @@ creates the array and fills it with random data:</np>
     stringData = new StringData[25];
     for (int i = 0; i &lt; 25; i++) {
         stringData[i] = new StringData();
-        stringData[i].x = canvas.getWidth() * Math.random();
-        stringData[i].y = canvas.getHeight() * Math.random();
+        stringData[i].x = <fx>canvas.</fx>getWidth() * Math.random();
+        stringData[i].y = <fx>canvas.</fx>getHeight() * Math.random();
         stringData[i].dx = 1 + 3*Math.random();
         if (Math.random() &lt; 0.5) // 50% chance that dx is negative
             stringData[i].dx = -stringData[i].dx;
@@ -391,22 +395,22 @@ make new random data when the user clicks a button.  The strings can
 now be drawn using a for loop such as:</p>
 
 <pre>for (int i = 0; i &lt; 25; i++) {
-    g.setFill( <newcode>stringData[i].</newcode>color );
+    g.set<fx>Fill</fx><swing>Color</swing>( <newcode>stringData[i].</newcode>color );
     g.setFont( <newcode>stringData[i].</newcode>font );
-    g.fillText( MESSAGE, <newcode>stringData[i].</newcode>x, <newword>stringData[i].</newword>y );
+    g.<fx>fillText</fx><swing>drawString</swing>( MESSAGE, <swing>(int)</swing><newcode>stringData[i].</newcode>x, <swing>(int)</swing><newword>stringData[i].</newword>y );<fx>
     g.setStroke(Color.BLACK);
-    g.strokeText( MESSAGE, <newcode>stringData[i].</newcode>x, <newword>stringData[i].</newword>y );
+    g.strokeText( MESSAGE, <newcode>stringData[i].</newcode>x, <newword>stringData[i].</newword>y );</fx>
 }</pre>
    
 <np>But in fact, in my program, I used an equivalent for-each loop, which might be easier
 to understand:</np>
    
 <pre>for ( StringData data : stringData ) {
-    g.setFill( data.color );
+    g.set<fx>Fill</fx><swing>Color</swing>( data.color );
     g.setFont( data.font);
-    g.fillText( MESSAGE, data.x, data.y );
+    g.<fx>fillText</fx><swing>drawString</swing>( MESSAGE, <swing>(int)</swing>data.x, <swing>(int)</swing>data.y );<fx>
     g.setStroke( Color.BLACK );
-    g.strokeText( MESSAGE, data.x, data.y );
+    g.strokeText( MESSAGE, data.x, data.y );</fx>
 }</pre>
    
 <np>In this loop, the loop control variable, <code>data</code>, holds a copy of one
@@ -418,7 +422,7 @@ array indices.</np>
 
 <p>As for how the animation is done, you can check out the full
 <sourceref href="RandomStringsWithArray.java">source code</sourceref>.  Animation was
-discussed in <localref href="GUI1.3.5"/>.</p>
+discussed in <fx><localref href="GUI1.3.5"/></fx><swing><localref href="GUI1.5.1"/></swing>.</p>
 
 
 <break/>
@@ -428,46 +432,42 @@ message is chosen at random from a set of five possible fonts. In the original
 version, there were five variables of type <classname>Font</classname> to
 represent the fonts. The variables were named <code>font1</code>, <code>font2</code>,
 <code>font3</code>, <code>font4</code>, and <code>font5</code>. To select one of these
-fonts at random, a <code>switch</code> statement can be used:</p>
+fonts at random, a <code>switch</code> statement could be used:</p>
 
 <pre>Font randomFont;  // One of the 5 fonts, chosen at random.
 int rand;         // A random integer in the range 0 to 4.
 
 fontNum = (int)(Math.random() * 5);
 switch (fontNum) {
-   case 0:
-      randomFont = font1;
-      break;
-   case 1:
-      randomFont = font2;
-      break;
-   case 2:
-      randomFont = font3;
-      break;
-   case 3:
-      randomFont = font4;
-      break;
-   case 4:
-      randomFont = font5;
-      break;
+    case 0 -> randomFont = font1;
+    case 1 -> randomFont = font2;
+    case 2 -> randomFont = font3;
+    case 3 -> randomFont = font4;
+    case 4 -> randomFont = font5;
 }</pre>
 
 <np>In the new version of the program, the five fonts are stored in an array,
-which is named <code>fonts</code>. This array is declared as an instance
-variable of type <atype>Font[]</atype></np>
+which is named <code>fonts</code>. This array is declared as a static final member
+variable of type <atype>Font[]</atype>:</np>
 
-<pre>Font[] fonts;</pre>
-
-<np>The array is created in the constructor, using the array literal
-syntax from <localref href="arrays.1.3"/>:</np>
-
-<pre>fonts= new Font[] {
+<fxdiv>
+<pre>private static final fonts= new Font[] {
         Font.font("Times New Roman", FontWeight.BOLD, 20),
         Font.font("Arial", FontWeight.BOLD, FontPosture .ITALIC, 28),
         Font.font("Verdana", 32),
         Font.font(40),
         Font.font("Times New Roman", FontWeight.BOLD, FontPosture .ITALIC, 60)
-};</pre>
+    };</pre>
+</fxdiv>
+<swingdiv>
+<pre>private final static Font[] fonts = new Font[] { // The five fonts
+        new Font("Serif", Font.BOLD, 20),
+        new Font("Monospace", Font.BOLD | Font.ITALIC, 28),
+        new Font("SansSerif", Font.PLAIN, 32),
+        new Font("Dialog", Font.ITALIC, 40),
+        new Font("Serif",  Font.BOLD | Font.ITALIC, 60)
+    };</pre>
+</swingdiv>
 
 <np>This makes it much easier to select one of the fonts at random. It can be
 done with the statements</np>
@@ -477,14 +477,14 @@ int fontIndex;    // A random number in the range 0 to 4.
 fontIndex = (int)(Math.random() * 5);
 randomFont = fonts[ fontIndex ];</pre>
 
-<np>The <code>switch</code> statement has been replaced by a few lines of code.
-In fact, the preceding four lines can be replaced by the single line</np>
+<np>In fact, the preceding four lines can be replaced by the single line</np>
    
 <pre>Font randomFont = fonts[ (int)(Math.random() * 5) ];</pre>
    
-<p>This is a very typical application of arrays. Note that this example uses
+<np>The  <code>switch</code> statement has been replaced by a single line of code.
+This is a very typical application of arrays. Note that this example uses
 the random access property:  We can pick an array index at random
-and go directly to the array element at that index.</p>
+and go directly to the array element at that index.</np>
 
 <p>Here is another example of the
 same sort of thing. Months are often stored as numbers 1, 2, 3, &dots;, 12.

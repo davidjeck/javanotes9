@@ -49,7 +49,7 @@ rearrange the items in the array so that they are in increasing or decreasing
 order (according to some criterion).</p>
 <p>(Note: To be more accurate, we should say "non-decreasing" instead of
 "increasing" and "non-increasing" instead of "decreasing."  An array can
-contain duplicate values, and in that case, its elements can'be be put
+contain duplicate values, and in that case, its elements can't be be put
 into strictly increasing or strictly decreasing order.)</p>
 </ans>
 </question>
@@ -119,7 +119,7 @@ for (String item : strlst) {
        smallest = item;
 }
 System.out.println("The smallest string lexicographically is " + smallest)</pre>
-<p>Not that in this version, the first item in the list is compared to itself
+<p>Note that in this version, the first item in the list is compared to itself
 as the first step in the loop.  There is no easy way to leave that item out
 of the for-each loop.</p>
 </ans>
@@ -155,13 +155,14 @@ characters is a * and the rest are periods. The output is</p>
 ******</pre>
 <p>It might help to look at the array items that are printed on each line. Note
 that <code>pic[row][col]</code> is '*' if <code>row</code> is 0 or if <code>row</code> is 5
-or if <code>row</code> and <code>col</code> are equal.</p>
-<pre>pic[0][0] pic[0][1] pic[0][2] pic[0][3] pic[0][4] pic[0][5] 
-pic[1][0] pic[1][1] pic[1][2] pic[1][3] pic[1][4] pic[1][5] 
-pic[2][0] pic[2][1] pic[2][2] pic[2][3] pic[2][4] pic[2][5] 
-pic[3][0] pic[3][1] pic[3][2] pic[3][3] pic[3][4] pic[3][5] 
-pic[4][0] pic[4][1] pic[4][2] pic[4][3] pic[4][4] pic[4][5] 
-pic[5][0] pic[5][1] pic[5][2] pic[5][3] pic[5][4] pic[5][5]</pre>
+or if <code>row</code> and <code>col</code> are equal.  The items with value '*'
+are shown in &newcodestyle;.</p>
+<pre><newcode>pic[0][0] pic[0][1] pic[0][2] pic[0][3] pic[0][4] pic[0][5]</newcode>
+pic[1][0] <newcode>pic[1][1]</newcode> pic[1][2] pic[1][3] pic[1][4] pic[1][5] 
+pic[2][0] pic[2][1] <newcode>pic[2][2]</newcode> pic[2][3] pic[2][4] pic[2][5] 
+pic[3][0] pic[3][1] pic[3][2] <newcode>pic[3][3]</newcode> pic[3][4] pic[3][5] 
+pic[4][0] pic[4][1] pic[4][2] pic[4][3] <newcode>pic[4][4]</newcode> pic[4][5] 
+<newcode>pic[5][0] pic[5][1] pic[5][2] pic[5][3] pic[5][4] pic[5][5]</newcode></pre>
 </ans>
 </question>
 
@@ -202,7 +203,7 @@ if the array has length zero.)</np>
    
 <question>
 <ques><p>Suppose that temperature
-measurements were made on each day of 2018 in each of 100 cities. The
+measurements were made on each day of 2021 in each of 100 cities. The
 measurements have been stored in an array</p>
 <pre>int[][]  temps  =  new  int[100][365];</pre>
 <np>where <code>temps[c][d]</code> holds the measurement for city number <code>c</code>
@@ -273,6 +274,89 @@ array.)</np>
 </ans>
 </question>
 
+<question>
+<ques>
+<p>Convert the <classname>Employee</classname> class from the previous
+question into a record class.  What changes would then need to be made to the
+previous question's solution?</p>
+</ques>
+<ans><p>It is easy to make the conversion, remembering that the instance
+variables of a record class are listed in parentheses after the class name.
+The class body will be empty:</p>
+<pre>record Employee(
+   String lastName,
+   String firstName,
+   double hourlyWage,
+   int yearsWithCompany
+) { }</pre>
+<np>(<classname>Employee</classname> objects would than have to be created using the canonical constructor,
+and it would not be possible to change the value of any instance variable after the
+object has been created.  However, none of that is relevant to the solution of the
+previous question.)</np>
+<p>Since the fields of a record are private, they are accessed by calling methods instead
+of directly.  For example, <code>emp.firstName</code> would become
+<code>emp.firstName()</code>.  The extra parentheses are the only changes that are
+relevant to the question.  So the two loops from the previous problem would become:</p>
+<pre>for (int i=0; i &lt; 100; i++) {
+    if ( employeeData[i].yearsWithCompany &gt;= 20 )
+        System.out.println(employeeData[i].firstName() + " " +
+                      employeeData[i].lastName() + ": " +
+                      employeeData[i].hourlyWage() );
+}</pre>
+<np>and</np>
+<pre>for ( Employee emp : employeeData ) {
+    if ( emp.yearsWithCompany &gt;= 20 )
+        System.out.println(emp.firstName() + " " +
+                      emp.lastName() + ": " +
+                      emp.hourlyWage() );
+}</pre>
+<p>(Note however that if the <classname>Employee</classname> class is a
+nested class in the same class that contains the <code>for</code> loops, then
+the change is not necessary, since a class has direct access to the
+private variables in a nested class that it contains.)</p>
+</ans>
+</question>
+
+<question>
+<ques>
+<p>Write a record class to represent dates, where a <classname>Date</classname> object
+contains three integer fields giving the month, day, and year of the date.
+The canonical constructor should throw an exception if the values for the month
+and day are not legal.  Also include a <code>toString()</code> method that
+prints a date in a form such as "5/27/2022".</p>
+</ques>
+<ans>
+<p>My solution assumes that months are numbered 1 through 12, and days are numbered
+1 through 31.  Since different months have different lengths, it's actually non-trivial
+to check for illegal values, especially taking into account the rule for leap years.
+But here is my solution:
+</p>
+<pre>public record Date( int month, int day, int year ) {
+
+    public Date {  // the canonical constructor
+        if ( month &lt; 1 || month &gt; 12 )
+            throw new IllegalArgumentException("Illegal month number.");
+        int maxday; // last day of the month
+        switch (month) {
+            case 4, 6, 9, 11 -> maxday = 30;  // April, June, September, October
+            case 2 -> {  // February
+                boolean isLeapYear = (year % 400 == 0)
+                           || ((year % 4 == 0) &amp;&amp; (year % 100 != 0));
+                maxday = isLeapYear ? 29 : 28;
+            }
+            default -> maxday = 31;  // All other months
+        }
+        if ( day &lt; 1 || day &gt; maxday)
+            throw new IllegalArgumentException("Illegal day number.");
+    }
+    
+    public String toString() {
+        return String.format("%d/%d/%d", month, day, year);
+    }
+
+}</pre>
+</ans>
+</question>
 
 <question>
 <ques><p>What is the purpose of the
@@ -298,7 +382,5 @@ sum of the numbers in row number <code>i</code> of <code>data</code>.
 number of rows in <code>data</code>.  In the nested <code>for</code> loop,
 <code>data[i].length</code> is the number of values in the <code>i</code>-th row.)</p></ans>
 </question>
-
-
 
 </quiz>
