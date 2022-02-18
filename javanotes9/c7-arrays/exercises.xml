@@ -37,6 +37,11 @@ an infinite loop in that case since the size of the ArrayList can never become l
 <code>max</code>.  My solution avoids the infinite loop by throwing
 an <classname>IllegalArgumentException</classname> when <code>count&nbsp;&gt;&nbsp;max</code>.
 You can see the complete subroutine, and a <code>main()</code> routine that tests it, below.</np>
+<p>Note that an ArrayList in this program is simply printed using
+<code>System.out.println()</code>.  The <code>toString()</code> method of the
+<classname>ArrayList</classname> class will be called to get the <classname>String</classname>
+representation of the list.  That method outputs the items from the list, enclosed between
+<code>[</code> and <code>]</code> and separated by commas.</p>
 </exercise-discuss>
 <exercise-code>
 <pre><prog name="SeveralRandomIntegers">import java.util.ArrayList;
@@ -70,27 +75,17 @@ public class SeveralRandomIntegers {
         return numbers;
     }
     
-    private static void printList( ArrayList&lt;Integer&gt; numbers ) {
-        System.out.print("    [ ");
-        for (int i = 0; i &lt; numbers.size(); i++) {
-            if (i &gt; 0)
-                System.out.print(", ");
-            System.out.print( numbers.get(i) );
-        }
-        System.out.println(" ]");
-    }
-    
     public static void main(String[] args) {
         System.out.println("10 integers chosen from the range 1 to 100:");
         for (int i = 0; i &lt; 8; i++)
-            printList( makeRandomInts(10,100) );
+            System.out.println( makeRandomInts(10,100) );
         System.out.println();
         System.out.println("10 integers chosen from the range 1 to 10:");
         for (int i = 0; i &lt; 3; i++)
-            printList( makeRandomInts(10,10) );
+            System.out.println( makeRandomInts(10,10) );
         System.out.println();
         System.out.println("25 integers chosen from the range 1 to 10000:");
-        printList( makeRandomInts(25,10000) );
+        System.out.println( makeRandomInts(25,10000) );
         System.out.println();
         System.out.println("End with an exception!");
         makeRandomInts(10,9);
@@ -271,16 +266,16 @@ two <code>selectionSort</code> methods, one to sort numbers an one to sort strin
 You will see that my program includes tests of those methods.  Without that test, I wouldn't
 have been confident that my subroutines were sorting the arrays correctly.</p>
 <p>The code for timing the sorting algorithms is straightforward.
-Here are sort times from my program, running on a rather old computer.  
-Note that <code>Arrays.sort()</code> is <b>much</b> faster than
+Here are sort times from my program, running my computer:</p>  
+<pre>Seconds to sort 100000 numbers with selectionSort: 3.39291
+Seconds to sort 100000 numbers with Arrays.sort(): 0.0369317
+Seconds to sort 100000 strings with selectionSort: 31.9331
+Seconds to sort 100000 strings with Arrays.sort(): 0.0571503</pre>
+<np>Note that <code>Arrays.sort()</code> is <b>much</b> faster than
 <code>selectionSort</code>.  Also, it takes longer to sort strings that it takes to
 sort numbers, since comparing two strings takes longer than comparing two numbers.
 The advantage of <code>Arrays.sort()</code> is greater for strings than it is for numbers.
-I'm not sure why that happens.</p>
-<pre>Seconds to sort 100000 numbers with selectionSort: 12.6222
-Seconds to sort 100000 numbers with Arrays.sort(): 0.0656723
-Seconds to sort 100000 strings with selectionSort: 265.148
-Seconds to sort 100000 strings with Arrays.sort(): 0.157401</pre>
+I'm not sure why that happens.</np>
 <p>You can try running the program with different array sizes.  A large difference is
 noticeable even for arrays of size 1000, although all of the times are rather short in that
 case.  The advantage of <code>Arrays.sort()</code> increases as the array size increases.</p>
@@ -445,7 +440,7 @@ public class SortExperiments {
 <exercise>
 <exercise-question><p>In <localref href="GUI1.ex.2"/>, you wrote a
 program <code>DragTwoSquares</code> that allows the user to
-drag a red square and a blue square around on a canvas.  Write an
+drag a red square and a blue square around on a canvas.  Write a
 much improved version where the user can add squares to a canvas
 and drag them around.  In particular: If the user shift-clicks
 or right-clicks the canvas, then the user is trying to drag a
@@ -472,13 +467,14 @@ of information into a class:</p>
 private static class SquareData {
     double x,y;  // The coordinates of the center of the square.
     Color color; // The color of the square.
-    }
 }</pre>
 <np>The data for the whole collection of squares is then stored using an instance variable
 named <code>squares</code> of type <atype>ArrayList&lt;SquareData&gt;</atype>.
-By using an ArrayList, we allow for an unlimited number of squares.</np>
+By using an ArrayList, we allow for an unlimited number of squares.
+(Note that since the xy coordinates will change when a square is dragged,
+we cannot use a record class here.)</np>
 
-<p>Given this data structure, it's easy to write a <code>draw()</code>
+<p>Given this data structure, it's easy to write a <fx><code>draw()</code></fx><swing><code>paintComponent()</code></swing>
 method that completely redraws the contents of the canvas.  
 It can use a for-each loop to go through the <classname>ArrayList</classname>.  
 The loop control
@@ -489,8 +485,9 @@ To draw a rectangle, we need the coordinates of the top-left corner of the squar
 Since <code>squareData.x</code> and <code>squareData.y</code> are the coordinates
 of the center of the square, we have to subtract half of the square size from
 them to get the coordinates for the top-left corner.  In my program, the square size
-is 100, so the <code>draw()</code> method can be written as follows:</p>
+is 100, so the drawing method can be written as follows:</p>
 
+<fxdiv>
 <pre>private void draw() {
     GraphicsContext g = canvas.getGraphicsContext2D();
     g.setFill(Color.rgb(230,255,230)); // light green background
@@ -503,18 +500,29 @@ is 100, so the <code>draw()</code> method can be written as follows:</p>
         g.strokeRect( squareData.x - 50, squareData.y - 50, 100, 100 );
     }
 }</pre>
+</fxdiv>
+<swingdiv>
+<pre>public void paintComponent(Graphics g) {
+    super.paintComponent(g);  // Fill with background color.
+    for ( SquareData squareData: squares ) {
+        g.setColor( squareData.color );
+        g.fillRect( squareData.x - 50, squareData.y - 50, 100, 100);
+        g.setColor( Color.BLACK );
+        g.drawRect( squareData.x - 50, squareData.y - 50, 100, 100);
+    }
+}</pre>
+</swingdiv>
 
 <np>This method is called every time the mouse is moved while the user is dragging
 a square.  It's not sufficient to draw the square in its new position&mdash;it must
 be removed from its previous position, and the area that it previously occupied has to be
 redrawn because it might contain other squares.  It is easiest, though not most efficient,
 just to redraw the entire picture.  When the user adds a new square, it would be enough
-to just draw the new square, but in fact my program just calls <code>draw()</code>
+to just draw the new square, but in fact my program just calls <code><fx>draw()</fx><swing>repaint()</swing></code>
 in that case as well.</np>
 
 <p>Another interesting point is in the <code>mousePressed()</code> routine, which
-is called by a <code>MousePressed</code> event handler that listens for mouse
-events on the canvas.  If the user shift-clicks or right-clicks, we have
+is called when the user clicks the mouse on the drawing area.  If the user shift-clicks or right-clicks, we have
 to figure out which square contains the mouse position, so that we know which
 square to drag.  To do that, we have to search the <classname>ArrayList</classname>
 of squares to find one that meets the criterion that it contains the mouse
@@ -543,8 +551,7 @@ for (int i = squares.size() - 1; i &gt;= 0; i--) {
 <np>You can check out the sample solution below for other details.</np>
 </exercise-discuss>
 <exercise-code>
-<p>Changes from <code>SimpleStamperWithDrag</code> are shown in &newcodestyle;.</p>
-<pre><prog name="DragLotsOfSquares">import javafx.application.Application;
+<pre><prog name="DragLotsOfSquares" scope="fx">import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -744,7 +751,207 @@ public class DragLotsOfSquares extends Application {
     }
 
 } // end class DragLotsOfSquares
-</prog></pre></exercise-code>
+</prog></pre>
+<pre><prog name="DragLotsOfSquares" scope="swing">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.ArrayList;
+
+
+/**
+ * A program that lets the user add squares to a canvas by clicking.
+ * The center of a square is placed at the point where the user clicked.
+ * Squares all have the same size (100-by-100).  They have random
+ * colors with up to 50% transparency.  If the user shift-clicks
+ * or right-clicks a square, the user can drag the square.  If
+ * the user drags a square off the canvas, it is deleted from the
+ * list of squares.
+ */
+public class DragLotsOfSquares extends JPanel {
+
+
+    /**
+     * A main routine allows this class to be run as an application.
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Click to add; Shift-click to drag!");
+        DragLotsOfSquares content = new DragLotsOfSquares();
+        window.setContentPane(content);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setLocation(120,70);
+        window.setSize(600,450);
+        window.setVisible(true);
+    }
+
+    //---------------------------------------------------------------------
+
+    /**
+     * An object of type SquareData contains the data necessary to
+     * draw one square, that is, the color of the square and the
+     * coordinates of its center.
+     */
+    private static class SquareData {
+        int x,y;  // Location of center of square.  The size is always 100-by-100.
+        Color color; // The color of the square
+    }
+
+    private ArrayList&lt;SquareData&gt; squares;  // Info for all squares in the picture.
+
+
+    /**
+     *  The constructor places the two squares in their initial positions and
+     *  sets up listening for mouse events and mouse motion events.
+     */
+    public DragLotsOfSquares() {
+
+        setBackground(new Color(200,255,200));  // Set up appearance of the panel
+        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2) );
+
+        Dragger listener = new Dragger();  // Listening object, belonging to a nested
+                                           //     class that is defined below.
+
+        addMouseListener(listener);        // Set up listening.
+        addMouseMotionListener(listener);
+        
+        squares = new ArrayList&lt;SquareData&gt;();
+    } 
+
+
+    /**
+     * paintComponent just draws all the squares in their current positions.
+     */
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);  // Fill with background color.
+        for ( SquareData squareData: squares ) {
+            g.setColor( squareData.color );
+            g.fillRect( squareData.x - 50, squareData.y - 50, 100, 100);
+            g.setColor( Color.BLACK );
+            g.drawRect( squareData.x - 50, squareData.y - 50, 100, 100);
+        }
+    }
+
+
+    /**
+     *  This private class is used to define the listener that listens
+     *  for mouse events and mouse motion events on the panel.
+     */
+    private class Dragger implements MouseListener, MouseMotionListener {
+
+        /* Some variables used during dragging */
+
+        boolean dragging;      // Set to true when a drag is in progress.
+
+        SquareData draggedSquare;  // When a drag is in progress, this is 
+                                   // the square that is being dragged.
+
+        int offsetX, offsetY;  // Offset of mouse-click coordinates from the
+                               //   center of the square that is being dragged.
+
+        /**
+         * Respond when the user presses the mouse on the panel.
+         * A shift-click or right-click starts dragging the square
+         * under the mouse, if any.  Other clicks will add a new
+         * square with its center at the mouse position.  A drag
+         * operation is begun only if the user shift-clicks or
+         * right-clicks a square.
+         */
+        public void mousePressed(MouseEvent evt) { 
+
+            if (dragging)  // Exit if a drag is already in progress.
+                return;
+
+            int x = evt.getX();  // Location where user clicked.
+            int y = evt.getY();
+
+            if (evt.isShiftDown() || evt.getButton() == MouseEvent.BUTTON3) {  
+                // If user shift-clicked or right-clicked a square, start dragging it.
+            
+                /* Find the square, if any, that contains (x,y).  If several squares
+                 * contain (x,y), we want the one on top, which is the LAST one in
+                 * the list that contains (x,y) -- so consider the squares in the
+                 * reverse of their order in the list. */
+                
+                for (int i = squares.size() - 1; i >= 0; i--) {
+                    SquareData squareData = squares.get(i);
+                    int cx = squareData.x; // (cx,cy) is the center of the square
+                    int cy = squareData.y;
+                    if ( x >= cx - 50 &amp;&amp; x &lt;= cx + 50 &amp;&amp; y >= cy - 50 &amp;&amp; y &lt;= cy + 50) {
+                        dragging = true;
+                        draggedSquare = squareData;
+                        offsetX = x - cx;
+                        offsetY = y - cy;
+                        break;  // stop as soon as we find  square containing (x,y)
+                    }
+                }
+            }
+            else { // Add a new square with center at (x,y)
+                SquareData squareData = new SquareData();
+                squareData.x = x;
+                squareData.y = y;
+                int red = (int)(256*Math.random());
+                int green = (int)(256*Math.random());
+                int blue = (int)(256*Math.random());
+                int alpha = 255 - (int)(128*Math.random());
+                squareData.color = new Color(red,green,blue,alpha);
+                squares.add( squareData );
+                repaint();  // Redraw the whole picture to show the new square.
+                            //  (Could have just drawn it here instead!)
+            }
+        }
+        
+
+        /**
+         * Dragging stops when user releases the mouse button.  If the user
+         * has dragged the square completely off the canvas, then it is deleted
+         * from the list of squares. (That will have no visible effect on the
+         * picture, so the canvas is not redrawn.)
+         */
+        public void mouseReleased(MouseEvent evt) { 
+            if ( ! dragging )
+                return;
+            if (draggedSquare.x > getWidth() + 50
+                    || draggedSquare.x &lt; -50
+                    || draggedSquare.y &gt; getHeight() + 50
+                    || draggedSquare.y &lt; -50) {
+                  // Square is completely off the canvas, so remove it!
+                squares.remove(draggedSquare);
+                  // For testing, to make sure square is actually deleted:
+                System.out.println("Removed square; list size = " + squares.size());
+            }
+            dragging = false;  // drag operation has ended.
+            draggedSquare = null;
+        }
+        
+
+        /**
+         * Respond when the user drags the mouse.  If a square is 
+         * not being dragged, then exit. Otherwise, change the position
+         * of the square that is being dragged to match the position
+         * of the mouse.  Note that the center of the square is placed
+         * in the same relative position with respect to the mouse that it
+         * had when the user started dragging it.
+         */
+        public void mouseDragged(MouseEvent evt) { 
+            if ( ! dragging )  
+                return;
+            int x = evt.getX();
+            int y = evt.getY();
+            draggedSquare.x = x - offsetX;
+            draggedSquare.y = y - offsetY;
+            repaint();  // Redraw picture to show square in new positions.
+        }
+
+        public void mouseMoved(MouseEvent evt) { }  // empty methods required by interfaces.
+        public void mouseClicked(MouseEvent evt) { }
+        public void mouseEntered(MouseEvent evt) { }
+        public void mouseExited(MouseEvent evt) { }
+
+    } // end nested class Dragger
+
+
+} // end class DragTwoSquaresPanel
+</prog></pre>
+</exercise-code>
 </exercise>
 
 
@@ -1065,15 +1272,20 @@ public class ListAllWordsFromFile {
    
    public static void main(String[] args) {
       
-      System.out.println("\n\nThis program will ask you to select an input file");
-      System.out.println("It will read that file and make an alphabetical");
-      System.out.println("list of all the words in the file.  After reading");
-      System.out.println("the file, the program asks you to select an output");
-      System.out.println("file.  If you select a file, the list of words will");
-      System.out.println("be written to that file; if you cancel, the list");
-      System.out.println("be written to standard output.  All words are converted");
-      System.out.println("lower case, and duplicates are eliminated from the list.\n\n");
-      System.out.print("Press return to begin.");
+      System.out.println("""
+                 This program will ask you to select an input file
+              It will read that file and make an alphabetical
+              list of all the words in the file.  After reading
+              the file, the program asks you to select an output
+              file.  If you select a file, the list of words will
+              be written to that file; if you cancel, the list
+              be written to standard output.  All words are converted
+              lower case, and duplicates are eliminated from the list.
+              
+              Press return to begin.
+              
+              """);
+
       TextIO.getln();  // Wait for user to press return.
       
       try {
@@ -1205,9 +1417,10 @@ two players play Go Moku against each other.</p>
 <p>Your program will be simpler than the <classname>Checkers</classname> program from
 <localref href="arrays.5.3"/>. Play alternates strictly between the two players,
 and there is no need to highlight the legal moves. You will only need one
-nested subclass, a subclass of <classname>Canvas</classname> to draw
-the board and do all the work of the game, like the nested <classname>CheckersBoard</classname>
-in the <classname>Chekers</classname> program.  You will probably want
+nested subclass, a subclass of <fx><classname>Canvas</classname></fx><swing><classname>JPanel</classname></swing> to draw
+the board and do all the work of the game, like the nested 
+<fx><classname>CheckersBoard</classname></fx><swing><classname>Board</classname></swing> class
+in the <classname>Checkers</classname> program.  You will probably want
 to look at the source code for the checkers program,
 <sourceref href="Checkers.java"/>, for ideas about the general
 outline of the program.</p>
@@ -1257,13 +1470,15 @@ while ( r &gt;= 0 &amp;&amp; r &lt; 13 &amp;&amp; c &gt;= 0 &amp;&amp; c &lt; 13
 it in stages, testing each stage separately. The first stage, the general
 layout of the panel, is already done in the 
 <sourceref href="Checkers.java"/> program. With just a few changes, the
-main panel class, the layout of the panel, and the button and message
+main <swing>panel</swing><fx>canvas</fx> class, the layout of the board, and the button and message
 handling come directly from that program. Let's take the rest of the Go&nbsp;Moku
 game one stage at a time.</p>
 
 <p>A two-dimensional array is used to store the contents of the board. This
 array is of type <atype>int[][]</atype> and is named <code>board</code>. It is defined as
-an instance variable in the <classname>Board</classname> class, and it is initialized
+an instance variable in the 
+<swing><classname>Board</classname></swing><fx><classname>GoMokuBoard</classname></fx>
+class, and it is initialized
 in the constructor of that class to be a 13-by-13 array. The value in each
 position of the array is one of three constants: <code>EMPTY</code>,
 <code>WHITE</code>, or <code>BLACK</code>. When a game begins, each of the entries in
@@ -1278,7 +1493,8 @@ to draw on the board.</p>
 
 <np><b><u>Drawing the Board</u></b></np>
 
-<p>We need a <code>drawBoard()</code> method for the <classname>Board</classname> class that
+<p>We need a <code><fx>drawBoard()</fx><swing>paintComponent()</swing></code> 
+method for the board class that
 can draw the board. The board has 13 rows and 13 columns of spaces. How wide
 should the board be? If each square in the board is <code>x</code> pixels wide, we
 need a total of <code>13*x</code> pixels just for the spaces. But there are also
@@ -1305,48 +1521,29 @@ same way. To draw a piece in row number <code>row</code> and column number
 <np>can be used. This allows a two-pixel gap between the oval that represents
 that piece and the side of the square.  Since the size of the square is 22 and there
 is a 2-pixel gap on each side of the oval, the size of the oval is 22 minus 4, or 18. 
-In my program, I defined a method to draw a piece.  Originally, I wrote it as:</np>
+In my program, I defined a <code>drawPiece()</code> method to draw a piece.</np>
 
-<pre>private void drawPiece(GraphicsContext g, int piece, int row, int col) {
-   if (piece == WHITE)
-      g.setFill(Color.WHITE);
-   else
-      g.setFill(Color.BLACK);
-   g.fillOval(4 + 24*col, 34+24*row, 18, 18);
-}</pre>
-
-<np>However, after looking at the result, I decided to outline the white pieces with
-black.  That little addition improved the appearance of the game significantly.</np>
-
-<p>The <code>drawBoard()</code> method fills the canvas with light gray,
-draws the black lines between the squares, and draws all the pieces that
+<p>The <code><fx>drawBoard()</fx><swing>paintComponent()</swing></code> method 
+fills the canvas with light gray<swing> (by calling <code>super.paintComponent(g)</code>)</swing>.
+It then draws the black lines between the squares, and draws all the pieces that
 have been placed on the board. Remember that the piece in a
 given row and column is recorded in the <code>board</code> array as
 <code>board[row][col]</code>. This is done as follows:</p>
 
-<pre>public void drawBoard() {
+<pre>/* Draw lines separating the square and along the edges of the canvas.  */
 
-    GraphicsContext g = getGraphicsContext2D();
-    g.setFill( Color.LIGHTGRAY );  // fill canvas with light gray
-    g.fillRect(0,0,314,314);
+ g.set<fx>Stroke</fx><swing>Color</swing>(Color.BLACK);
+ for (int i = 0; i &lt;= 13; i++) {
+     g.<fx>stroke</fx><swing>draw</swing>Line(1 + 24*i, 0, 1 + 24*i, 314);
+     g.<fx>stroke</fx><swing>draw</swing>Line(0, 1 + 24*i, 314, 1 + 24*i);
+ }
 
-    /* Draw lines separating the square and along the edges of the canvas.  */
+ /* Draw the pieces that are on the board. */
 
-    g.setStroke(Color.BLACK);
-    g.setLineWidth(2);
-    for (int i = 0; i &lt;= 13; i++) {
-        g.strokeLine(1 + 24*i, 0, 1 + 24*i, 314);
-        g.strokeLine(0, 1 + 24*i, 314, 1 + 24*i);
-    }
-
-    /* Draw the pieces that are on the board. */
-
-    for (int row = 0; row &lt; 13; row++)
-        for (int col = 0; col &lt; 13; col++)
-            if (boardData[row][col] != EMPTY)
-                drawPiece(g, boardData[row][col], row, col);
-
-}  // end drawBoard()</pre>
+ for (int row = 0; row &lt; 13; row++)
+     for (int col = 0; col &lt; 13; col++)
+         if (boardData[row][col] != EMPTY)
+             drawPiece(g, boardData[row][col], row, col);</pre>
 
 <break/>
 
@@ -1389,14 +1586,14 @@ can be written:</p>
       drawWinLine() to mark the winning pieces. */
 
     boardData[row][col] = currentPlayer;  // Make the move.
-    drawBoard();
+    <fx>drawBoard();</fx><swing>repaint();</swing>
 
     if (winner(row,col)) {  // First, check for a winner.
         if (currentPlayer == WHITE)
             gameOver("WHITE wins the game!");
         else
-            gameOver("BLACK wins the game!");
-        drawWinLine();
+            gameOver("BLACK wins the game!");<fx>
+        drawWinLine();</fx>
         return;
     }
 
@@ -1423,14 +1620,20 @@ can be written:</p>
 
 }  // end doClickSquare()</pre>
 
-<np>Note that when the move wins the game, the method <code>drawWinLine()</code> is called.
-This will draw a red line through the winning pieces.  Unlike every other part of the
+<np>Note that when the move wins the game, <fx>the method <code>drawWinLine()</code> is called.
+This</fx><swing>the <code>paintComponent() method</code></swing> will 
+draw a red line through the winning pieces.  <swing>You might notice that
+in <code>doClickSquare()</code>, <code>repaint()</code> is called before the
+<code>gameOver()</code> method is called.  It's important to realize that
+<code>repaint()</code> does not call <code>paintComponent()</code>, it just
+schedules it to be called later, and that won't happen until after the
+<code>doClickSquare()</code> method has finished.</swing><fx>Unlike every other part of the
 board, the red line is not drawn by <code>drawBoard()</code>.  It is added when the
 game is over, and it will stay there until the board is erased at the beginning of the
 new game.  Note that this violates my general policy that a <code>draw()</code> method
 should completely reflect the state of the game.  In this case, it does not draw
 the red line when the state of the game is that the game has been won.  This is OK
-only because <code>drawBoard()</code> is never called when the game is in that state.</np>
+only because <code>drawBoard()</code> is never called when the game is in that state.</fx></np>
 
 <break/>
 
@@ -1494,7 +1697,8 @@ an empty square that joins two shorter rows of pieces together.</p>
 
 <p>In my program, when a player wins, the row of pieces that wins the game is
 marked with a red line. To do this, I added four instance variables of type
-<ptype>int</ptype> to the <classname>Board</classname> class. The instance variables are
+<ptype>int</ptype> to the <swing><classname>Board</classname></swing><fx><classname>GoMokuBoard</classname></fx> class.
+ The instance variables are
 named <code>win_r1</code>, <code>win_c1</code>, <code>win_r2</code>, and <code>win_c2</code>.
 After a player has won the game, the values of these
 variables have been set to mark the squares at the two ends of the winning row of
@@ -1509,7 +1713,7 @@ finds in the two directions it checks.  The values are always set when <code>cou
 is called.  If the game is won, this will set the
 values correctly.   My program depends on the fact that once it has been determined
 that a game has been won, <code>count()</code> will not be called again during that
-game.  This means that when <code>drawWinLine()</code> is called, the variables
+game.  This means that when the red line is drawn, the variables
 <code>win_r1</code>, <code>win_c1</code>, <code>win_r2</code>, and <code>win_c2</code>
 will still mark the ends of the line of pieces that won the game.
 (I'm not really happy about how tricky this is.  My solution is "fragile" in the sense
@@ -1517,7 +1721,7 @@ that it could easily be broken inadvertently if the logic of the program is chan
 just a little.  But I really wanted to mark the winning pieces&dots;)</p>
 </exercise-discuss>
 <exercise-code>
-<pre><prog name="GoMoku">
+<pre><prog name="GoMoku" scope="fx">
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -1892,7 +2096,7 @@ public class GoMoku extends Application {
                     if (boardData[row][col] != EMPTY)
                         drawPiece(g, boardData[row][col], row, col);
 
-        }  // end paintComponent()
+        }  // end drawBoard()
 
 
         /**
@@ -1946,6 +2150,433 @@ public class GoMoku extends Application {
                     doClickSquare(row,col);
             }
         }
+
+    }  // end nested class GoMokuBoard
+
+
+} // end class GoMoku
+</prog></pre>
+<pre><prog name="GoMoku" scope="swing">
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;    
+
+/**
+ * This program lets two users play Go Moku (a.k.a Pente) against each 
+ * other.  Black always starts the game.  When a player gets five-in-a-row,
+ * that player wins.  The game ends in a draw if the board is filled
+ * before either player wins.
+ *
+ * The class has a main() routine that lets it be run as a stand-alone
+ * application.  The application just opens a window that uses an object
+ * of type GoMoku as its content pane.
+ * 
+ */
+
+public class GoMoku extends JPanel {
+
+    /**
+     * Main routine makes it possible to run GoMoku as a stand-alone
+     * application.  Opens a window showing a GoMoku panel; the program
+     * ends when the user closes the window.
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("GoMoku");
+        GoMoku content = new GoMoku();
+        window.setContentPane(content);
+        window.pack();
+        Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+        window.setLocation( (screensize.width - window.getWidth())/2,
+                                  (screensize.height - window.getHeight())/2 );
+        window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        window.setResizable(false);  
+        window.setVisible(true);
+    }
+
+
+    private JButton newGameButton;  // Button for starting a new game.
+
+    private JButton resignButton;   // Button that a player can use to end the 
+                                    //   game by resigning.
+
+    private JLabel message;  // Label for displaying messages to the user.
+
+
+    /**
+     *  The constructor lays out the panel.  The work of
+     *  the game is all done in the Board object.  A null layout
+     *  is used, and all setup of sizes and positions is done here.
+     */
+    public GoMoku() {
+
+        setLayout(null);  // I will do the layout myself.
+
+        setPreferredSize( new Dimension(500,420) );
+
+        setBackground(new Color(0,100,0));  // Dark green background.
+
+        /* Create the components and add them to the panel. */
+
+        Board board = new Board();  // Note: The constructor for the
+                                    //   board also creates the buttons
+                                    //   and label.
+        add(board);
+        add(newGameButton);
+        add(resignButton);
+        add(message);
+
+        /* Set the position and size of each component by calling
+           its setBounds() method. */
+
+        board.setBounds(20,20,314,314); // Note:  size MUST be 314-by-314 !
+        newGameButton.setBounds(370, 120, 120, 30);
+        resignButton.setBounds(370, 200, 120, 30);
+        message.setBounds(20, 370, 460, 30);
+    }
+
+
+    // ----------------------- Nested class -----------------------------------
+
+    /**
+     * This panel displays a 310-by-310 pixel checkerboard pattern with
+     * a 2-pixel black border.  It is assumed that the size of the
+     * pannel is set to exactly 314-by-314 pixels.  This class does
+     * the work of letting the users play Go Moku, and it displays
+     * the board.  In this program, the board has 13 rows and
+     * columns of squares.
+     */
+    class Board extends JPanel implements  MouseListener {
+
+        int[][] board;   // The data for the board is kept here.  The values
+                         //   in this array are chosen from the following constants.
+
+        static final int EMPTY = 0,       // Represents an empty square.
+                WHITE = 1,       // A white piece.
+                BLACK = 2;       // A black piece.
+
+        boolean gameInProgress; // Is a game currently in progress?
+
+        int currentPlayer;      // Whose turn is it now?  The possible values
+                                //    are WHITE and BLACK.  (This is valid only while
+                                //    a game is in progress.)
+
+        int win_r1, win_c1, win_r2, win_c2; // When a player wins by getting five or more
+                                            // pieces in a row, the squares at the
+                                            // ends of the row are (win_r1,win_c1)
+                                            // and (win_r2,win_c2).  A red line is
+                                            // drawn between these squares.  When there
+                                            // are not five pieces in a row, the value of
+                                            // win_r1 is -1.  The values are set in the
+                                            // count() method.  The value of win_r1 is
+                                            // tested in the paintComponent() method.
+
+        /**
+         * Constructor.  Create the buttons and label.  Listen for mouse
+         * clicks and for clicks on the buttons.  Create the board and
+         * start the first game.
+         */
+        public Board() {
+            setBackground(Color.LIGHT_GRAY);
+            addMouseListener(this);
+            resignButton = new JButton("Resign");
+            resignButton.addActionListener( e -&gt; doResign() );
+            newGameButton = new JButton("New Game");
+            newGameButton.addActionListener( e -&gt; doNewGame());
+            message = new JLabel("",JLabel.CENTER);
+            message.setFont(new  Font("Serif", Font.BOLD, 20));
+            message.setForeground(Color.GREEN);
+            board = new int[13][13];
+            doNewGame();
+        }
+
+
+        /**
+         * Begin a new game; this is called by the actionPerformed()
+         * method when a user clicks the New Game button.
+         */
+        void doNewGame() {
+            if (gameInProgress == true) {
+                // This should not be possible because New Game button
+                // is enabled only when it is legal to use it, but it doesn't 
+                // hurt to check.
+                message.setText("Finish the current game first!");
+                return;
+            }
+            for (int row = 0; row &lt; 13; row++)       // Fill the board with EMPTYs
+                for (int col = 0; col &lt; 13; col++)
+                    board[row][col] = EMPTY;
+            currentPlayer = BLACK;   // BLACK moves first.
+            message.setText("BLACK:  Make your move.");
+            gameInProgress = true;
+            newGameButton.setEnabled(false);
+            resignButton.setEnabled(true);
+            win_r1 = -1;  // This value indicates that no red line is to be drawn.
+            repaint();
+        }
+
+
+        /**
+         * Current player resigns; this is called by the actionPerformed()
+         * method when a user clicks the Resign button.  Game ends, and
+         * opponent wins.
+         */
+        void doResign() {
+            if (gameInProgress == false) {
+                // This should not be possible.
+                message.setText("There is no game in progress!");
+                return;
+            }
+            if (currentPlayer == WHITE)
+                message.setText("WHITE resigns.  BLACK wins.");
+            else
+                message.setText("BLACK resigns.  WHITE wins.");
+            newGameButton.setEnabled(true);
+            resignButton.setEnabled(false);
+            gameInProgress = false;
+        }
+
+
+        /**
+         * This method is called whenever the game ends.  The parameter, str,
+         * is displayed as a message, and the buttons are enabled/disabled
+         * to reflect the fact that a game is not currently in progress.
+         */
+        void gameOver(String str) {
+            message.setText(str);
+            newGameButton.setEnabled(true);
+            resignButton.setEnabled(false);
+            gameInProgress = false;
+        }
+
+
+        /**
+         * This is called by mousePressed() when a player clicks on the
+         * square in the specified row and col.  It has already been checked
+         * that a game is, in fact, in progress.
+         */
+        void doClickSquare(int row, int col) {
+
+            /* Check that the user clicked an empty square.  If not, show an
+                error message and exit. */
+
+            if ( board[row][col] != EMPTY ) {
+                if (currentPlayer == BLACK)
+                    message.setText("BLACK:  Please click an empty square.");
+                else
+                    message.setText("WHITE:  Please click an empty square.");
+                return;
+            }
+
+            /* Make the move.  Check if the board is full or if the move
+               is a winning move.  If so, the game ends.  If not, then it's
+               the other user's turn. */
+
+            board[row][col] = currentPlayer;  // Make the move.
+            repaint();
+
+            if (winner(row,col)) {  // First, check for a winner.
+                if (currentPlayer == WHITE)
+                    gameOver("WHITE wins the game!");
+                else
+                    gameOver("BLACK wins the game!");
+                return;
+            }
+
+            boolean emptySpace = false;     // Check if the board is full.
+            for (int i = 0; i &lt; 13; i++)
+                for (int j = 0; j &lt; 13; j++)
+                    if (board[i][j] == EMPTY)
+                        emptySpace = true;
+            if (emptySpace == false) {
+                gameOver("The game ends in a draw.");
+                return;
+            }
+
+            /* Continue the game.  It's the other player's turn. */
+
+            if (currentPlayer == BLACK) {
+                currentPlayer = WHITE;
+                message.setText("WHITE:  Make your move.");
+            }
+            else {  
+                currentPlayer = BLACK;
+                message.setText("BLACK:  Make your move.");
+            }
+
+        }  // end doClickSquare()
+
+
+        /**
+         * This is called just after a piece has been played on the
+         * square in the specified row and column.  It determines
+         * whether that was a winning move by counting the number
+         * of squares in a line in each of the four possible
+         * directions from (row,col).  If there are 5 squares (or more)
+         * in a row in any direction, then the game is won.
+         */
+        private boolean winner(int row, int col) {
+
+            if (count( board[row][col], row, col, 1, 0 ) &gt;= 5)
+                return true;
+            if (count( board[row][col], row, col, 0, 1 ) &gt;= 5)
+                return true;
+            if (count( board[row][col], row, col, 1, -1 ) &gt;= 5)
+                return true;
+            if (count( board[row][col], row, col, 1, 1 ) &gt;= 5)
+                return true;
+
+            /* When we get to this point, we know that the game is not
+               won.  The value of win_r1, which was changed in the count()
+               method, has to be reset to -1, to avoid drawing a red line
+               on the board. */
+
+            win_r1 = -1;
+            return false;
+
+        }  // end winner()
+
+
+        /**
+         * Counts the number of the specified player's pieces starting at
+         * square (row,col) and extending along the direction specified by
+         * (dirX,dirY).  It is assumed that the player has a piece at
+         * (row,col).  This method looks at the squares (row + dirX, col + dirY),
+         * (row + 2*dirX, col + 2*dirY), ... until it hits a square that is
+         * off the board or is not occupied by one of the player's pieces.
+         * It counts the squares that are occupied by the player's pieces.
+         * Furthermore, it sets (win_r1,win_c1) to mark last position where
+         * it saw one of the player's pieces.  Then, it looks in the
+         * opposite direction, at squares (row - dirX, col-dirY),
+         * (row - 2*dirX, col - 2*dirY), ... and does the same thing.
+         * Except, this time it sets (win_r2,win_c2) to mark the last piece.
+         * Note:  The values of dirX and dirY must be 0, 1, or -1.  At least
+         * one of them must be non-zero.
+         */
+        private int count(int player, int row, int col, int dirX, int dirY) {
+
+            int ct = 1;  // Number of pieces in a row belonging to the player.
+
+            int r, c;    // A row and column to be examined
+
+            r = row + dirX;  // Look at square in specified direction.
+            c = col + dirY;
+            while ( r &gt;= 0 &amp;&amp; r &lt; 13 &amp;&amp; c &gt;= 0 &amp;&amp; c &lt; 13 &amp;&amp; board[r][c] == player ) {
+                // Square is on the board and contains one of the players's pieces.
+                ct++;
+                r += dirX;  // Go on to next square in this direction.
+                c += dirY;
+            }
+
+            win_r1 = r - dirX;  // The next-to-last square looked at.
+            win_c1 = c - dirY;  //    (The LAST one looked at was off the board or
+            //    did not contain one of the player's pieces.
+
+            r = row - dirX;  // Look in the opposite direction.
+            c = col - dirY;
+            while ( r &gt;= 0 &amp;&amp; r &lt; 13 &amp;&amp; c &gt;= 0 &amp;&amp; c &lt; 13 &amp;&amp; board[r][c] == player ) {
+                // Square is on the board and contains one of the players's pieces.
+                ct++;
+                r -= dirX;   // Go on to next square in this direction.
+                c -= dirY;
+            }
+
+            win_r2 = r + dirX;
+            win_c2 = c + dirY;
+
+            // At this point, (win_r1,win_c1) and (win_r2,win_c2) mark the endpoints
+            // of the line of pieces belonging to the player.
+
+            return ct;
+
+        }  // end count()
+
+
+        /**
+         * Draws the board and the pieces on the board.  If the game has
+         * been won by getting five or more pieces in a row, draws a red line
+         * through the pieces.
+         */
+        public void paintComponent(Graphics g) {
+
+            super.paintComponent(g); // Fill with background color, lightGray
+            ((Graphics2D)g).setStroke(new BasicStroke(2));
+
+            /* Draw a two-pixel black border around the edges of the canvas,
+               and draw grid lines in darkGray.  */
+
+            g.setColor(Color.BLACK);
+            for (int i = 0; i &lt;= 13; i++) {
+                g.drawLine(1 + 24*i, 0, 1 + 24*i, 314);
+                g.drawLine(0, 1 + 24*i, 314, 1 + 24*i);
+            }
+
+            /* Draw the pieces that are on the board, with anti-aliasing turned on. */
+
+            ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                                                RenderingHints.VALUE_ANTIALIAS_ON);
+                                                
+            for (int row = 0; row &lt; 13; row++)
+                for (int col = 0; col &lt; 13; col++)
+                    if (board[row][col] != EMPTY)
+                        drawPiece(g, board[row][col], row, col);
+
+            /* If the game has been won, then win_r1 &gt;= 0.  Draw a line to mark
+               the five (or more) winning pieces. */
+
+            if (win_r1 &gt;= 0)
+                drawWinLine(g);
+
+        }  // end paintComponent()
+
+
+        /**
+         * Draw a piece in the square at (row,col).  The color is specified
+         * by the piece parameter, which should be either BLACK or WHITE.
+         */
+        private void drawPiece(Graphics g, int piece, int row, int col) {
+            if (piece == WHITE)
+                g.setColor(Color.WHITE);
+            else
+                g.setColor(Color.BLACK);
+            g.fillOval(4 + 24*col, 4 + 24*row, 19, 19);
+        }
+
+
+        /**
+         * Draw a 2-pixel wide red line from the middle of the square at
+         * (win_r1,win_c1) to the middle of the square at (win_r2,win_c2).
+         * This routine is called to mark the pieces that won the game.
+         * The values of the variables are set in the count() method.
+         */
+        private void drawWinLine(Graphics g) {
+            g.setColor(Color.RED);
+            ((Graphics2D)g).setStroke(new BasicStroke(4));
+            g.drawLine( 13 + 24*win_c1, 13 + 24*win_r1, 13 + 24*win_c2, 13 + 24*win_r2 );
+        }
+
+
+        /**
+         * Respond to a user click on the board.  If no game is
+         * in progress, show an error message.  Otherwise, find
+         * the row and column that the user clicked and call
+         * doClickSquare() to handle it.
+         */
+        public void mousePressed(MouseEvent evt) {
+            if (gameInProgress == false)
+                message.setText("Click \"New Game\" to start a new game.");
+            else {
+                int col = (evt.getX() - 2) / 24;
+                int row = (evt.getY() - 2) / 24;
+                if (col &gt;= 0 &amp;&amp; col &lt; 24 &amp;&amp; row &gt;= 0 &amp;&amp; row &lt; 24)
+                    doClickSquare(row,col);
+            }
+        }
+
+
+        public void mouseReleased(MouseEvent evt) { }
+        public void mouseClicked(MouseEvent evt) { }
+        public void mouseEntered(MouseEvent evt) { }
+        public void mouseExited(MouseEvent evt) { }
 
     }  // end nested class Board
 
