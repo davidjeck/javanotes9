@@ -147,7 +147,9 @@ exception belongs as well as the same string that would be returned by <code>e.g
 And the method <code>e.printStackTrace()</code> writes a stack trace to standard output that tells
 which subroutines were active when the exception occurred.
 A stack trace can be very useful when you
-are trying to determine the cause of the problem.  (Note that if an exception is <b>not</b>
+are trying to determine the cause of the problem.  Information in the stack trace can
+tell you exactly where in the program the exception occurred.
+(Note that if an exception is <b>not</b>
 caught by the program, then the default response to the exception  prints the stack trace to standard output.)</p>
 
 </subsection>
@@ -272,7 +274,7 @@ many cases let you approach the problem in a more organized way.)</p>
    
 <p>I have still not completely specified the syntax of the <code>try</code> statement.
 The next variation is the possibility of a <newword>finally clause</newword>
-at the end of a <code>try</code> statement.  With this addition, syntax of the <code>try</code>
+at the end of a <code>try</code> statement.  With this addition, the syntax of the <code>try</code>
 statement can be described as:</p>
 
 <pre>try {

@@ -37,7 +37,7 @@ personal computer there can be more serious consequences, such as lost work or
 lost money. When computers are given more important tasks, the consequences of
 failure can be proportionately more serious.</p>
 
-<p>About twenty years ago, the failure of two multi-million dollar space missions to
+<p>About twenty-three years ago, the failure of two multi-million dollar space missions to
 Mars was prominent in the news. Both failures were probably due to software
 problems, but in both cases the problem was not with an incorrect program as
 such. In September 1999, the Mars Climate Orbiter burned up in the Martian
@@ -87,9 +87,7 @@ computer software error contributed to the
 of 2003, one of the largest power outages in history. 
 In 2006, the Airbus A380 was <tex>delayed</tex><web><a href="http://www.cadalyst.com/cad/product-design/what-grounded-airbus-a380-10903">delayed</a></web>
 by software incompatibility problems, at a cost of perhaps billions of dollars.
-In 2007, a 
-<tex>software problem</tex><web><a href="http://www.cbsnews.com/stories/2007/06/20/travel/main2955199.shtml">software&nbsp;problem</a></web> grounded
-thousands of planes at the Los Angeles International Airport.
+In 2007, a software problem grounded thousands of planes at the Los Angeles International Airport.
 On May 6, 2010,
 a flaw in an automatic trading program apparently <tex>resulted in</tex>
 <web><a href="http://www.computerworld.com/s/article/9189179/Regulators_blame_computer_algorithm_for_stock_market_flash_crash_">resulted&nbsp;in</a></web> a 1000-point drop
@@ -217,7 +215,8 @@ array location that lies outside the range allocated for the array. As
 explained above, neither of these is possible in Java. (However, there could
 conceivably still be errors in Java's standard classes, since some of the
 methods in these classes are actually written in the C programming language
-rather than in Java.)</p>
+rather than in Java.  In fact, Java's internal security errors have at
+times been a problem for the language.)</p>
 
 <p>It's clear that language design can help prevent errors or detect them when
 they occur. Doing so involves restricting what a programmer is allowed to do.

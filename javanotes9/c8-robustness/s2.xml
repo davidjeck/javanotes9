@@ -289,7 +289,7 @@ exactly what we wanted to show:  When <code>total</code> is
 returned by the subroutine, it is equal to the sum of all the 
 elements of the array!</p>
 
-<p>This might seem like a lot of work to you to prove something
+<p>This might seem to you to be a lot of work to prove something
 that's obvious.  But if you try to explain <i>why</i> it's
 obvious that <code>arraySum()</code> works, you'll probably
 find yourself using the logic behind loop invariants, even if
@@ -313,7 +313,10 @@ where we assume that the array has length at least one:</p>
 <np>In this case, we have a loop invariant that says,
 "<code>max</code> is the largest value among the first
 <code>i</code> elements of&nbsp;<code>A</code>."
-Suppose this is true before the <code>if</code> statement.
+This statement is true before the loop starts, when
+<code>i</code> is&nbsp;1 and <code>max</code> is&nbsp;<code>A[0]</code>.
+Suppose it is true at the start of the loop,
+before the <code>if</code> statement.
 After the <code>if</code> statement, <code>max</code>
 is greater than or equal to <code>A[i]</code>, because
 that is a postcondition of the <code>if</code> statement,

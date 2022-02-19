@@ -26,9 +26,9 @@ public class TryStatementDemo {
 			id = nextID;
 			System.out.println("TestResource object #" +
 		             id + " is being created.");
-			   // NOTE:  Try adding an exception here, to see how it is
-			   // handled by the try..catch.  Just uncomment the next line.
-			// throw new RuntimeException("Error in constructor from TestResource " + id);
+				// NOTE:  Try adding an exception here, to see how it is
+				// handled by the try..catch.  Just uncomment the next line.
+				// throw new RuntimeException("Error in constructor from TestResource " + id);
 		}
 		public void close() {
 			    // Print a message when the object's close() method
@@ -38,8 +38,8 @@ public class TryStatementDemo {
 			    // the try statement.
 			System.out.println("TestResource object #" +
 		             id + " is being closed.");
-			   // NOTE:  You can also try adding an exception at this point.
-			// throw new RuntimeException("Error in close() from TestResource " + id);
+				// NOTE:  You can also try adding an exception at this point.
+				// throw new RuntimeException("Error in close() from TestResource " + id);
 		}
 	}
 	
@@ -70,7 +70,11 @@ public class TryStatementDemo {
 			
 			System.out.println("***Starting the try part.");
 			System.out.print("What's your favorite number? ");
+			
+			    // The next line will throw NoSuchElementException if the user's
+			    // input is not a legal integer.
 			int n = in.nextInt();
+			
 			System.out.println( (n+1) + " is better!");
 			System.out.println("***Finishing the try part.");
 		}
