@@ -95,20 +95,11 @@ public class PostfixEval {
 				}
 				x = stack.pop();
 				switch (op) {
-				case '+':  
-					answer = x + y; 
-					break;
-				case '-':  
-					answer = x - y;  
-					break;
-				case '*':  
-					answer = x * y;  
-					break;
-				case '/':  
-					answer = x / y;  
-					break;
-				default:   
-					answer = Math.pow(x,y);  // (op must be '^'.)
+					case '+' -> answer = x + y; 
+					case '-' -> answer = x - y;
+					case '*' -> answer = x * y;  
+					case '/' -> answer = x / y;  
+					default  -> answer = Math.pow(x,y);  // (op must be '^'.)
 				}
 				stack.push(answer);
 				System.out.println("   Evaluated " + op + " and pushed " + answer);

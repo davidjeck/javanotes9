@@ -28,7 +28,7 @@ have a right child even if it has no left child.  In the
 picture below, for example, node 3 is the parent of node 6, and nodes 4
 and 5 are children of node 2. Not every linked structure made up of tree nodes
 is a binary tree. A binary tree must have the following properties: There is
-exactly one node in the tree which has no parent. This node is called the
+exactly one node in the tree which has no parent; this node is called the
 <newword>root</newword> of the tree. Every other node in the tree has
 exactly one parent. Finally, there can be no loops in a binary tree. That is,
 it is not possible to follow a chain of pointers starting at some node and
@@ -77,9 +77,10 @@ Java:</p>
  * return the answer.  If root is null, the answer is zero.
  */
 static int countNodes( TreeNode root ) {
-   if ( root == null )
-      return 0;  // The tree is empty.  It contains no nodes.
-   else {
+   if ( root == null ) {  // Base case:  empty tree.
+      return 0;  // An empty tree contains no nodes.
+   }
+   else {  // Recursive case:  root node plus two subtrees.
       int count = 1;   // Start by counting the root.
       count += countNodes(root.left);  // Add the number of nodes
                                        //     in the left subtree.
@@ -209,7 +210,7 @@ precisely those that precede "judy" in alphabetical order, and all the items in
 the right subtree follow "judy" in alphabetical order. So, we know that "judy"
 is output in its proper alphabetical position. But the same argument applies to
 the subtrees. "Bill" will be output after "alice" and before "fred" and its
-descendents. "Fred" will be output after "dave" and before "jane" and "joe".
+descendants. "Fred" will be output after "dave" and before "jane" and "joe".
 And so on.</p>
 
 <p>Suppose that we want to search for a given item in a binary search tree.
@@ -237,8 +238,7 @@ During a search of any
 binary sort tree, every comparison eliminates one of two subtrees from further
 consideration. If the tree is balanced, that means cutting the number of items
 still under consideration in half. This is exactly the same as the binary
-search algorithm, and the result is a similarly efficient algorithm.
-</p>
+search algorithm, and the result is a similarly efficient algorithm.</p>
    
 <p>In terms of asymptotic analysis (<localref href="robustness.5"/>), searching, inserting,
 and deleting in a binary search tree have average case run time &Theta;(log(n)).
@@ -267,7 +267,7 @@ below. The <code>main()</code> routine tests the subroutines by letting you type
 strings to be inserted into the tree.</p>
 
 <p>In <classname>SortTreeDemo</classname>, nodes in the binary tree are represented using the
-following static nested class, including a simple constructor that makes creating nodes
+following static nested class, which includes a simple constructor to make creating nodes
 easier:</p>
 
 <pre>

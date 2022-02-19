@@ -630,7 +630,10 @@ int getBlobSize(int r, int c) {
 user clicks on a square. After <code>getBlobSize()</code> has performed its task,
 all the squares in the blob are still marked as visited. The
 method that draws the grid of squares shows visited squares in red, which makes the
-blob visible. The <code>getBlobSize()</code> method is also used for counting
+blob visible.</p>
+
+<p>The <code>getBlobSize()</code> method is also used for the other task that
+can be done by the program:  counting all the
 blobs. This is done by the following method, which includes comments to explain
 how it works:</p>
 
@@ -666,9 +669,9 @@ void countBlobs() {
             count++;
       }
                   
-   draw();  // Redraw the entire grid of squares. 
-            // Note that all the filled squares will be red,
-            //   since they have all now been visited.
+   <fx>draw</fx><swing>repaint</swing>();  // Redraw the entire grid of squares. 
+                // Note that all the filled squares will be red,
+                //    since they have all now been visited.
    
    message.setText("The number of blobs is " + count);
          

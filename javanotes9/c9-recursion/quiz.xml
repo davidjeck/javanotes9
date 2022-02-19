@@ -39,7 +39,7 @@ printStuff(3) outputs:   [[[*,*],[*,*]],[[*,*],[*,*]]]</pre>
 so the first clause of the <code>if</code> is executed, and the output is just *.
 For <code>printStuff(1)</code>, the else clause is executed. This else clause
 contains two recursive calls to <code>printStuff(level-1)</code>. Since
-<code>level</code> is 1, <code>level-1</code> is 0, so each call to <code>printStuff</code>
+<code>level</code> is 1, <code>level-1</code> is 0, so each call to <code>printStuff(0)</code>
 outputs a *. The overall output from <code>printStuff(1)</code> is [*,*]. In a
 similar way, <code>printStuff(2)</code> includes two recursive calls to
 <code>printStuff(1)</code>. Each call to <code>printStuff(1)</code> outputs [*,*]. And

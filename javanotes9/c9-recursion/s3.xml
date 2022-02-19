@@ -27,7 +27,11 @@ array. A program that only depends on the abstract definition of the ADT can
 use either implementation, interchangeably. In particular, the implementation
 of the ADT can be changed without affecting the program as a whole. This can
 make the program easier to debug and maintain, so ADTs are an important tool
-in software engineering.</p>
+in software engineering.  Abstraction is an important general concept
+in computer science.  We have seen other examples:
+control abstraction in <localref href="control.1.3a"/> and
+procedural abstraction in <localref href="subroutines.1"/>.  Here,
+we are considering <newword>data abstraction</newword>.</p>
 
 <p>In this section, we'll look at two common abstract data types, 
 <newword>stacks</newword> and <newword>queues</newword>. Both stacks
@@ -130,6 +134,12 @@ help. Note that the linked list is part of the <code>private</code> implementati
 of the <classname>StackOfInts</classname> class. A program that uses this class doesn't even
 need to know that a linked list is being used.</np>
 
+<p>(As an aside, the nested <classname>Node</classname> class in <classname>StackOfInts</classname>
+could have been record class (<localref href="arrays.3a"/>), since nodes don't
+need to be modified after they are created.  The implementation of <code>push()</code>
+would have to be changed to use the record class constructor.  See
+<sourceref href="StackOfInt.java"/>, which uses this approach.)</p>
+
 <p>Now, it's pretty easy to implement a stack as an array instead of as a
 linked list. Since the number of items on the stack varies with time, a counter
 is needed to keep track of how many spaces in the array are actually in use. If
@@ -193,7 +203,9 @@ public class StackOfInts {  // (alternate version, using an array)
 
 <np>Once again, the implementation of the stack (as an array) is private to the
 class. The two versions of the <classname>StackOfInts</classname> class can be used
-interchangeably, since their public interfaces are identical.</np>
+interchangeably, since their public interfaces are identical&mdash;including the
+fact that an attempt to pop from an empty stack will result in an
+<classname>IllegalStateException</classname>.</np>
    
 <break/>
    
@@ -227,7 +239,8 @@ from the list. However, a queue has two ends, called the front and the back of
 the queue. Items are always added to the queue at the back and removed from the
 queue at the front. The operations of adding and removing items are called
 <newword>enqueue</newword> and <newword>dequeue</newword> in this book.
-(These terms are not completely standardized, in the way that "push" and "pop" are.)
+(These names are not completely standardized, in the way that "push" and "pop" are.
+For example, the operations are sometimes called "put" and "take.")
 An item that is added to the back of the queue will remain on the queue until
 all the items in front of it have been removed. This should sound familiar. A
 queue is like a "line" or "queue" of customers waiting for service. Customers
@@ -268,8 +281,8 @@ while (tail.next != null) {
 // the last node in the list.</pre>
 
 <np>However, it would be very inefficient to do this over and over every time an
-item is enqueued. For the sake of efficiency, we'll keep a pointer to the last
-node in an instance variable. This complicates the class somewhat;
+item is enqueued. For the sake of efficiency, we'll use another instance
+variable to store a pointer to the last node. This complicates the class somewhat;
 we have to be careful to update the value of
 this variable whenever a new node is added to the end of the list. Given all
 this, writing the <classname>QueueOfInts</classname> class is not all that difficult:</np>
@@ -288,7 +301,8 @@ this, writing the <classname>QueueOfInts</classname> class is not all that diffi
    private Node head = null;  // Points to first Node in the queue.
                               // The queue is empty when head is null.
    
-   private Node tail = null;  // Points to last Node in the queue.
+   private Node tail = null;  // Points to last Node in the queue
+                              // when the queue is not empty.
 
    /**
     * Add N to the back of the queue.
@@ -458,7 +472,9 @@ the subroutines that are suspended. It does this with a stack.</p>
 <p>When a subroutine is called, an <newword>activation record</newword> 
 is created for that subroutine. The activation record contains
 information relevant to the execution of the subroutine, such as its local
-variables and parameters. The activation record for the subroutine is placed on
+variables, parameters, and return address (the the point in the program where
+the computer should return to when the subroutine ends). 
+The activation record for the subroutine is placed on
 a stack. It will be removed from the stack and destroyed when the subroutine
 returns. If the subroutine calls another subroutine, the activation record of
 the second subroutine is pushed onto the stack, on top of the activation record
@@ -490,7 +506,8 @@ applies to the two operands that precede it, namely "<code>15&nbsp;12&nbsp;-</co
 These are the same computations that are done in the original infix
 expression.</p>
 
-<p>Now, suppose that we want to process the expression "<code>2&nbsp;15&nbsp;12&nbsp;-&nbsp;17&nbsp;*&nbsp;+</code>", 
+<p>Now, suppose that we want to process the expression 
+"<code>2&nbsp;15&nbsp;12&nbsp;-&nbsp;17&nbsp;*&nbsp;+</code>", 
 from left to right and find its value. The first item we encounter is
 the <code>2</code>, but what can we do with it? At this point, we don't know what
 operator, if any, will be applied to the <code>2</code> or what the other operand
@@ -554,7 +571,7 @@ The "<code>^</code>" represents
 exponentiation. That is, "<code>2&nbsp;3&nbsp;^</code>" is evaluated as
 <code>2</code><sup>3</sup>. The program prints out a message as it processes each
 item in the expression. The stack class that is used in the program is defined in the
-file <sourceref href="StackOfDouble.java"/>. The
+file <sourceref href="StackOfDouble.java"/>.  The
 <classname>StackOfDouble</classname> class is identical to the first <classname>StackOfInts</classname>
 class, given above, except that it has been modified to store values of type
 <ptype>double</ptype> instead of values of type <ptype>int</ptype>.</p>
@@ -613,20 +630,11 @@ private static void readAndEvaluate() {
          }
          x = stack.pop();
          switch (op) {
-         case '+':  
-            answer = x + y; 
-            break;
-         case '-':  
-            answer = x - y;  
-            break;
-         case '*':  
-            answer = x * y;  
-            break;
-         case '/':  
-            answer = x / y;  
-            break;
-         default:   
-            answer = Math.pow(x,y);  // (op must be '^'.)
+	         case '+' -> answer = x + y; 
+	         case '-' -> answer = x - y;
+	         case '*' -> answer = x * y;  
+	         case '/' -> answer = x / y;  
+	         default  -> answer = Math.pow(x,y);  // (op must be '^'.)
          }
          stack.push(answer);
          System.out.println("   Evaluated " + op + " and pushed " + answer);

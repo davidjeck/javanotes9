@@ -257,12 +257,12 @@ private static double expressionValue() throws ParseError {
       }
       TextIO.getAnyChar();  // Read the ")"
       switch (op) {   //  Apply the operator and return the result. 
-      case '+':  return leftVal + rightVal;
-      case '-':  return leftVal - rightVal;
-      case '*':  return leftVal * rightVal;
-      case '/':  return leftVal / rightVal;
-      default:   return 0;  // Can't occur since op is one of the above.
-                            // (But Java syntax requires a return value.)
+         case '+':  return leftVal + rightVal;
+         case '-':  return leftVal - rightVal;
+         case '*':  return leftVal * rightVal;
+         case '/':  return leftVal / rightVal;
+         default:   return 0;  // Can't occur since op is one of the above.
+                               // (But Java syntax requires a return value.)
       }
    }
    else {  // No other character can legally start an expression.
@@ -341,7 +341,7 @@ private static double expressionValue() throws ParseError {
    double val;  // Value of the expression.
    val = termValue();  // Read and evaluate the first term.
    if (negative)
-      val = -val;
+      val = -val;  // Apply the leading minus sign to the first term.
    TextIO.skipBlanks();
    while ( TextIO.peek() == '+' || TextIO.peek() == '-' ) {
           // Read the next term and add it to or subtract it from
@@ -403,6 +403,7 @@ Here for example is the new <code>BinOpNode</code> class from <sourceref href="S
           // Construct a BinOpNode containing the specified data.
       assert op == '+' || op == '-' || op == '*' || op == '/';
       assert left != null &amp;&amp; right != null;
+           // (for assert statements, see <localref href="robustness.4.1"/>)
       this.op = op;
       this.left = left;
       this.right = right;
@@ -446,6 +447,7 @@ becomes</p>
     static ExpNode expressionTree() throws ParseError {
            // Read an expression from the current line of input and
            // return an expression tree representing the expression.
+           // (The return value is a pointer to the root of the tree.)
        TextIO.skipBlanks();
        boolean negative;  // True if there is a leading minus sign.
        negative = false;
