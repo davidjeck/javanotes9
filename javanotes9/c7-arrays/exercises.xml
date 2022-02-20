@@ -1280,7 +1280,7 @@ public class ListAllWordsFromFile {
               file.  If you select a file, the list of words will
               be written to that file; if you cancel, the list
               be written to standard output.  All words are converted
-              lower case, and duplicates are eliminated from the list.
+              to lower case, and duplicates are eliminated from the list.
               
               Press return to begin.
               

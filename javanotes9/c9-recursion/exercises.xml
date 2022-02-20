@@ -130,7 +130,8 @@ public class FibonacciAndFactorial {
     */
    static int fibonacci( int N ) {
        assert N &gt;= 0 : "fibonacci(n) is only defined for non-negative n";
-       assert N &lt;= 40 : "n is to large to compute fibonacci(N) recursively";
+       assert N &lt;= 40 : "n is too large to compute fibonacci(N) recursively";
+                // (for assertions, see <localref href="robustness.4.1"/>)
        if ( N == 0 || N == 1 ) {
                 // Base cases; the answer is 1.
            return 1;
@@ -243,15 +244,20 @@ public class ListAllWordsFromFileWithTree {
    
    public static void main(String[] args) {
       
-      System.out.println("\n\nThis program will ask you to select an input file");
-      System.out.println("It will read that file and make an alphabetical");
-      System.out.println("list of all the words in the file.  After reading");
-      System.out.println("the file, the program asks you to select an output");
-      System.out.println("file.  If you select a file, the list of words will");
-      System.out.println("be written to that file; if you cancel, the list");
-      System.out.println("be written to standard output.  All words are converted");
-      System.out.println("lower case, and duplicates are eliminated from the list.\n\n");
-      System.out.print("Press return to begin.");
+      System.out.println("""
+                 This program will ask you to select an input file
+              It will read that file and make an alphabetical
+              list of all the words in the file.  After reading
+              the file, the program asks you to select an output
+              file.  If you select a file, the list of words will
+              be written to that file; if you cancel, the list
+              be written to standard output.  All words are converted
+              to lower case, and duplicates are eliminated from the list.
+              
+              Press return to begin.
+              
+              """);
+
       TextIO.getln();  // Wait for user to press return.
       
       try {
@@ -295,7 +301,7 @@ public class ListAllWordsFromFileWithTree {
 
    /**
     * Read the next word from TextIO, if there is one.  First, skip past
-    * and non-letters in the input.  If an end-of-file is encountered before 
+    * any non-letters in the input.  If an end-of-file is encountered before 
     * a word is found, return null.  Otherwise, read and return the word.
     * A word is defined as a sequence of letters.  Also, a word can include
     * an apostrophe if the apostrophe is surrounded by letters on each side.
@@ -643,7 +649,7 @@ while the queue is not empty:
 test the subroutine. Note that you will need a queue of <classname>TreeNodes</classname>, so
 you will need to write a class to represent such queues.</np>
 <p>(Note that the order in which items are printed by this algorithm is different
-from all three of the orders considered in <localref href="recursion.4.1"/>.)</p>
+from all three of the orders considered in <localref href="recursion.4.1"/>.</p>
 </exercise-question>
 <exercise-discuss><p>There's really not a lot to think about here, since such a complete
 algorithm is given. However, we do have to assemble the pieces. I use the

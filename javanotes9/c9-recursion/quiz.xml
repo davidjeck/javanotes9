@@ -132,6 +132,44 @@ is <code>null</code>, and that <code>null</code> marks the new end of the list.)
    
    
 <question>
+<ques><p>List nodes can be used to build linked data structures that do not have
+the form of linked lists.  Consider the list node class shown on the left and
+the code shown on the right:</p>
+
+<pre>class ListNode {                        ListNode one = new ListNode(10);
+    int item;                           ListNode two = new ListNode(20);
+    ListNode next;                      ListNode three = new ListNode(30);
+    Listnode(int i) {                   ListNode four = new ListNode(40);
+        item = i;                       one.next = two;
+        next = null;                    two.next = three;
+    }                                   three.next = four;
+}                                       four.next = two;</pre>
+
+<np>Draw the data structure that is constructed by the code.  What happens if
+you try to print the items in the data structure using the usual code for
+traversing a linked list:</np>
+<pre>ListNode runner = one;
+while (runner != null) {
+    System.out.println(runner.item);
+    runner = runner.next();
+}</pre>
+</ques>
+<ans><p>Node one links to node two, node two links to node three, and node three
+links to node four.  If <code>four.next</code> were <code>null</code>, the
+result would be a normal, four-node linked list.  However, node four links back
+to node two:</p>
+<img src="looped-list.png" width="374" height="95" alt="a linked data structure with a loop"
+            tex="looped-list.eps" texscale="0.8"/>
+<np>When the while loop is executed, runner will never become null.  After the
+values in the four nodes (10, 20, 30, 40) are printed, the assignment <code>runner = runner.next</code>
+will set the runner to point to node two again, so the next number printed is 20.
+The program goes into an infinite loop in which the numbers 20, 30, 40 are printed
+over and over forever.</np>
+</ans>
+</question>
+   
+   
+<question>
 <ques><p>What are the three operations on a <i>stack?</i></p>
 </ques>
 <ans><p>The three stack operations are
@@ -257,6 +295,25 @@ processed.  This rule is applied at all levels of the tree.</p>
 </ans>
 </question>
    
+<question>
+<ques><p>Suppose that a binary sort tree of integers is initially empty and
+that the following integers are inserted into the tree in the order shown:</p>
+<pre>5   7   1   3   4   2   6</pre>
+<np>Draw the binary sort tree that results.  Then list the integers in the
+order that is produced by a post-order traversal of the tree.</np>
+</ques>
+<ans><p>This picture shows the tree that results after each integer
+has been inserted, using the <code>treeInsert()</code> method from
+<localref href="recursion.4.2"/>:</p>
+<img src="build-bst.png" width="381" height="265" alt="inserting integers into a binary sort tree" 
+           texscale="0.8" tex="build-bst.eps"/>
+<np>In a post-order traversal, the nodes in the left subtree are processed first, then
+the nodes in the right subtree, then the root node.  For this tree, the nodes are processed
+in the order:</np>
+<pre>2   4   3   1   6   7   5</pre>
+<np>(Of course, an in-order traversal would process the nodes in sorted order: 1, 2, 3, 4, 5, 6, 7.)</np>
+</ans>
+</question>
    
 <question>
 <ques><p>Suppose that a <code>&lt;multilist&gt;</code> is defined by the BNF rule</p>
@@ -296,6 +353,5 @@ means to determine its syntactic structure, that is, to figure out how it can
 be constructed using the rules of a grammar (such as a BNF grammar).</p>
 </ans>
 </question>
-   
    
 </quiz>
