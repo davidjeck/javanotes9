@@ -8,8 +8,7 @@
 properties of collection classes in Java. In this section, we look at some
 specific collection classes and how to use them. These classes can be divided
 into two main categories: lists and sets. A list consists of a sequence of items
-arranged in a linear order. A list has a definite order, but is not necessarily
-sorted into ascending order.
+arranged in a linear order. A list has a definite order, but is not necessarily sorted.
 A set is a collection that has no duplicate
 entries. The elements of a set might or might not be arranged into some
 definite order.  I will also briefly discuss a third category of
@@ -260,7 +259,8 @@ easier to design an insertion algorithm that uses array-like indexing with
 the methods <code>get(index)</code> and <code>add(index,obj)</code>. However, that
 algorithm would be horribly inefficient for <classname>LinkedLists</classname> because
 random access is so inefficient for linked lists.  (By the way, the insertion 
-algorithm works when the list is empty.  It might be useful
+algorithm works when the list is empty, and it works when the new item has to
+be inserted at the beginning or at the end of the list.  It might be useful
 for you to think about why this is true.)</p>
 
 
@@ -334,7 +334,7 @@ Java has two classes that implement the interface <classname>Set&lt;T&gt;</class
 <code>java.util.TreeSet</code> and <code>java.util.HashSet</code>.</p>
 
 <p>In addition to being a <classname>Set</classname>, a <classname>TreeSet</classname> has the property
-that the elements of the set are arranged into ascending sorted order. An
+that the elements of the set are arranged into ascending sorted order. That is, an
 <classname>Iterator</classname> (or a for-each loop) 
 for a <code>TreeSet</code> will always visit the elements of the
 set in ascending order.</p>
@@ -353,17 +353,21 @@ to the constructor when the <classname>TreeSet</classname> is created. In that c
 set.</p>
    
 <p>A <classname>TreeSet</classname> does not use the <code>equals()</code> method to
-test whether two objects are the same.  Instead, it uses the <code>compareTo()</code> (or <code>compare()</code>)
+test whether two objects are the same.  Instead, it uses the <code>compareTo()</code> or <code>compare()</code>
 method.  This can be a problem.  Recall from <localref href="generics.1.6"/> that
-<code>compareTo()</code> can consider two objects to be the same for the purpose
-of the comparison even though the objects are not equal.  For a <classname>TreeSet</classname>,
+the <code>compare()</code> method of a <classname>Comparator</classname>
+might consider two objects to be the same for the purpose
+of the comparison even though the objects are not equal.  (This is less likely, but still
+possible for a properly defined <code>compareTo</code>() method.)
+For a <classname>TreeSet</classname> that uses the <classname>Comparator</classname>,
 this means that only <b>one</b> of those objects can be in the set.  For example,
 if the <classname>TreeSet</classname> contains mailing addresses
-and if the <code>compareTo()</code> method
+and if the <code>compare()</code> method
 for addresses just compares their zip codes, then the set can contain only
 one address in each zip code.  Clearly, this is not right!  But that only means
 that you have to be aware of the semantics of <classname>TreeSets</classname>,
-and you need to make sure that <code>compareTo()</code> is defined in a reasonable
+and you need to make sure that the <code>compare()</code> or <code>compareTo()</code>
+is defined in a reasonable
 way for objects that you put into a <classname>TreeSet</classname>.  This will be
 true, by the way, for <classname>Strings</classname>, <classname>Integers</classname>,
 and many other built-in types, since the <code>compareTo()</code> method for these
@@ -372,8 +376,8 @@ types considers two objects to be the same only if they are actually equal.</p>
 <p>In the implementation of a <classname>TreeSet</classname>, the elements are stored in
 something similar to a binary sort tree. (See <localref href="recursion.4.2"/>.) 
 However, the data structure that is used is <b>balanced</b> 
-in the sense that all the leaves of the tree are at
-about the same distance from the root of the tree.  This ensures that
+in the sense that the left and right subtrees of any node in the tree are at
+about the same size.  This ensures that
 all the basic operations&mdash;inserting, deleting, and searching&mdash;are
 efficient, with worst-case run time &Theta;(log(n)), where n is the
 number of items in the set.</p>
@@ -535,7 +539,7 @@ any two items in the queue.  As with sorting, there are two solutions.  If the i
 the <classname>Comparable</classname> interface, then they can be compared using the
 <code>compareTo()</code> method from that interface.   Alternatively, a <classname>Comparator</classname>
 object can be provided as a parameter to the <classname>PriorityQueue</classname> constructor.
-In that case, the Comparator's <code>compare</code> method will be used to compare items.</p>
+In that case, the Comparator's <code>compare()</code> method will be used to compare items.</p>
 
 <p>Classes such as <classname>String</classname>, <classname>Integer</classname>, and
 <classname>Date</classname> that implement <classname>Comparable</classname> can be used
@@ -555,9 +559,9 @@ while ( ! pq.isEmpty() ) {
     System.out.println( pq.remove() );
 }</pre>
 
-<np>(Note, by the way, that we can't use an iterator or a for-each loop to print the
+<np>Note, by the way, that we can't use an iterator or a for-each loop to print the
 items in this example, since iterators and for-each loops do not traverse a
-priority queue in ascending order.)</np>
+priority queue in ascending order.</np>
 
 <p>The sample program <sourceref href="WordListWithPriorityQueue.java"/> makes a sorted list of
 words from a file without removing duplicates, using a priority queue to hold the words.

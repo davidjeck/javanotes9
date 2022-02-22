@@ -23,7 +23,7 @@
 
             <term>  ::=  <factor> [ [ "*" | "/" ] <factor> ]...
 
-            <factor>  ::=  <primary> [ "^" <primary> ]...
+            <factor>  ::=  <primary> [ "^" <factor> ]...
 
             <primary>  ::=  <number> | <variable> | "(" <expression> ")"
 
@@ -207,23 +207,20 @@ public class SimpleInterpreter {
 
 	/**
 	 * Read a factor from the current line of input and return its value.
-	 * (Note:  This method makes the exponentiation operator, ^, left
-	 * associative.  That is, a^b^c means (a^b)^c.  It should properly
-	 * be right-associative, that is, a^b^c = a^(b^c).  That could be
-	 * implemented simply by changing line 226 to read
-	 * "double nextVal = factorValue()" and replacing the "while"
-	 * on line 222 with "if".)
+	 * (Note:  The exponentiation operator, "^", is right associative.  That is,
+	 * a^b^c means a^(b^c), not (a^b)^c.  The BNF definition of primary takes
+	 * this into account.
 	 */
 	private static double factorValue() throws ParseError {
 		TextIO.skipBlanks();
 		double val;  // Value of the factor.
 		val = primaryValue();  // A factor must start with a primary.
 		TextIO.skipBlanks();
-		while ( TextIO.peek() == '^' ) {
-				// Read the next primary, and exponentiate
-				// the value-so-far by the value of this primary.
+		if ( TextIO.peek() == '^' ) {
+				// Read the next factor, and exponentiate
+				// the value by the value of that factor.
 			TextIO.getChar();
-			double nextVal = primaryValue();
+			double nextVal = factorValue();
 			val = Math.pow(val,nextVal);
 			if (Double.isNaN(val))
 				throw new ParseError("Illegal values for ^ operator.");

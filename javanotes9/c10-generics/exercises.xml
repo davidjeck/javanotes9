@@ -43,12 +43,12 @@ import java.util.TreeMap;
 public class PhoneDirectoryWithTreeMap {
 
 
-/**
- * The TreeMap that will store the data.  Both key and value are
- * of type String.  The key represents a name and the value represents
- * the associated phone number.
- */
-private TreeMap&lt;String,String&gt; data;
+   /**
+    * The TreeMap that will store the data.  Both key and value are
+    * of type String.  The key represents a name and the value represents
+    * the associated phone number.
+    */
+   private TreeMap&lt;String,String&gt; data;
    
    
    /**
@@ -136,7 +136,7 @@ are in both A and B. The <newword>difference</newword> of A and B is
 the set that contains all the elements of A <b>except</b> for those elements
 that are also in&nbsp;B.</p>
 
-<p>Suppose that <code>A</code> and <code>B</code> are variables of type <code>set</code> in
+<p>Suppose that <code>A</code> and <code>B</code> are variables of type <classname>Set</classname> in
 Java. The mathematical operations on <code>A</code> and <code>B</code> can be computed
 using methods from the <classname>Set</classname> interface. In particular: 
 <code>A.addAll(B)</code> computes the <i>union</i> of <code>A</code> and <code>B</code>;
@@ -184,7 +184,7 @@ techniques for doing this were covered for the example
 We can use the function <code>TextIO.peek()</code>
 to look ahead at the next character in the user's input. We need to be able
 to skip past any blanks in the input.  Instead of writing my own method to do
-that, I use the method <code>TextIO.skipBlanks()</code> in my program.</p>
+that, I use the method <code>TextIO.skipBlanks()</code>.</p>
 
 
 <p>My program uses exceptions to handle
@@ -459,13 +459,13 @@ so I will not discuss them further here. You can look at the solution, below.</p
 method that is used to increase the size of the table when the table becomes
 too full. I call this method in the <code>put()</code> method when the table
 becomes more than 3/4 full.  The hash table class has an instance variable, <code>count</code>, that
-is equal to the number of items in the array, so it only necessary to check the value of
+is equal to the number of items in the table, so it only necessary to check the value of
 <code>count</code> when deciding to increase the array size.  Having <code>count</code>
 is also important for implementing the <code>size()</code> method efficiently, since
 <code>size()</code> can simply return <code>count</code> as its return value.</p>
 
 <p>(By the way, the statement that "<code>count</code> is equal to the number of items
-in the array"" is a class invariant for the <classname>HashTable</classname> class.
+in the table" is a class invariant for the <classname>HashTable</classname> class.
 (See <localref href="robustness.2.3"/>.)
 It is important that all of the methods in the class maintain the truth of this
 class invariant.")</p>
@@ -517,7 +517,7 @@ public class HashTable {
 
    
    /**
-    * Create a hash table with an initial size of 64.
+    * Create a hash table with an initial array size of 64.
     */
    public HashTable() {
       table = new ListNode[64];
@@ -525,7 +525,7 @@ public class HashTable {
 
    
    /**
-    * Create a hash table with a specified initial size.
+    * Create a hash table with a specified initial array size.
     * Precondition: initalSize &gt; 0.
     */
    public HashTable(int initialSize) {
@@ -873,8 +873,8 @@ public static &lt;T&gt; int find(ArrayList&lt;T&gt; list, Predicate&lt;T&gt; pre
    
 </exercise-question>
 <exercise-discuss><p>The code for this exercise is pretty short, but it
-involves some advanced ideas, including methods with bounded type parameters
-(from <localref href="generics.5.4"/>).  Aside from that,
+involves some advanced ideas, including writing generic methods
+(from <localref href="generics.5.2"/>).  Aside from that,
 the main point of the exercise is to work with predicates and to see how they are
 useful in generic programming. The operation of finding all the items in a
 collection that satisfy some condition is very common. The code to do it is not
@@ -936,7 +936,7 @@ you will see that it defines a method <code>negate()</code>.  (It is defined
 in the interface as a <code>default</code> method.  A functional interface can
 only define one abstract method, but it can define additional methods if they are
 default methods.)  If <code>pred</code>
-is a predicate, then <code>pred.negate()</code> that is true when pred is false
+is a predicate, then <code>pred.negate()</code> is a predicate that is true when pred is false
 and is false when pred is true.  This means that <code>retain()</code> could
 actually be defined simply as</p>
 
@@ -979,7 +979,7 @@ at the point where the predicate is needed.  For example:</np>
 
 <pre>result = Predicates.collect(coll, i -&gt; (i % 2 == 0) )</pre>
 
-<np>I hope that you can see how using the lambda expression simpliies
+<np>I hope that you can see how using the lambda expression simplifies
 the code quite a bit!</np>
 
 </exercise-discuss>
@@ -1153,18 +1153,18 @@ public class TestPredicates {
 <exercise-question><p>This is a short exercise in using the stream API. 
 Suppose that the class <classname>Score</classname> is defined as</p>
 
-<pre>class ScoreInfo {
-    String firstName;
-    String lastName;
-    int score;
-    ScoreInfo( String lName, String fName, int s ) {
-        firstName = fName;
-        lastName = lName;
-        score = s;
-    }
-}</pre>
+<pre>/**
+ * Data for one student about a score on a test.
+ */
+private record ScoreInfo(
+    String lastName,
+    String firstName,
+    int score
+) { };
+</pre>
 
-<np>and that <code>scoreData</code> is an array of <classname>ScoreInfos</classname>
+<np>defined here as a record class for convenience (see <localref href="arrays.3a"/>).
+And suppose that <code>scoreData</code> is an array of <classname>ScoreInfos</classname>
 containing information about the scores of students on a test.
 Use the stream API to do each of the following tasks:</np>
 <ul>
@@ -1175,11 +1175,11 @@ Use the stream API to do each of the following tasks:</np>
     a <classname>List&lt;String&gt;</classname> that contains the names of students whose score was less than 70;
     the names should be in the form first name followed by last name</li>
 <li>print the names from the <classname>List</classname> that was generated in the previous task</li>
-<li>print out the student's names and scores, ordered last name</li>
-<li>print out the student's names and scores, ordered by score</li>
+<li>print out the students' names and scores, ordered by last name</li>
+<li>print out the students' names and scores, ordered by score</li>
 </ul>
 <np>You can put all of the code in <code>main()</code> routine and include
-<classname>ScoreInfo</classname> as a <code>static</code> nested class.
+<classname>ScoreInfo</classname> as a nested class.
 Do not use <b>any</b> for loops or other control structures.  Do everything
 using the stream API.  For testing your code, you can use this array:</np>
 
@@ -1203,7 +1203,9 @@ using the stream API.  For testing your code, you can use this array:</np>
 </exercise-question>
 <exercise-discuss><p>In each case, to process the values from the array using the stream 
 API, we need to make a stream containing those values.  That's done by calling
-<code>Arrays.stream(scoreData)</code>.  From there, we just need to apply the
+<code>Arrays.stream(scoreData)</code>, except in the case of printing out
+the names in a <classname>List</classname>, where <code>list.stream()</code>
+can be used.  From there, we just need to apply the
 appropriate stream operators to get the desired results.  I have added some
 comments on each of the assigned tasks to the program.</p>
 </exercise-discuss>
@@ -1220,16 +1222,11 @@ public class StreamTest {
     /**
      * Data for one student about a score on a test.
      */
-    private static class ScoreInfo {
-        String firstName;
-        String lastName;
-        int score;
-        ScoreInfo( String lName, String fName, int s ) {
-            firstName = fName;
-            lastName = lName;
-            score = s;
-        }
-    }
+    private record ScoreInfo(
+        String lastName,
+        String firstName,
+        int score
+    ) { };
     
     /**
      * A test array of StudentInfo that will be used to create streams.
@@ -1256,17 +1253,26 @@ public class StreamTest {
     public static void main(String[] args) {
         
         /* The number of students can be computed simply by applying
-         * the .count() operation to a stream created from the array. */
+         * the .count() operation to a stream created from the array.
+         * This is more than a little silly, since the answer will
+         * be the same as scoreData.length, but it sets up the 
+         * general format for the stream operations in the rest of
+         * the program. */
         
         long count = Arrays.stream(scoreData).parallel().count();
         System.out.println("Number of students: " + count);
         
-        /* To get the average, use the .sum() operation, and divide by count. */
+        /* To get the average, map the stream of ScoreData objects
+         * to an IntStream containing just the scores, and then use 
+         * the .average() operation from the IntStream class. Since
+         * .average() returns an Optional&lt;Double&gt;, we need to
+         * use getAsDouble() to retrieve the final answer. */
         
-        int total = Arrays.stream(scoreData).parallel()
+        double avg = Arrays.stream(scoreData).parallel()
                               .mapToInt( s -> s.score )
-                              .sum();
-        System.out.printf("Average grade:  %1.2f%n", (double)total/count );
+                              .average()
+                              .getAsDouble();
+        System.out.printf("Average grade:  %1.2f%n", avg );
         
         /* To get the number of students who got an A, first filter the
          * stream letting through only students who satisfy the
@@ -1471,16 +1477,19 @@ private static TreeMap&lt;String, TreeSet&lt;Integer&gt;&gt;  concordance;
 
 public static void main(String[] args) {
 
-   System.out.println("\n\n   This program will ask you to select an input file.");
-   System.out.println("It makes a list of all the words that occur in the file");
-   System.out.println("along with the line number of each line that contained");
-   System.out.println("that word.  This is called a \"concordance\" for the file.");
-   System.out.println("   After reading the input file, the program asks you to");
-   System.out.println("select an output file.  If you select a file, the list of");
-   System.out.println("words will be written to that file; if you cancel, the list");
-   System.out.println("be written to standard output.  All words are converted to");
-   System.out.println("lower case.\n\n");
-   System.out.print("Press return to begin.");
+   System.out.println("""
+                 This program will ask you to select an input file.
+             It makes a list of all the words that occur in the file
+             along with the line number of each line that contained
+             that word.  This is called a \"concordance\" for the file.
+             After reading the input file, the program asks you to
+             select an output file.  If you select a file, the list of
+             words will be written to that file; if you cancel, the list
+             be written to standard output.  All words are converted to
+             lower case.
+   
+             Press return to begin.
+             """);
    
    TextIO.getln();  // Wait for user to press return.
    
@@ -1695,20 +1704,15 @@ private static class StandardFunction {
     * parameter value, x.
     */
    double evaluate(double x) {
-      switch(functionCode) {
-      case SIN:
-         return Math.sin(x);
-      case COS:
-         return Math.cos(x);
-      case TAN:
-         return Math.tan(x);
-      case ABS:
-         return Math.abs(x);
-      case SQRT:
-         return Math.sqrt(x);
-      default:
-         return Math.log(x);
-      }
+          // (This uses the "switch expression" syntax)
+      return switch(functionCode) {
+	      case SIN -> Math.sin(x);
+	      case COS -> Math.cos(x);
+	      case TAN -> Math.tan(x);
+	      case ABS -> Math.abs(x);
+	      case SQRT -> Math.sqrt(x);
+	      default -> Math.log(x);
+      };
    }
 
 } // end class StandardFunction</pre>
@@ -1862,7 +1866,7 @@ are shown in &newcodestyle;.</b></p>
 
             &lt;term&gt;  ::=  &lt;factor&gt; [ [ "*" | "/" ] &lt;factor&gt; ]...
 
-            &lt;factor&gt;  ::=  &lt;primary&gt; [ "^" &lt;primary&gt; ]...
+            &lt;factor&gt;  ::=  &lt;primary&gt; [ "^" &lt;factor&gt; ]...
 
             &lt;primary&gt;  ::=  &lt;number&gt; | &lt;variable&gt; | "(" &lt;expression&gt; ")"
                                  <newcode>| &lt;standard-function-name&gt; "(" &lt;expression&gt; ")"</newcode>
@@ -1930,20 +1934,15 @@ public class SimpleInterpreter2 {
        * parameter value, x.
        */
       double evaluate(double x) {
-         switch(functionCode) {
-         case SIN:
-            return Math.sin(x);
-         case COS:
-            return Math.cos(x);
-         case TAN:
-            return Math.tan(x);
-         case ABS:
-            return Math.abs(x);
-         case SQRT:
-            return Math.sqrt(x);
-         default:
-            return Math.log(x);
-         }
+             // (This uses the switch expression syntax from <localref href="control.6.5"/>)
+         return switch(functionCode) {
+	         case SIN -> Math.sin(x);
+	         case COS -> Math.cos(x);
+	         case TAN -> Math.tan(x);
+	         case ABS -> Math.abs(x);
+	         case SQRT -> Math.sqrt(x);
+	         default -> Math.log(x);
+         };
       }
 
    } // end class StandardFunction</newcode>
@@ -2115,11 +2114,11 @@ public class SimpleInterpreter2 {
       double val;  // Value of the factor.
       val = primaryValue();  // A factor must start with a primary.
       TextIO.skipBlanks();
-      while ( TextIO.peek() == '^' ) {
-            // Read the next primary, and exponentiate
-            // the value-so-far by the value of this primary.
+      if ( TextIO.peek() == '^' ) {
+            // Read the next factor, and exponentiate
+            // the value by the value of that factor.
          TextIO.getChar();
-         double nextVal = primaryValue();
+         double nextVal = factorValue();
          val = Math.pow(val,nextVal);
          if (Double.isNaN(val))
             throw new ParseError("Illegal values for ^ operator.");

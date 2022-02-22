@@ -140,7 +140,7 @@ the position in the array where the object is stored. All objects with the same
 hash code go into the same linked list.  In Java, every object <code>obj</code> has a method
 <code>obj.hashCode()</code> that is used to compute hash codes for the object.
 If the object is to be stored in a hash table of size <code>N</code>, then
-the hash code that is used for the object is <code>Math.abs(obj.hashCode())%N</code>.</p>
+the hash code that is used for the object is <code>Math.abs(obj.hashCode())&nbsp;%&nbsp;N</code>.</p>
 </ans>
 </question>
    
@@ -160,6 +160,8 @@ chronological ordering.</p>
       year = y;
    }
 }</pre>
+<np>Also, rewrite the resulting <classname>Date</classname> class as a record class.
+(See <localref href="arrays.3a"/>.)</np>
 </ques>
 <ans><p>The interface <classname>Comparable&lt;Date&gt;</classname> specifies the method
 <code>"public int compareTo(Date d)"</code>, which will be used to compare
@@ -201,6 +203,37 @@ equal, compare the days.</p>
       }
    }
 }</pre>
+<p>When this class is rewritten as a record class, the class's instance variables
+are listed in parentheses after the class name, and a canonical constructor
+is automatically provided.  However, the <classname>Comparable</classname>
+interface is added to the class in the same way.  Record classes cannot
+extend other classes, but they can implement interfaces.  Of course, this
+record class could use many other improvements&dots;</p>
+<pre>record Date(int month, int day, int year)
+                        implements Comparable&lt;Date&gt; {
+   public int compareTo( Date otherDate ) {
+           // Returns 1, 0, or -1 if this date is greater than, equal to,
+           // or less than otherDate, respectively.
+      if (year &lt; otherDate.year)
+         return -1;
+      else if (year &gt; otherDate.year)
+         return 1;
+      else { // Years are equal; compare months.
+         if (month &lt; otherDate.month)
+            return -1;
+         else if (month &gt; otherDate.month)
+            return 1;
+         else { // Years and months are equal; compare days.
+            if (day &lt; otherDate.day)
+               return -1;
+            else if (day &gt; otherDate.day)
+               return 1;
+            else 
+               return 0;
+         }
+      }
+   }
+}</pre>
 </ans>
 </question>
    
@@ -210,18 +243,18 @@ equal, compare the days.</p>
 <code>syllabus</code> is a variable of type <classname>TreeMap&lt;Date,String&gt;</classname>,
 where <classname>Date</classname> is the class from the preceding exercise.
 Write a code segment that will write
-out the value string for every key that is in the month of December, 2018.</p>
+out the value string for every key that is in the month of December, 2021.</p>
 </ques>
 <ans><p>I will give two solutions. One
-of them simply looks up each date in December, 2018 in the map and prints the
+of them simply looks up each date in December, 2021 in the map and prints the
 corresponding value, if there is one. The other iterates though a submap that
 contains all the entries for dates in that month.</p>
 <pre>
 A solution using the map's get() method:
 
       for (int day = 1; day &lt;= 31; day++) {
-           // Get the info for one day in December, 2018
-         Date date = new Date(12,day,2018); // The key.
+           // Get the info for one day in December, 2021
+         Date date = new Date(12,day,2021); // The key.
          String info = syllabus.get(date);  // Get the value for that key.
                                             // (Can be null if there is no
                                             // entry in the map for this date.)
@@ -232,12 +265,25 @@ A solution using the map's get() method:
 
 A solution using a submap (harder, but more efficient):
 
-      Date startDate = new Date(12,1,2018); // Starting date for submap.
-      Date endDate = new Date(1,1,2019);    // Ending date for submap.
+      Date startDate = new Date(12,1,2021); // Starting date for submap.
+      Date endDate = new Date(1,1,2022);    // Ending date for submap.
                                             // (Remember that the end date
                                             // is not included.)
       Map&lt;Date,String&gt; decemberData = syllabus.subMap(startDate, endDate);
       for ( Map.Entry&lt;Date,String&gt; entry : decemberData ) {
+         Date date = entry.getKey();
+         String info = entry.getValue();
+         System.out.println("December " + date.day + ": " + info);
+      }
+
+Using <code>var</code> to declare local variables, this could also be written:
+
+      Date startDate = new Date(12,1,2021); // Starting date for submap.
+      Date endDate = new Date(1,1,2022);    // Ending date for submap.
+                                            // (Remember that the end date
+                                            // is not included.)
+      <newcode>var</newcode> decemberData = syllabus.subMap(startDate, endDate);
+      for (<newcode>var</newcode> entry : decemberData ) {
          Date date = entry.getKey();
          String info = entry.getValue();
          System.out.println("December " + date.day + ": " + info);
@@ -259,6 +305,9 @@ to hold the items on the stack.</p>
       stack.add(newItem);
    }  
    public T pop() {
+      if ( isEmpty() ) {
+          throw new IllegalStateException("Can't pop from an empty stack");
+      }
       int top = stack.size() - 1;  // location of top item
       return stack.remove(top);    // remove and return top item
    }

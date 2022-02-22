@@ -110,7 +110,7 @@ as is done with the standard interface <classname>Map&lt;K,V&gt;</classname>.
 A typical example is the definition of a "Pair" that contains two objects,
 possibly of different types.  A simple version of such a class can be defined as:</p>
 
-<pre>class Pair&lt;T,S&gt; {
+<pre>public class Pair&lt;T,S&gt; {
    public T first;
    public S second;
    public Pair( T a, S b ) {  // Constructor.
@@ -131,6 +131,11 @@ and within the definition of the class, "<code>T</code>" and "<code>S</code>" ar
 as if they are the names of specific, actual types.  Note in any case that type
 parameters are <b>never</b> added to the names of methods or constructors, only
 to the names of classes and interfaces.</np>
+
+<p>Record classes can also be generic.  For example, a generic record class
+version of <classname>Pair</classname> could be defined simply as</p>
+
+<pre>public record Pair(T a, S b) { }</pre>
    
 </subsection>
    
@@ -166,7 +171,7 @@ public static int countOccurrences(String[] list, String itemToCount) {
 <p>Once again, we have some code that works for type <classname>String</classname>,
 and we can imagine writing almost identical code to work with other types of objects.
 By writing a generic method, we get to write a single method definition that will
-work for objects of any type.  We need to replace the specific type <classname>String</classname>
+work for objects of any non-primitive type.  We need to replace the specific type <classname>String</classname>
 in the definition of the method with the name of a type parameter, such as&nbsp;<classname>T</classname>.
 However, if that's the only change we make, the compiler will think that "T" is the name
 of an actual type, and it will mark it as an undeclared identifier.  We need some way of
@@ -188,8 +193,7 @@ type of the method:</p>
             count++;
    }
    return count;
-}   
-</pre>
+}</pre>
    
 <np>The "<code>&lt;T&gt;</code>" marks the method as being generic and specifies the name
 of the type parameter that will be used in the definition.  Of course, the name of the
@@ -256,7 +260,8 @@ in any collection:</p>
 <p>Since <classname>Collection&lt;T&gt;</classname> is itself a generic type,
 this method is very general.  It can operate on an <classname>ArrayList</classname>
 of <classname>Integers</classname>, a <classname>TreeSet</classname> of <classname>Strings</classname>,
-a <classname>LinkedList</classname> of <classname>Buttons</classname>,&nbsp;&dots;.</p>
+a <classname>LinkedList</classname> of 
+<fx><classname>Buttons</classname></fx><swing><classname>JButtons</classname></swing>,&nbsp;&dots;.</p>
 
 </subsection>
    
@@ -369,7 +374,7 @@ of type <classname>Collection&lt;T&gt;</classname>, <code>coll.addAll(coll2)</co
 "adds all the objects in <code>coll2</code> to <code>coll</code>. The parameter, <code>coll2</code>, 
 can be any collection of type <classname>Collection&lt;T&gt;</classname>. However, it can also be 
 more general. For example, if <classname>T</classname> is a class and <classname>S</classname> 
-is a sub-class of <classname>T</classname>, then <code>coll2</code> can be of type 
+is a subclass of <classname>T</classname>, then <code>coll2</code> can be of type 
 <classname>Collection&lt;S&gt;</classname>.  This makes sense because any object of type <classname>S</classname>
 is automatically of type <classname>T</classname> and so can legally be added to <code>coll</code>." 
 If you think for a moment, you'll see that what I'm
@@ -528,51 +533,57 @@ collection of any type of object.</np>
 <p>Wildcard types don't solve all of our problems.  They allow us to generalize
 method definitions so that they can work with collections of objects of various types,
 rather than just a single type.  However, they do not allow us to restrict
-the types that are allowed as type parameters in a generic class or method definition.
+the types that are allowed as formal type parameters in a generic class or method definition.
 Bounded types exist for this purpose.</p>
    
 <p>We start with a small, not very realistic example.  
 Suppose that you would like to create groups of GUI
 components using a generic class named <classname>ControlGroup</classname>.
-For example, the parameterized type <classname>ControlGroup&lt;Button&gt;</classname>
-would represent a group of <classname>Buttons</classname>, while 
-<classname>ControlGroup&lt;Slider&gt;</classname> would represent a group
-of <classname>Sliders</classname>.  The class will include methods that can be
+For example, the parameterized type 
+<fx><classname>ControlGroup&lt;Button&gt;</classname></fx><swing><classname>ControlGroup&lt;JButton&gt;</classname></swing>
+would represent a group of <fx><classname>Buttons</classname></fx><swing><classname>JButton</classname></swing>, while 
+<fx><classname>ControlGroup&lt;Slider&gt;</classname></fx><swing><classname>ControlGroup&lt;JSlider&gt;</classname></swing> 
+would represent a group
+of <fx><classname>Sliders</classname></fx><swing><classname>JSlider</classname></swing>.
+The class will include methods that can be
 called to apply certain operations to all components in the group at once.
 For example, there will be an instance method of the form</p>
    
 <pre>public void disableAll() {
    .
-   .  // Call c.setDisable(true) for every control, c, in the group.
+   .  // Call c.set<fx>Disable(true)</fx><swing>Enabled(false)</swing> for every control, c, in the group.
    .
 }</pre>
    
-<np>The problem is that the <code>setDisable()</code> method is defined in a
-<classname>Control</classname> object, but not for objects of arbitrary
+<np>The problem is that the <code>set<fx>Disable</fx><swing>Enabled</swing>()</code> method is defined in a
+<fx><classname>Control</classname></fx><swing><classname>JComponent</classname></swing> object, 
+but not for objects of arbitrary
 type.  It wouldn't make sense to allow types such as
 <classname>ControlGroup&lt;String&gt;</classname> or 
 <classname>ControlGroup&lt;Integer&gt;</classname>, since <classname>Strings</classname>
-and <classname>Integers</classname> don't have <code>setDisable()</code> methods.
+and <classname>Integers</classname> don't have <code>set<fx>Disable</fx><swing>Enabled</swing>()</code> methods.
 We need some way to restrict the type parameter <classname>T</classname>
-in <classname>ControlGroup&lt;T&gt;</classname> so that only <classname>Control</classname>
-and subclasses of <classname>Control</classname> are allowed
+in <classname>ControlGroup&lt;T&gt;</classname> so that only 
+<fx><classname>Control</classname></fx><swing><classname>JComponent</classname></swing>
+and subclasses of <fx><classname>Control</classname></fx><swing><classname>JComponent</classname></swing> are allowed
 as actual type parameters.
-We can do this by using the <newword>bounded type</newword> "<code>T&nbsp;extends&nbsp;Control</code>"
+We can do this by using the <newword>bounded type</newword> 
+"<code>T&nbsp;extends&nbsp;<fx>Control</fx><swing>JComponent</swing></code>"
 instead of a plain "<code>T</code>" in the definition of the class:
 </np>
 
-<pre>public class ControlGroup&lt;<newcode>T extends Control</newcode>&gt; {
+<pre>public class ControlGroup&lt;<newcode>T extends <fx>Control</fx><swing>JComponent</swing></newcode>&gt; {
    private ArrayList&lt;T&gt; components; // For storing the components in this group.
    public void disableAll( ) {
-      for ( Control c : components )
+      for ( <fx>Control</fx><swing>JComponent</swing> c : components ) {
          if (c != null)
-            c.setDisable(true);
+            c.set<fx>Disable(true)</fx><swing>Enabled(false)</swing>;
       }
    }
    public void enableAll( ) {
-      for ( Control c : components )
+      for ( <fx>Control</fx><swing>JComponent</swing> c : components ) {
          if (c != null)
-            c.setDisable(false);
+            c.set<fx>Disable(false)</fx><swing>Enabled(true)</swing>;
       }
    }
    public void add( T c ) {  // Add a value c, of type T, to the group.
@@ -583,14 +594,15 @@ instead of a plain "<code>T</code>" in the definition of the class:
    .
 }</pre>
    
-<p>The restriction "<code>extends Control</code>" on <code>T</code> makes it
+<p>The restriction "<code>extends <fx>Control</fx><swing>JComponent</swing></code>" on <code>T</code> makes it
 illegal to create the parameterized types <classname>ControlGroup&lt;String&gt;</classname> and
 <classname>ControlGroup&lt;Integer&gt;</classname>, since the actual type parameter
-that replaces "<code>T</code>" is required to be either <classname>Control</classname> itself
-or a subclass of <classname>Control</classname>.
+that replaces "<code>T</code>" is required to be either 
+<fx><classname>Control</classname></fx><swing><classname>JComponent</classname></swing> itself
+or a subclass of <fx><classname>Control</classname></fx><swing><classname>JComponent</classname></swing>.
 With this restriction, we know&mdash;and, more important, the compiler knows&mdash;that
-the objects in the group are of type <classname>Control</classname>, so that the
-operation <code>c.setDisable()</code> is defined for any <code>c</code> in the group.</p>
+the objects in the group are of type <fx><classname>Control</classname></fx><swing><classname>JComponent</classname></swing>, so that the
+operation <code>c.set<fx>Disable</fx><swing>Enabled</swing>()</code> is defined for any <code>c</code> in the group.</p>
   
 <p>In general, a bounded type parameter "<code>T&nbsp;extends&nbsp;SomeType</code>" means roughly
 "a type, <classname>T</classname>, that is either equal to <classname>SomeType</classname>
@@ -613,27 +625,28 @@ use "<code>extends</code>", never "<code>super</code>".</p>
 <p>Bounded type parameters can be used when declaring generic methods.
 For example, as an alternative to the generic <classname>ControlGroup</classname>
 class, one could write a free-standing generic <code>static</code> method that can
-disable any collection of <classname>Controls</classname> as follows:</p>
+disable any collection of 
+<fx><classname>Controls</classname></fx><swing><classname>JComponents</classname></swing> as follows:</p>
    
-<pre>public static &lt;T extends Control&gt; void disableAll(Collection&lt;T&gt; comps) {
-   for ( Control c : comps )
+<pre>public static &lt;T extends <fx>Control</fx><swing>JComponent</swing>&gt; void disableAll(Collection&lt;T&gt; comps) {
+   for ( <fx>Control</fx><swing>JComponent</swing> c : comps )
       if (c != null)
-         c.setDisable(true);
+         c.set<fx>Disable(true)</fx><swing>Enabled(false)</swing>;
 }</pre>
    
-<np>Using "<code>&lt;T extends Control&gt;</code>" as the formal type parameter
+<np>Using "<code>&lt;T extends <fx>Control</fx><swing>JComponent</swing>&gt;</code>" as the formal type parameter
 means that the method can only be called for collections whose base type is
-<classname>Control</classname> or some subclass of <classname>Control</classname>,
-such as <code>Button</code> or <code>Slider</code>.</np>
+<code><fx>Control</fx><swing>JComponent</swing></code> or some subclass of <code><fx>Control</fx><swing>JComponent</swing></code>,
+such as <code><swing>J</swing>Button</code> or <code><swing>J</swing>Slider</code>.</np>
    
 
 <p>Note that we don't really need a generic type parameter in this case.  We can
 write an equivalent method using a wildcard type:</p>
       
-<pre>public static void disableAll(Collection&lt;? extends Control&gt; comps) {
-   for ( Control c : comps )
+<pre>public static void disableAll(Collection&lt;? extends <fx>Control</fx><swing>JComponent</swing>&gt; comps) {
+   for ( <fx>Control</fx><swing>JComponent</swing> c : comps )
       if (c != null)
-         c.setDisable(true);
+         c.set<fx>Disable(true)</fx><swing>Enabled(false)</swing>;
 }</pre>
 
 <np>In this situation, the version that uses the wildcard type is to be preferred,
@@ -644,7 +657,7 @@ to the unknown type, while a wildcard type does not give a name to the unknown t
 The name makes it possible to refer to the unknown type in the body of the method
 that is being defined.  If a generic method definition uses the generic type name
 more than once or uses it outside the formal parameter list of the method,
-then the generic type cannot be replaced with a wildcard type.</np>
+then the generic type parameter cannot be replaced with a wildcard type.</np>
 
 <p>Let's look at a generic method in which a bounded type parameter is essential.  
 In <localref href="generics.2.1"/>, I presented a code segment for inserting

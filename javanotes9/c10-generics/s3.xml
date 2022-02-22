@@ -40,8 +40,8 @@ for working with maps.  The map interface, <classname>Map&lt;K,V&gt;</classname>
 parameterized by <b>two</b> types.  The first type parameter, <classname>K</classname>,
 specifies the type of objects that are possible keys in the map; the second type parameter,
 <classname>V</classname>, specifies the type of objects that are possible values in the
-map.  For example, a map of type <classname>Map&lt;Date,Button&gt;</classname>
-would associate values of type <classname>Button</classname> to keys of
+map.  For example, a map of type <classname>Map&lt;Date,Color&gt;</classname>
+would associate values of type <classname>Color</classname> to keys of
 type <classname>Date</classname>.  For a map of type
 <classname>Map&lt;String,String&gt;</classname>, both the keys and the values
 are of type <classname>String</classname>.</p>
@@ -112,7 +112,7 @@ for comparing keys. (The <classname>Comparator</classname> can be provided as a 
 the <classname>TreeMap</classname> constructor.)  Note that in a <classname>TreeMap</classname>,
 as in a <classname>TreeSet</classname>, the <code>compareTo()</code> (or <code>compare()</code>) method is used
 to decide whether two keys are to be considered the same.  This can have undesirable
-consequences if the <code>compareTo()</code> method does not agree with the usual
+consequences if the comparison method does not agree with the usual
 notion of equality, and you should keep this in mind when using <classname>TreeMaps</classname>.</p>
 
 <p>A <classname>HashMap</classname> does not store associations in any particular order, so
@@ -269,7 +269,6 @@ the example using an iterator becomes:
 System.out.println("The map contains the following associations:");
 while (entryIter.hasNext()) { . . .</pre>
 
-<np>(But note that this syntax requires Java 10 or later.)</np>
    
 <break/>
    
@@ -332,18 +331,21 @@ if (ems.isEmpty()) {
 }
 else {
    System.out.println("Entries beginning with M:");
-   for ( Map.Entry&lt;String,String&gt; entry : ems.entrySet() )
+   for ( var entry : ems.entrySet() ) { 
+         // Note: type for entry is Map.Entry&lt;String,String&gt;
+         // but it's easier to user var to declare the variable!
       System.out.println( "   " + entry.getKey() + ": " + entry.getValue() );
+   }
 }</pre>
 
 <p>Subsets and submaps are probably best thought of as generalized search
 operations that make it possible to find all the items in a range of values,
 rather than just to find a single value. For example, suppose that a database
-of scheduled events is stored in a map of type <classname>TreeMap&lt;Date,Event&gt;</classname> 
-in which the keys are the
-times of the events, and suppose you want a listing of all events that are
-scheduled for some time on July 4, 2018. Just make a submap containing all keys
-in the range from 12:00 AM, July 4, 2018 to 12:00 AM, July 5, 2018, and output
+of scheduled events is stored in a map of type <classname>TreeMap&lt;DateTime,Event&gt;</classname> 
+in which the a key gives the date and
+time of an event, and suppose you want a listing of all events that are
+scheduled for some time on July 4, 2022. Just make a submap containing all keys
+in the range from 12:00 AM, July 4, 2022 to 12:00 AM, July 5, 2022, and output
 all the entries from that submap. This type of search, which is known as a
 <newword>subrange query</newword>, is quite common.</p>
 

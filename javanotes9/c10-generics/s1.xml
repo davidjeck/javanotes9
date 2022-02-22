@@ -559,7 +559,7 @@ characters are stored in the same location in memory is irrelevant. Two values
 of type <classname>Date</classname> should be considered equal if they represent the same
 time.</p>
 
-<p>The <classname>Object</classname> class defines the <ptype>boolean</ptype>-valued method
+<p>We have seen that the <classname>Object</classname> class defines the <ptype>boolean</ptype>-valued method
 <code>equals(Object)</code> for testing whether one object is equal to another.
 This method is used by many, but not by all, collection classes for deciding whether
 two objects are to be considered the same. In the <classname>Object</classname> class,
@@ -590,8 +590,9 @@ in collections could be defined as:</p>
                 // this card, so they should be considered equal.
              return true;
           }
-          else
+          else {
              return false;
+          }
        }
        catch (Exception e) {
               // This will catch the NullPointerException that occurs if obj
@@ -631,11 +632,11 @@ and only if <code>obj1</code> comes after <code>obj2</code>.
 A return value of zero means that the objects are considered to be the same
 for the purposes of this comparison.  This does not necessarily mean that
 the objects are equal in the sense that <code>obj1.equals(obj2)</code> is true.
-For example, if the objects are of type <classname>Address</classname>,  
-representing mailing addresses, it might be useful to sort the objects by zip code.
-Two <classname>Addresses</classname> are considered the same for the purposes of
-the sort if they have the same zip code&mdash;but clearly that would not mean that
-they are the same address.  (Some classes in the JCF use <code>compareTo()</code> rather
+But in general, classes that implement <classname>Comparable</classname>
+should try to define <code>.equals()</code>
+and <code>compareTo()</code> so that <code>obj1.equals(obj2)</code>
+and <code>obj1.compareTo(obj2)&nbsp;==&nbsp;0</code> always have the same value.
+(Some classes in the JCF use <code>compareTo()</code> rather
 than <code>equals()</code> to test objects for equality.)</np>
    
 <p>The <classname>String</classname> class implements the
@@ -672,14 +673,15 @@ public class FullName implements Comparable&lt;FullName&gt; {
    }
    
    public int compareTo( FullName other ) {
-      if ( lastName.compareTo(other.lastName) &lt; 0 ) {
+      int compareLast = lastName.compareTo(other.lastName);
+      if ( compareLast &lt; 0 ) {
              // If lastName comes before the last name of
              // the other object, then this FullName comes
              // before the other FullName.  Return a negative
              // value to indicate this.
          return -1;
       }
-      else if ( lastName.compareTo(other.lastName) &gt; 0 ) {
+      else if ( compareLast &gt; 0 ) {
              // If lastName comes after the last name of
              // the other object, then this FullName comes
              // after the other FullName.  Return a positive
@@ -698,7 +700,7 @@ public class FullName implements Comparable&lt;FullName&gt; {
    .
 }</pre>
    
-<np>(I find it a little odd that the class here is declared as "<code>class 
+<np>I find it a little odd that the class here is declared as "<code>class 
 FullName implements Comparable&lt;FullName&gt;</code>", with "FullName"
 repeated as a type parameter in the name of the interface.  However, it does
 make sense.  It means that we are going to compare objects that belong to
@@ -706,7 +708,14 @@ the class <classname>FullName</classname> to other objects <b>of the same type</
 Even though this is the only reasonable thing to do, that fact is not
 obvious to the Java compiler&mdash;and the type parameter in
 <classname>Comparable&lt;FullName&gt;</classname> is there for the
-compiler.)</np>
+compiler.</np>
+
+<p>(We have previously encountered <classname>FullName</classname> as
+a record class, in <localref href="arrays.3a.1"/>.  Remember that record
+classes can implement interfaces, so we could define a <classname>FullName</classname>
+record class to implement <classname>Comparable&lt;FullName&gt;</classname>.
+In the record class, the <code>equals()</code> method would already be
+defined appropriately.)</p>
 
 <p>There is another way to allow for comparison of objects in Java, and that is
 to provide a separate object that is capable of making the comparison. The
@@ -726,6 +735,12 @@ Comparators are useful for comparing objects that do not implement the
 the same collection of objects.  Since <classname>Comparator</classname> is 
 a functional interface, comparators are often defined by lambda expressions
 (see <localref href="subroutines.4a"/>).</np>
+
+<p>Note that it can often make sense to use a <classname>Comparator</classname>
+for which <code>obj1.equals(obj2)</code> does not always have the same
+value as <code>compare(obj1,obj2)&nbsp;==&nbsp;0</code>.  For example, when sorting
+addresses by zip code, you would use a <classname>Comparator</classname> that looks
+at the zip code field in the addresses that it compares.</p>
    
 <p>In the next two sections, we'll see how <classname>Comparable</classname> and
 <classname>Comparator</classname> are used in the context of collections and maps.</p>

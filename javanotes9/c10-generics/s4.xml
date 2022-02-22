@@ -286,6 +286,11 @@ when I first tried it!)</np>
 I have not written a complete indexing program, but  <localref href="generics.ex.5"/>
 presents a problem that is almost identical to the indexing problem.</p>
    
+<p>(By the way, the <code>printIndex()</code> method could have used <code>var</code>
+to declare all of its local variables.  This would have avoided the complex type names, 
+but you would still need to be aware of the types, since you have to 
+know what methods, such as <code>entry.getKey()</code>, can be used with the variables.)</p>
+
 <break/>
    
 <p>By the way, in this example, I would prefer to print each list of page references with
@@ -490,7 +495,13 @@ program has to sort the words by frequency and print them again. To do
 the sorting using a generic algorithm, we can copy the <classname>WordData</classname>
 objects into a list and then use the generic method
 <code>Collections.sort(list,comparator)</code>, which specifies a comparator
-as its second parameter.  The comparator can be given as a lambda expression.</p>
+as its second parameter.  Since we want to sort the data into <b>decreasing</b> order
+by count, we want a comparator for two <classname>WordData</classname> values <code>a</code>
+and <code>b</code> that puts <code>a</code> before <code>b</code> if
+<code>a.count&nbsp;&gt;&nbsp;b.count</code>.  You should check that the
+following lambda expression defines a comparator that will work here:</p>
+
+<pre>(a,b) -> b.count - a.count</pre>
 
 <p>The <classname>WordData</classname> objects that we need are
 the values in the map, <code>words</code>.  Recall that <code>words.values()</code> returns a

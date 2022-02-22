@@ -265,8 +265,8 @@ containing a given range of integer values.  The stream</p>
 <code>end</code> is not included.</np>
 
 <p>Some additional methods for making streams have been introduced in newer versions
-of Java.  For example, for a <classname>Scanner</classname>, <code>input</code>,
-Java&nbsp;9 introduced the method <code>input.tokens()</code>, which makes
+of Java.  For example, in Java&nbsp;11, for a <classname>Scanner</classname>, <code>input</code>,
+the method <code>input.tokens()</code> creates
 a stream consisting of all the strings that would be returned by calling
 <code>input.next()</code> over and over.  And for a <classname>String</classname>, <code>str</code>,
 that contains multiple lines of text, Java&nbsp;11 added <code>str.lines()</code> that creates
@@ -303,15 +303,16 @@ numbers!)</np>
 
 <p>A map applies a <classname>Function</classname> to each value in a stream,
 and creates a stream consisting of the output values.  For example, suppose
-that <code>strList</code> is <atype>ArrayList&lt;String&gt;</atype> and
+that <code>strList</code> is an <atype>ArrayList&lt;String&gt;</atype> and
 we would like a stream consisting of all the non-null strings in the
 list, converted to lower case:</p>
 
 <pre>strList.stream().filter( s -> (s != null) ).map( s -> s.toLowerCase() )</pre>
 
-<np>The specializations <code>mapToInt()</code> and <code>mapToDouble()</code>
+<np>The specializations <code>mapToInt()</code>, <code>mapToDouble()</code>, and <code>mapToLong()</code>
 exist to map <classname>Streams</classname> into
-<classname>IntStreams</classname> and <classname>DoubleStreams</classname>.</np>
+<classname>IntStreams</classname>,<classname>DoubleStreams</classname>,
+and <classname>LongStreams</classname>.</np>
 
 <p>Here are a few more intermediate operations on a stream, <code>S</code>, that
 can be useful:
@@ -357,7 +358,7 @@ some filters:</p>
 
 <p>Some terminal operations output a single value.  For example,
 <code>S.count()</code> returns the number of values in the stream <code>S</code>.
-And <classname>IntStreams</classname>
+And <classname>IntStreams</classname>, <classname>LongStreams</classname>,
 and <classname>DoubleStreams</classname> have the terminal operation <code>sum()</code>,
 to compute the sum of all the values in the stream.
 Suppose, for example, that you would like to
@@ -403,9 +404,12 @@ you can get the longest string in the collection with</p>
 method <code>isPresent()</code> in an <classname>Optional</classname> can be used to test
 whether the value exists.)</np>
 
-<p>Similarly, <classname>IntStream</classname> and <classname>DoubleStream</classname> provide
+<p>Similarly, <classname>IntStream</classname>, <classname>LongStream</classname>,
+and <classname>DoubleStream</classname> provide
 terminal operations <code>min()</code> and <code>max()</code> that return values of type
-<classname>OptionalInt</classname> and <classname>OptionalDouble</classname>.</p>
+<classname>OptionalInt</classname>, <classname>OptionalLong</classname>,
+and <classname>OptionalDouble</classname>.  Each of these classes also has an
+<code>average()</code> method that returns an <classname>OptionalDouble</classname>.</p>
 
 <p>The terminal operators <code>allMatch(p)</code> and <code>anyMatch(p)</code> take
 a predicate as parameter and compute a <ptype>boolean</ptype> value.  The value
@@ -419,7 +423,7 @@ does not match the predicate.</p>
 
 <p>Many terminal operations that compute a single value can be expressed in
 terms of a more general operation, <newword>reduce</newword>.
-A reduce operation combines the values from a string using a 
+A reduce operation combines the values from a stream using a 
 <classname>BinaryOperator</classname>.  For example, a sum is computed
 by a reduce operation in which the binary operation is addition.
 The binary operator should be associative, which means that the order
@@ -493,7 +497,7 @@ families = Arrays.stream(population)
 
 <np>Here, the lambda expression, <code>person -> person.lastname</code>, defines the
 grouping function.  The function takes a <classname>Person</classname>
-as input and outputs a <classname>String</classname>.  In the resulting
+as input and outputs a <classname>String</classname> giving that person's last name.  In the resulting
 <classname>Map</classname>, <code>families</code>, a key is one of the
 last names from the <classname>Persons</classname> in the array, and
 the value associated with that last name is a <classname>List</classname> 
