@@ -71,7 +71,7 @@ public class FetchURL {
 		System.out.println();
 		if (contentType == null || contentType.startsWith("text") == false)
 			throw new IOException("URL does not seem to refer to a text file.");
-		System.out.println("Fetching context from " + urlString + " ...");
+		System.out.println("Fetching content from " + urlString + " ...");
 		System.out.println();
 
 		/* Copy lines of text from the input stream to the screen, until

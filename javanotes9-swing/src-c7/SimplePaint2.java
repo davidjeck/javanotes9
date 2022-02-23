@@ -2,6 +2,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import java.util.ArrayList;
 
 /**
@@ -177,37 +178,31 @@ public class SimplePaint2 extends JPanel {
 		 * checkbox that determines whether symmetry should be used.
 		 */
 
+
 		JMenuItem undo = new JMenuItem("Undo");
 		controlMenu.add(undo);
-		undo.addActionListener( new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		undo.addActionListener( e -> {
 				if (curves.size() > 0) {
 					curves.remove( curves.size() - 1);
 					repaint();  // Redraw without the curve that has been removed.
 				}
-			}
-		});
+			} );
 		JMenuItem clear = new JMenuItem("Clear");
 		controlMenu.add(clear);
-		clear.addActionListener( new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		clear.addActionListener( e -> {
 				curves = new ArrayList<CurveData>();
 				repaint();  // Redraw with no curves shown.
-			}
-		});
+			} );
 		JCheckBoxMenuItem sym = new JCheckBoxMenuItem("Use Symmetry");
 		controlMenu.add(sym);
-		sym.addActionListener( new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				useSymmetry = ((JCheckBoxMenuItem)evt.getSource()).isSelected();
+		sym.addActionListener( e -> useSymmetry = ((JCheckBoxMenuItem)e.getSource()).isSelected() );
 				// This does not affect the current drawing; it affects
 				// curves that are drawn in the future.
-			}
-		});
+		
 
 		/* Add commands to the "Color" menu.  The menu contains commands for
 		 * setting the current drawing color.  When the user chooses one of these
-		 * commands, it has no immediate effect on the drawing.  It justs sets
+		 * commands, it has no immediate effect on the drawing.  It just sets
 		 * the color that will be used for future drawing.
 		 */
 
@@ -270,16 +265,12 @@ public class SimplePaint2 extends JPanel {
 	 * @param command  the text that will appear in the menu
 	 * @param color  the drawing color that is selected by this command.  (Note that
 	 *    this parameter is "final" for a technical reason: This is a requirement for
-	 *    a local variable that is used in an anonymous inner class.)
+	 *    a local variable that is used in a lambda expression.)
 	 * @return  the JMenuItem that has been created.
 	 */
 	private JMenuItem makeBgColorMenuItem(String command, final Color color) {
 		JMenuItem item = new JMenuItem(command);
-		item.addActionListener( new ActionListener()  {
-			public void actionPerformed(ActionEvent evt) {
-				setBackground(color);
-			}
-		});
+		item.addActionListener( e -> setBackground(color) );
 		return item;
 	}
 
@@ -293,11 +284,7 @@ public class SimplePaint2 extends JPanel {
 	 */
 	private JMenuItem makeColorMenuItem(String command, final Color color) {
 		JMenuItem item = new JMenuItem(command);
-		item.addActionListener( new ActionListener()  {
-			public void actionPerformed(ActionEvent evt) {
-				currentColor = color;
-			}
-		});
+		item.addActionListener( e -> currentColor = color );
 		return item;
 	}
 

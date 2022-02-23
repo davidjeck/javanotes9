@@ -149,9 +149,9 @@ public class Checkers extends JPanel {
 			newGameButton = new JButton("New Game");
 			newGameButton.addActionListener( e -> doNewGame() );
 			message = new JLabel("",JLabel.CENTER);
-			message.setFont(new  Font("Serif", Font.BOLD, 20));
+			message.setFont(new Font("Serif", Font.BOLD, 18));
 			message.setForeground(Color.GREEN);
-			setFont(new  Font("Serif", Font.BOLD, 18));
+			setFont(new Font("Serif", Font.BOLD, 18));
 			board = new CheckersData();
 			doNewGame();
 		}

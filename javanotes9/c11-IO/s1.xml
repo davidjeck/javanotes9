@@ -360,7 +360,7 @@ computers can deal correctly with all of these possibilities.)</np>
 which returns a value of type <atype>Stream&lt;String&gt;</atype> that can be used with
 the stream API (<localref href="generics.6"/>).  A convenient way to process all the lines
 from a <classname>BufferedReader</classname>, <code>reader</code>, is
-to use the <code>forEach()</code> operator on the stream of lines:
+to use the <code>forEachOrdered()</code> operator on the stream of lines:
 <code>reader.lines().forEachOrdered(action)</code>, where <code>action</code> is a consumer of
 strings, usually given as a lambda expression.</p>
    
@@ -576,7 +576,8 @@ For these reasons, object streams are appropriate mostly for short-term storage 
 and for transmitting objects over a network connection from one Java program to another.
 For long-term storage and for communication with non-Java programs, other approaches
 to object serialization are usually better.  (See <localref href="IO.5"/> for a
-character-based approach.)</p>
+character-based approach.  See <localref href="threads.5.1"/> for an example that uses
+object streams for network communication.)</p>
 
 <p><classname>ObjectInputStream</classname> and <classname>ObjectOutputStream</classname> 
 only work with

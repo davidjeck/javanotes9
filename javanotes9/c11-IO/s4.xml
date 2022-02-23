@@ -147,7 +147,7 @@ program to decide what to do when an error occurs.</p>
      System.out.println();
      if (contentType == null || contentType.startsWith("text") == false)
           throw new IOException("URL does not seem to refer to a text file.");
-     System.out.println("Fetching context from " + urlString + " ...");
+     System.out.println("Fetching content from " + urlString + " ...");
      System.out.println();
 
      /* Copy lines of text from the input stream to the screen, until
@@ -173,7 +173,7 @@ For this program, a URL can begin with "http://" or "https://" for a URL that re
 a resource on the web, with "file://" for a URL that refers to a file on
 your computer, or with "ftp://" for a URL that uses the "File Transfer Protocol."
 If it does not start with any of these, then "http://" is added to the start
-of the URL.  Try the program with URL <code>math.hws.edu/javanotes</code> to 
+of the URL.  Try the program with URL <code>math.hws.edu/javanotes<swing>-swing</swing></code> to 
 fetch the front page of this textbook from its website.  Try it with some bad inputs
 to see the various errors that can occur.</np>
    
@@ -223,8 +223,9 @@ server. This is called the <newword>client/server model</newword> of
 network communication. In many actual applications, a server program can
 provide connections to several clients at the same time. When a client connects
 to the listening socket in a server of that type, that socket does not stop listening. Instead,
-it continues listening for additional client connections at the same time that
-the first client is being serviced. To do that, it is necessary to use
+it continues listening for additional client connection requests at the same time that
+the client is being serviced. But to allow multiple clients to be connected 
+at the same time, it is necessary to use
 threads. We'll look at how it works in the <localref href="threads">next chapter</localref>.</p>
 
 <p>The <classname>URL</classname> class that was discussed at the beginning of this section
@@ -249,10 +250,10 @@ They are usually written
 in the so-called "dotted decimal" form, such as <code>64.89.144.237</code>, 
 where each of the four numbers in the address represents an 8-bit 
 integer in the range 0 through 255.  A new version of the Internet Protocol, 
-<newword>IPv6</newword>, is currently being introduced.
+<newword>IPv6</newword>, is being introduced.
 IPv6 addresses are 128-bit integers and are usually written in hexadecimal form
 (with some colons and maybe some extra information thrown in).
-In actual use, IPv6 addresses are still fairly rare.</p>
+You might see IP addresses of either form.</p>
 
 <p>A computer can have several IP addresses, and can have both IPv4 and IPv6 addresses.
 Usually, one of these is the <newword>loopback address</newword>, which can be
@@ -263,19 +264,20 @@ In addition, there can be one or more IP addresses associated with physical
 network connections.  Your computer probably has some utility for displaying
 your computer's IP addresses.   I have written a small Java program,
 <sourceref href="ShowMyNetwork.java"/>, that does the same thing.  When I run
-<code>ShowMyNetwork</code> on my computer, the output is:</p>
+<code>ShowMyNetwork</code> on one computer, the output was:</p>
    
-<pre>   en1 :  /192.168.1.47  /fe80:0:0:0:211:24ff:fe9c:5271%5  
-   lo0 :  /127.0.0.1  /fe80:0:0:0:0:0:0:1%1  /0:0:0:0:0:0:0:1%0</pre>
+<pre>   wlo1 :  /2603:7080:7f41:f400:441a:459f:2c62:c349%wlo1  /192.168.0.2  
+   lo :  /0:0:0:0:0:0:0:1%lo  /127.0.0.1</pre>
    
 <np>The first thing on each line is a network interface name, which
 is really meaningful only to the computer's operating system.  The same line
 also contains the IP addresses for that interface.  In this example,
-<code>lo0</code> refers to the loopback address, which has IPv4 address
-127.0.0.1 as usual.  The most important number here is <code>192.168.1.47</code>, 
+<code>lo</code> refers to the loopback address, which has IPv4 address
+127.0.0.1 as usual.  The most important number here is <code>192.168.0.2</code>, 
 which is the IPv4 address that can be used for communication over the network.
 (The slashes at the start of each address are not part of the actual address.)
-The other numbers in the output are IPv6 addresses.</np>
+The other numbers in the output are IPv6 addresses, but the IPv4 addresses
+are easier for a human to use.</np>
    
 <p>Now, a single computer might have several programs doing network
 communication at the same time, or one program communicating with several other
@@ -401,8 +403,6 @@ void doClientConnection(String computerName, int serverPort) {
     .
    try {
       connection.close();
-          // (Alternatively, you might depend on the server
-          //  to close the connection.)
    }
    catch (IOException e) {
    }

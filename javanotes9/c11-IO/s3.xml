@@ -232,7 +232,7 @@ book data in a file named "<code>.phone_book_demo</code>" in the user's
 home directory.  To find the user's home directory, it uses the
 <code>System.getProperty()</code> method that was mentioned in
 <localref href="IO.2.2"/>.  When the program starts, it checks whether
-the file already exists.  If it does, it should contain the user's
+the file already exists.  If the file exists, it should contain the user's
 phone book, which was saved in a previous run of the program; in that case,
 the data from the file is read and entered into a <classname>TreeMap</classname>
 named <code>phoneBook</code>
@@ -341,11 +341,12 @@ saved data back into the program.</p>
    
 <p>The data for a sketch consists of the background color of the picture
 and a list of the curves that were drawn by the user.  A curve consists of
-a list of <classname>Point2Ds</classname>.  The class <classname>Point2D</classname> is
-found in package <code>javafx.geometry</code>; a <classname>Point2D</classname>,
-<code>pt</code>, has instance methods <code>pt.getX()</code> and <code>pt.getY()</code>
-that return the coordinates of a point in the xy-plane as values of type <ptype>double</ptype>.
-Each curve can be a different color.  Furthermore, a curve can be "symmetric," which
+a list of <fx><classname>Point2Ds</classname></fx><swing><classname>Points</classname></swing>.  
+A <fx><classname>Point2D</classname></fx><swing><classname>Point</classname></swing>,
+<code>pt</code>, has instance <fx>methods <code>pt.getX()</code> and <code>pt.getY()</code>
+that return the coordinates of a point in the xy-plane as values of type <ptype>double</ptype></fx><swing>variables
+<code>x</code> and <code>y</code> of type <ptype>int</ptype> that represent the coordinates of
+the point in the xy-plane</swing>.  Each curve can be a different color.  Furthermore, a curve can be "symmetric," which
 means that in addition to the curve itself, the horizontal and vertical reflections
 of the curve are also drawn.  The data for each
 curve are stored in an object of type <classname>CurveData</classname>, which
@@ -358,13 +359,13 @@ is defined in the program as:</p>
 private static class CurveData {
    Color color;  // The color of the curve.
    boolean symmetric;  // Are horizontal and vertical reflections also drawn?
-   ArrayList&lt;Point2D&gt; points;  // The points on the curve.
+   ArrayList&lt;Point<fx>2D</fx>&gt; points;  // The points on the curve.
 }</pre>
    
 <np>Then, a list of type <atype>ArrayList&lt;CurveData&gt;</atype> is used to hold
 data for all of the curves that the user has drawn.</np>
    
-<p>Let's think about how the data for a sketch could be saved to a text file/
+<p>Let's think about how the data for a sketch could be saved to a text file.
 The basic idea is that all data necessary to reconstitute
 a sketch must be saved to the output file in some definite format.  The method
 that reads the file must follow exactly the same format as it reads the data,
@@ -379,10 +380,10 @@ just dump all the necessary data, in some definite order, into the file.
 Suppose that <code>out</code> is a <classname>PrintWriter</classname> that
 is used to write to the file.  We could then say:</p>
 
-<pre>Color bgColor = getBackground();    // Write the background color to the file.
-out.println( bgColor.getRed() );
-out.println( bgColor.getGreen() );
-out.println( bgColor.getBlue() );
+<pre><swing>Color backgroundColor = getBackground();
+</swing>out.println( backgroundColor.getRed() ); // Write background color to file.
+out.println( backgroundColor.getGreen() );
+out.println( backgroundColor.getBlue() );
 
 out.println( curves.size() );       // Write the number of curves.
    
@@ -392,9 +393,9 @@ for ( CurveData curve : curves ) {  // For each curve, write...
    out.println( curve.color.getBlue() );
    out.println( curve.symmetric ? 0 : 1 );   // the curve's symmetry property
    out.println( curve.points.size() );       // the number of points on curve
-   for ( Point2D pt : curve.points ) {       // the coordinates of each point
-      out.println( pt.getX() );
-      out.println( pt.getY() );
+   for ( Point<fx>2D</fx> pt : curve.points ) {       // the coordinates of each point
+      out.println( pt.<swing>x</swing><fx>getX()</fx> );
+      out.println( pt.<swing>y</swing><fx>getY()</fx> );
    }
 }</pre>
    
@@ -404,20 +405,20 @@ a <classname>Scanner</classname> named <code>scanner</code> to read
 the data file.  Then it could say:</np>
    
 <pre>Color newBackgroundColor;                // Read the background Color.
-double red = scanner.nextDouble();
-double green = scanner.nextDouble();
-double blue = scanner.nextDouble();
-newBackgroundColor = Color.color(red,green,blue);
+<fx>double</fx><swing>int</swing> red = scanner.next<fx>Double</fx><swing>Int</swing>();
+<fx>double</fx><swing>int</swing> green = scanner.next<fx>Double</fx><swing>Int</swing>();
+<fx>double</fx><swing>int</swing> blue = scanner.next<fx>Double</fx><swing>Int</swing>();
+newBackgroundColor = <fx>Color.color</fx><swing>new Color</swing>(red,green,blue);
 
 ArrayList&lt;CurveData&gt; newCurves = new ArrayList&lt;&gt;();
    
 int curveCount = scanner.nextInt();      // The number of curves to be read.
 for (int i = 0; i &lt; curveCount; i++) {
    CurveData curve = new CurveData();
-   double r = scanner.nextDouble();            // Read the curve's color.
-   double g = scanner.nextDouble();
-   double b = scanner.nextDouble();
-   curve.color = Color.color(r,g,b);
+   <fx>double</fx><swing>int</swing> r = scanner.next<fx>Double</fx><swing>Int</swing>();            // Read the curve's color.
+   <fx>double</fx><swing>int</swing> g = scanner.next<fx>Double</fx><swing>Int</swing>();
+   <fx>double</fx><swing>int</swing> b = scanner.next<fx>Double</fx><swing>Int</swing>();
+   curve.color = <fx>Color.color</fx><swing>new Color</swing>(r,g,b);
    int symmetryCode = scanner.nextInt(); // Read the curve's symmetry property.
    curve.symmetric = (symmetryCode == 1);
    curveData.points = new ArrayList&lt;&gt;();
@@ -425,13 +426,13 @@ for (int i = 0; i &lt; curveCount; i++) {
    for (int j = 0; j &lt; pointCount; j++) {
       int x = scanner.nextDouble();        // Read the coordinates of the point.
       int y = scanner.nextDouble();
-      curveData.points.add(new Point2D(x,y));
+      curveData.points.add(new Point<fx>2D</fx>(x,y));
    }
    newCurves.add(curve);
 }
 
 curves = newCurves;                     // Install the new data structures.
-setBackground(newBackgroundColor);</pre>
+<swing>setBackground(newBackgroundColor)</swing><fx>backgroundColor = newBackgroundColor</fx>;</pre>
    
    
 <np>Note how every piece of data that was written by the output method is
@@ -450,10 +451,10 @@ Here is a short but complete data file for the program; just by
 looking at it, you can probably tell what is going on:</p>
 
 <pre>SimplePaintWithFiles 1.0
-background 0.4 0.4 0.5
+background <fx>0.4 0.4 0.5</fx><swing>110 110 180</swing>
 
 startcurve
-  color 1 1 1
+  color <fx>1 1 1</fx><swing>255 255 255</swing>
   symmetry true
   coords 10 10
   coords 200 250
@@ -461,7 +462,7 @@ startcurve
 endcurve
 
 startcurve
-  color 0 1 1
+  color <fx>0 1 1</fx><swing>0 255 255</swing>
   symmetry false
   coords 10 400
   coords 590 400
@@ -505,13 +506,14 @@ for ( CurveData curve : curves ) {
     out.println("  color " + curve.color.getRed() + " " +
             curve.color.getGreen() + " " + curve.color.getBlue() );
     out.println( "  symmetry " + curve.symmetric );
-    for ( Point2D pt : curve.points )
-        out.println( "  coords " + pt.getX() + " " + pt.getY() );
+    for ( Point<fx>2D</fx> pt : curve.points )
+        out.println( "  coords " + pt.<fx>getX()</fx><swing>x</swing> + " " + pt.<fx>getY()</fx><swing>y</swing> );
     out.println("endcurve");
 }</pre>
 
 <np>In the program, this code is used in a <code>doSave()</code> method that
-is similar to the one that is presented in <localref href="IO.2.3"/>.  The method
+is similar to the <fx>one</fx><swing><code>writeFile()</code> method</swing> 
+that is presented in <localref href="IO.2.3"/>.  The method
 uses a file dialog box to allow the user to select the output file.</np>
    
 <p>Reading the data is somewhat harder, since the input routine has to
@@ -527,6 +529,7 @@ the input.  Here is the complete method from <sourceref href="SimplePaintWithFil
 that reads data files created by the <code>doSave()</code> method.  It uses a
 <classname>Scanner</classname> to read items from the file:</p>
    
+<fxdiv>
 <pre>private void doOpen() {
     FileChooser fileDialog = new FileChooser();
     fileDialog.setTitle("Select File to be Opened");
@@ -611,6 +614,89 @@ that reads data files created by the <code>doSave()</code> method.  It uses a
         errorAlert.showAndWait();
     }    
 }</pre>
+</fxdiv>
+<swingdiv>
+<pre>private void doOpen() {
+    if (fileDialog == null)
+        fileDialog = new JFileChooser();
+    fileDialog.setDialogTitle("Select File to be Opened");
+    fileDialog.setSelectedFile(null);  // No file is initially selected.
+    int option = fileDialog.showOpenDialog(this);
+    if (option != JFileChooser.APPROVE_OPTION)
+        return;  // User canceled or clicked the dialog's close box.
+    File selectedFile = fileDialog.getSelectedFile();
+    Scanner scanner;
+    try {
+        Reader stream = new BufferedReader(new FileReader(selectedFile));
+        scanner = new Scanner( stream );
+    }
+    catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "Sorry, but an error occurred while trying to open the file:\n" + e);
+        return;
+    }
+    try {
+        String programName = scanner.next();
+        if ( ! programName.equals("SimplePaintWithFiles") )
+            throw new IOException("File is not a SimplePaintWithFiles data file.");
+        double version = scanner.nextDouble();
+        if (version &gt; 1.0)
+            throw new IOException("File requires a newer version of SimplePaintWithFiles.");
+        Color newBackgroundColor = Color.WHITE;
+        ArrayList&lt;CurveData&gt; newCurves = new ArrayList&lt;CurveData&gt;();
+        while (scanner.hasNext()) {
+            String itemName = scanner.next();
+            if (itemName.equalsIgnoreCase("background")) {
+                int red = scanner.nextInt();
+                int green = scanner.nextInt();
+                int blue = scanner.nextInt();
+                newBackgroundColor = new Color(red,green,blue);
+            }
+            else if (itemName.equalsIgnoreCase("startcurve")) {
+                CurveData curve = new CurveData();
+                curve.color = Color.BLACK;
+                curve.symmetric = false;
+                curve.points = new ArrayList&lt;Point&gt;();
+                itemName = scanner.next();
+                while ( ! itemName.equalsIgnoreCase("endcurve") ) {
+                    if (itemName.equalsIgnoreCase("color")) {
+                        int r = scanner.nextInt();
+                        int g = scanner.nextInt();
+                        int b = scanner.nextInt();
+                        curve.color = new Color(r,g,b);
+                    }
+                    else if (itemName.equalsIgnoreCase("symmetry")) {
+                        curve.symmetric = scanner.nextBoolean();
+                    }
+                    else if (itemName.equalsIgnoreCase("coords")) {
+                        int x = scanner.nextInt();
+                        int y = scanner.nextInt();
+                        curve.points.add( new Point(x,y) );
+                    }
+                    else {
+                        throw new Exception("Unknown term in input.");
+                    }
+                    itemName = scanner.next();
+                }
+                newCurves.add(curve);
+            }
+            else {
+                throw new Exception("Unknown term in input.");
+            }
+        }
+        scanner.close();
+        setBackground(newBackgroundColor);
+        curves = newCurves;
+        repaint();
+        editFile = selectedFile;
+        setTitle("SimplePaint: " + editFile.getName());
+    }
+    catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "Sorry, but an error occurred while trying to read the data:\n" + e);
+    }    
+}</pre>
+</swingdiv>
    
 <p>The main reason for this long discussion of file formats has been to
 get you to think about the problem of representing complex data in a form suitable
@@ -626,7 +712,7 @@ representation problem that has become increasingly common.</p>
 <code>SimplePaintWithFiles</code> can also save the
 picture itself as an image file that could be, for example, printed
 or put on a web page.  This is a preview of image-handling techniques
-that will be covered in <localref href="GUI2.2.6"/>, and it uses
+that will be covered in <fx><localref href="GUI2.2.6"/></fx><swing><localref href="GUI2.1.5"/></swing>, and it uses
 techniques that I have not yet covered.</p>
 
 </subsection>

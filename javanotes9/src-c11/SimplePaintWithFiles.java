@@ -368,6 +368,10 @@ public class SimplePaintWithFiles extends Application {
 	} // end createMenuBar
 
 
+	/**
+	 * Clear the current image and restore the initial state for
+	 * current color, background color, and symmetry.
+	 */
 	private void doNew() {
 		curves = new ArrayList<>();
 		backgroundColor = Color.WHITE;

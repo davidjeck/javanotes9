@@ -250,7 +250,8 @@ Identifiers are used as names of variables, methods, and classes.</gitem>
 <gitem term="implementation">The inside of a black box, such as the code
 that defines a subroutine.</gitem>
 <gitem term="immutable object">An immutable object cannot be modified after it is constructed,
-because all of its instance variables are <code>final</code>.</gitem>
+because all of its instance variables are <code>final</code>.  (In my use of the term, an immutable
+object can contain pointers to other objects that are not immutable.)</gitem>
 <gitem term="infinite loop">A loop that never ends, because its continuation condition
 always evaluates to <code>true</code>.</gitem>
 <gitem term="inheritence">The fact that one class can extend another.  It then inherits
@@ -492,6 +493,9 @@ the program that the second thread is depending on (such as the value of variabl
 main memory of a computer.  Technically, however, it means memory in which all 
 locations are equally accessible at any given time.  The term also implies that
 data can be written to the memory as well as read from it.</gitem>
+<gitem term="record">A simple data structure containing several data items, or fields,
+that are identified by name.  The fields can be of different types.  Java has
+record classes to represent (immutable) records.</gitem>
 <gitem term="recursion">Defining something in terms of itself.  In particular, a
 recursive subroutine is one that calls itself, either directly, or indirectly through a
 chain of other subroutines.  Recursive algorithms work by reducing a complex problem into

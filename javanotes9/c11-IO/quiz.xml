@@ -89,10 +89,11 @@ address that it represents.</p>
 </question>
 
 <question>
-<ques><p>What is the purpose of the <classname>FileChooser</classname>
+<ques><p>What is the purpose of the <fx><classname>FileChooser</classname></fx><swing><classname>JFileChooser</classname></swing>
 class?</p>
 </ques>
-<ans><p>An object of type <classname>FileChooser</classname> represents a
+<ans><p>An object of type 
+<fx><classname>FileChooser</classname></fx><swing><classname>JFileChooser</classname></swing> represents a
 dialog box that can be used in a GUI program to let the user select a file
 that is to be used for input or for output.</p>
 </ans>
@@ -264,7 +265,8 @@ public class TenLinesWithStreamAPI {
 
 <np>Note: I didn't close the files that were used in any of these solutions,
 although it would have been good form to do so.  The easiest way to make sure that
-the files is closed is to use a <code>try..catch</code> statement with resources.
+the file is closed is to use a <code>try..catch</code> statement with resources.
+(See the last few paragraphs of <localref href="robustness.3.2"/>.)
 For example:</np>
 
 <pre>try ( BufferedReader in = new BufferedReader(new FileReader(args[0])) ) {

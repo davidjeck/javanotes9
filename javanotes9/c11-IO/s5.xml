@@ -66,7 +66,7 @@ rules, but the basic ideas are similar.  Here is a short, well-formed XML docume
 &lt;simplepaint version="1.0"&gt;
    &lt;background red='1' green='0.6' blue='0.2'/&gt;
    &lt;curve&gt;
-      &lt;color red='0' green='0' blue='1'/&gt;
+      &lt;color red='0' green='0' blue='<fx>1</fx><swing>255</swing>'/&gt;
       &lt;symmetric&gt;false&lt;/symmetric&gt;
       &lt;point x='83' y='96'/&gt;
       &lt;point x='116' y='149'/&gt;
@@ -78,7 +78,7 @@ rules, but the basic ideas are similar.  Here is a short, well-formed XML docume
       &lt;point x='400' y='543'/&gt;
    &lt;/curve&gt;
    &lt;curve&gt;
-      &lt;color red='1' green='1' blue='1'/&gt;
+      &lt;<fx>color red='1' green='1' blue='1'</fx><swing>color red='255' green='255' blue='255'</swing>/&gt;
       &lt;symmetric&gt;true&lt;/symmetric&gt;
       &lt;point x='54' y='305'/&gt;
       &lt;point x='79' y='289'/&gt;
@@ -158,13 +158,13 @@ The new version is <sourceref href="SimplePaintWithXML.java"/>.
 The sample XML document shown earlier in this section
 can be used with that program.  I designed the format of that document
 to represent all the data needed to reconstruct a picture in
-<code>SimplePaint</code>.  The document encodes the background color
+<code>SimplePaint2</code>.  The document encodes the background color
 of the picture and a list of curves.  Each <code>&lt;curve&gt;</code>
 element contains the data from one object of type <classname>CurveData</classname>.</p>
    
 <p>It is easy enough to write data in a customized XML format, although we
 have to be very careful to follow all the syntax rules.  Here is how <code>SimplePaintWithXML</code>
-writes the data for a <code>SimplePaint</code> picture to a
+writes the data for a <code>SimplePaint2</code> picture to a
 <classname>PrintWriter</classname>, <code>out</code>.  This produces
 an XML file with the same structure as the example shown above:</p>
    
@@ -177,8 +177,8 @@ for (CurveData c : curves) {
     out.println("      &lt;color red='" + c.color.getRed() + "' green='" +
             c.color.getGreen() + "' blue='" + c.color.getBlue() + "'/&gt;");
     out.println("      &lt;symmetric&gt;" + c.symmetric + "&lt;/symmetric&gt;");
-    for (Point2D pt : c.points)
-        out.println("      &lt;point x='" + pt.getX() + "' y='" + pt.getY() + "'/&gt;");
+    for (Point<fx>2D</fx> pt : c.points)
+        out.println("      &lt;point x='" + pt.<fx>getX()</fx><swing>x</swing> + "' y='" + pt.<fx>getY()</fx><swing>y</swing> + "'/&gt;");
     out.println("   &lt;/curve&gt;");
 }
 out.println("&lt;/simplepaint&gt;");</pre>
@@ -318,7 +318,7 @@ DOM representations.  Let's look at a few code fragments.  Suppose that
 in the course of processing a document you come across an <classname>Element</classname>
 node that represents the element</p>
    
-<pre>&lt;background red='1' green='0.6' blue='0.2'/&gt;</pre>
+<pre>&lt;background <fx>red='1' green='0.6' blue='0.2'</fx><swing>red='255' green='153' blue='51'</swing>/&gt;</pre>
    
 <np>This element might be encountered either while traversing the
 document with <code>getChildNodes()</code> or in the result of
@@ -329,10 +329,18 @@ case, the element represents a color, and the red, green, and blue components
 are given by the attributes of the element.  If <code>element</code> is a variable
 that refers to the node, the color can be obtained by saying:</np>
    
+<fxdiv>
 <pre>double r = Double.parseDouble( element.getAttribute("red") );
 double g = Double.parseDouble( element.getAttribute("green") );
 double b = Double.parseDouble( element.getAttribute("blue") );
 Color bgColor = Color.color(r,g,b);</pre>
+</fxdiv>
+<swingdiv>
+<pre>int r = Integer.parseInt( element.getAttribute("red") );
+int g = Integer.parseInt( element.getAttribute("green") );
+int b = Integer.parseInt( element.getAttribute("blue") );
+Color bgColor = new Color(r,g,b);</pre>
+</swingdiv>
    
 <np>Suppose now that <code>element</code> refers to the node that represents
 the element</np>
@@ -351,7 +359,7 @@ else
    symmetric = false;</pre>
    
 <np>Next, consider an example that uses a <classname>NodeList</classname>.
-Suppose we encounter an element that represents a list of <classname>Point2Ds</classname>:
+Suppose we encounter an element that represents a list of <fx><classname>Point2Ds</classname></fx><swing><classname>Points</classname>:</swing>:
 </np>
    
 <pre>&lt;pointlist&gt;
@@ -363,19 +371,19 @@ Suppose we encounter an element that represents a list of <classname>Point2Ds</c
    
 <np>Suppose that <code>element</code> refers to the node that represents
 the <code>&lt;pointlist&gt;</code> element.  Our goal is to build the list
-of type <code>ArrayList&lt;Point2D&gt;</code> that is represented by the
+of type <code>ArrayList&lt;Point<fx>2D</fx>&gt;</code> that is represented by the
 element.  We can do this by traversing the <classname>NodeList</classname>
 that contains the child nodes of <code>element</code>:</np>
    
-<pre>ArrayList&lt;Point2D&gt; points = new ArrayList&lt;&gt;();
+<pre>ArrayList&lt;Point<fx>2D</fx>&gt; points = new ArrayList&lt;&gt;();
 NodeList children = element.getChildNodes();
 for (int i = 0; i &lt; children.getLength(); i++) {
    Node child = children.item(i);   // One of the child nodes of element.
    if ( child instanceof Element ) {
       Element pointElement = (Element)child;  // One of the &lt;point&gt; elements.
-      int x = Integer.parseInt( pointElement.getAttribute("x") );
-      int y = Integer.parseInt( pointElement.getAttribute("y") );
-      Point2D pt = new Point2D(x,y); // Create the Point represented by pointElement.
+      <fx>double x = Double.parseDouble</fx><swing>int x = Integer.parseInt</swing>( pointElement.getAttribute("x") );
+      <fx>double y = Double.parseDouble</fx><swing>int y = Integer.parseInt</swing>( pointElement.getAttribute("y") );
+      Point<fx>2D</fx> pt = new Point<fx>2D</fx>(x,y); // Create the Point represented by pointElement.
       points.add(pt);  // Add the point to the list of points.
    }
 }</pre>
@@ -393,6 +401,7 @@ with a default data structure and then to modify and add to it as I
 traverse the DOM representation of the file.  It's not a trivial process,
 but I hope that you can follow it:</p>
 
+<fxdiv>
 <pre>Color newBackground = Color.WHITE;
 ArrayList&lt;CurveData> newCurves = new ArrayList&lt;>();
 Element rootElement = xmldoc.getDocumentElement();
@@ -448,6 +457,69 @@ for (int i = 0; i &lt; nodes.getLength(); i++) {
 }
 backgroundColor = newBackground;
 curves = newCurves;</pre>
+</fxdiv>
+<swingdiv>
+<pre>Color newBackground = Color.WHITE;
+ArrayList&lt;CurveData&gt; newCurves = new ArrayList&lt;CurveData&gt;();
+
+Element rootElement = xmldoc.getDocumentElement();
+   
+if ( ! rootElement.getNodeName().equals("simplepaint") )
+   throw new Exception("File is not a SimplePaint file.");
+String version = rootElement.getAttribute("version");
+try {
+   double versionNumber = Double.parseDouble(version);
+   if (versionNumber &gt; 1.0)
+      throw new Exception("File requires a newer version of SimplePaint.");
+}
+catch (NumberFormatException e) {
+}
+
+NodeList nodes = rootElement.getChildNodes();
+   
+for (int i = 0; i &lt; nodes.getLength(); i++) {
+   if (nodes.item(i) instanceof Element) {
+      Element element = (Element)nodes.item(i);
+      if (element.getTagName().equals("background")) { // Read background color.
+         int r = Integer.parseInt(element.getAttribute("red"));
+         int g = Integer.parseInt(element.getAttribute("green"));
+         int b = Integer.parseInt(element.getAttribute("blue"));
+         newBackground = new Color(r,g,b);
+      }
+      else if (element.getTagName().equals("curve")) { // Read data for a curve.
+         CurveData curve = new CurveData();
+         curve.color = Color.BLACK;
+         curve.points = new ArrayList&lt;Point&gt;();
+         newCurves.add(curve);  // Add this curve to the new list of curves.
+         NodeList curveNodes = element.getChildNodes();
+         for (int j = 0; j &lt; curveNodes.getLength(); j++) {
+            if (curveNodes.item(j) instanceof Element) {
+               Element curveElement = (Element)curveNodes.item(j);
+               if (curveElement.getTagName().equals("color")) { 
+                  int r = Integer.parseInt(curveElement.getAttribute("red"));
+                  int g = Integer.parseInt(curveElement.getAttribute("green"));
+                  int b = Integer.parseInt(curveElement.getAttribute("blue"));
+                  curve.color = new Color(r,g,b);
+               }
+               else if (curveElement.getTagName().equals("point")) {
+                  int x = Integer.parseInt(curveElement.getAttribute("x"));
+                  int y = Integer.parseInt(curveElement.getAttribute("y"));
+                  curve.points.add(new Point(x,y));
+               }
+               else if (curveElement.getTagName().equals("symmetric")) {
+                  String content = curveElement.getTextContent();
+                  if (content.equals("true"))
+                     curve.symmetric = true;
+               }
+            }
+         }
+      }
+   }
+}
+curves = newCurves;  // Change picture in window to show the data from file.
+setBackground(newBackground);
+repaint();</pre>
+</swingdiv>
 
 <np>You can find the complete source code in <sourceref href="SimplePaintWithXML.java"/>.</np> 
 
