@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This program counts the number of prime integers between 3000001 and 6000000.
- * The work is divided among one to five threads.  The number of threads is
+ * The work is divided among one to six threads.  The number of threads is
  * chosen by the user.
  * 
  * This is a slightly modified version of ThreadTest2.  It uses an AtomicInteger
@@ -17,10 +17,10 @@ public class ThreadTest3 {
 	/**
 	 * The starting point for the range of integers that are tested for primality.
 	 * The range is from (start+1) to (2*start).  Note the value of start is chosen
-	 * to be divisible by 2, 3, 4, and 5 to make it easy to divide up the range
+	 * to be divisible by 2, 3, 4, 5, and 6 to make it easy to divide up the range
 	 * among the threads.
 	 */
-	private static final int START = 3000000;
+	private static final int START = 6000000;
 
 	/**
 	 * The total number of primes found.  Each thread counts the number of primes in
@@ -96,11 +96,11 @@ public class ThreadTest3 {
 		else
 			System.out.println("Your computer has " + processors + " available processors.\n");
 		int numberOfThreads = 0;
-		while (numberOfThreads < 1 || numberOfThreads > 5) {
-			System.out.print("How many threads do you want to use  (from 1 to 5) ?  ");
+		while (numberOfThreads < 1 || numberOfThreads > 6) {
+			System.out.print("How many threads do you want to use  (from 1 to 6) ?  ");
 			numberOfThreads = TextIO.getlnInt();
-			if (numberOfThreads < 1 || numberOfThreads > 5)
-				System.out.println("Please enter 1, 2, 3, 4, or 5 !");
+			if (numberOfThreads < 1 || numberOfThreads > 6)
+				System.out.println("Please enter 1, 2, 3, 4, 5, or 6 !");
 		}
 		countPrimesWithThreads(numberOfThreads);
 	}

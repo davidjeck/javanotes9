@@ -808,6 +808,9 @@ public class FileClient {
                System.out.println("Some error occurred while writing the file.");
                System.out.println("Output file might be empty or incomplete.");
             }
+            else {
+               System.out.println("File has been received.");
+            }
          }
       }
       catch (Exception e) {

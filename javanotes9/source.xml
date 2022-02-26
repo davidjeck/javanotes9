@@ -436,7 +436,10 @@ as the GUI toolbox.</p>
    communication.</li>
    <li><sourceref href="chapter12/BackgroundComputationDemo.java">BackgroundComputationDemo.java</sourceref>, from <localref href="threads.2"/>,
    demonstrates using a thread running at a lower priority to perform a lengthy computation
-   in the background.</li>
+   in the background.  <swing><sourceref href="chapter12/BackgroundCompWithInvoke.java">BackgroundCompWithInvoke.java</sourceref>
+   is very small modification of the same program that uses <code>SwingUtilities.invokeLater</code>
+   instead of synchronization.</swing>  (The program computes a visualization of a small piece of the Mandelbrot
+   set, but the particular computation that is done is not important.)</li>
    <li><sourceref href="chapter12/MultiprocessingDemo1.java">MultiprocessingDemo1.java</sourceref>, from <localref href="threads.2"/>,
    is a modification of the previous example that uses several threads to perform the
    background computation.  This speeds up the computation on multi-processor machines.</li>

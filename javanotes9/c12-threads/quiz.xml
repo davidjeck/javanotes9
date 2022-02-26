@@ -6,7 +6,7 @@
 <question>
 <ques><p>Write a complete subclass of <classname>Thread</classname> to represent
 a thread that writes out the numbers from 1 to 10.  Then write some code that
-would create and start a thread belonging to that class.</p>
+creates and starts a thread belonging to that class.</p>
 </ques>
 <ans><p>The class that defines the thread:</p>
 <pre>public class CountingThread extends Thread {
@@ -52,7 +52,7 @@ sequence.  For example, there is a race condition in the simple assignment state
 <code>count&nbsp;=&nbsp;count+1</code> because it is executed as a sequence of steps.
 The old value of <code>count</code> is read, one is added to that value, and the new value is stored
 back into <code>count</code>.  A race condition occurs if it is possible for another thread to
-increment the value of <code>count</code> between the time when the first thread reads the old value
+increment the value stored in <code>count</code> between the time when the first thread reads the old value
 and the time when it stores the new value.  In this case, the race condition can result in an
 incorrect value for <code>count</code>&mdash;<code>count</code> might be increased by one
 when it was supposed to be increased by two.  Another example occurs in the if statement</p>

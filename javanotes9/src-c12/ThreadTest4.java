@@ -8,9 +8,10 @@ import java.util.concurrent.Future;
 import java.util.ArrayList;
 
 /**
- * This program counts the number of prime integers between 3000001 and 6000000.
- * The work is divided among one to five threads.  The number of threads is
- * chosen by the user.
+ * This program counts the number of prime integers between 6000001 and 12000000.
+ * The work is divided among one to six threads.  The problem is divided into
+ * subtasks which are executed by a thread pool with one thread for each
+ * available processor.  The number of subtasks is selected by the user.
  * 
  * This version of the program uses a ExecutorService to manage a thread pool
  * that executes subtasks.  The subtasks are objects of type CountPrimesTask,
@@ -22,11 +23,9 @@ public class ThreadTest4 {
 
 	/**
 	 * The starting point for the range of integers that are tested for primality.
-	 * The range is from (START+1) to (2*START).  Note the value of start is chosen
-	 * to be divisible by 2, 3, 4, and 5 to make it easy to divide up the range
-	 * among the threads.
+	 * The range is from (START+1) to (2*START). 
 	 */
-	private static final int START = 3000000;
+	private static final int START = 6000000;
 
 	/**
 	 * An object belonging to this class will count primes in a specified range

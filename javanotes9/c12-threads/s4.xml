@@ -127,7 +127,7 @@ as soon as the user generates them.</p>
 
 <p>The <code>GUIChat</code> program can act as either the client end or the server end
 of a connection. (Refer back to <localref href="IO.4.3"/> for information about how clients
-and servers work.) The program has a "Listen" button that the user can click to create a server socket
+and servers work.) The program has a "Listen on port" button that the user can click to create a server socket
 that will listen for an incoming connection request; this makes the program act
 as a server.  It also has a "Connect" button that the user can click to send 
 a connection request; this makes the program act as a client.  As usual, the server
@@ -204,7 +204,7 @@ ConnectionHandler(String remoteHost, int port) {  // For acting as "client."
 }</pre>
    
 <np>Here, <code>state</code> is an instance variable whose type is defined by
-an enumerated type</np>
+an enumerated type<swing> (<localref href="basics.3.4"/>)</swing>:</np>
    
 <pre>enum ConnectionState { LISTENING, CONNECTING, CONNECTED, CLOSED };</pre>
    
@@ -292,8 +292,9 @@ threads.  The <code>send()</code> method is called <i>by the event-handling
 thread</i> in response to a user action.  Its purpose is to transmit a
 message to the remote user.  (It is conceivable, though not likely, that
 the data output operation could block, if the socket's output buffer fills up.  A more
-sophisticated program might take this possibility into account.)
-This method uses a <classname>PrintWriter</classname>,
+sophisticated program might take this possibility into account by using another
+thread to transmit outgoing messages.)
+The <code>send()</code> method uses a <classname>PrintWriter</classname>,
 <code>out</code>, that writes to the socket's output stream.
 Synchronization of this method prevents
 the connection state from changing in the middle of the send operation:</p>
@@ -482,8 +483,8 @@ version of our server that uses a thread pool.  Each thread in the
 pool runs in an infinite loop.  Each time through the loop, it handles
 one connection.  We need a way for the main program to send
 connections to the threads.  It's natural to use a blocking
-queue named <code>connectionQueue</code> for that purpose.  A
-connection-handling thread takes connections from this queue.
+queue (<localref href="threads.3.3"/>) named <code>connectionQueue</code> for that purpose.  
+A&nbsp;connection-handling thread takes connections from this queue.
 Since it is a blocking queue, the thread blocks when the queue is
 empty and wakes up when a connection becomes available in the
 queue.  No other synchronization or communication technique is
@@ -594,20 +595,18 @@ work together on a task and communicate over a network&mdash;is called
    
 <p>In some sense, the whole Internet is an immense distributed computation,
 but here I am interested in how computers on a network can cooperate to
-solve some computational problem.  There are several approaches to
-distributed computing that are supported in Java.  <newword>RMI</newword>
-and <newword>CORBA</newword> are standards that enable a program running
+solve some computational problem.  There are several approaches that can be used
+for distributed computing in Java. One general technique that is a
+a standard part of Java is <newword>RMI</newword> (Remote Method Invocation).
+RMI enables a program running
 on one computer to call methods in objects that exist on other computers.
 This makes it possible to design an object-oriented program in which
 different parts of the program are executed on different computers.
-RMI (Remote Method Invocation) only supports communication between Java
-objects.  CORBA (Common Object Request Broker Architecture) is a more
-general standard that allows objects written in various programming 
-languages, including Java, to communicate with each other.  As is commonly
+As is commonly
 the case in networking, there is the problem of locating services (where
 in this case, a "service" means an object that is available to be called
 over the network).  That is, how can one computer know which computer a service is located
-on and what port it is listening on?  RMI and CORBA solve this problem
+on and what port it is listening on?  RMI solves this problem
 using a "request broker"&mdash;a
 server program running at a known location that keeps a list of services that are
 available on other computers.  Computers that offer services register
@@ -615,14 +614,14 @@ those services with the request broker; computers that need services must know
 the location of the broker, and they contact it
 to find out what services are available and where they are located.</p>
    
-<p>RMI and CORBA are complex systems that are not very easy to use.  I mention
-them here because they are part of Java's standard network API, but I will not discuss
-them further.  Instead, we will look at a relatively simple demonstration of
+<p>RMI is a complex system that is not very easy to use.  I mention
+it here because they are part of Java's standard network API, but I will not discuss
+it further.  Instead, we will look at a relatively simple demonstration of
 distributed computing that uses only basic networking.</p>
    
-<p>The problem that we will consider is the same one that we used
-in <sourceref href="MultiprocessingDemo1.java"/>, and its variations,
-in <localref href="threads.2"/> and <localref href="threads.3"/>, namely the
+<p>The problem that we will consider is the same one that was used
+in <localref href="threads.2"/> and <localref href="threads.3"/>
+for <sourceref href="MultiprocessingDemo1.java"/> and its variations, namely the
 computation of a complex image.  In this case, however, the program is not
 a GUI program and the image is not shown on the screen.  The computation is one that
 uses the simplest type of parallel programming, in which
@@ -639,9 +638,8 @@ are often called "slaves," and the program uses the so-called
 <p>The demonstration program is defined by three source code files:
 <sourceref href="CLMandelbrotMaster.java"/> defines the master program;
 <sourceref href="CLMandelbrotWorker.java"/> defines the worker programs;
-and <sourceref href="CLMandelbrotTask.java"/> defines the class,
-<classname>CLMandelbrotTask</classname>, that represents
-an individual task that is performed by the workers.  The master divides
+and <sourceref href="CLMandelbrotTask.java"/> defines the class that represents
+the individual tasks that are performed by the workers.  The master divides
 the overall problem into a collection of tasks; it distributes
 those tasks to the workers that will execute the tasks and send the
 results back to the master; and the master applies the results from all
@@ -732,7 +730,7 @@ the results and combines them with the results from other tasks.  After
 all the tasks have been completed and their results have been combined,
 the problem has been solved.</p>
    
-<p>A worker receives
+<p>A <code>CLMandelbrotWorker</code> receives
 not just one task, but a sequence of tasks.  Each time it finishes a task and
 sends back the result, it is assigned a new task.  After all tasks are completed,
 the worker receives a "close" command that tells it to close the connection.
@@ -815,7 +813,7 @@ else {
 <p>The tasks are put into a variable of type
 <classname>ConcurrentBlockingQueue&lt;CLMandelbrotTask&gt;</classname> named <code>tasks</code>
 (see <localref href="threads.3.2"/>.) The
-communication threads take tasks from this list and send them
+communication threads take tasks from this queue and send them
 to worker programs.  The method <code>tasks.poll()</code> is used to remove
 a task from the queue.  If the queue is empty, it returns
 <code>null</code>, which acts as a signal that all tasks have
@@ -874,9 +872,10 @@ the procedure to take this into account:</p>
 <pre>try {
    Create a socket connected to the worker program.
    Create input and output streams for communicating with the worker.
-   Let currentTask = tasks.poll().
-   Encode currentTask into a message and send it to the worker.
-   while (true) {
+   Let currentTask = tasks.poll()
+   if (currentTask != null)
+      Encode currentTask into a message and send it to the worker.
+   while (currentTask != null) {
       Read the response from the worker.
       Let nextTask = tasks.poll().
       If nextTask != null {
@@ -886,8 +885,6 @@ the procedure to take this into account:</p>
       }
       Decode and process the response to currentTask.
       currentTask = nextTask.
-      if (currentTask == null)
-         break; // All tasks have been assigned.
    }
    Send a "close" command to the worker.
    Close the socket.

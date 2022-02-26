@@ -8,7 +8,7 @@ is, they can be working on several different tasks at the same time.  A computer
 has just a single central processing unit can't literally do two things at the same time,
 any more than a person can,
 but it can still switch its attention back and forth among several tasks.  Furthermore,
-it is increasingly common for computers to have more than one processing unit, and
+most computers, and even mobile devices, now have more than one processing unit, and
 such computers can literally work on several tasks simultaneously.  It is likely that
 from now on, most of the increase in computing power will come from adding additional
 processors to computers rather than from increasing the speed of individual processors.
@@ -30,8 +30,8 @@ that is responsible for executing the <code>main</code> routine of the program.
 This main thread can in turn create other threads that can continue even after
 the main thread has terminated.  In a GUI program, there is at least one additional
 thread, which is responsible for handling events and drawing components on the screen.
-In JavaFX, that thread is the application thread, which does all the work 
-involved with handling events and drawing components on the screen.</p>
+<fx>In JavaFX, that thread is the application thread.</fx><swing>In Swing, that thread
+is the "event dispatch thread."</swing></p>
    
 <p>Unfortunately, parallel programming is even more difficult than ordinary,
 single-threaded programming.  When several threads are working together on a
@@ -199,18 +199,18 @@ greetingsFromFred.start();</pre>
 <p>To help you understand how multiple threads are executed in parallel, we consider
 the sample program <sourceref href="ThreadTest1.java"/>.  This program creates
 several threads.  Each thread performs exactly the same task.  The task is to count
-the number of integers less than 5000000 that are prime. (The particular task
+the number of integers less than 10,000,000 that are prime. (The particular task
 that is done is not important for our purposes here, as long as it is something
 that takes a non-trivial amount of time.
 This is a demo program; it would be silly in a real program to have multiple threads that
-do the same thing, and the method that is used for counting the primes is not efficient.)  
+do the same thing, and the method that is used for counting the primes is very inefficient.)  
 This computation should take no more than a few seconds on a modern computer.  
 The threads that perform this task are defined by the
-following static nested class:</p>
+following static nested class, where <code>MAX</code> is 10,000,000:</p>
    
 <pre>/**
  * When a thread belonging to this class is run it will count the
- * number of primes between 2 and 5000000.  It will print the result
+ * number of primes between 2 and MAX.  It will print the result
  * to standard output, along with its ID number and the elapsed
  * time between the start and the end of the computation.
  */
@@ -221,7 +221,7 @@ private static class CountPrimesThread extends Thread {
    }
    public void run() {
       long startTime = System.currentTimeMillis();
-      int count = countPrimes(2,5000000); // Counts the primes.
+      int count = countPrimes(2,MAX); // Counts the primes.
       long elapsedTime = System.currentTimeMillis() - startTime;
       System.out.println("Thread " + id + " counted " + 
             count + " primes in " + (elapsedTime/1000.0) + " seconds.");
@@ -233,11 +233,11 @@ the specified number of threads:</np>
    
 <pre>public static void main(String[] args) {
    int numberOfThreads = 0;
-   while (numberOfThreads &lt; 1 || numberOfThreads &gt; 25) {
-      System.out.print("How many threads do you want to use  (1 to 25) ?  ");
+   while (numberOfThreads &lt; 1 || numberOfThreads &gt; 30) {
+      System.out.print("How many threads do you want to use  (1 to 30) ?  ");
       numberOfThreads = TextIO.getlnInt();
-      if (numberOfThreads &lt; 1 || numberOfThreads &gt; 25)
-         System.out.println("Please enter a number between 1 and 25 !");
+      if (numberOfThreads &lt; 1 || numberOfThreads &gt; 30)
+         System.out.println("Please enter a number between 1 and 30 !");
    }
    System.out.println("\nCreating " + numberOfThreads 
                                            + " prime-counting threads...");
@@ -253,35 +253,39 @@ the specified number of threads:</np>
 <np>It would be a good idea for you to compile and run the program.</np>
 
    
-<p>When I ran the program with one thread on my old computer, it took 6.251 seconds for 
-the computer to do the computation.  When I ran it using eight threads, the output was:</p>
+<p>My computer has six processors.  When I ran the program on that computer with
+using one thread, it took about 3.36 seconds.  
+When I ran it using twelve threads, the output was:</p>
    
-<pre>Creating 8 prime-counting threads...
+<pre>Creating 12 prime-counting threads...
 Threads have been created and started.
-Thread 4 counted 348513 primes in 12.264 seconds.
-Thread 2 counted 348513 primes in 12.569 seconds.
-Thread 3 counted 348513 primes in 12.567 seconds.
-Thread 0 counted 348513 primes in 12.569 seconds.
-Thread 7 counted 348513 primes in 12.562 seconds.
-Thread 5 counted 348513 primes in 12.565 seconds.
-Thread 1 counted 348513 primes in 12.569 seconds.
-Thread 6 counted 348513 primes in 12.563 seconds.
-</pre>
+Thread 1 counted 664579 primes in 6.424 seconds.
+Thread 11 counted 664579 primes in 6.694 seconds.
+Thread 0 counted 664579 primes in 6.727 seconds.
+Thread 3 counted 664579 primes in 6.74 seconds.
+Thread 10 counted 664579 primes in 6.759 seconds.
+Thread 7 counted 664579 primes in 6.77 seconds.
+Thread 2 counted 664579 primes in 6.798 seconds.
+Thread 9 counted 664579 primes in 6.792 seconds.
+Thread 5 counted 664579 primes in 6.824 seconds.
+Thread 4 counted 664579 primes in 6.836 seconds.
+Thread 8 counted 664579 primes in 6.841 seconds.
+Thread 6 counted 664579 primes in 6.877 seconds.</pre>
    
 <p>The second line was printed immediately after the first. At this point, the main
-program has ended but the eight threads continued to run.  After a pause of about 12.5
+program has ended but the twelve threads continued to run.  After a pause of about 6.5
 seconds, all eight threads completed at about the same time.  The order in which the
 threads complete is not the same as the order in which they were started, and
 the order is indeterminate.  That is, if the program is run again, the order
 in which the threads complete will probably be different.</p>
    
-<p>On this computer, eight threads took about twice as long as one thread.
-This is because the computer has four processors.  With eight threads
-running on four processors&mdash;one-half processor per thread&mdash;each thread
+<p>On this computer, twelve threads took about twice as long as one thread.
+This is because the computer has six processors.  With twelve threads
+running on six processors&mdash;one-half processor per thread&mdash;each thread
 was only actively being executed for about half of the time, so it took
-twice as long to finish its task.  On a single-processor computer, eight
-threads would take about eight times as long as one thread.  
-On a computer with eight or more processors, eight threads might take no more time
+twice as long to finish its task.  On a single-processor computer, twelve
+threads would take about twelve times as long as one thread.  
+On a computer with six or more processors, six threads might take no more time
 than a single thread.  Because of overhead and other reasons, the actual speedup
 will probably be a little smaller than this analysis indicates, but on a multiprocessor
 machine, you should see a definite speedup.  What happens when you run the program
@@ -698,9 +702,9 @@ the value of <code>total</code> is changed:</np>
 }</pre>
    
 <p>The source code for the program can be found in <sourceref href="ThreadTest2.java"/>.
-This program counts the primes in the range 3000001 to 6000000.  (The numbers are
+This program counts the primes in the range 6,000,001 to 12,000,000.  (The numbers are
 rather arbitrary.)  The <code>main()</code> routine in this program creates between
-1 and 5 threads and assigns part of the job to each thread.  It waits for
+1 and 6 threads and assigns part of the job to each thread.  It waits for
 all the threads to finish, using the <code>join()</code> method as described above.
 It then reports the total number of primes found, along with the elapsed time.  
 Note that <code>join()</code> is required here, since it doesn't make sense to report the 

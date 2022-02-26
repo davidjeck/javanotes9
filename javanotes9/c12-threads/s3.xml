@@ -70,7 +70,7 @@ to the total amount of work that has to be done.  In my example program, the tas
 to compute a color for each pixel in an image.  For dividing that task up into subtasks,
 one possibility would be to have each subtask compute just one pixel.  But the subtasks
 produced in that way are probably too small.  So, instead, each subtask in my program
-will compute the colors for one row of pixels.  Since there are several hundred
+computes the colors for one row of pixels.  Since there are several hundred
 rows of pixels in the image, the number of subtasks will be fairly large, while each
 subtask will also be fairly large.  The result is fairly good load balancing, with
 a reasonable amount of overhead.</p> 
@@ -140,7 +140,7 @@ to get items from the queue at the same time will end up retrieving the same ite
 <p>Java has a built-in class to solve this problem:
 <classname>ConcurrentLinkedQueue</classname>.  This class and others that can 
 be useful in parallel programming are defined in the package <code>java.util.concurrent</code>.
-It is a parameterized class so that to create a queue that can hold objects
+It is a parameterized class; to create a queue that can hold objects
 of type <classname>Runnable</classname>, you can say</p>
 
 <pre>ConcurrentLinkedQueue&lt;Runnable&gt; queue = new ConcurrentLinkedQueue&lt;&gt;();</pre>
@@ -540,13 +540,14 @@ It is <b>not</b> an error to call <code>shutdown()</code> more than once.
 The threads in the thread pool are not
 daemon threads; if the service is not shut down, the existence of the threads
 will stop the Java Virtual Machine from shutting down after other
-threads have exited.</p>
+threads have exited.  Before exiting, the threads 
+in the pool will complete any tasks they have already removed from 
+the queue.</p>
 
 <p>The method <code>executor.shutdownNow()</code> is similar to
 <code>executor.shutdown()</code> but it discards any waiting
-tasks that are still in the queue.  Before exiting, the threads 
-in the pool will complete any tasks they have already removed from 
-the queue.</p>
+tasks that are still in the queue, and tries to stop any tasks
+that are currently being executed.</p>
 
 <p>The sample program <sourceref href="MultiprocessingDemo4.java"/> is a
 variation on <code>MultiprocessingDemo3</code> that uses an
@@ -886,7 +887,8 @@ execution. There is also a "Start Over" button that aborts the current solution
 and puts the puzzle back into its initial configuration. Here is a picture of
 the program in the middle of a solution, including the buttons:</p>
 
-<img src="towers-of-hanoi-gui.png" width="438" height="181" alt="Towers of Hanoi"
+<img src="towers-of-hanoi-gui.png" width="438" height="181" 
+      swingwidth="430" swingheight="168" alt="Towers of Hanoi"
       tex="towers-of-hanoi-gui.eps" texscale="0.6"/>
 
 <p>In this program, there are two threads: a thread that runs a recursive algorithm

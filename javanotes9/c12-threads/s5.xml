@@ -21,7 +21,7 @@ in a class that I was teaching.  I helped them with the network part of the
 project by writing a basic framework to support communication between the players.
 Since the application illustrates a variety of important ideas, I decided to
 include a somewhat more advanced and general version of that framework in
-the current edition of this book.   The final example is a networked poker game.
+this book.   The final example in this section is a networked poker game.
 </p>
 
 
@@ -47,14 +47,26 @@ a unit in a variety of projects.</p>
 <p>Integrated development environments such as Eclipse make it very
 easy to use packages:  To use the netgame package in a project in an IDE, simply
 copy-and-paste the entire <sourceref href="netgame"/> directory into the
-project.  Of course, since netgames use JavaFX, you need to use
+project.<fx>  Of course, since netgames use JavaFX, you need to use
 an Eclipse project configured to support JavaFX, as discussed in 
-<localref href="basics.6"/>.</p>
+<localref href="basics.6"/>.</fx></p>
 
+<swingdiv>
+<p>If you work on the command line, you should be in a working directory
+that includes the <i>netgame</i> directory as a subdirectory.  Then, to compile
+all the java files in the package <sourceref href="netgame/common/">netgame.common</sourceref>,
+for example, you can use the following command in Mac OS or Linux:</p>
+
+<pre>javac netgame/common/*.java</pre>
+
+<np>For windows, you should use backslashes instead of forward slashes:</np>
+
+<pre>javac netgame\common\*.java</pre>
+</swingdiv>
+<fxdiv>
 <p>If you work on the command line, you should be in a working directory
 that includes the <i>netgame</i> directory as a subdirectory.  
-Unless you are using an older JDK that has JavaFX built in, 
-you need to add JavaFX options to the <code>javac</code>
+You need to add JavaFX options to the <code>javac</code>
 and <code>java</code> commands.  Let's say that you've defined
 <code>jfxc</code> and <code>jfx</code> commands that are equivalent
 to the <code>javac</code> and <code>java</code> with JavaFX options included, as discussed in
@@ -67,9 +79,9 @@ for example, you can use the following command in MacOS or Linux:</p>
 <np>For Windows, you should use backslashes instead of forward slashes:</np>
 
 <pre>jfxc netgame\common\*.java</pre>
+</fxdiv>
 
-<np>Of course, for a JDK with built-in JavaFX, you would use <code>javac</code>, not <code>jfxc</code>.
-You will need similar commands to compile the source code for the examples in
+<np>You will need similar commands to compile the source code for the examples in
 this section, which are defined in other subpackages of <code>netgame</code>.</np>
 
 <p>To run a main program that is defined in a package, you should again be in
@@ -413,12 +425,15 @@ private class ChatClient extends Client {
         addToTranscript(
            "Sorry, communication has shut down due to an error:\n     " 
                                      + message );
-        Platform.runLater( () -> {
+        <fx>Platform.runLater( () -> {
             sendButton.setDisable(true);
             messageInput.setEditable(false);
             messageInput.setDisable(true);
             messageInput.setText("");
-        });
+        });</fx><swing>sendButton.setEnabled(false);
+        messageInput.setEnabled(false);
+        messageInput.setEditable(false);
+        messageInput.setText("");</swing>
         connected = false;
         connection = null;
     }
@@ -442,7 +457,11 @@ private class ChatClient extends Client {
 
 } // end nested class ChatClient</pre>
 
-<np>For the full source code of the chat room application, see the
+<np>Except for the constructor, none of the methods in the <classname>ChatClient</classname>
+class are called by the <classname>ChatRoomWindow</classname> program; they are called from
+the connection-handling thread in the client object, which was programmed in 
+<sourceref href="netgame/chat/Client.java">Client.java</sourceref>.
+For the full source code of the chat room application, see the
 source code files, which can be found in the package
 <sourceref href="netgame/chat">netgame.chat</sourceref>.</np>
 
@@ -601,13 +620,14 @@ to the hub.  When the state of the game changes, a message is sent
 to each client, and the client's <code>messageReceived()</code> method
 is called to process that message.  That method, in turn, calls a
 <code>newState()</code> method in the <classname>TicTacToeWindow</classname>
-class to update the window.  That method is called on the JavaFX
-application thread using <code>Platform.runLater()</code>:</p>
+class to update the window.  That method is called on the <fx>JavaFX
+application  thread using <code>Platform.runLater()</code></fx><swing>Swing 
+event-handling thread using <code>SwingUtilities.invokeLater()</code> (<localref href="threads.2.5"/>)</swing>:</p>
 
 
 <pre>protected void messageReceived(Object message) {
     if (message instanceof TicTacToeGameState) {
-        Platform.runLater( () -> newState( (TicTacToeGameState)message ) );
+        <swing>SwingUtilities.invokeLater</swing><fx>Platform.runLater</fx>( () -> newState( (TicTacToeGameState)message ) );
     }
 }</pre>
 
@@ -629,13 +649,14 @@ the name of the computer where the first player's program is running.
 As usual, for testing, you can run everything on one computer and use
 "localhost" as the computer name.</p>
 
+<fxdiv>
 <p>(This is the first program that we have seen that uses two different windows.
 Note that <classname>TicTacToeWindow</classname> is defined as a subclass of
 <classname>Stage</classname>, the JavaFX class that represents windows.
 A JavaFX program starts with a "primary stage" that is created by the system
 and passed as a parameter to the <code>start()</code> method.  But an application
 can certainly create additional windows.)</p>
-
+</fxdiv>
 </subsection>
 
 

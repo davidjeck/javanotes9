@@ -7,7 +7,7 @@ import textio.TextIO;
  */
 public class ThreadTest1 {
 	
-	private final static int MAX = 5000000;
+	private final static int MAX = 10_000_000;
 
 
 	/**
@@ -32,16 +32,16 @@ public class ThreadTest1 {
 
 
 	/**
-	 * Start several CountPrimesThreads.  The number of threads, between 1 and 25,
+	 * Start several CountPrimesThreads.  The number of threads, between 1 and 30,
 	 * is specified by the user.
 	 */
 	public static void main(String[] args) {
 		int numberOfThreads = 0;
-		while (numberOfThreads < 1 || numberOfThreads > 25) {
-			System.out.print("How many threads do you want to use  (from 1 to 25) ?  ");
+		while (numberOfThreads < 1 || numberOfThreads > 30) {
+			System.out.print("How many threads do you want to use  (from 1 to 30) ?  ");
 			numberOfThreads = TextIO.getlnInt();
-			if (numberOfThreads < 1 || numberOfThreads > 25)
-				System.out.println("Please enter a number between 1 and 25 !");
+			if (numberOfThreads < 1 || numberOfThreads > 30)
+				System.out.println("Please enter a number between 1 and 30 !");
 		}
 		System.out.println("\nCreating " + numberOfThreads + " prime-counting threads...");
 		CountPrimesThread[] worker = new CountPrimesThread[numberOfThreads];
