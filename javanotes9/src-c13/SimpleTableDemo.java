@@ -95,8 +95,8 @@ public class SimpleTableDemo extends Application  {
 
 	/**
 	 * An alphabetical list of the states of the United States and
-	 * their capital cities and population.  Population data is
-	 * from http://www.theus50.com/fastfacts/population.php.
+	 * their capital cities and their populations in 2010.  Population 
+	 * data is from http://www.theus50.com/fastfacts/population.php.
 	 * The items from this array are added to the table as
 	 * its items, so each row in the table will display data
 	 * from one object from this array.

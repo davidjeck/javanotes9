@@ -172,7 +172,8 @@ That is, if <code>slider</code> is a <classname>Slider</classname>, then</p>
 <np>is a string property representing the <ptype>double</ptype> value
 of the slider as a string.  The text property of a label can be bound to that
 string property.  In fact, <code>asString()</code> can take a format string (like the
-ones used with <code>System.out.printf</code>) to format the <ptype>double</ptype>
+ones used with <code>System.out.printf</code>) as an optional parameter that is used
+to format the <ptype>double</ptype>
 value.  In the program, the label is <code>sliderVal</code>, and its text property
 is bound by saying:</np>
 

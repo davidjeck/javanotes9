@@ -215,12 +215,12 @@ instance variable.  (I also changed some of the occurrences of the word "timer"
 in the original program to "stopwatch" to try to avoid some confusion:
 the stopwatch is a kind of timer, and we are using another kind of timer to
 implement it.)  When the stopwatch starts running, it is necessary to call
-<code>timer.start()</code> to start the animatino timer running, and when the
+<code>timer.start()</code> to start the animation timer running, and when the
 stopwatch stops running, <code>timer.stop() must be called.</code>
 The only other thing that is needed is to create the <classname>AnimationTimer</classname>
 object. Since <classname>AnimationTimer</classname> is an abstract class,
 we need a subclass, and we need to provide a definition for the abstract method
-<code>handle()</code>.  That method, which will be called 60 times per second,
+<code>handle()</code>.  That method, which will be called many times per second,
 can update the label to show the elapsed time.  Using an anonymous class,</p>
 
 <pre>timer = new AnimationTimer() {
@@ -235,9 +235,9 @@ can update the label to show the elapsed time.  Using an anonymous class,</p>
 <np>In the program, I don't create the animation timer until the first time
 the stopwatch is started.  Note that when the stopwatch is stopped, the program
 displays the time with three digits after the decimal point.  While it's running,
-it doesn't make sense to be that accurate, since the display is only updated
-60 times per second.  So, I only use one digit after the decimal point when
-the stopwatch is running.</np>
+it doesn't make sense to be that accurate since the display won't be updated 
+every millisecond.  So, I only use one digit after the 
+decimal point when the stopwatch is running.</np>
 </exercise-discuss>
 <exercise-code>
 <np><b>The timer component, with changes from the original shown in &newcodestyle;:</b></np>
@@ -250,9 +250,9 @@ import javafx.animation.AnimationTimer;
  * A custom component that acts as a simple stopwatch.  When the user clicks
  * on it, this component starts timing.  When the user clicks again,
  * it displays the time between the two clicks.  Clicking a third time
- * starts another timer, etc.  While it is timing, the label just
+ * starts another timer, etc.  <newcode>While it is timing, the label
  * displays the number of seconds that have passed since the stop
- * watch was started.
+ * watch was started.</newcode>
  */
 public class StopWatchLabel2 extends Label {
 
@@ -408,13 +408,13 @@ fully opaque color.  If translucent fill is turned on, the actual fill color sho
 same RGB components as <code>currentColor</code>, but its alpha component has to be set to
 0.5 for 50% transparency.  (In fact, in the end, I decided that 40% opaqueness looked better than
 50%, so I used an alpha of 0.4.)  Here is the code from <code>mousePressed</code> that sets up
-the sets up the graphics contexts, including both the stroke and fill colors and a
+the graphics contexts, including both the stroke and fill colors and a
 <code>currentLineWidth</code> that is also new in the program:</p>
 
 <pre>Color fill; // currentColor, possibly with alpha set to 0.4 for a translucent fill.
 if (translucentFill)
     fill = Color.color(currentColor.getRed(), currentColor.getGreen(), 
-                                                           currentColor.getBlue(), 0.4);
+                                       currentColor.getBlue(), 0.4);
 else
     fill = currentColor;
 canvasGraphics.setFill(fill);  
@@ -472,9 +472,9 @@ new shapes.</np>
 <p>For the new "Undo" command, I used a simple one-level undo, so that the program just has
 to save the most recent previous image.  I added an "Edit" menu to the program to hold
 the new command.  (To avoid having just one item in that menu, I moved the three background
-color commands from the "Color" menu to the new "Undo" menu.)  To implement the "Undo" command,
+color commands from the "Color" menu to the new "Edit" menu.)  To implement the "Undo" command,
 I needed to save the current image before modifying it in any way.  To get a copy of
-the current picture in the camera, I made a "snapshot" of the canvas.  I wrote a short
+the current picture in the canvas, I made a "snapshot" of the canvas.  I wrote a short
 method to do that, and to save the snapshot in a global variable, <code>imageForRedo</code>,
 of type <classname>Image</classname>:</p>
 
@@ -1308,7 +1308,7 @@ public static class PhoneEntry {
 
 <np>The table can then be created as a variable of type <code>TableView&lt;PhoneEntry&gt;</code>.
 The data for the phone book will be stored in the list of items in the table, which is of
-type <atype>ObservableList&lt;PhoneEntry&gt;</atype>.  The program use a variable,
+type <atype>ObservableList&lt;PhoneEntry&gt;</atype>.  The program uses a variable,
 <code>phoneEntries</code>, to refer to that list:</np>
 
 <pre>ObservableList&lt;PhoneEntry> phoneEntries = phoneBook.getItems();</pre>

@@ -170,11 +170,10 @@ such as Eclipse, you should just have to add the <code>edu</code> directory
 to your project, provided that project has been configured to use JavaFX.
 If you want to work on the command line instead, you must be
 working in the directory that contains the <code>edu</code> directory,
-and, unless you are using an older JDK that has JavaFX built in, 
-you need to add JavaFX options to the <code>javac</code>
+and you need to add JavaFX options to the <code>javac</code>
 and <code>java</code> commands.  Let's say that you've defined
 <code>jfxc</code> and <code>jfx</code> commands that are equivalent
-to the <code>javac</code> and <code>java</code> with JavaFX options included, as discussed in
+to <code>javac</code> and <code>java</code> with JavaFX options included, as discussed in
 <localref href="basics.6.7"/>. Then, to compile the source code, use the command</p>
    
 <pre>jfxc  edu/hws/eck/mdbfx/*.java</pre>
@@ -189,10 +188,7 @@ program, use the command:</np>
    
 <pre>jfx  edu.hws.eck.mdbfx.Main</pre>
    
-<np>This command must also be given in the directory that contains the <code>edu</code> directory.
-  (Of course, if your JDK does have built-in JavaFX, then you
-would simply use <code>javac</code> and <code>java</code> instead of <code>jfxc</code>
-and <code>jfx</code>.)</np>
+<np>This command must also be given in the directory that contains the <code>edu</code> directory.</np>
    
 <break/>
    
@@ -262,17 +258,12 @@ Mandelbrot set.</p>
 It installs MousePressed, MouseDragged, and MouseReleased event handlers on the
 overlay canvas to implement zooming the image.  It also installs a MouseMoved
 event handler that updates the status bar to display the xy-coordinates in the
-image that correspond to the mouse location.  (A MouseMoved event is generated
-when the user simply moves the mouse without holding down a mouse button.)
+image that correspond to the mouse location.
 And a MouseExited event handler on the canvas is used to reset the status bar
 to read "Idle" when the mouse moves out of the canvas.</p>
 
 <p>Furthermore, many menu commands are implemented by calling methods in the 
-<classname>MandebrotPane</classname> class.  The <classname>Menus</classname>
-class has an instance variable named <code>owner</code> that refers to the
-<classname>MandelbrotPane</classname> that contains the menu bar,
-and that variable can be used to call methods from the <classname>MandelbrotPane</classname>.
-For example, there is a
+<classname>MandebrotPane</classname> class.  For example, there is a
 <code>setLimits()</code> method that can be called to set the range of 
 xy-values that are shown in the image, and there are methods for setting
 the palette, the palette length, and the value of <code>maxIterations</code>.
@@ -282,7 +273,7 @@ computes a new palette of colors, and calls a method in <classname>MandelbrotCan
 to tell it to use the new palette. When the limits or maxIterations are changed,
 the image will have to be entirely recomputed.  <classname>MandelbrotPane</classname>
 calls a <code>startJob()</code> method in <classname>MandelbrotCanvas</classname>
-to tell it to start a new job.  All of the work of setting up and managing the job
+to tell it to start a new background computation job.  All of the work of setting up and managing the job
 is done in <classname>MandelbrotCanvas</classname>.</p>
 
 <p>The <classname>MandelbrotPane</classname> that
@@ -290,10 +281,12 @@ is being used in the program is a parameter to the <classname>Menus</classname> 
 and the <classname>Menus</classname> object saves a copy in an instance variable, <code>owner</code>.
 Many of the menu commands operate on the <classname>MandelbrotPane</classname>
 or on the <classname>MandelbrotCanvas</classname> that it contains.  In order to
-carry out these commands, the <classname>Menus</classname> object needs a reference
-to the <classname>MandelbrotPane</classname>.  As for the <classname>MandelbrotCanvas</classname>,
-the panel has a method <code>getDisplay()</code> that returns a reference to
-the canvas that it contains. So, the menu bar can obtain a reference to the canvas by calling <code>owner.getDisplay()</code>.  
+carry out these commands, the <classname>Menus</classname> uses its <code>owner</code> instance varialble
+to call methods from the pane object.
+As for the <classname>MandelbrotCanvas</classname>,
+<classname>MandelbrotPane</classname> has an instance method <code>getDisplay()</code> that returns a reference to
+the canvas that the pane contains. So, the <classname>Menus</classname> object can obtain a reference 
+to the canvas by calling <code>owner.getDisplay()</code>.  
 In previous examples in this book, everything
 was written as one large class file, so all the objects were directly available to
 all the code.  When a program is made up of multiple interacting files,
@@ -547,8 +540,6 @@ text of the menu item. In
 the Mandelbrot Viewer program, all of the commands in the "File" and
 "Control" menus have accelerators.</p>
 
-<p>
-</p>
 
 
 </subsection>
@@ -599,12 +590,7 @@ the user of the program will see different value strings.</p>
 used to divide words in the key string.  The value string
 can contain spaces or any other characters.  If the line ends with a backslash ("<code>\</code>"),
 the value string is continued on the next line; in this case, spaces at the beginning
-of that line are ignored.  One unfortunate detail is that a properties file can contain
-only plain ASCII characters.  The ASCII character set only supports the English alphabet.  Nevertheless,
-a value string can include arbitrary UNICODE characters.  Non-ASCII characters just have
-to be specially encoded.  The JDK comes with a program, <i>native2ascii</i>,
-that can convert files that use non-ASCII characters into a form that is suitable
-for use as a properties file.</np>
+of that line are ignored.  A properties file should use the UTF-8 charset (see <localref href="IO.1.3"/>).</np>
    
 <p>Suppose that the program wants to present a string to the user 
 (as the name of a menu command, for example).   The properties file would contain a key/value pair
@@ -612,7 +598,7 @@ such as</p>
    
 <pre>menu.saveimage=Save PNG Image...</pre>
    
-<np>where "Save PNG Image&dots;" is the string that will appear in the menu.  The
+<np>where "Save PNG Image&dots;" is the value string, which will appear in the menu.  The
 program would use the key string, "menu.saveimage", to look up the corresponding value string
 and would then use the value string as the text of the menu item.  In Java, the lookup 
 process is supported by the <classname>ResourceBundle</classname> class, which
@@ -725,7 +711,7 @@ and an extra "<code>/</code>" has been added at the beginning.)</p>
 preferences node for a given program identifier can be accessed as follows:</p>
    
 <pre>Preferences root = Preferences.userRoot();
-Preferences node = root.node(pathName);</pre>
+Preferences prefnode = root.node(pathName);</pre>
    
 <np>where <code>pathname</code> is the string, such as "/edu/hws/eck/mdbfx", that
 identifies the node.  The node itself consists of a simple list of

@@ -168,7 +168,7 @@ else {
 
 <p>Since I find <classname>Alert</classname> and <classname>TextInputDialog</classname>
 a little cumbersome to use (especially since I tend to prefer dialogs without icons),
-I wrote a utility class, <sourceref href="SimpleDialogs.java"/>, that defines several more
+I wrote my own utility class, <sourceref href="SimpleDialogs.java"/>, that defines several more
 convenient static methods for showing some common kinds of dialog.  In particular,
 </p>
 
@@ -332,12 +332,13 @@ of the web version of this very textbook.</p>
 <p>That could have been everything that <code>WebBrowser.java</code> needs to do &mdash; except for the
 "Window" menu, which contains a list of all open windows.  That list is not part of
 the data for an individual window, so it has to kept somewhere else.  In the web browser
-application, the <classname>WebBrowser</classname> object maintains the list of open
-windows.  (Another possibility would have been to make the window list a <code>static</code>
+application, the application object, of type <classname>WebBrowser</classname>, maintains the list of open
+windows.  There is only one application object in the program, so we have just one list of open windows.
+(Another possibility would have been to make the window list a <code>static</code>
 member variable in the <classname>BrowserWindow</classname> class, since <code>static</code>
 variables in a class are shared by all instances of the class.)  The <classname>WebBrowser</classname>
 class has a <code>newBrowserWindow()</code> method for opening new windows.  A <classname>BrowserWindow</classname>
-has an instance variable, <code>owner</code>, that refers to the <classname>WebBrowser</classname>
+has an instance variable, <code>owner</code>, that refers to the <classname>WebBrowser</classname> application
 that opened the window.   When the browser window wants to open a new window, it does so by
 calling <code>owner.newBrowserWindow(url)</code>, where the parameter, <code>url</code>,
 is the URL of the web site to be loaded by the new window, or is <code>null</code> to

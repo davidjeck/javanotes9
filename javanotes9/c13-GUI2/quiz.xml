@@ -46,7 +46,7 @@ value of the observable property, so the task could also be accomplished by</p>
 
 <question>
 <ques><p>Describe the picture that is produced by the following
-code, were <code>canvas</code> is a <classname>Canvas</classname>:</p>
+code, where <code>canvas</code> is a <classname>Canvas</classname>:</p>
 <pre>
 GraphicsContext g = canvas.getGraphicsContext2D();
 g.setFill(Color.WHITE);
@@ -107,7 +107,7 @@ In that case, the color for the first color stop would be black, and the color
 for the second color stop would be light gray.   We could also use a
 proportional gradient, where the coordinates for the start and end points
 are given in a coordinate system where the coordinates of the top left
-corner are (0,0) and the coordinates fo the bottom left corner are (0,1):</np>
+corner are (0,0) and the coordinates of the bottom left corner are (0,1):</np>
 
 <pre>LinearGradient gradient = 
                    new LinearGradient( 0,0, 0,1, true, CycleMethod.REPEAT,
@@ -127,7 +127,7 @@ and fill paints, and the line width.  A call to <code>g.restore()</code> will
 pop the most recently saved state from the stack and restore graphics context
 properties to their values from that state.  Any changes to the state that were
 made after the corresponding call to <code>g.save()</code> will be undone.
-This allows you to change make temporary changes to the state while being
+This allows you to make temporary changes to the state while being
 sure that those changes will not carry over to future drawing.</p>
 </ans>
 </question>
@@ -169,7 +169,7 @@ entire application, not just with one window.)</p>
 
 
 <question>
-<ques><p>The Java 8 API includes some classes in a package named <code>org.w3c.dom</code>.
+<ques><p>The Java API includes some classes in a package named <code>org.w3c.dom</code>.
 Why such a funny package name?</p>
 </ques>
 <ans><p>The packages presumably come from an organization that owns the Web domain name

@@ -269,7 +269,8 @@ The list is constructed in the following method, which is called in the program'
 <np>This method sets a preferred width and height for the list.  The default preferred
 size for a list seems to be about 200-by-400, no matter what it contains.  The icon
 list needs a much smaller width.  The preferred height is set to a small value, but
-in this program it will grow to fill the available space.  The default preferred height
+in this program it will grow to fill the available space in the "right" position of
+the <classname>BorderPane</classname> that fills the window.  The default preferred height
 would have forced the container to be bigger than I wanted.</np>
 
 <p>The other point of interest is the use of the "selection model" of the list.
@@ -288,7 +289,7 @@ of the item in the list, with numbering starting from zero as usual.
 If <code>index</code> is -1, than no item in the list is selected.  The selected
 item in the list is highlighted in the list view.  The list view listens for
 changes in the selection model.  When the user clicks an item, a mouse
-listener (which is part of the controller) changes the selection model.
+listener (which is a built-in part of the controller for the list) changes the selection model.
 When that happens, the list view is notified of the change and
 updates its appearance to reflect the fact that a different item is now selected.
 A program can find out which item is currently selected by calling</np>
@@ -395,7 +396,7 @@ converter and used it create the cell factory for the list:</np>
 
 listView.setCellFactory( TextFieldListCell.forListView( myConverter ) );</pre>
 
-<np>As you can see, a <classname>StringConverter</classname> just has
+<np>As you can see, a <classname>StringConverter</classname> just needs
 to  define two functions, <code>fromString()</code> and <code>toString()</code>.</np>
 
 <p>Standard string converters can be found in package <code>javafx.util.converters</code>, and
@@ -500,12 +501,14 @@ and working with one of the columns
 in a <classname>TableView</classname> is in many ways similar to
 working with a <classname>ListView</classname>.</p>
 
-<p><atype>TableView&lt;T&gt;</atype> is a parameterized type.  An object of the 
-type parameter, <classname>T</classname>, contains all of the data for one
-row of the table.  (It can contain additional data as well; the table can be
+<p><atype>TableView&lt;T&gt;</atype> is a parameterized type.  The type <classname>T</classname>
+represents one row of the table; that is, an object of the 
+type parameter, <classname>T</classname>, contains the data for one
+row.  (It can contain additional data as well; the table can be
 a view of just some of the available data.)  The data model for a <code>table</code>
 of type <atype>TableView&lt;T&gt;</atype> is an <atype>ObservableList&lt;T&gt;</atype>,
-and it can be accessed as <code>table.getItems()</code>.  You can add and delete rows
+and it can be accessed as <code>table.getItems()</code>. Each item represents one row,
+and you can add and delete complete rows
 of the table by adding and deleting elements of this list.</p>
 
 <p>To define a table, it's not enough to provide the class that represents the
@@ -619,7 +622,8 @@ of the points.  To add some interest, the program also shows the points on
 a canvas; the canvas is a "scatter plot" with a small crosshair at the location
 of each point.  In the picture, one of the x-coordinates is being edited:</p>
 
-<img src="scatter-plot.png" width="500" height="320" tex="scatter-plot.eps" texscale="0.6" alt="editable list of points, with scatter plot"/>
+<img src="scatter-plot.png" width="500" height="320" tex="scatter-plot.eps" 
+     texscale="0.6" alt="editable list of points, with scatter plot"/>
 
 <p>We need a data type to represent the rows of the table.  It can be a simple
 class, with two properties <code>x</code> and <code>y</code> that hold the

@@ -184,7 +184,7 @@ is reversed so that the colors match up at the boundaries; and <code>CycleMethod
 that the color along each boundary is extended infinitely.  Here are pictures of three red/blue/yellow gradients
 using the same original line segment and color stops.  The picture on the left uses the <code>MIRROR</code> cycle method,
 the one in the middle uses <code>REPEAT</code>, and the one on the right uses <code>NO_REPEAT</code>.
-The basic line segments for the gradient are drawn, and the positions of the color stops on that 
+The basic line segments for the gradients are shown, and the positions of the three color stops on that 
 line segment are marked:</p>
 
 <img src="linear-gradient.png" width="500" height="166" tex="linear-gradient.eps"
@@ -293,7 +293,8 @@ working with transforms, to prevent the effect of a transform from carrying over
 call to another.</p>
   
 <p>You should also remember that, like other properties of a graphics context, a transform
-affects things that are drawn <b>after</b> the transform is applied to the graphics context.</p>
+affects things that are drawn <b>after</b> the transform is applied to the graphics context.
+It does not transform the picture that has already been drawn.</p>
    
 <p>Suppose that <code>g</code> is of type <classname>GraphicsContext</classname>.
 A translation transform can be applied to <code>g</code> by calling
@@ -350,7 +351,7 @@ rotates all subsequently drawn objects through an angle of <code>r</code> about 
 point <code>(0,0)</code>.   Angles are measured in degrees.
 Positive angles are clockwise rotations, while negative angles are
 counterclockwise (unless you have applied a negative scale factor,
-which reverses the orientation).</p>
+which reverses the direction of rotation).</p>
   
 <p>Shearing is not considered a basic transform, since it can be done (with some difficulty)
 by a series of rotations and scalings.  The effect of a horizontal shear is to shift horizontal
@@ -418,7 +419,9 @@ ovals.</p>
 <p>When the user draws with one of the five shape tools, the user drags the mouse
 and a shape is drawn between the starting point of the drag gesture and the current
 position of the mouse.   Each time the mouse moves, the previous shape is deleted
-and a new shape is drawn.  For the line tool, for example, the effect is that the
+and a new shape is drawn.  The new shape doesn't actually become part of
+the picture until the user releases the mouse button.  For the line tool, 
+for example, the effect is that the
 user sees a line that stretches from the starting point to the current mouse position,
 and that line moves along with the mouse.  I urge you to try the program to
 see the effect!</p>
@@ -426,9 +429,10 @@ see the effect!</p>
 <p>The difficulty for the programmer is that
 parts of the drawing are continually being covered and uncovered as the user moves
 the mouse around.  When part of the current drawing is covered and then uncovered,
-the drawing must still be there!  This means that the program can't simply draw
-the shape on the same canvas that contains the drawing, since doing so would
-obliterate whatever was in that part of the drawing.</p>
+the drawing must still be there!  This means that while the user is dragging the
+mouse, the program can't simply draw
+the new shape on the same canvas that contains the current picture, since doing so would
+obliterate whatever was in that part of the picture.</p>
 
 <p>The solution in JavaFX is to use <b>two</b> canvases, one stacked on top
 of the other.  The bottom canvas contains the actual drawing.  The top canvas
@@ -668,7 +672,7 @@ different:</p>
 <np>The parameter is a string that specifies the file location as a URL&mdash;essentially
 a path to the file, preceded by "file:".  If <classname>imageFile</classname>
 is an object of type <classname>File</classname> representing a path to the file, you can
-simply say</np>
+say</np>
 
 <pre>Image imageFromFile = new Image( "file:" + imageFile );</pre>
 
@@ -722,7 +726,7 @@ canvas by making a snapshot of the  entire canvas.  That can be done with</p>
 
 <pre>Image image = canvas.snapshot(null,null);</pre>
 
-<np>Unfortunately, at least in the current version, 
+<np>Unfortunately, at least in the current version, it seems that
 JavaFX does not itself include any support for saving images to files.  
 For that, it depends on something
 from the older "AWT" GUI toolkit:  the <classname>BufferedImage</classname>
