@@ -90,7 +90,8 @@ in on the point where you click by a magnification factor of two.  (Shift-click 
 use the right mouse button to zoom out instead of zooming in.)  The interesting points
 are along the boundary of the Mandelbrot set.  In fact, the boundary is infinitely
 complex.  (Note that if you zoom in too far, you will exceed the capabilities of
-the <ptype>double</ptype> data type; nothing is done in the program to prevent this.)</p>
+the <ptype>double</ptype> data type; nothing is done in the program to prevent this.
+As you zoom in further, the picture will first become "blocky" and then meaningless.)</p>
    
 <p>Use the "MaxIterations" menu to increase
 the maximum number of iterations in the loop.  Remember that black pixels might or might
@@ -166,8 +167,8 @@ Use the command</p>
 <pre>javac  edu\hws\eck\mdb\*.java</pre>
    
 <np>to compile the source code.  The main routine for the 
-program is defined by a class named <classname>Main</classname>.  To run this
-class, use the command:</np>
+program is defined by a class named <classname>Main</classname>.  To run the
+program, use the command:</np>
    
 <pre>java  edu.hws.eck.mdb.Main</pre>
    
@@ -232,9 +233,9 @@ is being used in the program is a parameter to the <classname>Menus</classname> 
 Many of the menu commands operate on this panel
 or on the <classname>MandelbrotDisplay</classname> that it contains.  In order to
 carry out these commands, the <classname>Menus</classname> object needs a reference
-to the <classname>MandelbrotPanel</classname>.  As for the <classname>MandelbrotDisplay</classname>,
-the panel has a method <code>getDisplay()</code> that returns a reference to
-the display that it contains. So as long as the menu bar has a reference to the
+to the <classname>MandelbrotPanel</classname>.  And to allow access to the <classname>MandelbrotDisplay</classname>,
+the MandelbrotPanel has a method <code>getDisplay()</code> that returns a reference to
+the MandelbrotDisplay that it contains. So as long as the menu bar has a reference to the
 panel, it can obtain a reference to the display.  In previous examples, everything
 was written as one large class file, so all the objects were directly available to
 all the code.  When a program is made up of multiple interacting files,
@@ -264,7 +265,7 @@ is often referred to as <newword>I18n</newword>, where 18 is the number of lette
 between the "I" and the final "n" in "Internationalization."  The process of adapting
 the program to a particular location is called <newword>localization</newword>,
 and the locations are called <newword>locales</newword>.  Locales differ in many
-ways, including the type of currency used and the format used for numbers and
+ways, including the type of currency used and the formats used for numbers and
 dates, but the most obvious difference is language.  Here, I will discuss how
 to write a program so that it can be easily translated into other languages.</p>
    
@@ -296,12 +297,7 @@ the user of the program will see different value strings.</p>
 used to divide words in the key string.  The value string
 can contain spaces or any other characters.  If the line ends with a backslash ("<code>\</code>"),
 the value string is continued on the next line; in this case, spaces at the beginning
-of that line are ignored.  One unfortunate detail is that a properties file can contain
-only plain ASCII characters.  The ASCII character set only supports the English alphabet.  Nevertheless,
-a value string can include arbitrary UNICODE characters.  Non-ASCII characters just have
-to be specially encoded.  The JDK comes with a program, <i>native2ascii</i>,
-that can convert files that use non-ASCII characters into a form that is suitable
-for use as a properties file.</np>
+of that line are ignored.  A properties files should use the UTF-8 charset (see <localref href="IO.1.3"/>).</np>
    
 <p>Suppose that the program wants to present a string to the user 
 (as the name of a menu command, for example).   The properties file would contain a key/value pair
@@ -403,7 +399,7 @@ class is not strongly coupled to the other classes.  In fact, it can be used in 
 programs without any modification and without access to the other classes.  The alternative to using events would be
 to have the display object call methods such as <code>displaySizeChanged()</code>
 or <code>computationStarted()</code> in the <classname>MandelbrotPanel</classname> and 
-<classname>MandelbrotFrame</classname> objects to tell them what is going on in the display.
+<classname>Menus</classname> objects to tell them what is going on in the display.
 This would be strong coupling: Any programmer who wanted to use <classname>MandelbrotDisplay</classname>
 would also have to use the other two classes or would have to modify the display class so
 that it no longer refers to the other classes.  Of course, not everything can be done with 
@@ -458,8 +454,8 @@ below.</p>
 <p>Perhaps the most interesting use of events in the Mandelbrot Viewer program is to
 enable and disable menu commands based on the status of the display.  For this,
 events of type <classname>PropertyChangeEvent</classname> are used.  This event
-class is part of a "bean" framework that Java uses for some advanced work with objects,
-and class <classname>PropertyChangeEvent</classname> and related classes are
+class is part of a "bean" framework that Java uses for some advanced work with objects;
+class <classname>PropertyChangeEvent</classname> and related classes are
 defined in the package <code>java.beans</code>.  The idea is that bean objects are
 defined by their "properties" (which are just aspects of the state of the bean).
 When a bean property changes, the bean can emit a <classname>PropertyChangeEvent</classname>
@@ -621,7 +617,7 @@ and an extra "<code>/</code>" has been added at the beginning.)</p>
 preferences node for a given program identifier can be accessed as follows:</p>
    
 <pre>Preferences root = Preferences.userRoot();
-Preferences node = root.node(pathName);</pre>
+Preferences prefnode = root.node(pathName);</pre>
    
 <np>where <code>pathname</code> is the string, such as "/edu/hws/eck/mdb", that
 identifies the node.  The node itself consists of a simple list of

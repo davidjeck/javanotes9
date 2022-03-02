@@ -524,10 +524,10 @@ as the GUI toolbox.</p>
    <li><sourceref href="chapter13/PaintWithOffScreenCanvas.java">PaintWithOffScreenCanvas.java</sourceref>, from <localref href="GUI2.1"/>, is a little
    paint program that illustrates the use of a <classname>BufferedImage</classname> as
    an off-screen canvas. </li>
-   <li><sourceref href="chapter13/SoundAndCursorDemo.java">SoundAndCursorDemo.java</sourceref>, from <localref href="GUI2.1"/>, lets the user
-   play a few sounds and change the cursor by clicking some buttons.  This demonstrates
-   using audio resource files and using an image resource to create a custom cursor.  Requires
-   the resource files in the directory <sourceref href="chapter13/snc_resources">snc_resources</sourceref>.</li>
+   <li><sourceref href="chapter13/CursorDemo.java">CursorDemo.java</sourceref>, from <localref href="GUI2.1"/>, lets the user
+   change the cursor by clicking some buttons.  This demonstrates using standard cursors and
+   using an image resource to create a custom cursor.  Requires
+   the image resource file <sourceref href="chapter13/TinySmiley.png">TinySmiley.png</sourceref>.</li>
    <li><sourceref href="chapter13/TransparencyDemo.java">TransparencyDemo.java</sourceref>, from <localref href="GUI2.2"/>, demonstrates
    using the alpha component of colors.  It is also an example of using <classname>FontMetrics</classname>.</li>
    <li><sourceref href="chapter13/StrokeDemo.java">StrokeDemo.java</sourceref>, from <localref href="GUI2.2"/>, demonstrates the
@@ -535,8 +535,11 @@ as the GUI toolbox.</p>
    Also demonstrates antialiasing.</li>
    <li><sourceref href="chapter13/PaintDemo.java">PaintDemo.java</sourceref>, from <localref href="GUI2.2"/>, demonstrates
    using a <classname>GradientPaint</classname> and using a <classname>TexturePaint</classname>
-   to fill a polygon.  Uses the image resource files <sourceref href="chapter13/TinySmiley.png">TinySmiley.png</sourceref>
+   to fill a polygon.  Uses the image resource files <sourceref href="chapter13/face-smile.png">face-smile.png</sourceref>
    and <sourceref href="chapter13/QueenOfHearts.png">QueenOfHearts.png</sourceref>.</li>
+   <li><sourceref href="chapter13/TransformDemo.java">TransformDemo.java</sourceref>,from <localref href="GUI2.2"/>, demonstrates
+   applying various transforms, such as scale and rotate, to the drawing that is done in a panel.  Uses the
+   image resource file <sourceref href="chapter13/face-smile.png">face-smile.png</sourceref>.</li>
    <li><sourceref href="chapter13/ChoiceDemo.java">ChoiceDemo.java</sourceref>, discussed in <localref href="GUI2.3"/>, demonstrates
    radio buttons, combo boxes, and Actions.</li>
    <li><sourceref href="chapter13/ToolBarDemo.java">ToolBarDemo.java</sourceref>, from <localref href="GUI2.3"/>, uses a <classname>JToolBar</classname>

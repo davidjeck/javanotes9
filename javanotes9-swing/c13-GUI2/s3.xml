@@ -47,7 +47,9 @@ an <code>abstract</code> class which includes a method</np>
 <pre>public void actionPerformed(ActionEvent evt)</pre>
    
 <np>that must be defined in any concrete subclass.  Often, this is done
-in an anonymous inner class.  For example, suppose that <code>display</code>
+in an anonymous inner class.  (Unfortunately, you can't use a lambda
+expression here, because <classname>Action</classname> is not a 
+functional interface.)  For example, suppose that <code>display</code>
 is an object that has a <classname>clear()</classname> method.  Then
 an <classname>Action</classname> object that represents the action 
 "clear the display" can be defined as:</np>
@@ -668,7 +670,7 @@ for the computer on which it is running.  However, it requires the
 use of a different method for constructing the <classname>KeyStroke</classname>.  The 
 function call</p>
 
-<pre>int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()</pre>
+<pre>int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()</pre>
 
 <np>returns a "mask" that can be used to represent the correct modifier key when
 the keystroke is created by the function</np>
@@ -688,15 +690,11 @@ code segment that is used in <sourceref href="ChoiceDemo.java"/> to make
 a "Quit" menu item that will have the appropriate modifier key for
 the computer on which the program is running</p>
 
-<pre>int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+<pre>int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMasEx();
 KeyStroke quitKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Q, shortcutMask);
 JMenuItem quit = new JMenuItem("Quit");
 quit.setAccelerator(quitKeyStroke);
-quit.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent evt) {
-        System.exit(0);
-    }
-});
+quit.addActionListener( evt -> System.exit(0) );
 controlMenu.add(quit);</pre>
    
 </subsection>

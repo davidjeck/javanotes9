@@ -658,6 +658,47 @@ int baselineLength = fm.stringWidth("Hello World");
 g2.rotate( -90 * Math.PI / 180, x, y);
 g2.drawString( "Hello World", x - baselineLength/2, y );</pre>
 
+
+<p>Sometimes you might want to apply several transforms to get the effect you want.
+Suppose, for example, that you would like to scale a string to be twice its
+usual size, with its basepoint at (x,y).  This <b>won't</b>
+do it:</p>
+
+<pre>g.scale(2,2);
+g.drawString("Hello World", x, y);</pre>
+
+<np>The problem is that the scaling doens't just make the string bigger; it also
+move the point (x,y) so that the basepoint of the string ends up at (2x,2y).
+What you should do is make a scaled string with its basepoint at <code>(0,0)</code>,
+and then translate by <code>(x,y)</code>, which will move the basepoint from
+<code>(0,0)</code> to <code>(x,y)</code>.  That can be done as follows:</np>
+
+<pre>g.translate(x,y);
+g.scale(2,2);
+g.drawString("Hello World", 0, 0);</pre>
+
+<np>The important thing to note is the order of the transforms.  The translation applies
+to everything that comes after the <code>translate</code> command.  What comes after it
+is some code that draws a scaled string with its basepoint at <code>(0,0)</code>.
+That scaled string will be translated by <code>(x,y)</code>.  In effect, the image is first
+scaled, then translated. The rule for multiple transforms is that <b>transforms
+are applied to objects in the opposite of the order in which the transform commands
+occur in the code.</b></np>
+
+<p>Java has one other transform method for applying <newword>shear</newword> transformations.
+Shearing is not considered a basic transform, since it can be done (with some difficulty)
+by a series of rotations and scalings.  The effect of a horizontal shear is to shift horizontal
+lines to the left or right by an amount that is proportional to the distance from the x-axis.
+That is, the point <code>(x,y)</code> is transformed to <code>(x+a*y,y)</code>, where <code>a</code>
+is the amount of shear.  Similarly, a vertical shear will shift vertical lines up or down
+by an amount proportional to the distance from the y-axis.  The method <code>g2.shear(a,b)</code>
+will apply a horizontal shear by <code>a</code> and a vertical shear by&nbsp;<code>b</code>.</p>
+
+<p>The sample program <sourceref href="TransformDemo.java"/> demonstrates transforms,
+including scaling, rotation, translation, and horizontal shear.  A set of sliders
+lets you control the amount of each transformation that is applied to a drawing. 
+Running the program might help you understand transformations.</p>
+
 <break/>
 
 <p>The drawing operations in the <classname>Graphics</classname> class use

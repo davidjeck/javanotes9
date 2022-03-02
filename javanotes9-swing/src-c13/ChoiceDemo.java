@@ -84,22 +84,22 @@ public class ChoiceDemo extends JPanel {
 			    // radio group.  evt.getActionCommand() is the text from the button.
 			public void actionPerformed(ActionEvent evt) {
 				switch ( evt.getActionCommand() ) {
-				case "Red":
-					message.setForeground(Color.RED);
-					foregroundChoice.setSelectedIndex(0);
-					break;
-				case "Blue":
-					message.setForeground(Color.BLUE);
-					foregroundChoice.setSelectedIndex(1);
-					break;
-				case "Green":
-					message.setForeground(Color.GREEN);
-					foregroundChoice.setSelectedIndex(2);
-					break;
-				case "Yellow":
-					message.setForeground(Color.YELLOW);
-					foregroundChoice.setSelectedIndex(3);
-					break;
+					case "Red" -> {
+						message.setForeground(Color.RED);
+						foregroundChoice.setSelectedIndex(0);
+					}
+					case "Blue" -> {
+						message.setForeground(Color.BLUE);
+						foregroundChoice.setSelectedIndex(1);
+					}
+					case "Green" -> {
+						message.setForeground(Color.GREEN);
+						foregroundChoice.setSelectedIndex(2);
+					}
+					case "Yellow" -> {
+						message.setForeground(Color.YELLOW);
+						foregroundChoice.setSelectedIndex(3);
+					}
 				}
 			}
 		};
@@ -137,22 +137,22 @@ public class ChoiceDemo extends JPanel {
 			    // sets the corresponding radio button to be selected.
 			public void actionPerformed(ActionEvent evt) {
 				switch ( foregroundChoice.getSelectedIndex() ) {
-				case 0:
-					message.setForeground(Color.RED);
-					redRadio.setSelected(true);
-					break;
-				case 1:
-					message.setForeground(Color.BLUE);
-					blueRadio.setSelected(true);
-					break;
-				case 2:
-					message.setForeground(Color.GREEN);
-					greenRadio.setSelected(true);
-					break;
-				case 3:
-					message.setForeground(Color.YELLOW);
-					yellowRadio.setSelected(true);
-					break;
+					case 0 -> {
+						message.setForeground(Color.RED);
+						redRadio.setSelected(true);
+					}
+					case 1 -> {
+						message.setForeground(Color.BLUE);
+						blueRadio.setSelected(true);
+					}
+					case 2 -> {
+						message.setForeground(Color.GREEN);
+						greenRadio.setSelected(true);
+					}
+					case 3 -> {
+						message.setForeground(Color.YELLOW);
+						yellowRadio.setSelected(true);
+					}
 				}
 			}
 		});
@@ -235,15 +235,11 @@ public class ChoiceDemo extends JPanel {
 		    // key on a Mac and the control key on Windows or Linux.  Note that the color
 		    // commands in the BackgroundColor menu use the control key on any computer.
 		    // The next line gets a code for the correct modifier key.
-		int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 		KeyStroke quitKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Q, shortcutMask);
 		JMenuItem quit = new JMenuItem("Quit");
 		quit.setAccelerator(quitKeyStroke);
-		quit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				System.exit(0);
-			}
-		});
+		quit.addActionListener( evt -> System.exit(0) );
 		controlMenu.add(quit);
 		
 		JMenu colorMenu = new JMenu("BackgroundColor");

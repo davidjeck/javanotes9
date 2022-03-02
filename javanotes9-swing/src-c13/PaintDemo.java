@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 /**
  * This program demonstrates GradientPaint and TexturePaint.
  * This class has a main() routine and so can be run as an application.
+ * This program requires two resource image files: file-smile.png, QueenOfHearts.png
  */
 public class PaintDemo extends JPanel {
 
@@ -237,7 +238,7 @@ public class PaintDemo extends JPanel {
 		setPaint();
 		try {
 			ClassLoader cl = PaintDemo.class.getClassLoader();
-			URL imageURL = cl.getResource("TinySmiley.png");
+			URL imageURL = cl.getResource("face-smile.png");
 			if (imageURL != null)
 				smiley = ImageIO.read(imageURL);
 			imageURL = cl.getResource("QueenOfHearts.png");

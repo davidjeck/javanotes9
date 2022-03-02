@@ -224,7 +224,7 @@ public class Life extends JPanel implements ActionListener, MouseListener, Mouse
 		int row = display.yCoordToRowNumber(e.getY());
 		int col = display.yCoordToRowNumber(e.getX());
 		if (row >= 0 && row < display.getRowCount() && col >= 0 && col < display.getColumnCount()) {
-			if (e.isMetaDown() || e.isControlDown()) {
+			if ( (e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0 ) {
 				display.setColor(row,col,null);
 				alive[row][col] = false;
 			}

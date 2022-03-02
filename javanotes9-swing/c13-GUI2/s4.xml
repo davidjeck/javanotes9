@@ -216,7 +216,7 @@ others, are defined:</p>
 <li><codedef>dlmodel.getElementAt(index)</codedef> &mdash; returns the item at position
    <code>index</code> in the list.</li>
 <li><codedef>dlmodel.addElement(item)</codedef> &mdash; Adds <code>item</code> to the
-   end of the list; <code>item</code> can be any <classname>Object</classname>.</li>
+   end of the list.</li>
 <li><codedef>dlmodel.insertElementAt(item, index)</codedef> &mdash; inserts the specified
 <code>item</code> into the list at the specified <code>index</code>; items that come
 after that position in the list are moved down to make room for the new item.</li>
@@ -307,7 +307,7 @@ to scroll the table.  For example:</np>
 <np>The column headers of a <classname>JTable</classname> are not actually part of the table;
 they are in a separate component.  But when you add the table to a
 <classname>JScrollPane</classname>, the column headers are automatically placed
-at the top of the pane.</np>
+at the top of the scroll pane.</np>
 
 <p>Using the default settings, the user can edit any cell in the table by
 clicking that cell.  When editing a cell, the arrow keys

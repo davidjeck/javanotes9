@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.util.EnumSet;
+import java.util.ArrayList;
 
 /**
  * A simple paint program that is a first demonstration of using
@@ -41,12 +41,12 @@ public class PaintWithOffScreenCanvas extends JPanel {
 	private enum Tool { CURVE, LINE, RECT, OVAL, FILLED_RECT, FILLED_OVAL, SMUDGE, ERASE }
 
 	/**
-	 * The set of Tools that represent "shapes."  Shapes are handled differently
+	 * The list of Tools that represent "shapes."  Shapes are handled differently
 	 * during dragging than other tools, since they are drawn "on top of" the
 	 * current picture during a mouse drag and are only added permanently to the
-	 * picture on mouse release.
+	 * picture on mouse release.  The list is created in the constructor.
 	 */
-	private final static EnumSet<Tool> SHAPE_TOOLS = EnumSet.range(Tool.LINE, Tool.FILLED_OVAL);
+	private ArrayList<Tool> shapeTools;
 
 	/**
 	 * The currently selected drawing tool.  Initially Tool.CURVE.  Can be
@@ -101,6 +101,12 @@ public class PaintWithOffScreenCanvas extends JPanel {
 		MouseHandler mouseHandler = new MouseHandler();
 		addMouseListener(mouseHandler);
 		addMouseMotionListener(mouseHandler);
+		shapeTools = new ArrayList<>();
+		shapeTools.add(Tool.LINE);
+		shapeTools.add(Tool.RECT);
+		shapeTools.add(Tool.OVAL);
+		shapeTools.add(Tool.FILLED_RECT);
+		shapeTools.add(Tool.FILLED_OVAL);
 	}
 
 
@@ -133,7 +139,7 @@ public class PaintWithOffScreenCanvas extends JPanel {
 		      canvas, using the current drawing color.  (This is not done if the
 		      user is drawing a curve or using the smudge tool.) */
 
-		if (dragging && SHAPE_TOOLS.contains(currentTool)) {
+		if (dragging && shapeTools.contains(currentTool)) {
 			g.setColor(currentColor);
 			putCurrentShape(g);
 		}
@@ -405,7 +411,7 @@ public class PaintWithOffScreenCanvas extends JPanel {
 		 * is made to the off-screen canvas, and repaint() is called to
 		 * copy the changes to the screen.
 		 */
-		void applyToolAlongLine(int x1, int y1, int x2, int y2) {
+		void applyToolAlongLine(int x1, int y1, int x2, int y2) { 
 			Graphics g = OSC.createGraphics();
 			g.setColor(fillColor);    // (for ERASE only)
 			int w = OSC.getWidth();   // (for SMUDGE only)
@@ -428,29 +434,29 @@ public class PaintWithOffScreenCanvas extends JPanel {
 				else { 
 						// For the SMUDGE tool, blend some of the color from
 						// the smudgeRed, smudgeGreen, and smudgeBlue arrays
-						// into the pixels in a 7-by-7 block around (x,y), and
+						// into the pixels in a 9-by-9 block around (x,y), and
 						// vice versa.  The effect is to smear out the color
 						// of pixels that are visited by the tool.
-					for (int i = 0; i < 7; i++)
-						for (int j = 0; j < 7; j++) {
-							int r = y + j - 3;
-							int c = x + i - 3;
+					for (int i = 0; i < 9; i++)
+						for (int j = 0; j < 9; j++) {
+							int r = y + j - 4;
+							int c = x + i - 4;
 							if (!(r < 0 || r >= h || c < 0 || c >= w || smudgeRed[i][j] == -1)) {
 								int curCol = OSC.getRGB(c,r);
 								int curRed = (curCol >> 16) & 0xFF;
 								int curGreen = (curCol >> 8) & 0xFF;
 								int curBlue = curCol & 0xFF;
-								int newRed = (int)(curRed*0.7 + smudgeRed[i][j]*0.3);
-								int newGreen = (int)(curGreen*0.7 + smudgeGreen[i][j]*0.3);
-								int newBlue = (int)(curBlue*0.7 + smudgeBlue[i][j]*0.3);
+								int newRed = (int)(curRed*0.8 + smudgeRed[i][j]*0.2);
+								int newGreen = (int)(curGreen*0.8 + smudgeGreen[i][j]*0.2);
+								int newBlue = (int)(curBlue*0.8 + smudgeBlue[i][j]*0.2);
 								int newCol = newRed << 16 | newGreen << 8 | newBlue;
 								OSC.setRGB(c,r,newCol);
-								smudgeRed[i][j] = curRed*0.3 + smudgeRed[i][j]*0.7;
-								smudgeGreen[i][j] = curGreen*0.3 + smudgeGreen[i][j]*0.7;
-								smudgeBlue[i][j] = curBlue*0.3 + smudgeBlue[i][j]*0.7;
+								smudgeRed[i][j] = curRed*0.2 + smudgeRed[i][j]*0.8;
+								smudgeGreen[i][j] = curGreen*0.2 + smudgeGreen[i][j]*0.8;
+								smudgeBlue[i][j] = curBlue*0.2 + smudgeBlue[i][j]*0.8;
 							}
 						}
-					repaint(x-3,y-3,7,7);
+					repaint(x-4,y-4,9,9);
 				}
 			}
 			g.dispose();
@@ -472,24 +478,24 @@ public class PaintWithOffScreenCanvas extends JPanel {
 				repaint(startX-5,startY-5,10,10);
 			}
 			else if (currentTool == Tool.SMUDGE) {
-					// Record the colors in a 7-by-7 block of pixels around the
+					// Record the colors in a 9-by-9 block of pixels around the
 					// starting mouse position into the arrays smudgeRed, 
 					// smudgeGreen, and smudgeBlue.  These arrays hold the
 					// red, green, and blue components of the colors.
 				if (smudgeRed == null) {
 						// Create the arrays, if they have not already been created.
-					smudgeRed = new double[7][7];
-					smudgeGreen = new double[7][7];
-					smudgeBlue = new double[7][7];
+					smudgeRed = new double[9][9];
+					smudgeGreen = new double[9][9];
+					smudgeBlue = new double[9][9];
 				}
 				int w = OSC.getWidth();
 				int h = OSC.getHeight();
 				int x = evt.getX();
 				int y = evt.getY();
-				for (int i = 0; i < 7; i++)
-					for (int j = 0; j < 7; j++) {
-						int r = y + j - 3;
-						int c = x + i - 3;
+				for (int i = 0; i < 9; i++)
+					for (int j = 0; j < 9; j++) {
+						int r = y + j - 4;
+						int c = x + i - 4;
 						if (r < 0 || r >= h || c < 0 || c >= w) {
 								// A -1 in the smudgeRed array indicates that the
 								// corresponding pixel was outside the canvas.
@@ -527,7 +533,7 @@ public class PaintWithOffScreenCanvas extends JPanel {
 				g.dispose();
 				repaintRect(prevX,prevY,currentX,currentY);
 			}
-			else if (SHAPE_TOOLS.contains(currentTool)) {
+			else if (shapeTools.contains(currentTool)) {
 					// Repaint the rectangles occupied by the previous position of
 					// the shape and by its current position.
 				repaintRect(startX,startY,prevX,prevY);
@@ -550,7 +556,7 @@ public class PaintWithOffScreenCanvas extends JPanel {
 		 */
 		public void mouseReleased(MouseEvent evt) {
 			dragging = false;
-			if (SHAPE_TOOLS.contains(currentTool)) {
+			if (shapeTools.contains(currentTool)) {
 				Graphics g = OSC.createGraphics();
 				g.setColor(currentColor);
 				putCurrentShape(g);

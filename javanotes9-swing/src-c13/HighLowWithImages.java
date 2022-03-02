@@ -244,9 +244,9 @@ public class HighLowWithImages extends JPanel {
 
 
 		/**
-		 * Draws a card in a 79x123 pixel picture of a card with its
-		 * upper left corner at a specified point (x,y).  Drawing the card 
-		 * requires the image file "cards.png".
+		 * Draws a playing card in a 79x123 rectangle, with its
+		 * upper left corner at a specified point (x,y).  Drawing the 
+		 * card requires the image file "cards.png".
 		 * @param g The non-null graphics context used for drawing the card.  If g is
 		 * null, a NullPointerException will be thrown.
 		 * @param card The card that is to be drawn.  If the value is null, then a
@@ -264,18 +264,10 @@ public class HighLowWithImages extends JPanel {
 			else {
 				cx = (card.getValue()-1)*79;
 				switch (card.getSuit()) {
-				case Card.CLUBS:    
-					cy = 0; 
-					break;
-				case Card.DIAMONDS: 
-					cy = 123; 
-					break;
-				case Card.HEARTS:   
-					cy = 2*123; 
-					break;
-				default:  // spades   
-					cy = 3*123; 
-					break;
+					case Card.CLUBS -> cy = 0; 
+					case Card.DIAMONDS -> cy = 123; 
+					case Card.HEARTS -> cy = 2*123; 
+					default -> cy = 3*123; 
 				}
 			}
 			g.drawImage(cardImages,x,y,x+79,y+123,cx,cy,cx+79,cy+123,this);

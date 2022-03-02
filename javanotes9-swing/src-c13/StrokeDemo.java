@@ -87,7 +87,7 @@ public class StrokeDemo extends JPanel {
 					displays[i][j].x2 = e.getX();
 					displays[i][j].y1 = e.getY();
 					displays[i][j].y2 = e.getY();
-					displays[i][j].drawLine = ! e.isMetaDown();
+					displays[i][j].drawLine = e.getButton() != MouseEvent.BUTTON3;
 					displays[i][j].repaint();
 				}
 		}

@@ -45,6 +45,10 @@ cp -r $SOURCE_DIR/$PROJECT_SWING/* $EXPORT_DIR/$PROJECT
 
 cd $EXPORT_DIR
 
+# We need Card.java, Deck.java, Hand.java in the source directory for chapter 13.
+
+cp $PROJECT/src-extra/Card.java $PROJECT/src-extra/Deck.java $PROJECT/src-extra/Hand.java $PROJECT/src-c13
+
 #Remove source folder src-extra, which contains duplicates of files from javanotes9 that are
 #also needed in javanotes9-swing
 

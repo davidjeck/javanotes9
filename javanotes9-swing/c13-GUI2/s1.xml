@@ -117,7 +117,7 @@ all the cards might be put into a single image:</np>
 <np>(This image is from the Gnome desktop project,
 <a href="http://www.gnome.org">http://www.gnome.org</a>, and is shown here much smaller
 than its actual size.)
-Now just one <classname>Image</classname> object is needed. Drawing one card means
+Now, just one <classname>Image</classname> object is needed. Drawing one card means
 drawing a rectangular region from the image. This technique is used in a variation of
 the sample program <sourceref chapter="6" href="HighLowGUI.java"/> from <localref href="GUI1.7.6"/>.
 In the original version, the cards are represented by textual descriptions such as
@@ -137,9 +137,9 @@ corners of the source rectangle for the <code>drawImage()</code>
 command:</p>
 
 <pre>/**
- * Draws a card in a 79x123 pixel picture of a card with its
- * upper left corner at a specified point (x,y).  Drawing the card 
- * requires the image file "cards.png".
+ * Draws a playing card in a 79x123 rectangle, with its
+ * upper left corner at a specified point (x,y).  Drawing the 
+ * card requires the image file "cards.png".
  * @param g The graphics context used for drawing the card.
  * @param card The card that is to be drawn.  If the value is null, then a
  * face-down card is drawn.
@@ -156,18 +156,10 @@ public void drawCard(Graphics g, Card card, int x, int y) {
    else {
       cx = (card.getValue()-1)*79;
       switch (card.getSuit()) {
-      case Card.CLUBS:    
-         cy = 0; 
-         break;
-      case Card.DIAMONDS: 
-         cy = 123; 
-         break;
-      case Card.HEARTS:   
-         cy = 2*123; 
-         break;
-      default:  // spades   
-         cy = 3*123; 
-         break;
+          case Card.CLUBS -> cy = 0; 
+          case Card.DIAMONDS -> cy = 123; 
+          case Card.HEARTS -> cy = 2*123; 
+          default -> cy = 3*123; 
       }
    }
    g.drawImage(cardImages,x,y,x+79,y+123,cx,cy,cx+79,cy+123,this);
@@ -191,12 +183,12 @@ can be created using the constructor</p>
    
 <np>where <code>width</code> and <code>height</code> specify the width and height of
 the image in pixels, and <code>imageType</code> can be one of several constants
-that are defined in the <classname>BufferedImage</classname>.  The image type
-specifies how the color of each pixel is represented.  One likely
+that are defined in the <classname>BufferedImage</classname> class.  The image type
+specifies how the color of each pixel is represented.  One possible
 value for <code>imageType</code> is <code>BufferedImage.TYPE_INT_RGB</code>,
 which specifies that the color of each pixel is a usual RGB color, with red, green
 and blue components in the range 0 to 255.  The image type
-<code>BufferedImage.TYPE_INT_ARGB</code> represents an RGB image with "transparency."
+<code>BufferedImage.TYPE_INT_ARGB</code> represents an RGB image with "transparency."  
 The image type
 <code>BufferedImage.TYPE_BYTE_GRAY</code> can be used to create a <newword>grayscale</newword>
 image in which the only possible colors are shades of gray.</np>
@@ -313,7 +305,7 @@ you are ready to understand the <code>paintComponent()</code> method:</np>
       canvas, using the current drawing color.  (This is not done if the
       user is drawing a curve or using the smudge, curve, or erase tool.) */
 
-   if (dragging &amp;&amp; SHAPE_TOOLS.contains(currentTool)) {
+   if (dragging &amp;&amp; shapeTools.contains(currentTool)) {
       g.setColor(currentColor);
       putCurrentShape(g);
    }
@@ -323,10 +315,9 @@ you are ready to understand the <code>paintComponent()</code> method:</np>
 <np>Here, <code>dragging</code> is a <ptype>boolean</ptype> instance variable that is
 set to true while the user is dragging the mouse, and <code>currentTool</code>
 tells which tool is currently in use.  The possible tools are defined by
-an <code>enum</code> named <classname>Tool</classname>, and <code>SHAPE_TOOLS</code> 
-is a variable of type <classname>EnumSet&lt;Tool&gt;</classname>
-that contains the line, oval, rectangle, filled oval, and filled rectangle tools.
-(See <localref href="generics.2.4"/>.)</np>
+an <code>enum</code> named <classname>Tool</classname>, and <code>shapeTools</code> 
+is a variable of type <classname>ArrayList&lt;Tool&gt;</classname>
+that contains the line, oval, rectangle, filled oval, and filled rectangle tools.</np>
     
 <p>You might notice that there is a problem if the size of the panel
 is ever changed, since the size of the off-screen canvas will not be changed
@@ -395,21 +386,6 @@ automatically by the system, and the programmer doesn't have to worry about it. 
 possible to turn this automatic double buffering off in Swing, but there
 is seldom a good reason to do so.)</p>
    
-<p>One final historical note about off-screen canvasses: There is an
-alternative way to create them.  The <classname>Component</classname> class
-defines the following instance method, which can be used in any GUI
-component object:</p>
-
-<pre>public Image createImage(int width, int height)</pre>
-   
-<np>This method creates an <classname>Image</classname> with a specified
-width and height.  You can use this image as an off-screen canvas in the
-same way that you would a <classname>BufferedImage</classname>. In fact,
-you can expect that in a modern version of Java, the image that is returned
-by this method is in fact a <classname>BufferedImage</classname>.
-The <code>createImage()</code> method was part of Java from the beginning,
-before the <classname>BufferedImage</classname> class was introduced.</np>
-
 </subsection>
       
 <subsection id="GUI2.1.2" title="Working With Pixels">
@@ -453,7 +429,7 @@ in the range 0 to 255.  When a color is encoded as a single <ptype>int</ptype>,
 the blue component is contained in the eight low-order bits of the <ptype>int</ptype>,
 the green component in the next lowest eight bits, and the red component in
 the next eight bits.  (The eight high order bits store the "alpha component" of
-the color, which we'll encounter in the next section.)  
+the color, which has to do with transparency and which we'll encounter in the next section.)  
 It is easy to translate between the two representations using the
 <newword>shift operators</newword> <code>&lt;&lt;</code> and&nbsp;<code>&gt;&gt;</code>
 and the <newword>bitwise logical operators</newword> <code>&amp;</code> and&nbsp;<code>|</code>.
@@ -479,9 +455,16 @@ int green = (rgb &gt;&gt; 8) &amp; 0xFF;
 int blue = rgb &amp; 0xFF;
    
 /* Suppose that red, green, and blue are color components in
-   the range 0 to 255.  To combine them into a single int: */
+   the range 0 to 255.  To combine them into a single int
+   representing an RGB color: */
    
 int rgb = (red &lt;&lt; 16) | (green &lt;&lt; 8) | blue;</pre>
+
+<np>Or, if working with fully opaque ARGB colors, you need to set the eight
+high order bits to one.  The number 255 is a byte in which all eight bits
+are one:</np>
+
+<pre>int argb = 255 &lt;&lt; 24 | (red &lt;&lt; 16) | (green &lt;&lt; 8) | blue;</pre>
    
 <break/>
 
@@ -497,7 +480,7 @@ smudge tool, you'll get something like this:
    
 <np>This is an effect that can only be achieved by manipulating the colors of
 individual pixels!  Here's how it works: when the user presses the mouse using
-the smudge tool, the color components of a 7-by-7 block of pixels are copied
+the smudge tool, the color components of a 9-by-9 block of pixels are copied
 from the off-screen canvas into arrays named <code>smudgeRed</code>,
 <code>smudgeGreen</code> and <code>smudgeBlue</code>.  This is done
 in the <code>mousePressed()</code> routine with the following code:</np>
@@ -506,10 +489,10 @@ in the <code>mousePressed()</code> routine with the following code:</np>
 int h = OSC.getHeight();
 int x = evt.getX();
 int y = evt.getY();
-for (int i = 0; i &lt; 7; i++)
-   for (int j = 0; j &lt; 7; j++) {
-      int r = y + j - 3;
-      int c = x + i - 3;
+for (int i = 0; i &lt; 9; i++)
+   for (int j = 0; j &lt; 9; j++) {
+      int r = y + j - 4;
+      int c = x + i - 4;
       if (r &lt; 0 || r &gt;= h || c &lt; 0 || c &gt;= w) {
             // A -1 in the smudgeRed array indicates that the
             // corresponding pixel was outside the canvas.
@@ -534,20 +517,20 @@ the new mouse position.  At the same time, the colors in the arrays are
 replaced by a weighted average of the old colors in the arrays and the colors
 from the image.  This has the effect of moving some color from the image
 into the arrays.  This is done using the following code for each pixel position,
-<code>(c,r)</code>, in a 7-by-7 block around the new mouse location:</np>
+<code>(c,r)</code>, in a 9-by-9 block around the new mouse location:</np>
    
 <pre>int curCol = OSC.getRGB(c,r);
 int curRed = (curCol &gt;&gt; 16) &amp; 0xFF;
 int curGreen = (curCol &gt;&gt; 8) &amp; 0xFF;
 int curBlue = curCol &amp; 0xFF;
-int newRed = (int)(curRed*0.7 + smudgeRed[i][j]*0.3);
-int newGreen = (int)(curGreen*0.7 + smudgeGreen[i][j]*0.3);
-int newBlue = (int)(curBlue*0.7 + smudgeBlue[i][j]*0.3);
+int newRed = (int)(curRed*0.8 + smudgeRed[i][j]*0.2);
+int newGreen = (int)(curGreen*0.8 + smudgeGreen[i][j]*0.2);
+int newBlue = (int)(curBlue*0.8 + smudgeBlue[i][j]*0.2);
 int newCol = newRed &lt;&lt; 16 | newGreen &lt;&lt; 8 | newBlue;
 OSC.setRGB(c,r,newCol);
-smudgeRed[i][j] = curRed*0.3 + smudgeRed[i][j]*0.7;
-smudgeGreen[i][j] = curGreen*0.3 + smudgeGreen[i][j]*0.7;
-smudgeBlue[i][j] = curBlue*0.3 + smudgeBlue[i][j]*0.7;</pre>
+smudgeRed[i][j] = curRed*0.2 + smudgeRed[i][j]*0.8;
+smudgeGreen[i][j] = curGreen*0.2 + smudgeGreen[i][j]*0.8;
+smudgeBlue[i][j] = curBlue*0.2 + smudgeBlue[i][j]*0.8;</pre>
    
 </subsection>
       
@@ -633,44 +616,6 @@ done later, for example when <code>cardImages</code> is used in a
 <code>drawImage</code> command.  Another technique, which does read
 the image completely, is to use the <code>ImageIO.read()</code>
 method, which will be discussed below in <localref href="GUI2.1.5"/></np>
-   
-<break/>
-   
-<p>Sounds represent another kind of resource that a program might want to use.
-For some reason, the easiest way to playing a sound is to use a static method
-in the <classname>Applet</classname> class, in package <code>java.awt</code>:</p>
-   
-<pre>public static AudioClip newAudioClip(URL soundURL)</pre>
-   
-<np>
-Since this is a <code>static</code> method, it can be used in any
-program, not just in applets, simply by calling it as <code>Applet.newAudioClip(soundURL)</code>.
-The parameter is the URL of a sound resource, and the return value is of type
-<code>java.applet.AudioClip</code>.  Once you have an <classname>AudioClip</classname>,
-you can call its <code>play()</code> method to play the audio clip from the
-beginning.</np>
-
-<p>Here is a method that puts all this together to load and play
-the sound from an audio resource file:</p>
-   
-<pre>private void playAudioResource(String audioResourceName) {
-   ClassLoader cl = getClass().getClassLoader();
-   URL resourceURL = cl.getResource(audioResourceName);
-   if (resourceURL != null) {
-      AudioClip sound = Applet.newAudioClip(resourceURL);
-      sound.play();
-   }
-}</pre>
-   
-<np>This method is from a sample program <sourceref href="SoundAndCursorDemo.java"/> that
-will be discussed in the next subsection.  Of course, if you plan to reuse
-the sound often, it would be better to load the sound once into an
-instance variable of type <classname>AudioClip</classname>, which could then
-be used to play the sound any number of times, without the need to reload
-it each time.</np>
-
-<p>The <classname>AudioClip</classname> class supports audio files in the
-common WAV, AIFF, and AU formats.</p>
 
 </subsection>
 
@@ -734,12 +679,10 @@ if (resourceURL != null) {
    panel.setCursor(cursor);
 }</pre>
    
-<p>The sample program <sourceref href="SoundAndCursorDemo.java"/> shows how
-to use predefined and custom cursors and how to play sounds from resource
-files.  The program has several buttons that you can click.  Some of the
-buttons change the cursor that is associated with the main panel of the
-program.  Some of the buttons play sounds.  When you play a sound, the
-cursor is reset to be the default cursor.</p>
+<p>The short sample program <sourceref href="CursorDemo.java"/> shows how
+to use predefined and custom cursors.  The program has several
+ buttons that you can click to change the cursor that is associated with the main panel of the
+program.</p>
     
 <p>Another standard use of images in GUI interfaces is for <newword>icons</newword>.
 An icon is simply a small picture.  As we'll see in <localref href="GUI2.3"/>, icons can be used
@@ -767,9 +710,8 @@ so that the users would be able to save their work and to open and edit
 existing images. (See <localref href="GUI2.ex.1"/>.)</p>
    
 <p>There are many ways that the data for an image could be stored in a file.
-Many standard formats have been created for doing this.  Java supports at
-least three standard image formats: PNG, JPEG, and GIF.
-(Individual implementations of Java might support more.)
+Many standard formats have been created for doing this.  Java supports
+various standard image formats, including PNG, JPEG, and GIF.
 The JPEG format is "lossy," which means that the picture that you
 get when you read a JPEG file is only an approximation of the picture
 that was saved.  Some information in the picture has been lost.  Allowing some

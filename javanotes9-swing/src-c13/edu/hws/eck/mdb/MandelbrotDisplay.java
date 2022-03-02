@@ -88,7 +88,7 @@ public class MandelbrotDisplay extends JPanel {
 	private int imageWidth;                // Number of columns in the image; same as OSC.getWidth();
 	
 	
-	private int maxIterations = 50;        // Current maximum number of iterations that will be used
+	private int maxIterations = 250;       // Current maximum number of iterations that will be used
 	                                       //    in the Mandelbrot computation loop.  Pixels that require
 	                                       //    more iterations are colored black.
 	

@@ -1,24 +1,21 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.applet.AudioClip;
 import java.net.URL;
 
 /**
- * A demo program that can play a few sounds from resource files and
- * can show several different cursors, including a custom cursor that
- * is created from an image resource.  A main() routine allows this class
- * to be run as a stand-alone application. 
- * (The sound files used by this demo were taken from the KDE desktop.)
+ * A short demo program that can show several different cursors, including 
+ * a custom cursor that is created from an image resource.  A main() routine 
+ * allows this class to be run as a stand-alone application.  desktop.)
  */
-public class SoundAndCursorDemo extends JPanel {
+public class CursorDemo extends JPanel {
 	
 	/**
-	 * The main routine simply opens a window that shows a SoundAndCursorDemo panel.
+	 * The main routine simply opens a window that shows a CursorDemo panel.
 	 */
 	public static void main(String[] args) {
-		JFrame window = new JFrame("SoundAndCursorDemo");
-		SoundAndCursorDemo content = new SoundAndCursorDemo();
+		JFrame window = new JFrame("CursorDemo");
+		CursorDemo content = new CursorDemo();
 		window.setContentPane(content);
 		window.pack();  
 		window.setResizable(false); 
@@ -30,31 +27,19 @@ public class SoundAndCursorDemo extends JPanel {
 	}
 	
 	
-	public SoundAndCursorDemo() {
-		setLayout(new GridLayout(4,2,3,3));
+	public CursorDemo() {
+		setLayout(new GridLayout(4,1,3,3));
 		setBackground(Color.GRAY);
 		setBorder(BorderFactory.createLineBorder(Color.GRAY,3));
 		JButton button;
 		ButtonHandler listener = new ButtonHandler();
-		button = new JButton("Play Sound #1");
-		button.addActionListener(listener);
-		add(button);
 		button = new JButton("Use Crosshair Cursor");
-		button.addActionListener(listener);
-		add(button);
-		button = new JButton("Play Sound #2");
 		button.addActionListener(listener);
 		add(button);
 		button = new JButton("Use Wait Cursor");
 		button.addActionListener(listener);
 		add(button);
-		button = new JButton("Play Sound #3");
-		button.addActionListener(listener);
-		add(button);
 		button = new JButton("Use Move Cursor");
-		button.addActionListener(listener);
-		add(button);
-		button = new JButton("Play Sound #4");
 		button.addActionListener(listener);
 		add(button);
 		button = new JButton("Use Custom Cursor");
@@ -66,43 +51,17 @@ public class SoundAndCursorDemo extends JPanel {
 	private class ButtonHandler implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
 			String command = evt.getActionCommand();
-			if (command.equals("Play Sound #1"))
-				playAudioResource("snc_resources/KDE_Beep.wav");
-			else if (command.equals("Play Sound #2"))
-				playAudioResource("snc_resources/KDE_Beep_Lightning.wav");
-			else if (command.equals("Play Sound #3"))
-				playAudioResource("snc_resources/KDE_Window_Iconify.wav");
-			else if (command.equals("Play Sound #4"))
-				playAudioResource("snc_resources/KDE_Window_Sticky.wav");
-			else if (command.equals("Use Wait Cursor"))
+			if (command.equals("Use Wait Cursor"))
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			else if (command.equals("Use Move Cursor"))
 				setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 			else if (command.equals("Use Crosshair Cursor"))
 				setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 			else if (command.equals("Use Custom Cursor"))
-				useCustomCursor("snc_resources/TinySmiley.png");
-			if (command.startsWith("Play"))
-				setCursor(Cursor.getDefaultCursor());
+				useCustomCursor("TinySmiley.png");
 		}
 	}
 	
-	
-	/**
-	 * Plays the sound from an audio resource file.  If the resource can't
-	 * be found, nothing is done.  (If the sound is to replayed several
-	 * times, it would be more efficient to save the AudioClip in an
-	 * instance variable instead of loading it each time it is played.)
-	 */
-	private void playAudioResource(String audioResourceName) {
-		ClassLoader cl = getClass().getClassLoader();
-		URL resourceURL = cl.getResource(audioResourceName);
-		if (resourceURL != null) {
-			AudioClip sound = JApplet.newAudioClip(resourceURL);
-			sound.play();
-		}
-	}
-
 
 	/**
 	 * Sets the current cursor for this component to be a custom
