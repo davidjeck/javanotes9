@@ -11,7 +11,7 @@
 </xsl:template>
 
 <xsl:template match="sourceref">
-  <xsl:if test="not( ancestor::swing or ancestor::swingdiv or ancestor::swingSourceItems or ancestor::subsection[@scope='swing'])">
+  <xsl:if test="not( ancestor::fx or ancestor::fxdiv or ancestor::fxSourceItems or ancestor::subsection[@scope='fx'])">
    <xsl:variable name="chapternum"><!-- chapter attribute must be a chapter number; used occasionally, only in chapters, for ref to example in another chapter -->
       <xsl:choose>
          <xsl:when test="@chapter"><xsl:value-of select="@chapter"/></xsl:when>

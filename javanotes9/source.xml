@@ -380,7 +380,7 @@ as the GUI toolbox.</p>
    <li><sourceref href="chapter6/MosaicDraw.java">MosaicDraw.java</sourceref>, from <localref href="GUI1.8"/>,
    demonstrates menus and a color chooser dialog.  This is used in a program where
    the user colors the squares of a mosaic by clicking-and-dragging the mouse. It uses
-   <sourceref href="chapter6/MosaicPanel.java">MosaicPanel.java</sourceref> to define the mosaic panel itself,
+   <sourceref href="chapter6/MosaicCanvas.java">MosaicCanvas.java</sourceref> to define the mosaic panel itself,
    and it uses <sourceref href="chapter6/MosaicDrawController.java">MosaicDrawController.java</sourceref>
    to create the panel and menu bar and to handle events.</li>
    <li><sourceref href="chapter6/SimpleDialogDemo.java">SimpleDialogDemo.java</sourceref>, from <localref href="GUI1.8"/>,

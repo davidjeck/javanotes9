@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE section SYSTEM "../javanotes9.dtd" >
 
-<section id="GUI1.8" title="Menus and Dialogs">
+<section id="GUI1.8" title="Menus, Dialogs, and Complete Programs">
 
 <p><start><big>W</big>e have already encountered</start> many of the basic
 aspects of GUI programming, but professional programs use many
@@ -504,7 +504,10 @@ of the form:</p>
 <pre>java  -jar  JarFileName.jar</pre>
 
 <np>and you might even be able to run the jar file by double-clicking its icon in 
-a file browser window.</np>
+a file browser window.  if the jar file is not executable, you can add the name
+of the class that contains the main program to the command:</np>
+
+<pre>java  -jar  JarFileName.jar  MyMainClass</pre>
    
 <p>The question, then, is how to create a jar file.  The answer depends on what
 programming environment you are using.  The two basic types of programming environment&mdash;command line
@@ -539,7 +542,7 @@ Then give the command</p>
 The "<code>*</code>" in "<code>*.class</code>" is a wildcard that makes <code>*.class</code> match every class
 file in the current directory.  This means that all the class files in the directory will be
 included in the jar file.  If you want to include only certain class files, you
-can name them individually, separated by spaces. You can also list the class file names separately.
+can name them individually, separated by spaces. 
 If the program uses resource files, such as images, they should
 also be listed in the command.  (Things get more complicated if your classes and resources are not in the
 default package.  In that case, the files must be in subdirectories of the
@@ -567,6 +570,81 @@ and use a command of the form</np>
 variety of different operations.  The first parameter to the command, such as "<code>cf</code>"
 or "<code>cmf</code>", tells it which operation to perform.)</np>
    
+
+</subsection>
+
+<subsection title="jpackage" id="GUI1.8.5">
+
+<p>You can collect the class files and resource files for a program into a jar file,
+and you can give that jar file to someone who would like to use your
+program.  However, that person will still need to have Java installed on their
+computer&mdash;something that is really not very likely these days, unless that person
+is a Java developer.  A possible solution is to bundle a Java virtual machine
+along with your program.  The Java Development Kit includes the <code>jpackage</code>
+command to make that possible.</p>
+
+<p>The <code>jpackage</code> command can create an installer that will install your
+program along with as much Java support as is needed to run it.  It has some
+significant limitations.  It can only make an installer for the type of computer
+and operating system that you are using; for example, it is not possible to use <code>jpackage</code>
+on Linux to make an installer for Windows.  And the files that it makes are very
+large, since they have to include large parts of a Java execution environment.
+So <code>jpackage</code> is really meant for packaging large, serious applications.
+But if you want to try it, here is a basic example, using only a few of the
+options that are available for <code>jpackage</code>.  For the example, 
+I&nbsp;made an installer for the network poker game from <localref href="threads.5.4"/>.
+This might also help you understand how to work with packages in general.</p>
+
+<p>To use <code>jpackage</code>, you need a jar file that contains the classes and resource files for your
+program.  The poker game uses classes from the packages <code>netgame.common</code> and
+<code>netgame.fivecarddraw</code>, plus a resource image file <code>cards.png</code>
+in <code>netgame.fivecarddraw</code>.  To make the jar file, I first compiled
+the java files by giving the following command in the directory that contained
+the <sourceref chapter="12" href="netgame"/> directory:</p>
+
+<pre>javac  netgame/common/*.java  netgame/fivecarddraw/*.java</pre>
+
+<np>and then created a jar file, <code>Poker.jar</code>, with this command,
+<i>typed all on one line</i>:</np>
+
+<pre>jar  cf  Poker.jar  netgame/common/*.class  netgame/fivecarddraw/*.class
+                netgame/fivecarddraw/cards.png</pre>
+                
+<np>It is important to include the image resource file along with the class files.
+(Note that on Windows, the slashes, "/", would be replaced by backslashes, "\".)</np>
+
+<p>I moved <code>Poker.jar</code> to a new directory.  Working in that new directory,
+I used the following <code>jpackage</code> command, again <i>typed all on one line</i>:</p>
+
+<pre>jpackage  --input  <b>.</b>  --main-jar  Poker.jar 
+             --main-class  netgame.fivecarddraw.Main  --name NetPoker</pre>
+             
+<np>The value for the <code>--input</code> option is a period, which represents the current working
+directory; it could be replaced by a path to the directory that contains <code>Poker.jar</code>.
+The value for the <code>--main-class</code> option is the full name of the class that
+contains the main program; this option is not needed if the jar file is executable.
+The value of the <code>--name</code> option is used to name the installer and
+to name the executable file that it will install.</np>
+
+<p>When used on my computer, running Linux Mint, this produced a file named
+<code>netpoker_1.0-1_amd64.deb</code> that I could
+then install in the usual way. It installed the poker executable
+as <code>/opt/netpoker/bin/NetPoker</code>.</p>
+
+<p>On Mac OS, using the JDK from adoptium.net (see <localref href="basics.6.1"/>),
+I found that <code>jpackage</code> was installed as part of the
+JDK, but it was not made available on the command-line.  I was able to define it
+myself as an alias: </p>
+
+<pre>alias jpackage=
+     "/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/bin/jpackage"</pre>
+
+<np>Again, type this all on one line.  With that done, I used the same commands
+as given above.  The result was a .dmg file containing a program, <code>netpoker.app</code>,
+that could be run by double-clicking.</np>
+
+<p>The <code>jpackage</code> command should also work on Windows, but it requires
+something called the "WiX toolset" in addition to the JDK.  I have not tried it.</p>
 
 </subsection>
 

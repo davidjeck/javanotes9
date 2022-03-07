@@ -111,7 +111,7 @@ The <code>toString()</code> method returns a string that includes the name of th
 class and the names and values of its fields.  The <code>equals()</code> method
 returns <code>true</code> if its parameter is an object of the same type that has
 the same values for its fields.  (We will not encounter the <code>hashCode()</code> 
-method until <sourceref href="generics.3"/>.)</p>
+method until <localref href="generics.3"/>.)</p>
 
 <p>We will see that record class definitions can be more complex, but you should
 expect basic record classes, with empty class bodies, to be very common, since

@@ -15,7 +15,7 @@ import javax.swing.JFrame;
  * makes it visible on the screen.  It also sets the program to end when
  * the user closes the window.
  * 
- * Note that this class depends on MosaicPanel.java and MosaicDrawController.java.
+ * Note that this class depends on MosaicCanvas.java and MosaicDrawController.java.
  */
 public class MosaicDraw extends JFrame {
 

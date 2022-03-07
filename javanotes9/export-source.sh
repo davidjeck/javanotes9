@@ -5,7 +5,7 @@ PROJECT='javanotes9'
 
 SOURCE_DIR='/home/eck/git/javanotes9'
 EXPORT_DIR="/home/eck/Desktop/$VERSION-source"
-XALAN_DIR="/home/eck/xalan-j_2_7_1"
+XALAN_DIR="/home/eck/xalan-j_2_7_2"
 
 if [ -x "$EXPORT_DIR" ] ; then
    rm -r $EXPORT_DIR/*

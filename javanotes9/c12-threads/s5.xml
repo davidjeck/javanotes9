@@ -460,7 +460,7 @@ private class ChatClient extends Client {
 <np>Except for the constructor, none of the methods in the <classname>ChatClient</classname>
 class are called by the <classname>ChatRoomWindow</classname> program; they are called from
 the connection-handling thread in the client object, which was programmed in 
-<sourceref href="netgame/chat/Client.java">Client.java</sourceref>.
+<sourceref href="netgame/common/Client.java">Client.java</sourceref>.
 For the full source code of the chat room application, see the
 source code files, which can be found in the package
 <sourceref href="netgame/chat">netgame.chat</sourceref>.</np>

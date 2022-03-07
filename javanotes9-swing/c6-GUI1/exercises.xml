@@ -401,7 +401,7 @@ prevY = y;</pre>
 I included a <code>main()</code> routine in the class, to allow it to be run
 as an application, but <code>main()</code> could also be in its own class.
 The <code>main()</code> routine can be more-or-less copied from other
-programs in this chapter, such as <sourceref href="SillyStamper.java"/>.</p>
+programs in this chapter, such as <sourceref href="SimpleStamper.java"/>.</p>
 
 <p>The constructor in the <classname>DrawTwoSquares</classname> class sets up 
 the initial positions of the two
@@ -1016,7 +1016,7 @@ containing class, but <code>frames</code> is not a natural part of that class.
 And <code>frames</code> cannot be a local variable in the <code>roll()</code>
 method, because it is not effectively final, and local variables can only 
 be used in lambda expressions and local classes if they are <code>final</code> or effectively
-final.  (See <sourceref href="OOP.8.4"/>.)</np>
+final.  (See <localref href="OOP.8.4"/>.)</np>
 
 <p>For this program, I decided to put the <code>main()</code> routine for the program in
 a separate class, just to remind you that it can be done that way!</p>
