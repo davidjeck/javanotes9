@@ -15,8 +15,8 @@
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java</h2>
-        <h2 class="chapter_title">Version 9, JavaFX Edition, 2022</h2>
-        <p style="text-align:center">(Under Development!)</p>
+        <h2 class="chapter_title">Version 9, JavaFX Edition</h2>
+        <p style="text-align:center">(Under Development, Spring 2022!)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
@@ -31,11 +31,15 @@
          programmers who want to learn something about Java.  It is not meant to
          provide complete coverage of the Java language.
         </p>
-        <p>Version 9 covers Java 17.  It updates Version&#160;8.1.3 mostly by moving definitively to Java&#160;17.
+        <p>Version 9 covers Java 17.  It updates Version&#160;8.1.3 mostly by moving definitively to Java&#160;17
+        and by adding a new Swing edition.
          This edition of Version&#160;9 uses JavaFX for GUI programming;
-         <a href="http://math.hws.edu/javanotes/">an&#160;edition</a> that uses
+         <a href="http://math.hws.edu/javanotes9-swing/">an&#160;edition</a> that uses
          Swing instead of JavaFX is also available. See the <a href="preface.html">preface</a> for links to
          older versions.</p>
+         <p><b>Links for downloading the book will be available when the final version is
+         published in the middle of May.</b></p>
+<!--          
          <p>You can the download this
          web site for use on your own computer. 
          PDF, <span style="white-space:pre">e-book</span>, and print
@@ -46,6 +50,7 @@
          the book!  You can download the source code separately or as part of the web site using the links below.
          See the <a href="README-running-the-examples.txt">README&#160;file</a>
          for information about how to compile and run the examples.</b></p>
+-->         
         <h3>Short Table of Contents:</h3>
         <ul class="contents">
         <li><b><a href="contents-with-subsections.html">Full Table of Contents</a></b></li>
@@ -65,7 +70,7 @@
         </ul>
         <hr/>
         <blockquote>
-         <i>&#169;1996--2021, David J. Eck.<br/>
+         <i>&#169;1996--2022, David J. Eck.<br/>
             <small>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License</a>.
             (This license allows you to redistribute this book in unmodified form for non-commercial purposes.  It allows you
             to make and distribute modified versions for non-commercial purposes, as long as you include an attribution to the
@@ -77,6 +82,7 @@
             This book is available for downloading and for on-line use at the Web address:
             <a href="https://math.hws.edu/javanotes/">https://math.hws.edu/javanotes/</a></small></i>
           </blockquote>
+ <!--
         <hr/>
         <h3>Downloading And Other Links</h3>
         <ul>
@@ -117,9 +123,7 @@
           </li>
           <li>
           <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9.pdf">https://math.hws.edu/eck/cs124/downloads/javanotes9.pdf</a></b> &#8212;
-          a PDF version without links, more suitable for printing.  <!-- This PDF is in the format that is used for the printed version of the text,
-          except that it also includes an appendix listing example programs and a glossary (since they would have
-          exceeded the lulu.com page limit). -->
+          a PDF version without links, more suitable for printing.
           Size:&#160;6.2&#160;Megabytes; 767 pages.
           </li>
           </ul>
@@ -141,7 +145,7 @@
            </li>
            </ul>
         </li>
- <!--       <li>
+       <li>
           <b>Print Version Available from Lulu.com:</b>
           <ul>
           <li><b>Printed version</b> &#8212;  I have made this book available for
@@ -165,12 +169,12 @@
           audience.  See the end of the <a href="preface.html">preface</a> for more information and a link.</li>
           </ul>
         </li>
--->
         </ul>
+-->
         </td></tr></table>
         <hr/>
         <div align="right"><small><i>
-                 (Winter 2022, Version 9 under development)
+                 (14 March 2022, Preliminary version 9 released on-line only)
               </i></small></div>
         </div>
         </div></body>

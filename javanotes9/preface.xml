@@ -13,8 +13,8 @@ programming.  Chapters 1 through 7 can be used as a textbook in a one-semester
 college-level course or in a year-long high school course.  The remaining
 chapters can be covered in a second course.</p>
 
-<p>The textbook home page, <fx><a href="https://math.hws.edu/javanotes/">https://math.hws.edu/javanotes/</a>,</fx>
-<swing><a href="https://math.hws.edu/javanotes-swing/">https://math.hws.edu/javanotes-swing/</a>,</swing> 
+<p>The textbook home page, 
+<fx><a href="https://math.hws.edu/javanotes/">https://math.hws.edu/javanotes/</a>,</fx><swing><a href="https://math.hws.edu/javanotes-swing/">https://math.hws.edu/javanotes-swing/</a>,</swing> 
 has links for downloading both web site and PDF versions of the book.  Example programs and
 solutions to end-of-chapter exercises are part of the web site download and can also be downloaded
 separately.  Readers are encouraged
@@ -62,8 +62,10 @@ to cover some more advanced features.</p>
 <p>Java currently has two major approaches to Graphical User Interface programming:
 JavaFX and Swing.  This edition of the textbook uses <fx>JavaFX</fx><swing>Swing</swing>,
 but there is an alternative edition that uses <fx>Swing</fx><swing>JavaFX</swing>.
-The main differences are in Chapters&nbsp;6 and&nbsp;13, which are devoted to GUI programming.
-For the Swing edition, those two chapters are taken from Version&nbsp;7 of this textbook,
+The main differences are in Chapters&nbsp;6 and&nbsp;13, which are devoted to GUI programming,
+but GUI programs and GUI-related material
+in other chapters also use <fx>JavaFX</fx><swing>Swing</swing> exclusively.
+For the Swing edition, much of the GUI material is taken from Version&nbsp;7 of this textbook,
 with some updating and modification.</p>
 
 <p>Swing is a standard part of Java.  JavaFX was introduced as a more modern approach to
@@ -102,8 +104,9 @@ However, I will never refer to any of the non-long-term-support releases.</p>
    
 
 <p>The first version of the book was written in 1996, and there have
-been several editions since then.  All editions are archived (at least until my retirement in December 2022) 
-at the following Web addresses:</p>
+been several versions since then.  Version&nbsp;9 will be the last version.
+All editions are archived (at least until my retirement in December 2022
+and hopefully beyond) at the following Web addresses:</p>
    
 <ul>
 <li>First edition: <a href=

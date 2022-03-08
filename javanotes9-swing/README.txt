@@ -2,10 +2,10 @@
 
 This is the README file for the javanotes source download...
                                                     
-Directory javanotes9.0-source contains the source files that are used 
+Directory javanotes9.0-swing-source contains the source files that are used 
 to produce the web site and PDF versions of "Introduction to Programming 
-using Java", Version 9.0, JavaFX edition.  This free textbook (or a later 
-version) can be found on the web at:  http://math.hws.edu/javanotes
+using Java", Version 9.0, Swing edition.  This free textbook (or a later 
+version) can be found on the web at:  http://math.hws.edu/javanotes-swing
 
       Everything in this directory is released under a 
       Creative Commons Attribution-NonCommercial-ShareAlike 4.0 License 
@@ -84,13 +84,12 @@ The following scripts are provided:
     BUILD-lulu.sh
           --- creates the three PDF files for the print versions
               that are published at lulu.com
-              
+                           
     BUILD-epub.sh
           --- creates an ebook in epub format.  (It will also
               convert the .epub file to a .mobi file, if you
               have the utility that is required to do that.)
               This is a perpetually experimental feature!
-                           
               
 All these scripts put their output in a directory named
 build_output (but the destination can be changed by

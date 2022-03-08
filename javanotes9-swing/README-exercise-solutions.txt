@@ -1,16 +1,15 @@
 
 This README explains how to use the solutions to the programming exercises
-for "Introduction to Programming Using Java, Version 9, JavaFX edition", 
-which is freely available on the web at http://math.hws.edu/javanotes
+for "Introduction to Programming Using Java, Version 9, Swing edition", 
+which is freely available on the web at http://math.hws.edu/javanotes-swing
 
 Although some exercise solutions will work with earlier versions,
-Java 17 is required for many of them.  All GUI programs use JavaFX,
-which must be downloaded separately.  Information about getting
-and using Java and JavaFX can be found in Section 2.6 of the book.
+Java 17 is required for many of them.  Information about getting
+Java can be found in Section 2.6 of the book.
 
 Each end-of-chapter exercise has a web page that contains a discussion
 of the solution and the source code for a sample solution.  The
-archive javanotes9-exercise-solutions.zip, which can be downloaded
+archive javanotes9-swing-exercise-solutions.zip, which can be downloaded
 using a link on the web site, contains all of the source code for
 the solutions, extracted from the solution web pages.  It also contains
 all extra files that are required by the solutions.  The solutions
@@ -33,10 +32,8 @@ You have two options for running the solutions...
 
 If you want to run the examples in an IDE, such as Eclipse, you should
 be able to copy-and-paste the entire contents of any one of the chapter folders
-into a project in the IDE, and then run the programs.  For GUI programs,
-which use JavaFX, you need to configure the Eclipse workspace as
-discussed in Section 2.6 of the book.  Note: When adding items to
-an Eclipse project, do not copy the chapter folder itself; open the 
+into a project in the IDE, and then run the programs.   Note: When adding items 
+to an Eclipse project, do not copy the chapter folder itself; open the 
 folder and copy the contents into the src folder in the Eclipse project.
 You can put the examples from several chapters into the same project if you 
 want; some files, such as TextIO.java, are duplicated in several chapters,
@@ -48,8 +45,8 @@ copy of the file in your project.
 
 If you know how to compile programs on the command line, and if you have
 downloaded the examples, you can easily compile and run all the examples.
-For non-GUI programs, just change into one of the chapter directories inside 
-the "sources" directory, and use a command of the form
+Just change into one of the chapter directories inside the "sources" directory, 
+and use a command of the form
 
                   javac ExampleClassName.java
                   
@@ -62,29 +59,21 @@ but warnings do not stop a program from being compiled or executed.)  You can
 then run the compiled program using the java command.  For example:
 
                   java HelloWorld
-                  
-For GUI programs, which use JavaFX, you will have to add command-line options to
-the javac and java commands, as discussed in Section 2.6 of the textbook,
-but the basic idea is the same.
+                   
  
- 
-There is one exercise in Chapter 12 that uses packages.  Furthermore, that
-exercise uses JavaFX, so you will need to add JavaFX options to the javac
-and java commands.  Let's say that you've defined commands  jfxc  and  jfx
-that are equivalent to the  javac  and  java  commands with JavaFX options
-included, as discussed in Subsection 2.6.7.  Then you can compile the
+There is one exercise in Chapter 12 that uses packages.  You can compile the
 example with the command
 
-                  jfxc netgame/newchat/*.java
+                  javac netgame/newchat/*.java
                   
 on Mac or Linux or
 
-                  jfxc netgame\newchat\*.java
+                  javac netgame\newchat\*.java
                   
 on Windows.  Then, to use the program, you need to run both the server program
 and the client program with the following commands (in separate command windows):
 
-                  jfx netgame.newchat.NewChatRoomServer
+                  java netgame.newchat.NewChatRoomServer
 and
-                  jfx netgame.newchat.NewChatRoomWindow
+                  java netgame.newchat.NewChatRoomWindow
 

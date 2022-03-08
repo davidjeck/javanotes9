@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Javanotes Version 8.1.3 -- News</title>
+<title>Javanotes Version 9.0 -- News</title>
 <link type="text/css" rel="stylesheet" href="javanotes.css">
 <style>
    .error {
@@ -21,12 +21,48 @@
 <body>
 <div class="page">
 <div class="content">
-<h3 class="chapter_title">Introduction to Programming Using Java, Eighth Edition</h3>
+<h3 class="chapter_title">Introduction to Programming Using Java, Version 9</h3>
 <h2 class="chapter_title">News and Errata</h2>
 
 <hr>
 
-<h2>News for the Eighth Edition of This Book</h2>
+<h2>News for Version 9 of This Book</h2>
+
+<ul>
+<li><b>March 21, 2022</b> &mdash; Preliminary releases of Version 9 of 
+<i>Introduction to Programming Using Java</i> is available for use
+on-line at <a style="white-space:pre" href="https://math.hws.edu/javanotes9">https://math.hws.edu/javanotes9</a>
+and at <a style="white-space:pre" href="https://math.hws.edu/javanotes9-swing">https://math.hws.edu/javanotes9-swing</a>.
+The official release should be in mid-May (after the end of the Spring semester); downloads will
+be available at that time.  Version&nbsp;9 covers
+Java&nbsp;17.  It is available in two editions, one using JavaFX for GUI programming and a new
+alternative edition that uses Swing.</li>
+</ul>
+
+<hr>
+
+
+
+<h2>Errata for Version 9.0</h2>
+
+<p>When substantive errors are found in Version 9, they will be posted here.  (Typos will
+not reported.)</p>
+
+<!--
+
+<p>This is a list of substantive errors that have been found in Version 9.0.</p>
+
+<ul>
+<li><b>Section ??</b>: In Subsection ??,
+<span class="error"><code>???</code></span> should be
+<span class="fix"><code>???</code></span>.</li>
+</ul>
+
+-->
+
+<hr>
+
+<h2>Some Old News</h2>
 
 <ul>
 <li><b>August 1, 2021</b> &mdash; Version 8.1.3 is released, with updates to information
@@ -55,109 +91,6 @@ course, using Chapters 8 through 13 of the eighth edition, can be found at
 <a href="http://math.hws.edu/eck/cs225/">http://math.hws.edu/eck/cs225/</a>.</li>
 <li><b>December 5, 2018</b> &mdash; The official release of the Eighth Edition.  Once again, I am
 indebted to John Ganci, who contributed many corrections to the "beta" version of this edition.</li>
-<li><b>August 19, 2018</b> &mdash; A "final beta" version of the Eighth Edition is available for
-browsing on the web and for download.
-The official release of the Eighth Edition will take place some time after Java 11 is released.</li>
-</ul>
-
-<hr>
-
-
-
-
-<h2>Errata for Version 8.1</h2>
-
-<p>This is a list of substantive errors that have been found in Version 8.1.</p>
-
-<ul>
-<li><b>Section 2.5</b>: A reader wrote to point out some errors in the description of Java
-expressions in Section 2.5.  The statement in Subsection 2.5.3 that said <code>x&nbsp;==&nbsp;Double.NaN</code>
-and <code>x&nbsp;!=&nbsp;Double.NaN</code> are both <code>false</code> in all cases is not correct.
-In fact, <code>x&nbsp;==&nbsp;Double.NaN</code> is defined to be false in all cases, and
-<code>x&nbsp;!=&nbsp;Double.NaN</code> is defined to be <code>true</code> in all cases.
-Also, Subsection 2.5.6 incorrectly said that there is an assignment operator <code>&amp;&amp;=</code>.
-There is no such operator. [Fixed in version 8.1.2.] </li>
-<li><b>Section 2.6</b>: Near the end of Subsection 2.6.3, a .bat file 
-for compiling JavaFX programs on the command line in windows is given as <span class="error">javac -p&nbsp;C:\Users\eck\openjfx-sdk-11\lib --add-modules=ALL-MODULES-PATH&nbsp;$*</span>.
-It should be <span class="fix">javac -p&nbsp;C:\Users\eck\openjfx-sdk-11\lib --add-modules=ALL-MODULE-PATH&nbsp;%*</span>.
-Note the use of&nbsp;% at the end instead of&nbsp;$, and the extra "S" that was added to ALL-MODULE-PATH in the incorrect
-version.  [Fixed in version 8.1.3.]</li>
-<li><b>Section 2.6</b>: In the last paragraph of Subsection 2.6.7,
-"For example, if a program is in a package named <span class="error"><code>text.pkg</code></span>"
-should be "For example, if a program is in a package named <span class="fix"><code>test.pkg</code></span>".
-[Fixed in version 8.1.2.]</li>
-<li><b>Source file RandomCircles.java for Chapter 3</b>: The comments on this file were not updated from
-an earlier version and did not correctly describe the program.  [Comments are corrected in version 8.1.2.]</li>
-<li><b>Section 4.4</b>: At the start of the sample program <i>ThreeN2</i> in Subsection 4.4.3,
-<span class="error"><code>input&nbsp;textio.TextIO</code></span> should be
-<span class="fix"><code>import&nbsp;textio.TextIO</code></span>.
-[Fixed in version 8.1.2.]</li>
-<li><b>Section 6.4</b>: The method <span class="error">control.setToolTipText(text)</span> for setting the
-tool tip for a control is incorrect.  This is left over from the Swing GUI.  In JavaFX, a tool tip
-can be set using <span class="fix">control.setTooltip(new&nbsp;Tooltip(string))</span>.
-[Fixed in version 8.1.3.]</li>
-<li><b>Section 7.5</b>: In the illustration of a symmetric matrix in Subsection 7.5.1, two of the
-entries are not symmetric.  <span class="error"><code>M[0][3]</code></span> should be 6, not 13,
-and <span class="error"><code>M[3][6]</code></span> should be -4, not&nbsp;4. [Fixed in version 8.1.2.]</li>
-<li><b>Section 7.2</b>: In the next-to-last code segment in Subsection 7.2.1,
-<span class="error"><code>double&nbsp;B</code></span> should be <span class="fix"><code>double[]&nbsp;B</code></span>.
-[Corrected in Version 8.1.1.]</li>
-<li><b>Section 10.1</b>: In several places, <span class="error">JFC</span> is used as the abbreviation for
-the Java Collection Framework.  It should be <span class='fix'>JCF</span>.  [Fixed in version 8.1.3.]</li>
-</ul>
-
-<hr>
-
-
-
-
-<h2>Errata for Version 8.0</h2>
-
-<p>This is a list of substantive errors that were found in the original Version&nbsp;8.0 from December 2018.
-These errors have been corrected in Version&nbsp;8.1.</p>
-
-<!-- <li><b></b>, <span class="error"></span> should be <span class="fix"></span></li> -->
-
-<ul>
-<li><b>Section 3.9, Section 1</b>: Three occurrences of <span class="error">g.drawLine</span>
-should be <span class="fix">g.strokeLine</span></li>
-<li><b>Chapter 6 Quiz Answers</b>, in the answer to Question 5, "<span class="error">The drawLine command</span>"
-should be "<span class="fix">The strokeLine command</span>".
-<li><b>Section 10.6</b>, next-to-last paragraph of the introductory material:
-"The net result is that we've added up the lengths of all the
-<span class="error">streams</span> in the list" should be 
-"The net result is that we've added up the lengths of all the
-<span class="fix">strings</span> in the list.</li>
-</ul>
-
-<hr>
-
-
-<h2>Some Old News</h2>
-
-<ul>
-<li><b>November 25, 2017</b> -- My <a href="http://math.hws.edu/eck/cs124/index.html">CPSC 124 web site</a>
-includes programming assignments as well as tests and quizzes from the Fall 2017 of my Introductory
-Programming course [using the seventh edition of this textbook].</li>
-<li><b>March 19, 2016</b> -- I have added eBook versions of this textbook to the web site, in
-"epub" format and in "mobi" format for Kindle.  They can be downloaded using links at the
-bottom of the <a href="index.html">front&nbsp;page</a>.  Note that there can be problems with
-the rendering of long lines in code samples, and that the problems will be worse on some
-devices.  The eBook versions should be considered somewhat experimental.
-In addition to adding the eBooks, a very small number
-of errors (about a half dozen) have been fixed in the on-line and PDF versions, without
-changing the version number.</li>
-<li><b>August 1, 2014</b> -- Version 7 is released.  Version 7 requires Java&nbsp;7 or later.
-Note that with this version, the book no longer cover applets, and there are no applets
-in the on-line version.  Readers are encouraged to download, compile, and run the examples.
-Links for downloading are available on the <a href="index.html">front&nbsp;page</a>.</li>
-<li><b>May 17, 2013</b> -- Version 6.0.2 is released, with fixes for many small, mostly typographical
-errors.  Again, thanks to readers who sent in error reports, especially Mark Christy and
-John Ganci, who found many errors.</li>
-<li><b>June 1, 2011</b> -- Version 6.0 is released.  The sixth edition adds a new
-chapter on threads and multiprocessing and some coverage of new features of Java 6
-and Java&nbsp;7.  Thanks to many readers who wrote with suggestions and error reports,
-especially to Jeff Wexler who sent a large numbers of corrections.</li>
 </ul>
 
 

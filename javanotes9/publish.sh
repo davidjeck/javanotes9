@@ -1,7 +1,6 @@
 #!/bin/bash
 
 VERSION='javanotes9'
-PROJECT='javanotes9'
 
 if [ ! -d build_output ] ; then
    echo Cannot find build_output directory
@@ -11,9 +10,7 @@ fi
 echo Changing to build_output
 cd build_output
 
-UPLOADS=""
-
-if [ -e javanotes9.pdf -o -e javanotes9-linked.pdf -o -e web-site ] ; then
+if [ -e javanotes9.pdf -o -e javanotes9-linked.pdf -o -e web-site -o -e javanotes9.epub -o -e exercise-programs ] ; then
    echo Creating downloads directory
    mkdir downloads
 else
@@ -74,7 +71,4 @@ cd ..
 echo
 echo Output in build_output folder.
 echo
-
-#echo Copying files to web site.
-#rsync -e ssh -r build_output/* dje@math.hws.edu:/var/www/htdocs/eck/cs124
 

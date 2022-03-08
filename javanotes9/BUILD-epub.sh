@@ -1,12 +1,18 @@
 #!/bin/bash
 
-# THIS SCRIPT BUILDS JAVANOTES AS AN EPUB EBOOK AND AS A MOBI EBOOK
+# THIS SCRIPT BUILDS JAVANOTES AS AN EPUB EBOOK.
+# IT SHOULD BE CONSIDERED (PERMANENTLY) EXPERIMENTAL.
 
-# To build the MOBI version, you must get the kindlegen program from
-# amazon.com and set the following variable to refer to that program.
-# If you don't want to generate the MOBI version, comment out this line.
+# The script can convert the .epub file to a .mobi file
+# if an appropriate utilty is available and you uncomment
+# and edit one of the following lines.  The first uses
+# an old utility named kindlegen from amazon.com that is no 
+# longer available for download.  The second uses a command
+# that is installed on Linux as part of the Calibre ebook
+# viewer.
 
-KINDLEGEN='/home/eck-mint13/KindleGen/kindlegen'
+# KINDLEGEN='/home/eck-mint13/KindleGen/kindlegen'
+# EBOOKCONVERT='/usr/bin/ebook-convert'
 
 # VARIABLES USED IN THIS SCRIPT CAN BE SET IN BUILT-env.sh; see that file
 # for more information.
@@ -102,7 +108,7 @@ if  $XALAN_COMMAND -xsl convert-epub.xsl -in javanotes9-epub.xml ; then
     
    echo
    echo "BUILD-epub.sh completed."
-   echo "Created javanotes6.epub in $BUILD_OUTPUT_DIR."
+   echo "Created javanotes9.epub in $BUILD_OUTPUT_DIR."
    echo
    
    if [ -x "$KINDLEGEN" ]; then
@@ -118,9 +124,22 @@ if  $XALAN_COMMAND -xsl convert-epub.xsl -in javanotes9-epub.xml ; then
          echo
          echo EPUB was created successfully, but MOBI could not be created.
       fi
+   elif [ -x "$EBOOKCONVERT" ]; then
+      echo
+      echo Converting epub to mobi with ebook-convert
+      echo
+      cd $BUILD_OUTPUT_DIR
+      $EBOOKCONVERT javanotes9.epub javanotes9.mobi
+      if [ -f "javanotes9.mobi" ]; then
+         echo
+         echo Finished EPUB and MOBI ebook generation.
+      else
+         echo
+         echo EPUB was created successfully, but MOBI could not be created.
+      fi
    else
       echo
-      echo Skipping conversion of EPUB to MOBI because kindlegen executable not found.
+      echo Skipping conversion of EPUB to MOBI because no conversion utility is available.
    fi
    
    exit 0

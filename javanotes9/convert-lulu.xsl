@@ -51,7 +51,7 @@
 \tableofcontents
 <xsl:apply-templates select="/javanotes/preface"/>
 \mainmatter
-<xsl:if test="$lulu = 'two'">\setcounter{page}{385}
+<xsl:if test="$lulu = 'two'">\setcounter{page}{401}
 \setcounter{chapter}{7}</xsl:if>
 <xsl:apply-templates select="/javanotes/chapter"/>
 \appendix

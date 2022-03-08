@@ -13,14 +13,14 @@
 		<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="javanotesID">
 		    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/"
 		          xmlns:opf="http://www.idpf.org/2007/opf">
-		   		<dc:title>Introduction to Programming Using Java, Version 9, JavaFX Edition</dc:title>
+		   		<dc:title>Introduction to Programming Using Java, Version 9, Swing Edition</dc:title>
 		   		<dc:creator opf:role="aut">David J. Eck</dc:creator>
-		   		<dc:description>A free introductory programming textbook using Java as the programming language, version 9, JavaFX Edition.</dc:description>
+		   		<dc:description>A free introductory programming textbook using Java as the programming language, version 9, Swing Edition.</dc:description>
 		   		<dc:date>2022-5</dc:date>
 		   		<dc:language>en-US</dc:language>
 		   		<dc:rights>Copyright 1996-2022 by David J. Eck.  Released under the
 		   		    Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.</dc:rights>
-		   		<dc:identifier id="javanotesID">https://math.hws.edu/javanotes9</dc:identifier>
+		   		<dc:identifier id="javanotesID">https://math.hws.edu/javanotes9-swing</dc:identifier>
 		    </metadata>
 		    <manifest>
 		        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
@@ -120,7 +120,7 @@
    <redirect:write file="epub/OEBPS/toc.ncx">
 	<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en-US">
 	    <head>
-	        <meta content="http://math.hws.edu/javanotes9" name="dtb:uid"/>
+	        <meta content="http://math.hws.edu/javanotes9-swing" name="dtb:uid"/>
 	    </head>
 	    <docTitle>
 	        <text>Introduction to Programming Using Java, Version 9.0</text>
@@ -155,7 +155,7 @@
 		                  <text><xsl:value-of select="concat('Section ',$chapter,'.',$section,': ',@title)"/></text>
 		               </navLabel>
 		               <content><xsl:attribute name="src"><xsl:value-of select="concat('c',$chapter,'/s',$section,'.html')"/></xsl:attribute></content>
-		               <xsl:for-each select="subsection"><xsl:if test="@scope != 'swing'">
+		               <xsl:for-each select="subsection"><xsl:if test="@scope != 'fx'">
 			                <xsl:variable name="subsection"><xsl:value-of select="position()"/></xsl:variable>
 				            <navPoint><xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
 				               <navLabel>
@@ -236,7 +236,7 @@
 </xsl:text>
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-        <title>Javanotes 9, JavaFX Edition -- Title Page</title>
+        <title>Javanotes 9, Swing Edition -- Title Page</title>
         <link href="javanotes-epub.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
@@ -493,7 +493,7 @@
     </redirect:write>
 </xsl:template>
     
-<xsl:template match="subsection"><xsl:if test="@scope != 'swing'">
+<xsl:template match="subsection"><xsl:if test="@scope != 'fx'">
     <hr class="break"/>
     <h3 class="subsection_title"><a><xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute><xsl:if test="not(ancestor::source)"><xsl:number count="chapter"/>.<xsl:number count="section"/>.<xsl:number count="subsection"/>&#160;&#160;</xsl:if><xsl:value-of select="@title"/></a></h3>
     <xsl:apply-templates/>
@@ -846,7 +846,7 @@
    
 <xsl:template match="endchapter"></xsl:template>
     
-<xsl:template match="prog"><xsl:if test="@scope != 'swing'">
+<xsl:template match="prog"><xsl:if test="@scope != 'fx'">
     <xsl:apply-templates/>
 </xsl:if></xsl:template>
     
@@ -862,22 +862,22 @@
     <xsl:apply-templates/>
 </xsl:template>
 
-<xsl:template match="fx">
+<xsl:template match="fx"></xsl:template>
+    
+<xsl:template match="fxdiv"></xsl:template>
+    
+<xsl:template match="fxSourceItems"></xsl:template>
+    
+<xsl:template match="swing">
     <xsl:apply-templates/>
 </xsl:template>
     
-<xsl:template match="fxdiv">
+<xsl:template match="swingdiv">
     <xsl:apply-templates/>
 </xsl:template>
-    
-<xsl:template match="fxSourceItems">
-    <xsl:apply-templates/>
-</xsl:template>
-    
-<xsl:template match="swing"></xsl:template>
-    
-<xsl:template match="swingdiv"></xsl:template>
 
-<xsl:template match="swingSourceItems"></xsl:template>
+<xsl:template match="swingSourceItems">
+    <xsl:apply-templates/>
+</xsl:template>
     
 </xsl:stylesheet>
