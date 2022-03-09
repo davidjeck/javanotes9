@@ -242,12 +242,9 @@
         <body>
         <div class="content">
         <hr/>
-        <h2 class="chapter_title">Introduction to Programming Using Java, Ninth Edition</h2>
-        <h2 class="chapter_title">Version 9.0, May 2022</h2>
- <!--        <p class="centeralign">
-        <i>(Version 7.0.3, with minor corrections, May 2018)</i>
-        </p>
- -->
+        <h2 class="chapter_title">Introduction to Programming Using Java</h2>
+        <h2 class="chapter_title">Version 9.0, Swing Edition</h2>
+        <h2 class="chapter_title">May 2022</h2>
         <h4 class="centeralign">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4> 
         <div style="margin-left: 1cm; margin-right:1cm">
@@ -257,7 +254,7 @@
         Note that PDF and web versions
         are available on-line at <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.  
         Source code for examples is <b>not</b> included in
-        this ebook but can be accessed on-line at the same link.
+        this ebook, but the ebook does contain links to online copies of the examples.
         You can email comments to the author.</p>
         <hr/>
         <p>&#169;1996--2020, David J. Eck.</p>
@@ -405,8 +402,7 @@
      <body>
      <div class="content">
         <h3 class="centeralign">Introduction to Programming Using Java<br/>
-           Version 9.0, May 2022<br/></h3>
-<!--       <p class="centeralign"><small><i>Version 7.0.3, with minor corrections, December 2018</i></small></p> -->
+           Version 9.0, Swing Edition, May 2022<br/></h3>
         <h2 class="centeralign">Preface</h2>
         <hr class="break"/>
         <xsl:apply-templates/>

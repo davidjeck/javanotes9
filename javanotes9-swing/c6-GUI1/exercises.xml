@@ -628,7 +628,7 @@ int val, int x, int y)</code>", to draw a die at the specified <code>(x,y)</code
 coordinates. The second parameter, <code>val</code>, specifies the value that is
 showing on the die. Assume that the size of the panel is 100 by 100 pixels.
 Here is a picture of the panel that displays the dice:</p>
-<img src="roll-dice-gui.png" width="" height="" alt="a pair of dice" tex="roll-dice-gui.eps" texscale="0.75"/>
+<img src="roll-dice-gui.png" width="100" height="100" alt="a pair of dice" tex="roll-dice-gui.eps" texscale="0.75"/>
 </exercise-question>
 <exercise-discuss><p>This is largely an exercise in precision drawing.</p>
    

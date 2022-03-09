@@ -16,7 +16,7 @@
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java</h2>
         <h2 class="chapter_title">Version 9, Swing Edition, 2022</h2>
-        <p style="text-align:center">(Under Development, Spring 2022!)</p>
+        <p style="text-align:center">(Preliminary Version, March 2022!)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
@@ -70,7 +70,7 @@
         </ul>
         <hr/>
         <blockquote>
-         <i>&#169;1996--2021, David J. Eck.<br/>
+         <i>&#169;1996--2022, David J. Eck.<br/>
             <small>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License</a>.
             (This license allows you to redistribute this book in unmodified form for non-commercial purposes.  It allows you
             to make and distribute modified versions for non-commercial purposes, as long as you include an attribution to the

@@ -177,7 +177,7 @@ of drawing an outline.</li>
 with something simple, let's say that we want to draw a set of ten parallel lines, something
 like this:</p>
 
-<img src="parallel-lines.png" width="" height="" alt="a stack of 10 horizontal lines"
+<img src="parallel-lines.png" width="300" height="156" alt="a stack of 10 horizontal lines"
          tex="parallel-lines.eps" texscale="0.6" bordered="true"/>
          
 <np>Let's say that the lines are 200 pixels long and that the distance from each line

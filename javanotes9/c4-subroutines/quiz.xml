@@ -91,7 +91,7 @@ someone has written. It tells you what routines are available, how to call
 them, and what they do, but it does not tell you how the subroutines are
 implemented. An example is the standard Java API which describes the interfaces
 of all the subroutines in all the classes that are available in such packages
-as <code>java.lang</code> and <code>javafx.scene.control</code>.</p></ans>
+as <code>java.lang</code> and <code>java.util</code>.</p></ans>
 </question>
 
 <question>

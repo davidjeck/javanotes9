@@ -106,7 +106,7 @@ JavaFX</swing><fx> JavaFX API that is used for GUI programming in this textbook<
 
 <p>A package can contain both classes and other packages. A package that is
 contained in another package is sometimes called a "sub-package." The
-<code>java</code>, <code>,javax</code>, and <code>javafx</code> packages all contain sub-packages. 
+<code>java</code> and <code><fx>javafx</fx><swing>javax</swing></code> packages both contain sub-packages. 
 One of the sub-packages of <code>java</code>, for example, is named "<code>util</code>".
 Since <code>util</code> is contained within <code>java</code>, its full name is actually
 <code>java.util</code>.  This package contains a variety of utility classes, including

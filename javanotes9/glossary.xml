@@ -226,8 +226,8 @@ instance variable.  By convention, a getter is named <code>getXyz()</code> where
 <gitem term="global variable">Another name for member variable, emphasizing the fact
 that a member variable in a class exists outside the methods of that class.</gitem>
 <gitem term="graphics context">The data and methods necessary for
-drawing to some particular destination.  A graphics context in JavaFX is an object
-belonging to the <classname>GraphicsContext</classname> class.</gitem>
+drawing to some particular destination.  A graphics context in <fx>JavaFX</fx><swing>Swing</swing> is an object
+belonging to the <fx><classname>GraphicsContext</classname></fx><swing><classname>Graphics</classname></swing> class.</gitem>
 <gitem term="GUI">Graphical User Interface.  The modern way of interacting with a computer,
 in which the computer displays interface components such as buttons and menus on a screen
 and the user interacts with them&mdash;for example by clicking on them with a mouse.</gitem>
@@ -285,8 +285,9 @@ the collection in turn.</gitem>
 <gitem term="Java Collection Framework (JCF)">A set of standard classes that implement
 generic data structures, including <classname>ArrayList</classname> and <classname>TreeSet</classname>,
 for example.</gitem>
-<gitem term="JavaFX">The new toolkit for GUI applications, which becomes the preferred approach
-to GUI programming in Java&nbsp;8.  JavaFX is not covered in this book.</gitem>
+<gitem term="JavaFX">A toolkit for GUI applications, which was introduced as a more
+modern alternative to the Swing GUI toolkit.  JavaFX is not a standard part of Java
+<swing>and is not covered in this textbook</swing><fx>but is used in this textbook</fx>.</gitem>
 <gitem term="JDK">Java Development Kit.  Basic software that supports both compiling
 and running Java programs.  A JDK includes a command-line programming environment as 
 well as a JRE.  You need a JDK if you want to compile Java source code, as well as
@@ -409,7 +410,7 @@ are defined in the same class can have the same name, as long as they have diffe
 of a method that is inherited from a superclass, the new definition is said to override the 
 original definition.</gitem>
 <gitem term="package">In Java, a named collection of related classes and sub-packages, such as
-<code>java.io</code> and <code>javafx.scene.control</code>.</gitem>
+<code>java.io</code> and <code><swing>javax.swing</swing><fx>javafx.scene.control</fx></code>.</gitem>
 <gitem term="parallel processing">When several tasks are being performed simultaneously, either
 by multiple processors or by one processor that switches back and forth among
 the tasks.</gitem>

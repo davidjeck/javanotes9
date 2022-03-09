@@ -58,7 +58,7 @@ this and other examples from this textbook, see <localref href="basics.6"/>.)</n
 <p>In fact, there are three complete sets of GUI components that can be used with Java. One of these,
 the AWT or <newword>Abstract Windowing Toolkit</newword>, was
 part of the original version of Java. The second, which is known as
-<newword>Swing</newword>, was introduced in Java version 1.2,
+<newword>Swing</newword>, builds on the AWT; it was introduced in Java version 1.2,
 and was the standard GUI toolkit for many years.  The third GUI toolkit,
 JavaFX, briefly became a standard part of Java in Version&nbsp;8 but is now distributed
 separately.  JavaFX is meant as a more modern

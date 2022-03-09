@@ -34,7 +34,7 @@ of JavaFX would require an entire book of its own.</p>
 Development Kit.  For information about how to obtain JavaFX and how to
 compile and run programs that use it, see <localref href="basics.6"/>.</p>
 
-<p>This edition of this textbook covers GUI program using the JavaFX GUI toolkit.
+<p>This edition of this textbook covers GUI programming using the JavaFX GUI toolkit.
 An alternative edition covers the Swing GUI toolkit instead of JavaFX.  
 Swing is included as a standard part of Java, so does not require any extra
 downloads or configuration.  The Swing edition can be found

@@ -530,7 +530,7 @@ BlueJ can be downloaded from <a href="https://bluej.org">bluej.org</a>.  There
 are installers available for Windows, for MacOS, and for Debian-based Linux (such as Ubuntu Linux and Linux Mint).
 The installers include an OpenJDK as well as JavaFX (which is required to run BlueJ), so you
 will not need to do any additional downloading or configuration.
-As of January, 2022, BlueJ supports Java&nbsp;11 but not later versions.</p>
+As of March, 2022, BlueJ supports Java&nbsp;11 but not later versions.</p>
 
 <p>In BlueJ, you can begin a project with the "New Project" command in the "Project" menu.
 A BlueJ project is simply a folder.  When you create a project, you will have to select

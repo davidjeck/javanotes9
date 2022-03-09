@@ -431,7 +431,7 @@ to the topic in <localref href="arrays.5"/>.</p>
 arranged in rows and columns.  Here, for example, is a 2D array of <ptype>int</ptype>
 that has five rows and seven columns:</p>
 
-<img src="two-d-array.png" width="" height="" alt="an array of its with 5 rows and 7 columns"
+<img src="two-d-array.png" width="318" height="130" alt="an array of its with 5 rows and 7 columns"
        tex="two-d-array.eps" texscale="0.75"/>
 
 <np>This 5-by-7 grid contains a total of 35 elements.

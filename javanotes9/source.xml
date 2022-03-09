@@ -618,7 +618,7 @@ along with the programs that use them.</p>
    window that contains a grid of colored rectangles.  
    It depends on <sourceref href="chapter4/MosaicCanvas.java">MosaicCanvas.java</sourceref>.
    It is used in several examples and exercises in <localref href="subroutines"/>.</li>
-   <li><sourceref href="chapter4/MosaicCanvas.java"/>  defines a subclass of 
+   <li><sourceref href="chapter4/MosaicCanvas.java">MosaicCanvas</sourceref>  defines a subclass of 
    <fx><classname>Canvas</classname></fx><swing><classname>JPanel</classname></swing> 
    that shows little rectangles arranged in rows and columns, with many options.</li>
    <li><sourceref href="chapter5/StatCalc.java">StatCalc.java</sourceref> is a simple

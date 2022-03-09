@@ -125,7 +125,7 @@ In the original version, the cards are represented by textual descriptions such 
 the cards are shown as images.  You should try the program, but here's how it looks
 with the card images:</np>
 
-<img src="high-low-with-images.png" width="" height="" alt="a card game using pictures of the cards"
+<img src="high-low-with-images.png" width="397" height="229" alt="a card game using pictures of the cards"
       tex="high-low-with-images.eps" texscale="0.6"/>
    
 <p>In the program, the pictures of the cards are drawn using the following method. The instance variable

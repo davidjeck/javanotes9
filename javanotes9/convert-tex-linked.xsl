@@ -53,6 +53,7 @@
 \pretolerance=1000
 \tolerance=8000
 \input texmacros
+\renewcommand{\weblink}[2]{\href{#1}{#2}}
 \title{Introduction to Programming Using Java}
 \author{David J. Eck}
 \begin{document}
