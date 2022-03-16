@@ -257,7 +257,7 @@
         this ebook, but the ebook does contain links to online copies of the examples.
         You can email comments to the author.</p>
         <hr/>
-        <p>&#169;1996--2020, David J. Eck.</p>
+        <p>&#169;1996--2022, David J. Eck.</p>
         <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License</a>.
             (This license allows you to redistribute this book in unmodified form for non-commercial purposes.  It allows you
             to make and distribute modified versions for non-commercial purposes, as long as you include an attribution to the

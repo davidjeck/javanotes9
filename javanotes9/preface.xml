@@ -193,6 +193,14 @@ However, I have had several requests for the sources and have made
 them available on an "as-is" basis.  For more information about the sources and
 how they are used see the <tex>README file</tex><web><a href="README-full-source.txt">README&nbsp;file</a></web> from
 the source download.</p>
+
+<p>The source files for the JavaFX edition and for the Swing edition are actually
+generated from a common set of source files that would be even harder to use.
+If you are interested in exploring them, those ultimate source files can be
+found on Github.  You can browse the files online, or you can clone
+the git repository, using the following URL: </p>
+
+<p align="center"><a href="https://github.com/davidjeck/javanotes9">https://github.com/davidjeck/javanotes9</a></p>
    
 <break/> 
 

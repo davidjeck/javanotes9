@@ -15,7 +15,7 @@
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java</h2>
-        <h2 class="chapter_title">Version 9, Swing Edition, 2022</h2>
+        <h2 class="chapter_title">Version 9, Swing Edition</h2>
         <p style="text-align:center">(Preliminary Version, March 2022!)</p>
         <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
@@ -92,7 +92,7 @@
           <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.zip</a></b> &#8212;
           This "zip" archive contains a complete copy of the web site.  It should be usable on almost
           any computer. 
-          Size:&#160;5.7&#160;Megabytes.
+          Size:&#160;4.4&#160;Megabytes.
           </li>
           </ul>
         </li>
@@ -102,12 +102,12 @@
           <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-example-programs.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-example-programs.zip</a></b>  &#8212;
           A zip archive of the "source" directory from the web site, which includes source code for sample programs from the text.
           Note that if you download the complete web site, then you <b>already have</b> a copy of the same source directory.
-          See the <a href="README-running-the-examples.txt">README&#160;file</a>. Size: 1.4&#160;Megabytes.
+          See the <a href="README-running-the-examples.txt">README&#160;file</a>. Size: 750&#160;Kilobytes.
           </li>
           <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-exercise-solutions.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing-exercise-solutions.zip</a></b>  &#8212;
           A zip archive containing source code for all the end-of-chapter exercises.  These have been extracted from the
           web pages that contain the solutions as a convenience.  They are <b>not</b> included in the web site download.
-          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 922&#160;Kilobytes.
+          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 300&#160;Kilobytes.
           </li>
           </ul>
         </li>
@@ -119,12 +119,12 @@
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
-          Size:&#160;6.7&#160;Megabytes; 760 pages.
+          Size:&#160;6.5&#160;Megabytes; 791 pages.
           </li>
           <li>
           <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.pdf">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.pdf</a></b> &#8212;
           a PDF version without links, more suitable for printing.
-          Size:&#160;6.2&#160;Megabytes; 767 pages.
+          Size:&#160;6.0&#160;Megabytes; 797 pages.
           </li>
           </ul>
         </li>

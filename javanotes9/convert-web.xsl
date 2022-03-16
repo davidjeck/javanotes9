@@ -107,7 +107,7 @@
           <li><b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-exercise-solutions.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-exercise-solutions.zip</a></b>  &#8212;
           A zip archive containing source code for all the end-of-chapter exercises.  These have been extracted from the
           web pages that contain the solutions as a convenience.  They are <b>not</b> included in the web site download.
-          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 922&#160;Kilobytes.
+          See the <a href="README-exercise-solutions.txt">README&#160;file</a>. Size: 923&#160;Kilobytes.
           </li>
           </ul>
         </li>
@@ -119,12 +119,12 @@
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
-          Size:&#160;6.7&#160;Megabytes; 760 pages.
+          Size:&#160;6.8&#160;Megabytes; 774 pages.
           </li>
           <li>
           <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9.pdf">https://math.hws.edu/eck/cs124/downloads/javanotes9.pdf</a></b> &#8212;
           a PDF version without links, more suitable for printing.
-          Size:&#160;6.2&#160;Megabytes; 767 pages.
+          Size:&#160;6.3&#160;Megabytes; 781 pages.
           </li>
           </ul>
         </li>
