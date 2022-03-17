@@ -1,13 +1,48 @@
 #!/bin/bash
 
-VERSION='javanotes-9.0-swing'
+# This script will export the source files for the Swing edition of 
+# Introduction to Programming using Java.  The exported directory
+# will contain the files that are needed to build the book in 
+# various formats, plus a README.txt file with mor information.
+# The source for the exports is the Eclipse project directory
+# that contains this script.
+
+# ----------------------------------------------------------------
+# ---- Edit the following variables for your environment! --------
+#-----------------------------------------------------------------
+
+# PROJECT is the name of the main Eclipse project directory (the directory
+# that contains this script!).  javanotes9 should be correct.
+# PROJECT_SWING is the name of the Eclipse project that contains the
+# additional needed for the Swing edition.   This script copies files
+# from PROJECT, then modifies the output using files from PROJECT_SWING. 
+
 PROJECT='javanotes9'
-#project javanotes9-swing contains alternative files for the Swing version of the textbook
-PROJECT_SWING='javanotes9-swing'
+PROJECT_SWING="$PROJECT-swing"
+
+# SOURCE_DIR refers the directory that contains the two Eclipse projects,
+# so $SOURCE_DIR/$PROJECT is the JavaFX Eclipse project directory, and
+# $SOURCE_DIR/$PROJECT_SWING is the supplemental Swing Eclipse project.
 
 SOURCE_DIR='/home/eck/git/javanotes9'
+
+# VERSION is only used as part of the name of the EXPORT_DIR.
+# EXPORT_DIR is directory to which the files are exported.
+#
+# WARNING:  If the EXPORT_DIR already exists, its current contents
+#           will be deleted!!!
+
+VERSION='javanotes-9.0-swing'
 EXPORT_DIR="/home/eck/Desktop/$VERSION-source"
+
+# The scripts for building the book use xalan-j to process the XSLT
+# files.  You can set XALAN_DIR to the directory that contains the
+# xalan-j .jar files, or you can leave it empty and set the XALAN_DIR
+# directory in BUILD-env.sh.
+
 XALAN_DIR="/home/eck/xalan-j_2_7_2"
+
+#---------------------------------------------------------------
 
 if [ -x "$EXPORT_DIR" ] ; then
    rm -r $EXPORT_DIR/*
@@ -62,8 +97,9 @@ mv $PROJECT/publish.sh .
 mv $PROJECT/BUILD*.sh .
 chmod +x BUILD*.sh publish.sh
 cp $PROJECT/README.txt .
-ln -s $XALAN_DIR xalan
-cd ..
+if [ -d "$XALAN_DIR" ] ; then
+   ln -s $XALAN_DIR xalan
+fi
 
 echo Exported source to $EXPORT_DIR
 
