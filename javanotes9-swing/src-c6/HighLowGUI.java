@@ -57,9 +57,6 @@ public class HighLowGUI extends JPanel {
 
 		JButton higher = new JButton( "Higher" );
 		higher.addActionListener( evt -> board.doHigher() );
-		   // Note: the action listener is a lambda expression that
-		   // calls the doHigher() method in the board object when
-		   // the user clicks the button.
 		buttonPanel.add(higher);
 
 		JButton lower = new JButton( "Lower" );

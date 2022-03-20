@@ -700,15 +700,17 @@ components, sets up event handling, and lays out the components:</p>
    add(buttonPanel, BorderLayout.SOUTH);
    
    JButton higher = new JButton( "Higher" );
-   higher.addActionListener(board);   // The CardPanel listens for events.
+   higher.addActionListener( evt -> board.doHigher() );
+          // Note:  The ActionListener is a lambda expression that
+          // calls the doHiger() method in the board object.
    buttonPanel.add(higher);
    
    JButton lower = new JButton( "Lower" );
-   lower.addActionListener(board);
+   lower.addActionListener( evt -> board.doLower() );
    buttonPanel.add(lower);
    
    JButton newGame = new JButton( "New Game" );
-   newGame.addActionListener(board);
+   newGame.addActionListener( evt -> board.doNewGame() );
    buttonPanel.add(newGame);
    
    setBorder(BorderFactory.createLineBorder( new Color(130,50,40), 3) );

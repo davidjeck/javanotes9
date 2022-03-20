@@ -202,8 +202,8 @@ wraps the <ptype>int</ptype> value <code>42</code> with</p>
 <pre>Integer n = Integer.valueOf(42);</pre>
    
 <np>The value of <code>n</code> has the same information as the value of type
-<ptype>int</ptype>, but it is an object. If you want to retrieve the <ptype>double</ptype>
-value that is wrapped in the object, you can call the function <code>d.doubleValue()</code>.
+<ptype>int</ptype>, but it is an object. If you want to retrieve the <ptype>int</ptype>
+value that is wrapped in the object, you can call the function <code>n.intValue()</code>.
 Similarly, you can wrap a <ptype>double</ptype>
 in an object of type <classname>Double</classname>, a <ptype>boolean</ptype> value
 in an object of type <classname>Boolean</classname>, and so on.  Each wrapper

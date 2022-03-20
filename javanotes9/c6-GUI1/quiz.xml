@@ -35,7 +35,7 @@ the root of the window's scene.</p>
    
 <question>
 <ques><p>JavaFX has standard classes called <classname>Canvas</classname>
-and <classname>GraphicsContext</classname>.  Explain the purposed of
+and <classname>GraphicsContext</classname>.  Explain the purpose of
 these classes.</p></ques>
 <ans><p>A <classname>Canvas</classname> is a scene graph node that represents a
 drawing surface where a program can draw pictures.  A canvas has an associated

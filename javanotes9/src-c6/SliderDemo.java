@@ -29,7 +29,7 @@ public class SliderDemo extends Application {
 		slider2.setMinorTickCount(5); // 5 small tick marks between big tick marks.
 		slider2.setShowTickMarks(true);
 
-		slider3 = new Slider(2000,2100,2018);
+		slider3 = new Slider(2000,2100,2022);
 		slider3.setMajorTickUnit(50);  // determines how many labels are shown
 		slider3.setMinorTickCount(49); // so there is a tick mark every 1 unit (ticks are not shown)
 		slider3.setShowTickLabels(true);  // will show labels at 2000, 2050, 2100

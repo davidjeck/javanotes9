@@ -18,8 +18,8 @@ and run the examples from this textbook using the command line, Eclipse, or Blue
 (Readers are strongly encouraged to read,
 compile, and run the examples.  Source code for sample programs and solutions to
 end-of-chapter exercises can be downloaded from the
-book's web page, <fx><a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a>.</fx>
-<swing><a href="http://math.hws.edu/javanotes-swing">http://math.hws.edu/javanotes-swing</a>.</swing>)</p>
+book's web page,
+<fx><a href="https://math.hws.edu/javanotes">https://math.hws.edu/javanotes</a>.</fx><swing><a href="https://math.hws.edu/javanotes-swing">https://math.hws.edu/javanotes-swing</a>.</swing>)</p>
 
 <p>One thing to keep in mind is that you do not have to pay any money
 to do Java programming (aside from buying a computer, of course).  Everything
@@ -179,7 +179,7 @@ directory named <code>source</code>; you can use
 your computer's GUI to copy-and-paste this file into your working directory,
 or you could <code>cd</code> into the <code>chapter2</code> folder and work there.
 Alternatively, you can navigate to <sourceref href="HelloWorld.java"/> on the book's 
-<tex><fx><a href="http://math.hws.edu/javanotes/source/index.html">Web&nbsp;site</a></fx><swing><a href="http://math.hws.edu/javanotes-swing/source/index.html">Web&nbsp;site</a></swing></tex><web><a href="../source/index.html">Web&nbsp;site</a></web>
+<tex><fx><a href="https://math.hws.edu/javanotes/source/index.html">Web&nbsp;site</a></fx><swing><a href="https://math.hws.edu/javanotes-swing/source/index.html">Web&nbsp;site</a></swing></tex><web><a href="../source/index.html">Web&nbsp;site</a></web>
 and use the  "Save&nbsp;As" command in your Web browser to save a copy of the file into your working directory.)
 Type the command (while working in the directory that contains the file <code>HelloWorld.java</code>):</p>
    
@@ -320,7 +320,7 @@ most likely to need the x86_64 version, which will work for Intel and AMD CPUs.<
 
 <p>Eclipse is a free program.  It is itself written in Java. Recent versions of Eclipse include
 an OpenJDK (although Eclipse calls it a JRE), so you can use it without downloading a separate JDK.
-The December 2021 version includes a Java&nbsp;17 SDK.</p>
+The March 2022 version includes a Java&nbsp;17 SDK.</p>
       
 <p>The first time you start Eclipse, you will be asked to specify a <newword>workspace</newword>,
 which is the directory where your work will be stored.  You can accept the default name, or
@@ -647,7 +647,7 @@ the user is shown in bold.</web></p>
 
 <pre>
 $ <b>jshell</b>
-|  Welcome to JShell -- Version 17.0.1
+|  Welcome to JShell -- Version 17.0.2
 |  For an introduction type: /help intro
 
 jshell> <b>System.out.println("Hello World")</b>
@@ -694,7 +694,7 @@ download links on this page:</p>
 <np>You need to download a JavaFX "SDK"&mdash;<b>not</b> "jmods" or "Monocle SDK"&mdash;that is 
 appropriate for your operating system (Linux, MacOS, or Windows) and for the JDK that you
 are using.  You should get the version number that matches the version 
-of the JDK; that probably means JavaFX version 17.0.1.  (Only the major version number, 17, has to match.)
+of the JDK; that probably means JavaFX version 17.0.2.  (Only the major version number, 17, has to match.)
 Furthermore, you need to select the "Architecture," which refers to the CPU type.
 The architecture should match the architecture used by your JDK.  If you are using an "x64" JDK from
 Adoptium or if you are using an "x86_64" Eclipse package, then you need JavaFX for the x64 architecture.
@@ -706,7 +706,7 @@ file.  You will need to extract the contents of the archive.
 Usually, simply double-clicking the icon of the archive file
 will either extract the contents or open a program that you can use to extract the
 contents.  You will get a directory with a name something like 
-<i>javafx-sdk-17.0.1</i>.  You can put the directory anywhere on your
+<i>javafx-sdk-17.0.2</i>.  You can put the directory anywhere on your
 computer, but you will need to know where it is located.</p>
 
 <p>JavaFX is a collection of Java classes that can be used for making GUI programs.
@@ -727,12 +727,12 @@ second says which modules you actually want to use.  For the purposes of this
 textbook, you can set the value of <code>--add-modules</code> to <code>ALL-MODULE-PATH</code>,
 which makes all of JavaFX available to your program.  The value of <code>--module-path</code>
 is a path to the <i>lib</i> directory that contains the JavaFX .jar files.
-For example, let's say that the JavaFX SDK directory is named <i>openjfx-sdk-17.0.1</i> and
+For example, let's say that the JavaFX SDK directory is named <i>openjfx-sdk-17.0.2</i> and
 that it is in my home directory, <i>/home/eck</i>.  Then the full path to the
-<i>lib</i> directory is <code>/home/eck/openjfx-sdk-11/lib</code>, and the <code>javac</code>
+<i>lib</i> directory is <code>/home/eck/openjfx-sdk-17.0.2/lib</code>, and the <code>javac</code>
 command for compiling JavaFX programs would be:</p>
 
-<pre>javac --module-path=/home/eck/openjfx-sdk-17.0.1/lib --add-modules=ALL-MODULE-PATH</pre>
+<pre>javac --module-path=/home/eck/openjfx-sdk-17.0.2/lib --add-modules=ALL-MODULE-PATH</pre>
 
 <np>This would be followed on the same line by the .java files that you want to compile.  
 Exactly the same options would
@@ -740,7 +740,7 @@ be used with the <code>java</code> command to run JavaFX programs.
 The option <code>--module-path</code> can also be abbreviated to <code>-p</code>, with no
 equals sign.  So this can also be written</np>
 
-<pre>javac -p /home/eck/openjfx-sdk-17.0.1/lib --add-modules=ALL-MODULE-PATH</pre>
+<pre>javac -p /home/eck/openjfx-sdk-17.0.2/lib --add-modules=ALL-MODULE-PATH</pre>
 
 <p>If you don't know the full path to the JavaFX SDK, open a command window and use
 the <i>cd</i> command to move to the SDK's <i>lib</i> directory. On Mac or Linux,
@@ -749,23 +749,23 @@ On windows, use the command <i>cd</i>, with no directory specified, to print out
 Use the output from that command as the value for the <code>--module-path</code>. On windows, a typical
 <code>java</code> command for use with javafx might look something like this:</p>
 
-<pre>java -p C:\Users\eck\openjfx-sdk-17.0.1\lib --add-modules=ALL-MODULE-PATH</pre>
+<pre>java -p C:\Users\eck\openjfx-sdk-17.0.2\lib --add-modules=ALL-MODULE-PATH</pre>
 
 <np>If the path name includes a space, or certain other special characters, it
 must be enclosed in quotation marks.  For example,</np>
 
-<pre>java -p "C:\JavaFX Support\openjfx-sdk-17.0.1\lib" --add-modules=ALL-MODULE-PATH</pre>
+<pre>java -p "C:\JavaFX Support\openjfx-sdk-17.0.2\lib" --add-modules=ALL-MODULE-PATH</pre>
 
 <p>Of course, this is very verbose, and it would be nice not to have to retype it
 all the time.  On MacOS or Linux, it is easy to define <newword>aliases</newword>,
 which are shortcuts for long commands.  On my computer, I use an alias to define
 a <i>jfxc</i> command for compiling JavaFX programs. The alias is defined as follows:</p>
 
-<pre>alias jfxc='javac -p /home/eck/javafx-sdk-17.0.11/lib --add-modules=ALL-MODULE-PATH'</pre>
+<pre>alias jfxc='javac -p /home/eck/javafx-sdk-17.0.2/lib --add-modules=ALL-MODULE-PATH'</pre>
                   
 <np>Similarly, I defined an alias for running JavaFX programs:</np>
 
-<pre>alias jfx='java -p /home/eck/javafx-sdk-17.0.1/lib --add-modules=ALL-MODULE-PATH'</pre>
+<pre>alias jfx='java -p /home/eck/javafx-sdk-17.0.2/lib --add-modules=ALL-MODULE-PATH'</pre>
 
 <np>This lets me compile and run JavaFX programs using commands such as</np>
 
@@ -789,7 +789,7 @@ be able to set your file browser to show hidden files.</p>
 to make a batch script file to run the command.  For compilation, you could 
 create a file named <i>jfxc.bat</i> containing just one line similar to</p>
 
-<pre>javac -p C:\Users\eck\javafx-sdk-17.0.1\lib --add-modules=ALL-MODULE-PATH %*</pre>
+<pre>javac -p C:\Users\eck\javafx-sdk-17.0.2\lib --add-modules=ALL-MODULE-PATH %*</pre>
 
 <np>but, of course, using the appropriate JavaFX location for your own computer.
 The "<code>%*</code>" at the end represents the inputs to the <code>javac</code> command.
@@ -866,7 +866,7 @@ To do that, you need to fill in the
 the <i>java</i> command.
 The input box contains options that will be added to the
 <i>java</i> command every time you run a program in Eclipse using this JRE.
-The <code>-p</code> (or <code>--module-path</code>) and <code>ALL-MODULE-PATH</code>
+The <code>-p</code> (or <code>--module-path</code>) and <code>--add-modules</code>
 options that are needed were discussed in the previous subsection.
 Examples appropriate for my own computer are shown in the above illustration.
 The value of the <code>-p</code> 
@@ -886,7 +886,7 @@ You should then be able to use JavaFX in that project.  If not, check your JRE c
 You can "Edit" it in the same Java preferences where you set it up in the first place.
 If you can't compile JavaFX programs, make sure that you are using a JavaFX SDK with
 the same major version number as the built-in JDK in Eclipse (JavaFX&nbsp;17 for the
-December 2021 version of Eclipse). If you can compile JavaFX programs but not run them, 
+March 2022 version of Eclipse, for example). If you can compile JavaFX programs but not run them, 
 check the "Default VM arguments" and check that you have the JavaFX SDK for the
 correct operating system and architecture.</p>
 

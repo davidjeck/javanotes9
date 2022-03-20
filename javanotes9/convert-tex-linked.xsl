@@ -208,8 +208,8 @@
    </xsl:variable>
    <xsl:variable name="ref">
       <xsl:choose>
-         <xsl:when test="ancestor::source"><xsl:text>http://math.hws.edu/eck/cs124/javanotes9/source/</xsl:text><xsl:value-of select="@href"/></xsl:when>
-         <xsl:otherwise><xsl:text>http://math.hws.edu/eck/cs124/javanotes9/source/chapter</xsl:text><xsl:value-of select="$chapternum"/><xsl:text>/</xsl:text><xsl:value-of select="@href"/></xsl:otherwise>
+         <xsl:when test="ancestor::source"><xsl:text>https://math.hws.edu/eck/cs124/javanotes9/source/</xsl:text><xsl:value-of select="@href"/></xsl:when>
+         <xsl:otherwise><xsl:text>https://math.hws.edu/eck/cs124/javanotes9/source/chapter</xsl:text><xsl:value-of select="$chapternum"/><xsl:text>/</xsl:text><xsl:value-of select="@href"/></xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
    <xsl:choose>

@@ -385,7 +385,7 @@ representing the usable area of the main screen.  This is used in the program's
         windowWidth = windowHeight*1.6;
     
        // Open the first window, showing the front page of this textbook.
-    newBrowserWindow("http://math.hws.edu/javanotes/index.html");
+    newBrowserWindow("https://math.hws.edu/javanotes/index.html");
     
 } // end start()</pre>
 

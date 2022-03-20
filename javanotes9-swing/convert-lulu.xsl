@@ -52,7 +52,7 @@
 \tableofcontents
 <xsl:apply-templates select="/javanotes/preface"/>
 \mainmatter
-<xsl:if test="$lulu = 'two'">\setcounter{page}{401}
+<xsl:if test="$lulu = 'two'">\setcounter{page}{407}
 \setcounter{chapter}{7}</xsl:if>
 <xsl:apply-templates select="/javanotes/chapter"/>
 \appendix
@@ -74,7 +74,7 @@
 <xsl:apply-templates/>
 </xsl:template>
    
-<xsl:template match="subsection"><xsl:if test="@scope != 'swing'">
+<xsl:template match="subsection"><xsl:if test="@scope != 'fx'">
 <xsl:choose><xsl:when test="ancestor::source">\section*</xsl:when><xsl:otherwise>\subsection</xsl:otherwise></xsl:choose><xsl:if test="@shorttitle">[<xsl:value-of select="@shorttitle"/>]</xsl:if>{<xsl:value-of select="@title"/>}\label{<xsl:value-of select="@id"/>}
 <xsl:apply-templates/>
 </xsl:if></xsl:template>
@@ -150,7 +150,7 @@
 <xsl:template match="ul">
 <xsl:text>&#10;</xsl:text>
 \mylist{
-<xsl:for-each select="li | fxSourceItems/li">
+<xsl:for-each select="li | swingSourceItems/li">
 \myitem <xsl:apply-templates/>
 </xsl:for-each>
 }
@@ -242,7 +242,7 @@
 <xsl:template match="endchapter">
 </xsl:template>
     
-<xsl:template match="prog"><xsl:if test="@scope != 'swing'">
+<xsl:template match="prog"><xsl:if test="@scope != 'fx'">
     <xsl:apply-templates/>
 </xsl:if></xsl:template>
     
@@ -260,22 +260,22 @@
       <xsl:apply-templates/>
 </xsl:template>
     
-<xsl:template match="fx">
+<xsl:template match="fx"></xsl:template>
+    
+<xsl:template match="fxdiv"></xsl:template>
+    
+<xsl:template match="fxSourceItems"></xsl:template>
+    
+<xsl:template match="swing">
     <xsl:apply-templates/>
 </xsl:template>
     
-<xsl:template match="fxdiv">
+<xsl:template match="swingdiv">
     <xsl:apply-templates/>
 </xsl:template>
-    
-<xsl:template match="fxSourceItems">
-    <xsl:apply-templates/>
-</xsl:template>
-    
-<xsl:template match="swing"></xsl:template>
-    
-<xsl:template match="swingdiv"></xsl:template>
 
-<xsl:template match="swingSourceItems"></xsl:template>
+<xsl:template match="swingSourceItems">
+    <xsl:apply-templates/>
+</xsl:template>
     
 </xsl:stylesheet>

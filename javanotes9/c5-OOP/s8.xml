@@ -311,7 +311,7 @@ are used in the definition of a local class.</p>
 
 <p>The same restriction on the use of local variables also applies to
 lambda expressions, which are very similar to anonymous classes.  Here
-is an example using the stream API and the <classname>FunctionR2R</classname>
+is an example using the <classname>FunctionR2R</classname>
 functional interface from <localref href="subroutines.4a.2"/>, which defines the
 single method "<code>double&nbsp;valueAt(double&nbsp;x))</code>".
 This code segment creates an array of <classname>FunctionR2R</classname>

@@ -311,7 +311,7 @@ list, converted to lower case:</p>
 
 <np>The specializations <code>mapToInt()</code>, <code>mapToDouble()</code>, and <code>mapToLong()</code>
 exist to map <classname>Streams</classname> into
-<classname>IntStreams</classname>,<classname>DoubleStreams</classname>,
+<classname>IntStreams</classname>, <classname>DoubleStreams</classname>,
 and <classname>LongStreams</classname>.</np>
 
 <p>Here are a few more intermediate operations on a stream, <code>S</code>, that

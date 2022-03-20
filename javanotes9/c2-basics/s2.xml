@@ -456,8 +456,8 @@ pair of parentheses.</p>
    
 <p>
 All the sample programs for this textbook are available in separate source code files in
-the on-line version of this text at <fx><a href="http://math.hws.edu/javanotes/source">http://math.hws.edu/javanotes/source</a>.</fx>
-<swing><a href="http://math.hws.edu/javanotes-swing/source">http://math.hws.edu/javanotes-swing/source</a>.</swing>  They
+the on-line version of this text at <fx><a href="https://math.hws.edu/javanotes/source">https://math.hws.edu/javanotes/source</a>.</fx>
+<swing><a href="https://math.hws.edu/javanotes-swing/source">https://math.hws.edu/javanotes-swing/source</a>.</swing>  They
 are also included in the downloadable archive of the web site, in a folder named <code>source</code>.
 The source code for the <code>Interest</code> program, for example, 
 can be found in the file <sourceref href="Interest.java"/> in subfolder named <code>chapter2</code> inside the <code>source</code>

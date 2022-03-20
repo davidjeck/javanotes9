@@ -493,7 +493,7 @@ data. This data can be processed in a lot of interesting ways. For example, the
 total profit for the company&mdash;for the whole year from all its stores&mdash;can
 be calculated by adding up all the entries in the array:</p>
 
-<pre>double totalProfit;  // Company's total profit in 2018.
+<pre>double totalProfit;  // Company's total profit in 2022.
 int store, month;  // variables for looping through the stores and the months
 totalProfit = 0;
 for ( store = 0; store &lt; 25; store++ ) {

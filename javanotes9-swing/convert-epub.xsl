@@ -120,7 +120,7 @@
    <redirect:write file="epub/OEBPS/toc.ncx">
 	<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en-US">
 	    <head>
-	        <meta content="http://math.hws.edu/javanotes9-swing" name="dtb:uid"/>
+	        <meta content="https://math.hws.edu/javanotes9-swing" name="dtb:uid"/>
 	    </head>
 	    <docTitle>
 	        <text>Introduction to Programming Using Java, Version 9.0</text>
@@ -245,14 +245,14 @@
         <h2 class="chapter_title">Introduction to Programming Using Java</h2>
         <h2 class="chapter_title">Version 9.0, Swing Edition</h2>
         <h2 class="chapter_title">May 2022</h2>
-        <h4 class="centeralign">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
+        <h4 class="centeralign">Author:&#160; <a href="https://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4> 
         <div style="margin-left: 1cm; margin-right:1cm">
         <hr/>
         <p>This is an <b>experimental</b> ebook version of a free Java Programming textbook.  Please excuse any
         irregularities in formatting.  In particular, your reader might have problems with overly wide code segments.
         Note that PDF and web versions
-        are available on-line at <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a>.  
+        are available on-line at <a href="https://math.hws.edu/javanotes/">https://math.hws.edu/javanotes/</a>.  
         Source code for examples is <b>not</b> included in
         this ebook, but the ebook does contain links to online copies of the examples.
         You can email comments to the author.</p>
@@ -267,7 +267,7 @@
             details.)
             The most recent version of this book is always available, at no
             charge, for downloading and for on-line use at the Web address:
-            <a href="http://math.hws.edu/javanotes/">http://math.hws.edu/javanotes/</a></p>
+            <a href="https://math.hws.edu/javanotes/">https://math.hws.edu/javanotes/</a></p>
             <hr/>
         </div>
         </div>
@@ -408,7 +408,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div class="rightalign"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
+     <div class="rightalign"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a></small></div>
      </body>
      </html>
    </redirect:write>
@@ -433,7 +433,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div class="rightalign"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a>, June 2011</small></div>
+     <div class="rightalign"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a>, June 2011</small></div>
      </body>
      </html>
    </redirect:write>
@@ -653,7 +653,7 @@
    <xsl:variable name="ref">
       <xsl:choose>
          <xsl:when test="ancestor::source"><xsl:value-of select="@href"/></xsl:when>
-         <xsl:otherwise><xsl:text>http://math.hws.edu/eck/cs124/javanotes9/source/chapter</xsl:text><xsl:value-of select="$chapternum"/><xsl:text>/</xsl:text><xsl:value-of select="@href"/></xsl:otherwise>
+         <xsl:otherwise><xsl:text>https://math.hws.edu/eck/cs124/javanotes9/source/chapter</xsl:text><xsl:value-of select="$chapternum"/><xsl:text>/</xsl:text><xsl:value-of select="@href"/></xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
    <a><xsl:attribute name="href"><xsl:value-of select="$ref"/></xsl:attribute>

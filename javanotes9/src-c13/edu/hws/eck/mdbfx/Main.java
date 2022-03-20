@@ -23,9 +23,9 @@ public class Main extends Application {
 	 * been done in a more JavaFX-like way, and since it is a fairly complex
 	 * program, it is likely that the port has introduced a few unnoticed bugs.
 	 * For a nicer Mandelbrot program in Java, see 
-	 *     http://math.hws.edu/eck/js/mandelbrot/java/MB-java.html
+	 *     https://math.hws.edu/eck/js/mandelbrot/java/MB-java.html
 	 * A pretty nice JavaScript version is at 
-	 *     http://math.hws.edu/eck/js/mandelbrot/MB.html
+	 *     https://math.hws.edu/eck/js/mandelbrot/MB.html
 	 */
 
 	public static void main(String[] args) {

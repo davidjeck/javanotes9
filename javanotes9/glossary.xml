@@ -409,7 +409,7 @@ are defined in the same class can have the same name, as long as they have diffe
 <gitem term="overriding">Redefining in a subclass.  When a subclass provides a new definition
 of a method that is inherited from a superclass, the new definition is said to override the 
 original definition.</gitem>
-<gitem term="package">In Java, a named collection of related classes and sub-packages, such as
+<gitem term="package">In Java, a named collection of related classes and subpackages, such as
 <code>java.io</code> and <code><swing>javax.swing</swing><fx>javafx.scene.control</fx></code>.</gitem>
 <gitem term="parallel processing">When several tasks are being performed simultaneously, either
 by multiple processors or by one processor that switches back and forth among

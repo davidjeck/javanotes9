@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
  * 60 of the 64 available squares on the board.  The squares that are to be left empty are selected
  * in advance at random and are colored black.  The main point of the program is to demo a
  * recursive backtracking algorithm, so the process is slowed down enough to see what is going
- * on.  See http://math.hws.edu/eck/js/pentominos/pentominos.html for a greatly enhanced version of this 
+ * on.  See https://math.hws.edu/eck/js/pentominos/pentominos.html for a greatly enhanced version of this 
  * program, written in JavaScript, including the ability to quickly find solutions.
  * 
  * Note that this class depends on another class, MosaicCanvas.

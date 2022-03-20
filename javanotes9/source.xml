@@ -10,9 +10,9 @@ examples appearing in the free, on-line textbook <i>Introduction
 to Programming Using Java,</i> Version 9, <swing>Swing Edition</swing><fx>JavaFX Edition</fx>.
 <web>The <a href="../index.html">index&nbsp;page</a></web>
 <tex>The web site for the book, 
-<fx><a href="http://math.hws.edu/javanotes">http://math.hws.edu/javanotes</a></fx><swing><a href="http://math.hws.edu/javanotes-swing">http://math.hws.edu/javanotes-swing</a></swing>,</tex>
+<fx><a href="https://math.hws.edu/javanotes">https://math.hws.edu/javanotes</a></fx><swing><a href="https://math.hws.edu/javanotes-swing">https://math.hws.edu/javanotes-swing</a></swing>,</tex>
 has links for downloading the entire web site.  If you do that, you will find
-the source code files in a directory named <i>sources</i>.  There is also
+the source code files in a directory named <i>source</i>.  There is also
 a link for downloading just the source code files.  
 <a href="../README-running-the-examples.txt">The&nbsp;README&nbsp;file</a> from the download includes some 
 instructions for compiling and running the programs.

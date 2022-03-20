@@ -105,13 +105,13 @@ contains the <swing>alternative graphics API,
 JavaFX</swing><fx> JavaFX API that is used for GUI programming in this textbook</fx>.</p>
 
 <p>A package can contain both classes and other packages. A package that is
-contained in another package is sometimes called a "sub-package." The
-<code>java</code> and <code><fx>javafx</fx><swing>javax</swing></code> packages both contain sub-packages. 
-One of the sub-packages of <code>java</code>, for example, is named "<code>util</code>".
+contained in another package is sometimes called a "subpackage." The
+<code>java</code> and <code><fx>javafx</fx><swing>javax</swing></code> packages both contain subpackages. 
+One of the subpackages of <code>java</code>, for example, is named "<code>util</code>".
 Since <code>util</code> is contained within <code>java</code>, its full name is actually
 <code>java.util</code>.  This package contains a variety of utility classes, including
 the <classname>Scanner</classname> class that was discussed in <localref href="basics.4.6"/>. 
-The <code>java</code> package includes several other sub-packages, such as
+The <code>java</code> package includes several other subpackages, such as
 <code>java.io</code>, which provides facilities for input/output, and
 <code>java.net</code>, which deals with network communication. The
 most basic package is called <code>java.lang</code>. This package contains
@@ -120,8 +120,8 @@ fundamental classes such as <classname>String</classname>, <classname>Math</clas
 
 
 <p>It might be helpful to look at a graphical representation of the levels of
-nesting in the <code>java</code> package, its sub-packages, the classes in those
-sub-packages, and the subroutines in those classes. This is not a complete
+nesting in the <code>java</code> package, its subpackages, the classes in those
+subpackages, and the subroutines in those classes. This is not a complete
 picture, since it shows only a very few of the many items in each element:</p>
 
 
@@ -150,7 +150,7 @@ what is available. As I write this, the
 documentation for the complete basic API for Java&nbsp;8 can be found at</p>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/">https://docs.oracle.com/javase/8/docs/api/</a></pre>
 <fxdiv>
-<np>and for JavaFX at</np>
+<np>and for JavaFX 8 at</np>
 <pre><a href="https://docs.oracle.com/javase/8/javafx/api/toc.htm">https://docs.oracle.com/javase/8/javafx/api/toc.htm</a></pre>
 </fxdiv>
 
@@ -212,8 +212,8 @@ the classes from a given package. For example, you can import all the classes fr
 <pre>import java.util.*;</pre>
 
 <np>The "<code>*</code>" is a <newword>wildcard</newword> that matches every class in the package.
-(However, it does not match sub-packages; for example, you <b>cannot</b> import the entire
-contents of all the sub-packages of the <code>java</code> package by saying
+(However, it does not match subpackages; for example, you <b>cannot</b> import the entire
+contents of all the subpackages of the <code>java</code> package by saying
 <code>import&nbsp;java.*</code>.)</np>
    
 <p>Some programmers think that using a wildcard in an <code>import</code> statement

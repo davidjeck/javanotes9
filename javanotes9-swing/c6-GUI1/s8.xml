@@ -550,25 +550,26 @@ directory in which you issue the <code>jar</code> command, and you have to inclu
 the file in the name.  For example: <code>textio/TextIO.class</code> on MacOS and Linux,
 or <code>textio\TextIO.class</code> on Windows.)</np>
    
-<p>Making an executable jar file on the command line is  more complicated.
+<p>Making an executable jar file on the command line is  only a little more complicated.
 There has to be some way of specifying which class contains the <code>main()</code>
-routine.  This can be done by creating a <newword>manifest file</newword>.  The manifest
-file can be a plain text file containing a single line of the form</p>
-
-<pre>Main-Class: ClassName</pre>
-
-<np>where <code>ClassName</code> should be replaced by the name of the class that contains
-the <code>main()</code> routine.  For example, if the <code>main()</code> routine is in
-the class <classname>MosaicDraw</classname>, then the manifest file should read
-"<code>Main-Class: MosaicDraw</code>".  You can give the manifest file any name
-you like.  Put it in the same directory where you will issue the <code>jar</code> command,
-and use a command of the form</np>
+routine.  This can be done by adding the <code>-e</code> option to the command,
+with a value giving the full name of the class that is to be executed when the
+jar file is run.  For example, if the name of the class is <classname>MyMainClass</classname>,
+then the jar file could be created with:</p>
    
-<pre>jar  cmf  ManifestFileName  JarFileName.jar  *.class</pre>
+<pre>jar  -c  -f  JarFileName.jar  -e  MyMainClass  *.class</pre>
    
-<np>to create the jar file.  (The <code>jar</code> command is capable of performing a
-variety of different operations.  The first parameter to the command, such as "<code>cf</code>"
-or "<code>cmf</code>", tells it which operation to perform.)</np>
+<np>For a program defined in two packages, <code>grapher.ui</code> and <code>grapher.util</code>,
+with a main class defined in the file <code>Main.java</code> in package <code>grapher.ui</code>,
+the command would become</np>
+
+<pre>jar -c -f Grapher.jar -e grapher.ui.Main grapher/ui/*.class grapher/util/*.class</pre>
+
+<np>except that on Windows, the slashes would be replaced by backslashes.</np>
+   
+<p>(The options <code>-c</code>, <code>-f</code>, and <code>-e</code> are abbreviations
+for the longer forms <code>--create</code>, <code>--file</code>, and <code>--main-class</code>,
+and you can use the longer forms, if you prefer clarity to brevity.)</p>
    
 
 </subsection>
@@ -607,7 +608,7 @@ the <sourceref chapter="12" href="netgame"/> directory:</p>
 <np>and then created a jar file, <code>Poker.jar</code>, with this command,
 <i>typed all on one line</i>:</np>
 
-<pre>jar  cf  Poker.jar  netgame/common/*.class  netgame/fivecarddraw/*.class
+<pre>jar -c -f Poker.jar  netgame/common/*.class  netgame/fivecarddraw/*.class
                 netgame/fivecarddraw/cards.png</pre>
                 
 <np>It is important to include the image resource file along with the class files.

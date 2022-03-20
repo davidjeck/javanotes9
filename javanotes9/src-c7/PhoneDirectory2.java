@@ -57,6 +57,10 @@ public class PhoneDirectory2 {
 		if (name == null || number == null)
 			throw new IllegalArgumentException("name and number cannot be null");
 		PhoneEntry newEntry = new PhoneEntry(name,number);
+		   // (Note: Since a PhoneEntry object is immutable, we can't simply
+		   // change the value of the number field in the exiting entry -- we
+		   // have to create an entirely new entry with the same name and
+		   // the new number.)
 		int i = find(name);
 		if (i >= 0) 
 			data.set(i, newEntry); // Replace existing entry.

@@ -59,14 +59,14 @@ your computer.)</p>
 <p>An object belonging to the <classname>URL</classname> class represents such an address.
 Once you have a <classname>URL</classname> object, you can use it to open a
 <classname>URLConnection</classname> to the resource at that address. A url is ordinarily
-specified as a string, such as "<code>http://math.hws.edu/eck/index.html</code>".
+specified as a string, such as "<code>https://math.hws.edu/eck/index.html</code>".
 There are also <newword>relative url's</newword>. A relative url
 specifies the location of a resource relative to the location of another url,
 which is called the <newword>base</newword> or <newword>context</newword> 
 for the relative url. For example, if the context is
-given by the url <code>http://math.hws.edu/eck/</code>, then the incomplete,
+given by the url <code>https://math.hws.edu/eck/</code>, then the incomplete,
 relative url "<code>index.html</code>" would really refer to
-<code>http://math.hws.edu/eck/index.html</code>.</p>
+<code>https://math.hws.edu/eck/index.html</code>.</p>
 
 <p>An object of the class <classname>URL</classname> is not simply a string, but it can be
 constructed from a string representation of a url. A <classname>URL</classname> object can

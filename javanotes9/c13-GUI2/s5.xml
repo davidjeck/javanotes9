@@ -17,11 +17,11 @@ some that apply to all programs, not just GUI programs.</p>
 explore the famous Mandelbrot set.  I will begin by explaining what that means.
 Note that an even more capable Mandelbrot program can be found at</p>
 
-<p align="center"><a href="http://math.hws.edu/eck/js/mandelbrot/java/MB-java.html">http://math.hws.edu/eck/js/mandelbrot/java/MB-java.html</a>.</p>
+<p align="center"><a href="https://math.hws.edu/eck/js/mandelbrot/java/MB-java.html">https://math.hws.edu/eck/js/mandelbrot/java/MB-java.html</a>.</p>
    
 <np>And there is a JavaScript version that will run in your web browser at</np>
    
-<p align="center"><a href="http://math.hws.edu/eck/js/mandelbrot/MB.html">http://math.hws.edu/eck/js/mandelbrot/MB.html</a></p>
+<p align="center"><a href="https://math.hws.edu/eck/js/mandelbrot/MB.html">https://math.hws.edu/eck/js/mandelbrot/MB.html</a></p>
 
 
 <subsection id="GUI2.5.1" title="The Mandelbrot Set">
@@ -143,7 +143,7 @@ the package.  My office computer has domain name <code>eck.hws.edu</code>,
 and no other computer in the world should have the same name.
 According to Oracle, this allows me to use the package name
 <code>edu.hws.eck</code>, with the elements of the domain name
-in reverse order.  I can also use sub-packages of this package,
+in reverse order.  I can also use subpackages of this package,
 such as <code>edu.hws.eck.mdbfx</code>, which is the package name
 that I decided to use for my Mandelbrot Viewer application.
 No one else&mdash;or at least no one else who uses the same naming

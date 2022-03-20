@@ -45,9 +45,9 @@ of a hyphen and a greater-than character, and then by a single statement.
 The statement can be a subroutine call statement, a <code>throw</code> statement,
 or a block statement, containing several nested statements.
 A switch statement can also, optionally, have one jump point labeled with <code>default</code>
-instead of which a case label.  The syntax for the statement can be specified as follows,
+instead of with a case label.  The syntax for the statement can be specified as follows,
 noting that there can be at most one <code>default</code> case and that all the constants
-in the case label must be different:</np>
+in the case labels must be different:</np>
 
 <pre>switch ( <bnf>expression</bnf> ) {
     <bnf>case-label-or-default</bnf> -&gt; <bnf>statement</bnf> 

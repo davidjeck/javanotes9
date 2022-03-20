@@ -187,7 +187,7 @@ An option of the form
 "<code>-ea:<bnf>class-name</bnf></code>"
 enables only the assertions in the specified class.  Note that there are no
 spaces between the <code>-ea</code>, the ":", and the name of the class.  To
-enable all the assertions in a package and in its sub-packages, you can use
+enable all the assertions in a package and in its subpackages, you can use
 an option of the form "<code>-ea:<bnf>package-name</bnf>...</code>".
 To enable assertions in the "default package" (that is, classes that are not specified to
 belong to a package, like almost all the classes in this book), use

@@ -110,29 +110,29 @@ and hopefully beyond) at the following Web addresses:</p>
    
 <ul>
 <li>First edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes1/">http://math.hws.edu/eck/cs124/javanotes1/</a> (Covers Java 1.0.)</li>
+"https://math.hws.edu/eck/cs124/javanotes1/">https://math.hws.edu/eck/cs124/javanotes1/</a> (Covers Java 1.0.)</li>
 <li>Second edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes2/">http://math.hws.edu/eck/cs124/javanotes2/</a> (Covers Java 1.1.)</li>
+"https://math.hws.edu/eck/cs124/javanotes2/">https://math.hws.edu/eck/cs124/javanotes2/</a> (Covers Java 1.1.)</li>
 <li>Third edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes3/">http://math.hws.edu/eck/cs124/javanotes3/</a> (Covers Java 1.1.)</li>
+"https://math.hws.edu/eck/cs124/javanotes3/">https://math.hws.edu/eck/cs124/javanotes3/</a> (Covers Java 1.1.)</li>
 <li>Fourth edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes4/">http://math.hws.edu/eck/cs124/javanotes4/</a> (Covers Java 1.4.)</li>
+"https://math.hws.edu/eck/cs124/javanotes4/">https://math.hws.edu/eck/cs124/javanotes4/</a> (Covers Java 1.4.)</li>
 <li>Fifth edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes5/">http://math.hws.edu/eck/cs124/javanotes5/</a> (Covers Java 5.0.)</li>
+"https://math.hws.edu/eck/cs124/javanotes5/">https://math.hws.edu/eck/cs124/javanotes5/</a> (Covers Java 5.0.)</li>
 <li>Sixth edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes6/">http://math.hws.edu/eck/cs124/javanotes6/</a> (Covers Java 5.0, with a bit of 6.0.)</li>
+"https://math.hws.edu/eck/cs124/javanotes6/">https://math.hws.edu/eck/cs124/javanotes6/</a> (Covers Java 5.0, with a bit of 6.0.)</li>
 <li>Seventh edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes7/">http://math.hws.edu/eck/cs124/javanotes7/</a> (Covers Java 7.)</li>
+"https://math.hws.edu/eck/cs124/javanotes7/">https://math.hws.edu/eck/cs124/javanotes7/</a> (Covers Java 7.)</li>
 <li>Eighth edition: <a href=
-"http://math.hws.edu/eck/cs124/javanotes8/">http://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 8, plus a bit of 11 and 17.)</li>
+"https://math.hws.edu/eck/cs124/javanotes8/">https://math.hws.edu/eck/cs124/javanotes8/</a> (Covers Java 8, plus a bit of 11 and 17.)</li>
 <li>Ninth edition with JavaFX: <a href=
-"http://math.hws.edu/eck/cs124/javanotes9/">http://math.hws.edu/eck/cs124/javanotes9/</a> (Covers Java 17.)</li>
+"https://math.hws.edu/eck/cs124/javanotes9/">https://math.hws.edu/eck/cs124/javanotes9/</a> (Covers Java 17.)</li>
 <li>Ninth edition with Swing: <a href=
-"http://math.hws.edu/eck/cs124/javanotes9-swing/">http://math.hws.edu/eck/cs124/javanotes9-swing/</a> (Covers Java 17.)</li>
+"https://math.hws.edu/eck/cs124/javanotes9-swing/">https://math.hws.edu/eck/cs124/javanotes9-swing/</a> (Covers Java 17.)</li>
 </ul>
    
 
-<p><i>Introduction to Programming using Java</i> is <b>free</b>, but it is not in the
+<p>This textbook is <b>free</b>, but it is not in the
 public domain. Version&nbsp;9 is published under the terms of the
 Creative Commons Attribution-NonCommercial-ShareAlike 4.0 License. 
 To view a copy of this license, visit 
@@ -158,11 +158,9 @@ to other languages.</li>
 
 </ul>
 
-<p>For uses of the book in ways not covered by the license, permission of the
-author is required.</p>
+<np>For uses of the book in ways not covered by the license, permission of the
+author is required.</np>
 
-<p>While it is not actually required by the license, I do appreciate hearing
-from people who are using or distributing my work.</p>
    
 <break/>
    
@@ -174,11 +172,8 @@ PDF version, the XML is processed into a form that can be used by the TeX
 typesetting program.  In addition to
 XML files, the source includes DTDs, XSLT transformations, Java source code files,
 image files, a TeX macro file, and a couple of scripts that are used in processing.
-The scripts work on Linux and on MacOS.
-</p>
-
-<p><b>I have made the complete source files available for download at
-the following address:</b></p>
+The scripts work on Linux and on MacOS. I have made the complete source files available 
+for download here:</p>
 
 <fxdiv>
 <p align="center"><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip">https://math.hws.edu/eck/cs124/downloads/javanotes9-full-source.zip</a></p>
@@ -207,8 +202,6 @@ the git repository, using the following URL: </p>
 <np>Professor David J. Eck<br />
 Department of Mathematics and Computer Science<br />
 Hobart and William Smith Colleges<br />
-300 Pulteney Street<br />
-Geneva, New York 14456, USA<br />
 Email: <a href="mailto:eck@hws.edu">eck@hws.edu</a><br />
 WWW: <a href="https://math.hws.edu/eck/">https://math.hws.edu/eck/</a><br /><br />
 </np>

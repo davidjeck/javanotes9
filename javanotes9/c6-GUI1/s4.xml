@@ -556,7 +556,7 @@ overlap.  To see the labels, you need to call
 example, the third slider in the above illustration was created and configured 
 to show labels with the commands:</p>
 
-<pre>slider3 = new Slider(2000,2100,2018);
+<pre>slider3 = new Slider(2000,2100,2022);
 slider3.setMajorTickUnit(50); // tick marks are not shown!
 slider3.setShowTickLabels(true)</pre>
 

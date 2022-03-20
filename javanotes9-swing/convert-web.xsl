@@ -17,7 +17,7 @@
         <h2 class="chapter_title">Introduction to Programming Using Java</h2>
         <h2 class="chapter_title">Version 9, Swing Edition</h2>
         <p style="text-align:center">(Preliminary Version, March 2022!)</p>
-        <h4 align="center">Author:&#160; <a href="http://math.hws.edu/eck/">David J. Eck</a>&#160;
+        <h4 align="center">Author:&#160; <a href="https://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
         <table border="0">
@@ -34,7 +34,7 @@
         <p>Version 9 covers Java 17.  It updates Version&#160;8.1.3 mostly by moving definitively to Java&#160;17
         and by adding a new Swing edition.
          This edition of Version&#160;9 uses Swing for GUI programming;
-         <a href="http://math.hws.edu/javanotes9/">an&#160;edition</a> that uses
+         <a href="https://math.hws.edu/javanotes9/">an&#160;edition</a> that uses
          JavaFX instead of Swing is also available. See the <a href="preface.html">preface</a> for links to
          older versions.</p>
          <p><b>Links for downloading the book will be available when the final version is
@@ -80,7 +80,7 @@
             <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">license</a> for full
             details.)<br/><br/>
             This book is available for downloading and for on-line use at the Web address:
-            <a href="http://math.hws.edu/javanotes-swing/">http://math.hws.edu/javanotes-swing/</a></small></i>
+            <a href="https://math.hws.edu/javanotes-swing/">https://math.hws.edu/javanotes-swing/</a></small></i>
           </blockquote>
 <!-- 
         <hr/>
@@ -257,7 +257,7 @@
         </xsl:if>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
+     <div align="right"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a></small></div>
      </div>
      </div></body>
      </html>
@@ -341,7 +341,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
+     <div align="right"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a></small></div>
      </div></body>
      </html>
    </redirect:write>
@@ -362,7 +362,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
+     <div align="right"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a></small></div>
      </div></body>
      </html>
    </redirect:write>
@@ -383,7 +383,7 @@
         <xsl:apply-templates/>
      </div>
      <hr/>
-     <div align="right"><small><a href="http://math.hws.edu/eck/index.html">David Eck</a></small></div>
+     <div align="right"><small><a href="https://math.hws.edu/eck/index.html">David Eck</a></small></div>
      </div></body>
      </html>
     </redirect:write>

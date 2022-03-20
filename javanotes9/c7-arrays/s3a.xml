@@ -204,7 +204,7 @@ for the <classname>FullName</classname> record class.  For a full
 class definition that implements all of these ideas, see
 the sample file <sourceref href="FullName.java"/>.</p>
 
-<p>Two final syntax notes:  Although a record class cannot extend
+<p>A final syntax note:  Although a record class cannot extend
 another class, it can implement one or more interfaces.
 </p>
 
@@ -328,9 +328,10 @@ It can do this because it knows exactly what each method call does&mdash;but tha
 the case because the <classname>Complex</classname> class is final.  If that were not
 the case, then A, B, C, or&nbsp;x might actually refer to objects belonging to subclasses
 of <classname>Complex</classname> that have redefined <code>plus()</code> and <code>times()</code>.
-That is something that can only be checked at run time, not at compile time, so a
+That is something that can only be checked at run time, not at compile time, so 
+if the class were not final, a
 compiler would have no way of knowing what the calls to <code>plus()</code> and <code>times()</code>
-will actually do when the program is run.</np>
+will do when the program is run.</np>
 
 <p>As for immutability, it might also help with optimization, since a compiler can be
 sure that calling a method on an object will not modify the instance variables in that
