@@ -119,7 +119,7 @@
           a PDF version with internal links for navigation and external links to source code
           files, exercise solutions, and other resources that are not included in the PDF.
           Recommended for on-screen reading.
-          Size:&#160;6.5&#160;Megabytes; 791 pages.
+          Size:&#160;6.5&#160;Megabytes; 790 pages.
           </li>
           <li>
           <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.pdf">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.pdf</a></b> &#8212;

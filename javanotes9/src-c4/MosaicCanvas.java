@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.application.Platform;
 
 /**
- *  A MosaicPanel object represents a grid containing rows
+ *  A MosaicCanvas object represents a grid containing rows
  *  and columns of colored rectangles.  There can be "grouting"
  *  between the rectangles.  (The grouting is just drawn as a 
  *  one-pixel outline around each rectangle.)  The rectangles can
@@ -46,7 +46,7 @@ public class MosaicCanvas extends Canvas {
 
 
 	/**
-	 *  Construct a MosaicPanel with 42 rows and 42 columns of rectangles,
+	 *  Construct a MosaicCanvas with 42 rows and 42 columns of rectangles,
 	 *  and with preferred rectangle height and width both set to 16.
 	 */
 	public MosaicCanvas() {
@@ -54,7 +54,7 @@ public class MosaicCanvas extends Canvas {
 	}
 
 	/**
-	 *  Construct a MosaicPanel with specified numbers of rows and columns of rectangles,
+	 *  Construct a MosaicCanvas with specified numbers of rows and columns of rectangles,
 	 *  and with preferred rectangle height and width both set to 16.
 	 */
 	public MosaicCanvas(int rows, int columns) {
@@ -64,7 +64,7 @@ public class MosaicCanvas extends Canvas {
 
 
 	/**
-	 *  Construct a MosaicPanel with the specified number of rows and
+	 *  Construct a MosaicCanvas with the specified number of rows and
 	 *  columns of rectangles, and with a specified preferred size for the  
 	 *  rectangle.  The default rectangle color is black, the
 	 *  grouting color is gray, and alwaysDrawGrouting is set to false.
@@ -505,7 +505,7 @@ public class MosaicCanvas extends Canvas {
 	}
 
 	/**
-	 * Given an x-coordinate of a pixel in the MosaicPanel, this method returns
+	 * Given an x-coordinate of a pixel in the MosaicCanvas, this method returns
 	 * the row number of the mosaic rectangle that contains that pixel.  If
 	 * the x-coordinate does not lie within the bounds of the mosaic, the return
 	 * value is -1 or is equal to the number of columns, depending on whether
@@ -523,7 +523,7 @@ public class MosaicCanvas extends Canvas {
 	}
 
 	/**
-	 * Given a y-coordinate of a pixel in the MosaicPanel, this method returns
+	 * Given a y-coordinate of a pixel in the MosaicCanvas, this method returns
 	 * the column number of the mosaic rectangle that contains that pixel.  If
 	 * the y-coordinate does not lie within the bounds of the mosaic, the return
 	 * value is -1  or is equal to the number of rows, depending on whether

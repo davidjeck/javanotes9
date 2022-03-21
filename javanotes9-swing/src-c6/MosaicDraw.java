@@ -4,7 +4,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 
 /**
- * A MosaicDraw is a JFrame that shows a MosaicPanel as its content pane.  The mosaic
+ * A MosaicDraw is a JFrame that shows a MosaicCanvas as its content pane.  The mosaic
  * is made up of rows and columns of squares.  The user can click-and-drag
  * the mouse to color the squares.  A menu bar with some options is shown
  * at the top of the window.  The window will be centered on the screen,

@@ -155,6 +155,7 @@ call :buildFXjar chapter12 BackgroundComputationDemo
 call :buildFXjar chapter12 MultiprocessingDemo1
 call :buildFXjar chapter12 MultiprocessingDemo2
 call :buildFXjar chapter12 MultiprocessingDemo3
+call :buildFXjar chapter12 QuicksortThreadDemo
 call :buildtio chapter12 ThreadTest4
 call :buildFXjar chapter12 TowersOfHanoiGUI
 call :buildFXjar chapter12 GUIChat

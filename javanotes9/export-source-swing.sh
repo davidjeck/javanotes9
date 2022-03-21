@@ -44,6 +44,24 @@ XALAN_DIR="/home/eck/xalan-j_2_7_2"
 
 #---------------------------------------------------------------
 
+if [ ! -x "$SOURCE_DIR" ] ; then
+   echo "Source directory $SOURCE_DIR does not exist!"
+   echo "You need to edit this script to specify directories!"
+   exit
+fi
+
+if [ ! -x "$SOURCE_DIR/$PROJECT" ] ; then
+   echo "Project directory $SOURCE_DIR/$PROJECT does not exist!"
+   echo "You need to edit this script to specify directories!"
+   exit
+fi
+
+if [ ! -x "$SOURCE_DIR/$PROJECT_SWING" ] ; then
+   echo "Swing project directory $SOURCE_DIR/$PROJECT_SWING does not exist!"
+   echo "You need to edit this script to specify directories!"
+   exit
+fi
+
 if [ -x "$EXPORT_DIR" ] ; then
    rm -r $EXPORT_DIR/*
 else

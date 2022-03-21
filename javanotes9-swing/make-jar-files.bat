@@ -54,7 +54,6 @@ call :buildtio chapter3 BirthdayProblem
 call :buildtio chapter3 ReverseInputNumbers
 call :buildjar chapter3 SimpleGraphicsStarter
 call :buildjar chapter3 MovingRects
-call :buildjar chapter3 RandomCircles
 call :buildtio chapter4 GuessingGame
 call :buildtio chapter4 GuessingGame2
 call :buildtio chapter4 RowsOfChars
@@ -83,7 +82,7 @@ call :buildjar chapter6 SliderAndButtonDemo
 call :buildjar chapter6 SimpleCalc
 call :buildjar chapter6 NullLayoutDemo
 call :buildjar chapter6 HighLowGUI Card.java Hand.java Deck.java
-call :buildjar chapter6 MosaicDraw MosaicDrawController.java MosaicPanel.java
+call :buildjar chapter6 MosaicDraw MosaicDrawController.java MosaicCanvas.java
 call :buildjar chapter6 SimpleDialogDemo
 
 call :buildjar chapter7 RandomStringsWithArray
@@ -194,15 +193,6 @@ cd temp
 %JAVAC% PaintDemo.java
 %JAR% -cmf manifest PaintDemo.jar *.class *.png
 move PaintDemo.jar ..\compiled-jar-files\chapter13 > nul
-cd ..
-
-call :cpfiles chapter13 SoundAndCursorDemo SoundAndCursorDemo.java 
-mkdir temp\snc_resources
-xcopy /S /Q chapter13\snc_resources temp\snc_resources > nul
-cd temp
-%JAVAC% SoundAndCursorDemo.java
-%JAR% -cmf manifest SoundAndCursorDemo.jar *.class snc_resources\*
-move SoundAndCursorDemo.jar ..\compiled-jar-files\chapter13 > nul
 cd ..
 
 call :cpfiles chapter13 edu.hws.eck.mdb.Main 

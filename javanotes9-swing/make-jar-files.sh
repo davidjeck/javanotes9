@@ -213,7 +213,7 @@ buildjar chapter6 SliderAndButtonDemo
 buildjar chapter6 SimpleCalc
 buildjar chapter6 NullLayoutDemo
 buildjar chapter6 HighLowGUI Card.java Hand.java Deck.java
-buildjar chapter6 MosaicDraw MosaicDrawController.java MosaicPanel.java
+buildjar chapter6 MosaicDraw MosaicDrawController.java MosaicCanvas.java
 buildjar chapter6 SimpleDialogDemo
 buildjar chapter7 RandomStringsWithArray
 buildTextIOjar chapter7 ReverseWithDynamicArray DynamicArrayOfInt.java
