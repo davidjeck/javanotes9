@@ -650,7 +650,7 @@ are just those JavaFX modules that are needed for this program.</np>
 then install in the usual way. It installed the poker executable
 as <code>/opt/netpoker/bin/NetPoker</code>.</p>
 
-<p>On Mac OS, using the JDK from adoptium.net (see <localref href="basics.6.1"/>),
+<p>On MacOS 10.15, using the JDK from adoptium.net (see <localref href="basics.6.1"/>),
 I found that <code>jpackage</code> was installed as part of the
 JDK, but it was not made available on the command-line.  I was able to define it
 myself as an alias: </p>
@@ -661,7 +661,8 @@ myself as an alias: </p>
 <np>Again, type this all on one line.  With that done, I used the same commands
 as given above, with appropriate directory names for the JavaFX SDK and jmods.
 The result was a .dmg file containing a program, <code>netpoker.app</code>,
-that could be run by double-clicking.</np>
+that could be run by double-clicking. (The jpackage command might be properly set up
+in newer versions of MacOS.)</np>
 
 <p>The <code>jpackage</code> command should also work on Windows, but it requires
 something called the "WiX toolset" in addition to the JDK.  I have not tried it.</p>

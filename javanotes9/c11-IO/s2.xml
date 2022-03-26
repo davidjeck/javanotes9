@@ -463,7 +463,7 @@ class called <classname>FileChooser</classname>, in package <code>javafx.stage</
 <p>A file dialog box shows the user a list of files and sub-directories in some
 directory, and makes it easy for the user to specify a file in that directory.
 The user can also navigate easily from one directory to another. The 
-common constructor for <classname>FileChooser</classname> has no parameter.
+constructor for <classname>FileChooser</classname> has no parameter.
 Constructing a <classname>FileChooser</classname> object does not make the dialog box
 appear on the screen. You have to call a method in the object to do that.
 Often, before showing the dialog box, you will call instance methods in the <classname>FileChooser</classname>
