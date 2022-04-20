@@ -1,6 +1,13 @@
-                Javanotes Version 9, Spring 2022
+                Javanotes Version 9, May 2022
 
 This is the README file for the javanotes source download...
+
+(Note that there are two editions of Javanotes Version 9, one using
+JavaFX for GUI programs and one using Swing.  These are source files 
+used to build the JavaFX edition.  The source files for both editions 
+can be extracted from a Github repository that can be found at
+https://github.com/davidjeck/javanotes9.  For more information,
+see the README.md file for that repository.)
                                                     
 Directory javanotes9.0-source contains the source files that are used 
 to produce the web site and PDF versions of "Introduction to Programming 

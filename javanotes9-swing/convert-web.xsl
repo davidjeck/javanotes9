@@ -15,31 +15,28 @@
         <div class="content">
         <hr/>
         <h2 class="chapter_title">Introduction to Programming Using Java</h2>
-        <h2 class="chapter_title">Version 9, Swing Edition</h2>
-        <p style="text-align:center">(Preliminary Version, March 2022!)</p>
+        <h2 class="chapter_title">Version 9.0, Swing Edition</h2>
+        <p style="text-align:center">(May, 2022)</p>
         <h4 align="center">Author:&#160; <a href="https://math.hws.edu/eck/">David J. Eck</a>&#160;
                  (<a href="mailto:eck@hws.edu">eck@hws.edu</a>)</h4>        
         <hr/>
         <table border="0">
         <tr valign="top"><td><p style="margin-right:20pt"><img height="235" width="180" src="javanotes9-cover-180x235.png"/></p></td>
         <td style="margin-left:1cm">
-        <p><big>W</big>ELCOME TO
-         the Version 9.0 of <i>Introduction to Programming Using Java</i>,
-         a free, on-line textbook on introductory
-         programming, which uses Java as the language of instruction.  This book is directed
+         <p><big>W</big>ELCOME TO Version 9.0 of <i>Introduction to Programming Using Java</i>,
+         a free, on-line textbook for introductory
+         programming that uses Java as the language of instruction.  This book is directed
          mainly towards beginning programmers, although it might also be useful for experienced
-         programmers who want to learn something about Java.  It is not meant to
-         provide complete coverage of the Java language.
+         programmers who want to learn something about Java.
         </p>
-        <p>Version 9 covers Java 17.  It updates Version&#160;8.1.3 mostly by moving definitively to Java&#160;17
+        <p>Version 9 covers Java 17.  It updates the previous version mostly by moving definitively to Java&#160;17
         and by adding a new Swing edition.
          This edition of Version&#160;9 uses Swing for GUI programming;
-         <a href="https://math.hws.edu/javanotes9/">an&#160;edition</a> that uses
-         JavaFX instead of Swing is also available. See the <a href="preface.html">preface</a> for links to
+         <a href="https://math.hws.edu/javanotes9/">an&#160;alternative&#160;edition</a> that uses
+         JavaFX instead of Swing is also available.  Earlier versions of the book are also available;
+         see the <a href="preface.html">preface</a> for links to
          older versions.</p>
-         <p><b>Links for downloading the book will be available when the final version is
-         published in the middle of May.</b></p>
-<!--          
+
          <p>You can the download this
          web site for use on your own computer. 
          PDF, <span style="white-space:pre">e-book</span>, and print
@@ -50,7 +47,7 @@
          the book!  You can download the source code separately or as part of the web site using the links below.
          See the <a href="README-running-the-examples.txt">README&#160;file</a>
          for information about how to compile and run the examples.</b></p>
--->         
+        
         <h3>Short Table of Contents:</h3>
         <ul class="contents">
         <li><b><a href="contents-with-subsections.html">Full Table of Contents</a></b></li>
@@ -82,7 +79,7 @@
             This book is available for downloading and for on-line use at the Web address:
             <a href="https://math.hws.edu/javanotes-swing/">https://math.hws.edu/javanotes-swing/</a></small></i>
           </blockquote>
-<!-- 
+
         <hr/>
         <h3>Downloading And Other Links</h3>
         <ul>
@@ -136,11 +133,7 @@
            </li>
            <li>
            <b><a href="https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.epub">https://math.hws.edu/eck/cs124/downloads/javanotes9-swing.epub</a></b>, for most other ebook readers.<br/>
-           &#160;&#160;&#160;&#160;&#160;&#160;These should be considered experimental.  Depending on the particular ebook reader that you use,
-           there can be problems with rendering of long lines in program code sample.  You might find that lines that are too long
-           to fit across your screen are incorrectly split into multiple lines, or that the part that extends beyond the right
-           margin is simply dropped.  On some readers, you might be able to scroll horizontally to see the hidden text.
-           The ebooks include answers to quizzes
+           &#160;&#160;&#160;&#160;&#160;&#160;These should be considered permanently experimental. The ebooks include answers to quizzes
            and exercises but do not include source code for sample programs; the sample programs can be downloaded separately, above.
            </li>
            </ul>
@@ -153,11 +146,8 @@
           <a href="http://www.lulu.com">lulu.com</a>.  This is for convenience only, for those who would
           like to have a bound printout in a nice form.
           (Please <b>do not</b> feel obliged to buy the printed version; I do not make any money from it!)
-          The entire book is available in a thick and somewhat unwieldy 740-page printed version:
-          <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java/paperback/product-1nwwq5r.html">Introduction to Programming Using Java</a>.
-          It is also available in two parts: 
-          <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java-part-i/paperback/product-1k8pjg9.html">Chapters 1 through 7</a>,
-          and <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java-part-2/paperback/product-1yjjdq2.html">Chapters 8 through 13</a>.
+          The book is available in a thick and somewhat unwieldy 788-page printed version:
+          <a style="whitespace:pre" href="https://www.lulu.com/en/us/shop/david-eck/introduction-to-programming-using-java-version-90-swing-edition/paperback/product-pznkkj.html">Introduction to Programming Using Java</a>.
            </li>
           </ul>
         </li>
@@ -170,11 +160,11 @@
           </ul>
         </li>
         </ul>
--->
+
         </td></tr></table>
         <hr/>
         <div align="right"><small><i>
-                 (14 March 2022, Preliminary version 9 released on-line only)
+                 (14 May 2022, Version 9.0 released)
               </i></small></div>
         </div>
         </div></body>
