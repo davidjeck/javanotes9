@@ -3,7 +3,7 @@ This git repository contains the full source files for the free textbook *Introd
 The textbook has been available on the web in a series of versions since 1996.
 
 *Introduction to Programming Using Java* is a free introductory textbook covering the Java programming language.
-Version 9 is available in two editions, one using JavaFX for GUI programming and one using Swing.  Version 9.
+Version 9 is available in two editions, one using JavaFX for GUI programming and one using Swing.  Version 9
 covers Java 17.  It was released in May 2022. The two editions can be accessed online
 at [https://math.hws.edu/javanotes](https://math.hws.edu/javanotes) and
 [https://math.hws.edu/javanotes-swing](https://math.hws.edu/javanotes-swing).
